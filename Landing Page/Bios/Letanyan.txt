@@ -1,0 +1,12 @@
+Letanyan Arumugam
+
+Skills:
+- Programming Language: C, C++, Java, Swift, Objective-C, SQL, Python, Delphi, x86 ASM, HTML, JavaScript, CSS, PHP, Bash.
+- macOS, iOS, tvOS, watchOS development
+- Windows development
+- Web Development
+- Known Technologies: MAMP Stack, Git, XCode
+
+
+About Me:
+I am currently a 3rd-year student at the University of Pretoria studying BSc. Computer Science. In my spare time, I'm an active member of the Swift-Evolution community, which deals with the language design of, the programming language, Swift. With Swift, I have created applications that have were published on the Apple App Store. Building these apps allows me to do a few things that I enjoy. These would be algorithm optimisation, user experience and designing an excellent looking user interface.

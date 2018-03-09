@@ -1,0 +1,51 @@
+Kevin Reid
+
+Education: {
+	High School: IEB Matric Certificate {
+		English
+		Afrikaans
+		Life Orientation
+		Mathematics
+		Information Technology
+		Accounting
+		Physical Sciences
+	}
+	University: {
+		2015-2H2016: BEng. Computer Engineering
+		2H2016-Present: BSc. Computer Science
+	}
+}
+
+Language (Spoken): {
+	English: Home Language
+	Afrikaans: Basic Comprehension
+}
+
+Skills: {
+	Languages: {
+		C
+		C++
+		Java
+		Assembly (x86_64 YASM)
+		HTML
+		JavaScript
+		CSS
+		MySQL (MariaDB)
+		PHP
+		XML
+		BASH, ZSH
+		LaTeX
+	}
+	Experience With: {
+		GNU/Linux (Debian and Arch based)
+		3D modelling and texturing (Blender)
+		Circuitry and Electronics
+		LAMP Stack
+		Git
+	}
+}
+
+About Me: {
+	I came out of high school and went into computer engineering for a year and a half, after only enjoying the computer science modules, I decided it was time to make a change. Since that change, I have grown to love almost all things computer science, and have never been happier.
+	In my spare time I tend to enjoy video games, series and movies. But otherwise, I take great pleasure in programming--nothing better than a good challenge--or other computer related things; like when you have over 60 mods (it's not many I know) in skyrim and it all works--then you realise that that's actually the best part of the game; or learning Dvorak was great fun; blender's my on and off again lover; installing and configuring an operating system is always a hoot--speaking of: it's time I installed Arch again. . .
+}
