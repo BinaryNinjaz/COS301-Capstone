@@ -23,6 +23,7 @@ struct WorkArea {
        title: String,
        start: CLLocationCoordinate2D,
        end: CLLocationCoordinate2D) {
+    
     workingTime = 0.0
     self.id = id
     self.title = title
@@ -30,10 +31,13 @@ struct WorkArea {
     
     rect = (start, end)
     
+    // Create Polygon
     let tl = start
-    let bl = CLLocationCoordinate2D(latitude: start.latitude, longitude: end.longitude)
+    let bl = CLLocationCoordinate2D(latitude: start.latitude,
+                                    longitude: end.longitude)
     let br = end
-    let tr = CLLocationCoordinate2D(latitude: end.latitude, longitude: start.longitude)
+    let tr = CLLocationCoordinate2D(latitude: end.latitude,
+                                    longitude: start.longitude)
     
     let path = GMSMutablePath()
     path.add(tl)
@@ -46,6 +50,7 @@ struct WorkArea {
     area.userData = ["id": id, "title": title, "workingTime": workingTime]
     area.fillColor = UIColor.color(color, alpha: 0.5)
     area.title = title
+    // -------------
   }
   
   func contains(_ location: CLLocationCoordinate2D) -> Bool {
@@ -73,7 +78,11 @@ extension CLLocationCoordinate2D {
 }
 
 extension Array where Element == WorkArea {
-  mutating func visit(location: CLLocationCoordinate2D, forDuration d: TimeInterval) -> WorkArea? {
+  /// updates location work time and returns the updated workArea
+  mutating func visit(
+    location: CLLocationCoordinate2D,
+    forDuration d: TimeInterval
+  ) -> WorkArea? {
     for (idx, el) in zip(indices, self) {
       guard el.contains(location) else {
         continue

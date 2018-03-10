@@ -40,7 +40,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     }
   }
   // Store user locations
-  var locationBuffer = [WorkArea]()
+  var workZones = [WorkArea]()
   
   @IBAction func startButtonPressed(_ sender: UIButton) {
     timerButton.isSelected = !timerButton.isSelected
@@ -57,10 +57,12 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     lastLocationPollTime = nil
     timerButton.backgroundColor = .green
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    let vc = storyboard.instantiateViewController(withIdentifier: "WorkTimesTable") as! WorkTimesTableViewController
-    vc.locationBuffer = locationBuffer
-    for i in locationBuffer.indices {
-      locationBuffer[i].workingTime = 0.0
+    let vc = storyboard
+      .instantiateViewController(
+        withIdentifier: "WorkTimesTable") as! WorkTimesTableViewController
+    vc.locationBuffer = workZones
+    for i in workZones.indices {
+      workZones[i].workingTime = 0.0
     }
     self.navigationController?.pushViewController(vc, animated: true)
   }
@@ -80,22 +82,25 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     coder = GMSGeocoder()
     
-    locationBuffer.append(WorkArea(id: 0,
+    workZones.append(WorkArea(id: 0,
                                    title: "Outside Home",
-                                   start: CLLocationCoordinate2D(latitude: -25.832900, longitude: 28.187155),
-                                   end: CLLocationCoordinate2D(latitude: -25.836900, longitude: 28.193528)))
+                                   start: CLLocationCoordinate2D(
+                                    latitude: -25.832900,
+                                    longitude: 28.187155),
+                                   end: CLLocationCoordinate2D(
+                                    latitude: -25.836900,
+                                    longitude: 28.193528)))
     
-    locationBuffer.append(WorkArea(id: 1,
+    workZones.append(WorkArea(id: 1,
                                    title: "Inside Home",
-                                   start: CLLocationCoordinate2D(latitude: -25.836900, longitude: 28.187155),
-                                   end: CLLocationCoordinate2D(latitude: -25.842100, longitude: 28.193528)))
+                                   start: CLLocationCoordinate2D(
+                                    latitude: -25.836900,
+                                    longitude: 28.187155),
+                                   end: CLLocationCoordinate2D(
+                                    latitude: -25.842100,
+                                    longitude: 28.193528)))
     
-    
-    
-    
-    
-    
-    for loc in locationBuffer {
+    for loc in workZones {
       loc.area.map = mapView
     }
     
@@ -110,12 +115,16 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     // Dispose of any resources that can be recreated.
   }
   
-  func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
-    for wa in locationBuffer {
+  func mapView(
+    _ mapView: GMSMapView,
+    didTapAt coordinate: CLLocationCoordinate2D
+  ) {
+    for wa in workZones {
       if wa.contains(coordinate) {
         return
       }
     }
+    // if we tap something thats not a zone deselect the last tapped
     tappedWorkArea?.tap()
     tappedWorkArea = nil
   }
@@ -125,8 +134,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     let id = dict["id"] as! UInt32
     
-    guard let find = locationBuffer.first(where: { $0.id == id }) else {
-      tappedWorkArea?.tap()
+    guard let find = workZones.first(where: { $0.id == id }) else {
+      tappedWorkArea?.tap() // set the last tapped location off
       return
     }
     
@@ -134,7 +143,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
       tappedWorkArea?.tap()
       tappedWorkArea = nil
     } else {
-      tappedWorkArea?.tap()
+      tappedWorkArea?.tap() // set the last tapped location off
       tappedWorkArea = find
       tappedWorkArea?.tap()
     }
@@ -146,8 +155,11 @@ class ViewController: UIViewController, GMSMapViewDelegate {
 extension ViewController: CLLocationManagerDelegate {
   
   // Handle incoming location events.
-  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    currentLocation = locations.last ?? currentLocation
+  func locationManager(
+    _ manager: CLLocationManager,
+    didUpdateLocations locations: [CLLocation]
+  ) {
+    currentLocation = locations.last ?? currentLocation // use old if not update
     let camera = GMSCameraPosition.camera(withLatitude: currentLocation!.coordinate.latitude,
                                           longitude: currentLocation!.coordinate.longitude,
                                           zoom: zoomLevel)
@@ -173,9 +185,13 @@ extension ViewController: CLLocationManagerDelegate {
         print("Geocoder Error")
         return
       }
-      let d = self.lastLocationPollTime == nil ? 0.0 : Date().timeIntervalSince(self.lastLocationPollTime!)
+      let d = self.lastLocationPollTime == nil
+        ? 0.0
+        : Date().timeIntervalSince(self.lastLocationPollTime!)
       self.lastLocationPollTime = Date()
-      self.currentWorkArea = self.locationBuffer.visit(location: coord, forDuration: d) ?? self.currentWorkArea
+      self.currentWorkArea = self.workZones.visit(
+        location: coord,
+        forDuration: d) ?? self.currentWorkArea
       if self.currentWorkArea?.id == self.tappedWorkArea?.id {
         self.tappedWorkArea = self.currentWorkArea
       }

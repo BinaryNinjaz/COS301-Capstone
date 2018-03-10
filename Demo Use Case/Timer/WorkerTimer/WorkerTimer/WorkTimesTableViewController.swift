@@ -25,12 +25,18 @@ class WorkTimesTableViewController: UITableViewController {
       return 1
   }
 
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  override func tableView(
+    _ tableView: UITableView,
+    numberOfRowsInSection section: Int
+  ) -> Int {
       return locationBuffer.count
   }
 
   
-  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  override func tableView(
+    _ tableView: UITableView,
+    cellForRowAt indexPath: IndexPath
+  ) -> UITableViewCell {
     guard let cell =
       tableView.dequeueReusableCell(withIdentifier: "workTimeCell",
                                     for: indexPath) as? WorkTimeTableViewCell else {
