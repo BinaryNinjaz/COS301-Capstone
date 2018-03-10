@@ -1,9 +1,5 @@
 Letanyan Arumugam
 
-Find Me:
-- Github Profile: https://github.com/Letanyan
-- Swift Evolution Profile: https://forums.swift.org/u/Letan/summary
-
 Skills:
 - Programming Language: C, C++, Java, Swift, Objective-C, SQL, Python, Delphi, x86 ASM, HTML, JavaScript, CSS, PHP, Bash.
 - macOS, iOS, tvOS, watchOS development
