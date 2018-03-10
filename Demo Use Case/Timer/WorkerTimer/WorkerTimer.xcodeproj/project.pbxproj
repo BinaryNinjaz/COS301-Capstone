@@ -14,6 +14,9 @@
 		160E4F7C2052A994003BE408 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 160E4F7A2052A994003BE408 /* LaunchScreen.storyboard */; };
 		160E4F872052A994003BE408 /* WorkerTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E4F862052A994003BE408 /* WorkerTimerTests.swift */; };
 		160E4F922052A994003BE408 /* WorkerTimerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160E4F912052A994003BE408 /* WorkerTimerUITests.swift */; };
+		16461CD320531BC10004A24C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 16461CD220531BC10004A24C /* GoogleService-Info.plist */; };
+		16461CD5205324700004A24C /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16461CD4205324700004A24C /* Duration.swift */; };
+		16461CD72053295F0004A24C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16461CD62053295F0004A24C /* MapKit.framework */; };
 		78DA6800A1062F1EFC1EF246 /* libPods-WorkerTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E6EA2B9F33FE669142CE7DA /* libPods-WorkerTimer.a */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +51,9 @@
 		160E4F8D2052A994003BE408 /* WorkerTimerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WorkerTimerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		160E4F912052A994003BE408 /* WorkerTimerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerTimerUITests.swift; sourceTree = "<group>"; };
 		160E4F932052A994003BE408 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		16461CD220531BC10004A24C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		16461CD4205324700004A24C /* Duration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duration.swift; sourceTree = "<group>"; };
+		16461CD62053295F0004A24C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		4D9EA8F6CA2533938D48B4A6 /* Pods-WorkerTimer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WorkerTimer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WorkerTimer/Pods-WorkerTimer.debug.xcconfig"; sourceTree = "<group>"; };
 		51FA732C2D5EBDC28E22F629 /* Pods-WorkerTimer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WorkerTimer.release.xcconfig"; path = "Pods/Target Support Files/Pods-WorkerTimer/Pods-WorkerTimer.release.xcconfig"; sourceTree = "<group>"; };
 		6E6EA2B9F33FE669142CE7DA /* libPods-WorkerTimer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WorkerTimer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16461CD72053295F0004A24C /* MapKit.framework in Frameworks */,
 				78DA6800A1062F1EFC1EF246 /* libPods-WorkerTimer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -106,10 +113,12 @@
 			children = (
 				160E4F712052A994003BE408 /* AppDelegate.swift */,
 				160E4F732052A994003BE408 /* ViewController.swift */,
+				16461CD4205324700004A24C /* Duration.swift */,
 				160E4F752052A994003BE408 /* Main.storyboard */,
 				160E4F782052A994003BE408 /* Assets.xcassets */,
 				160E4F7A2052A994003BE408 /* LaunchScreen.storyboard */,
 				160E4F7D2052A994003BE408 /* Info.plist */,
+				16461CD220531BC10004A24C /* GoogleService-Info.plist */,
 			);
 			path = WorkerTimer;
 			sourceTree = "<group>";
@@ -144,6 +153,7 @@
 		875B8410AEB735CDBB81423C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				16461CD62053295F0004A24C /* MapKit.framework */,
 				6E6EA2B9F33FE669142CE7DA /* libPods-WorkerTimer.a */,
 			);
 			name = Frameworks;
@@ -221,6 +231,11 @@
 					160E4F6D2052A994003BE408 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					160E4F812052A994003BE408 = {
 						CreatedOnToolsVersion = 9.2;
@@ -260,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				160E4F7C2052A994003BE408 /* LaunchScreen.storyboard in Resources */,
+				16461CD320531BC10004A24C /* GoogleService-Info.plist in Resources */,
 				160E4F792052A994003BE408 /* Assets.xcassets in Resources */,
 				160E4F772052A994003BE408 /* Main.storyboard in Resources */,
 			);
@@ -323,11 +339,13 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-WorkerTimer/Pods-WorkerTimer-resources.sh",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GooglePlacePicker/Frameworks/GooglePlacePicker.framework/Resources/GooglePlacePicker.bundle",
 				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlacePicker.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlaces.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -342,6 +360,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16461CD5205324700004A24C /* Duration.swift in Sources */,
 				160E4F742052A994003BE408 /* ViewController.swift in Sources */,
 				160E4F722052A994003BE408 /* AppDelegate.swift in Sources */,
 			);

@@ -3,10 +3,12 @@
 //  WorkerTimer
 //
 //  Created by Letanyan Arumugam on 2018/03/09.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
 //
 
 import UIKit
+import Firebase
+import GoogleMaps
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
+    
+    GMSPlacesClient.provideAPIKey("AIzaSyABi3ju9zDNMIkweEt4Cvr2JAgS6ITFaEE")
+    GMSServices.provideAPIKey("AIzaSyABi3ju9zDNMIkweEt4Cvr2JAgS6ITFaEE")
+    FirebaseApp.configure()
     return true
   }
 
