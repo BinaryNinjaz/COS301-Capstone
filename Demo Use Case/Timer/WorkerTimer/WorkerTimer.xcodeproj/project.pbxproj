@@ -17,6 +17,10 @@
 		16461CD320531BC10004A24C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 16461CD220531BC10004A24C /* GoogleService-Info.plist */; };
 		16461CD5205324700004A24C /* Duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16461CD4205324700004A24C /* Duration.swift */; };
 		16461CD72053295F0004A24C /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16461CD62053295F0004A24C /* MapKit.framework */; };
+		16461CD92053C2310004A24C /* WorkArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16461CD82053C2310004A24C /* WorkArea.swift */; };
+		16461CDB2053D6E50004A24C /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16461CDA2053D6E50004A24C /* Colors.swift */; };
+		16461CDD2053DBAE0004A24C /* WorkTimesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16461CDC2053DBAE0004A24C /* WorkTimesTableViewController.swift */; };
+		16461CDF2053DC170004A24C /* WorkTimeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16461CDE2053DC170004A24C /* WorkTimeTableViewCell.swift */; };
 		78DA6800A1062F1EFC1EF246 /* libPods-WorkerTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E6EA2B9F33FE669142CE7DA /* libPods-WorkerTimer.a */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +58,10 @@
 		16461CD220531BC10004A24C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		16461CD4205324700004A24C /* Duration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duration.swift; sourceTree = "<group>"; };
 		16461CD62053295F0004A24C /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		16461CD82053C2310004A24C /* WorkArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkArea.swift; sourceTree = "<group>"; };
+		16461CDA2053D6E50004A24C /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		16461CDC2053DBAE0004A24C /* WorkTimesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkTimesTableViewController.swift; sourceTree = "<group>"; };
+		16461CDE2053DC170004A24C /* WorkTimeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkTimeTableViewCell.swift; sourceTree = "<group>"; };
 		4D9EA8F6CA2533938D48B4A6 /* Pods-WorkerTimer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WorkerTimer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WorkerTimer/Pods-WorkerTimer.debug.xcconfig"; sourceTree = "<group>"; };
 		51FA732C2D5EBDC28E22F629 /* Pods-WorkerTimer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WorkerTimer.release.xcconfig"; path = "Pods/Target Support Files/Pods-WorkerTimer/Pods-WorkerTimer.release.xcconfig"; sourceTree = "<group>"; };
 		6E6EA2B9F33FE669142CE7DA /* libPods-WorkerTimer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WorkerTimer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +122,10 @@
 				160E4F712052A994003BE408 /* AppDelegate.swift */,
 				160E4F732052A994003BE408 /* ViewController.swift */,
 				16461CD4205324700004A24C /* Duration.swift */,
+				16461CD82053C2310004A24C /* WorkArea.swift */,
+				16461CDA2053D6E50004A24C /* Colors.swift */,
+				16461CDC2053DBAE0004A24C /* WorkTimesTableViewController.swift */,
+				16461CDE2053DC170004A24C /* WorkTimeTableViewCell.swift */,
 				160E4F752052A994003BE408 /* Main.storyboard */,
 				160E4F782052A994003BE408 /* Assets.xcassets */,
 				160E4F7A2052A994003BE408 /* LaunchScreen.storyboard */,
@@ -360,9 +372,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16461CDF2053DC170004A24C /* WorkTimeTableViewCell.swift in Sources */,
 				16461CD5205324700004A24C /* Duration.swift in Sources */,
+				16461CDB2053D6E50004A24C /* Colors.swift in Sources */,
+				16461CD92053C2310004A24C /* WorkArea.swift in Sources */,
 				160E4F742052A994003BE408 /* ViewController.swift in Sources */,
 				160E4F722052A994003BE408 /* AppDelegate.swift in Sources */,
+				16461CDD2053DBAE0004A24C /* WorkTimesTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
