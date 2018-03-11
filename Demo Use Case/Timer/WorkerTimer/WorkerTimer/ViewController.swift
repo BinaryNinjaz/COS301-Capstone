@@ -28,15 +28,43 @@ class ViewController: UIViewController, GMSMapViewDelegate {
   var coder: GMSGeocoder!
   
   let updateTitle: (ViewController) -> Void = { controller in
+    if !controller.working {
+      controller.timerLabel.text = "Tap Start to Begin"
+      return
+    }
+    
+    let headerAttribute = [
+      NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
+    ]
+    let bodyAttibute = [
+      NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.light)
+    ]
+    
     if let tapped = controller.tappedWorkArea {
-      controller.timerLabel.text = "⏹ " + tapped.title + "\n" + formatTimeInterval(tapped.workingTime)
+      let ms = NSMutableAttributedString()
+      let msTitle = NSAttributedString(string: "⚫️ \(tapped.title)", attributes: headerAttribute)
+      let msBody = NSAttributedString(string: "\n\(formatTimeInterval(tapped.workingTime))", attributes: bodyAttibute)
+      
+      ms.append(msTitle)
+      ms.append(msBody)
+      
+      controller.timerLabel.attributedText = ms
       return
     }
     
     if let duration = controller.currentWorkArea?.workingTime {
-      controller.timerLabel.text = "⏺ " + controller.currentWorkArea!.title + "\n" + formatTimeInterval(duration)
+      let ms = NSMutableAttributedString()
+      let msTitle = NSAttributedString(string: "🔵 \(controller.currentWorkArea!.title)", attributes: headerAttribute)
+      let msBody = NSAttributedString(string: "\n\(formatTimeInterval(duration))", attributes: bodyAttibute)
+      
+      ms.append(msTitle)
+      ms.append(msBody)
+      
+      controller.timerLabel.attributedText = ms
     } else {
-      controller.timerLabel.text = "Not in a Work Area"
+      let msTitle = NSAttributedString(string: "❌ Not in a Work Area", attributes: headerAttribute)
+      
+      controller.timerLabel.attributedText = msTitle
     }
   }
   // Store user locations
@@ -47,9 +75,15 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     guard working else {
       locationManager.requestAlwaysAuthorization()
       working = true
+      tappedWorkArea?.tap()
+      tappedWorkArea = nil
       lastLocationPollTime = Date()
       timerButton.backgroundColor = .red
-      timerLabel.text = "Starting..."
+      let headerAttribute = [
+        NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
+      ]
+      let msTitle = NSAttributedString(string: "🔴 Starting...", attributes: headerAttribute)
+      timerLabel.attributedText = msTitle
       return
     }
     updateTitle(self)
@@ -83,13 +117,13 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     coder = GMSGeocoder()
     
     workZones.append(WorkArea(id: 0,
-                                   title: "Outside Home",
-                                   start: CLLocationCoordinate2D(
-                                    latitude: -25.832900,
-                                    longitude: 28.187155),
-                                   end: CLLocationCoordinate2D(
-                                    latitude: -25.836900,
-                                    longitude: 28.193528)))
+                             title: "Outside Home",
+                             start: CLLocationCoordinate2D(
+                              latitude: -25.832900,
+                              longitude: 28.187155),
+                             end: CLLocationCoordinate2D(
+                              latitude: -25.836900,
+                              longitude: 28.193528)))
     
     workZones.append(WorkArea(id: 1,
                                    title: "Inside Home",
@@ -99,6 +133,42 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                                    end: CLLocationCoordinate2D(
                                     latitude: -25.842100,
                                     longitude: 28.193528)))
+    
+    workZones.append(WorkArea(id: 2,
+                              title: "North Campus",
+                              start: CLLocationCoordinate2D(
+                                latitude: -25.750657,
+                                longitude: 28.228649),
+                              end: CLLocationCoordinate2D(
+                                latitude: -25.753012,
+                                longitude: 28.231911)))
+    
+    workZones.append(WorkArea(id: 3,
+                              title: "West Campus",
+                              start: CLLocationCoordinate2D(
+                                latitude: -25.753128,
+                                longitude: 28.225404),
+                              end: CLLocationCoordinate2D(
+                                latitude: -25.756538,
+                                longitude: 28.228913)))
+    
+    workZones.append(WorkArea(id: 4,
+                              title: "South Campus",
+                              start: CLLocationCoordinate2D(
+                                latitude: -25.753272,
+                                longitude: 28.229095),
+                              end: CLLocationCoordinate2D(
+                                latitude: -25.756836,
+                                longitude: 28.232210)))
+    
+    workZones.append(WorkArea(id: 5,
+                              title: "East Campus",
+                              start: CLLocationCoordinate2D(
+                                latitude: -25.752205,
+                                longitude: 28.232455),
+                              end: CLLocationCoordinate2D(
+                                latitude: -25.757786,
+                                longitude: 28.236677)))
     
     for loc in workZones {
       loc.area.map = mapView
@@ -147,6 +217,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
       tappedWorkArea = find
       tappedWorkArea?.tap()
     }
+    updateTitle(self)
   }
 
 
