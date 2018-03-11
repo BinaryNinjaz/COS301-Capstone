@@ -1,5 +1,8 @@
 Letanyan Arumugam
 
+Role:
+- Back-end Developer
+
 Find Me:
 - On Github: https://github.com/Letanyan
 - On Swift Forums: https://forums.swift.org/u/Letan/summary
