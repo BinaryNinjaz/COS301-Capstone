@@ -4,6 +4,8 @@ Course: BSc Information Technology and Applied Mathematics
 
 Career Interests: Software Development/Engineering, Financial/System Analyst
 
+Position: Team Leader of Binary Ninjaz
+
 Skills:
 •	Programming (C, C++, Java, MATLAB, SAS, Assembly)
 •	Web development
