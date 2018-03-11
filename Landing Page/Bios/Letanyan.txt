@@ -1,9 +1,10 @@
 Letanyan Arumugam
 
 Role:
-- Back-end Developer
+- Front-end Developer
 
 Find Me:
+- By Email: letanyan.a@gmail.com
 - On Github: https://github.com/Letanyan
 - On Swift Forums: https://forums.swift.org/u/Letan/summary
 
@@ -14,6 +15,22 @@ Skills:
 - Web Development
 - Known Technologies: MAMP Stack, Git, XCode
 
+Strengths:
+- Optimization problems
+- Data structures
+- Generics
+- Imperative programming
+- Protocol-Oriented programming
+- Data-Oriented programming
+- Low level programming
+- UX design
+- Functional programming
+
+
+Desires:
+- Language designer
+- Standard Library engineer
+- Compiler engineer
 
 About Me:
 I am currently a 3rd-year student at the University of Pretoria studying BSc. Computer Science. In my spare time, I'm an active member of the Swift-Evolution community, which deals with the language design of, the programming language, Swift. With Swift, I have created applications that have were published on the Apple App Store. Building these apps allows me to do a few things that I enjoy. These would be algorithm optimisation, user experience and designing an excellent looking user interface.
