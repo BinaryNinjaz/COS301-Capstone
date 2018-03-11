@@ -1,2 +1,5 @@
 .DS_Store
 Demo Use Case/Timer/WorkerTimer/Pods
+Demo Use Case/Timer/WorkerTimer/Podfile.lock
+Demo Use Case/Timer/WorkerTimer/WorkerTimer.xcodeproj
+Demo Use Case/Timer/WorkerTimer/WorkerTimer.xcworkspace
