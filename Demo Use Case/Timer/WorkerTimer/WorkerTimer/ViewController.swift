@@ -13,6 +13,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
   @IBOutlet weak var mapView: GMSMapView!
   @IBOutlet weak var timerButton: UIButton!
   @IBOutlet weak var timerLabel: UILabel!
+  @IBOutlet weak var removeButton: UIBarButtonItem!
   
   // Time Trackers
   var working: Bool = false
@@ -26,6 +27,11 @@ class ViewController: UIViewController, GMSMapViewDelegate {
   var zoomLevel: Float = 15.0
   var autoMoveCameraToCurrentLocation = false
   var coder: GMSGeocoder!
+  
+  // Space Maker
+  var userZonePoint: CLLocationCoordinate2D? = nil
+  // Store user locations
+  var workZones = [WorkArea]()
   
   let updateTitle: (ViewController) -> Void = { controller in
     if !controller.working {
@@ -67,8 +73,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
       controller.timerLabel.attributedText = msTitle
     }
   }
-  // Store user locations
-  var workZones = [WorkArea]()
   
   @IBAction func startButtonPressed(_ sender: UIButton) {
     timerButton.isSelected = !timerButton.isSelected
@@ -101,6 +105,21 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
+  @IBAction func removeWorkArea(_ sender: UIBarButtonItem) {
+    if let twa = tappedWorkArea {
+      guard let idx = workZones.index(where: { wa in wa.id == twa.id }) else {
+        return
+      }
+      workZones.remove(at: idx)
+      UserDefaults.standard.removeWorkArea(forKey: twa.id)
+      twa.area.map = nil
+    } else {
+      if let bundleID = Bundle.main.bundleIdentifier {
+        UserDefaults.standard.removePersistentDomain(forName: bundleID)
+      }
+    }
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -116,62 +135,12 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     coder = GMSGeocoder()
     
-    workZones.append(WorkArea(id: 0,
-                             title: "Outside Home",
-                             start: CLLocationCoordinate2D(
-                              latitude: -25.832900,
-                              longitude: 28.187155),
-                             end: CLLocationCoordinate2D(
-                              latitude: -25.836900,
-                              longitude: 28.193528)))
-    
-    workZones.append(WorkArea(id: 1,
-                                   title: "Inside Home",
-                                   start: CLLocationCoordinate2D(
-                                    latitude: -25.836900,
-                                    longitude: 28.187155),
-                                   end: CLLocationCoordinate2D(
-                                    latitude: -25.842100,
-                                    longitude: 28.193528)))
-    
-    workZones.append(WorkArea(id: 2,
-                              title: "North Campus",
-                              start: CLLocationCoordinate2D(
-                                latitude: -25.750657,
-                                longitude: 28.228649),
-                              end: CLLocationCoordinate2D(
-                                latitude: -25.753012,
-                                longitude: 28.231911)))
-    
-    workZones.append(WorkArea(id: 3,
-                              title: "West Campus",
-                              start: CLLocationCoordinate2D(
-                                latitude: -25.753128,
-                                longitude: 28.225404),
-                              end: CLLocationCoordinate2D(
-                                latitude: -25.756538,
-                                longitude: 28.228913)))
-    
-    workZones.append(WorkArea(id: 4,
-                              title: "South Campus",
-                              start: CLLocationCoordinate2D(
-                                latitude: -25.753272,
-                                longitude: 28.229095),
-                              end: CLLocationCoordinate2D(
-                                latitude: -25.756836,
-                                longitude: 28.232210)))
-    
-    workZones.append(WorkArea(id: 5,
-                              title: "East Campus",
-                              start: CLLocationCoordinate2D(
-                                latitude: -25.752205,
-                                longitude: 28.232455),
-                              end: CLLocationCoordinate2D(
-                                latitude: -25.757786,
-                                longitude: 28.236677)))
-    
-    for loc in workZones {
-      loc.area.map = mapView
+    let workZoneCount = UserDefaults.standard.workAreaCount()
+    for i in 0..<workZoneCount {
+      let wa = UserDefaults.standard.workArea(forKey: i)
+      workZones.append(wa)
+      print(workZones)
+      wa.area.map = mapView
     }
     
     timerButton.layer.cornerRadius = timerButton.frame.size.width / 2
@@ -202,7 +171,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
   func mapView(_ mapView: GMSMapView, didTap overlay: GMSOverlay) {
     let dict = overlay.userData as! [String: Any]
     
-    let id = dict["id"] as! UInt32
+    let id = dict["id"] as! Int
     
     guard let find = workZones.first(where: { $0.id == id }) else {
       tappedWorkArea?.tap() // set the last tapped location off
@@ -212,14 +181,44 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     if let tapped = tappedWorkArea, find.id == tapped.id {
       tappedWorkArea?.tap()
       tappedWorkArea = nil
+      removeButton.title = "Remove All"
     } else {
       tappedWorkArea?.tap() // set the last tapped location off
       tappedWorkArea = find
       tappedWorkArea?.tap()
+      removeButton.title = "Remove \(tappedWorkArea?.title ?? "Item")"
     }
     updateTitle(self)
   }
 
+  func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
+    let gen = UISelectionFeedbackGenerator()
+    gen.prepare()
+    gen.selectionChanged()
+    
+    if userZonePoint == nil {
+      userZonePoint = coordinate
+    } else {
+      let alert = UIAlertController(title: "Enter Name", message: "Name of work zone", preferredStyle: .alert)
+      alert.addTextField { tf in tf.autocapitalizationType = .words }
+      alert.addAction(UIAlertAction(title: "Done", style: .default) { [weak alert] _ in
+        let title = alert?.textFields?[0].text ?? ""
+        self.workZones.append(WorkArea(id: self.workZones.count,
+                                  title: title,
+                                  start: self.userZonePoint!,
+                                  end: coordinate))
+        self.userZonePoint = nil
+        self.workZones.last!.area.map = mapView
+        UserDefaults.standard.set(self.workZones.last!)
+        UserDefaults.standard.setWorkAreaCount(self.workZones.count)
+      })
+      
+      alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+      
+      present(alert, animated: true, completion: nil)
+      
+    }
+  }
 
 }
 

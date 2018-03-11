@@ -11,7 +11,7 @@ import CoreGraphics
 import GoogleMaps
 
 struct WorkArea {
-  var id: UInt32
+  var id: Int
   var title: String
   let area: GMSPolygon
   let rect: (start: CLLocationCoordinate2D, end: CLLocationCoordinate2D)
@@ -19,7 +19,7 @@ struct WorkArea {
   var isSelected: Bool = false
   var color: UInt32
   
-  init(id: UInt32,
+  init(id: Int,
        title: String,
        start: CLLocationCoordinate2D,
        end: CLLocationCoordinate2D) {
@@ -91,5 +91,51 @@ extension Array where Element == WorkArea {
       return self[idx]
     }
     return nil
+  }
+}
+
+extension UserDefaults {
+  func set(_ wa: WorkArea) {
+    set(wa.title, forKey: wa.id.description + "Title")
+    
+    set(wa.rect.start.latitude, forKey: wa.id.description + "StartLat")
+    set(wa.rect.start.longitude, forKey: wa.id.description + "StartLong")
+    
+    set(wa.rect.end.latitude, forKey: wa.id.description + "EndLat")
+    set(wa.rect.end.longitude, forKey: wa.id.description + "EndLong")
+  }
+  
+  func setWorkAreaCount(_ count: Int) {
+    set(count, forKey: "WorkAreaCount")
+  }
+  
+  func workAreaCount() -> Int {
+    return integer(forKey: "WorkAreaCount")
+  }
+  
+  func workArea(forKey key: Int) -> WorkArea {
+    let t = string(forKey: key.description + "Title")
+    
+    let startLat = double(forKey: key.description + "StartLat")
+    let startLong = double(forKey: key.description + "StartLong")
+    
+    let endLat = double(forKey: key.description + "EndLat")
+    let endLong = double(forKey: key.description + "EndLong")
+    
+    return WorkArea(id: key,
+                    title: t ?? "",
+                    start: CLLocationCoordinate2D(latitude: startLat, longitude: startLong),
+                    end: CLLocationCoordinate2D(latitude: endLat, longitude: endLong))
+    
+  }
+  
+  func removeWorkArea(forKey key: Int) {
+    removeObject(forKey: key.description + "Title")
+    
+    removeObject(forKey: key.description + "StartLat")
+    removeObject(forKey: key.description + "StartLong")
+    
+    removeObject(forKey: key.description + "EndLat")
+    removeObject(forKey: key.description + "EndLong")
   }
 }

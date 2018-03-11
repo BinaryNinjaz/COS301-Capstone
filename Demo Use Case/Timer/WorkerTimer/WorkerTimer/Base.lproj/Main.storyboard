@@ -75,9 +75,16 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="D0T-B0-BRf"/>
+                    <navigationItem key="navigationItem" id="D0T-B0-BRf">
+                        <barButtonItem key="rightBarButtonItem" title="Remove All" id="SXU-bg-2ci">
+                            <connections>
+                                <action selector="removeWorkArea:" destination="BYZ-38-t0r" id="gNB-1L-WR8"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="uMF-Fh-POs" id="gSp-Jf-ujc"/>
+                        <outlet property="removeButton" destination="SXU-bg-2ci" id="3jr-dl-MiE"/>
                         <outlet property="timerButton" destination="1cn-2Z-UW0" id="lxY-v0-NaM"/>
                         <outlet property="timerLabel" destination="Ed1-9C-jDd" id="sq2-dD-Q0F"/>
                     </connections>
