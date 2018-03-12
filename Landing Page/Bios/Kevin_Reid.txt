@@ -51,5 +51,5 @@ About Me: {
 }
 
 Contact:{
-	Email: kevinjr@tuta.io
+	Email: 00kevinreid00@gmail.com
 }
