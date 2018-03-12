@@ -52,4 +52,5 @@ About Me: {
 
 Contact:{
 	Email: 00kevinreid00@gmail.com
+	Linkedin: https://www.linkedin.com/in/KevinJRofCS/
 }
