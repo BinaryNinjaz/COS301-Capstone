@@ -6,7 +6,7 @@ Role:
 Find Me:
 - By Email: letanyan.a@gmail.com
 - On Github: https://github.com/Letanyan
-- On Swift Forums: https://forums.swift.org/u/Letan/summary
+- On LinkedIn: www.linkedin.com/in/letanyan
 
 Skills:
 - Programming Language: C, C++, Java, Swift, Objective-C, SQL, Python, Delphi, x86 ASM, HTML, JavaScript, CSS, PHP, Bash.
