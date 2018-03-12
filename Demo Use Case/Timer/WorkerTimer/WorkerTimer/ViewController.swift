@@ -117,6 +117,10 @@ class ViewController: UIViewController, GMSMapViewDelegate {
       if let bundleID = Bundle.main.bundleIdentifier {
         UserDefaults.standard.removePersistentDomain(forName: bundleID)
       }
+      for wa in workZones {
+        wa.area.map = nil
+      }
+      workZones.removeAll()
     }
   }
   
@@ -137,7 +141,9 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     let workZoneCount = UserDefaults.standard.workAreaCount()
     for i in 0..<workZoneCount {
-      let wa = UserDefaults.standard.workArea(forKey: i)
+      guard let wa = UserDefaults.standard.workArea(forKey: i) else {
+        continue
+      }
       workZones.append(wa)
       print(workZones)
       wa.area.map = mapView

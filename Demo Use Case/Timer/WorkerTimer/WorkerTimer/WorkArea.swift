@@ -113,8 +113,10 @@ extension UserDefaults {
     return integer(forKey: "WorkAreaCount")
   }
   
-  func workArea(forKey key: Int) -> WorkArea {
-    let t = string(forKey: key.description + "Title")
+  func workArea(forKey key: Int) -> WorkArea? {
+    guard let t = string(forKey: key.description + "Title") else {
+      return nil
+    }
     
     let startLat = double(forKey: key.description + "StartLat")
     let startLong = double(forKey: key.description + "StartLong")
@@ -123,7 +125,7 @@ extension UserDefaults {
     let endLong = double(forKey: key.description + "EndLong")
     
     return WorkArea(id: key,
-                    title: t ?? "",
+                    title: t,
                     start: CLLocationCoordinate2D(latitude: startLat, longitude: startLong),
                     end: CLLocationCoordinate2D(latitude: endLat, longitude: endLong))
     
