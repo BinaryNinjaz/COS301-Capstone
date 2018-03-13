@@ -196,21 +196,29 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     let id = dict["id"] as! Int
     
-    guard let find = workZones.first(where: { $0.id == id }) else {
+    guard let find = workZones.index(where: { $0.id == id }) else {
       tappedWorkArea?.tap() // set the last tapped location off
       return
     }
     
-    if let tapped = tappedWorkArea, find.id == tapped.id {
+    if let tapped = tappedWorkArea, workZones[find].id == tapped.id {
       tappedWorkArea?.tap()
       tappedWorkArea = nil
       removeButton.title = "Remove All"
     } else {
       tappedWorkArea?.tap() // set the last tapped location off
-      tappedWorkArea = find
+      tappedWorkArea = workZones[find]
       tappedWorkArea?.tap()
       removeButton.title = "Remove \(tappedWorkArea?.title ?? "Item")"
     }
+    
+    for (i, wa) in zip(currentWorkAreas.indices, currentWorkAreas) {
+      if tappedWorkArea?.id != wa.id {
+        currentWorkAreas[i].isSelected = false
+        currentWorkAreas[i].area.fillColor = UIColor.color(wa.color, alpha: 0.5)
+      }
+    }
+    
     updateTitle(self)
   }
 
@@ -286,6 +294,11 @@ extension ViewController: CLLocationManagerDelegate {
         location: coord,
         forDuration: d)
       self.currentTimerOffset = Date()
+      
+      for i in self.currentWorkAreas.indices {
+        if !self.currentWorkAreas[i].isIn {  self.currentWorkAreas[i].isIn = true }
+      }
+      
       if let wa = self.tappedWorkArea, let nwa = self.currentWorkAreas.contains(workArea: wa) {
         self.tappedWorkArea = nwa
       }

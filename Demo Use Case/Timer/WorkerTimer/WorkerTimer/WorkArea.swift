@@ -16,7 +16,14 @@ struct WorkArea {
   let area: GMSPolygon
   let rect: (start: CLLocationCoordinate2D, end: CLLocationCoordinate2D)
   var workingTime: TimeInterval
-  var isSelected: Bool = false
+  var isSelected = false
+  var isIn = false {
+    didSet {
+      area.fillColor = isIn
+        ? UIColor.color(color, alpha: 0.5)
+        : UIColor.color(color, alpha: 0.1)
+    }
+  }
   var color: UInt32
   
   init(id: Int,
@@ -48,7 +55,9 @@ struct WorkArea {
     area = GMSPolygon(path: path)
     area.isTappable = true
     area.userData = ["id": id, "title": title, "workingTime": workingTime]
-    area.fillColor = UIColor.color(color, alpha: 0.5)
+    area.fillColor = UIColor.color(color, alpha: 0.1)
+    area.strokeColor = UIColor.color(color, alpha: 0.9)
+    area.strokeWidth = 2.5
     area.title = title
     // -------------
   }
@@ -66,7 +75,7 @@ struct WorkArea {
     if isSelected {
       area.fillColor = UIColor.color(color, alpha: 0.75)
     } else {
-      area.fillColor = UIColor.color(color, alpha: 0.5)
+      area.fillColor = UIColor.color(color, alpha: 0.1)
     }
   }
 }
