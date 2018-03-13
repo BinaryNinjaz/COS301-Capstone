@@ -24,7 +24,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
   // Location Trackers
   var locationManager = CLLocationManager()
   var currentLocation: CLLocation?
-  var currentWorkArea: WorkArea?
+  var currentWorkAreas: [WorkArea] = []
   var tappedWorkArea: WorkArea?
   var zoomLevel: Float = 15.0
   var autoMoveCameraToCurrentLocation = false
@@ -60,20 +60,23 @@ class ViewController: UIViewController, GMSMapViewDelegate {
       return
     }
     
-    if let duration = controller.currentWorkArea?.workingTime {
-      let ms = NSMutableAttributedString()
-      let msTitle = NSAttributedString(string: "🔵 \(controller.currentWorkArea!.title)", attributes: headerAttribute)
-      
-      let d = controller.currentTimerOffset == nil
-        ? duration
-        : Date().timeIntervalSince(controller.currentTimerOffset!) + duration
-      
-      let msBody = NSAttributedString(string: "\n\(formatTimeInterval(d))", attributes: bodyAttibute)
-      
-      ms.append(msTitle)
-      ms.append(msBody)
-      
-      controller.timerLabel.attributedText = ms
+    if !controller.currentWorkAreas.isEmpty {
+      for area in controller.currentWorkAreas {
+        let duration = area.workingTime
+        let ms = NSMutableAttributedString()
+        let msTitle = NSAttributedString(string: "🔵 \(area.title)", attributes: headerAttribute)
+        
+        let d = controller.currentTimerOffset == nil
+          ? duration
+          : Date().timeIntervalSince(controller.currentTimerOffset!) + duration
+        
+        let msBody = NSAttributedString(string: "\n\(formatTimeInterval(d))", attributes: bodyAttibute)
+        
+        ms.append(msTitle)
+        ms.append(msBody)
+        
+        controller.timerLabel.attributedText = ms
+      }
     } else {
       let msTitle = NSAttributedString(string: "❌ Not in a Work Area", attributes: headerAttribute)
       
@@ -279,12 +282,12 @@ extension ViewController: CLLocationManagerDelegate {
         ? 0.0
         : Date().timeIntervalSince(self.lastLocationPollTime!)
       self.lastLocationPollTime = Date()
-      self.currentWorkArea = self.workZones.visit(
+      self.currentWorkAreas = self.workZones.visit(
         location: coord,
-        forDuration: d) ?? self.currentWorkArea
+        forDuration: d)
       self.currentTimerOffset = Date()
-      if self.currentWorkArea?.id == self.tappedWorkArea?.id {
-        self.tappedWorkArea = self.currentWorkArea
+      if let wa = self.tappedWorkArea, let nwa = self.currentWorkAreas.contains(workArea: wa) {
+        self.tappedWorkArea = nwa
       }
       self.updateTitle(self)
     }

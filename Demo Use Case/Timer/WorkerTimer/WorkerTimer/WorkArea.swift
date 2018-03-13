@@ -82,13 +82,23 @@ extension Array where Element == WorkArea {
   mutating func visit(
     location: CLLocationCoordinate2D,
     forDuration d: TimeInterval
-  ) -> WorkArea? {
+  ) -> [WorkArea] {
+    var result = [WorkArea]()
     for (idx, el) in zip(indices, self) {
       guard el.contains(location) else {
         continue
       }
       self[idx].workingTime += d
-      return self[idx]
+      result.append(self[idx])
+    }
+    return result
+  }
+  
+  func contains(workArea: WorkArea) -> WorkArea? {
+    for e in self {
+      if e.id == workArea.id {
+        return e
+      }
     }
     return nil
   }
