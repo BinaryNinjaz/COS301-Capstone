@@ -16,6 +16,8 @@ class ViewController: UIViewController, GMSMapViewDelegate {
   @IBOutlet weak var removeButton: UIBarButtonItem!
   
   // Time Trackers
+  var timer: Timer?
+  var currentTimerOffset: Date?
   var working: Bool = false
   var lastLocationPollTime: Date? = nil
   
@@ -61,7 +63,12 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     if let duration = controller.currentWorkArea?.workingTime {
       let ms = NSMutableAttributedString()
       let msTitle = NSAttributedString(string: "🔵 \(controller.currentWorkArea!.title)", attributes: headerAttribute)
-      let msBody = NSAttributedString(string: "\n\(formatTimeInterval(duration))", attributes: bodyAttibute)
+      
+      let d = controller.currentTimerOffset == nil
+        ? duration
+        : Date().timeIntervalSince(controller.currentTimerOffset!) + duration
+      
+      let msBody = NSAttributedString(string: "\n\(formatTimeInterval(d))", attributes: bodyAttibute)
       
       ms.append(msTitle)
       ms.append(msBody)
@@ -88,6 +95,13 @@ class ViewController: UIViewController, GMSMapViewDelegate {
       ]
       let msTitle = NSAttributedString(string: "🔴 Starting...", attributes: headerAttribute)
       timerLabel.attributedText = msTitle
+      
+      currentTimerOffset = Date()
+      timer = Timer(timeInterval: 1.0, repeats: true, block: { _ in self.updateTitle(self) })
+      if let t = timer, t.isValid {
+        RunLoop.current.add(t, forMode: RunLoopMode.defaultRunLoopMode)
+      }
+      
       return
     }
     updateTitle(self)
@@ -268,6 +282,7 @@ extension ViewController: CLLocationManagerDelegate {
       self.currentWorkArea = self.workZones.visit(
         location: coord,
         forDuration: d) ?? self.currentWorkArea
+      self.currentTimerOffset = Date()
       if self.currentWorkArea?.id == self.tappedWorkArea?.id {
         self.tappedWorkArea = self.currentWorkArea
       }
