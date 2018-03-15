@@ -1,6 +1,3 @@
-The Bootstrap and JQuery libraries have been added here, locally. They're not currently on the master branch, but will be there with the next merge.
-If they are really needed ASAP, then make a pull reguest.
-
 **Remember to use the CDNs at deployment. And if you are connected to the internet, it is most probably better to be using them over the locals when testing.**
 
 -Kevin
