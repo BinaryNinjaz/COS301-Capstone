@@ -49,3 +49,8 @@ About Me: {
 	I came out of high school and went into computer engineering for a year and a half, after only enjoying the computer science modules, I decided it was time to make a change. Since that change, I have grown to love almost all things computer science, and have never been happier.
 	In my spare time I tend to enjoy video games, series and movies. But otherwise, I take great pleasure in programming--nothing better than a good challenge--or other computer related things; like when you have over 60 mods (it's not many I know) in skyrim and it all works--then you realise that that's actually the best part of the game; or learning Dvorak was great fun; blender's my on and off again lover; installing and configuring an operating system is always a hoot--speaking of: it's time I installed Arch again. . .
 }
+
+Contact:{
+	Email: 00kevinreid00@gmail.com
+	Linkedin: https://www.linkedin.com/in/KevinJRofCS/
+}

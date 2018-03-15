@@ -1,14 +1,19 @@
 Shaun Yates
 Course: BSc (Information Technology) – Information and Knowledge Systems
-Career Interest: Artificial Intelligence
+Career Interest: Artificial Intelligence, Computer Security
+Current Position:  Software Engineer for Binary Ninjaz
+
 Skills:
 * Programming Languages (C++, Java, MySQL,  HTML, CSS, JavaScript, PHP)
 * Database Systems (Relational)
 * Systems Design/Modelling
-About Me:
-I was shown the world of IT at a young age due to my dad being an IT consultant, which helped show me that a career in IT is what I want 
-to do with my life. I started my course in 2016, originally taking the Genetics elective group due to it interesting me; it also allowed 
-me to take Artificial Intelligence in third year, which few elective groups allow. Now, in third year, I got the choice to take more 
-Computer Science related modules instead of the Genetics electives, and I opted for that instead. In my spare time I enjoy series or 
-going out and meeting new people. I like to think I’m a very sociable person and look forward to working with many different people in 
-the years to come, as I firmly believe you can learn a lot from anybody that you meet. 
+
+Bio:
+I am currently completing my final year at the University of Pretoria in BSc IT, although
+I plan on doing my honours should I get in. Data security and artificial intelligence are
+my current IT interests, however I enjoy learning all aspects as I wish to broaden my 
+knowledge as much as possible. Currently working part-time as a waiter but I look 
+forward to working in my field of study.
+
+LinkedIn profile: https://www.linkedin.com/in/shaun-yates-47283215b/
+Email: shaunyates39@gmail.com

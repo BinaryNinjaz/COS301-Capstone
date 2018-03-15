@@ -1,10 +1,16 @@
 John Ojo
+
 Course: BSc Information Technology and Applied Mathematics
-Career Interests: Software Developments/Engineering, Financial/System Analyst
+
+Career Interests: Software Development/Engineering, Financial/System Analyst
+
+Position: Team Leader of Binary Ninjaz
+
 Skills:
-•	Programming (C++, Java, MATLAB, SAS, Assembly)
-•	Web development
-•	Database Systems (Relational)
+â€¢	Programming (C, C++, Java, MATLAB, SAS, Assembly)
+â€¢	Web development
+â€¢	Database Systems (Relational)
+
 Bio: Since the beginning of my degree I have been looking forward to doing 
 Software Engineering. I wanted to combine different systems, mix the old 
 and the new and especially combine mathematics and Information 
@@ -15,3 +21,6 @@ that has challenged to students and join the world of IT where concepts
 and theories were made possible. I want to work with different people, 
 create things that were just thoughts and improve life as a whole. IT gives 
 me that opportunity.
+
+Email: johnojo97@gmail.com
+LinkedIn profile: www.linkedin.com/in/john-ojo-b2b24115b
