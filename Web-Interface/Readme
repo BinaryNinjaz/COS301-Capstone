@@ -1,5 +1,0 @@
-Be aware that local Bootstrap and JQuery is not on GitHub, and this will not work without it.
-On the off chance I forget to enable the CDNs, then you'll need to do that to make it work.
-Idea is, of course, to use the CDNs in deployment.
-
--Kevin
