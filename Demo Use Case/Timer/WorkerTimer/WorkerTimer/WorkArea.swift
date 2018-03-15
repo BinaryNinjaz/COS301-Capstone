@@ -17,14 +17,17 @@ struct WorkArea {
   let rect: (start: CLLocationCoordinate2D, end: CLLocationCoordinate2D)
   var workingTime: TimeInterval
   var isSelected = false
-  var isIn = false {
+  var isIn: Bool = false {
     didSet {
-      area.fillColor = isIn
-        ? UIColor.color(color, alpha: 0.5)
-        : UIColor.color(color, alpha: 0.1)
+      area.fillColor = uiColor
     }
   }
   var color: UInt32
+  var uiColor: UIColor {
+    return isSelected
+      ? UIColor.color(color, alpha: 0.75)
+      : UIColor.color(color, alpha: isIn ? 0.5 : 0.1)
+  }
   
   init(id: Int,
        title: String,
@@ -72,11 +75,7 @@ struct WorkArea {
   
   mutating func tap() {
     isSelected = !isSelected
-    if isSelected {
-      area.fillColor = UIColor.color(color, alpha: 0.75)
-    } else {
-      area.fillColor = UIColor.color(color, alpha: 0.1)
-    }
+    area.fillColor = uiColor
   }
 }
 
@@ -91,14 +90,14 @@ extension Array where Element == WorkArea {
   mutating func visit(
     location: CLLocationCoordinate2D,
     forDuration d: TimeInterval
-  ) -> [WorkArea] {
-    var result = [WorkArea]()
+  ) -> [Int] {
+    var result = [Int]()
     for (idx, el) in zip(indices, self) {
       guard el.contains(location) else {
         continue
       }
       self[idx].workingTime += d
-      result.append(self[idx])
+      result.append(el.id)
     }
     return result
   }
@@ -110,6 +109,20 @@ extension Array where Element == WorkArea {
       }
     }
     return nil
+  }
+  
+  subscript(id id: Int) -> WorkArea {
+    get {
+      return first { wa in
+        wa.id == id
+      }!
+    }
+    set {
+      guard let idx = index(where: { wa in wa.id == id }) else {
+        return
+      }
+      self[idx] = newValue
+    }
   }
 }
 

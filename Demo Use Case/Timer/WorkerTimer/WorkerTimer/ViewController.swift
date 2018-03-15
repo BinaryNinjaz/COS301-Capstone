@@ -24,7 +24,7 @@ class ViewController: UIViewController, GMSMapViewDelegate {
   // Location Trackers
   var locationManager = CLLocationManager()
   var currentLocation: CLLocation?
-  var currentWorkAreas: [WorkArea] = []
+  var currentWorkAreaIDs: [Int] = []
   var tappedWorkArea: WorkArea?
   var zoomLevel: Float = 15.0
   var autoMoveCameraToCurrentLocation = false
@@ -60,8 +60,9 @@ class ViewController: UIViewController, GMSMapViewDelegate {
       return
     }
     
-    if !controller.currentWorkAreas.isEmpty {
-      for area in controller.currentWorkAreas {
+    if !controller.currentWorkAreaIDs.isEmpty {
+      for idx in controller.currentWorkAreaIDs {
+        let area = controller.workZones[id: idx]
         let duration = area.workingTime
         let ms = NSMutableAttributedString()
         let msTitle = NSAttributedString(string: "🔵 \(area.title)", attributes: headerAttribute)
@@ -196,26 +197,29 @@ class ViewController: UIViewController, GMSMapViewDelegate {
     
     let id = dict["id"] as! Int
     
-    guard let find = workZones.index(where: { $0.id == id }) else {
-      tappedWorkArea?.tap() // set the last tapped location off
-      return
-    }
+    let oldWorkZoneID = workZones.index{ $0.id == tappedWorkArea?.id }
+    let newWorkZoneID = workZones.index{ $0.id == id }
     
-    if let tapped = tappedWorkArea, workZones[find].id == tapped.id {
-      tappedWorkArea?.tap()
+    switch (oldWorkZoneID, newWorkZoneID) {
+    case (nil, nil):
+      break
+    case (nil, let new?):
+      workZones[id: new].tap()
+      tappedWorkArea = workZones[id: new]
+      removeButton.title = "Remove \(tappedWorkArea?.title ?? "Item")"
+    case (let old?, nil):
+      workZones[id: old].tap()
       tappedWorkArea = nil
       removeButton.title = "Remove All"
-    } else {
-      tappedWorkArea?.tap() // set the last tapped location off
-      tappedWorkArea = workZones[find]
-      tappedWorkArea?.tap()
-      removeButton.title = "Remove \(tappedWorkArea?.title ?? "Item")"
-    }
-    
-    for (i, wa) in zip(currentWorkAreas.indices, currentWorkAreas) {
-      if tappedWorkArea?.id != wa.id {
-        currentWorkAreas[i].isSelected = false
-        currentWorkAreas[i].area.fillColor = UIColor.color(wa.color, alpha: 0.5)
+    case let (old?, new?):
+      workZones[old].tap()
+      if new != old {
+        workZones[id: new].tap()
+        tappedWorkArea = workZones[id: new]
+        removeButton.title = "Remove \(tappedWorkArea?.title ?? "Item")"
+      } else {
+        tappedWorkArea = nil
+        removeButton.title = "Remove All"
       }
     }
     
@@ -290,17 +294,17 @@ extension ViewController: CLLocationManagerDelegate {
         ? 0.0
         : Date().timeIntervalSince(self.lastLocationPollTime!)
       self.lastLocationPollTime = Date()
-      self.currentWorkAreas = self.workZones.visit(
+      self.currentWorkAreaIDs = self.workZones.visit(
         location: coord,
         forDuration: d)
       self.currentTimerOffset = Date()
       
-      for i in self.currentWorkAreas.indices {
-        if !self.currentWorkAreas[i].isIn {  self.currentWorkAreas[i].isIn = true }
+      for i in self.currentWorkAreaIDs {
+        self.workZones[id: i].isIn = true
       }
       
-      if let wa = self.tappedWorkArea, let nwa = self.currentWorkAreas.contains(workArea: wa) {
-        self.tappedWorkArea = nwa
+      if let wa = self.tappedWorkArea {
+        self.tappedWorkArea = self.workZones[id: wa.id]
       }
       self.updateTitle(self)
     }
