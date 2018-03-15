@@ -280,36 +280,25 @@ extension ViewController: CLLocationManagerDelegate {
     guard working else {
       return
     }
-    
-    coder.reverseGeocodeCoordinate(currentLocation!.coordinate) { res, err in
-      if let err = err {
-        print("Geocoder Error: \(err.localizedDescription)")
-        return
-      }
-      guard let coord = res?.firstResult()?.coordinate else {
-        print("Geocoder Error")
-        return
-      }
-      let d = self.lastLocationPollTime == nil
-        ? 0.0
-        : Date().timeIntervalSince(self.lastLocationPollTime!)
-      self.lastLocationPollTime = Date()
-      self.currentWorkAreaIDs = self.workZones.visit(
-        location: coord,
-        forDuration: d)
-      self.currentTimerOffset = Date()
-      
-      for i in self.currentWorkAreaIDs {
-        self.workZones[id: i].isIn = true
-      }
-      
-      if let wa = self.tappedWorkArea {
-        self.tappedWorkArea = self.workZones[id: wa.id]
-      }
-      self.updateTitle(self)
+
+    let coord = currentLocation!.coordinate
+    let d = self.lastLocationPollTime == nil
+      ? 0.0
+      : Date().timeIntervalSince(self.lastLocationPollTime!)
+    self.lastLocationPollTime = Date()
+    self.currentWorkAreaIDs = self.workZones.visit(
+      location: coord,
+      forDuration: d)
+    self.currentTimerOffset = Date()
+
+    for i in self.currentWorkAreaIDs {
+      self.workZones[id: i].isIn = true
     }
-    
-    
+
+    if let wa = self.tappedWorkArea {
+      self.tappedWorkArea = self.workZones[id: wa.id]
+    }
+    self.updateTitle(self)
   }
   
   // Handle authorization for the location manager.
