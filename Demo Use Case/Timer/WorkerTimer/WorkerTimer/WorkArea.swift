@@ -97,7 +97,7 @@ extension Array where Element == WorkArea {
         continue
       }
       self[idx].workingTime += d
-      result.append(el.id)
+      result.append(idx)
     }
     return result
   }
@@ -109,20 +109,6 @@ extension Array where Element == WorkArea {
       }
     }
     return nil
-  }
-  
-  subscript(id id: Int) -> WorkArea {
-    get {
-      return first { wa in
-        wa.id == id
-      }!
-    }
-    set {
-      guard let idx = index(where: { wa in wa.id == id }) else {
-        return
-      }
-      self[idx] = newValue
-    }
   }
 }
 
