@@ -163,7 +163,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
         continue
       }
       workZones.append(wa)
-      print(workZones)
       wa.area.map = mapView
     }
     
@@ -243,7 +242,6 @@ class ViewController: UIViewController, GMSMapViewDelegate {
                                   title: title,
                                   start: self.userZonePoint!,
                                   end: coordinate))
-        print(self.workZones.last!)
         self.userZonePoint = nil
         self.workZones.last!.area.map = mapView
         UserDefaults.standard.set(self.workZones.last!)
