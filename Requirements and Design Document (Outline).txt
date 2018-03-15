@@ -1,9 +1,0 @@
-The goal of this project is to design and develop a software application with the aim of it being used in the farming community to achieve efficient labour and assist growers with the necessary data to obtain their desired yield.
-We are required to design and develop a software application for Android and/or iOS smartphones or tablets that:
-1.	measures yield, by combining a clocking system with yield data
-2.	is able to make use of GPS data and based on weight and location assumptions, give approximate yield estimates not only for each orchard, but for each approximate location where the data was entered
-3.	display data on a heat map
-4.	accepts detailed information about produce
-5.	tracks foreman in real time through the GPS on the farmer’s phone/tablet
-6.	does administrative tasks on a web interface
-7.	can be made available on the Google Playstore and/or the Appstore.
