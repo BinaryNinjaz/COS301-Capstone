@@ -3,7 +3,7 @@ We are required to design and develop a software application for Android and/or 
 1.	Measures yield, by combining a clocking system with yield data, through the input view of the mobile interface.
 2.	Is able to make use of GPS data and based on weight and location assumptions, give approximate yield estimates not only for each orchard, but for each approximate location where the data was entered, through the mobile interface.
 3.	Display data on a heat map through the summary view of the web interface.
-4.	Accepts detailed information about produce tablet through the admin web view interface. (e.g. cultivar, year planted)
+4.	Accepts detailed information about produce through the admin web view interface. (e.g. cultivar, year planted)
 5.	Tracks foreman in real time through the GPS on the farmer’s phone/tablet through the admin web view interface.
 6.	Does administrative tasks through the web interface. (e.g. adding worker names and block details)
 7.	Can be made available on the Google Playstore and/or the Appstore.
