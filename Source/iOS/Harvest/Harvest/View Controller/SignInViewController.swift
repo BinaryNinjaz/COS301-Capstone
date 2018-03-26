@@ -17,8 +17,22 @@ class SignInViewController: UIViewController {
   @IBOutlet weak var signUpButton: UIButton!
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
   
-  
-  
+  func attempSignIn(username: String, password: String) {
+    signInButton.isHidden = true
+    signUpButton.isHidden = true
+    activityIndicator.startAnimating()
+    HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
+      if w,
+        let vc = self
+          .storyboard?
+          .instantiateViewController(withIdentifier: "winView") {
+        self.present(vc, animated: true, completion: nil)
+      }
+      self.signInButton.isHidden = false
+      self.signUpButton.isHidden = false
+      self.activityIndicator.stopAnimating()
+    }
+  }
   
   @IBAction func signInTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text else {
@@ -33,25 +47,18 @@ class SignInViewController: UIViewController {
     
     let password = passwordTextField.text ?? ""
     
-    signInButton.isHidden = true
-    signUpButton.isHidden = true
-    activityIndicator.startAnimating()
-    HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
-      if w,
-      let vc = self
-        .storyboard?
-        .instantiateViewController(withIdentifier: "winView") {
-        self.present(vc, animated: true, completion: nil)
-      }
-      self.signInButton.isHidden = false
-      self.signUpButton.isHidden = false
-      self.activityIndicator.stopAnimating()
-    }
+    attempSignIn(username: username, password: password)
   }
   
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    if let username = UserDefaults.standard.getUsername(),
+      let password = UserDefaults.standard.getPassword() {
+      attempSignIn(username: username, password: password)
+      return
+    }
     
   }
 

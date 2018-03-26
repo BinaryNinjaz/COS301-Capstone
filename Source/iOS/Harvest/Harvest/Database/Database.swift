@@ -49,7 +49,8 @@ struct HarvestDB {
         completion(false)
         return
       }
-      
+      UserDefaults.standard.set(password: password)
+      UserDefaults.standard.set(username: email)
       HarvestUser.current.name = user.email!
       completion(true)
     }
@@ -85,9 +86,31 @@ struct HarvestDB {
         return
       }
       
+      UserDefaults.standard.set(password: password)
+      UserDefaults.standard.set(username: email)
+      
       completion(true)
     }
   }
   
   
+}
+
+
+extension UserDefaults {
+  func set(username: String) {
+    set(username, forKey: "username")
+  }
+  
+  func getUsername() -> String? {
+    return string(forKey: "username")
+  }
+  
+  func set(password: String) {
+    set(password, forKey: "password")
+  }
+  
+  func getPassword() -> String? {
+    return string(forKey: "password")
+  }
 }
