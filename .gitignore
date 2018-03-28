@@ -3,3 +3,6 @@ Demo Use Case/Timer/WorkerTimer/Pods
 Demo Use Case/Timer/WorkerTimer/Podfile.lock
 Demo Use Case/Timer/WorkerTimer/WorkerTimer.xcodeproj
 Demo Use Case/Timer/WorkerTimer/WorkerTimer.xcworkspace
+Source/iOS/Harvest/Pods
+Source/iOS/Harvest/Harvest.xcworkspace
+Source/Web/functions/node_modules
