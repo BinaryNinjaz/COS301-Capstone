@@ -5,3 +5,12 @@ Demo Use Case/Timer/WorkerTimer/WorkerTimer.xcodeproj
 Demo Use Case/Timer/WorkerTimer/WorkerTimer.xcworkspace
 Source/iOS/Harvest/Pods
 Source/iOS/Harvest/Harvest.xcworkspace
+Source/Web/functions/node_modules
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
