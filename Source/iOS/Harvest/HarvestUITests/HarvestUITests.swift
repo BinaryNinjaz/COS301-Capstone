@@ -28,9 +28,20 @@ class HarvestUITests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testAutoSignIn() {
+      // Use recording to get started writing UI tests.
+      // Use XCTAssert and related functions to verify your tests produce the correct results.
+      let app = XCUIApplication()
+      let johnMailComTextField = app.textFields["john@mail.com"]
+      johnMailComTextField.tap()
+      johnMailComTextField.typeText("Letanyan.a@gmail.com")
+      
+      let textField = app.otherElements.containing(.staticText, identifier:"Username").children(matching: .textField).element(boundBy: 1)
+      textField.tap()
+      textField.tap()
+      textField.typeText("letanyan")
+      app.buttons["Log In"].tap()
+      
     }
     
 }
