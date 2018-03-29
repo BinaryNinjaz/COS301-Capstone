@@ -54,11 +54,11 @@ class SignInViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    if let username = UserDefaults.standard.getUsername(),
-      let password = UserDefaults.standard.getPassword() {
-      attempSignIn(username: username, password: password)
-      return
-    }
+//    if let username = UserDefaults.standard.getUsername(),
+//      let password = UserDefaults.standard.getPassword() {
+//      attempSignIn(username: username, password: password)
+//      return
+//    }
     
   }
 
