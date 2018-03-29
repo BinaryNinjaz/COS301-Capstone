@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -71,7 +72,7 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="0Bx-xq-Dmk">
                                 <rect key="frame" x="169" y="315" width="37" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES"/>
-                                <color key="color" red="0.0" green="0.97680455450000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="color" red="0.0" green="0.56284224989999998" blue="0.31881666180000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -89,20 +90,76 @@
             </objects>
             <point key="canvasLocation" x="-362.39999999999998" y="67.916041979010501"/>
         </scene>
-        <!--View Controller-->
+        <!--Tracker View Controller-->
         <scene sceneID="H2b-6H-xwA">
             <objects>
-                <viewController storyboardIdentifier="winView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Wl-k0-RpW" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="trackerViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Wl-k0-RpW" customClass="TrackerViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Y8O-8S-VIT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e0V-gX-aPR">
+                                <rect key="frame" x="16" y="104" width="286" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Yield Amount" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JVB-qe-5HJ">
+                                <rect key="frame" x="16" y="75" width="103" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Expected Yield" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0fg-2o-hXA">
+                                <rect key="frame" x="16" y="142" width="343" height="199"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4NQ-bB-lKn">
+                                <rect key="frame" x="310" y="104" width="49" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Collect"/>
+                                <connections>
+                                    <action selector="collectYield:" destination="3Wl-k0-RpW" eventType="touchUpInside" id="7nk-FO-g7g"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nb1-AJ-Upq">
+                                <rect key="frame" x="127" y="527" width="120" height="120"/>
+                                <color key="backgroundColor" red="0.0" green="0.56284224989999998" blue="0.31881666180000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="nb1-AJ-Upq" secondAttribute="height" multiplier="1:1" id="Ijq-TX-w23"/>
+                                    <constraint firstAttribute="height" constant="120" id="aq3-Ly-Xt3"/>
+                                    <constraint firstAttribute="width" constant="120" id="ohx-lL-Aq4"/>
+                                </constraints>
+                                <state key="normal" title="Start Session">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="startSession:" destination="3Wl-k0-RpW" eventType="touchUpInside" id="HI2-fM-R1g"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="nb1-AJ-Upq" firstAttribute="centerX" secondItem="gY2-33-92o" secondAttribute="centerX" id="6pu-As-fSd"/>
+                            <constraint firstItem="gY2-33-92o" firstAttribute="bottom" secondItem="nb1-AJ-Upq" secondAttribute="bottom" constant="20" id="SgF-Wr-e0i"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="gY2-33-92o"/>
                     </view>
+                    <connections>
+                        <outlet property="collectButton" destination="4NQ-bB-lKn" id="bEW-gc-OSQ"/>
+                        <outlet property="expectedYieldLabel" destination="0fg-2o-hXA" id="FIk-NI-tkr"/>
+                        <outlet property="startSessionButton" destination="nb1-AJ-Upq" id="pHu-m5-OxK"/>
+                        <outlet property="yieldAmountTextField" destination="e0V-gX-aPR" id="COp-ug-aa1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pab-0L-PjA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="450" y="68"/>
+            <point key="canvasLocation" x="448.80000000000001" y="67.916041979010501"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="cel-RK-Rty">
@@ -161,7 +218,7 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="gxY-EB-oYQ">
                                 <rect key="frame" x="169" y="304" width="37" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="color" red="0.0" green="0.97680455450000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="color" red="0.0" green="0.56284224989999998" blue="0.31881666180000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -180,5 +237,5 @@
             <point key="canvasLocation" x="-362" y="837"/>
         </scene>
     </scenes>
-    <color key="tintColor" red="0.0" green="0.97680455450000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <color key="tintColor" red="0.0" green="0.56284224989999998" blue="0.31881666180000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

@@ -7,6 +7,7 @@
 //
 
 import Firebase
+import CoreLocation
 
 let passwordPadding = "s3cr3ts4uc3"
 
@@ -18,6 +19,12 @@ struct HarvestUser {
 
 
 struct HarvestDB {
+  static var ref: DatabaseReference! = Database.database().reference()
+  
+  enum Path: String {
+    case yields = "mockfarm/yields"
+  }
+  
   //MARK: - Authentication
   
   static func signIn(
@@ -93,6 +100,26 @@ struct HarvestDB {
     }
   }
   
+  // MARK: - Yield
+  
+  static func collect(yield: Double,
+                      from email: String,
+                      inAmountOfSeconds amount: TimeInterval,
+                      at loc: CLLocationCoordinate2D,
+                      on date: Date) {
+    let cref = ref.child(Path.yields.rawValue)
+    let key = cref.childByAutoId().key
+    let data: [String: Any] = [
+      "date": date.timeIntervalSince1970,
+      "yield": yield,
+      "email": email,
+      "duration": amount,
+      "location": ["lat": loc.latitude, "lng": loc.longitude]
+    ]
+    let updates = ["yields/\(key)": data]
+    
+    ref.updateChildValues(updates)
+  }
   
 }
 
