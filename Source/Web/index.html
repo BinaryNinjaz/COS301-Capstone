@@ -78,6 +78,21 @@
                 map.panTo(center);
             }
         });
+        
+        var yieldRef = firebase.database().ref('yields');
+        yieldRef.on('value', function(snapshot) {
+            var yields = document.getElementById('yields');
+            yields.innerHTML = "";
+            
+            snapshot.forEach(function(childSnapshot) {
+                var obj = childSnapshot.val();
+                yields.innerHTML += "<b>Date: </b>" + obj.date + "</br>";
+                yields.innerHTML += "<b>Duration: </b>" + obj.duration + "</br>"; 
+                yields.innerHTML += "<b>Email: </b>" + obj.email + "</br>"; 
+                yields.innerHTML += "<b>Location: </b>" + obj.location.lat + "," + obj.location.lng + "</br>";
+                yields.innerHTML += "<b>Yield: </b>" + obj.yield + "</br></br>";  
+            });
+        });
     </script>
     
 </head>
@@ -104,6 +119,8 @@
         </script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTTgAtocwDfror-XZLi4R5rUEphTUK4PU&callback=initMap"
         async defer></script>
+        
+        <div id="yields"></div>
     </div>
     
     <div id="login">
