@@ -25,7 +25,7 @@ class SignInViewController: UIViewController {
       if w,
         let vc = self
           .storyboard?
-          .instantiateViewController(withIdentifier: "winView") {
+          .instantiateViewController(withIdentifier: "trackerViewController") {
         self.present(vc, animated: true, completion: nil)
       }
       self.signInButton.isHidden = false

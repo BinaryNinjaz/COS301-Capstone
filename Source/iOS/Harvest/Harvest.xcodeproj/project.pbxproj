@@ -18,6 +18,10 @@
 		16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FC820696B8F00E1A292 /* QuickAlert.swift */; };
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
+		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
+		169E5197206C62E6006B923E /* TrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* TrackerModel.swift */; };
+		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
+		169E519B206C6C8D006B923E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E519A206C6C8D006B923E /* Utils.swift */; };
 		2246F7A4FADAD9C7BD1EE2D8 /* libPods-Harvest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +60,10 @@
 		16420FC820696B8F00E1A292 /* QuickAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlert.swift; sourceTree = "<group>"; };
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
+		169E5196206C62E6006B923E /* TrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerModel.swift; sourceTree = "<group>"; };
+		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		169E519A206C6C8D006B923E /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
 		6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Harvest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AEA05C55967C38BA2131585 /* Pods-Harvest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.release.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.release.xcconfig"; sourceTree = "<group>"; };
@@ -66,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				169E5199206C66D6006B923E /* MapKit.framework in Frameworks */,
 				2246F7A4FADAD9C7BD1EE2D8 /* libPods-Harvest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -112,6 +121,7 @@
 		1604E4A1206958E900E9BA15 /* Harvest */ = {
 			isa = PBXGroup;
 			children = (
+				169E5195206C62D6006B923E /* Model */,
 				16420FCA2069717200E1A292 /* Database */,
 				16420FC720696B6500E1A292 /* UI */,
 				1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */,
@@ -155,6 +165,7 @@
 			children = (
 				1604E4A4206958E900E9BA15 /* SignInViewController.swift */,
 				16420FCD2069738200E1A292 /* SignUpViewController.swift */,
+				169E5193206C623F006B923E /* TrackerViewController.swift */,
 			);
 			path = "View Controller";
 			sourceTree = "<group>";
@@ -192,9 +203,19 @@
 			path = Database;
 			sourceTree = "<group>";
 		};
+		169E5195206C62D6006B923E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				169E5196206C62E6006B923E /* TrackerModel.swift */,
+				169E519A206C6C8D006B923E /* Utils.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		7FC5D262691DF4EC3193E21A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				169E5198206C66D6006B923E /* MapKit.framework */,
 				6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */,
 			);
 			name = Frameworks;
@@ -281,6 +302,11 @@
 					1604E49E206958E800E9BA15 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					1604E4B2206958E900E9BA15 = {
 						CreatedOnToolsVersion = 9.2;
@@ -409,8 +435,11 @@
 				1604E4A5206958E900E9BA15 /* SignInViewController.swift in Sources */,
 				1604E4A3206958E900E9BA15 /* AppDelegate.swift in Sources */,
 				16420FCC2069718400E1A292 /* Database.swift in Sources */,
+				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
 				16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */,
 				16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */,
+				169E5197206C62E6006B923E /* TrackerModel.swift in Sources */,
+				169E519B206C6C8D006B923E /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
