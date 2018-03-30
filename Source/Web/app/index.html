@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Log in to Harvest</title>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
+        
+        <script>
+          var config = {
+            apiKey: "AIzaSyBTTgAtocwDfror-XZLi4R5rUEphTUK4PU",
+            authDomain: "harvest-ios-1522082524457.firebaseapp.com",
+            databaseURL: "https://harvest-ios-1522082524457.firebaseio.com",
+            projectId: "harvest-ios-1522082524457",
+            storageBucket: "harvest-ios-1522082524457.appspot.com",
+            messagingSenderId: "167365669216"
+          };
+          firebase.initializeApp(config);
+          
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              var displayName = user.displayName;
+              var email = user.email;
+              var uid = user.uid;
+              var providerData = user.providerData;
+              document.location.href = "next.html";
+            } else {
+            }
+          });
+          
+          function fblogin() {
+            firebase.initializeApp(config).o;
+            var email = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            
+            firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              
+              if (errorCode === 'auth/wrong-password') {
+                alert('Wrong password.');
+              } else {
+                alert(errorMessage);
+              }
+              console.log(error);
+              document.getElementById('quickstart-sign-in').disabled = false;
+            });
+          }
+        </script>
+       
+    </head>
+    <body>
+        <div class="topnav">
+              <a class="active" href="#">Harvest</a>
+              <a href="Register.html">Sign Up</a>
+        </div>
+        
+        <div class="container">            
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5">
+                    <div class="loginBlock" align="center">                    
+                    
+<!--                     <form action="" method=""> -->
+                        <h1>Log in to Harvest</h1>
+                        <div class="form-group">
+                            <label for="username"><b>Username:</b></label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password"><b>Password:</b></label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        
+                        <button onClick="fblogin()" class="btn btn-success">Log In</button><!-- Log In button -->
+                        <br> or <br>
+                        <a href="Register.html" class="btn btn-primary">Create New Account</a><!-- Registration link --> <br><br>  
+                        <label>
+                            <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+                        </label>
+                        <br><br>
+                        <p class="forgot"><a href="">Forgot account details</a></p>
+<!--                     </form>                     -->
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

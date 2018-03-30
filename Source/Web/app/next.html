@@ -2,11 +2,6 @@
 <html lang="en">
 <head>
     <style>
-        #app {
-            height: 500px;
-            width: 100%;
-            visibility: hidden;
-        }
         #map {
             height: 500px;
             width: 100%;
@@ -24,7 +19,7 @@
     
     <script>
         var config = {
-            apiKey: "AIzaSyBc_V6zztkn9ItnhELyg_Mr_HNXjY2Cic0",
+            apiKey: "AIzaSyBTTgAtocwDfror-XZLi4R5rUEphTUK4PU",
             authDomain: "harvest-ios-1522082524457.firebaseapp.com",
             databaseURL: "https://harvest-ios-1522082524457.firebaseio.com",
             projectId: "harvest-ios-1522082524457",
@@ -55,19 +50,13 @@
         }
         
         firebase.auth().onAuthStateChanged(function(user) {
-            var app = document.getElementById("app");
-            var login = document.getElementById("login");
             if (user) {
                 var displayName = user.displayName;
                 var email = user.email;
                 var uid = user.uid;
                 var providerData = user.providerData;
-                
-                app.style.visibility = "visible";
-                login.style.visibility = "hidden";
             } else {
-                app.style.visibility = "hidden";
-                login.style.visibility = "visible";
+                
             }
         });
         
@@ -104,29 +93,22 @@
     change the lat, lng value of the location node. And the map will automatically pan to that location.
     </h3>
 
-    <div id="app">
-        <div id="map"></div>
-        <script>
-            var map;
-            function initMap() {
-                map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: -34.397, lng: 150.644},
-                    zoom: 8
-                });
-                var center = new google.maps.LatLng(-32, 118);
-                map.panTo(center);
-            }
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTTgAtocwDfror-XZLi4R5rUEphTUK4PU&callback=initMap"
-        async defer></script>
-        
-        <div id="yields"></div>
-    </div>
+    <div id="map"></div>
+    <script>
+        var map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 8
+            });
+            var center = new google.maps.LatLng(-32, 118);
+            map.panTo(center);
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTTgAtocwDfror-XZLi4R5rUEphTUK4PU&callback=initMap"
+    async defer></script>
     
-    <div id="login">
-        <div id="firebaseui-auth-container"></div>
-        <div id="loader"></div>
-    </div>
+    <div id="yields"></div>
     
 </body>
 </html> 
