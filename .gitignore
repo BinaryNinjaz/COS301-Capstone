@@ -6,3 +6,4 @@ Demo Use Case/Timer/WorkerTimer/WorkerTimer.xcworkspace
 Source/iOS/Harvest/Pods
 Source/iOS/Harvest/Harvest.xcworkspace
 Source/Web/functions/node_modules
+*.log
