@@ -1,0 +1,37 @@
+\documentclass[12pt]{article}
+\title{Testing Policy}
+\author{Binary Ninjaz}
+\date{}
+
+\begin{document}
+  \maketitle
+  \newpage
+  
+  \tableofcontents
+  \newpage
+  
+  \section{Introduction}
+  This document details the policies that BinaryNinjaz will be using to guide development and ensure a quality product. We describe why we intend to use specific testing methods and how their effects will impactful in our process. 
+  
+  \section{Purpose}
+  Automated testing is vital and ensuring that the number of bugs in a program is as limited as possible. While having automated testing does not guarantee there will be no bugs in a program it can greatly reduce any bugs from appearing when you might not expect them to. While we intend to have a comprehensive test suite, we will not accept that wholly passing test cases mean that a program is without flaw.
+  
+  \section{Testing Tools}
+  \subsection{Android Studio}
+  The JUnit framwork will be used for out automated testing purposes. To run tests one will need Android Stuio. To execute the tests one can right click on the tests directory and select 'Run tests.'
+  \subsection{NPM}
+  The Ava framework will be used for automated testing purposes. To run tests one will need to run "npm test" from the testing directory.
+  \subsection{XCode}
+  The XCTest framework will be used for out automated testing purposes. To run tests one will need XCode. To execute the tests one will need to use XCodes build command.
+  
+  \section{Testing Philosohpy}
+  Implementation of both simple and holistic tests will be of concern. However, holistic testing will be of more interest. Testing workflows are of vital importance. The project does not have many simple tasks that could provide us with the safety guarantees we would like. We instead seek to find safety in implementing tests that check the whole interaction of these few unit cases.
+  
+  \subsection{Benefits}
+  Automated test provide developers with the ability to have safe of mind that they have not made any changes that break the program in any way or introduce bugs in any part of the program.
+  Forcing developers to write tests forces them to check every part of code they write making tests a form of documentation of a projects requirements.
+  
+  \section{Test Evaluation}
+  Strict zero test case failure will be followed. Any branch with a failing test case will never be merged into master. Hence we will ensure that every branch runs tests before a pull request.
+  
+\end{document}
