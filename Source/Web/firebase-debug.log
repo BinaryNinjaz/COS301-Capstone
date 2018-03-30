@@ -1,0 +1,41 @@
+[debug] [2018-03-30T18:59:54.444Z] ----------------------------------------------------------------------
+[debug] [2018-03-30T18:59:54.447Z] Command:       /usr/local/Cellar/node/9.10.1/bin/node /usr/local/bin/firebase serve
+[debug] [2018-03-30T18:59:54.447Z] CLI Version:   3.17.7
+[debug] [2018-03-30T18:59:54.447Z] Platform:      darwin
+[debug] [2018-03-30T18:59:54.447Z] Node Version:  v9.10.1
+[debug] [2018-03-30T18:59:54.448Z] Time:          Fri Mar 30 2018 20:59:54 GMT+0200 (SAST)
+[debug] [2018-03-30T18:59:54.448Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-03-30T18:59:54.464Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-03-30T18:59:54.464Z] > authorizing via signed-in user
+[debug] [2018-03-30T18:59:54.466Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-03-30T18:59:54.467Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/xJNom_ww2NkRJrKokdvJ1v4zG-bXl_09c8VE_e8758J1sl1of_MktTJt1DZ9UR7z',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Fri Mar 30 2018 20:59:54 GMT+0200 (SAST)
+[debug] [2018-03-30T18:59:55.731Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-30T18:59:55.751Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/harvest-ios-1522082524457  
+  
+ Fri Mar 30 2018 20:59:55 GMT+0200 (SAST)
+[debug] [2018-03-30T18:59:58.291Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-30T18:59:58.292Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/harvest-ios-1522082524457/tokens  
+  
+ Fri Mar 30 2018 20:59:58 GMT+0200 (SAST)
+[debug] [2018-03-30T18:59:59.467Z] <<< HTTP RESPONSE 200
+[debug] [2018-03-30T18:59:59.469Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/harvest-ios-1522082524457  
+  
+ Fri Mar 30 2018 20:59:59 GMT+0200 (SAST)
+[debug] [2018-03-30T19:00:01.684Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/LetanyanArumugam/Documents/GitHub/COS301-Capstone/Source/Web'...
+[info] 
+[debug] [2018-03-30T19:00:01.687Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/167365669216/clients/_:getWebAppConfig  
+  
+ Fri Mar 30 2018 21:00:01 GMT+0200 (SAST)
+[debug] [2018-03-30T19:00:02.972Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: app
+[info] ✔  hosting: Local server: http://localhost:5000
+
