@@ -1,7 +1,10 @@
 ## Setting up Firebase
 
+When you run the 'firebase login' command you'll be prompted to login to firebase. Use the binary ninjaz firebase account.
+
 ```
 npm install --global -firebase-tools
+cd Web-Interface
 firebase login
 firbase serve
 ```
