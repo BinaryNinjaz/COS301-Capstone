@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>Log in to Harvest</title>
+        <link href="Styling.css" rel="stylesheet" type="text/css" />
+        
+        <script src="javaScript.js" type="text/javascript"></script>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+       
+    </head>
+    <body>
+        <div class="topnav">
+            <ul class="nav navbar-nav">
+              <a class="active" href="#">Harvest</a>
+              <a href="Register.html">Sign Up</a>
+            </ul>
+        </div>
+        
+        <div class="container">            
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5">
+                    <div class="loginBlock" align="center">                    
+                    
+                    <form action="" method="POST" >
+                        <h1>Log in to Harvest</h1>
+                        <div class="form-group">
+                            <label for="username"><b>Username:</b></label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password"><b>Password:</b></label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">Log In</button><!-- Log In button -->
+                        <br> or <br>
+                        <a href="Register.html" class="btn btn-primary">Create New Account</a><!-- Registration link --> <br><br>  
+                        <label>
+                            <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+                        </label>
+                        <br><br>
+                        <p class="forgot"><a href="">Forgot account details</a></p>
+                    </form>                    
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
