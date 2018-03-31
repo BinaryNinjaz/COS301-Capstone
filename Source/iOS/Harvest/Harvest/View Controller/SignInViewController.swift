@@ -16,20 +16,23 @@ class SignInViewController: UIViewController {
   @IBOutlet weak var signInButton: UIButton!
   @IBOutlet weak var signUpButton: UIButton!
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+  @IBOutlet weak var orLabel: UILabel!
   
   func attempSignIn(username: String, password: String) {
     signInButton.isHidden = true
     signUpButton.isHidden = true
+    orLabel.isHidden = true
     activityIndicator.startAnimating()
     HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
       if w,
         let vc = self
           .storyboard?
-          .instantiateViewController(withIdentifier: "trackerViewController") {
+          .instantiateViewController(withIdentifier: "mainTabBarViewController") {
         self.present(vc, animated: true, completion: nil)
       }
       self.signInButton.isHidden = false
       self.signUpButton.isHidden = false
+      self.orLabel.isHidden = false
       self.activityIndicator.stopAnimating()
     }
   }
@@ -53,13 +56,16 @@ class SignInViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    hideKeyboardWhenTappedAround()
     
-//    if let username = UserDefaults.standard.getUsername(),
-//      let password = UserDefaults.standard.getPassword() {
-//      attempSignIn(username: username, password: password)
-//      return
-//    }
+    signInButton.apply(gradient: .green)
+    signUpButton.apply(gradient: .blue)
     
+    if let username = UserDefaults.standard.getUsername(),
+      let password = UserDefaults.standard.getPassword() {
+      attempSignIn(username: username, password: password)
+      return
+    }
   }
 
   override func didReceiveMemoryWarning() {

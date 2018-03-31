@@ -33,7 +33,9 @@ class TrackerViewController: UIViewController {
         locationManager.startUpdatingLocation()
         
         collectButton.isEnabled = true
-        startSessionButton.backgroundColor = .orange
+        startSessionButton.setTitle("Stop", for: .normal)
+        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.orange[1])
+        startSessionButton.apply(gradient: sessionLayer)
         
         tracker = Tracker()
       }
@@ -41,7 +43,9 @@ class TrackerViewController: UIViewController {
       locationManager.stopUpdatingLocation()
       
       collectButton.isEnabled = false
-      startSessionButton.backgroundColor = .moss
+      startSessionButton.setTitle("Start", for: .normal)
+      let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.green[1])
+      startSessionButton.apply(gradient: sessionLayer)
       
       tracker = nil
     }
@@ -84,6 +88,12 @@ class TrackerViewController: UIViewController {
     super.viewDidLoad()
     startSessionButton.layer.cornerRadius = 60
     hideKeyboardWhenTappedAround()
+    
+    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.green[1])
+    startSessionButton.apply(gradient: sessionLayer)
+    
+    collectButton.apply(gradient: .green)
+    
     // Do any additional setup after loading the view.
   }
 

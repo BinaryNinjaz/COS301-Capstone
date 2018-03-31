@@ -66,6 +66,7 @@ struct HarvestDB {
   static func signUp(
     withEmail email: String,
     andPassword password: String,
+    name: (first: String, last: String),
     on controller: UIViewController,
     completion: @escaping (Bool) -> () = { _ in }
   ) {
@@ -84,7 +85,7 @@ struct HarvestDB {
         return
       }
       
-      guard let _ = user else {
+      guard let user = user else {
         let alert = UIAlertController.alertController(
           title: "Sign Up Failure",
           message: "An unknown error occured")
@@ -96,8 +97,30 @@ struct HarvestDB {
       UserDefaults.standard.set(password: password)
       UserDefaults.standard.set(username: email)
       
+      let changeRequest = user.createProfileChangeRequest()
+      changeRequest.displayName = name.first + " " + name.last
+      changeRequest.commitChanges(completion: nil)
+      
       completion(true)
     }
+  }
+  
+  static func signOut(
+    on controller: UIViewController,
+    completion: @escaping (Bool) -> () = { _ in }
+  ) {
+    do {
+      try Auth.auth().signOut()
+    } catch {
+//      #warning("Complete with proper errors")
+      let alert = UIAlertController.alertController(
+        title: "Sign Out Failure",
+        message: "An unknown error occured")
+      controller.present(alert, animated: true, completion: nil)
+      completion(false)
+      return
+    }
+    completion(true)
   }
   
   // MARK: - Yield
