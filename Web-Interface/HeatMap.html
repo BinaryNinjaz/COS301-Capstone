@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Edit Information</title>
+        <title>Heat Map</title>
         <link href="Styling.css" rel="stylesheet" type="text/css" /><!-- css file -->
         
         <!-- Firebase Dependencies -->
@@ -18,49 +18,33 @@
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        
+        <!-- Firebase -->
+        <script>
+          // This is automatic whenever there's a change to a users authorization
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              // user logged in
+            } else {
+              // user logged out
+            }
+          });          
+        </script>
        
     </head>
     <body>
-        <div class="topnav"><!-- Latest compiled and minified JavaScript -->
+        <div class="topnav">
             <ul class="nav navbar-nav">
                 <a class="active" href="HomePage.html">Harvest Home</a>
                 <a href="#">View Information</a>
-                <a href="#">Edit Information</a>
-                <a href="HeatMap.html">Heatmap</a>  
+                <a href="EditInformation.html">Edit Information</a>
+                <a href="#">Heatmap</a>  
             </ul>
             
             <ul class="pull-right nav navbar-nav">
                 <a href="#">Username</a>
                 <a href="#">Sign out</a>
-            </ul>                        
-        </div>
-        
-        <div class="orchardInformation" align="center">
-            <div class="row">
-                <div class="col-md-2 col-md-offset-5">
-                    <form action="" method="POST" >
-                        <h1>Edit Information</h1>
-
-                        <div class="form-group">
-                            <label for="orchard"><b>Orchard name:</b></label>
-                            <textarea id="orchard" name="orchard"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="fruitNut"><b>Type of fruit/nut:</b></label>
-                            <textarea id="fruitNut" name="fruitNut"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="orchardDetails"><b>Orchard details:</b></label>
-                            <textarea id="orchardDetails" name="orchardDetails"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="workers"><b>Workers names:</b></label>
-                            <textarea id="workers" name="workers"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success">Confirm changes</button><!-- confirm button -->
-                    </form>
-                </div>
-            </div>
+            </ul>
         </div>
     </body>
 </html>

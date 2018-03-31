@@ -1,10 +1,16 @@
 <html>
     <head>
         <title>Harvest Home</title>
-        <link href="Styling.css" rel="stylesheet" type="text/css" />
+        <link href="Styling.css" rel="stylesheet" type="text/css" /><!-- css file -->
         
-        <script src="javaScript.js" type="text/javascript"></script>
+        <!-- Firebase Dependencies -->
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
         
+        <script src="javaScript.js" type="text/javascript"></script><!-- javascript file -->
+        
+        <!-- Bootstrap (maybe we shouldn't use links) -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
         <!-- Optional theme -->
@@ -13,20 +19,58 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
        
+        <!-- Firebase -->
+        <script>
+            // A reference to the database location
+            var yieldRef = firebase.database().ref('yields');
+            // When a yield is added, changed or deleted 
+            yieldRef.on('value', function(snapshot) {
+                // snapshot is the part of the database that was changed
+                
+                var yields = document.getElementById('yields');
+                yields.innerHTML = "";
+                
+                // yields has multiple yield inputs
+                // so we iterate over each yield individually
+                snapshot.forEach(function(childSnapshot) {
+                    // we use val() to get the actual data.
+                    // the we can obj like it was just a normal object with fields
+                    var obj = childSnapshot.val();
+                    
+                    var date = obj.date;
+                    var duration = obj.duration;
+                    var email = obj.email;
+                    var lat = obj.location.lat;
+                    var lng = obj.location.lng;
+                    var yieldAmount = obj.yield;
+                    
+                    yields.innerHTML += "<b>Date: </b>" + date + "</br>";
+                    yields.innerHTML += "<b>Duration: </b>" + duration + "</br>"; 
+                    yields.innerHTML += "<b>Email: </b>" + email + "</br>"; 
+                    yields.innerHTML += "<b>Location: </b>" + lat + "," + lng + "</br>";
+                    yields.innerHTML += "<b>Yield: </b>" + yieldAmount + "</br></br>";  
+                });
+            });
+        </script>
+    
     </head>
     <body>
         <div class="topnav">
             <ul class="nav navbar-nav">
                 <a class="active" href="#">Harvest Home</a>
-                <a href="">View Information</a>
-                <a href="#">Edit Information</a>
-                <a href="#">Heatmap</a>  
+                <a href="#">View Information</a>
+                <a href="EditInformation.html">Edit Information</a>
+                <a href="HeatMap.html">Heatmap</a>  
             </ul>
             
             <ul class="pull-right nav navbar-nav">
                 <a href="#">Username</a>
                 <a href="#">Sign out</a>
             </ul>
+        </div>
+        
+        <div id="yields">
+        
         </div>
     </body>
 </html>
