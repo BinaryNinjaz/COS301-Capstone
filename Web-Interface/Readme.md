@@ -1,3 +1,18 @@
+## Setting up Firebase
+
+```
+npm install --global -firebase-tools
+firebase login
+firbase serve
+```
+
+This will setup a localhost on port 5000.
+
+In your browser go to "localhost:5000/Login.html"
+
+login using an account. If you dont have one set up one in Firebase console.
+
+
 **Remember to use the CDNs at deployment. And if you are connected to the internet, it is most probably better to be using them over the locals when testing.**
 
 -Kevin

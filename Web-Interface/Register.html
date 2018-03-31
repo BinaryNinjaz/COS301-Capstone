@@ -3,6 +3,11 @@
         <title>Sign up for Harvest</title>
         <link href="Styling.css" rel="stylesheet" type="text/css" />
         
+        <!-- Firebase Dependencies Must be before javaScript.js -->
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
+        
         <script src="javaScript.js" type="text/javascript"></script>
         
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -12,6 +17,40 @@
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        
+        <!-- Firebase -->
+        <script>
+            // This is automatic whenever there's a change to a users authorization
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // user logged in
+                } else {
+                    // user logged out
+                }
+            });
+            
+            function firebaseRegister() {
+                var email = document.getElementById("username").value;
+                var password = document.getElementById("password").value;
+                
+                firebase.auth()
+                .createUserWithEmailAndPassword(email, password)
+                    .then(function(user) { // user details correct
+                        document.location.href = "HomePage.html";
+                    })
+                    .catch(function(error) { // some error occured
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                
+                        if (errorCode === 'auth/wrong-password') {
+                            alert('Wrong password.');
+                        } else {
+                            alert(errorMessage);
+                        }
+                        console.log(error);
+                    });
+            }
+        </script>
        
     </head>
     <body>
@@ -27,7 +66,7 @@
                 <div class="col-md-2 col-md-offset-5">
                     <div align="center">                    
                     
-                    <form action="" method="POST" >
+<!--                     <form action="" method="POST" > -->
                         <h1>Sign up for Harvest</h1>
                         
                         <div class="form-group">
@@ -47,8 +86,8 @@
                             <input type="password" class="form-control" id="password" required>
                         </div>
                         <br><br>
-                        <button type="submit" class="btn btn-success">Create Account</button><!-- Log In button -->
-                    </form>
+                        <button onclick="firebaseRegister()" class="btn btn-success">Create Account</button><!-- Log In button -->
+<!--                     </form> -->
                     </div>
                 </div>
             </div>
