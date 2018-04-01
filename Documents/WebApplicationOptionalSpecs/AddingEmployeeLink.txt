@@ -1,0 +1,101 @@
+/* This is not to dictate to the person responsible for the web application */
+* The web designer can choose to ignore all this 
+* This is ment to help the web designer/developer on information they might add
+
+                                Adding Employee
+----------------------------------------------------------------------------------------------------------------------------------------
+Recording the full name(s) of the worker(foreman/farmer):
+	<div class="form-group">
+		<label for="employeeName" class="control-label">Full Name(s):</label>
+		<input type="text" class="form-control" id="employeeName" name="employeeName"/>
+	</div>
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+Recording the Employees email adress at Subtrop
+
+	<div class="form-group">
+		<label class="col-md-4 control-label" >Email Address:</label>
+		<div class="col-md-4 inputGroupContainer">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+				<input name="email" placeholder="farmer@subtop.co.za" class="form-control" id="updateEmail" type="text">
+			</div>
+		</div>
+	</div>
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+You can have a dropdown input that has positions in subtrop (farmer/foreman/executive...):
+
+	<div class="form-group">
+		<label for="jobPosition">Occupation (Position):</label>
+		<select class="form-control" name="jobPosition" id="jobPosition">
+			<option>Farmer</option>
+			<option>Supervisor</option>
+			<option>Foreman</option>
+			<option>Section Manager</option>
+			<option>Executive</option>
+		</select>
+	</div>
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+Recording the Employee's new username on the website (maybe)
+
+	<div class="form-group">
+		<label class="col-md-4 control-label" >Username:</label>
+		<div class="col-md-4 inputGroupContainer">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+				<input name="username" placeholder="" class="form-control" id="updateUsername" type="text">
+			</div>
+		</div>
+	</div>
+----------------------------------------------------------------------------------------------------------------------------------------
+As extra info (maybe for management) to know the the Employee's birthday
+
+	<div class="form-group">
+		<label class="col-md-4 control-label" >Birthday:</label>
+		<div class="col-md-4 inputGroupContainer">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+				<input name="birthday" placeholder="04-08-2017" class="form-control" id="updateBirthday" type="date">
+			</div>
+		</div>
+	</div>
+----------------------------------------------------------------------------------------------------------------------------------------
+The Employee Can have the option of uploading his/her picture
+
+	<div class="form-group">
+		<div class="form-group">
+			<label for="employeeImage">Employee Image(optional):</label>
+			<input type="file" name="employeeImage" class="form-control" id="employeeImage">
+		</div>
+	</div>
+----------------------------------------------------------------------------------------------------------------------------------------
+/*
+* Any Team member can add what they thing is logical to add to the Adding Employee Link
+*/
+So far: 
+	Adding Employee:
+		-Full Name(s)
+		-Email Adress
+		-Username
+		-Job Positions
+		-Password
+		-Birthday
+		-Picture Upload
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
