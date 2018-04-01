@@ -1,22 +1,23 @@
-var database = firebase.database();
+const database = firebase.database();
 
 function popOrch() {
-    var col2=document.getElementById("col2");
-    var count = 0;
-    var orchards;
+    clear();
+    const col2 = document.getElementById("col2");
+    let count = 0;
+    const orchards = [];
 
     firebase.database().ref('/orchards').once('value').then(function(snapshot) {
         count = (snapshot.val() && snapshot.val().count);
     });
 
-    for (var i = 0; i < count; i++){
-        var orchard;
+    for (let i = 0; i < count; i++){
+        let orchard;
         firebase.database().ref('/orchards/' + i).once('value').then(function(snapshot) {
             orchard = {
-                name : snapshot.name,
+                name : (snapshot.val() && snapshot.val().name),
                 id : i,
-                crop : snapshot.crop,
-                further : snapshot.further
+                crop : (snapshot.val() && snapshot.val().crop),
+                further : (snapshot.val() && snapshot.val().further)
             };
         });
         orchards.push(orchard);
@@ -28,13 +29,13 @@ function popOrch() {
 
     for (i = 0; i < orchards.length; i++){
         col2.innerHTML+="" +
-            "<button type='button' class='btn btn-info' onclick='dispOrch(" + i + ")'>"+ orchards[i] +"</button>"
+            "<button type='button' class='btn btn-info' onclick='dispOrch(" + i + ")'>"+ orchards[i].name +"</button>"
         ;
     }
 }
 
 function dispOrch(id) {
-    var col3 = document.getElementById("col3");
+    const col3 = document.getElementById("col3");
 
     if(id === -1){
         col3.innerHTML="" +
@@ -56,7 +57,7 @@ function dispOrch(id) {
     }
     else {
 
-        var orchard;
+        let orchard;
         firebase.database().ref('/orchards/' + id).once('value').then(function (snapshot) {
             orchard = {
                 name: snapshot.name,
@@ -87,7 +88,7 @@ function dispOrch(id) {
 
 function orchSave(type, id) {
     /*0 means create, 1 means modify*/
-    var col3 = document.getElementById("col3");
+    const col3 = document.getElementById("col3");
 
     firebase.database().ref('/orchards/').once('value').then(function (snapshot) {
         id = snapshot.val().count || 0;
@@ -108,40 +109,13 @@ function orchSave(type, id) {
     else if(type === 1){
 
     }
-    else {
-        console.log("Something went so terribly wrong in orchSave()");
-        return;
-    }
 
-    var orchard;
-    firebase.database().ref('/orchards/' + id).once('value').then(function (snapshot) {
-        orchard = {
-            name: snapshot.name,
-            crop: snapshot.crop,
-            further: snapshot.further
-        };
-    });
-
-    col3.innerHTML="" +
-        "<form class='form-horizontal'>" +
-        "" +
-        "<div class='form-group'><div class='col-lg-9 col-lg-offset-2'><button onclick='orchMod("+ orchard +")' type='button' class='btn btn-danger'>Modify</button></div></div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-lg-2' for='text'>Orchard Name:</label>" +
-        "<div class='col-lg-9'><p class='form-control-static'>" + orchard.name + "</p> </div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-lg-2' for='text'>Orchard Crop:</label>" +
-        "<div class='col-lg-9'><p class='form-control-static'>" + orchard.crop + "</p></div> </div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-lg-2' for='text'>Information:</label>" +
-        "<div class='col-lg-9'><p class='form-control-static'>" + orchard.further + "</p></div> </div>" +
-        "" +
-        "</form>"
-    ;
+    dispOrch(id);
+    popOrch();
 }
 
 function orchMod(orchard) {
-    var col3 = document.getElementById("col3");
+    const col3 = document.getElementById("col3");
     col3.innerHTML="" +
         "<form class='form-horizontal'>" +
         "" +
@@ -166,4 +140,8 @@ function popWorkers() {
 
 function popYield() {
 
+}
+
+function clear(){
+    document.getElementById('col3').innerHTML='';
 }
