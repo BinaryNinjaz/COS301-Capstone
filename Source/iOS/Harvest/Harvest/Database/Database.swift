@@ -144,23 +144,48 @@ struct HarvestDB {
     ref.updateChildValues(updates)
   }
   
+  static func yieldCollection(
+    for user: String,
+    on date: Date,
+    completion: @escaping (DataSnapshot) -> ()
+  ) {
+    let yields = ref.child(Path.yields.rawValue)
+    yields.observeSingleEvent(of: .value) { (snapshot) in
+      for _child in snapshot.children {
+        guard let child = (_child as? DataSnapshot)?.value as? [String: Any] else {
+          continue
+        }
+        guard let email = child["email"] as? String else {
+          continue
+        }
+        guard let cdate = child["date"] as? Date else {
+          continue
+        }
+        
+        if email == user && cdate == date {
+          completion(_child as! DataSnapshot)
+          return
+        }
+      }
+    }
+  }
 }
 
 
-extension UserDefaults {
-  func set(username: String) {
+public extension UserDefaults {
+  public func set(username: String) {
     set(username, forKey: "username")
   }
   
-  func getUsername() -> String? {
+  public func getUsername() -> String? {
     return string(forKey: "username")
   }
   
-  func set(password: String) {
+  public func set(password: String) {
     set(password, forKey: "password")
   }
   
-  func getPassword() -> String? {
+  public func getPassword() -> String? {
     return string(forKey: "password")
   }
 }

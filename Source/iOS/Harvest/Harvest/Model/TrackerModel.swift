@@ -11,14 +11,17 @@ import CoreLocation
 
 struct Tracker {
   var sessionStart: Date
+  var lastCollection: Date
   
   init() {
     sessionStart = Date()
+    lastCollection = sessionStart
   }
   
-  func collect(yield: Double, at loc: CLLocation) {
+  mutating func collect(yield: Double, at loc: CLLocation) {
     let collectionDate = Date()
-    let duration = collectionDate.timeIntervalSince(sessionStart)
+    let duration = collectionDate.timeIntervalSince(lastCollection)
+    lastCollection = Date()
     
     HarvestDB.collect(yield: yield,
                       from: HarvestUser.current.name,

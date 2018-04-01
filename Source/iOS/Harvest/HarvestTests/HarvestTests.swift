@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CoreLocation
 @testable import Harvest
 
 class HarvestTests: XCTestCase {
@@ -22,8 +23,65 @@ class HarvestTests: XCTestCase {
       super.tearDown()
   }
   
-  func testTemp() {
-    XCTAssertEqual([1, 2, 3].reduce(0, +), 6)
+  func testYieldCollection() {
+    let coord = CLLocationCoordinate2DMake(25, -20)
+    let date = Date(timeIntervalSince1970: 100000)
+    
+    HarvestDB.collect(yield: 10.5,
+                      from: "dummy@gmail.com",
+                      inAmountOfSeconds: 123.45,
+                      at: coord,
+                      on: date)
+    
+    
+    HarvestDB.yieldCollection(for: "dummy@gmail.com", on: date) { (snapshot) in
+      guard let child = snapshot.value as? [String: Any] else {
+        XCTAssert(false, "not a valid snapshot")
+        return
+      }
+      
+      guard let yield = child["yield"] as? Double else {
+        XCTAssert(false, "not a valid snapshot")
+        return
+      }
+      
+      guard let email = child["email"] as? String else {
+        XCTAssert(false, "not a valid snapshot")
+        return
+      }
+      
+      guard let duration = child["duration"] as? Double else {
+        XCTAssert(false, "not a valid snapshot")
+        return
+      }
+      
+      guard let loc = child["location"] as? [String: Any] else {
+        XCTAssert(false, "not a valid snapshot")
+        return
+      }
+      guard let lat = loc["lat"] as? Double else {
+        XCTAssert(false, "not a valid snapshot")
+        return
+      }
+      guard let lng = loc["lng"] as? Double else {
+        XCTAssert(false, "not a valid snapshot")
+        return
+      }
+      
+      guard let cdateinterval = child["date"] as? Double else {
+        XCTAssert(false, "not a valid snapshot")
+        return
+      }
+      let cdate = Date(timeIntervalSince1970: cdateinterval)
+      print("foooooo")
+      XCTAssertEqual(yield, 10.5)
+      XCTAssertEqual(email, "dummy@gmail.com")
+      XCTAssertEqual(duration, 123.45)
+      XCTAssertEqual(lat, 25.0)
+      XCTAssertEqual(lng, -20)
+      XCTAssertEqual(date, cdate)
+    }
+    
   }
     
   func testLogin() {
