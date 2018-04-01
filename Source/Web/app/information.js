@@ -108,13 +108,13 @@ function orchSave(type, id) {
     const col3 = document.getElementById("col3");
 
     if(type === 0){
-        newId++;
-        firebase.database().ref("/orchards/" + newId).set({
-            name : document.getElementById("orchName").value,
+        var orchardRef = firebase.database().ref("/orchards");
+        var newOrchard = orchardRef.push();
+        newOrchard.set({
+            name: document.getElementById("orchName").value,
             crop : document.getElementById("orchCrop").value,
             further : document.getElementById("oi").value
         });
-        id = newId;
     }
     else if(type === 1){
         firebase.database().ref("/orchards/" + id).update({
@@ -123,7 +123,6 @@ function orchSave(type, id) {
             further : document.getElementById("oi").value
         })
     }
-
 
     popOrch();
     dispOrch(id);
