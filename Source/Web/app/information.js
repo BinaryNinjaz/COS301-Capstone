@@ -1,13 +1,14 @@
+
 const database = firebase.database();
-orchardsRef = firebase.database().ref('/orchards');
 let newId = -1;
+let newIdSet = false;
 
 function popOrch() {
     clear();
     const col2 = document.getElementById("col2");
-    let count = 0;
-    const orchards = [];
+    col2.innerHTML = "<h2>Loading Orchard Information</h2>"
 
+    orchardsRef = firebase.database().ref('/orchards');
     orchardsRef.off();
 
     orchardsRef.on('value', function (snapshot) {
@@ -16,43 +17,13 @@ function popOrch() {
         ;
 
         snapshot.forEach(function (child) {
-            let orchard = child.val();
-            orchards.push(orchard);
-            // newId = orchard.key;
-
             col2.innerHTML+="" +
-                // "<button type='button' class='btn btn-info' onclick='dispOrch(" + i + ")'>"+ orchards[i].name +"</button>"
-                "<button type='button' class='btn btn-info' onclick='dispOrch("+child.key+")'>"+orchard.name+"</button>"
+                "<button type='button' class='btn btn-info' onclick='dispOrch("+child.key+")'>"+child.val().name+"</button>"
             ;
             newId=child.key;
         });
 
     });
-
-
-
-    // firebase.database().ref('/orchards').once('value').then(function(snapshot) {
-    //     count = (snapshot.val() && snapshot.val().count);
-    // });
-
-    // for (let i = 0; i < count; i++){
-    //     let orchard;
-    //     firebase.database().ref('/orchards/' + i).once('value').then(function(snapshot) {
-    //         orchard = {
-    //             name : (snapshot.val() && snapshot.val().name),
-    //             id : i,
-    //             crop : (snapshot.val() && snapshot.val().crop),
-    //             further : (snapshot.val() && snapshot.val().further)
-    //         };
-    //     });
-    //     orchards.push(orchard);
-    // }
-
-
-
-    // for (i = 0; i < orchards.length; i++){
-    //
-    // }
 }
 
 function dispOrch(id) {
@@ -105,7 +76,6 @@ function dispOrch(id) {
 
 function orchSave(type, id) {
     /*0 means create, 1 means modify*/
-    const col3 = document.getElementById("col3");
 
     if(type === 0){
         newId++;
@@ -115,50 +85,48 @@ function orchSave(type, id) {
             further : document.getElementById("oi").value
         });
         id = newId;
+        popOrch();
     }
     else if(type === 1){
         firebase.database().ref("/orchards/" + id).update({
             name : document.getElementById("orchName").value,
             crop : document.getElementById("orchCrop").value,
             further : document.getElementById("oi").value
-        })
+        });
     }
-
-
-    popOrch();
     dispOrch(id);
 }
 
 function orchMod(id) {
     firebase.database().ref('/orchards/' + id).once('value').then(function (snapshot) {
+        document.getElementById('modalDelBut').innerHTML="<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch("+id+")'>Delete</button>";
+        document.getElementById('modalText').innerText="Please confirm deletion of " + snapshot.val().name;
         document.getElementById('col3').innerHTML="" +
             "<form class='form-horizontal'>" +
             "" +
             "<div class='form-group'>" +
-            "<div class='col-lg-4 col-lg-offset-2'><button onclick='orchSave("+1+","+id+")' type='button' class='btn btn-warning'>Save</button></div>" +
-            "<div class='col-lg-4 col-lg-offset-1'><button onclick='dispOrch("+id+")' type='button' class='btn btn-default'>Cancel</button> </div> " +
+            "<div class='col-lg-3 col-lg-offset-2'><button onclick='orchSave("+1+","+id+")' type='button' class='btn btn-warning'>Save</button></div>" +
+            "<div class='col-lg-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
+            "<div class='col-lg-3'><button onclick='dispOrch("+id+")' type='button' class='btn btn-default'>Cancel</button></div>" +
             "</div> " +
             "" +
-            "<div class='form-group'><label class='control-label col-lg-2' for='text'>orchard Name:</label>" +
-            "<div class='col-lg-9'><input type='text' class='form-control' id='orchName' placeholder='"+snapshot.val().name+"'></div> </div> " +
+            "<div class='form-group'><label class='control-label col-lg-2' for='text'>Orchard Name:</label>" +
+            "<div class='col-lg-9'><input type='text' class='form-control' id='orchName' value='"+snapshot.val().name+"'></div> </div> " +
             "" +
-            "<div class='form-group'><label class='control-label col-lg-2' for='text'>orchard Crop:</label>" +
-            "<div class='col-lg-9'><input type='text' class='form-control' id='orchCrop' placeholder='"+snapshot.val().crop+"'></div> </div>" +
+            "<div class='form-group'><label class='control-label col-lg-2' for='text'>Orchard Crop:</label>" +
+            "<div class='col-lg-9'><input type='text' class='form-control' id='orchCrop' value='"+snapshot.val().crop+"'></div> </div>" +
             "" +
             "<div class='form-group'><label class='control-label col-lg-2' for='text'>Information:</label>" +
-            "<div class='col-lg-9'><input type='text' class='form-control' id='orchInfo' placeholder='"+snapshot.val().further+"'></div> </div>" +
+            "<div class='col-lg-9'><input type='text' class='form-control' id='oi' value='"+snapshot.val().further+"'></div> </div>" +
             "" +
             "</form>"
         ;
     });
 }
 
-function popWorkers() {
-
-}
-
-function popYield() {
-
+function delOrch(id) {
+    firebase.database().ref('/orchards/' + id).remove();
+    popOrch();
 }
 
 function clear(){
