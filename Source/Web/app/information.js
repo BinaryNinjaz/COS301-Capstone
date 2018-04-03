@@ -1,15 +1,14 @@
-
 const database = firebase.database();
 let newId = -1;
+const orchardsRef = firebase.database().ref('/orchards');
+const workersRef = firebase.database().ref('/workers');
 popOrch();
 popWork();
 document.getElementById("col2").innerHTML = "";
 
 function popOrch() {
     const col2 = document.getElementById("col2");
-    col2.innerHTML = "<h2>Loading Orchard Information</h2>";
-
-    const orchardsRef = firebase.database().ref('/orchards');
+    col2.innerHTML = "<h2>Loading Orchard List...</h2>";
     orchardsRef.off();
 
     orchardsRef.on('value', function (snapshot) {
@@ -77,9 +76,8 @@ function dispOrch(id) {
             firebase.database().ref("/workers").once('value').then(function (workers) {
                 const buttons = document.getElementById("workerButtons");
                 workers.forEach(function (worker) {
-                    console.log(worker.val().orchard + " " + id);
                     if(worker.val().orchard == id){
-                        buttons.innerHTML+="<div class='col-lg-4'><button class='btn btn-default' onclick='dispWork("+id+")'>"+worker.val().name.charAt(0)+". "+worker.val().surname+"</button></div>";
+                        buttons.innerHTML+="<div class='col-lg-4'><button class='btn btn-default' onclick='dispWork("+worker.key+")'>"+worker.val().name.charAt(0)+". "+worker.val().surname+"</button></div>";
                     }
                 });
             });
@@ -148,9 +146,8 @@ function delOrch(id) {
 
 function popWork() {
     const col2 = document.getElementById("col2");
-    col2.innerHTML = "<h2>Loading Worker Information</h2>";
+    col2.innerHTML = "<h2>Loading Worker List...</h2>";
 
-    const workersRef = firebase.database().ref('/workers');
     workersRef.off();
 
     workersRef.on('value', function (snapshot) {
@@ -211,7 +208,8 @@ function dispWork(id) {
     }
     else {
         firebase.database().ref('/workers/' + id).once('value').then(function (snapshot) {
-            firebase.database().ref('/orchards').once('value').then(function (orchardSnapshot) {
+            // firebase.database().ref('/orchards').once('value').then(function (orchardSnapshot) {
+            orchardsRef.once('value').then(function (orchardSnapshot) {
                 col3.innerHTML = "" +
                     "<form class='form-horizontal'>" +
                     "" +
@@ -242,7 +240,7 @@ function dispWork(id) {
                 orchardSnapshot.forEach(function (orchard) {
                     if(orchard.key === snapshot.val().orchard){
                         // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
-                        document.getElementById("workOrchDisp").innerHTML="<div class='col-lg-4'><button class='btn btn-default' onclick='dispOrch("+id+")'>"+orchard.val().name+"</button></div>";
+                        document.getElementById("workOrchDisp").innerHTML="<div class='col-lg-4'><button class='btn btn-default' onclick='dispOrch("+orchard.key+")'>"+orchard.val().name+"</button></div>";
                     }
                 });
 
