@@ -1,11 +1,13 @@
 
 const database = firebase.database();
 let newId = -1;
+popOrch();
+popWork();
+document.getElementById("col2").innerHTML = "";
 
 function popOrch() {
-    clear();
     const col2 = document.getElementById("col2");
-    col2.innerHTML = "<h2>Loading Orchard Information</h2>"
+    col2.innerHTML = "<h2>Loading Orchard Information</h2>";
 
     const orchardsRef = firebase.database().ref('/orchards');
     orchardsRef.off();
@@ -66,8 +68,21 @@ function dispOrch(id) {
                 "<div class='form-group'><label class='control-label col-lg-2' for='text'>Information:</label>" +
                 "<div class='col-lg-9'><p class='form-control-static'>" + snapshot.val().further + "</p></div> </div>" +
                 "" +
+                "<div class='form-group'><label class='control-label col-lg-2' for='text'>Assigned Workers:</label>" +
+                "<div class='col-lg-9' id='workerButtons'></div></div>" +
+                "" +
                 "</form>"
             ;
+
+            firebase.database().ref("/workers").once('value').then(function (workers) {
+                const buttons = document.getElementById("workerButtons");
+                workers.forEach(function (worker) {
+                    console.log(worker.val().orchard + " " + id);
+                    if(worker.val().orchard == id){
+                        buttons.innerHTML+="<div class='col-lg-4'><button class='btn btn-default' onclick='dispWork("+id+")'>"+worker.val().name.charAt(0)+". "+worker.val().surname+"</button></div>";
+                    }
+                });
+            });
         });
 
 
@@ -128,12 +143,12 @@ function orchMod(id) {
 function delOrch(id) {
     firebase.database().ref('/orchards/' + id).remove();
     popOrch();
+    clear3();
 }
 
 function popWork() {
-    clear();
     const col2 = document.getElementById("col2");
-    col2.innerHTML = "<h2>Loading Worker Information</h2>"
+    col2.innerHTML = "<h2>Loading Worker Information</h2>";
 
     const workersRef = firebase.database().ref('/workers');
     workersRef.off();
@@ -195,7 +210,7 @@ function dispWork(id) {
         });
     }
     else {
-        firebase.database().ref('/workers' + id).once('value').then(function (snapshot) {
+        firebase.database().ref('/workers/' + id).once('value').then(function (snapshot) {
             firebase.database().ref('/orchards').once('value').then(function (orchardSnapshot) {
                 col3.innerHTML = "" +
                     "<form class='form-horizontal'>" +
@@ -226,11 +241,12 @@ function dispWork(id) {
 
                 orchardSnapshot.forEach(function (orchard) {
                     if(orchard.key === snapshot.val().orchard){
-                        document.getElementById("workOrchDisp").innerHTML="<a class='form-control-static' href='javascript:;' onclick='dispOrch(" + orchard.key + ")>"+orchard.name+"</a>"
+                        // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
+                        document.getElementById("workOrchDisp").innerHTML="<div class='col-lg-4'><button class='btn btn-default' onclick='dispOrch("+id+")'>"+orchard.val().name+"</button></div>";
                     }
                 });
 
-                if(snapshot.type === "Foreman"){
+                if(snapshot.val().type === "Foreman"){
                     document.getElementById("emailDispSpace").innerHTML = ""+
                         "<div class='form-group'><label class='control-label col-lg-2' for='text'>Foreman Email:</label>" +
                         "<div class='col-lg-9'><p class='form-control-static'>"+ snapshot.val().email+"</p> </div></div>"
@@ -298,34 +314,70 @@ function workMod(id) {
     firebase.database().ref('/workers/' + id).once('value').then(function (snapshot) {
         document.getElementById('modalDelBut').innerHTML="<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delWork("+id+")'>Delete</button>";
         document.getElementById('modalText').innerText="Please confirm deletion of " + snapshot.val().name + " " + snapshot.val().surname;
-        document.getElementById('col3').innerHTML="" +
-            "<form class='form-horizontal'>" +
-            "" +
-            "<div class='form-group'>" +
-            "<div class='col-lg-3 col-lg-offset-2'><button onclick='workSave("+1+","+id+")' type='button' class='btn btn-warning'>Save</button></div>" +
-            "<div class='col-lg-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
-            "<div class='col-lg-3'><button onclick='dispWork("+id+")' type='button' class='btn btn-default'>Cancel</button></div>" +
-            "</div> " +
-            "" +
-            "<div class='form-group'><label class='control-label col-lg-2' for='text'>Worker Name:</label>" +
-            "<div class='col-lg-9'><input type='text' class='form-control' id='workName' value='"+snapshot.val().name+"'></div> </div> " +
-            "" +
-            "<div class='form-group'><label class='control-label col-lg-2' for='text'>Worker Surname:</label>" +
-            "<div class='col-lg-9'><input type='text' class='form-control' id='workSName' value='"+snapshot.val().surname+"'></div> </div>" +
-            "" +
-            "<div class='form-group'><label class='control-label col-lg-2' for='text'>Worker Email:</label>" +
-            "<div class='col-lg-9'><input type='text' class='form-control' id='workEmail' value='"+snapshot.val().email+"'></div> </div>" +
-            "" +
-            "</form>"
-        ;
+        firebase.database().ref('/orchards').once('value').then(function (orchard) {
+            document.getElementById('col3').innerHTML="" +
+                "<form class='form-horizontal'>" +
+                "" +
+                "<div class='form-group'>" +
+                "<div class='col-lg-3 col-lg-offset-2'><button onclick='workSave("+1+","+id+")' type='button' class='btn btn-warning'>Save</button></div>" +
+                "<div class='col-lg-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
+                "<div class='col-lg-3'><button onclick='dispWork("+id+")' type='button' class='btn btn-default'>Cancel</button></div>" +
+                "</div>" +
+                "" +
+                "<div class='form-group'><label class='control-label col-lg-2' for='text'>Worker Name:</label>" +
+                "<div class='col-lg-9'><input type='text' class='form-control' id='workName' value='"+snapshot.val().name+"'></div> </div> " +
+                "" +
+                "<div class='form-group'><label class='control-label col-lg-2' for='text'>Worker Surname:</label>" +
+                "<div class='col-lg-9'><input type='text' class='form-control' id='workSName' value='"+snapshot.val().surname+"'></div> </div>" +
+                "" +
+                "<div class='form-group'><label class='control-label col-lg-2' for='sel1'>Assigned Orchard:</label>" +
+                "<div class='col-lg-9'><select class='form-control' id='workOrch'></select></div></div>" +
+                "" +
+                "<div class='form-group'><label class='control-label col-lg-2' id='workType'>Worker Type:</label>" +
+                "<label class='radio-inline'><input type='radio' name='optradio' onclick='dispWorkEmail(false)' id='rWorker'>Worker</label>" +
+                "<label class='radio-inline'><input type='radio' name='optradio' onclick='dispWorkEmail(true)' id='rForeman'>Foreman</label>" +
+                "</div>" +
+                "" +
+                "<div class='form-group'><label class='control-label col-lg-2' for='text'>Information:</label>" +
+                "<div class='col-lg-9'><textarea class='form-control' rows='4' id='workInfo'>"+snapshot.val().info+"</textarea></div></div>" +
+                "" +
+                "<div id='emailSpace'></div>" +
+                "" +
+
+                "</form>"
+            ;
+
+            if(snapshot.val().type==="Foreman"){
+                document.getElementById("rForeman").setAttribute("checked","");
+                document.getElementById("emailSpace").innerHTML="" +
+                    "<div class='form-group'><label class='control-label col-lg-2' for='text'>Foreman Email:</label>" +
+                    "<div class='col-lg-9'><input type='text' class='form-control' id='workEmail' value='"+snapshot.val().email+"'></div> </div> "
+                ;
+            }
+            else{
+                document.getElementById("rWorker").setAttribute("checked","");
+            }
+
+            orchard.forEach(function (child) {
+                const workOrch = document.getElementById("workOrch");
+                let selec = "";
+                // workOrch.innerHTML = workOrch.innerHTML + "<option";
+                if(child.key === snapshot.val().orchard){
+                    selec = ' selected';
+                }
+                // workOrch.innerHTML = workOrch.innerHTML + "><" +child.key+"> " + child.val().name+"  :  "+child.val().crop + "</option>";
+                workOrch.innerHTML+="<option"+selec+"><" +child.key+"> " + child.val().name+"  :  "+child.val().crop + "</option>";
+            });
+        });
     });
 }
 
 function delWork(id) {
     firebase.database().ref('/workers/' + id).remove();
     popWork();
+    clear3();
 }
 
-function clear(){
-    document.getElementById('col3').innerHTML='';
+function clear3() {
+    document.getElementById("col3").innerHTML = "";
 }
