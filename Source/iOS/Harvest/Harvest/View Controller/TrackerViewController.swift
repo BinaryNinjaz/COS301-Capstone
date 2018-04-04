@@ -13,11 +13,12 @@ class TrackerViewController: UIViewController {
   var tracker: Tracker!
   var locationManager: CLLocationManager!
   var currentLocation: CLLocation?
+  var workers: [Worker] = []
   
   @IBOutlet weak var startSessionButton: UIButton!
   @IBOutlet weak var expectedYieldLabel: UILabel!
   @IBOutlet weak var collectButton: UIButton!
-  @IBOutlet weak var yieldAmountTextField: UITextField!
+  @IBOutlet weak var workerPicker: UIPickerView!
   
   
   @IBAction func startSession(_ sender: Any) {
@@ -46,29 +47,14 @@ class TrackerViewController: UIViewController {
       startSessionButton.setTitle("Start", for: .normal)
       let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.green[1])
       startSessionButton.apply(gradient: sessionLayer)
+      HarvestDB.collect(from: tracker.collections, from: HarvestUser.current.name, on: Date())
       
       tracker = nil
     }
   }
   
   @IBAction func collectYield(_ sender: Any) {
-    guard let yieldText = yieldAmountTextField.text else {
-      let alert = UIAlertController.alertController(
-        title: "Missing Yield Amount",
-        message: "Please enter amount of yield collect before pressing collect")
-      
-      present(alert, animated: true, completion: nil)
-      return
-    }
-    
-    guard let yield = Double(yieldText) else {
-      let alert = UIAlertController.alertController(
-        title: "Incorrect Yield",
-        message: "Please enter a number for the yield amount")
-      
-      present(alert, animated: true, completion: nil)
-      return
-    }
+    let idx = workerPicker.selectedRow(inComponent: 0)
     
     guard let loc = currentLocation else {
       let alert = UIAlertController.alertController(
@@ -79,20 +65,30 @@ class TrackerViewController: UIViewController {
       return
     }
     
-    yieldAmountTextField.text = ""
-    tracker.collect(yield: yield, at: loc)
-    view.endEditing(true)
+    tracker.collect(for: workers[idx], at: loc)
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    startSessionButton.layer.cornerRadius = 60
+    startSessionButton.layer.cornerRadius = 35
     hideKeyboardWhenTappedAround()
     
-    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.green[1])
+    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 35, borderColor: UIColor.Bootstrap.green[1])
     startSessionButton.apply(gradient: sessionLayer)
     
     collectButton.apply(gradient: .green)
+    
+    workerPicker.delegate = self
+    workerPicker.dataSource = self
+    
+    HarvestDB.getWorkers { (workers) in
+      for worker in workers {
+        self.workers.append(worker)
+      }
+      DispatchQueue.main.async {
+        self.workerPicker.reloadAllComponents()
+      }
+    }
     
     // Do any additional setup after loading the view.
   }
@@ -108,4 +104,19 @@ extension TrackerViewController : CLLocationManagerDelegate {
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     currentLocation = locations.first
   }
+}
+
+extension TrackerViewController : UIPickerViewDelegate, UIPickerViewDataSource {
+  func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    return 1
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    return workers.count
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    return workers[row].firstname + " " + workers[row].lastname
+  }
+  
 }

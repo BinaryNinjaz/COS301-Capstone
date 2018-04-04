@@ -17,6 +17,19 @@ struct HarvestUser {
   static var current = HarvestUser(name: "")
 }
 
+struct Worker :  Hashable {
+  var firstname: String
+  var lastname: String
+  
+  static func ==(lhs: Worker, rhs: Worker) -> Bool {
+    return lhs.firstname == rhs.firstname && lhs.lastname == rhs.lastname
+  }
+  
+  var hashValue: Int {
+    return "\(firstname)\(lastname)".hashValue
+  }
+}
+
 
 struct HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
@@ -125,6 +138,24 @@ struct HarvestDB {
   
   // MARK: - Yield
   
+  static func getWorkers(_ completion: @escaping ([Worker]) -> ()) {
+    let wref = ref.child("/workers")
+    wref.observeSingleEvent(of: .value) { (snapshot) in
+      var workers = [Worker]()
+      for _child in snapshot.children {
+        guard let worker = (_child as? DataSnapshot)?.value as? [String: Any] else {
+          continue
+        }
+        let fn = worker["name"] as? String ?? ""
+        let ln = worker["surname"] as? String ?? ""
+        print(worker)
+        let w = Worker(firstname: fn, lastname: ln)
+        workers.append(w)
+      }
+      completion(workers)
+    }
+  }
+  
   static func collect(yield: Double,
                       from email: String,
                       inAmountOfSeconds amount: TimeInterval,
@@ -139,6 +170,48 @@ struct HarvestDB {
       "duration": amount,
       "location": ["lat": loc.latitude, "lng": loc.longitude]
     ]
+    let updates = ["yields/\(key)": data]
+    
+    ref.updateChildValues(updates)
+  }
+  
+  static func collect(from workers: [Worker: WorkerCollection],
+                      from email: String,
+                      on date: Date) {
+    let cref = ref.child(Path.yields.rawValue)
+    let key = cref.childByAutoId().key
+    
+    var cs = [String: Any]()
+    
+    for (w, c) in workers {
+      var collections = [String: Any]()
+      var i = 0
+      
+      for cp in c.collectionPoints {
+        let d = cp.date.timeIntervalSince1970
+        let lat = cp.location.coordinate.latitude
+        let lng = cp.location.coordinate.longitude
+        
+        collections[i.description] = [
+          "date": d,
+          "coord": [
+            "lat": lat,
+            "lng": lng
+          ]
+        ]
+        
+        i += 1
+      }
+      
+      cs[w.firstname + " " + w.lastname] = collections
+    }
+    
+    let data: [String: Any] = [
+      "date": date.timeIntervalSince1970,
+      "email": email,
+      "collections": cs
+    ]
+    
     let updates = ["yields/\(key)": data]
     
     ref.updateChildValues(updates)
