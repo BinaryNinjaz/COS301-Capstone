@@ -10,15 +10,13 @@ import UIKit
 import CoreLocation
 
 class TrackerViewController: UIViewController {
-  var tracker: Tracker!
+  var tracker: Tracker?
   var locationManager: CLLocationManager!
   var currentLocation: CLLocation?
   var workers: [Worker] = []
   
   @IBOutlet weak var startSessionButton: UIButton!
-  @IBOutlet weak var expectedYieldLabel: UILabel!
-  @IBOutlet weak var collectButton: UIButton!
-  @IBOutlet weak var workerPicker: UIPickerView!
+  @IBOutlet weak var workerCollectionView: UICollectionView!
   
   
   @IBAction func startSession(_ sender: Any) {
@@ -33,9 +31,8 @@ class TrackerViewController: UIViewController {
       if CLLocationManager.locationServicesEnabled() {
         locationManager.startUpdatingLocation()
         
-        collectButton.isEnabled = true
         startSessionButton.setTitle("Stop", for: .normal)
-        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange, locations: [0, 1], cornerRadius: 35, borderColor: UIColor.Bootstrap.orange[1])
+        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.orange[1])
         startSessionButton.apply(gradient: sessionLayer)
         
         tracker = Tracker()
@@ -43,18 +40,19 @@ class TrackerViewController: UIViewController {
     } else {
       locationManager.stopUpdatingLocation()
       
-      collectButton.isEnabled = false
       startSessionButton.setTitle("Start", for: .normal)
-      let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 35, borderColor: UIColor.Bootstrap.green[1])
+      let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
       startSessionButton.apply(gradient: sessionLayer)
-      HarvestDB.collect(from: tracker.collections, from: HarvestUser.current.name, on: Date())
+      HarvestDB.collect(from: tracker!.collections, from: HarvestUser.current.name, on: Date())
       
       tracker = nil
     }
   }
   
   @IBAction func collectYield(_ sender: Any) {
-    let idx = workerPicker.selectedRow(inComponent: 0)
+    guard let idx = workerCollectionView.indexPathsForSelectedItems?.first else {
+      return
+    }
     
     guard let loc = currentLocation else {
       let alert = UIAlertController.alertController(
@@ -65,37 +63,29 @@ class TrackerViewController: UIViewController {
       return
     }
     
-    tracker.collect(for: workers[idx], at: loc)
+    tracker?.collect(for: workers[idx.row], at: loc)
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    startSessionButton.layer.cornerRadius = 35
+    startSessionButton.layer.cornerRadius = 40
     hideKeyboardWhenTappedAround()
     
-    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 35, borderColor: UIColor.Bootstrap.green[1])
+    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
     startSessionButton.apply(gradient: sessionLayer)
-    
-    collectButton.apply(gradient: .green)
-    
-    workerPicker.delegate = self
-    workerPicker.dataSource = self
     
     HarvestDB.getWorkers { (workers) in
       for worker in workers {
         self.workers.append(worker)
       }
       DispatchQueue.main.async {
-        self.workerPicker.reloadAllComponents()
+        self.workerCollectionView.reloadData()
       }
     }
-    
-    // Do any additional setup after loading the view.
   }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
   }
 
 }
@@ -106,17 +96,65 @@ extension TrackerViewController : CLLocationManagerDelegate {
   }
 }
 
-extension TrackerViewController : UIPickerViewDelegate, UIPickerViewDataSource {
-  func numberOfComponents(in pickerView: UIPickerView) -> Int {
+extension TrackerViewController : UICollectionViewDataSource {
+  func numberOfSections(in collectionView: UICollectionView) -> Int {
     return 1
   }
   
-  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return workers.count
   }
   
-  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-    return workers[row].firstname + " " + workers[row].lastname
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "workerCollectionViewCell", for: indexPath) as? WorkerCollectionViewCell else {
+      return UICollectionViewCell()
+    }
+    
+    let worker = workers[indexPath.row]
+    
+    cell.myBackgroundView.frame.size = cell.frame.size
+    
+    cell.myBackgroundView.apply(gradient: CAGradientLayer.blue)
+    cell.nameLabel.text = worker.firstname + " " + worker.lastname
+    cell.yieldLabel.text = String(tracker?.collections[worker]?.count ?? 0)
+    
+    return cell
   }
-  
+}
+
+extension TrackerViewController : UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    guard tracker != nil else {
+      let alert = UIAlertController.alertController(
+        title: "Session Not Started",
+        message: "Please start the session before collecting yields")
+      
+      present(alert, animated: true, completion: nil)
+      return
+    }
+    
+    guard let loc = currentLocation else {
+      let alert = UIAlertController.alertController(
+        title: "Location Unavailable",
+        message: "Please allow location service from the 'Settings' app")
+      
+      present(alert, animated: true, completion: nil)
+      return
+    }
+    
+    tracker?.collect(for: workers[indexPath.row], at: loc)
+    
+    workerCollectionView.deselectItem(at: indexPath, animated: true)
+    
+    workerCollectionView.reloadData()
+  }
+}
+
+extension TrackerViewController : UICollectionViewDelegateFlowLayout {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      sizeForItemAt indexPath: IndexPath) -> CGSize {
+    return CGSize(width: collectionView.frame.width / 2 - 0.5,
+                  height: collectionView.frame.width / 2 - 0.5);
+  }
 }

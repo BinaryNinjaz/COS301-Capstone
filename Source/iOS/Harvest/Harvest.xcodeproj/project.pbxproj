@@ -23,6 +23,7 @@
 		169E5197206C62E6006B923E /* TrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* TrackerModel.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
 		169E519B206C6C8D006B923E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E519A206C6C8D006B923E /* Utils.swift */; };
+		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
 		2246F7A4FADAD9C7BD1EE2D8 /* libPods-Harvest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */; };
 		B7A9FFC5EFF7E01DA1441BF9 /* libPods-HarvestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 74FD0ED4702F6DC1CD4761E8 /* libPods-HarvestTests.a */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,7 @@
 		169E5196206C62E6006B923E /* TrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerModel.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		169E519A206C6C8D006B923E /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
 		6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Harvest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		74FD0ED4702F6DC1CD4761E8 /* libPods-HarvestTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HarvestTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -198,6 +200,7 @@
 		16420FC720696B6500E1A292 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				16F2BA4B20766041007652E8 /* Cells */,
 				16420FC820696B8F00E1A292 /* QuickAlert.swift */,
 			);
 			path = UI;
@@ -218,6 +221,14 @@
 				169E519A206C6C8D006B923E /* Utils.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		16F2BA4B20766041007652E8 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		7FC5D262691DF4EC3193E21A /* Frameworks */ = {
@@ -502,6 +513,7 @@
 				16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */,
 				169E5197206C62E6006B923E /* TrackerModel.swift in Sources */,
 				169E519B206C6C8D006B923E /* Utils.swift in Sources */,
+				16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */,
 				168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
