@@ -35,7 +35,7 @@ class TrackerViewController: UIViewController {
         
         collectButton.isEnabled = true
         startSessionButton.setTitle("Stop", for: .normal)
-        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.orange[1])
+        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange, locations: [0, 1], cornerRadius: 35, borderColor: UIColor.Bootstrap.orange[1])
         startSessionButton.apply(gradient: sessionLayer)
         
         tracker = Tracker()
@@ -45,7 +45,7 @@ class TrackerViewController: UIViewController {
       
       collectButton.isEnabled = false
       startSessionButton.setTitle("Start", for: .normal)
-      let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.green[1])
+      let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 35, borderColor: UIColor.Bootstrap.green[1])
       startSessionButton.apply(gradient: sessionLayer)
       HarvestDB.collect(from: tracker.collections, from: HarvestUser.current.name, on: Date())
       
