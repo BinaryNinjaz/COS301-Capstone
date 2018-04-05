@@ -2,9 +2,13 @@ const database = firebase.database();
 let newId = -1;
 const orchardsRef = firebase.database().ref('/orchards');
 const workersRef = firebase.database().ref('/workers');
+const farmRef = firebase.database().ref('/farms');
 popOrch();
 popWork();
+popFarm();
 document.getElementById("col2").innerHTML = "";
+
+
 
 function popOrch() {
     const col2 = document.getElementById("col2");
@@ -143,6 +147,8 @@ function delOrch(id) {
     popOrch();
     clear3();
 }
+
+
 
 function popWork() {
     const col2 = document.getElementById("col2");
@@ -375,6 +381,8 @@ function delWork(id) {
     popWork();
     clear3();
 }
+
+
 
 function clear3() {
     document.getElementById("col3").innerHTML = "";
