@@ -1,0 +1,5 @@
+Introduction:
+We are the Binary Ninjaz, with Letanyan as QA Lead, Sizo as Front-end Architect, Kevin as Back-end Architect, Shaun as UX designer, Teboho as UI designer and I, John, as Team Leader, Scrum master and Analyst.
+
+Brief description:	
+Our project, Harvest, is an application to assist growers with yield data and optimise worker performance. In other words, our project is a system that can efficiently measure the amount of work done by a worker, track the foremen on a farm, record information and data, and display the necessary information. This system is aimed at farming communities to help then record data and get work done more efficiently.
