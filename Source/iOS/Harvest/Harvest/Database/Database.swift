@@ -176,8 +176,9 @@ struct HarvestDB {
   }
   
   static func collect(from workers: [Worker: WorkerCollection],
-                      from email: String,
-                      on date: Date) {
+                      by email: String,
+                      on date: Date,
+                      track: [(Double, Double)]) {
     let cref = ref.child(Path.yields.rawValue)
     let key = cref.childByAutoId().key
     
@@ -207,9 +208,11 @@ struct HarvestDB {
     }
     
     let data: [String: Any] = [
-      "date": date.timeIntervalSince1970,
+      "start_date": date.timeIntervalSince1970,
+      "end_date": Date().timeIntervalSince1970,
       "email": email,
-      "collections": cs
+      "collections": cs,
+      "track": track.firbaseCoordRepresentation()
     ]
     
     let updates = ["yields/\(key)": data]
@@ -244,6 +247,18 @@ struct HarvestDB {
   }
 }
 
+extension Array where Element == (Double, Double) {
+  func firbaseCoordRepresentation() -> [String: Any] {
+    var result = [String: Any]()
+    var id = 0
+    for (lat, lng) in self {
+      let coord = ["lat": lat, "lng": lng]
+      result[id.description] = coord
+      id += 1
+    }
+    return result
+  }
+}
 
 public extension UserDefaults {
   public func set(username: String) {
