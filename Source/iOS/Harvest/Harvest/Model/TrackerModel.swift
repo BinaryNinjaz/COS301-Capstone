@@ -20,26 +20,16 @@ struct WorkerCollection {
 }
 
 struct Tracker {
+  var trackCount: Int
   var sessionStart: Date
   var lastCollection: Date
   var collections: [Worker: WorkerCollection]
   
   init() {
+    trackCount = 0
     sessionStart = Date()
     lastCollection = sessionStart
     collections = [:]
-  }
-  
-  mutating func collect(yield: Double, at loc: CLLocation) {
-    let collectionDate = Date()
-    let duration = collectionDate.timeIntervalSince(lastCollection)
-    lastCollection = Date()
-    
-    HarvestDB.collect(yield: yield,
-                      from: HarvestUser.current.name,
-                      inAmountOfSeconds: duration,
-                      at: loc.coordinate,
-                      on: collectionDate)
   }
   
   mutating func collect(for worker: Worker, at loc: CLLocation) {
@@ -54,5 +44,34 @@ struct Tracker {
     collection.collectionPoints.append(CollectionPoint(location: loc, date: Date()))
     
     collections[worker] = collection
+  }
+  
+  mutating func track(location: CLLocation) {
+    UserDefaults.standard.track(location: location, index: trackCount)
+    trackCount += 1
+  }
+  
+  func storeSession() {
+    var track = [(Double, Double)]()
+    
+    for i in 0..<trackCount {
+      let d = i.description
+      let lat = UserDefaults.standard.double(forKey: "lat" + d)
+      let lng = UserDefaults.standard.double(forKey: "lng" + d)
+      track.append((lat, lng))
+    }
+    
+    HarvestDB.collect(from: collections,
+                      by: HarvestUser.current.name,
+                      on: sessionStart,
+                      track: track)
+  }
+}
+
+extension UserDefaults {
+  func track(location: CLLocation, index: Int) {
+    let d = String(index)
+    set(location.coordinate.latitude, forKey: "lat" + d)
+    set(location.coordinate.longitude, forKey: "lng" + d)
   }
 }

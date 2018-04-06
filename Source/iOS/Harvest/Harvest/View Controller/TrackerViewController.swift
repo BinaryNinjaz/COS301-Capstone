@@ -43,7 +43,7 @@ class TrackerViewController: UIViewController {
       startSessionButton.setTitle("Start", for: .normal)
       let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
       startSessionButton.apply(gradient: sessionLayer)
-      HarvestDB.collect(from: tracker!.collections, from: HarvestUser.current.name, on: Date())
+      tracker?.storeSession()
       
       tracker = nil
     }
@@ -92,7 +92,11 @@ class TrackerViewController: UIViewController {
 
 extension TrackerViewController : CLLocationManagerDelegate {
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    currentLocation = locations.first
+    guard let loc = locations.first else {
+      return
+    }
+    currentLocation = loc
+    tracker?.track(location: loc)
   }
 }
 
