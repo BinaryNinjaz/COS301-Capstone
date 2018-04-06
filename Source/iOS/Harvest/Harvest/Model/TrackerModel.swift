@@ -20,11 +20,13 @@ struct WorkerCollection {
 }
 
 struct Tracker {
+  var trackCount: Int
   var sessionStart: Date
   var lastCollection: Date
   var collections: [Worker: WorkerCollection]
   
   init() {
+    trackCount = 0
     sessionStart = Date()
     lastCollection = sessionStart
     collections = [:]
@@ -40,6 +42,35 @@ struct Tracker {
                       inAmountOfSeconds: duration,
                       at: loc.coordinate,
                       on: collectionDate)
+  }
+  
+  mutating func track(location: CLLocation) {
+    UserDefaults.standard.track(location: location, index: trackCount)
+    trackCount += 1
+  }
+  
+  func storeTrack() {
+    var track = [(Double, Double)]()
+    let now = Date()
+    
+    for i in 0..<trackCount {
+      let d = i.description
+      let lat = UserDefaults.standard.double(forKey: "lat" + d)
+      let lng = UserDefaults.standard.double(forKey: "lng" + d)
+      track.append((lat, lng))
+    }
+    
+    let duration = now.timeIntervalSince(sessionStart)
+    
+    HarvestDB.track(track, from: HarvestUser.current.name, inAmountOfSeconds: duration, on: sessionStart)
+  }
+}
+
+extension UserDefaults {
+  func track(location: CLLocation, index: Int) {
+    let d = String(index)
+    set(location.coordinate.latitude, forKey: "lat" + d)
+    set(location.coordinate.longitude, forKey: "lng" + d)
   }
   
   mutating func collect(for worker: Worker, at loc: CLLocation) {

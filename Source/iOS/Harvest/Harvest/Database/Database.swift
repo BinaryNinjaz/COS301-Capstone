@@ -35,7 +35,8 @@ struct HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
   
   enum Path: String {
-    case yields = "mockfarm/yields"
+    case yields = "yields"
+    case tracks = "tracks"
   }
   
   //MARK: - Authentication
@@ -241,6 +242,37 @@ struct HarvestDB {
         }
       }
     }
+  }
+  
+  // MARK: - Tracking
+  static func track(_ track: [(Double, Double)],
+                      from email: String,
+                      inAmountOfSeconds amount: TimeInterval,
+                      on date: Date) {
+    let cref = ref.child(Path.tracks.rawValue)
+    let key = cref.childByAutoId().key
+    let data: [String: Any] = [
+      "date": date.timeIntervalSince1970,
+      "track": track.firbaseCoordRepresentation(),
+      "email": email,
+      "duration": amount
+    ]
+    let updates = ["tracks/\(key)": data]
+    
+    ref.updateChildValues(updates)
+  }
+}
+
+extension Array where Element == (Double, Double) {
+  func firbaseCoordRepresentation() -> [String: Any] {
+    var result = [String: Any]()
+    var id = 0
+    for (lat, lng) in self {
+      let coord = ["lat": lat, "lng": lng]
+      result[id.description] = coord
+      id += 1
+    }
+    return result
   }
 }
 

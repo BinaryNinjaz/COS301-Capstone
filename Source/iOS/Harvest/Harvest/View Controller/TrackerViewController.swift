@@ -40,6 +40,7 @@ class TrackerViewController: UIViewController {
     } else {
       locationManager.stopUpdatingLocation()
       
+      tracker.storeTrack()
       startSessionButton.setTitle("Start", for: .normal)
       let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
       startSessionButton.apply(gradient: sessionLayer)
@@ -92,7 +93,11 @@ class TrackerViewController: UIViewController {
 
 extension TrackerViewController : CLLocationManagerDelegate {
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    currentLocation = locations.first
+    guard let loc = locations.first else {
+      return
+    }
+    currentLocation = loc
+    tracker.track(location: loc)
   }
 }
 
