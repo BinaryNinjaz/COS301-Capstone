@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Harvest</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_login">Log In</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Log In</string>
+    <string name="action_sign_up">Sign Up</string>
+    <string name="action_sign_in_short">Log In</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <string name="prompt_enter_email">Email</string>
+
+    <string name="prompt_enter_password">Password</string>
+
+    <string name="login">Log In</string>
+
+    <string name="sign_up">Sign Up</string>
+    <string name="title_activity_sign_up">Sign Up</string>
+    <string name="prompt_enter_surname">Surname</string>
+    <string name="prompt_enter_firstName">First name</string>
+    <string name="prompt_enter_newPassword">New Password</string>
+    <string name="prompt_enter_username">Username</string>
+
+    <string name="forgotAccountDetails"><a href="#">Forgot account details?</a></string>
+</resources>
