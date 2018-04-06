@@ -5,4 +5,8 @@
 /.idea/libraries
 .DS_Store
 /build
+<<<<<<< HEAD
 /captures
+=======
+/captures
+>>>>>>> ignore android files
