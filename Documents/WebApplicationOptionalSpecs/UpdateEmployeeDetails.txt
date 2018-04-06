@@ -1,0 +1,134 @@
+/* This is not to dictate to the person responsible for the web application */
+* The web designer can choose to ignore all this 
+* This is ment to help the web designer/developer on information they might add
+
+								Update Employee Details
+----------------------------------------------------------------------------------------------------------------------------------------
+Recording the full name(s) of the worker(foreman/farmer):
+	<div class="form-group">
+		<label class="col-md-4 control-label" >Full Name(s):</label>
+		<div class="col-md-4 inputGroupContainer">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+				<input name="name" placeholder="Teboho Mokoena" class="form-control"  id="updateName" type="text">
+			</div>
+		</div>
+	</div>
+
+----------------------------------------------------------------------------------------------------------------------------------------
+Recording the Employees email adress at Subtrop
+
+	<div class="form-group">
+		<label class="col-md-4 control-label" >Email Address:</label>
+		<div class="col-md-4 inputGroupContainer">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+				<input name="email" placeholder="farmer@subtop.co.za" class="form-control" id="updateEmail" type="text">
+			</div>
+		</div>
+	</div>
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+Recording the Employee's new username on the website (maybe)
+
+	<div class="form-group">
+		<label class="col-md-4 control-label" >Username:</label>
+		<div class="col-md-4 inputGroupContainer">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+				<input name="username" placeholder="" class="form-control" id="updateUsername" type="text">
+			</div>
+		</div>
+	</div>
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+Updating the Employee's password (this can have a popup that will prompt the user to put in his old password before any changes can be made)
+
+	<div class="form-group">
+		<label class="col-md-4 control-label" >Password:</label>
+		<div class="col-md-4 inputGroupContainer">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+				<input name="password" placeholder="******" class="form-control" id="updatePassword" type="password">
+			</div>
+		</div>
+	</div>
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+As extra info (maybe for management) to know the the Employee's birthday
+
+	<div class="form-group">
+		<label class="col-md-4 control-label" >Birthday:</label>
+		<div class="col-md-4 inputGroupContainer">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+				<input name="birthday" placeholder="04-08-2017" class="form-control" id="updateBirthday" type="date">
+			</div>
+		</div>
+	</div>
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+You can have a dropdown input that has positions in subtrop (farmer/foreman/executive...):
+
+	<div class="form-group">
+		<label for="jobPosition">Occupation (Position):</label>
+		<select class="form-control" name="jobPosition" id="jobPosition">
+			<option>Farmer</option>
+			<option>Supervisor</option>
+			<option>Foreman</option>
+			<option>Section Manager</option>
+			<option>Executive</option>
+		</select>
+	</div>
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+You can have a button where the Employee can delete his own profile (this will immediately log him/her out) also can have a popup which requires a password
+	<div class="modal-footer">
+		<button class='btn btn-default deleteProfile'>Delete Profile</button>
+	</div>
+	
+----------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+* Any Team member can add what they thing is logical to add to the Update Employee Details Link
+*/
+So far: 
+	Update Employee Details:
+		-Full Name(s)
+		-Email Adress
+		-Username
+		-Password
+		-Birthday
+		-Job Positions
+		-Delete Profile
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

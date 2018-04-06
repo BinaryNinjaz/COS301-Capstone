@@ -1,0 +1,129 @@
+/* This is not to dictate to the person responsible for the web application */
+* The web designer can choose to ignore all this 
+* This is ment to help the web designer/developer on information they might add
+*
+                     	Detailed Yield Information
+---------------------------------------------------------------------------------------------------------------------------------------------
+A feild Section(mabye the farm is divided in sections):
+	<div class="form-group">
+	<label for="fieldsection">Feild Section:</label>
+		<select class="form-control" name="fieldsection" id="fieldsection">
+			<option>A</option>
+			<option>B</option>
+			<option>C</option>
+			<option>D</option>
+		</select>
+	</div>
+	
+---------------------------------------------------------------------------------------------------------------------------------------------
+A Produce/Fruit/cultivar name(maybe you can make it a dropdown):
+	<div class="form-group">
+		<label for="category">Produce Name or cultivar:</label>
+		<select class="form-control" name="category" id="category">
+			<option>Mango</option>
+			<option>Litchi </option>
+			<option>Mango</option>
+			<option>Macadamia Nuts</option>
+		</select>
+	</div>
+	
+---------------------------------------------------------------------------------------------------------------------------------------------
+A Topography and Soil Type report (This usually has an effect on the the Yeild)
+	<div class="form-group">
+		<h4>Topography</h4>
+		<input type="checkbox" name="topography" value="Mountain">Close to Mountain<br>
+		<input type="checkbox" name="topography1" value="River" checked>Close to rivers/lake<br>
+		<input type="checkbox" name="topography2" value="Valley">Close to Valley<br>
+		<input type="checkbox" name="topography3" value="Flat" checked>On Flat Surface<br>
+		<input type="checkbox" name="topography4" value="Slope">On Incline/Decline slope<br>
+	</div>
+	<div class="form-group">
+		<h4>Soil Type</h4>
+		<select class="form-control" name="soilType" id="soilType">
+			<option>Organic</option><option>Silicic</option>
+			<option>Humic</option><option>Calcic</option>
+			<option>Melanic</option><option>Duplex</option>
+			<option>Vertic</option><option>Podzolic </option>
+		</select>
+	</div>
+	
+---------------------------------------------------------------------------------------------------------------------------------------------
+The farm's spray program, at that particular sections where the plant/fruit/nuts are:
+-Agrochemicals used
+-Pesticides used
+-Herbicides used
+-Fertilisers used
+
+	<div class="form-group">
+		<h4>The spray program (Quantity)</h4>
+		<label for="agrochemicals">Agrochemicals:</label>
+		<input class="form-control" type="number" step="0.01" name="agrochemicals" id="agrochemicals"/>
+		<label for="pesticides">Pesticides:</label>
+		<input class="form-control" type="number" step="0.01" name="pesticides" id="pesticides"/>
+		<label for="herbicides">Herbicides:</label>
+		<input class="form-control" type="number" step="0.01" name="herbicides" id="herbicides"/>
+		<label for="fertilisers">Fertilisers:</label>
+		<input class="form-control" type="number" step="0.01" name="fertilisers" id="fertilisers"/>
+	</div>
+	
+---------------------------------------------------------------------------------------------------------------------------------------------
+The minimum and maximum temperatures of the of the day of recording (this the farmer can collect on google)
+
+	<div class="form-group">
+		<h4>Daily Minimum & Maximum Temperatures</h4>
+		<label for="dateRecorded">Date Recorded:</label>
+		<input type="date" class="form-control" id="dateRecorded" name="dateRecorded"/>
+		<label for="minimum">Minimum Temperatures (Degrees Celsius):</label>
+		<input class="form-control" type="number" step="0.01" name="minimum" id="minimum"/>
+		<label for="maximum">Maximum Temperatures (Degrees Celsius):</label>
+		<input class="form-control" type="number" step="0.01" name="maximum" id="maximum"/>
+	</div>
+	
+---------------------------------------------------------------------------------------------------------------------------------------------	
+How much Yeild was recorded that day (I dont know about this, just a guess)
+
+	<div class="form-group">
+		<h4>Yield Records (Measured in kg) </h4>
+		<label for="Hectares">Numbers of ha planted :</label>
+		<input class="form-control" type="number" step="0.01" name="Hectares" id="Hectares"/>
+		<label for="quantity">Kg Harvested:</label>
+		<input class="form-control" type="number" step="0.01" name="quantity" id="quantity"/>
+	</div>	
+	
+---------------------------------------------------------------------------------------------------------------------------------------------
+The quality of the produce for that day (The farmer will use his discretion here)
+
+	<div class="form-group">
+		<div class="form-group">
+			<label for="productImage">Grade/Quality of Produce:<br></label><br>Good
+			<input type="range" name="productImage" min="0" max="10" id="productImage">Best
+		</div>
+	</div>	
+	
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+* Any Team member can add what they thing is logical to add to the Detailed Yeild Information Link
+*/
+So far: 
+	Detailed Yeild Information:
+		-Feild Section
+		-Caltivar Name
+		-Topography and Soil Type
+		-Farm's Spray Program (Types of chemicals used)
+		-Min and Max temperatures of the day
+		-Yeild Measurement
+		-Quality Of the Produce
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

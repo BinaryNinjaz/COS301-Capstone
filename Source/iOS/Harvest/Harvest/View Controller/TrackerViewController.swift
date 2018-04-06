@@ -10,14 +10,13 @@ import UIKit
 import CoreLocation
 
 class TrackerViewController: UIViewController {
-  var tracker: Tracker!
+  var tracker: Tracker?
   var locationManager: CLLocationManager!
   var currentLocation: CLLocation?
+  var workers: [Worker] = []
   
   @IBOutlet weak var startSessionButton: UIButton!
-  @IBOutlet weak var expectedYieldLabel: UILabel!
-  @IBOutlet weak var collectButton: UIButton!
-  @IBOutlet weak var yieldAmountTextField: UITextField!
+  @IBOutlet weak var workerCollectionView: UICollectionView!
   
   
   @IBAction func startSession(_ sender: Any) {
@@ -32,9 +31,8 @@ class TrackerViewController: UIViewController {
       if CLLocationManager.locationServicesEnabled() {
         locationManager.startUpdatingLocation()
         
-        collectButton.isEnabled = true
         startSessionButton.setTitle("Stop", for: .normal)
-        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.orange[1])
+        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.orange[1])
         startSessionButton.apply(gradient: sessionLayer)
         
         tracker = Tracker()
@@ -43,30 +41,98 @@ class TrackerViewController: UIViewController {
       locationManager.stopUpdatingLocation()
       
       tracker.storeTrack()
-      
-      collectButton.isEnabled = false
       startSessionButton.setTitle("Start", for: .normal)
-      let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.green[1])
+      let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
       startSessionButton.apply(gradient: sessionLayer)
+      HarvestDB.collect(from: tracker!.collections, from: HarvestUser.current.name, on: Date())
       
       tracker = nil
     }
   }
   
   @IBAction func collectYield(_ sender: Any) {
-    guard let yieldText = yieldAmountTextField.text else {
+    guard let idx = workerCollectionView.indexPathsForSelectedItems?.first else {
+      return
+    }
+    
+    guard let loc = currentLocation else {
       let alert = UIAlertController.alertController(
-        title: "Missing Yield Amount",
-        message: "Please enter amount of yield collect before pressing collect")
+        title: "Location Unavailable",
+        message: "Please allow location service from the 'Settings' app")
       
       present(alert, animated: true, completion: nil)
       return
     }
     
-    guard let yield = Double(yieldText) else {
+    tracker?.collect(for: workers[idx.row], at: loc)
+  }
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    startSessionButton.layer.cornerRadius = 40
+    hideKeyboardWhenTappedAround()
+    
+    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
+    startSessionButton.apply(gradient: sessionLayer)
+    
+    HarvestDB.getWorkers { (workers) in
+      for worker in workers {
+        self.workers.append(worker)
+      }
+      DispatchQueue.main.async {
+        self.workerCollectionView.reloadData()
+      }
+    }
+  }
+
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+  }
+
+}
+
+extension TrackerViewController : CLLocationManagerDelegate {
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    guard let loc = locations.first else {
+      return
+    }
+    currentLocation = loc
+    tracker.track(location: loc)
+  }
+}
+
+extension TrackerViewController : UICollectionViewDataSource {
+  func numberOfSections(in collectionView: UICollectionView) -> Int {
+    return 1
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return workers.count
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "workerCollectionViewCell", for: indexPath) as? WorkerCollectionViewCell else {
+      return UICollectionViewCell()
+    }
+    
+    let worker = workers[indexPath.row]
+    
+    cell.myBackgroundView.frame.size = cell.frame.size
+    
+    cell.myBackgroundView.apply(gradient: CAGradientLayer.blue)
+    cell.nameLabel.text = worker.firstname + " " + worker.lastname
+    cell.yieldLabel.text = String(tracker?.collections[worker]?.count ?? 0)
+    
+    return cell
+  }
+}
+
+extension TrackerViewController : UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    guard tracker != nil else {
       let alert = UIAlertController.alertController(
-        title: "Incorrect Yield",
-        message: "Please enter a number for the yield amount")
+        title: "Session Not Started",
+        message: "Please start the session before collecting yields")
       
       present(alert, animated: true, completion: nil)
       return
@@ -81,37 +147,19 @@ class TrackerViewController: UIViewController {
       return
     }
     
-    yieldAmountTextField.text = ""
-    tracker.collect(yield: yield, at: loc)
-    view.endEditing(true)
-  }
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    startSessionButton.layer.cornerRadius = 60
-    hideKeyboardWhenTappedAround()
+    tracker?.collect(for: workers[indexPath.row], at: loc)
     
-    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 60, borderColor: UIColor.Bootstrap.green[1])
-    startSessionButton.apply(gradient: sessionLayer)
+    workerCollectionView.deselectItem(at: indexPath, animated: true)
     
-    collectButton.apply(gradient: .green)
-    
-    // Do any additional setup after loading the view.
+    workerCollectionView.reloadData()
   }
-
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-
 }
 
-extension TrackerViewController : CLLocationManagerDelegate {
-  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    guard let loc = locations.first else {
-      return
-    }
-    currentLocation = loc
-    tracker.track(location: loc)
+extension TrackerViewController : UICollectionViewDelegateFlowLayout {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      sizeForItemAt indexPath: IndexPath) -> CGSize {
+    return CGSize(width: collectionView.frame.width / 2 - 0.5,
+                  height: collectionView.frame.width / 2 - 0.5);
   }
 }

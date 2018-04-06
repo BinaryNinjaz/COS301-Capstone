@@ -1,0 +1,170 @@
+\documentclass[11pt]{article}
+\addtolength{\oddsidemargin}{-1.cm}
+\addtolength{\textwidth}{2cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{3.5cm}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+\usepackage[pdftex]{graphicx}
+\usepackage{pdflscape}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{cite}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	filecolor=magenta,
+	urlcolor=cyan,
+}
+
+% define the title
+\author{Binary Ninjaz}
+\title{Harvest}
+\begin{document}
+\begin{titlepage}
+
+	\begin{center}
+		% Upper part of the page
+		\textsc{\LARGE Binary Ninjaz}\\[0.3cm]
+		% Title
+		\rule{\linewidth}{0.5mm} \\[1cm]
+		{ \huge \bfseries Harvest (User Manual)}\\[0.5cm]
+		\rule{\linewidth}{0.5mm} \\[1cm]
+
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				Letanyan {Arumugam}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				14228123
+			\end{flushright}
+		\end{minipage}
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+            	\emph{} \\
+				Sizo {Duma}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				15245579
+			\end{flushright}
+		\end{minipage}
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				Teboho {Mokoena}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				14415888
+			\end{flushright}
+		\end{minipage}
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				John {Ojo}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				15096794
+			\end{flushright}
+		\end{minipage}
+
+        \begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				Kevin {Reid}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				15008739
+			\end{flushright}
+		\end{minipage}
+        
+        \begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				Shaun {Yates}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				16007493
+			\end{flushright}
+		\end{minipage}
+
+		\rule{\linewidth}{0.5mm} \\[1cm]
+		\textsc{\Large Stakeholders}\\[1cm]
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				SAMAC:
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				Barry Christie
+			\end{flushright}
+		\end{minipage}
+
+
+	\end{center}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+
+\newpage
+\section{General Information}
+\subsection{System Overview}
+Harvest, is an application to assist growers with yield data and optimise worker performance. In other words, it is a system that can efficiently measure the amount of work done by a worker, track the foremen on a farm, record information and data, and display the necessary information. This system is aimed at farming communities to help then record data and get work done more efficiently.\\
+
+\subsection{System Configuration}
+The system currently requires:\\
+\begin{itemize}
+	\item Android 4.1 OS or iOS
+	\item RAM
+	\item Disk Space		
+	\item Location Services
+\end{itemize}
+
+\subsection{Installation}
+For Android devices the application will be available on the Google Play Store for download and for iOS devices the application will be available on the App Store.\\
+With regards to configuration, location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application. Profile setting can be configured via selecting the user’s username.\\
+
+\newpage
+\section{Getting Started}
+
+\subsection{Logging in}
+
+\subsection{System Menu}
+
+\subsection{Exiting the System}
+
+\newpage
+\section{Using the System}
+
+\newpage
+\section{Troubleshooting}.
+
+
+\end{document}

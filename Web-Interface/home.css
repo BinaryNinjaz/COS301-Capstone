@@ -6,3 +6,38 @@
 .feedHeader{
     text-align: center;
 } 
+
+/*Vincent Did all of this from here until */
+.modal
+{
+    opacity: 0.6;
+    position: fixed;
+    height:80%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+}
+
+#form
+{
+    background-color: transparent;
+}
+
+.modal-header, .modal-footer
+{
+    background-color: #A9A9A9;
+}
+
+.modal-body
+{
+    background-color: #bbb;
+}
+
+
+h4
+{
+    background-color: #A9A9A9;
+	font-family: 'Segoe UI', Frutiger, 'Frutiger Linotype', 'Dejavu Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+/*Vincent Did all of this until here */

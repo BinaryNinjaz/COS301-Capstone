@@ -31,25 +31,25 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-        _loginButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
-
-        _signupLink.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
-                finish();
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out); //anim file (include)
-            }
-        });
+//        _loginButton.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                login();
+//            }
+//        });
+//
+//        _signupLink.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                // Start the Signup activity
+//                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+//                startActivityForResult(intent, REQUEST_SIGNUP);
+//                finish();
+//                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out); //anim file (include)
+//            }
+//        });
     }
 
     public void login() {
