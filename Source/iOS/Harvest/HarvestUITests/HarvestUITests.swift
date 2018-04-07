@@ -29,21 +29,20 @@ class HarvestUITests: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     super.tearDown()
   }
-  
-  func testAutoSignIn() {
-    
-  }
 
   func testYieldCollection() {
-    UserDefaults.standard.set("letanyan.a@gmail.com", forKey: "username")
-    UserDefaults.standard.set("letanyan", forKey: "password")
     
     let app = XCUIApplication()
-    let textField = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .textField).element
-    textField.tap()
-    app.buttons["Start Session"].tap()
-    textField.tap()
-    app.buttons["Collect"].tap()
+    let cellsQuery = app.collectionViews.cells
+    let trissMerigoldElementsQuery = cellsQuery.otherElements.containing(.staticText, identifier:"Triss Merigold")
+    let staticText = trissMerigoldElementsQuery.staticTexts["0"]
+    staticText.tap()
+    app.alerts["Session Not Started"].buttons["Okay"].tap()
+    app.buttons["Start"].tap()
+    cellsQuery.otherElements.containing(.staticText, identifier:"Zoltan Chivay").staticTexts["0"].tap()
+    cellsQuery.otherElements.containing(.staticText, identifier:"Keira Metz").staticTexts["0"].tap()
+    staticText.tap()
+    trissMerigoldElementsQuery.staticTexts["1"].tap()
     app.buttons["Stop"].tap()
     
   }

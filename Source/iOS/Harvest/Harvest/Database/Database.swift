@@ -148,7 +148,6 @@ struct HarvestDB {
         }
         let fn = worker["name"] as? String ?? ""
         let ln = worker["surname"] as? String ?? ""
-        print(worker)
         let w = Worker(firstname: fn, lastname: ln)
         workers.append(w)
       }

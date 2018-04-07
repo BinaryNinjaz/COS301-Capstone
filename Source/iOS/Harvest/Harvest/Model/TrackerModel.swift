@@ -20,10 +20,10 @@ struct WorkerCollection {
 }
 
 struct Tracker {
-  var trackCount: Int
-  var sessionStart: Date
-  var lastCollection: Date
-  var collections: [Worker: WorkerCollection]
+  private(set) var trackCount: Int
+  private(set) var sessionStart: Date
+  private(set) var lastCollection: Date
+  private(set) var collections: [Worker: WorkerCollection]
   
   init() {
     trackCount = 0
@@ -51,20 +51,24 @@ struct Tracker {
     trackCount += 1
   }
   
-  func storeSession() {
-    var track = [(Double, Double)]()
+  func pathTracked() -> [(Double, Double)] {
+    var result = [(Double, Double)]()
     
     for i in 0..<trackCount {
       let d = i.description
       let lat = UserDefaults.standard.double(forKey: "lat" + d)
       let lng = UserDefaults.standard.double(forKey: "lng" + d)
-      track.append((lat, lng))
+      result.append((lat, lng))
     }
     
+    return result
+  }
+  
+  func storeSession() {
     HarvestDB.collect(from: collections,
                       by: HarvestUser.current.name,
                       on: sessionStart,
-                      track: track)
+                      track: pathTracked())
   }
 }
 
