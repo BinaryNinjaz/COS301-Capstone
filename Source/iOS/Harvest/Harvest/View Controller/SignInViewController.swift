@@ -103,10 +103,7 @@ class SignInViewController: UIViewController {
     
     signInButton.apply(gradient: .green)
     signUpButton.apply(gradient: .blue)
-  }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
+    
     if let username = UserDefaults.standard.getUsername(),
       let password = UserDefaults.standard.getPassword() {
       attempSignIn(username: username, password: password)
