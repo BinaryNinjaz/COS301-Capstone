@@ -14,3 +14,11 @@ initializeFirebase();// set up the database
 function refreshPage() {
     location.reload();
 }
+
+function fbSignIn(email, password) {
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        // Handle Errors here.
+        alert("Sign In Fail");
+        // ...
+    });
+}
