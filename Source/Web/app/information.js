@@ -74,7 +74,7 @@ function dispFarm(id) {
                 const buttons = document.getElementById("orchardButtons");
                 workers.forEach(function (orchard) {
                     if(orchard.val().farm == id){
-                        buttons.innerHTML+="<div class='col-lg-4'><button class='btn btn-default' onclick='dispOrch("+orchard.key+")'>"+orchard.val().name+"</button></div>";
+                        buttons.innerHTML+="<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispOrch("+orchard.key+")'>"+orchard.val().name+"</button></div>";
                     }
                 });
             });
@@ -247,7 +247,7 @@ function dispOrch(id) {
                 farmSnapshot.forEach(function (farm) {
                     if(farm.key === snapshot.val().farm){
                         // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
-                        document.getElementById("orchFarmDisp").innerHTML="<div class='col-lg-4'><button class='btn btn-default' onclick='dispFarm("+farm.key+")'>"+farm.val().name+"</button></div>";
+                        document.getElementById("orchFarmDisp").innerHTML="<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispFarm("+farm.key+")'>"+farm.val().name+"</button></div>";
                     }
                 });
 
@@ -255,7 +255,7 @@ function dispOrch(id) {
                     const buttons = document.getElementById("workerButtons");
                     workers.forEach(function (worker) {
                         if (worker.val().orchard == id) {
-                            buttons.innerHTML += "<div class='col-lg-4'><button class='btn btn-default' onclick='dispWork(" + worker.key + ")'>" + worker.val().name.charAt(0) + ". " + worker.val().surname + "</button></div>";
+                            buttons.innerHTML += "<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispWork(" + worker.key + ")'>" + worker.val().name.charAt(0) + ". " + worker.val().surname + "</button></div>";
                         }
                     });
                 });
@@ -466,7 +466,7 @@ function dispWork(id) {
                 orchardSnapshot.forEach(function (orchard) {
                     if(orchard.key === snapshot.val().orchard){
                         // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
-                        document.getElementById("workOrchDisp").innerHTML="<div class='col-lg-4'><button class='btn btn-default' onclick='dispOrch("+orchard.key+")'>"+orchard.val().name+"</button></div>";
+                        document.getElementById("workOrchDisp").innerHTML="<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispOrch("+orchard.key+")'>"+orchard.val().name+"</button></div>";
                     }
                 });
 
