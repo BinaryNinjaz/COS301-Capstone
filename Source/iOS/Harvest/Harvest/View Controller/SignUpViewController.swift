@@ -114,6 +114,9 @@ class SignUpViewController: UIViewController {
     cancelButton.apply(gradient: .blue)
   }
 
+  
+  
+  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }

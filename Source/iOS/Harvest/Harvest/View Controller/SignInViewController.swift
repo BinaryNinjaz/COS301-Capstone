@@ -53,6 +53,49 @@ class SignInViewController: UIViewController {
     attempSignIn(username: username, password: password)
   }
   
+  @IBAction func forgotAccountTouchUp(_ sender: UIButton) {
+    
+    let emailRequest = UIAlertController(title: "Email Address",
+                                         message: "Please enter the email address for the account that you forgot",
+                                         preferredStyle: .alert)
+    
+    emailRequest.addTextField { (email) in email.keyboardType = .emailAddress }
+    
+    emailRequest.addAction(UIAlertAction(title: "Done", style: .default, handler: { [weak emailRequest] _ in
+      guard let email = emailRequest?.textFields?[0].text else {
+        let alert = UIAlertController.alertController(
+          title: "No Email",
+          message: "Please eneter a valid email address")
+        
+        self.present(alert, animated: true, completion: nil)
+        
+        return
+      }
+      
+      Auth.auth().sendPasswordReset(withEmail: email) { (error) in
+        if let err = error {
+          let alert = UIAlertController.alertController(
+            title: "An Error Occured",
+            message: err.localizedDescription)
+          
+          self.present(alert, animated: true, completion: nil)
+          
+          return
+        }
+        
+        let alert = UIAlertController.alertController(
+          title: "Password Reset Sent",
+          message: "An email was sent to \(email) to reset your password")
+        
+        self.present(alert, animated: true, completion: nil)
+      }
+    }))
+    
+    emailRequest.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+    
+    present(emailRequest, animated: true, completion: nil)
+    
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
