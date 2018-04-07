@@ -141,15 +141,14 @@ Harvest, is an application to assist growers with yield data and optimise worker
 \subsection{System Configuration}
 The system currently requires:\\
 \begin{itemize}
-	\item Android 4.1 OS or iOS
-	\item RAM
-	\item Disk Space		
+	\item Android 4.1 OS
+    \item iOS 10.0 or above		
 	\item Location Services
 \end{itemize}
 
 \subsection{Installation}
 For Android devices the application will be available on the Google Play Store for download and for iOS devices the application will be available on the App Store.\\
-With regards to configuration, location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application. Profile setting can be configured via selecting the user’s username.\\
+With regards to configuration, location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application. Profile setting can be configured via selecting the user's username.\\
 
 \newpage
 \section{Getting Started}
@@ -161,6 +160,24 @@ With regards to configuration, location services are required. The user will be 
 \subsection{Exiting the System}
 
 \newpage
+\section{Using the iOS Application}
+\subsection{Creating an Account}
+The application will open by default on the log in screen. If you do not have an account you can press the "Sign Up" button. Once on the sign up page enter your details an press "Create Account". You will then be logged in accordingly.
+
+\subsection{Logging In}
+When on the log in screen enter your email and its password you used to create the account. If you have already logged in the app will keep you logged in until you log out.
+
+\subsection{Using the Clicker}
+When using the clicker ensure that you start the session first before clicking a worker to collect a yield from them. The procedure of using the clicker works as follows:
+
+\begin{enumerate}
+\item Press "Start"
+\item Click a workers name when they bring in a bag.
+\item Press "Stop"
+\end{enumerate}
+
+
+\newpage
 \section{Using the System}
 
 \newpage
@@ -168,3 +185,4 @@ With regards to configuration, location services are required. The user will be 
 
 
 \end{document}
+
