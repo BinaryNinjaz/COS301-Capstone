@@ -74,7 +74,7 @@ function dispFarm(id) {
                 const buttons = document.getElementById("orchardButtons");
                 workers.forEach(function (orchard) {
                     if(orchard.val().farm == id){
-                        buttons.innerHTML+="<div class='col-lg-4'><button class='btn btn-default' onclick='dispOrch("+orchard.key+")'>"+orchard.val().name+"</button></div>";
+                        buttons.innerHTML+="<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispOrch("+orchard.key+")'>"+orchard.val().name+"</button></div>";
                     }
                 });
             });
@@ -184,7 +184,7 @@ function dispOrch(id) {
                 "<div class='form-group'><label class='control-label col-lg-2' for='date'>Date Planted:</label>" +
                 "<div class='col-lg-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
                 "" +
-                "<div class='form-group'><label class='control-label col-lg-2' for='date'>Dimensions:</label>" +
+                "<div class='form-group'><label class='control-label col-lg-2' for='date'>Spacing:</label>" +
                 "<div class='col-lg-2'><input type='number' class='form-control' id='orchDimX'></div>" +
                 "<div class='col-lg-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
                 "<div class='col-lg-2'><input type='number' class='form-control' id='orchDimY'> </div>" +
@@ -228,7 +228,7 @@ function dispOrch(id) {
                     "<div class='form-group'><label class='control-label col-lg-2' for='date'>Date Planted:</label>" +
                     "<div class='col-lg-9'><p class='form-control-static'>" + snapshot.val().date + "</p></div></div> " +
                     "" +
-                    "<div class='form-group'><label class='control-label col-lg-2' for='date'>Dimensions:</label>" +
+                    "<div class='form-group'><label class='control-label col-lg-2' for='date'>Spacing:</label>" +
                     "<div class='col-lg-9'><p class ='form-control-static'>" + snapshot.val().xDim + " x " + snapshot.val().yDim + " " + snapshot.val().unit +"</p></div>" +
                     "</div> " +
                     "" +
@@ -247,7 +247,7 @@ function dispOrch(id) {
                 farmSnapshot.forEach(function (farm) {
                     if(farm.key === snapshot.val().farm){
                         // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
-                        document.getElementById("orchFarmDisp").innerHTML="<div class='col-lg-4'><button class='btn btn-default' onclick='dispFarm("+farm.key+")'>"+farm.val().name+"</button></div>";
+                        document.getElementById("orchFarmDisp").innerHTML="<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispFarm("+farm.key+")'>"+farm.val().name+"</button></div>";
                     }
                 });
 
@@ -255,7 +255,7 @@ function dispOrch(id) {
                     const buttons = document.getElementById("workerButtons");
                     workers.forEach(function (worker) {
                         if (worker.val().orchard == id) {
-                            buttons.innerHTML += "<div class='col-lg-4'><button class='btn btn-default' onclick='dispWork(" + worker.key + ")'>" + worker.val().name.charAt(0) + ". " + worker.val().surname + "</button></div>";
+                            buttons.innerHTML += "<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispWork(" + worker.key + ")'>" + worker.val().name.charAt(0) + ". " + worker.val().surname + "</button></div>";
                         }
                     });
                 });
@@ -330,7 +330,7 @@ function orchMod(id) {
                 "<div class='form-group'><label class='control-label col-lg-2' for='date'>Date Planted:</label>" +
                 "<div class='col-lg-9'><input type='date' class='form-control' id='orchDate' value='"+ snapshot.val().date+"'></div></div> " +
                 "" +
-                "<div class='form-group'><label class='control-label col-lg-2' for='date'>Dimensions:</label>" +
+                "<div class='form-group'><label class='control-label col-lg-2' for='date'>Spacing:</label>" +
                 "<div class='col-lg-2'><input type='number' class='form-control' id='orchDimX' value ='"+snapshot.val().xDim+"'></div>" +
                 "<div class='col-lg-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
                 "<div class='col-lg-2'><input type='number' class='form-control' id='orchDimY' value ='"+snapshot.val().yDim+"'> </div>" +
@@ -466,7 +466,7 @@ function dispWork(id) {
                 orchardSnapshot.forEach(function (orchard) {
                     if(orchard.key === snapshot.val().orchard){
                         // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
-                        document.getElementById("workOrchDisp").innerHTML="<div class='col-lg-4'><button class='btn btn-default' onclick='dispOrch("+orchard.key+")'>"+orchard.val().name+"</button></div>";
+                        document.getElementById("workOrchDisp").innerHTML="<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispOrch("+orchard.key+")'>"+orchard.val().name+"</button></div>";
                     }
                 });
 
