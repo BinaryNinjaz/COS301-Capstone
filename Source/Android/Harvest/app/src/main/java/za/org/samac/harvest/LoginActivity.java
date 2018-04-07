@@ -3,8 +3,11 @@ package za.org.samac.harvest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +22,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Html;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +36,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,22 +72,26 @@ public class LoginActivity extends AppCompatActivity {
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private EditText mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
-
+    private EditText edtEmail;
+    private EditText edtPassword;
+    private View login_progress;
+    private View login_form;
     private Button btnSignup;
+    private Button btnLogin;
+    private TextView linkForgotAccountDetails;
+
+    private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
+    private static final String TAG = "EmailPassword";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = findViewById(R.id.edtEmail);
+        edtEmail = findViewById(R.id.edtEmail);
 
-        mPasswordView = findViewById(R.id.edtPassword);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        edtPassword = findViewById(R.id.edtPassword);
+        edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
@@ -92,11 +110,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        login_form = findViewById(R.id.login_form);
+        login_progress = findViewById(R.id.login_progress);
 
+        //user presses Log in button, validates and if all is well goes to actual app screen
+        btnLogin = findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
+            }
+        });
+
+        //user presses Sign up button (goes to sign up screen)
         btnSignup = findViewById(R.id.btnSignup);
-
         btnSignup.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,6 +132,157 @@ public class LoginActivity extends AppCompatActivity {
                 finish();//kill current Activity
             }
         });
+
+        //user presses Forgot account details link
+        linkForgotAccountDetails = findViewById(R.id.linkForgotAccountDetails);
+        linkForgotAccountDetails.setMovementMethod(LinkMovementMethod.getInstance());
+        linkForgotAccountDetails.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
+
+                //TODO: center "Reset Password"
+                alert.setMessage(Html.fromHtml("<b>"+"Reset Password"+"</b>"+"<br>"+"Please enter your email, you will receive an email to recover your password."));
+
+                final EditText email = new EditText(LoginActivity.this);
+                email.setInputType(InputType.TYPE_CLASS_TEXT
+                        | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                email.setHint("Email");
+
+                //TODO: adjust padding of text field
+
+                alert.setView(email);
+
+                alert.setNegativeButton("Cancel", null);
+                alert.setPositiveButton("Request Reset", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        login_form.setVisibility(View.INVISIBLE);
+                        login_progress.setVisibility(View.VISIBLE);
+
+                        mAuth.sendPasswordResetEmail(email.getText().toString());//send reset password email
+
+                        login_form.setVisibility(View.VISIBLE);
+                        login_progress.setVisibility(View.GONE);
+                        Snackbar.make(login_form, "Please check your email.", Snackbar.LENGTH_LONG)
+                                .setAction("OK", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                    }
+                                })
+                                .setActionTextColor(getResources().getColor(android.R.color.holo_green_light ))
+                                .show();
+                    }
+                });
+
+                alert.show();
+
+                /*Intent intent = new Intent(LoginActivity.this, LoginActivity.class);//refresh log in screen
+                startActivity(intent);
+                finish();//kill current Activity*/
+            }
+        });
+
+        mAuth = FirebaseAuth.getInstance();//initialisation the FirebaseAuth instance
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);//had to create method for this
+    }
+
+    private void updateUI(FirebaseUser currentUser) {
+
+    }
+
+    private void signInToAccount(String email, String password) {
+        Log.d(TAG, "signInToAccount:" + email);
+        if (!validateForm()) {
+            return;
+        }
+
+        login_form.setVisibility(View.INVISIBLE);
+        login_progress.setVisibility(View.VISIBLE);
+        if (password.length() < 6) {
+            int paddingCount = 6 - password.length();
+
+            for(int i = 0; i < paddingCount; i++) {
+                password += '#';
+            }
+        }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+
+                            Snackbar.make(login_form, "Log In Successful", Snackbar.LENGTH_LONG).show();
+                            login_progress.setVisibility(View.GONE);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);//TODO: change this to make it go to actual app
+                                    startActivity(intent);
+                                    finish();//kill current Activity
+                                }
+                            }, 1500);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+
+                            login_form.setVisibility(View.VISIBLE);
+                            login_progress.setVisibility(View.GONE);
+                            Snackbar.make(login_form, "Email or password incorrect. Please try again.", Snackbar.LENGTH_LONG)
+                                    .setAction("OK", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                        }
+                                    })
+                                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                                    .show();
+                        }
+
+                        // ...
+                    }
+                });
+
+    }
+
+    //firebase suggested validate
+    private boolean validateForm() {
+        boolean valid = true;
+
+        String email = edtEmail.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            edtEmail.setError("Required.");
+            valid = false;
+        } else {
+            edtEmail.setError(null);
+        }
+
+        String password = edtPassword.getText().toString();
+        if (TextUtils.isEmpty(password)) {
+            edtPassword.setError("Required.");
+            valid = false;
+        } else {
+            edtPassword.setError(null);
+        }
+
+        return valid;
     }
 
     private boolean mayRequestContacts() {
@@ -115,7 +293,7 @@ public class LoginActivity extends AppCompatActivity {
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(edtEmail, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -154,31 +332,31 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        edtEmail.setError(null);
+        edtPassword.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = edtEmail.getText().toString();
+        String password = edtPassword.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            edtPassword.setError(getString(R.string.error_invalid_password));
+            focusView = edtPassword;
             cancel = true;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            edtEmail.setError(getString(R.string.error_field_required));
+            focusView = edtEmail;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            edtEmail.setError(getString(R.string.error_invalid_email));
+            focusView = edtEmail;
             cancel = true;
         }
 
@@ -216,28 +394,28 @@ public class LoginActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+            login_form.setVisibility(show ? View.GONE : View.VISIBLE);
+            login_form.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    login_form.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
+            login_progress.setVisibility(show ? View.VISIBLE : View.GONE);
+            login_progress.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    login_progress.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            login_progress.setVisibility(show ? View.VISIBLE : View.GONE);
+            login_form.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -287,8 +465,8 @@ public class LoginActivity extends AppCompatActivity {
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                edtPassword.setError(getString(R.string.error_incorrect_password));
+                edtPassword.requestFocus();
             }
         }
 

@@ -41,35 +41,60 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/edtFirstName"
-                    android:hint="@string/prompt_enter_firstName"
-                    style="@style/EditText"
-                    android:inputType="text" />
+                <android.support.design.widget.TextInputLayout
+                    style="@style/TextInputLayout">
 
-                <EditText
-                    android:id="@+id/edtSurname"
-                    android:hint="@string/prompt_enter_surname"
-                    style="@style/EditText"
-                    android:inputType="text" />
+                    <EditText
+                        android:id="@+id/edtFirstName"
+                        android:hint="@string/prompt_enter_firstName"
+                        style="@style/EditText"
+                        android:inputType="text" />
 
-                <EditText
-                    android:id="@+id/edtUsername"
-                    android:hint="@string/prompt_enter_username"
-                    style="@style/EditText"
-                    android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/edtEmail"
-                    android:hint="@string/prompt_enter_email"
-                    style="@style/EditText"
-                    android:inputType="textEmailAddress" />
+                <android.support.design.widget.TextInputLayout
+                    style="@style/TextInputLayout">
 
-                <EditText
-                    android:id="@+id/edtPassword"
-                    android:hint="@string/prompt_enter_newPassword"
-                    style="@style/EditText"
-                    android:inputType="textPassword" />
+                    <EditText
+                        android:id="@+id/edtSurname"
+                        android:hint="@string/prompt_enter_surname"
+                        style="@style/EditText"
+                        android:inputType="text" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/TextInputLayout">
+
+                    <EditText
+                        android:id="@+id/edtEmail"
+                        android:hint="@string/prompt_enter_email"
+                        style="@style/EditText"
+                        android:inputType="textEmailAddress" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/TextInputLayout">
+
+                    <EditText
+                        android:id="@+id/edtPassword"
+                        android:hint="@string/prompt_enter_newPassword"
+                        style="@style/EditText"
+                        android:inputType="textPassword" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/TextInputLayout">
+
+                    <EditText
+                        android:id="@+id/edtConfirmPassword"
+                        android:hint="@string/prompt_confirm_Password"
+                        style="@style/EditText"
+                        android:inputType="textPassword" />
+
+                </android.support.design.widget.TextInputLayout>
 
                 <Button
                     android:id="@+id/btnSignUp"
