@@ -56,12 +56,12 @@ class SignInViewController: UIViewController {
   @IBAction func forgotAccountTouchUp(_ sender: UIButton) {
     
     let emailRequest = UIAlertController(title: "Reset Password",
-                                         message: "Please eneter your email, you will receive an email to reset your password.",
+                                         message: "Please enter your email, you will receive an email to reset your password.",
                                          preferredStyle: .alert)
     
     emailRequest.addTextField { (email) in email.keyboardType = .emailAddress }
     
-    emailRequest.addAction(UIAlertAction(title: "Done", style: .default, handler: { [weak emailRequest] _ in
+    emailRequest.addAction(UIAlertAction(title: "Request Reset", style: .default, handler: { [weak emailRequest] _ in
       guard let email = emailRequest?.textFields?[0].text else {
         let alert = UIAlertController.alertController(
           title: "No Email",
