@@ -184,7 +184,7 @@ function dispOrch(id) {
                 "<div class='form-group'><label class='control-label col-lg-2' for='date'>Date Planted:</label>" +
                 "<div class='col-lg-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
                 "" +
-                "<div class='form-group'><label class='control-label col-lg-2' for='date'>Dimensions:</label>" +
+                "<div class='form-group'><label class='control-label col-lg-2' for='date'>Spacing:</label>" +
                 "<div class='col-lg-2'><input type='number' class='form-control' id='orchDimX'></div>" +
                 "<div class='col-lg-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
                 "<div class='col-lg-2'><input type='number' class='form-control' id='orchDimY'> </div>" +
@@ -228,7 +228,7 @@ function dispOrch(id) {
                     "<div class='form-group'><label class='control-label col-lg-2' for='date'>Date Planted:</label>" +
                     "<div class='col-lg-9'><p class='form-control-static'>" + snapshot.val().date + "</p></div></div> " +
                     "" +
-                    "<div class='form-group'><label class='control-label col-lg-2' for='date'>Dimensions:</label>" +
+                    "<div class='form-group'><label class='control-label col-lg-2' for='date'>Spacing:</label>" +
                     "<div class='col-lg-9'><p class ='form-control-static'>" + snapshot.val().xDim + " x " + snapshot.val().yDim + " " + snapshot.val().unit +"</p></div>" +
                     "</div> " +
                     "" +
@@ -330,7 +330,7 @@ function orchMod(id) {
                 "<div class='form-group'><label class='control-label col-lg-2' for='date'>Date Planted:</label>" +
                 "<div class='col-lg-9'><input type='date' class='form-control' id='orchDate' value='"+ snapshot.val().date+"'></div></div> " +
                 "" +
-                "<div class='form-group'><label class='control-label col-lg-2' for='date'>Dimensions:</label>" +
+                "<div class='form-group'><label class='control-label col-lg-2' for='date'>Spacing:</label>" +
                 "<div class='col-lg-2'><input type='number' class='form-control' id='orchDimX' value ='"+snapshot.val().xDim+"'></div>" +
                 "<div class='col-lg-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
                 "<div class='col-lg-2'><input type='number' class='form-control' id='orchDimY' value ='"+snapshot.val().yDim+"'> </div>" +
