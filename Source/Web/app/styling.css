@@ -54,3 +54,7 @@ button {
     background-color: white;
     width: 100%;
 }
+
+p.errmsg{
+    color: red;
+}

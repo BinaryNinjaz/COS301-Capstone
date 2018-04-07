@@ -2,14 +2,14 @@
     <head>
         <title>Harvest Home</title>
 
-        <link href="Styling.css" rel="stylesheet" type="text/css" />
+        <link href="styling.css" rel="stylesheet" type="text/css" />
 
         <!-- Firebase Dependencies -->
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
         <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
         
-        <script src="FireBaseRelatedJavaScriptFunctions.js" type="text/javascript"></script>
+        <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script>
         
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -17,42 +17,11 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
         <!-- Latest compiled and minified JavaScript -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-        <script src ='../functions/jquery-3.3.1.min.js'></script>
         <!-- Firebase -->
-        <script>
-            // A reference to the database location
-            var yieldRef = firebase.database().ref('yields');
-            // When a yield is added, changed or deleted 
-            yieldRef.on('value', function(snapshot) {
-                // snapshot is the part of the database that was changed
-                
-                var yields = document.getElementById('yields');
-                yields.innerHTML = "";
-                
-                // yields has multiple yield inputs
-                // so we iterate over each yield individually
-                snapshot.forEach(function(childSnapshot) {
-                    // we use val() to get the actual data.
-                    // the we can obj like it was just a normal object with fields
-                    var obj = childSnapshot.val();
-                    
-                    var date = obj.date;
-                    var duration = obj.duration;
-                    var email = obj.email;
-                    var lat = obj.location.lat;
-                    var lng = obj.location.lng;
-                    var yieldAmount = obj.yield;
-                    
-                    yields.innerHTML += "<b>Date: </b>" + date + "</br>";
-                    yields.innerHTML += "<b>Duration: </b>" + duration + "</br>"; 
-                    yields.innerHTML += "<b>Email: </b>" + email + "</br>"; 
-                    yields.innerHTML += "<b>Location: </b>" + lat + "," + lng + "</br>";
-                    yields.innerHTML += "<b>Yield: </b>" + yieldAmount + "</br></br>";  
-                });
-            });
-        </script>
+        <script src="homepage.js" type="text/javascript"></script>
     
     </head>
     <body>
@@ -60,12 +29,12 @@
             <ul class="nav navbar-nav">
                 <a class="active" href="#">Harvest Home</a>
                 <a href="Information.html">View/Edit Information</a>
-                <a href="HeatMap.html">Heatmap</a>  
+                <!--<a href="HeatMap.html">Heatmap</a> -->  <!--TODO: Heatmap-->
             </ul>
             
             <ul class="pull-right nav navbar-nav">
-                <a href="#">Username</a>
-                <a href="#">Sign out</a>
+                <!--<a href="javascript:;">Username <span class="glyphicon glyphicon-cog"></span> </a>--> <!--TODO: Account Managment Page-->
+                <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
             </ul>
         </div>
         
