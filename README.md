@@ -1,1 +1,3 @@
-# COS 301 Capstone Project
+# Github Rules
+
+We will have a mediator between the master branch and the called the developer branch so when we work on something individually we will first merge our own personal branches then if everything is still fine we can merge it with the developer branch. Once all testing is done completely and everything works we will then merge developer to master. So the developer branch is like the child master in other words. Everything has to pass through developer to go to master. 
