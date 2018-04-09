@@ -23,9 +23,8 @@ class HarvestTests: XCTestCase {
       super.tearDown()
   }
   
-  func testYieldCollection() {
+  func setUpYieldTracker() -> (Tracker, [CLLocation], [String: Worker]) {
     var tracker = Tracker()
-    let d = Date()
     
     let workerA = Worker(firstname: "Andy", lastname: "Andrews")
     let workerB = Worker(firstname: "Ben", lastname: "Bennet")
@@ -51,20 +50,48 @@ class HarvestTests: XCTestCase {
     tracker.collect(for: workerB, at: loc2)
     tracker.collect(for: workerB, at: loc1)
     
-    XCTAssertLessThan(tracker.sessionStart, d)
+    return (tracker, [loc0, loc1, loc2], ["A": workerA, "B": workerB])
+  }
+  
+  func testYieldCollectionAmount() {
+    let (tracker, _, workers) = setUpYieldTracker()
     
     let collectionPointsA = tracker
-      .collections[workerA]?
+      .collections[workers["A"]!]?
       .collectionPoints
       .map { $0.location }
     
     let collectionPointsB = tracker
-      .collections[workerB]?
+      .collections[workers["B"]!]?
       .collectionPoints
       .map { $0.location }
     
-    XCTAssertEqual(collectionPointsA, [loc0, loc1])
-    XCTAssertEqual(collectionPointsB, [loc2, loc2, loc1])
+    XCTAssertEqual(collectionPointsA?.count, 2)
+    XCTAssertEqual(collectionPointsB?.count, 3)
+  }
+  
+  func testYieldCollectionCoords() {
+    let (tracker, locs, workers) = setUpYieldTracker()
+    
+    let collectionPointsA = tracker
+      .collections[workers["A"]!]?
+      .collectionPoints
+      .map { $0.location }
+    
+    let collectionPointsB = tracker
+      .collections[workers["B"]!]?
+      .collectionPoints
+      .map { $0.location }
+    
+    XCTAssertEqual(collectionPointsA, [locs[0], locs[1]])
+    XCTAssertEqual(collectionPointsB, [locs[2], locs[2], locs[1]])
+  }
+  
+  func testYieldCollectionClocking() {
+    let (tracker, _, _) = setUpYieldTracker()
+    let d = Date()
+    
+    XCTAssertLessThan(tracker.sessionStart, d)
   }
   
   func testLocationTracking() {
