@@ -75,6 +75,7 @@ class TrackerViewController: UIViewController {
     startSessionButton.apply(gradient: sessionLayer)
     
     HarvestDB.getWorkers { (workers) in
+      self.workers.removeAll(keepingCapacity: true)
       for worker in workers {
         self.workers.append(worker)
       }
