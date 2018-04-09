@@ -203,8 +203,13 @@ struct HarvestDB {
         i += 1
       }
       
-      cs[w.firstname + " " + w.lastname] = collections
+      let (f, l) = (w.firstname.removedFirebaseInvalids(),
+                    w.lastname.removedFirebaseInvalids())
+      cs[f + " " + l] = collections
     }
+    
+    print(cs)
+    print(track.firbaseCoordRepresentation())
     
     let data: [String: Any] = [
       "start_date": date.timeIntervalSince1970,
@@ -255,6 +260,20 @@ extension Array where Element == (Double, Double) {
       result[id.description] = coord
       id += 1
     }
+    return result
+  }
+}
+
+extension String {
+  func removedFirebaseInvalids() -> String {
+    var result = ""
+    
+    for c in self {
+      if !"[.*$#]".contains(c) {
+        result += "\(c)"
+      }
+    }
+    
     return result
   }
 }

@@ -46,6 +46,18 @@ struct Tracker {
     collections[worker] = collection
   }
   
+  mutating func pop(for worker: Worker) {
+    guard var collection = collections[worker],
+      !collection.collectionPoints.isEmpty else {
+      return
+    }
+    
+    collection.count -= 1
+    collection.collectionPoints.removeLast()
+    
+    collections[worker] = collection
+  }
+  
   mutating func track(location: CLLocation) {
     UserDefaults.standard.track(location: location, index: trackCount)
     trackCount += 1

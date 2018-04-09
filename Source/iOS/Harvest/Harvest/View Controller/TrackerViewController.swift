@@ -46,6 +46,8 @@ class TrackerViewController: UIViewController {
       tracker?.storeSession()
       
       tracker = nil
+      
+      workerCollectionView.reloadData()
     }
   }
   
@@ -125,35 +127,57 @@ extension TrackerViewController : UICollectionViewDataSource {
     cell.nameLabel.text = worker.firstname + " " + worker.lastname
     cell.yieldLabel.text = String(tracker?.collections[worker]?.count ?? 0)
     
+    
+    cell.inc = { this in
+      guard self.tracker != nil else {
+        let alert = UIAlertController.alertController(
+          title: "Session Not Started",
+          message: "Please start the session before collecting yields")
+        
+        self.present(alert, animated: true, completion: nil)
+        return
+      }
+      
+      guard let loc = self.currentLocation else {
+        let alert = UIAlertController.alertController(
+          title: "Location Unavailable",
+          message: "Please allow location service from the 'Settings' app")
+        
+        self.present(alert, animated: true, completion: nil)
+        return
+      }
+      
+      self.tracker?.collect(for: self.workers[indexPath.row], at: loc)
+      
+      this.yieldLabel.text = self
+        .tracker?
+        .collections[self.workers[indexPath.row]]?.count.description ?? "0"
+    }
+    
+    cell.dec = { this in
+      guard self.tracker != nil else {
+        let alert = UIAlertController.alertController(
+          title: "Session Not Started",
+          message: "Please start the session before collecting yields")
+        
+        self.present(alert, animated: true, completion: nil)
+        return
+      }
+      
+      self.tracker?.pop(for: self.workers[indexPath.row])
+      
+      this.yieldLabel.text = self
+        .tracker?
+        .collections[self.workers[indexPath.row]]?.count.description ?? "0"
+    }
+    
     return cell
   }
 }
 
 extension TrackerViewController : UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    guard tracker != nil else {
-      let alert = UIAlertController.alertController(
-        title: "Session Not Started",
-        message: "Please start the session before collecting yields")
-      
-      present(alert, animated: true, completion: nil)
-      return
-    }
     
-    guard let loc = currentLocation else {
-      let alert = UIAlertController.alertController(
-        title: "Location Unavailable",
-        message: "Please allow location service from the 'Settings' app")
-      
-      present(alert, animated: true, completion: nil)
-      return
-    }
-    
-    tracker?.collect(for: workers[indexPath.row], at: loc)
-    
-    workerCollectionView.deselectItem(at: indexPath, animated: true)
-    
-    workerCollectionView.reloadData()
   }
 }
 
@@ -161,7 +185,13 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(width: collectionView.frame.width / 2 - 0.5,
-                  height: collectionView.frame.width / 2 - 0.5);
+    
+    let w = collectionView.frame.width
+    
+    let n = CGFloat(Int(w / 186))
+    
+    let cw = w / n - (0.5 * (n - 1))
+    
+    return CGSize(width: cw, height: 109);
   }
 }
