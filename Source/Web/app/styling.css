@@ -9,9 +9,9 @@
     float: left;
     color: whitesmoke;
     text-align: center;
-    padding: 14px 16px;
+    padding: 19px 22px;
     text-decoration: none;
-    font-size: 17px;
+    font-size: 18px;
 }
 
 /* Change the colour of links on hover */
@@ -32,29 +32,71 @@ body {
 
 h1 {
     font-family: sans-serif;
-    color: chartreuse;
+    color: black;
 }
 
 label {
     font-family: sans-serif;
     color: black;
 }
-
+.form-control{
+	border-color: grey;
+}
 button {
     background-color: #4CAF50;/*Green*/
     color: white;
     padding: 14px 20px;
-    margin: 8px 0;
+    margin: 10px 0;
     border: none;
     cursor: pointer;
     width: 100%;
 }
 
 .loginBlock {
-    background-color: white;
+    background-color: whitesmoke;
     width: 100%;
 }
 
 p.errmsg{
     color: red;
+}
+.center2 {
+      background-color: whitesmoke;
+		width: 600px;
+        height: 990px;
+		position:absolute; /*it can be fixed too*/
+        left:0; right:0;
+        top:0; bottom:0;
+        margin:auto;
+
+        /*this to solve "the content will not be cut when the window is smaller than the content": */
+        max-width:100%;
+        max-height:100%;
+        overflow:auto;
+	
+	text-align:center;
+	display: block;
+    margin-top: 150px;
+    margin-right: auto;
+}
+
+.center {
+      background-color: whitesmoke;
+		width: 400px;
+        height: 600px;
+		position:absolute; /*it can be fixed too*/
+        left:0; right:0;
+        top:0; bottom:0;
+        margin:auto;
+
+        /*this to solve "the content will not be cut when the window is smaller than the content": */
+        max-width:100%;
+        max-height:100%;
+        overflow:auto;
+	
+	text-align:center;
+	display: block;
+    margin-top: 150px;
+    margin-right: auto;
+
 }
