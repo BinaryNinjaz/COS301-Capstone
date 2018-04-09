@@ -83,6 +83,8 @@ class TrackerViewController: UIViewController {
         self.workerCollectionView.reloadData()
       }
     }
+    
+    workerCollectionView.accessibilityIdentifier = "workerClickerCollectionView"
   }
 
   override func didReceiveMemoryWarning() {

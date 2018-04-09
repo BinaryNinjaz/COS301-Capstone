@@ -33,16 +33,11 @@ class HarvestUITests: XCTestCase {
   func testYieldCollection() {
     
     let app = XCUIApplication()
-    let cellsQuery = app.collectionViews.cells
-    let trissMerigoldElementsQuery = cellsQuery.otherElements.containing(.staticText, identifier:"Triss Merigold")
-    let staticText = trissMerigoldElementsQuery.staticTexts["0"]
-    staticText.tap()
+    let firstChild = app.collectionViews.firstMatch.cells.firstMatch
+    firstChild.tap()
     app.alerts["Session Not Started"].buttons["Okay"].tap()
     app.buttons["Start"].tap()
-    cellsQuery.otherElements.containing(.staticText, identifier:"Zoltan Chivay").staticTexts["0"].tap()
-    cellsQuery.otherElements.containing(.staticText, identifier:"Keira Metz").staticTexts["0"].tap()
-    staticText.tap()
-    trissMerigoldElementsQuery.staticTexts["1"].tap()
+    firstChild.tap()
     app.buttons["Stop"].tap()
     
   }
