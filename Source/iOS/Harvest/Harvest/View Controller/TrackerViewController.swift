@@ -45,6 +45,12 @@ class TrackerViewController: UIViewController {
       startSessionButton.apply(gradient: sessionLayer)
       tracker?.storeSession()
       
+      
+      let amount = tracker?.totalCollected() ?? 0
+      let alert = UIAlertController.alertController(title: "\(amount) Bags Collected", message: "The session duration was \(tracker?.durationFormatted() ?? "")")
+      
+      present(alert, animated: true, completion: nil)
+      
       tracker = nil
       
       workerCollectionView.reloadData()

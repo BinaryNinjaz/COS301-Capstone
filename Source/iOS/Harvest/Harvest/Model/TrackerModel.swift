@@ -82,6 +82,24 @@ struct Tracker {
                       on: sessionStart,
                       track: pathTracked())
   }
+  
+  func totalCollected() -> Int {
+    var result = 0
+    for (_, wc) in collections {
+      result += wc.count
+    }
+    return result
+  }
+  
+  func durationFormatted() -> String {
+    let end = Date()
+    
+    let formatter = DateComponentsFormatter()
+    formatter.unitsStyle = .short
+    formatter.allowedUnits = [.minute, .second, .hour]
+    
+    return formatter.string(from: end.timeIntervalSince(sessionStart)) ?? ""
+  }
 }
 
 extension UserDefaults {
