@@ -155,6 +155,19 @@ struct HarvestDB {
     }
   }
   
+  static func onLastSession(
+    _ completion: @escaping ([String: Any]) -> ()
+  ) {
+    let wref = ref.child("/yields").queryLimited(toLast: 1)
+    wref.observe(.value) { (snapshot) in
+      guard let session = snapshot.value as? [String: Any] else {
+        return
+      }
+      completion(session)
+    }
+  }
+  
+  
   static func collect(yield: Double,
                       from email: String,
                       inAmountOfSeconds amount: TimeInterval,
