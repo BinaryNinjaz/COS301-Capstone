@@ -64,7 +64,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
 //          let date = Date(timeIntervalSince1970: dateSince)
           
           let marker = GMSMarker(position:
-            CLLocationCoordinate2D(latitude: lat + 0.005 * Double(arc4random()) / Double(UInt32.max), longitude: lng + 0.005 * Double(arc4random()) / Double(UInt32.max)))
+            CLLocationCoordinate2D(latitude: lat, longitude: lng))
           
           marker.title = name
           
