@@ -1,5 +1,7 @@
 body {
     background-color: whitesmoke;
+    font-family: Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif;
+   
     background-image: url("backgrdSmaller.jpg");
     height: 100%;
 
