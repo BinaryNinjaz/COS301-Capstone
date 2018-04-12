@@ -36,9 +36,7 @@ function refreshPage() {
     }
 });*/
 
-function firebaseRegister() {
-  var email = document.getElementById("email").value;
-  var password = document.getElementById("password").value;
+function firebaseRegister(email, password) {
 
   firebase.auth()
     .createUserWithEmailAndPassword(email, password)
