@@ -1,6 +1,7 @@
 var page = 0; //0 being login, 1 being sign up
 var contents=document.getElementById("pageCon");
-var navBar = document.getElementsById("navHighlight");
+// var navBar = document.getElementsById("navHighlight");
+
 function showLogin(){
 	contents.innerHTML = "<div class='container'>"
         +"<div class='row'>"
@@ -19,9 +20,9 @@ function showLogin(){
 
 													+"<button onclick='firebaseLogin()' class='btn btn-success'>Log In</button>"
 													+"<br>"
-                                                                                                        +"<button onclick='showRegister()' class='btn btn-primary'>Don't have an account? Sign Up</button>"
-                                                                                                        +"<br>" +
-													+"<a  onclick='resetPassword()'>Forgot password</a>"
+													+"<button onclick='showRegister()' class='btn btn-primary'>Don't have an account? Sign Up</button>"
+													+"<br>"
+													+"<a  onclick='resetPassword()' href='javascript:;'>Forgot password</a>"
 
 
 										+"</fieldset>"
