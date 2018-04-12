@@ -37,7 +37,7 @@ class TrackerViewController: UIViewController {
         
         tracker = Tracker()
         
-        updateWorkerCells()
+        workerCollectionView.reloadData()
       }
     } else {
       locationManager.stopUpdatingLocation()
@@ -76,15 +76,13 @@ class TrackerViewController: UIViewController {
     tracker?.collect(for: workers[idx.row], at: loc)
   }
   
-  func updateWorkerCells() {
-    if tracker != nil {
-      self.workers.removeAll(keepingCapacity: true)
-      for worker in workers {
-        self.workers.append(worker)
-      }
-      DispatchQueue.main.async {
-        self.workerCollectionView.reloadData()
-      }
+  func updateWorkerCells(with newWorkers: [Worker]) {
+    workers.removeAll(keepingCapacity: true)
+    for worker in newWorkers {
+      workers.append(worker)
+    }
+    DispatchQueue.main.async {
+      self.workerCollectionView.reloadData()
     }
   }
   
@@ -97,7 +95,7 @@ class TrackerViewController: UIViewController {
     startSessionButton.apply(gradient: sessionLayer)
     
     HarvestDB.getWorkers { (workers) in
-      self.updateWorkerCells()
+      self.updateWorkerCells(with: workers)
     }
     
     workerCollectionView.accessibilityIdentifier = "workerClickerCollectionView"
@@ -125,7 +123,7 @@ extension TrackerViewController : UICollectionViewDataSource {
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return tracker == nil ? 1 : workers.count
+    return tracker == nil || workers.isEmpty ? 1 : workers.count
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -224,6 +222,6 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
     
     let cw = w / n - (0.5 * (n - 1))
     
-    return CGSize(width: tracker == nil ? w - 2 : cw, height: 109);
+    return CGSize(width: tracker == nil || workers.isEmpty ? w - 2 : cw, height: 109);
   }
 }
