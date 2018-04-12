@@ -14,12 +14,14 @@ import za.org.samac.harvest.R;
 
 public class WorkerGridAdapter extends BaseAdapter {
 
-    private Context context;
+    public Context context;//made it private initially
     private ArrayList<String> workers;
+    public int totalBagsCollected; //keeps track of total bags collected
 
     public WorkerGridAdapter(Context context, ArrayList<String> workers) {
         this.context = context;
         this.workers = workers;
+        this.totalBagsCollected = 0;
     }
 
     @Override
@@ -52,14 +54,22 @@ public class WorkerGridAdapter extends BaseAdapter {
             final TextView increment = convertView.findViewById(R.id.increment);
             increment.setText("0");
             Button btnPlus = convertView.findViewById(R.id.btnPlus);
+            //btnPlus.setEnabled(false);
+
+
+
             btnPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Long value = Long.valueOf(increment.getText().toString()) + 1;
                     increment.setText(String.format("%d", value));
+
+                    //make changes on firebase
+                    ++totalBagsCollected;
                 }
             });
             Button btnMinus = convertView.findViewById(R.id.btnMinus);
+            ///btnMinus.setEnabled(false);
             btnMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -67,11 +77,16 @@ public class WorkerGridAdapter extends BaseAdapter {
                     if(currentValue > 0) {
                         Long value = currentValue - 1;
                         increment.setText(String.format("%d", value));
+
+                        //make changes on firebase
+                        --totalBagsCollected;
                     }
                 }
             });
         }
 
+        //int convID = 1;
+        //convertView.setId(convID);
         return convertView;
     }
 }

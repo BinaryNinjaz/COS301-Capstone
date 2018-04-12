@@ -33,8 +33,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import za.org.samac.harvest.adapter.WorkerGridAdapter;
 
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.LayoutInflater;
+
 public class MainActivity extends AppCompatActivity {
-    int totalBagsCollected = 0; //keeps track of total bags collected
+    //int totalBagsCollected = 0; //keeps track of total bags collected
 
 
     private static final String TAG = "Clicker";
@@ -45,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
     private GridView gridview;
     private WorkerGridAdapter adapter;
+
+    //private View convertView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -161,7 +167,15 @@ public class MainActivity extends AppCompatActivity {
     long startTime=0, stopTime=0;
     @SuppressLint("SetTextI18n")
     public void onClickStart(View v){
+        /*final android.view.LayoutInflater layoutInflater = LayoutInflater.from(adapter.context);
+        convertView = layoutInflater.inflate(R.layout.worker_grid_item , null);
+        Button btnPlus = getView().findViewById(R.id.btnPlus);
+        Button btnMinus = getView.findViewById(R.id.btnMinus);
+
+        btnPlus.setEnabled(true);
+        btnMinus.setEnabled(true);*/
         Button btn = findViewById(R.id.button_start);
+        //adapter.totalBagsCollected=0;
         if(btn.getTag()=="green"){
             startTime = System.currentTimeMillis();
             btn.setBackgroundColor(Color.parseColor("#FFFF8800"));
@@ -178,8 +192,8 @@ public class MainActivity extends AppCompatActivity {
             int m = (int) (((elapsedTime / 1000) / 60) % 60);
             int s = (int) ((elapsedTime / 1000) % 60);
             String timeTaken = h+" hour(s), "+m+" minute(s) and "+s+" second(s)";
-            String msg = "A total of "+totalBagsCollected+" bags have been collected in "+timeTaken+".";
-            totalBagsCollected=0;
+            String msg = "A total of "+adapter.totalBagsCollected+" bags have been collected in "+timeTaken+".";
+            adapter.totalBagsCollected=0;
             //pop up is used to show how many bags were collected in the elapsed time
             AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
             dlgAlert.setMessage(msg);
