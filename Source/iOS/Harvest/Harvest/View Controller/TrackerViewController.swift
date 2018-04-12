@@ -36,6 +36,8 @@ class TrackerViewController: UIViewController {
         startSessionButton.apply(gradient: sessionLayer)
         
         tracker = Tracker()
+        
+        updateWorkerCells()
       }
     } else {
       locationManager.stopUpdatingLocation()
@@ -74,6 +76,18 @@ class TrackerViewController: UIViewController {
     tracker?.collect(for: workers[idx.row], at: loc)
   }
   
+  func updateWorkerCells() {
+    if tracker != nil {
+      self.workers.removeAll(keepingCapacity: true)
+      for worker in workers {
+        self.workers.append(worker)
+      }
+      DispatchQueue.main.async {
+        self.workerCollectionView.reloadData()
+      }
+    }
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     startSessionButton.layer.cornerRadius = 40
@@ -83,13 +97,7 @@ class TrackerViewController: UIViewController {
     startSessionButton.apply(gradient: sessionLayer)
     
     HarvestDB.getWorkers { (workers) in
-      self.workers.removeAll(keepingCapacity: true)
-      for worker in workers {
-        self.workers.append(worker)
-      }
-      DispatchQueue.main.async {
-        self.workerCollectionView.reloadData()
-      }
+      self.updateWorkerCells()
     }
     
     workerCollectionView.accessibilityIdentifier = "workerClickerCollectionView"
@@ -117,10 +125,28 @@ extension TrackerViewController : UICollectionViewDataSource {
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return workers.count
+    return tracker == nil ? 1 : workers.count
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+    guard tracker != nil else {
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "startingWorkerCollectionViewCell", for: indexPath) as? StartingWorkingCollectionViewCell else {
+        return UICollectionViewCell()
+      }
+      
+      return cell
+    }
+    
+    guard !workers.isEmpty else {
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "loadingWorkerCollectionViewCell", for: indexPath) as? LoadingWorkerCollectionViewCell else {
+        return UICollectionViewCell()
+      }
+      
+      return cell
+    }
+    
+    
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "workerCollectionViewCell", for: indexPath) as? WorkerCollectionViewCell else {
       return UICollectionViewCell()
     }
@@ -198,6 +224,6 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
     
     let cw = w / n - (0.5 * (n - 1))
     
-    return CGSize(width: cw, height: 109);
+    return CGSize(width: tracker == nil ? w - 2 : cw, height: 109);
   }
 }
