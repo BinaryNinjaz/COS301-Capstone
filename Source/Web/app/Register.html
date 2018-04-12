@@ -1,78 +1,96 @@
 <html>
-    <head>
-        <title>Sign up for Harvest</title>
-     
-        <!-- Firebase Dependencies -->
-        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
-        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
-        
-        <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script><!-- javascript file -->
-        
-        <!-- Bootstrap (maybe we shouldn't use links) -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<head>
+    <title>Sign up for Harvest</title>
+    <meta charset="UTF-8">
 
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Firebase Dependencies -->
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css"/>
 
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script><!-- javascript file -->
 
-        <script src="register.js" type="text/javascript"></script>
+    <!-- Bootstrap (maybe we shouldn't use links) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-        <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
-        <link href="loginRegister.css" rel="stylesheet" type="text/css" />
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-    </head>
-    <body>
-        <div class="topnav">
-            <ul class="nav navbar-nav">
-                <a class="active" href="#">Harvest</a>
-                <a href="Login.html">Log In</a>
-            </ul>
-        </div>
-        
-	<div >
-        <div class="container">            
-            <div class="row">
-                <div class="col-md-3 col-md-offset-1">
-                    <div align="center">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
 
-<!--                     We remove the form because it reloads the page -->
-<!--                     Which we don't want. -->
-<!--                     <form action="" method="POST" > -->
-						<fieldset class="inputBlock">
-								<h2>Sign up for Harvest</h2>                        
-								<div class="form-group">
-									<label style="text-align:left">First Name</label>
-									<input placeholder="" type="text" class="form-control" id="name" required>
-								</div>
-								<div class="form-group">                            
-									<label style="text-align:left">Surname</label>
-									<input placeholder="" type="text" class="form-control" id="surname" required>
-								</div>
-								<div class="form-group">
-									<label style="text-align:left">Email Address</label>
-									<input type="text" class="form-control" id="email" required data-type="tooltip" title="The email must be properly formatted, so joe@example.com">
-								</div>
-								<div class="form-group">
-									<label style="text-align:left">New Password</label>
-									<input placeholder="" type="password" class="form-control" id="password" required data-type="tooltip" title="There are absolutely no password requirements">
-								</div>
-								<div class="form-group">
-									<label style="text-align:left">Password Conformation</label>
-									<input placeholder="" type="password" class="form-control" id="passwordConf" required>
-								</div>
-								<div class="form-group" id="errorSpace"><br></div>
-								<button onclick="register()" class="btn btn-success">Create Account</button><!-- Log In button -->
-						</fieldset>
-<!--                     </form> -->
-                    </div>
+    <script src="register.js" type="text/javascript"></script>
+
+    <link href="navbar.css" rel="stylesheet" type="text/css"/><!-- css file -->
+    <link href="loginRegister.css" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+<div class="topnav">
+    <ul class="nav navbar-nav">
+        <a class="active" href="#">Harvest</a>
+        <a href="Login.html">Log In</a>
+    </ul>
+</div>
+
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-md-offset-1">
+                <div align="center">
+
+                    <!--                     We remove the form because it reloads the page -->
+                    <!--                     Which we don't want. -->
+                    <!--                     <form action="" method="POST" > -->
+                    <fieldset class="inputBlock">
+                        <h2>Sign up for Harvest</h2>
+                        <div class="form-group">
+                            <label style="text-align:left">First Name</label>
+                            <input placeholder="" type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="text-align:left">Surname</label>
+                            <input placeholder="" type="text" class="form-control" id="surname" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="text-align:left">Email Address</label>
+                            <input type="text" class="form-control" id="email" required data-type="tooltip"
+                                   title="The email must be properly formatted, so joe@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label style="text-align:left">New Password</label>
+                            <input placeholder="" type="password" class="form-control" id="password" required
+                                   data-type="tooltip" title="There are absolutely no password requirements">
+                        </div>
+                        <div class="form-group">
+                            <label style="text-align:left">Password Conformation</label>
+                            <input placeholder="" type="password" class="form-control" id="passwordConf" required>
+                        </div>
+                        <div class="form-group" id="errorSpace"><br></div>
+                        <button onclick="register()" class="btn btn-success">Create Account</button>
+                        <!-- Log In button -->
+                    </fieldset>
+                    <!--                     </form> -->
                 </div>
             </div>
         </div>
-	</div>
-    </body>
+    </div>
+</div>
+
+<!--TESTING STUFF, UNCOMMENT TO ENABLE TESTING-->
+<!--<div style="background-color: white">-->
+    <!--<div id="qunit"></div>-->
+    <!--<div id="qunit-fixture"></div>-->
+    <!--<script src="https://code.jquery.com/qunit/qunit-2.6.0.js"></script>-->
+    <!--<script src="tests.js"></script>-->
+<!--</div>-->
+
+</body>
 </html>
+
