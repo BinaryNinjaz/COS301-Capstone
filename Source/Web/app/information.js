@@ -254,7 +254,7 @@ function dispOrch(id) {
           const buttons = document.getElementById("workerButtons");
           workers.forEach(function (worker) {
             if (worker.val().orchard == id) {
-              buttons.innerHTML += "<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispWork(" + worker.key + ")'>" + worker.val().name.charAt(0) + ". " + worker.val().surname + "</button></div>";
+              buttons.innerHTML += "<div class='col-lg-4'><button type='button' class='btn btn-default' onclick='dispWork(" + worker.key + ")'>" + worker.val().name + " " + worker.val().surname + "</button></div>";
             }
           });
         });
@@ -381,7 +381,7 @@ function popWork() {
 
     snapshot.forEach(function (child) {
       col2.innerHTML += "" +
-        "<button type='button' class='btn btn-info' onclick='dispWork(" + child.key + ")'>" + child.val().name.charAt(0) + ". " + child.val().surname + "</button>"
+        "<button type='button' class='btn btn-info' onclick='dispWork(" + child.key + ")'>" + child.val().name + " " + child.val().surname + "</button>"
       ;
       newId = child.key;
     });
