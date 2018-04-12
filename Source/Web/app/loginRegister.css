@@ -1,6 +1,6 @@
 body {
     background-color: whitesmoke;
-    background-image: url("backgrd.jpg");
+    background-image: url("backgrdSmaller.jpg");
     height: 100%;
 
     /* Center and scale the image nicely */
@@ -18,13 +18,31 @@ body {
     background-color: whitesmoke;
     width: 280px;
 
-    margin-top: 20%;
-    margin-bottom: 30%;
+    // margin-top: 10%;
+    margin-bottom: 10%;
 }
+.left{
+    text-align: left;
+    width: 40%;      
+    float: left;
+}
+.right{
+    margin-left: 40%;    
+    color: black;
+    outline-color: #006633;
+    outline-width: 2px;
+    font-family: Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif;
+    letter-spacing: 3px;
+    font-size: 30px;
+}
+.list-heading {
+    font-weight: bolder;
+    font-size: 35px;
 
+}
 .center {
-    /*background-color: whitesmoke;	*/
-    position: fixed; /*it can be fixed too*/
+
+    position: fixed; 
     /*this to solve "the content will not be cut when the window is smaller than the content": */
     max-width: 100%;
     overflow: scroll;
@@ -33,4 +51,21 @@ body {
     margin-top: 50px;
     margin-right: auto;
 
+}
+
+.sec {
+    text-align: left;
+    width: 99%;
+    height: 80%;
+    margin: auto;
+    padding: 10px;
+}
+
+ul {
+    list-style-type: ico;
+}
+
+ul.ico {
+    list-style-image: url('leaf2.png');// no-repeat left top;
+   
 }
