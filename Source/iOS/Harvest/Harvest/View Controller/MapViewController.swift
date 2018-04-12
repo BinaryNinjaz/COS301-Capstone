@@ -72,6 +72,30 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
           print(1)
         }
       }
+      guard let track = sessionInfo["track"] as? [Any] else {
+        return
+      }
+      
+      let path = GMSMutablePath()
+      
+      for coord in track {
+        guard let coord = coord as? [String: Any] else {
+          continue
+        }
+        guard let lat = coord["lat"] as? Double else {
+          continue
+        }
+        guard let lng = coord["lng"] as? Double else {
+          continue
+        }
+        let loc = CLLocationCoordinate2D(latitude: lat, longitude: lng)
+        path.add(loc)
+      }
+      let polyline = GMSPolyline(path: path)
+      polyline.strokeColor = .blue
+      polyline.strokeWidth = 2
+      
+      polyline.map = self.mapView
     }
     
   }

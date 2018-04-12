@@ -27,7 +27,7 @@ class TrackerViewController: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
       }
       
-      locationManager.requestWhenInUseAuthorization()
+      locationManager.requestAlwaysAuthorization()
       if CLLocationManager.locationServicesEnabled() {
         locationManager.startUpdatingLocation()
         
