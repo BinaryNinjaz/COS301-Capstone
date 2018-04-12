@@ -94,12 +94,25 @@ class SignUpViewController: UIViewController {
     activityIndicator.startAnimating()
     HarvestDB.signUp(withEmail: username, andPassword: password, name: (fname, lname), on: self) {w in
       if w {
-        self.dismiss(animated: true, completion: nil)
+        HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
+          if w,
+            let vc = self
+              .storyboard?
+              .instantiateViewController(withIdentifier: "mainTabBarViewController") {
+            self.present(vc, animated: true, completion: nil)
+          }
+          self.signUpButton.isHidden = false
+          self.cancelButton.isHidden = false
+          self.activityIndicator.stopAnimating()
+        }
+      } else {
+        self.signUpButton.isHidden = false
+        self.cancelButton.isHidden = false
+        self.activityIndicator.stopAnimating()
       }
-      self.signUpButton.isHidden = false
-      self.cancelButton.isHidden = false
-      self.activityIndicator.stopAnimating()
     }
+    
+    
   }
   
   @IBAction func cancelTouchUp(_ sender: Any) {
