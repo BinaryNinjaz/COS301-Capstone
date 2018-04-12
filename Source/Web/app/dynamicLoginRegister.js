@@ -61,7 +61,7 @@ function showRegister(){
 											+'<div class="form-group">'
 												+'<label style="text-align:left">Password Conformation</label>'
 												+'<input placeholder="" type="password" class="form-control" id="passwordConf" required>'
-											+'</div'
+											+'</div>'
 											+'<div class="form-group" id="errorSpace"></div>'
 											+'<button onclick="register()" class="btn btn-success">Create Account</button>'
 											+'<br /> <button class="btn btn-primary" onclick="showLogin();">Have an account? Log In</button>'
