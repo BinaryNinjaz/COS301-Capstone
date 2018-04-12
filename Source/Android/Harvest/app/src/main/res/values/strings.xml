@@ -34,4 +34,7 @@
 
     <string name="forgotAccountDetails"><a>Forgot account details?</a></string>
     <string name="prompt_confirm_Password">Confirm Password</string>
+    <string name="yieldTracker">Yield Tracker</string>
+    <string name="menuSettings">Settings</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
 </resources>

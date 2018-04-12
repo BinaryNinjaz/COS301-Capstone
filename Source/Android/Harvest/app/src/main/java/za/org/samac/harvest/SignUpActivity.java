@@ -66,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
      */
     private UserLoginTask mAuthTask = null;
 
-    // UI references.
+    // UI references (used the ID names).
     private EditText edtFirstName;
     private EditText edtSurname;
     private EditText edtEmail;
@@ -74,12 +74,11 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private EditText edtConfirmPassword;
     private View signUp_progress;
     private View signUp_form;
-
     private Button btnSignUp;
     private Button btnLogin;
 
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
-    private static final String TAG = "EmailPassword";
+    private static final String TAG = "EmailPassword";//tag I used for log
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,23 +95,26 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         populateAutoComplete();
 
         edtPassword = findViewById(R.id.edtPassword);
-        edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        /*edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
                     return true;
                 }
                 return false;
             }
-        });
+        });*/
 
         edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
         edtConfirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    if(validateForm()) {
+                        createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
+                    }
+
                     return true;
                 }
                 return false;
@@ -191,7 +193,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }
@@ -201,9 +203,9 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                            /*Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+                            updateUI(null);*/
 
                             signUp_form.setVisibility(View.VISIBLE);
                             signUp_progress.setVisibility(View.GONE);
@@ -226,51 +228,71 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     //firebase suggested validate
     private boolean validateForm() {
         boolean valid = true;
+        View focusView = null;
 
-        String firstName = edtFirstName.getText().toString();
-        if (TextUtils.isEmpty(firstName)) {
-            edtFirstName.setError("Required.");
+        String confirmPassword = edtConfirmPassword.getText().toString();
+        if (TextUtils.isEmpty(confirmPassword)) {
+            edtConfirmPassword.setError("Required.");
+            focusView = edtConfirmPassword;
             valid = false;
         } else {
-            edtFirstName.setError(null);
-        }
-
-        String surname = edtSurname.getText().toString();
-        if (TextUtils.isEmpty(surname)) {
-            edtSurname.setError("Required.");
-            valid = false;
-        } else {
-            edtSurname.setError(null);
-        }
-
-        String email = edtEmail.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            edtEmail.setError("Required.");
-            valid = false;
-        } else {
-            edtEmail.setError(null);
+            edtConfirmPassword.setError(null);
         }
 
         String password = edtPassword.getText().toString();
         if (TextUtils.isEmpty(password)) {
             edtPassword.setError("Required.");
+            focusView = edtPassword;
             valid = false;
         } else {
             edtPassword.setError(null);
-        }
-
-        String confirmPassword = edtConfirmPassword.getText().toString();
-        if (TextUtils.isEmpty(confirmPassword)) {
-            edtConfirmPassword.setError("Required.");
-            valid = false;
-        } else {
-            edtConfirmPassword.setError(null);
         }
 
         //check if two passwords entered match
         if (!confirmPassword.equals(password)) {
             valid = false;
         }
+
+        String email = edtEmail.getText().toString();
+        if (isEmailValid(email) == false) {
+            //edtEmail.setError("Invalid email.");//this isn't working
+            edtEmail.setError(getString(R.string.error_invalid_email));
+            focusView = edtEmail;
+            focusView.requestFocus();
+            valid = false;
+        } else {
+            edtEmail.setError(null);
+        }
+
+        String surname = edtSurname.getText().toString();
+        if (TextUtils.isEmpty(surname)) {
+            edtSurname.setError("Required.");
+            focusView = edtSurname;
+            valid = false;
+        } else {
+            edtSurname.setError(null);
+        }
+
+        String firstName = edtFirstName.getText().toString();
+        if (TextUtils.isEmpty(firstName)) {
+            edtFirstName.setError("Required.");
+            focusView = edtFirstName;
+            valid = false;
+        } else {
+            edtFirstName.setError(null);
+        }
+
+        if (valid == false) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } /*else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true);
+            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask.execute((Void) null);
+        }*/
 
         return valid;
     }
@@ -324,7 +346,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    /*private void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }
@@ -369,7 +391,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
-    }
+    }*/
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
@@ -377,8 +399,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        //TODO: we are still debating on what value to use
+        return password.length() > 0;
     }
 
     /**
