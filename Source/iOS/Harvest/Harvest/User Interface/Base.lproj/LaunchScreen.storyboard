@@ -48,6 +48,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="HarvestLogo" width="48" height="48"/>
+        <image name="HarvestLogo" width="123" height="123"/>
     </resources>
 </document>
