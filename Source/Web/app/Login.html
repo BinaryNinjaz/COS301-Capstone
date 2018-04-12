@@ -26,8 +26,7 @@
         <div class="topnav">
             <ul class="nav navbar-nav" id="navHighlight">
                 <a class="active" href="#">Harvest</a>
-                <a onclick="showLogin();" href="#">Log In</a>
-                <a onclick="showRegister();" href="#" >Sign Up</a>
+                
             </ul>
         </div>
         <br />
@@ -51,9 +50,13 @@
                                         <label style="text-align:left">Password</label>
                                         <input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">
                                     </div>
-                               
+
                                     <button onclick="firebaseLogin()" class="btn btn-success">Log In</button><!-- Log In button -->
-                                    <br><br>
+                                    
+                                    <br>
+                                    <button onclick='showRegister()' class='btn btn-primary'>Don't have an account? Sign Up</button>
+                                    <br>
+                                    <br>
                                     <a  onclick="resetPassword()" href="javascript:;">Forgot password</a>
                                     <!--<label>-->
                                         <!--<input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me--> <!--TODO: Remember Me-->
