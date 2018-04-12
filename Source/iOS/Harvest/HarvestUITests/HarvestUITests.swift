@@ -30,15 +30,4 @@ class HarvestUITests: XCTestCase {
     super.tearDown()
   }
 
-  func testYieldCollection() {
-    
-    let app = XCUIApplication()
-    let firstChild = app.collectionViews.firstMatch.cells.firstMatch
-    firstChild.tap()
-    app.alerts["Session Not Started"].buttons["Okay"].tap()
-    app.buttons["Start"].tap()
-    firstChild.tap()
-    app.buttons["Stop"].tap()
-    
-  }
 }
