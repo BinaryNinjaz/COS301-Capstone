@@ -82,3 +82,11 @@ function signOut() {
     document.location.href = "Login.html";
   });
 }
+
+function sendPasswordResetEmail(emailAddress) {
+    firebase.auth().sendPasswordResetEmail(emailAddress).then(function() {
+        // Email sent.
+    }).catch(function(error) {
+        // An error happened.
+    });
+}
