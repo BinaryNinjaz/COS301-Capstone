@@ -32,7 +32,7 @@ function refreshPage() {
         // window.location.href = "HomePage.html";
     } else {
         // user logged out
-        window.location.href = "Login.html";
+        window.location.href = "DynamicLoginRegister.html";
     }
 });*/
 
@@ -78,7 +78,7 @@ function firebaseLogin() {
 
 function signOut() {
     firebase.auth().signOut().then(function () {
-        document.location.href = "Login.html";
+        document.location.href = "DynamicLoginRegister.html";
     });
 }
 
