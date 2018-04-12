@@ -1,8 +1,7 @@
 <html>
     <head>
         <title>Log in to Harvest</title>
-        <link href="styling.css" rel="stylesheet" type="text/css" /><!-- css file -->
-
+     
         <!-- Firebase Dependencies Must be before firebaseRelatedJavaScriptFunctions.js -->
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
@@ -19,6 +18,7 @@
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"
                 integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   <link href="styling.css" rel="stylesheet" type="text/css" /><!-- css file -->
 
     </head>
     <body>
@@ -28,38 +28,42 @@
               <a href="Register.html">Sign Up</a>
             </ul>
         </div>
-        
+        <br />
+	<br />
+	<div >
         <div class="container">            
             <div class="row">
-                <div class="col-md-2 col-md-offset-5">
-                    <div class="loginBlock" align="center">                    
-                    
+                <div class="col-md-3 col-md-offset-1">
+                    <div align="center">
 <!--                     We remove the form because it reloads the page -->
 <!--                     Which we don't want. -->
 <!--                     <form action="" method="POST" > -->
-                        <h1>Log in to Harvest</h1>
-                        <div class="form-group">
-                            <label for="username"><b>Email Address:</b></label>
-                            <input type="text" class="form-control" id="username" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password"><b>Password:</b></label>
-                            <input type="password" class="form-control" id="password" required>
-                        </div>
-                        
-                        <button onclick="firebaseLogin()" class="btn btn-success">Log In</button><!-- Log In button -->
-                        <br> or <br>
-                        <a href="Register.html" class="btn btn-primary">Create New Account</a><!-- Registration link --> <br><br>  
-                        <!--<label>-->
-                            <!--<input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me--> <!--TODO: Remember Me-->
-                        <!--</label>-->
-                        <br>
-                        <!--<p class="forgot"><a href="">Forgot account details</a></p>--> <!--TODO: forgot account details-->
-<!--                     </form>                     -->
-                        
-                    </div>
+						<fieldset class="inputBlock">
+								<h2>Login to Harvest:</h2>
+									<div class="form-group">
+										<label style="text-align:left">Username/Email</label>
+										<input type="text" class="form-control" id="username" required>
+									</div>
+									<div class="form-group">
+										<label style="text-align:left">Password</label>
+										<input type="password" class="form-control" id="password" required>
+									</div>
+									
+									<button onclick="firebaseLogin()" class="btn btn-success">Log In</button><!-- Log In button -->
+									<br><br>  
+									<a  onclick="#">Forgot password</a>                       
+						<!-- Registration link --> 
+									<!--<label>-->
+										<!--<input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me--> <!--TODO: Remember Me-->
+									<!--</label>-->
+									
+								</fieldset>
+					</div>
                 </div>
             </div>
         </div>
-    </body>
+	</div>
+
+	
+  </body>
 </html>
