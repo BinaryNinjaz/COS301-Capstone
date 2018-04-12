@@ -2,11 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Information</title>
+    <title>User Settings</title>
 
-    <!--Here import stuff-->
-
-    <!--Firebase-->
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-database.js"></script>
@@ -27,21 +24,18 @@
 
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css"/>
 
-    <link rel="stylesheet" type="text/css" href="information.css"/>
-
 </head>
 <body>
 
-<!--NavBar-->
 <div class="topnav">
     <ul class="nav navbar-nav">
         <a href="HomePage.html">Harvest Home</a>
-        <a class='active' href="Information.html">View/Edit Information</a>
+        <a href="Information.html">View/Edit Information</a>
         <a href="HeatMap.html">Heatmap</a>
     </ul>
 
     <ul class="pull-right nav navbar-nav">
-        <a href="Settings.html" id="emailInNav"></a>
+        <a class="active" href="Settings.html" id="emailInNav"></a>
         <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
             <span class="icon-bar"></span>
@@ -51,47 +45,7 @@
     </ul>
 </div>
 
-<!--Page Body-->
-<div class="row">
-    <div class="col-lg-2" id="col1">
-        <!--Column One-->
-        <button type="button" class="btn btn-primary" id="farm" onclick="popFarm()">Farms</button>
-        <button type="button" class="btn btn-primary" id="orchInfo" onclick="popOrch()">Orchards</button>
-        <button type="button" class="btn btn-primary" id="workers" onclick="popWork()">Workers</button>
-        <!--<button type="button" class="btn btn-primary" id="yield" onclick="popYield()">TODO: Yield Information</button>-->
-        <!--<a onclick="fbSignIn('u15008739@tuks.co.za','fbPass')" href="#">Sign In</a>-->
-    </div>
-    <div class="col-lg-2" id="col2">
-        <!--Column Two-->
-    </div>
-    <div class="col-lg-8" id="col3">
-        <!--Column Two-->
-    </div>
-</div>
-
-<!-- Modal -->
-<div id="delModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Confirm Deletion</h4>
-            </div>
-            <div class="modal-body" id="modalText"></div>
-            <div class="modal-footer">
-                <div class="col-sm-2 col-sm-offset-8" style="padding: 5px;">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                </div>
-                <div class="col-sm-2" style="padding: 5px;">
-                    <div id="modalDelBut"></div>
-                    <!--<button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>-->
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
+User Settings go here. Like change email, password, delete account, etc.
 
 </body>
 </html>
