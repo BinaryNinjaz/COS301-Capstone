@@ -12,9 +12,11 @@ import CoreLocation
 let passwordPadding = "s3cr3ts4uc3"
 
 struct HarvestUser {
-  var name: String
+  var email: String
+  var displayName: String
+  var uid: String
   
-  static var current = HarvestUser(name: "")
+  static var current = HarvestUser(email: "", displayName: "", uid: "")
 }
 
 struct Worker :  Hashable {
@@ -35,7 +37,7 @@ struct HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
   
   enum Path: String {
-    case yields = "mockfarm/yields"
+    case yields = "yields"
   }
   
   //MARK: - Authentication
@@ -71,7 +73,9 @@ struct HarvestDB {
       }
       UserDefaults.standard.set(password: password)
       UserDefaults.standard.set(username: email)
-      HarvestUser.current.name = user.email!
+      HarvestUser.current.email = user.email!
+      HarvestUser.current.displayName = user.displayName ?? ""
+      HarvestUser.current.uid = user.uid
       completion(true)
     }
   }
@@ -167,28 +171,8 @@ struct HarvestDB {
     }
   }
   
-  
-  static func collect(yield: Double,
-                      from email: String,
-                      inAmountOfSeconds amount: TimeInterval,
-                      at loc: CLLocationCoordinate2D,
-                      on date: Date) {
-    let cref = ref.child(Path.yields.rawValue)
-    let key = cref.childByAutoId().key
-    let data: [String: Any] = [
-      "date": date.timeIntervalSince1970,
-      "yield": yield,
-      "email": email,
-      "duration": amount,
-      "location": ["lat": loc.latitude, "lng": loc.longitude]
-    ]
-    let updates = ["yields/\(key)": data]
-    
-    ref.updateChildValues(updates)
-  }
-  
   static func collect(from workers: [Worker: WorkerCollection],
-                      by email: String,
+                      by user: (display: String, uid: String),
                       on date: Date,
                       track: [(Double, Double)]) {
     let cref = ref.child(Path.yields.rawValue)
@@ -221,13 +205,11 @@ struct HarvestDB {
       cs[f + " " + l] = collections
     }
     
-    print(cs)
-    print(track.firbaseCoordRepresentation())
-    
     let data: [String: Any] = [
       "start_date": date.timeIntervalSince1970,
       "end_date": Date().timeIntervalSince1970,
-      "email": email,
+      "display": user.display,
+      "uid": user.uid,
       "collections": cs,
       "track": track.firbaseCoordRepresentation()
     ]
