@@ -76,8 +76,10 @@ function showRegister(){
 }
 
 function register() {
-    if(checkPass(document.getElementById("password").value, document.getElementById("passwordConf").value)){
-        firebaseRegister(document.getElementById("email").value, pass1);
+	const email = document.getElementById("email").value;
+	const pass = document.getElementById("password").value;
+    if(checkPass(pass, document.getElementById("passwordConf").value)){
+        firebaseRegister(email, pass);
 	}
 }
 
