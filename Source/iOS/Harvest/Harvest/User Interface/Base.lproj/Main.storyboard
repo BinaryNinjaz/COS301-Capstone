@@ -133,8 +133,8 @@
                     </tabBar>
                     <connections>
                         <segue destination="3Wl-k0-RpW" kind="relationship" relationship="viewControllers" id="x2a-Es-20V"/>
-                        <segue destination="vND-wI-MtW" kind="relationship" relationship="viewControllers" id="KCM-nJ-IM6"/>
                         <segue destination="YDK-CO-F7N" kind="relationship" relationship="viewControllers" id="CzN-Dd-hdL"/>
+                        <segue destination="vND-wI-MtW" kind="relationship" relationship="viewControllers" id="KCM-nJ-IM6"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="npl-fN-IOD" userLabel="First Responder" sceneMemberID="firstResponder"/>

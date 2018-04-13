@@ -99,6 +99,11 @@ class TrackerViewController: UIViewController {
     }
     
     workerCollectionView.accessibilityIdentifier = "workerClickerCollectionView"
+    
+    workerCollectionView.contentInset = UIEdgeInsets(top: 0,
+                                                     left: 0,
+                                                     bottom: 106,
+                                                     right: 0)
   }
 
   override func didReceiveMemoryWarning() {
