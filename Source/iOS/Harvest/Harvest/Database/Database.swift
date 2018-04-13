@@ -139,8 +139,8 @@ struct HarvestDB {
   // MARK: - Yield
   
   static func getWorkers(_ completion: @escaping ([Worker]) -> ()) {
-    let wref = ref.child("/workers")
-    wref.observeSingleEvent(of: .value) { (snapshot) in
+    let wref = ref.child("/workers").queryOrdered(byChild: "surname")
+    wref.observe(.value) { (snapshot) in
       var workers = [Worker]()
       for _child in snapshot.children {
         guard let worker = (_child as? DataSnapshot)?.value as? [String: Any] else {
@@ -154,6 +154,19 @@ struct HarvestDB {
       completion(workers)
     }
   }
+  
+  static func onLastSession(
+    _ completion: @escaping ([String: Any]) -> ()
+  ) {
+    let wref = ref.child("/yields").queryLimited(toLast: 1)
+    wref.observe(.value) { (snapshot) in
+      guard let session = snapshot.value as? [String: Any] else {
+        return
+      }
+      completion(session)
+    }
+  }
+  
   
   static func collect(yield: Double,
                       from email: String,
@@ -203,8 +216,13 @@ struct HarvestDB {
         i += 1
       }
       
-      cs[w.firstname + " " + w.lastname] = collections
+      let (f, l) = (w.firstname.removedFirebaseInvalids(),
+                    w.lastname.removedFirebaseInvalids())
+      cs[f + " " + l] = collections
     }
+    
+    print(cs)
+    print(track.firbaseCoordRepresentation())
     
     let data: [String: Any] = [
       "start_date": date.timeIntervalSince1970,
@@ -255,6 +273,20 @@ extension Array where Element == (Double, Double) {
       result[id.description] = coord
       id += 1
     }
+    return result
+  }
+}
+
+extension String {
+  func removedFirebaseInvalids() -> String {
+    var result = ""
+    
+    for c in self {
+      if !"[.*$#]".contains(c) {
+        result += "\(c)"
+      }
+    }
+    
     return result
   }
 }

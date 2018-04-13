@@ -46,6 +46,18 @@ struct Tracker {
     collections[worker] = collection
   }
   
+  mutating func pop(for worker: Worker) {
+    guard var collection = collections[worker],
+      !collection.collectionPoints.isEmpty else {
+      return
+    }
+    
+    collection.count -= 1
+    collection.collectionPoints.removeLast()
+    
+    collections[worker] = collection
+  }
+  
   mutating func track(location: CLLocation) {
     UserDefaults.standard.track(location: location, index: trackCount)
     trackCount += 1
@@ -69,6 +81,24 @@ struct Tracker {
                       by: HarvestUser.current.name,
                       on: sessionStart,
                       track: pathTracked())
+  }
+  
+  func totalCollected() -> Int {
+    var result = 0
+    for (_, wc) in collections {
+      result += wc.count
+    }
+    return result
+  }
+  
+  func durationFormatted() -> String {
+    let end = Date()
+    
+    let formatter = DateComponentsFormatter()
+    formatter.unitsStyle = .short
+    formatter.allowedUnits = [.minute, .second, .hour]
+    
+    return formatter.string(from: end.timeIntervalSince(sessionStart)) ?? ""
   }
 }
 
