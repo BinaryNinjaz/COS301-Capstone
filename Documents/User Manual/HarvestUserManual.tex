@@ -10,6 +10,7 @@
 \usepackage{hyperref}
 \usepackage{float}
 \usepackage{cite}
+
 \hypersetup{
 	colorlinks=true,
 	linkcolor=black,
@@ -27,8 +28,9 @@
 		% Upper part of the page
 		\textsc{\LARGE Binary Ninjaz}\\[0.3cm]
 		% Title
-		\rule{\linewidth}{0.5mm} \\[1cm]
-		{ \huge \bfseries Harvest (User Manual)}\\[0.5cm]
+		\rule{\linewidth}{0.5mm} \\[0.5cm]
+		{ \huge \bfseries Harvest \\
+		  \vspace{0.3cm}\large \bfseries User Manual}\\[0.5cm]
 		\rule{\linewidth}{0.5mm} \\[1cm]
 
 
@@ -110,6 +112,7 @@
 			\end{flushright}
 		\end{minipage}
 
+		\vspace{1cm}
 		\rule{\linewidth}{0.5mm} \\[1cm]
 		\textsc{\Large Stakeholders}\\[1cm]
 
@@ -131,42 +134,129 @@
 \end{titlepage}
 
 \newpage
+\pagenumbering{Roman}
 \tableofcontents
+\newpage
+\listoffigures
 
 \newpage
+\pagenumbering{arabic}
+
 \section{General Information}
 \subsection{System Overview}
-Harvest, is an application to assist growers with yield data and optimise worker performance. In other words, it is a system that can efficiently measure the amount of work done by a worker, track the foremen on a farm, record information and data, and display the necessary information. This system is aimed at farming communities to help then record data and get work done more efficiently.\\
+Harvest, is an application to assist growers with yield data and optimise worker performance. In other words, it is a system that can efficiently measure the amount of work done by a worker, track the foremen on a farm, record information and data, and display the necessary information. This system is aimed at farming communities to help then record data and get work done more efficiently.
 
-\subsection{System Configuration}
-The system currently requires:\\
+\subsection{System Requirements}
+\subsubsection{Android}
+The Android application currently requires:
 \begin{itemize}
-	\item Either Android 4.0 OS or above, or  iOS 10.0 or above
+	\item Either Android 4.0 OS or above
 \item 200 MB RAM
 \item 50 MB Disk Space	
 	\item Location Services
 \end{itemize}
+\subsubsection{iOS}
+The iOS application currently requires:
+\begin{itemize}
+	\item iOS 10.0 or above
+\item 200 MB RAM
+\item 50 MB Disk Space	
+	\item Location Services
+\end{itemize}
+\subsubsection{Website}
+The website requires any modern up-to-date web browser such as Vivaldi, Firefox, Opera, Chrome, Safari, or any other.
+
+\subsection{Communications}
+All of the subsystems---Android, iOS, and website---run independently, but use Firebase\footnote{\url{https://firebase.google.com}} to store and retrieve data from a common source. This can be seen in \ref{Communications}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Communications.png}
+ \caption{Communications}
+ \label{Communications}
+\end{figure}
 
 \subsection{Installation}
-For Android devices the application will be available on the Google Play Store for download and for iOS devices the application will be available on the App Store.\\
-With regards to configuration, location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application. Profile setting can be configured via selecting the user's username.\\
+\subsubsection{Android}
+The application will be available on the Google Play Store.
+\subsubsection{iOS}
+The application will be available for download on the Apple App Store.
+\subsubsection{Website}
+No Installation is required to use the website, however it can be accessed at <Web Link>.
+\subsubsection{Location Services}
+With regards to configuring the iOS and Android applications: location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application. Profile setting can be configured via selecting the user's username.
 
 \newpage
 \section{Getting Started}
+\textit{From this point on, the functioning of the Android and iOS applications are similar, so they are grouped into a single} Mobile \textit{section, and unless otherwise stated, the description applies to both applications.}
 
-\subsection{Creating an Account}
+\subsection{Mobile}
+
+\subsubsection{Creating an Account}
 The application will open by default on the log in screen. If you do not have an account you can press the "Sign Up" button. Once on the sign up page enter your details an press "Create Account". You will then be logged in accordingly.
 
-\subsection{Logging In}
+\subsubsection{Logging In}
 When on the log in screen enter your email and its password you used to create the account. If you have already logged in the app will keep you logged in until you log out.
 
-\subsection{Logging Out}
+\subsubsection{Logging Out}
 The Log out button can be found at the bottom of the Harvest "Settings" Tab.
+
+\subsection{Website}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Map.png}
+ \caption{Website Map}
+ \label{WebsiteMap}
+\end{figure}
+
+\textit{For ease of visualization, a diagram representing a map of the website is given in \ref{WebsiteMap}: each web page is given, indicating to where, and how a traversal is possible from that page.}
+
+\subsubsection{Registering}
+\paragraph{Finding the Register Page}The registration page can be found at <Web Link>, and once there the user will be presented with the page as seen in \ref{RegisterPage}. It is important to note that the login page can also be accessed from \ref{LoginPage} by clicking on the \texttt{Sign Up} button at the top left of the page, or by clicking on the blue \texttt{Create New Account} button.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Register-Page.png}
+ \caption{Register Page}
+ \label{RegisterPage}
+\end{figure}
+
+\paragraph{Creating an Account}Once at the register page the new user must enter their first name, surname, email address, desired password, and confirm the desired password by entering it again. When all of the information has been entered, and the user is content that the information is correct, they shall click on the green \texttt{Create Account} button. They will now be taken to the login page as seen in \ref{LoginPage}. The user shall receive an email as seen in \ref{AccountCreationConfirmationEmail} at the specified address, asking to confirm their account. The user simply needs to click on the \texttt{Confirm Account} button in order to complete the account creation.
+
+\subsubsection{Logging In}
+\paragraph{Finding the Login Page}The login page can be found at <Web Link>, and once there the user will be presented with the page as seen in \ref{LoginPage}. It is important to note that the login page can also be accessed from \ref{RegisterPage} by clicking on the \texttt{Log In} button at the top left of the page.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Login-Page.png}
+ \caption{Login Page}
+ \label{LoginPage}
+\end{figure}
+
+\paragraph{Logging In}The user simply enters the correct email address and password associated with their account, and clicks on the green \texttt{Log In} button. The user will the now be taken to \ref{HomePage}.
+
+\subsubsection{Home Page}
+Once the user has logged in, they will be taken to the home page, as seen in \ref{HomePage}. The home page is the starting point of the system, it serves simply by providing a real time updating feed of all bag drops.
+
+\subsubsection{Universal Features}
+Once the user is logged in, all web pages follow a similar design, so that use is consistent and manageable. The navbar that appears at the top of all logged in screens is consistent. Buttons in the navbar, from left to right are (note that the active page is always highlighted in green): 
+\paragraph{Harvest Home}Takes the user to the home page, as seen in \ref{HomePage}.
+\paragraph{View/Edit Information}Takes the user to the View/Edit Information page, as seen in \ref{InformationPage}.
+\paragraph{Sign Out}Logs the user out of the system, and returns them to the login page, as seen in \ref{LoginPage}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Home-Page.png}
+ \caption{Home Page}
+ \label{HomePage}
+\end{figure}
 
 \newpage
 \section{Using the System}
 
-\subsection{Using the Clicker}
+\subsection{Mobile}
+\subsubsection{Using the Clicker}
 When using the clicker ensure that you start the session first before clicking a worker to collect a yield from them. The procedure of using the clicker works as follows:
 
 \begin{enumerate}
@@ -175,16 +265,102 @@ When using the clicker ensure that you start the session first before clicking a
 \item Press "Stop"
 \end{enumerate}
 
+\subsection{Website}
+\subsubsection{View/Edit Information}
+\paragraph{Introduction}The View/Edit Information page can be found at any time by clicking on the \texttt{View/Edit Information} button in the navbar. Once clicked on, the user will be taken to \ref{InformationPage}. The concept is that almost all information can be viewed from this page, and once the relevant information has been located, it can also be edited.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Information-Page.png}
+ \caption{View/Edit Information Page}
+ \label{InformationPage}
+\end{figure}
+
+\paragraph{Locating the Correct Information}When in \ref{InformationPage} there are three blue buttons available; \texttt{Farms}, \texttt{Orchards}, and \texttt{Workers}. Each of which will expand a list of the relevant items. The entire process is best described through an example, so, in this example, the goal is to locate information on a worker named \textit{Joe Soap}. The process, however can be accomplished in multiple ways; the first, and most obvious is to select \texttt{Workers}, then \texttt{J. Soap} (the process can be seen by following \ref{InformationPage}, \ref{InformationPageWorkers}, and \ref{InformationPageJoe}), however, if the user is looking at the \texttt{Pear Shaped} orchard, and see's that \textit{Joe Soap} is assigned (see \ref{InformationPagePear}), then they can click on the button representing \textit{Joe Soap}---labeled \texttt{J. Soap}---to go to \textit{Joe Soap's} page, as seen in \ref{InformationPageJoePear}, note that the list of orchards is still displayed.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Information-Workers.png}
+ \caption{Workers}
+ \label{InformationPageWorkers}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Information-Joe.png}
+ \caption{Joe Soap}
+ \label{InformationPageJoe}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Information-Pear.png}
+ \caption{Pear Shaped}
+ \label{InformationPagePear}
+\end{figure}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Information-Joe-Pear.png}
+ \caption{Joe Soap Through Pear Shaped}
+ \label{InformationPageJoePear}
+\end{figure}
+
+\paragraph{Adding Information}Note that at the top of the second list in \ref{InformationPageWorkers}, \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear} there is a green \texttt{Add Farm}, \texttt{Add Orchard}, or \texttt{Add Worker} button, clicking this button will display the interface to enter the necessary information. An example of this can be seen in \ref{InformationAddOrchard}, where a new orchard can be created. Once all of the necessary information has been entered, then the \texttt{Save} button can be clicked to create the new orchard, note that none of the fields are required.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Information-AddOrchard.png}
+ \caption{Adding an Orchard}
+ \label{InformationAddOrchard}
+\end{figure}
+
+\paragraph{Modifying Information}When looking at any information, a \texttt{Modify} button can be seen at the top (see \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear}). In \ref{InformationModJoe} the view when \textit{Joe Soap} is being modified can be seen. The fields are already populated by the information that was already stored in them. Once the user is content with the changes, they can click on the orange \texttt{Save} button to apply the changes. A reminder that no fields are required, so that fulled in fields can be erased. The user can also click on the red \texttt{Delete} button to delete the entry in its entirety---note a confirmation dialog will appear. The user may also cancel, which will return them to before they clicked on \texttt{Modify}, as seen in \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear}.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/Information-Mod-Joe.png}
+ \caption{Modifying Information}
+ \label{InformationModJoe}
+\end{figure}
+
+\paragraph{Stored Information}
+Below, the fields stored are described.
+\subparagraph{Farm}
+\begin{itemize}
+ \item \textit{Farm Name}: the name of the farm.
+ \item \textit{Information}: any further textual information about the farm.
+ \item \textit{Assigned Orchards}: a clickable list of the orchards assigned to the farm.
+\end{itemize}
+
+\subparagraph{Orchard}
+\begin{itemize}
+ \item \textit{Orchard Name}: the name of the orchard.
+\item \textit{Orchard Crop}: the type of crop grown in the orchard.
+\item \textit{Mean Bag Mass}: the average mass of a bag that is harvested from the orchard.
+\item \textit{Date Planted}: the date that the orchard was planted.
+\item \textit{Spacing}: the spacing of the crops.
+\item \textit{Information}: any further textual information about the orchard.
+\item \textit{Assigned Farm}: a clickable button indicating the farm that the orchard is assigned to.
+\item \textit{Assigned Workers}: a clickable list of the workers assigned to the orchard.
+\end{itemize}
+
+\subparagraph{Worker}
+\begin{itemize}
+\item \textit{Worker Name}: the first name of the worker.
+\item \textit{Worker Surname}: the surname of the worker.
+\item \textit{Assigned Orchard}: a clickable button indicating the orchard that the worker is assigned to.
+\item \textit{Worker Type}: indicates if the worker is a foreman or a regular worker.
+\item \textit{Information}: any further textual information about the worker.
+\item \textit{Foreman Email}: in the case of a foreman, their email address for linking to their app.
+\end{itemize}
+
 \newpage
-\section{Troubleshooting}.
+\section{Troubleshooting}
 
-\subsection{Location Services}
-\begin{enumerate}
-\item Check that your phone supports location services
-\item In the "Settings" application make sure that the Harvest app is allowed location services 
-\end{enumerate}
+\subsection{Mobile and Website}
 
-\subsection{Forgotten Password}
+\subsubsection{Forgotten Password}
 \begin{enumerate}
 \item On the sign in screen, tap "Forgot account details?" button.
 \item When asked for your email, enter the the email address of the account with the forgotten password.
@@ -193,5 +369,14 @@ When using the clicker ensure that you start the session first before clicking a
 \item From the web page that the link sent you to, Enter the new password for your account.
 \item Log in to Harvest using your new details.
 \end{enumerate}
+
+\subsection{Mobile Only}
+\subsubsection{Location Services}
+\begin{enumerate}
+\item Check that your phone supports location services
+\item In the "Settings" application make sure that the Harvest app is allowed location services 
+\end{enumerate}
+
+\subsection{Website Only}
 
 \end{document}
