@@ -217,11 +217,13 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
     
     let w = collectionView.frame.width
+    let h = collectionView.frame.height - 186
     
     let n = CGFloat(Int(w / 186))
     
-    let cw = w / n - (0.5 * (n - 1))
+    let cw = w / n - ((n - 1) / n)
     
-    return CGSize(width: tracker == nil || workers.isEmpty ? w - 2 : cw, height: 109);
+    return CGSize(width: tracker == nil || workers.isEmpty ? w - 2 : cw,
+                  height: tracker == nil || workers.isEmpty ? h : 109);
   }
 }
