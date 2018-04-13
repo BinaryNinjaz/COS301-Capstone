@@ -1,41 +1,30 @@
 package za.org.samac.harvest;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationManager;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.GridView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,13 +32,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import za.org.samac.harvest.adapter.MyData;
-import za.org.samac.harvest.adapter.WorkerGridAdapter;
-import za.org.samac.harvest.adapter.collections;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.LayoutInflater;
+import za.org.samac.harvest.adapter.MyData;
+import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
+import za.org.samac.harvest.adapter.collections;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStart;
     private ProgressBar progressBar;
     private RelativeLayout relLayout;
-    private GridView gridview;
-    private WorkerGridAdapter adapter;
+    private RecyclerView recyclerView;
+    private WorkerRecyclerViewAdapter adapter;
     private LocationManager locationManager;
     private Location location;
     private FirebaseAuth mAuth;
@@ -79,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        }else {
+        } else {
             locationEnabled = true;
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
@@ -120,10 +111,32 @@ public class MainActivity extends AppCompatActivity {
         relLayout.setVisibility(View.GONE);
 
         workers = new ArrayList<>();
-        gridview = findViewById(R.id.gridview);
-        adapter = new WorkerGridAdapter(getApplicationContext(), workers);
-        gridview.setAdapter(adapter);
-        gridview.setVisibility(View.GONE);
+        recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, GridLayoutManager.VERTICAL));
+        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workers);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setVisibility(View.GONE);
+
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.actionYieldTracker:
+
+                            case R.id.actionSettings:
+
+                            case R.id.actionLastSession:
+
+                        }
+                        return true;
+                    }
+                });
     }
 
     /***********************
@@ -153,19 +166,19 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
-        gridview.setVisibility(View.VISIBLE);
-        if(!namesShowing) {
+        recyclerView.setVisibility(View.VISIBLE);
+        if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
             textView.setVisibility(View.GONE);
-            namesShowing=true;
+            namesShowing = true;
             adapter.notifyDataSetChanged();
         }
         if (btnStart.getTag() == "green") {
             adapter.setPlusEnabled(true);
             adapter.setMinusEnabled(true);
             track = new HashMap<Integer, Location>(); //used in firebase function
-            track.put(trackCount,location);
-            if(locationEnabled) {
+            track.put(trackCount, location);
+            if (locationEnabled) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
             }
             startTime = System.currentTimeMillis();
@@ -181,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
             int s = (int) ((elapsedTime / 1000) % 60);
             String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
             String msg = "A total of " + adapter.totalBagsCollected + " bags have been collected in " + timeTaken + ".";
-            if(locationEnabled) {
+            if (locationEnabled) {
                 locationManager.removeUpdates(mLocationListener);
             }
             adapter.totalBagsCollected = 0;
@@ -210,23 +223,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void writeToFirebase(collections collectionObj) {
-        FirebaseDatabase database =  FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         String key = database.getReference("yields").push().getKey();
-        DatabaseReference mRef =  database.getReference().child("yields").child(key);
+        DatabaseReference mRef = database.getReference().child("yields").child(key);
         mRef.setValue("collections");
         Map<String, MyData> map = collectionObj.getIndividualCollections();
-        Map<String,String> collectionData = new HashMap<String, String>();
+        Map<String, String> collectionData = new HashMap<String, String>();
         collectionData.put("email", collectionObj.getForemanEmail());
         collectionData.put("end_date", Double.toString(collectionObj.getEnd_date()));
         collectionData.put("start_date", Double.toString(collectionObj.getStart_date()));
         mRef.child("collections").setValue(collectionData);
         Iterator it = map.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+            Map.Entry pair = (Map.Entry) it.next();
             mRef.child("collections").setValue(pair.getKey());
             MyData data = map.get(pair.getKey());
-            DatabaseReference dRef = mRef.child("collections").child((String)pair.getKey());
-            for(int i = 0; i < data.size ; i++) {
+            DatabaseReference dRef = mRef.child("collections").child((String) pair.getKey());
+            for (int i = 0; i < data.size; i++) {
                 dRef.setValue(Integer.toString(i));
                 dRef.child(Integer.toString(i)).setValue("coord");
                 dRef.child(Integer.toString(i)).setValue("date");
@@ -247,9 +260,9 @@ public class MainActivity extends AppCompatActivity {
         Iterator it1 = track.entrySet().iterator();
         int count = 0;
         while (it1.hasNext()) {
-            Map.Entry pair = (Map.Entry)it1.next();
+            Map.Entry pair = (Map.Entry) it1.next();
             Location loc = (Location) pair.getValue();
-            if(loc!=null) {
+            if (loc != null) {
                 double lat = loc.getLatitude();
                 double lng = loc.getLongitude();
                 mRef.child("track").setValue(Integer.toString(count));
@@ -262,22 +275,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public Location getLocation() { return location; }
+    public Location getLocation() {
+        return location;
+    }
 
     private final LocationListener mLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(final Location locationChange) {
             location = locationChange;
             trackCount++;
-            track.put(trackCount,location);
+            track.put(trackCount, location);
             adapter.setLocation(location);
         }
+
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) { }
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
         @Override
-        public void onProviderEnabled(String provider) { }
+        public void onProviderEnabled(String provider) {
+        }
+
         @Override
-        public void onProviderDisabled(String provider) { }
+        public void onProviderDisabled(String provider) {
+        }
     };
 
 

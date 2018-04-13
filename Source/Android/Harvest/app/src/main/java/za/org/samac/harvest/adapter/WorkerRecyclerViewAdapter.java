@@ -2,11 +2,10 @@ package za.org.samac.harvest.adapter;
 
 import android.content.Context;
 import android.location.Location;
-import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 
 import za.org.samac.harvest.R;
 
-public class WorkerGridAdapter extends BaseAdapter {
+public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecyclerViewAdapter.WorkerViewHolder> {
 
     public Context context;//made it private initially
     private ArrayList<String> workers;
@@ -29,7 +28,7 @@ public class WorkerGridAdapter extends BaseAdapter {
     private FirebaseAuth mAuth;
     private collections collectionObj;
 
-    public WorkerGridAdapter(Context context, ArrayList<String> workers) {
+    public WorkerRecyclerViewAdapter(Context context, ArrayList<String> workers) {
         this.context = context;
         this.workers = workers;
         this.totalBagsCollected = 0;
@@ -46,62 +45,45 @@ public class WorkerGridAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return workers.size();
+    public WorkerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.worker_grid_item, parent, false);
+
+        return new WorkerViewHolder(itemView);
     }
 
     @Override
-    public Object getItem(int i) {
-        return i;
+    public int getItemCount() {
+        return this.workers.size();
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
-    }
+    public void onBindViewHolder(final WorkerViewHolder holder, int position) {
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
         final String personName = this.workers.get(position);
-        final LayoutInflater layoutInflater = LayoutInflater.from(context);
+        holder.workerName.setText(personName);
 
-        ConstraintLayout view;
-
-        if (convertView == null) {
-            view = (ConstraintLayout) layoutInflater.inflate(R.layout.worker_grid_item , null);
-
-        } else {
-            view = (ConstraintLayout) convertView;
-        }
-        TextView workerName = view.findViewById(R.id.workerName);
-        workerName.setText(personName);
-
-        final TextView increment = view.findViewById(R.id.increment);
-        incrementViews.add(increment);
-        Button btnPlus = view.findViewById(R.id.btnPlus);
-        //btnPlus.setEnabled(false);
-        btnPlus.setOnClickListener(new View.OnClickListener() {
+        incrementViews.add(holder.increment);
+        holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Long value = Long.valueOf(increment.getText().toString()) + 1;
-                increment.setText(String.format("%d", value));
+                Long value = Long.valueOf(holder.increment.getText().toString()) + 1;
+                holder.increment.setText(String.format("%d", value));
 
                 //make changes on firebase
                 collectionObj.addCollection(personName, location);
                 ++totalBagsCollected;
             }
         });
-        plus.add(btnPlus);
+        plus.add(holder.btnPlus);
 
-        Button btnMinus = view.findViewById(R.id.btnMinus);
-        //btnMinus.setEnabled(false);
-        btnMinus.setOnClickListener(new View.OnClickListener() {
+        holder.btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Long currentValue = Long.valueOf(increment.getText().toString());
+                Long currentValue = Long.valueOf(holder.increment.getText().toString());
                 if(currentValue > 0) {
                     Long value = currentValue - 1;
-                    increment.setText(String.format("%d", value));
+                    holder.increment.setText(String.format("%d", value));
 
                     //make changes on firebase
                     collectionObj.removeCollection(personName);
@@ -109,11 +91,23 @@ public class WorkerGridAdapter extends BaseAdapter {
                 }
             }
         });
-        minus.add(btnMinus);
-
-        return view;
+        minus.add(holder.btnMinus);
     }
 
+    public class WorkerViewHolder extends RecyclerView.ViewHolder {
+        TextView workerName;
+        TextView increment;
+        Button btnPlus;
+        Button btnMinus;
+
+        WorkerViewHolder(View view) {
+            super(view);
+            workerName = view.findViewById(R.id.workerName);
+            increment = view.findViewById(R.id.increment);
+            btnPlus = view.findViewById(R.id.btnPlus);
+            btnMinus = view.findViewById(R.id.btnMinus);
+        }
+    }
     public void setPlusEnabled(boolean state) {
         for(int i = 0 ; i < plus.size() ; i++) {
             Button btn = plus.get(i);
@@ -145,4 +139,6 @@ public class WorkerGridAdapter extends BaseAdapter {
     public collections getCollectionObj() {
         return collectionObj;
     }
+
+
 }

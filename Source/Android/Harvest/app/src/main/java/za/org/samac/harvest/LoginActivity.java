@@ -44,8 +44,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import za.org.samac.harvest.util.AppUtil;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -227,6 +227,8 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+
+                            AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
 
                             Snackbar.make(login_form, "Log In Successful", Snackbar.LENGTH_LONG).show();
                             login_progress.setVisibility(View.GONE);

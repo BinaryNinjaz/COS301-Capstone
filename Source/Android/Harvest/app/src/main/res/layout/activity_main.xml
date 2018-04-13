@@ -8,61 +8,69 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
     <ProgressBar
-        android:layout_centerInParent="true"
         android:id="@+id/progressBar"
-        android:layout_gravity="center"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/relLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        >
+        android:visibility="gone">
 
-    <!--<ScrollView
-        android:id="@+id/containBtns"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <!--<ScrollView
+            android:id="@+id/containBtns"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        &lt;!&ndash; used to align worker buttons but only seems to work for first button &ndash;&gt;
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal"
-            android:layout_weight="2"
-            android:id="@+id/rel">
+            &lt;!&ndash; used to align worker buttons but only seems to work for first button &ndash;&gt;
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"
+                android:layout_weight="2"
+                android:id="@+id/rel">
 
-        </RelativeLayout>
-    </ScrollView>-->
-    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_marginTop="3dp"
-        android:id="@+id/gridview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="175dp"
-        android:gravity="center"
-        android:horizontalSpacing="5dp"
-        android:numColumns="2"
-        android:visibility="gone"
-        android:layout_marginBottom="50dp"
-        android:stretchMode="none"
-        android:verticalSpacing="5dp" />
+            </RelativeLayout>
+        </ScrollView>-->
+        <!--<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_marginTop="3dp"
+            android:id="@+id/gridview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="175dp"
+            android:gravity="center"
+            android:horizontalSpacing="5dp"
+            android:numColumns="2"
+            android:visibility="gone"
+            android:layout_marginBottom="50dp"
+            android:stretchMode="none"
+            android:verticalSpacing="5dp" />-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="100dp"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
 
 
         <!-- used to align start button and expected yield to the bottom -->
 
         <LinearLayout
-            android:layout_alignParentBottom="true"
             android:id="@+id/mLlayoutBottomButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/bottom_navigation"
             android:layout_gravity="bottom"
             android:orientation="horizontal">
 
@@ -74,7 +82,7 @@
                 android:gravity="center"
                 android:onClick="onClickStart"
                 android:tag="green"
-                android:text="Start"
+                android:text="@string/start"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 tools:layout_editor_absoluteX="0dp"
                 tools:layout_editor_absoluteY="550dp"
@@ -84,8 +92,8 @@
                 android:id="@+id/textView"
                 android:layout_width="292dp"
                 android:layout_height="45dp"
-                android:gravity="center"
                 android:background="@color/white"
+                android:gravity="center"
                 android:text="Expected Yield: 30"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 tools:layout_editor_absoluteX="92dp"
@@ -148,52 +156,29 @@
                 app:menu="@menu/navigation" />
 
         </LinearLayout> -->
-    <TextView
-        android:id="@+id/startText"
-        android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="40dp"
-        android:gravity="center"
-        android:text="Press 'Start' to begin tracking worker collections"
-        android:textSize="18sp"
-        tools:maxLines="2"
-        tools:textSize="22sp" />
+        <TextView
+            android:id="@+id/startText"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:text="Press 'Start' to begin tracking worker collections"
+            android:textSize="18sp"
+            tools:maxLines="2"
+            tools:textSize="22sp" />
+
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:itemBackground="@color/colorPrimary"
+            app:itemIconTint="@color/white"
+            app:itemTextColor="@color/white"
+            app:menu="@menu/bottom_navigation_main" />
     </RelativeLayout>
 
 </LinearLayout>
-
-    <!-- <?xml version="1.0" encoding="utf-8"?>
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
-
-        <TextView
-            android:id="@+id/message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/title_home"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/navigation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:layout_marginStart="0dp"
-            android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/navigation" />
-
-    </android.support.constraint.ConstraintLayout> -->

@@ -19,6 +19,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"></activity>
         <activity
             android:name=".LoginActivity"
@@ -36,7 +37,7 @@
             android:label="@string/title_activity_sign_up" />
         <activity
             android:name=".SplashScreenActivity"
-            android:label="@string/title_activity_splash_screen"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

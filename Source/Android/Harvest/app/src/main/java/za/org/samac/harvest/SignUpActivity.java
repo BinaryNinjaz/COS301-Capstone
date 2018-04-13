@@ -42,6 +42,8 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import za.org.samac.harvest.util.AppUtil;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -189,6 +191,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+
+                            AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
 
                             Snackbar.make(signUp_form, "Registration Successful", Snackbar.LENGTH_LONG).show();
                             signUp_progress.setVisibility(View.GONE);
