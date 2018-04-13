@@ -29,22 +29,5 @@ class HarvestUITests: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     super.tearDown()
   }
-  
-  func testAutoSignIn() {
-    
-  }
 
-  func testYieldCollection() {
-    UserDefaults.standard.set("letanyan.a@gmail.com", forKey: "username")
-    UserDefaults.standard.set("letanyan", forKey: "password")
-    
-    let app = XCUIApplication()
-    let textField = app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .other).element.children(matching: .textField).element
-    textField.tap()
-    app.buttons["Start Session"].tap()
-    textField.tap()
-    app.buttons["Collect"].tap()
-    app.buttons["Stop"].tap()
-    
-  }
 }

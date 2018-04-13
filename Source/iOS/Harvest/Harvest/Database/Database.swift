@@ -139,8 +139,8 @@ struct HarvestDB {
   // MARK: - Yield
   
   static func getWorkers(_ completion: @escaping ([Worker]) -> ()) {
-    let wref = ref.child("/workers")
-    wref.observeSingleEvent(of: .value) { (snapshot) in
+    let wref = ref.child("/workers").queryOrdered(byChild: "surname")
+    wref.observe(.value) { (snapshot) in
       var workers = [Worker]()
       for _child in snapshot.children {
         guard let worker = (_child as? DataSnapshot)?.value as? [String: Any] else {
@@ -148,13 +148,25 @@ struct HarvestDB {
         }
         let fn = worker["name"] as? String ?? ""
         let ln = worker["surname"] as? String ?? ""
-        print(worker)
         let w = Worker(firstname: fn, lastname: ln)
         workers.append(w)
       }
       completion(workers)
     }
   }
+  
+  static func onLastSession(
+    _ completion: @escaping ([String: Any]) -> ()
+  ) {
+    let wref = ref.child("/yields").queryLimited(toLast: 1)
+    wref.observe(.value) { (snapshot) in
+      guard let session = snapshot.value as? [String: Any] else {
+        return
+      }
+      completion(session)
+    }
+  }
+  
   
   static func collect(yield: Double,
                       from email: String,
@@ -176,8 +188,9 @@ struct HarvestDB {
   }
   
   static func collect(from workers: [Worker: WorkerCollection],
-                      from email: String,
-                      on date: Date) {
+                      by email: String,
+                      on date: Date,
+                      track: [(Double, Double)]) {
     let cref = ref.child(Path.yields.rawValue)
     let key = cref.childByAutoId().key
     
@@ -203,13 +216,20 @@ struct HarvestDB {
         i += 1
       }
       
-      cs[w.firstname + " " + w.lastname] = collections
+      let (f, l) = (w.firstname.removedFirebaseInvalids(),
+                    w.lastname.removedFirebaseInvalids())
+      cs[f + " " + l] = collections
     }
     
+    print(cs)
+    print(track.firbaseCoordRepresentation())
+    
     let data: [String: Any] = [
-      "date": date.timeIntervalSince1970,
+      "start_date": date.timeIntervalSince1970,
+      "end_date": Date().timeIntervalSince1970,
       "email": email,
-      "collections": cs
+      "collections": cs,
+      "track": track.firbaseCoordRepresentation()
     ]
     
     let updates = ["yields/\(key)": data]
@@ -244,6 +264,32 @@ struct HarvestDB {
   }
 }
 
+extension Array where Element == (Double, Double) {
+  func firbaseCoordRepresentation() -> [String: Any] {
+    var result = [String: Any]()
+    var id = 0
+    for (lat, lng) in self {
+      let coord = ["lat": lat, "lng": lng]
+      result[id.description] = coord
+      id += 1
+    }
+    return result
+  }
+}
+
+extension String {
+  func removedFirebaseInvalids() -> String {
+    var result = ""
+    
+    for c in self {
+      if !"[.*$#]".contains(c) {
+        result += "\(c)"
+      }
+    }
+    
+    return result
+  }
+}
 
 public extension UserDefaults {
   public func set(username: String) {

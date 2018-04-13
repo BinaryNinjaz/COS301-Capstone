@@ -23,69 +23,114 @@ class HarvestTests: XCTestCase {
       super.tearDown()
   }
   
-  func testYieldCollection() {
-    let coord = CLLocationCoordinate2DMake(25, -20)
-    let date = Date(timeIntervalSince1970: 100000)
+  func setUpYieldTracker() -> (Tracker, [CLLocation], [String: Worker]) {
+    var tracker = Tracker()
     
-    HarvestDB.collect(yield: 10.5,
-                      from: "dummy@gmail.com",
-                      inAmountOfSeconds: 123.45,
-                      at: coord,
-                      on: date)
+    let workerA = Worker(firstname: "Andy", lastname: "Andrews")
+    let workerB = Worker(firstname: "Ben", lastname: "Bennet")
     
-    
-    HarvestDB.yieldCollection(for: "dummy@gmail.com", on: date) { (snapshot) in
-      guard let child = snapshot.value as? [String: Any] else {
-        XCTAssert(false, "not a valid snapshot")
-        return
-      }
-      
-      guard let yield = child["yield"] as? Double else {
-        XCTAssert(false, "not a valid snapshot")
-        return
-      }
-      
-      guard let email = child["email"] as? String else {
-        XCTAssert(false, "not a valid snapshot")
-        return
-      }
-      
-      guard let duration = child["duration"] as? Double else {
-        XCTAssert(false, "not a valid snapshot")
-        return
-      }
-      
-      guard let loc = child["location"] as? [String: Any] else {
-        XCTAssert(false, "not a valid snapshot")
-        return
-      }
-      guard let lat = loc["lat"] as? Double else {
-        XCTAssert(false, "not a valid snapshot")
-        return
-      }
-      guard let lng = loc["lng"] as? Double else {
-        XCTAssert(false, "not a valid snapshot")
-        return
-      }
-      
-      guard let cdateinterval = child["date"] as? Double else {
-        XCTAssert(false, "not a valid snapshot")
-        return
-      }
-      let cdate = Date(timeIntervalSince1970: cdateinterval)
-      print("foooooo")
-      XCTAssertEqual(yield, 10.5)
-      XCTAssertEqual(email, "dummy@gmail.com")
-      XCTAssertEqual(duration, 123.45)
-      XCTAssertEqual(lat, 25.0)
-      XCTAssertEqual(lng, -20)
-      XCTAssertEqual(date, cdate)
+    let rand = {
+      return Double(arc4random()) / Double(UInt32.max) * 60 - 30
     }
     
-  }
+    let la = rand()
+    let lb = rand()
+    let lc = rand()
+    let ld = rand()
+    let le = rand()
+    let lf = rand()
     
-  func testLogin() {
-//    HarvestDB.signIn(withEmail: "letanyan.a@gmail.com", andPassword: "letanyan", on: <#T##UIViewController#>)
+    let loc0 = CLLocation(latitude: la, longitude: lb)
+    let loc1 = CLLocation(latitude: lc, longitude: ld)
+    let loc2 = CLLocation(latitude: le, longitude: lf)
+    
+    tracker.collect(for: workerA, at: loc0)
+    tracker.collect(for: workerB, at: loc2)
+    tracker.collect(for: workerA, at: loc1)
+    tracker.collect(for: workerB, at: loc2)
+    tracker.collect(for: workerB, at: loc1)
+    
+    return (tracker, [loc0, loc1, loc2], ["A": workerA, "B": workerB])
+  }
+  
+  func testYieldCollectionAmount() {
+    let (tracker, _, workers) = setUpYieldTracker()
+    
+    let collectionPointsA = tracker
+      .collections[workers["A"]!]?
+      .collectionPoints
+      .map { $0.location }
+    
+    let collectionPointsB = tracker
+      .collections[workers["B"]!]?
+      .collectionPoints
+      .map { $0.location }
+    
+    XCTAssertEqual(collectionPointsA?.count, 2)
+    XCTAssertEqual(collectionPointsB?.count, 3)
+  }
+  
+  func testYieldCollectionCoords() {
+    let (tracker, locs, workers) = setUpYieldTracker()
+    
+    let collectionPointsA = tracker
+      .collections[workers["A"]!]?
+      .collectionPoints
+      .map { $0.location }
+    
+    let collectionPointsB = tracker
+      .collections[workers["B"]!]?
+      .collectionPoints
+      .map { $0.location }
+    
+    XCTAssertEqual(collectionPointsA, [locs[0], locs[1]])
+    XCTAssertEqual(collectionPointsB, [locs[2], locs[2], locs[1]])
+  }
+  
+  func testYieldCollectionClocking() {
+    let (tracker, _, _) = setUpYieldTracker()
+    let d = Date()
+    
+    XCTAssertLessThan(tracker.sessionStart, d)
+  }
+  
+  func testLocationTracking() {
+    var tracker = Tracker()
+    
+    let rand = {
+      return Double(arc4random()) / Double(UInt32.max) * 60 - 30
+    }
+    
+    let la = rand()
+    let lb = rand()
+    let lc = rand()
+    let ld = rand()
+    let le = rand()
+    let lf = rand()
+    
+    let coords = [la, lb, lc, ld, le, lf]
+    var locs = [CLLocation]()
+    
+    for _ in 0..<10 {
+      let i = Int(arc4random()) % 6
+      let j = Int(arc4random()) % 6
+      locs.append(CLLocation(latitude: coords[i], longitude: coords[j]))
+    }
+    
+    for loc in locs {
+      tracker.track(location: loc)
+    }
+    
+    let locsTuple = locs.map { (loc: CLLocation) -> (Double, Double) in
+      let lat = loc.coordinate.latitude
+      let lng = loc.coordinate.longitude
+      return (lat, lng)
+    }
+    
+    for (x, y) in zip(tracker.pathTracked(), locsTuple) {
+      XCTAssertEqual(x.0, y.0)
+      XCTAssertEqual(x.1, y.1)
+    }
   }
     
 }

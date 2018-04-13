@@ -14,6 +14,7 @@ class SignUpViewController: UIViewController {
   @IBOutlet weak var lastnameTextField: UITextField!
   @IBOutlet weak var usernameTextField: UITextField!
   @IBOutlet weak var passwordTextField: UITextField!
+  @IBOutlet weak var confirmPasswordTextField: UITextField!
   @IBOutlet weak var signUpButton: UIButton!
   @IBOutlet weak var cancelButton: UIButton!
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -68,17 +69,50 @@ class SignUpViewController: UIViewController {
       return
     }
     
+    guard let confirmedPassword = confirmPasswordTextField.text else {
+      let alert = UIAlertController.alertController(
+        title: "No confirm password provided",
+        message: "Please provide a confirm password to create an account")
+      
+      present(alert, animated: true, completion: nil)
+      
+      return
+    }
+    
+    guard confirmedPassword == password else {
+      let alert = UIAlertController.alertController(
+        title: "Mismatching passwords",
+        message: "Your passwords are not matching. Please provide the same password in both password prompts")
+      
+      present(alert, animated: true, completion: nil)
+      
+      return
+    }
+    
     signUpButton.isHidden = true
-    cancelButton.isEnabled = false
+    cancelButton.isHidden = true
     activityIndicator.startAnimating()
     HarvestDB.signUp(withEmail: username, andPassword: password, name: (fname, lname), on: self) {w in
       if w {
-        self.dismiss(animated: true, completion: nil)
+        HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
+          if w,
+            let vc = self
+              .storyboard?
+              .instantiateViewController(withIdentifier: "mainTabBarViewController") {
+            self.present(vc, animated: true, completion: nil)
+          }
+          self.signUpButton.isHidden = false
+          self.cancelButton.isHidden = false
+          self.activityIndicator.stopAnimating()
+        }
+      } else {
+        self.signUpButton.isHidden = false
+        self.cancelButton.isHidden = false
+        self.activityIndicator.stopAnimating()
       }
-      self.signUpButton.isHidden = false
-      self.cancelButton.isEnabled = true
-      self.activityIndicator.stopAnimating()
     }
+    
+    
   }
   
   @IBAction func cancelTouchUp(_ sender: Any) {
@@ -93,6 +127,9 @@ class SignUpViewController: UIViewController {
     cancelButton.apply(gradient: .blue)
   }
 
+  
+  
+  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
