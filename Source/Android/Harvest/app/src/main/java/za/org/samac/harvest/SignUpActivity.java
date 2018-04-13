@@ -170,11 +170,13 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         signUp_form.setVisibility(View.INVISIBLE);
         signUp_progress.setVisibility(View.VISIBLE);
         if (password.length() < 6) {
-            int paddingCount = 6 - password.length();
+            /*int paddingCount = 6 - password.length();
 
             for(int i = 0; i < paddingCount; i++) {
                 password += '#';
-            }
+            }*/
+
+            password += "s3cr3ts4uc3";
         }
 
         mAuth.createUserWithEmailAndPassword(email, password)

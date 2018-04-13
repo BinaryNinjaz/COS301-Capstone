@@ -1,15 +1,25 @@
 package za.org.samac.harvest;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
@@ -24,6 +34,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,32 +43,51 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.WorkerGridAdapter;
+import za.org.samac.harvest.adapter.collections;
 
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 
 public class MainActivity extends AppCompatActivity {
-    //int totalBagsCollected = 0; //keeps track of total bags collected
-
 
     private static final String TAG = "Clicker";
 
     private ArrayList<String> workers;
-    private ArrayList<Integer> bagsCollected;
-    private ArrayList<Button> workerBtns;
+    private Map<Integer, Location> track;
+    int trackCount = 0;
+    boolean namesShowing = false;
 
+    private Button btnStart;
+    private ProgressBar progressBar;
+    private RelativeLayout relLayout;
     private GridView gridview;
     private WorkerGridAdapter adapter;
-
-    private Button btnPlus;
-    private Button btnMinus;
-
-    //private View convertView;
+    private LocationManager locationManager;
+    private Location location;
+    private FirebaseAuth mAuth;
+    private boolean locationEnabled = false;
+    private static final long LOCATION_REFRESH_TIME = 60000;
+    private static final float LOCATION_REFRESH_DISTANCE = 3;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        }else {
+            locationEnabled = true;
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);
+            location = locationManager
+                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            adapter.setLocation(location);
+        }
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("workers");
@@ -64,26 +95,35 @@ public class MainActivity extends AppCompatActivity {
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null) {
+                if (dataSnapshot.getValue() != null) {
                     collectWorkers((Map<String, Object>) dataSnapshot.getValue());
                 }
+                progressBar.setVisibility(View.GONE);
+                relLayout.setVisibility(View.VISIBLE);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("Error", databaseError.toString());
+                progressBar.setVisibility(View.GONE);
+                relLayout.setVisibility(View.VISIBLE);
             }
         });
 
         setContentView(R.layout.activity_main);
-        Button btn = findViewById(R.id.button_start);
-        btnPlus = findViewById(R.id.btnPlus);
-        btnMinus = findViewById(R.id.btnMinus);
+        relLayout = findViewById(R.id.relLayout);
+        progressBar = findViewById(R.id.progressBar);
+        btnStart = findViewById(R.id.button_start);
+        btnStart.setTag("green");
 
-        btn.setTag("green");
+        progressBar.setVisibility(View.VISIBLE);
+        relLayout.setVisibility(View.GONE);
+
         workers = new ArrayList<>();
         gridview = findViewById(R.id.gridview);
         adapter = new WorkerGridAdapter(getApplicationContext(), workers);
         gridview.setAdapter(adapter);
+        gridview.setVisibility(View.GONE);
     }
 
     /***********************
@@ -93,187 +133,152 @@ public class MainActivity extends AppCompatActivity {
 
 
     protected void collectWorkers(Map<String, Object> users) {
-
-        bagsCollected = new ArrayList<>();
-        workerBtns = new ArrayList<>();
-        int screenWidth = getScreenWidth();
-        int count = 0 ;
         for (Map.Entry<String, Object> entry : users.entrySet()) {
             Map singleUser = (Map) entry.getValue();
             String fullName = singleUser.get("name") + " " + singleUser.get("surname");
             workers.add(fullName);
-           /* bagsCollected.add(0);
-            final Button workerBtn = new Button(this);
-            workerBtn.setTag(fullName);
-            String btnText = fullName+System.getProperty("line.separator")
-                    +System.getProperty("line.separator")+"0";
-            workerBtn.setText(btnText);
-            workerBtn.setId(count);
-
-            ++count;
-            int width =  (int)(screenWidth/2.2);
-            workerBtn.setLayoutParams(new RelativeLayout.LayoutParams(width,width));
-            workerBtn.setBackgroundColor(Color.parseColor("#275894"));
-            workerBtn.setGravity(Gravity.CENTER);
-            workerBtn.setTextColor(Color.parseColor("#FFFFFFFF"));
-            workerBtn.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    int pos = workers.indexOf(workerBtn.getTag());
-                    bagsCollected.set(pos, bagsCollected.get(pos)+1);
-                    ++totalBagsCollected;
-                    String newText = workers.get(pos)+System.getProperty("line.separator")+
-                            System.getProperty("line.separator")+bagsCollected.get(pos);
-                    workerBtn.setText(newText);
-                }
-            });
-            workerBtns.add(workerBtn);*/
         }
-        adapter.notifyDataSetChanged();
-        //addButtons();
+
+        Collections.sort(workers);
+        //adapter.notifyDataSetChanged();
     }
 
-    //worker buttons need to be added dynamically
-    //seperate function was created for testing purposes
-    private void addButtons() {
-        if(workerBtns.size() > 0) {
-            final RelativeLayout rl = findViewById(R.id.rel);
-            rl.addView(workerBtns.get(0));
-            for (int i = 1; i < workerBtns.size(); i++) {
-                RelativeLayout.LayoutParams layoutParam =
-                        new RelativeLayout.LayoutParams((int)(getScreenWidth()/2.2),
-                                (int)(getScreenWidth()/2.2));
-                layoutParam.setMargins(0,5,0,5);
-
-                if (i == 1) {
-                    layoutParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, i - 2);
-                } else if (i % 2 == 0) {
-                    layoutParam.addRule(RelativeLayout.BELOW,i - 1);
-                } else if (i % 2 == 1) { // odd
-                    layoutParam.addRule(RelativeLayout.BELOW,i - 2);
-                    layoutParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, i - 1);
-                }
-
-                rl.addView(workerBtns.get(i),layoutParam);
-            }
-        }
-        /*****************************************
-        **Code above does not work correctly, gets majority of buttons to show
-        * but not even sure if it's the right approach (was probably my 1000th attempt)
-        * there are most likely mistakes in the xml file
-        */
-
-    }
 
     /*******************************
      Code below handles the stop/start button, runs a timer and displays how many
      bags were collected in the elapsed time. It then clears for another timer to start.
      Sessions for each worker still needs to be implemented *
      */
-    long startTime=0, stopTime=0;
-    @SuppressLint("SetTextI18n")
-    public void onClickStart(View v){
-        /*final android.view.LayoutInflater layoutInflater = LayoutInflater.from(adapter.context);
-        convertView = layoutInflater.inflate(R.layout.worker_grid_item , null);
-        Button btnPlus = getView().findViewById(R.id.btnPlus);
-        Button btnMinus = getView.findViewById(R.id.btnMinus);
+    long startTime = 0, stopTime = 0;
 
-        btnPlus.setEnabled(true);
-        btnMinus.setEnabled(true);*/
-        Button btn = findViewById(R.id.button_start);
-        //adapter.totalBagsCollected=0;
-
-        /*btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btnPlus.setEnabled(true);//enable plus button
-                btnMinus.setEnabled(true);//enable minus button
+    @SuppressLint({"SetTextI18n", "MissingPermission"})
+    public void onClickStart(View v) {
+        gridview.setVisibility(View.VISIBLE);
+        if(!namesShowing) {
+            TextView textView = findViewById(R.id.startText);
+            textView.setVisibility(View.GONE);
+            namesShowing=true;
+            adapter.notifyDataSetChanged();
+        }
+        if (btnStart.getTag() == "green") {
+            adapter.setPlusEnabled(true);
+            adapter.setMinusEnabled(true);
+            track = new HashMap<Integer, Location>(); //used in firebase function
+            track.put(trackCount,location);
+            if(locationEnabled) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
             }
-        });*/
-
-        if(btn.getTag()=="green") {
             startTime = System.currentTimeMillis();
-            btn.setBackgroundColor(Color.parseColor("#FFFF8800"));
-            btn.setText("Stop");
-            btn.setTag("orange");
+            btnStart.setBackgroundColor(Color.parseColor("#FFFF8800"));
+            btnStart.setText("Stop");
+            btnStart.setTag("orange");
         } else {
-            //btnPlus.setEnabled(true);//enable plus button
-            //btnMinus.setEnabled(true);//enable minus button
-
             stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             // do something with time
-            for(int i = 0; i < bagsCollected.size(); i++) {
-                bagsCollected.set(i, 0);
-            }
-
             int h = (int) ((elapsedTime / 1000) / 3600);
             int m = (int) (((elapsedTime / 1000) / 60) % 60);
             int s = (int) ((elapsedTime / 1000) % 60);
-            String timeTaken = h+" hour(s), "+m+" minute(s) and "+s+" second(s)";
-            String msg = "A total of "+adapter.totalBagsCollected+" bags have been collected in "+timeTaken+".";
-            adapter.totalBagsCollected=0;
+            String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
+            String msg = "A total of " + adapter.totalBagsCollected + " bags have been collected in " + timeTaken + ".";
+            if(locationEnabled) {
+                locationManager.removeUpdates(mLocationListener);
+            }
+            adapter.totalBagsCollected = 0;
+            adapter.setPlusEnabled(false);
+            adapter.setMinusEnabled(false);
+            collections collectionObj = adapter.getCollectionObj();
+            collectionObj.sessionEnd();
+            //****writeToFirebase(collectionObj);
             //pop up is used to show how many bags were collected in the elapsed time
-            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setMessage(msg);
             dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    for(int i = 0; i < bagsCollected.size(); i++){
-                        Button temp = workerBtns.get(i);
-                        temp.setText(workers.get(i)+System.getProperty("line.separator")+
-                                System.getProperty("line.separator")+"0");
-                        workerBtns.set(i, temp);
-                    }
+                    adapter.setIncrement();
                     dialog.dismiss();
                 }
             });
             dlgAlert.setCancelable(false);
             dlgAlert.create().show();
             //
-            btn.setBackgroundColor(Color.parseColor("#FF0CCB29"));
-            btn.setText("Start");
-            btn.setTag("green");
+            btnStart.setBackgroundColor(Color.parseColor("#FF0CCB29"));
 
-
+            btnStart.setText("Start");
+            btnStart.setTag("green");
         }
     }
 
-    public static int getScreenWidth() {
-        return Resources.getSystem().getDisplayMetrics().widthPixels;
-    }
-
-}
-/*public class MainActivity extends AppCompatActivity {
-
-    private TextView mTextMessage;
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
+    private void writeToFirebase(collections collectionObj) {
+        FirebaseDatabase database =  FirebaseDatabase.getInstance();
+        String key = database.getReference("yields").push().getKey();
+        DatabaseReference mRef =  database.getReference().child("yields").child(key);
+        mRef.setValue("collections");
+        Map<String, MyData> map = collectionObj.getIndividualCollections();
+        Map<String,String> collectionData = new HashMap<String, String>();
+        collectionData.put("email", collectionObj.getForemanEmail());
+        collectionData.put("end_date", Double.toString(collectionObj.getEnd_date()));
+        collectionData.put("start_date", Double.toString(collectionObj.getStart_date()));
+        mRef.child("collections").setValue(collectionData);
+        Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            mRef.child("collections").setValue(pair.getKey());
+            MyData data = map.get(pair.getKey());
+            DatabaseReference dRef = mRef.child("collections").child((String)pair.getKey());
+            for(int i = 0; i < data.size ; i++) {
+                dRef.setValue(Integer.toString(i));
+                dRef.child(Integer.toString(i)).setValue("coord");
+                dRef.child(Integer.toString(i)).setValue("date");
+                dRef.child("date").setValue(data.date.get(i));
+                dRef.child("coord").setValue("lat");
+                dRef.child("coord").setValue("lng");
+                dRef.child("coord").child("lat").setValue(data.latitude.get(i));
+                dRef.child("coord").child("lng").setValue(data.longitude.get(i));
             }
-            return false;
         }
+        /*mRef.child("collections").setValue("email");
+        mRef.child("collections").setValue("start_date");
+        mRef.child("collections").setValue("end_date");
+        mRef.child("collections").child("email").setValue(collectionObj.getForemanEmail());
+        mRef.child("collections").child("start_date").setValue(collectionObj.getStart_date());
+        mRef.child("collections").child("end_date").setValue(collectionObj.getEnd_date());*/
+        mRef.setValue("track");
+        Iterator it1 = track.entrySet().iterator();
+        int count = 0;
+        while (it1.hasNext()) {
+            Map.Entry pair = (Map.Entry)it1.next();
+            Location loc = (Location) pair.getValue();
+            if(loc!=null) {
+                double lat = loc.getLatitude();
+                double lng = loc.getLongitude();
+                mRef.child("track").setValue(Integer.toString(count));
+                mRef.child("track").child(Integer.toString(count)).setValue("lat");
+                mRef.child("track").child(Integer.toString(count)).setValue("lng");
+                mRef.child("track").child(Integer.toString(count)).child("lat").setValue(lat);
+                mRef.child("track").child(Integer.toString(count)).child("lng").setValue(lng);
+            }
+            ++count;
+        }
+    }
+
+    public Location getLocation() { return location; }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location locationChange) {
+            location = locationChange;
+            trackCount++;
+            track.put(trackCount,location);
+            adapter.setLocation(location);
+        }
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) { }
+        @Override
+        public void onProviderEnabled(String provider) { }
+        @Override
+        public void onProviderDisabled(String provider) { }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
-
-}*/
+}

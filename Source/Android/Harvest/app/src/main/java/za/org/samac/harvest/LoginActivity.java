@@ -209,11 +209,13 @@ public class LoginActivity extends AppCompatActivity {
         login_form.setVisibility(View.INVISIBLE);
         login_progress.setVisibility(View.VISIBLE);
         if (password.length() < 6) {
-            int paddingCount = 6 - password.length();
+            //int paddingCount = 6 - password.length();
 
-            for(int i = 0; i < paddingCount; i++) {
+            /*for(int i = 0; i < paddingCount; i++) {
                 password += '#';
-            }
+            }*/
+
+            password += "s3cr3ts4uc3";
         }
 
         mAuth.signInWithEmailAndPassword(email, password)

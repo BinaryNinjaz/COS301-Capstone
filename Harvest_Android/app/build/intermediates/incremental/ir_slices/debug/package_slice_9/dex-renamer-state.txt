@@ -1,4 +1,0 @@
-#Mon Apr 09 22:47:16 CAT 2018
-base.0=C\:\\Users\\samue\\Documents\\AndroidStudioProjects\\Harvest\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\9
-path.0=classes.dex
-renamed.0=classes.dex
