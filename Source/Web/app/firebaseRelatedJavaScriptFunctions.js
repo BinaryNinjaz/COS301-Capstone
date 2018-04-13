@@ -1,5 +1,5 @@
 function initializeFirebase() {
-    var config = {
+    const config = {
         apiKey: "AIzaSyBTTgAtocwDfror-XZLi4R5rUEphTUK4PU",
         authDomain: "harvest-ios-1522082524457.firebaseapp.com",
         databaseURL: "https://harvest-ios-1522082524457.firebaseio.com",
@@ -37,15 +37,17 @@ function refreshPage() {
 });*/
 
 function firebaseRegister(email, password) {
-    password += email + "123456";
+    if(password.length < 6) {
+        password += "s3cr3ts4uc3";
+    }
     firebase.auth()
         .createUserWithEmailAndPassword(email, password)
         .then(function (user) { // user details correct
             document.location.href = "HomePage.html";
         })
         .catch(function (error) { // some error occured
-            var errorCode = error.code;
-            var errorMessage = error.message;
+            const errorCode = error.code;
+            const errorMessage = error.message;
 
             if (errorCode === 'auth/wrong-password') {
                 alert('Wrong password.');
@@ -57,15 +59,17 @@ function firebaseRegister(email, password) {
 }
 
 function firebaseLogin() {
-    var email = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-    password += email + "123456";
+    const email = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    if(password.length < 6) {
+        password += "s3cr3ts4uc3";
+    }
 
     firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) { // user details correct
         document.location.href = "HomePage.html";
     }).catch(function (error) { // some error occured
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
 
         if (errorCode === 'auth/wrong-password') {
             alert('Wrong password.');
