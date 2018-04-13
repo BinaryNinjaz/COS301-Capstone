@@ -14,6 +14,7 @@ class TrackerViewController: UIViewController {
   var locationManager: CLLocationManager!
   var currentLocation: CLLocation?
   var workers: [Worker] = []
+  var lastLocationPoll: Date? = nil
   
   @IBOutlet weak var startSessionButton: UIButton!
   @IBOutlet weak var workerCollectionView: UICollectionView!
@@ -119,6 +120,10 @@ extension TrackerViewController : CLLocationManagerDelegate {
     }
     currentLocation = loc
     tracker?.track(location: loc)
+    if (lastLocationPoll == nil || Date().timeIntervalSince(lastLocationPoll!) > 60) {
+      HarvestDB.update(location: loc.coordinate)
+      lastLocationPoll = Date()
+    }
   }
 }
 

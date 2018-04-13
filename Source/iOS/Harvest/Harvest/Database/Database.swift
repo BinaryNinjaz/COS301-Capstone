@@ -38,6 +38,7 @@ struct HarvestDB {
   
   enum Path: String {
     case yields = "yields"
+    case locations = "locations"
   }
   
   //MARK: - Authentication
@@ -243,6 +244,22 @@ struct HarvestDB {
         }
       }
     }
+  }
+  
+  static func update(location: CLLocationCoordinate2D) {
+    let path = Path.locations.rawValue + "/" + HarvestUser.current.uid
+    let updates =
+    [
+      path: [
+        "coord": [
+          "lat": location.latitude,
+          "lng": location.longitude
+        ],
+        "display": HarvestUser.current.displayName
+      ]
+    ]
+    
+    ref.updateChildValues(updates)
   }
 }
 
