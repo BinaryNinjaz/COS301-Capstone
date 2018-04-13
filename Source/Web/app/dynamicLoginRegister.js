@@ -1,9 +1,10 @@
-var page = 0; //0 being login, 1 being sign up
-var contents=document.getElementById("pageCon");
+let page = 0; //0 being login, 1 being sign up
+
 // var navBar = document.getElementsById("navHighlight");
 
 function showLogin(){
-	contents.innerHTML = "<div class='container'>"
+	page = 0;
+	document.getElementById("pageCon").innerHTML = "<div class='container'>"
         +"<div class='row'>"
 								+"<div class='col-md-3 col-md-offset-1'>"
 									+"<div align='center'>"
@@ -34,7 +35,8 @@ function showLogin(){
 }
 
 function showRegister(){
-	contents.innerHTML = '<div class="container">'
+	page = 1;
+    document.getElementById("pageCon").innerHTML = '<div class="container">'
 							+'<div class="row">'
 								+'<div class="col-md-3 col-md-offset-1">'
 									+'<div align="center">'
@@ -74,7 +76,9 @@ function showRegister(){
 }
 
 function register() {
-    checkPass(document.getElementById("password").value, document.getElementById("passwordConf").value);
+    if(checkPass(document.getElementById("password").value, document.getElementById("passwordConf").value)){
+        firebaseRegister(document.getElementById("email").value, pass1);
+	}
 }
 
 function checkPass(pass1, pass2) {
@@ -82,6 +86,13 @@ function checkPass(pass1, pass2) {
     //     document.getElementById("errorSpace").innerHTML = "<p class='errmsg'>Passwords cannot be empty</p>";
     //     return false;
     // }
+	if(page === 0){
+		return false;
+	}
+	if (pass1 === "" && pass2 === ""){
+        document.getElementById("errorSpace").innerHTML = "<br>";
+        return true;
+	}
     if (pass1 !== pass2) {
         document.getElementById("errorSpace").innerHTML = "<p class='errmsg'>Passwords do not match</p>";
         document.getElementById("password").value = 0;
@@ -90,7 +101,6 @@ function checkPass(pass1, pass2) {
     }
     if (pass1 === pass2) {
         document.getElementById("errorSpace").innerHTML = "<br>";
-        firebaseRegister(document.getElementById("email").value, pass1);
         return true;
     }
 }

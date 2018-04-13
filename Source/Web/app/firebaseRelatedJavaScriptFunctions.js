@@ -89,23 +89,3 @@ function sendPasswordResetEmail(emailAddress) {
         // An error happened.
     });
 }
-
-// let user /*= firebase.auth().currentUser*/;
-//
-// window.onload = function() {
-//     let otherUser = firebase.auth().currentUser;
-//     if (otherUser != null){
-//         user = otherUser;
-//     }
-//     document.getElementById("emailInNav").innerHTML = user.email + " <span class=\"glyphicon glyphicon-cog\"></span>";
-// };
-
-//IT'S ASYNC TIME BABY"!!! TODO:Get this working with async.
-
-window.onload = function () {
-    document.getElementById("emailInNav").innerHTML = "user email" + " <span class=\"glyphicon glyphicon-cog\"></span>"
-};
-
-// document.addEventListener("DOMContentLoaded", function() {
-//     document.getElementById("emailInNav").innerHTML = firebase.auth().currentUser.email + " <span class=\"glyphicon glyphicon-cog\"></span>";
-// });
