@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:167365669216:android:c3fe73ed021c5c39",
         "android_client_info": {
-          "package_name": "com.binaryninjaz.harvest"
+          "package_name": "za.org.samac.harvest"
         }
       },
       "oauth_client": [
