@@ -80,7 +80,7 @@ public class WorkerGridAdapter extends BaseAdapter {
             increment.setText("0");
             incrementViews.add(increment);
             Button btnPlus = convertView.findViewById(R.id.btnPlus);
-            //btnPlus.setEnabled(false);
+            btnPlus.setEnabled(false);
             btnPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -95,7 +95,7 @@ public class WorkerGridAdapter extends BaseAdapter {
             plus.add(btnPlus);
 
             Button btnMinus = convertView.findViewById(R.id.btnMinus);
-            //btnMinus.setEnabled(false);
+            btnMinus.setEnabled(false);
             btnMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
