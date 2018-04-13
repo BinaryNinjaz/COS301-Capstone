@@ -11,6 +11,17 @@ function initMap() {
   });
 }
 
+function initials(name) {
+  var f = name[0];
+  var e = " ";
+  for (var i = 0; i < name.length; i++) {
+    if (name[i] === " " && i < name.length - 1) {
+      e = name[i + 1];
+    }
+  }
+  return f + e
+}
+
 function displayForemanLocation() {
   locationsRef.on('value', function(snapshot) {
     locations = [];
@@ -19,8 +30,11 @@ function displayForemanLocation() {
       
       var marker = new google.maps.Marker({
         position: loc.coord,
-        map: map
+        map: map,
+        title: loc.display,
+        label: initials(loc.display)
       });
+      marker.setTitle(loc.display);
     });
   });
 }
