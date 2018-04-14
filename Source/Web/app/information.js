@@ -19,6 +19,7 @@ function initEditOrchardMap(withCurrentLoc, editing) {
     updateLocationMap();
   }
   initMap();
+  google.maps.event.clearListeners(map, "click");
   if (editing) {
     map.addListener("click", function(e) {
       if (orchardCoords === undefined) {
@@ -60,7 +61,8 @@ function initMap() {
   }
   map = new google.maps.Map(document.getElementById('map'), {
     center: loc,
-    zoom: 14
+    zoom: 14,
+    disableDoubleClickZoom: true
   });
 }
 function updatePolygon(snapshot) {
