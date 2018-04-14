@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> workers;
     private Map<Integer, Location> track;
     int trackCount = 0;
-    boolean namesShowing = false;
 
     private GridView gridview;
     private WorkerGridAdapter adapter;
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Collections.sort(workers);
-        //adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -139,16 +138,10 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
         Button btn = findViewById(R.id.button_start);
-        if(!namesShowing) {
-            TextView textView = findViewById(R.id.startText);
-            textView.setVisibility(View.GONE);
-            namesShowing=true;
-            adapter.notifyDataSetChanged();
-        }
         if (btn.getTag() == "green") {
             adapter.setPlusEnabled(true);
             adapter.setMinusEnabled(true);
-            track = new HashMap<Integer, Location>(); //used in firebase function
+            track = new HashMap<Integer, Location>();
             track.put(trackCount,location);
             if(locationEnabled) {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
@@ -174,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
             adapter.setMinusEnabled(false);
             collections collectionObj = adapter.getCollectionObj();
             collectionObj.sessionEnd();
-            //****writeToFirebase(collectionObj);
+            writeToFirebase(collectionObj);
             //pop up is used to show how many bags were collected in the elapsed time
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             dlgAlert.setMessage(msg);
