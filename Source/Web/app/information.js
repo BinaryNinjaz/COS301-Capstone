@@ -97,6 +97,15 @@ function popOrchardCoord() {
   orchardCoords.pop();
   orchardPoly.setPath(orchardCoords);
 }
+function clearOrchardCoord() {
+  if (orchardCoords === undefined) {
+    orchardCoords = [];
+  }
+  while(orchardCoords.length > 0) {
+    orchardCoords.pop();
+  }
+  orchardPoly.setPath(orchardCoords);
+}
 
 function popFarm() {
   const col2 = document.getElementById("col2");
@@ -265,8 +274,10 @@ function dispOrch(id) {
         "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop'></div> </div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
-        "<div class='col-sm-9'><div id='map'></div></div>" +
-        "<div class='col-sm-3'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div></div>" +
+        "<div class='col-sm-9'>" +
+        "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
+        "<div class='col-sm-12'><div id='map'></div></div>" +
+        "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
         "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass'></div>" +
@@ -424,8 +435,10 @@ function orchMod(id) {
         "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop' value='" + snapshot.val().crop + "'></div> </div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
-        "<div class='col-sm-9'><div id='map'></div></div>" +
-        "<div class='col-sm-3'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div></div>" +
+        "<div class='col-sm-9'>" +
+        "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
+        "<div class='col-sm-12'><div id='map'></div></div>" +
+        "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
         "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass' value='" + snapshot.val().bagMass + "'></div>" +
