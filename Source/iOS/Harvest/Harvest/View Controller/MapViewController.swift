@@ -156,7 +156,7 @@ extension MapViewController : CLLocationManagerDelegate {
       }
     }
     if !changed {
-      titleLabel = ""
+      titleLabel.text = ""
     }
   }
   
