@@ -154,13 +154,37 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CH9-qQ-FSh">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="qPH-3A-URw">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J7i-TL-Ftg">
+                                            <rect key="frame" x="8" y="26" width="359" height="38"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </view>
+                                <blurEffect style="prominent"/>
+                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="CH9-qQ-FSh" firstAttribute="top" secondItem="6NQ-cT-1Kh" secondAttribute="topMargin" constant="-20" id="eVO-d3-ZZD"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="CH9-qQ-FSh" secondAttribute="trailing" constant="-16" id="nkq-IX-qDr"/>
+                            <constraint firstItem="CH9-qQ-FSh" firstAttribute="leading" secondItem="6NQ-cT-1Kh" secondAttribute="leadingMargin" constant="-16" id="t45-CE-2Kh"/>
+                            <constraint firstItem="mVT-pI-LjO" firstAttribute="top" secondItem="CH9-qQ-FSh" secondAttribute="bottom" constant="-52" id="ubm-NV-AFf"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="mVT-pI-LjO"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Last Session" id="2Kf-5z-PEx"/>
                     <connections>
                         <outlet property="mapView" destination="Wcr-nI-2ez" id="4ym-v2-PEG"/>
+                        <outlet property="titleLabel" destination="J7i-TL-Ftg" id="5Wz-Dj-zVM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6rj-Fs-UT6" userLabel="First Responder" sceneMemberID="firstResponder"/>

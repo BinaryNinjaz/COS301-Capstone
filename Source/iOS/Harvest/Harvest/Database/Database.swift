@@ -32,6 +32,19 @@ struct Worker :  Hashable {
   }
 }
 
+struct Orchard {
+  var bagMass: Double
+  var coords: [CLLocationCoordinate2D]
+  var crop: String
+  var date: Date
+  var farm: Int
+  var futher: String
+  var name: String
+  var unit: String
+  var xDim: Double
+  var yDim: Double
+}
+
 
 struct HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
@@ -39,6 +52,7 @@ struct HarvestDB {
   enum Path: String {
     case yields = "yields"
     case locations = "locations"
+    case orchards = "orchards"
   }
   
   //MARK: - Authentication
@@ -260,6 +274,50 @@ struct HarvestDB {
     ]
     
     ref.updateChildValues(updates)
+  }
+  
+  static func getOrchards(_ completion: @escaping ([Orchard]) -> ()) {
+    let oref = ref.child(Path.orchards.rawValue)
+    oref.observe(.value) { (snapshot) in
+      var orchards = [Orchard]()
+      for _child in snapshot.children {
+        guard let orchard = (_child as? DataSnapshot)?.value as? [String: Any] else {
+          continue
+        }
+        let bagMass = orchard["bagMass"] as? Double ?? 0.0
+        let crop = orchard["crop"] as? String ?? ""
+        let date = Date(timeIntervalSince1970: orchard["date"] as? Double ?? 0.0)
+        let farm = orchard["farm"] as? Int ?? 0
+        let further = orchard["further"] as? String ?? ""
+        let name = orchard["name"] as? String ?? ""
+        let unit = orchard["unit"] as? String ?? ""
+        let xDim = orchard["xDim"] as? Double ?? 0.0
+        let yDim = orchard["yDim"] as? Double ?? 0.0
+        
+        let cs = orchard["coords"] as? [Any] ?? []
+        var coords = [CLLocationCoordinate2D]()
+        
+        
+        for c in cs {
+          guard let c = c as? [String: Any] else {
+            continue
+          }
+          guard let lat = c["lat"] as? Double else {
+            continue
+          }
+          guard let lng = c["lng"] as? Double else {
+            continue
+          }
+          
+          coords.append(CLLocationCoordinate2D(latitude: lat, longitude: lng))
+        }
+        
+        let o = Orchard(bagMass: bagMass, coords: coords, crop: crop, date: date, farm: farm, futher: further, name: name, unit: unit, xDim: xDim, yDim: yDim)
+        
+        orchards.append(o)
+      }
+      completion(orchards)
+    }
   }
 }
 
