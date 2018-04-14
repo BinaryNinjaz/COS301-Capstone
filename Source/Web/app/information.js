@@ -85,6 +85,8 @@ function updatePolygon(snapshot) {
     fillOpacity: 0.35,
     map: map
   });
+  map.setCenter({lat: cenLat(orchardCoords), lng: cenLng(orchardCoords)});
+  map.fitBounds(bounds(orchardCoords));
 }
 function popOrchardCoord() {
   if (orchardCoords === undefined) {
