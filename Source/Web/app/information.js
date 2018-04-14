@@ -20,30 +20,39 @@ function initEditOrchardMap(withCurrentLoc, editing) {
   }
   initMap();
   google.maps.event.clearListeners(map, "click");
+  if (orchardPoly !== undefined) {
+    google.maps.event.clearListeners(orchardPoly, "click");
+  }
+  
   if (editing) {
     map.addListener("click", function(e) {
-      if (orchardCoords === undefined) {
-        orchardCoords = [];
-      }
-      const c = {
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng()
-      }
-      orchardCoords.push(c);
-      if (orchardPoly !== undefined && orchardPoly !== null) {
-        orchardPoly.setMap(null);
-      }
-      orchardPoly = new google.maps.Polygon({
-        paths: orchardCoords,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
-        map: map
-      });
+      pushOrchardCoord(e);
+      updatePolyListener();
     });
   }
+}
+function pushOrchardCoord(e) {
+  if (orchardCoords === undefined) {
+    orchardCoords = [];
+  }
+  const c = {
+    lat: e.latLng.lat(),
+    lng: e.latLng.lng()
+  }
+  orchardCoords.push(c);
+  if (orchardPoly !== undefined && orchardPoly !== null) {
+    orchardPoly.setMap(null);
+  }
+  orchardPoly = new google.maps.Polygon({
+    paths: orchardCoords,
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#FF0000',
+    fillOpacity: 0.35,
+    map: map
+  });
+  updatePolyListener();
 }
 function updateLocationMap() {
   navigator.geolocation.getCurrentPosition(function(loca) {
@@ -62,7 +71,8 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: loc,
     zoom: 14,
-    disableDoubleClickZoom: true
+    disableDoubleClickZoom: true,
+    mapTypeId: "satellite"
   });
 }
 function updatePolygon(snapshot) {
@@ -87,8 +97,15 @@ function updatePolygon(snapshot) {
     fillOpacity: 0.35,
     map: map
   });
+  updatePolyListener();
   map.setCenter({lat: cenLat(orchardCoords), lng: cenLng(orchardCoords)});
   map.fitBounds(bounds(orchardCoords));
+}
+function updatePolyListener() {
+  if (orchardPoly !== undefined) {
+    google.maps.event.clearListeners(orchardPoly, "click");
+    orchardPoly.addListener("click", pushOrchardCoord);
+  }
 }
 function popOrchardCoord() {
   if (orchardCoords === undefined) {
@@ -96,6 +113,7 @@ function popOrchardCoord() {
   }
   orchardCoords.pop();
   orchardPoly.setPath(orchardCoords);
+  updatePolyListener();
 }
 function clearOrchardCoord() {
   if (orchardCoords === undefined) {
@@ -105,6 +123,7 @@ function clearOrchardCoord() {
     orchardCoords.pop();
   }
   orchardPoly.setPath(orchardCoords);
+  updatePolyListener();
 }
 
 function popFarm() {
