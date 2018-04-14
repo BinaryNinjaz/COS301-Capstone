@@ -8,8 +8,42 @@ popWork();
 popFarm();
 document.getElementById("col2").innerHTML = "";
 
+var editingOrchard = false;
+var orchardCoords = [];
+var orchardPoly;
 var loc;
 var map;
+function initEditOrchardMap(withCurrentLoc, editing) {
+  editingOrchard = editing;
+  if (withCurrentLoc) {
+    updateLocationMap();
+  }
+  initMap();
+  if (editing) {
+    map.addListener("click", function(e) {
+      if (orchardCoords === undefined) {
+        orchardCoords = [];
+      }
+      const c = {
+        lat: e.latLng.lat(),
+        lng: e.latLng.lng()
+      }
+      orchardCoords.push(c);
+      if (orchardPoly !== undefined && orchardPoly !== null) {
+        orchardPoly.setMap(null);
+      }
+      orchardPoly = new google.maps.Polygon({
+        paths: orchardCoords,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map
+      });
+    });
+  }
+}
 function updateLocationMap() {
   navigator.geolocation.getCurrentPosition(function(loca) {
     loc = {
@@ -28,6 +62,36 @@ function initMap() {
     center: loc,
     zoom: 14
   });
+}
+function updatePolygon(snapshot) {
+  if (orchardCoords === undefined) {
+    orchardCoords = [];
+  }
+  while (orchardCoords.length > 0) {
+    orchardCoords.pop();
+  }
+  snapshot.val().coords.forEach(function(coord) {
+    orchardCoords.push(coord);
+  });
+  if (orchardPoly !== undefined && orchardPoly !== null) {
+    orchardPoly.setMap(null);
+  }
+  orchardPoly = new google.maps.Polygon({
+    paths: orchardCoords,
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#FF0000',
+    fillOpacity: 0.35,
+    map: map
+  });
+}
+function popOrchardCoord() {
+  if (orchardCoords === undefined) {
+    orchardCoords = [];
+  }
+  orchardCoords.pop();
+  orchardPoly.setPath(orchardCoords);
 }
 
 function popFarm() {
@@ -197,7 +261,8 @@ function dispOrch(id) {
         "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop'></div> </div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
-        "<div class='col-sm-9'><div id='map'></div></div></div> " +
+        "<div class='col-sm-9'><div id='map'></div></div>" +
+        "<div class='col-sm-3'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div></div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
         "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass'></div>" +
@@ -224,8 +289,8 @@ function dispOrch(id) {
         "" +
         "</form>"
       ;
-      updateLocationMap();
-
+      initEditOrchardMap(true, true);
+      
       snapshot.forEach(function (child) {
         document.getElementById("orchFarm").innerHTML += "<option><" + child.key + "> " + child.val().name + "</option>";
       });
@@ -271,7 +336,8 @@ function dispOrch(id) {
           "</form>"
         ;
         
-        initMap();
+        initEditOrchardMap(false, false);
+        updatePolygon(snapshot);
         
         farmSnapshot.forEach(function (farm) {
           if (farm.key === snapshot.val().farm) {
@@ -310,6 +376,7 @@ function orchSave(type, id) {
       yDim: document.getElementById("orchDimY").value,
       unit: document.getElementById("orchDimUnit").value,
       bagMass: document.getElementById("orchBagMass").value,
+      coords: orchardCoords,
       farm: farmID
     });
     id = newId;
@@ -325,6 +392,7 @@ function orchSave(type, id) {
       yDim: document.getElementById("orchDimY").value,
       unit: document.getElementById("orchDimUnit").value,
       bagMass: document.getElementById("orchBagMass").value,
+      coords: orchardCoords,
       farm: farmID
     });
   }
@@ -352,7 +420,8 @@ function orchMod(id) {
         "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop' value='" + snapshot.val().crop + "'></div> </div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
-        "<div class='col-sm-9'><div id='map'></div></div></div> " +
+        "<div class='col-sm-9'><div id='map'></div></div>" +
+        "<div class='col-sm-3'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div></div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
         "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass' value='" + snapshot.val().bagMass + "'></div>" +
@@ -379,7 +448,8 @@ function orchMod(id) {
         "" +
         "</form>"
       ;
-      initMap();
+      initEditOrchardMap(false, true);
+      updatePolygon(snapshot);
       
       farm.forEach(function (child) {
         const orchFarm = document.getElementById("orchFarm");
