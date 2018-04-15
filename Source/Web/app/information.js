@@ -16,7 +16,7 @@ var map;
 function initEditOrchardMap(withCurrentLoc, editing) {
   editingOrchard = editing;
   if (withCurrentLoc) {
-    updateLocationMap();
+    updateLocationMap(editing);
   }
   initMap();
   google.maps.event.clearListeners(map, "click");
@@ -54,15 +54,35 @@ function pushOrchardCoord(e) {
   });
   updatePolyListener();
 }
-function updateLocationMap() {
+function updateLocationMap(editing) {
   navigator.geolocation.getCurrentPosition(function(loca) {
     loc = {
       lat: loca.coords.latitude,
       lng: loca.coords.longitude
     }
-    initMap(); 
+    initMap();
+    if (editing) {
+      google.maps.event.clearListeners(map, "click");
+      if (orchardPoly !== undefined) {
+        google.maps.event.clearListeners(orchardPoly, "click");
+      }
+      map.addListener("click", function(e) {
+        pushOrchardCoord(e);
+        updatePolyListener();
+      });
+    }
   });
   initMap();
+  if (editing) {
+    google.maps.event.clearListeners(map, "click");
+    if (orchardPoly !== undefined) {
+      google.maps.event.clearListeners(orchardPoly, "click");
+    }
+    map.addListener("click", function(e) {
+      pushOrchardCoord(e);
+      updatePolyListener();
+    });
+  }
 }
 function initMap() {
   if (loc === undefined) {
@@ -82,9 +102,11 @@ function updatePolygon(snapshot) {
   while (orchardCoords.length > 0) {
     orchardCoords.pop();
   }
-  snapshot.val().coords.forEach(function(coord) {
-    orchardCoords.push(coord);
-  });
+  if (snapshot !== null) {
+    snapshot.val().coords.forEach(function(coord) {
+      orchardCoords.push(coord);
+    });
+  }
   if (orchardPoly !== undefined && orchardPoly !== null) {
     orchardPoly.setMap(null);
   }
@@ -324,6 +346,7 @@ function dispOrch(id) {
         "</form>"
       ;
       initEditOrchardMap(true, true);
+      updatePolygon(null);
       
       snapshot.forEach(function (child) {
         document.getElementById("orchFarm").innerHTML += "<option><" + child.key + "> " + child.val().name + "</option>";
