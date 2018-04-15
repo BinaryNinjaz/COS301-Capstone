@@ -13,8 +13,14 @@ class TrackerViewController: UIViewController {
   var tracker: Tracker?
   var locationManager: CLLocationManager!
   var currentLocation: CLLocation?
-  var workers: [Worker] = []
+  var workers: [Worker] = [] {
+    didSet {
+      filteredWorkers = workers
+    }
+  }
   var lastLocationPoll: Date? = nil
+  var filter: String = ""
+  var filteredWorkers: [Worker] = []
   
   @IBOutlet weak var startSessionButton: UIButton!
   @IBOutlet weak var workerCollectionView: UICollectionView!
@@ -92,6 +98,7 @@ class TrackerViewController: UIViewController {
     startSessionButton.layer.cornerRadius = 40
     hideKeyboardWhenTappedAround()
     
+    
     let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
     startSessionButton.apply(gradient: sessionLayer)
     
@@ -128,21 +135,28 @@ extension TrackerViewController : CLLocationManagerDelegate {
 }
 
 extension TrackerViewController : UICollectionViewDataSource {
+  
+  var shouldDisplayMessage: Bool {
+    return tracker == nil
+      || workers.isEmpty
+      || filteredWorkers.isEmpty
+  }
+  
   func numberOfSections(in collectionView: UICollectionView) -> Int {
     return 1
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return tracker == nil || workers.isEmpty ? 1 : workers.count
+    return shouldDisplayMessage ? 1 : filteredWorkers.count
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     guard tracker != nil else {
-      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "startingWorkerCollectionViewCell", for: indexPath) as? StartingWorkingCollectionViewCell else {
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "labelWorkerCollectionViewCell", for: indexPath) as? LabelWorkingCollectionViewCell else {
         return UICollectionViewCell()
       }
-      
+      cell.textLabel.text = "Press 'Start' to begin tracking worker collections"
       return cell
     }
     
@@ -154,12 +168,20 @@ extension TrackerViewController : UICollectionViewDataSource {
       return cell
     }
     
+    guard !filteredWorkers.isEmpty else {
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "labelWorkerCollectionViewCell", for: indexPath) as? LabelWorkingCollectionViewCell else {
+        return UICollectionViewCell()
+      }
+      cell.textLabel.text = "No workers that contains '\(filter)' in their name"
+      return cell
+    }
+    
     
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "workerCollectionViewCell", for: indexPath) as? WorkerCollectionViewCell else {
       return UICollectionViewCell()
     }
     
-    let worker = workers[indexPath.row]
+    let worker = filteredWorkers[indexPath.row]
     
     cell.myBackgroundView.frame.size = cell.frame.size
     
@@ -233,7 +255,23 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
     
     let cw = w / n - ((n - 1) / n)
     
-    return CGSize(width: tracker == nil || workers.isEmpty ? w - 2 : cw,
-                  height: tracker == nil || workers.isEmpty ? h : 109);
+    return CGSize(width: shouldDisplayMessage ? w - 2 : cw,
+                  height: shouldDisplayMessage ? h : 109);
+  }
+}
+
+extension TrackerViewController : UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    filter = searchText
+    
+    filteredWorkers = workers.filter({ (worker) -> Bool in
+      guard filter != "" else {
+        return true
+      }
+      return (worker.firstname + " " + worker.lastname).contains(filter)
+    })
+    
+    workerCollectionView.reloadData()
+    searchBar.becomeFirstResponder()
   }
 }
