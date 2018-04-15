@@ -203,6 +203,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="scrollIndicatorInsets" minX="0.0" minY="56" maxX="0.0" maxY="106"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" sectionInsetReference="safeArea" id="ieY-Xz-2Oa">
                                     <size key="itemSize" width="186" height="109"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -286,7 +287,7 @@
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="labelWorkerCollectionViewCell" reuseIdentifier="labelWorkerCollectionViewCell" id="MhE-cb-7e9" customClass="LabelWorkingCollectionViewCell" customModule="Harvest" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="166" width="186" height="109"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="186" height="109"/>
                                             <autoresizingMask key="autoresizingMask"/>
@@ -294,7 +295,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shm-qc-oqw">
                                                     <rect key="frame" x="20" y="20" width="146" height="69"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="32"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -344,7 +345,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <searchBar contentMode="redraw" fixedFrame="YES" searchBarStyle="minimal" placeholder="Search Workers" translatesAutoresizingMaskIntoConstraints="NO" id="8FH-FL-a95">
+                                        <searchBar userInteractionEnabled="NO" contentMode="redraw" fixedFrame="YES" searchBarStyle="minimal" placeholder="Search Workers" translatesAutoresizingMaskIntoConstraints="NO" id="8FH-FL-a95">
                                             <rect key="frame" x="0.0" y="20" width="375" height="56"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <textInputTraits key="textInputTraits"/>
@@ -372,6 +373,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Yield Tracker" id="i4D-U6-cRY"/>
                     <connections>
+                        <outlet property="searchBar" destination="8FH-FL-a95" id="lAQ-ee-WXo"/>
                         <outlet property="startSessionButton" destination="nb1-AJ-Upq" id="pHu-m5-OxK"/>
                         <outlet property="workerCollectionView" destination="5MG-iq-Vf2" id="93F-FX-mKd"/>
                     </connections>

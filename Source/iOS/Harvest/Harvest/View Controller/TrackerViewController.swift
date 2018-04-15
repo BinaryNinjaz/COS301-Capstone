@@ -19,11 +19,11 @@ class TrackerViewController: UIViewController {
     }
   }
   var lastLocationPoll: Date? = nil
-  var filter: String = ""
   var filteredWorkers: [Worker] = []
   
   @IBOutlet weak var startSessionButton: UIButton!
   @IBOutlet weak var workerCollectionView: UICollectionView!
+  @IBOutlet weak var searchBar: UISearchBar!
   
   
   @IBAction func startSession(_ sender: Any) {
@@ -43,6 +43,7 @@ class TrackerViewController: UIViewController {
         startSessionButton.apply(gradient: sessionLayer)
         
         tracker = Tracker()
+        searchBar.isUserInteractionEnabled = true
         
         workerCollectionView.reloadData()
       }
@@ -61,6 +62,7 @@ class TrackerViewController: UIViewController {
       present(alert, animated: true, completion: nil)
       
       tracker = nil
+      searchBar.isUserInteractionEnabled = false
       
       workerCollectionView.reloadData()
     }
@@ -172,7 +174,11 @@ extension TrackerViewController : UICollectionViewDataSource {
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "labelWorkerCollectionViewCell", for: indexPath) as? LabelWorkingCollectionViewCell else {
         return UICollectionViewCell()
       }
-      cell.textLabel.text = "No workers that contains '\(filter)' in their name"
+      guard let searchText = searchBar.text else {
+        cell.textLabel.text = "Unknown Error Occured"
+        return cell
+      }
+      cell.textLabel.text = "No workers that contains '\(searchText)' in their name"
       return cell
     }
     
@@ -249,7 +255,7 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
     
     let w = collectionView.frame.width
-    let h = collectionView.frame.height - 186
+    let h = collectionView.frame.height - 300
     
     let n = CGFloat(Int(w / 186))
     
@@ -262,13 +268,13 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
 
 extension TrackerViewController : UISearchBarDelegate {
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    filter = searchText
-    
     filteredWorkers = workers.filter({ (worker) -> Bool in
-      guard filter != "" else {
+      guard searchText != "" else {
         return true
       }
-      return (worker.firstname + " " + worker.lastname).contains(filter)
+      return (worker.firstname + " " + worker.lastname)
+        .uppercased()
+        .contains(searchText.uppercased())
     })
     
     workerCollectionView.reloadData()
