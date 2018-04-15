@@ -70,18 +70,30 @@ extension Poly {
     return result
   }
   
+//  public func contains(_ p: Point<Number>) -> Bool {
+//    let segments = intersectionSegments(onLineXEqual: p.x)
+//
+//    for segment in segments {
+//      let miny = segment.min().y
+//      let maxy = segment.max().y
+//
+//      if miny <= p.y && p.y <= maxy {
+//        return true
+//      }
+//    }
+//    return false
+//  }
+  
   public func contains(_ p: Point<Number>) -> Bool {
-    let segments = intersectionSegments(onLineXEqual: p.x)
-    
-    for segment in segments {
-      let miny = segment.min().y
-      let maxy = segment.max().y
-      
-      if miny <= p.y && p.y <= maxy {
-        return true
+    var result = false
+    for e in edges.dropLast() {
+      if (e.start.y >= p.y) != (e.end.y >= p.y)
+      && p.x <= (e.end.x - e.start.x) * (p.y - e.start.y) / (e.end.y - e.start.y)
+        + e.start.x {
+        result = !result
       }
     }
-    return false
+    return result
   }
 }
 
