@@ -8,21 +8,33 @@
 
 import UIKit
 import Firebase
+import GoogleSignIn
 
 class SignInViewController: UIViewController {
-  
   @IBOutlet weak var usernameTextField: UITextField!
   @IBOutlet weak var passwordTextField: UITextField!
   @IBOutlet weak var signInButton: UIButton!
   @IBOutlet weak var signUpButton: UIButton!
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-  @IBOutlet weak var orLabel: UILabel!
+  @IBOutlet weak var googleSignInButton: UIButton!
+  @IBOutlet weak var signInVisualEffect: UIVisualEffectView!
+  @IBOutlet weak var signUpVisualEffect: UIVisualEffectView!
+  
+  var isLoading: Bool = false {
+    didSet {
+      signInButton.isHidden = isLoading
+      signUpButton.isHidden = isLoading
+      googleSignInButton.isHidden = isLoading
+      if isLoading  {
+        activityIndicator.startAnimating()
+      } else {
+        activityIndicator.stopAnimating()
+      }
+    }
+  }
   
   func attempSignIn(username: String, password: String) {
-    signInButton.isHidden = true
-    signUpButton.isHidden = true
-    orLabel.isHidden = true
-    activityIndicator.startAnimating()
+    isLoading = true
     HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
       if w,
         let vc = self
@@ -30,15 +42,12 @@ class SignInViewController: UIViewController {
           .instantiateViewController(withIdentifier: "mainTabBarViewController") {
         self.present(vc, animated: true, completion: nil)
       }
-      self.signInButton.isHidden = false
-      self.signUpButton.isHidden = false
-      self.orLabel.isHidden = false
-      self.activityIndicator.stopAnimating()
+      self.isLoading = false
     }
   }
   
   @IBAction func signInTouchUp(_ sender: UIButton) {
-    guard let username = usernameTextField.text else {
+    guard let username = usernameTextField.text, username != "" else {
       let alert = UIAlertController.alertController(
         title: "No Email",
         message: "Please input an email address to log in")
@@ -97,22 +106,108 @@ class SignInViewController: UIViewController {
     
   }
   
+  @IBAction func googleSignInTouchUp(_ sender: UIButton) {
+    GIDSignIn.sharedInstance().signIn()
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     hideKeyboardWhenTappedAround()
     
     signInButton.apply(gradient: .green)
     signUpButton.apply(gradient: .blue)
+    googleSignInButton.apply(gradient: .google)
+    signInVisualEffect.layer.cornerRadius = 24
+    signInVisualEffect.clipsToBounds = true
+    signUpVisualEffect.layer.cornerRadius = 10.5
+    signUpVisualEffect.clipsToBounds = true
+    
+    usernameTextField.leftViewMode = .always
+    let mailImageWrapper = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 22))
+    let mailImage = UIImageView(frame: CGRect(x: 8, y: 3, width: 24, height: 16))
+    mailImage.image = #imageLiteral(resourceName: "Mail")
+    mailImage.contentMode = .scaleAspectFit
+    mailImageWrapper.addSubview(mailImage)
+    usernameTextField.leftView = mailImageWrapper
+    
+    
+    passwordTextField.leftViewMode = .always
+    let lockImageWrapper = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 22))
+    let lockImage = UIImageView(frame: CGRect(x: 8, y: 3, width: 24, height: 16))
+    lockImage.image = #imageLiteral(resourceName: "Lock")
+    lockImage.contentMode = .scaleAspectFit
+    lockImageWrapper.addSubview(lockImage)
+    passwordTextField.leftView = lockImageWrapper
     
     if let username = UserDefaults.standard.getUsername(),
       let password = UserDefaults.standard.getPassword() {
       attempSignIn(username: username, password: password)
       return
     }
+    
+    GIDSignIn.sharedInstance().delegate = self
+    GIDSignIn.sharedInstance().uiDelegate = self
+    
+    if let _ = UserDefaults.standard.getUsername() {
+      isLoading = true
+      GIDSignIn.sharedInstance().signIn()
+    }
   }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
+  }
+}
+
+extension SignInViewController : GIDSignInUIDelegate {
+  
+}
+
+extension SignInViewController : GIDSignInDelegate {
+  func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+    if let error = error  {
+      let alert = UIAlertController.alertController(
+        title: "An Error Occured",
+        message: error.localizedDescription)
+      
+      
+      
+      self.present(alert, animated: true, completion: nil)
+      isLoading = false
+      return
+    }
+    
+    guard let authentication = user.authentication else {
+      isLoading = false
+      return
+    }
+    
+    let credential = GoogleAuthProvider.credential(
+      withIDToken: authentication.idToken,
+      accessToken: authentication.accessToken)
+    
+    Auth.auth().signIn(with: credential) { (user, error) in
+      if let error = error {
+        let alert = UIAlertController.alertController(
+          title: "An Error Occured",
+          message: error.localizedDescription)
+        
+        self.present(alert, animated: true, completion: nil)
+        self.isLoading = false
+        return
+      }
+      
+      if let e = user?.email {
+        UserDefaults.standard.set(username: e)
+      }
+      
+      if let vc = self
+        .storyboard?
+        .instantiateViewController(withIdentifier: "mainTabBarViewController") {
+        self.present(vc, animated: true, completion: nil)
+      }
+      self.isLoading = false
+    }
   }
 }
 

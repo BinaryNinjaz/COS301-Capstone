@@ -8,6 +8,7 @@
 
 import Firebase
 import CoreLocation
+import GoogleSignIn
 
 let passwordPadding = "s3cr3ts4uc3"
 
@@ -143,6 +144,8 @@ struct HarvestDB {
   ) {
     do {
       try Auth.auth().signOut()
+      GIDSignIn.sharedInstance().disconnect()
+      GIDSignIn.sharedInstance().signOut()
     } catch {
 //      #warning("Complete with proper errors")
       let alert = UIAlertController.alertController(

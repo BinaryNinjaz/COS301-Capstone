@@ -49,6 +49,13 @@ extension UIColor {
       
       return [s, e]
     }
+    
+    static var google: [UIColor] {
+      let s = UIColor(hue: 8.0 / 360.0, saturation: 0.73, brightness: 0.93, alpha: 1)
+      let e = UIColor(hue: 8.0 / 360.0, saturation: 0.73, brightness: 0.85, alpha: 1)
+      
+      return [s, e]
+    }
   }
   
   
@@ -90,6 +97,13 @@ extension CAGradientLayer {
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
                     borderColor: UIColor.Bootstrap.orange[1])
+  }
+  
+  static var google: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.google,
+                    locations: [0.0, 1.0],
+                    cornerRadius: 5,
+                    borderColor: UIColor.Bootstrap.google[1])
   }
 }
 
