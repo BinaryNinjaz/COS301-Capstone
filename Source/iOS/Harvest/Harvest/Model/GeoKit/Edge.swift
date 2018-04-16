@@ -29,12 +29,12 @@ extension Edge {
     let dy = end.y - start.y
     let dx = end.x - start.x
     
-    return dx == 0 ? Number.infinity : dy / dx
+    return dx == 0 ? 0 : dy / dx
   }
   
   public func offset() -> Number? {
     let m = gradient()
-    return m == .infinity ? nil : m * -start.x + start.y
+    return start.x == end.x ? nil : m * -start.x + start.y
   }
   
   public func intersection(onLineXEqual x: Number) -> Point<Number>? {

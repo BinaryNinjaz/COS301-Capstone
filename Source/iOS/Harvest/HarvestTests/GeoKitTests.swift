@@ -97,6 +97,9 @@ class GeoKitTests: XCTestCase {
     XCTAssertEqual(s, nil)
     XCTAssertEqual(t, Point(10, 30))
     XCTAssertEqual(u, Point(10, 20))
+    
+    
+    XCTAssertEqual(Edge(a, b).intersection(onLineXEqual: -10), nil)
   }
   
   func testPolyIntersectionPoints() {
@@ -113,8 +116,13 @@ class GeoKitTests: XCTestCase {
     let s = Poly(a, b, c, d, e, f, g, h)
     
     let ps = s.intersectionPoints(onLineXEqual: 36)
-    
+
     XCTAssertEqual(ps, [Point(36, 10), Point(36, 20), Point(36, 30), Point(36, 40)])
+    
+    
+    let qs = s.intersectionPoints(onLineXEqual: -20)
+    
+    XCTAssertEqual(qs, [])
   }
   
   func testPolyIntersectionSegments() {
@@ -136,6 +144,9 @@ class GeoKitTests: XCTestCase {
     let e1 = Edge(Point(36, 30), Point(36, 40))
     
     XCTAssertEqual(ps, [e0, e1])
+    
+    
+    XCTAssertEqual(s.intersectionSegments(onLineXEqual: -20), [])
   }
   
   func testPolyContains() {
@@ -155,14 +166,17 @@ class GeoKitTests: XCTestCase {
     XCTAssertTrue(s.contains(Point(36, 20)))
     XCTAssertTrue(s.contains(Point(36, 30)))
     XCTAssertTrue(s.contains(Point(36, 40)))
-    
+
     XCTAssertFalse(s.contains(Point(36, 24)))
+    XCTAssertFalse(s.contains(Point(36.43, -24)))
+    XCTAssertFalse(s.contains(Point(-36.43, 24)))
+    XCTAssertFalse(s.contains(Point(-20, 20)))
     
     XCTAssert(s.contains(Point(20, 10)))
     XCTAssert(s.contains(Point(20, 20)))
     XCTAssert(s.contains(Point(20, 30)))
     XCTAssert(s.contains(Point(20, 40)))
-    
+
     XCTAssertFalse(s.contains(Point(50, 50)))
     XCTAssertFalse(s.contains(Point(10, 50)))
   }

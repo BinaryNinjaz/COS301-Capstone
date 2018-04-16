@@ -48,7 +48,12 @@ extension Poly {
   
   func intersectionPoints(onLineXEqual x: Number) -> [Point<Number>] {
     return edges
-      .compactMap { $0.intersection(onLineXEqual: x) }
+      .compactMap {
+        guard let p = $0.intersection(onLineXEqual: x) else {
+          return nil
+        }
+        return number(p.x, isBetweenUnorderedRange: ($0.start.x, $0.end.x)) ? p : nil
+      }
       .sorted { $0.y < $1.y }
   }
   
@@ -70,30 +75,22 @@ extension Poly {
     return result
   }
   
-//  public func contains(_ p: Point<Number>) -> Bool {
-//    let segments = intersectionSegments(onLineXEqual: p.x)
-//
-//    for segment in segments {
-//      let miny = segment.min().y
-//      let maxy = segment.max().y
-//
-//      if miny <= p.y && p.y <= maxy {
-//        return true
-//      }
-//    }
-//    return false
-//  }
+  func number(_ a: Number, isBetweenUnorderedRange r: (Number, Number)) -> Bool {
+    return (r.0 < a && a <= r.1) || (r.1 < a && a <= r.0)
+  }
   
   public func contains(_ p: Point<Number>) -> Bool {
-    var result = false
-    for e in edges.dropLast() {
-      if (e.start.y >= p.y) != (e.end.y >= p.y)
-      && p.x <= (e.end.x - e.start.x) * (p.y - e.start.y) / (e.end.y - e.start.y)
-        + e.start.x {
-        result = !result
+    let segments = intersectionSegments(onLineXEqual: p.x)
+    
+    for segment in segments {
+      let miny = segment.min().y
+      let maxy = segment.max().y
+      
+      if miny <= p.y && p.y <= maxy {
+        return true
       }
     }
-    return result
+    return false
   }
 }
 
