@@ -24,6 +24,7 @@ class TrackerViewController: UIViewController {
   @IBOutlet weak var startSessionButton: UIButton!
   @IBOutlet weak var workerCollectionView: UICollectionView!
   @IBOutlet weak var searchBar: UISearchBar!
+  @IBOutlet weak var yieldLabel: UILabel!
   
   
   @IBAction func startSession(_ sender: Any) {
@@ -68,23 +69,6 @@ class TrackerViewController: UIViewController {
     }
   }
   
-  @IBAction func collectYield(_ sender: Any) {
-    guard let idx = workerCollectionView.indexPathsForSelectedItems?.first else {
-      return
-    }
-    
-    guard let loc = currentLocation else {
-      let alert = UIAlertController.alertController(
-        title: "Location Unavailable",
-        message: "Please allow location service from the 'Settings' app")
-      
-      present(alert, animated: true, completion: nil)
-      return
-    }
-    
-    tracker?.collect(for: workers[idx.row], at: loc)
-  }
-  
   func updateWorkerCells(with newWorkers: [Worker]) {
     workers.removeAll(keepingCapacity: true)
     for worker in newWorkers {
@@ -114,6 +98,8 @@ class TrackerViewController: UIViewController {
                                                      left: 0,
                                                      bottom: 106,
                                                      right: 0)
+    
+    yieldLabel.attributedText = attributedStringForYieldCollection(0, 0)
   }
 
   override func didReceiveMemoryWarning() {
@@ -134,6 +120,24 @@ extension TrackerViewController : CLLocationManagerDelegate {
       lastLocationPoll = Date()
     }
   }
+}
+
+func attributedStringForYieldCollection(_ a: Int, _ p: Int) -> NSAttributedString {
+  let boldFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
+  let regularFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .regular)]
+  
+  let current = NSAttributedString(string: "Current Yield: ", attributes: boldFont)
+  let currentAmount = NSAttributedString(string: a.description, attributes: regularFont)
+  let expected = NSAttributedString(string: "\nExpected Yield: ", attributes: boldFont)
+  let expectedAmount = NSAttributedString(string: p.description, attributes: regularFont)
+  
+  let result = NSMutableAttributedString()
+  result.append(current)
+  result.append(currentAmount)
+  result.append(expected)
+  result.append(expectedAmount)
+  
+  return result
 }
 
 extension TrackerViewController : UICollectionViewDataSource {
@@ -166,7 +170,7 @@ extension TrackerViewController : UICollectionViewDataSource {
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "loadingWorkerCollectionViewCell", for: indexPath) as? LoadingWorkerCollectionViewCell else {
         return UICollectionViewCell()
       }
-      
+//      cell.textLabel.text = "No workers were added to your farm"
       return cell
     }
     
@@ -215,11 +219,15 @@ extension TrackerViewController : UICollectionViewDataSource {
         return
       }
       
-      self.tracker?.collect(for: self.workers[indexPath.row], at: loc)
+      self.tracker?.collect(for: self.filteredWorkers[indexPath.row], at: loc)
       
       this.yieldLabel.text = self
         .tracker?
-        .collections[self.workers[indexPath.row]]?.count.description ?? "0"
+        .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
+      
+      self.yieldLabel.attributedText = attributedStringForYieldCollection(
+        self.tracker?.totalCollected() ?? 0,
+        Int(Double(self.tracker?.totalCollected() ?? 0) * 1.1))
     }
     
     cell.dec = { this in
@@ -232,11 +240,17 @@ extension TrackerViewController : UICollectionViewDataSource {
         return
       }
       
-      self.tracker?.pop(for: self.workers[indexPath.row])
+      self.tracker?.pop(for: self.filteredWorkers[indexPath.row])
       
       this.yieldLabel.text = self
         .tracker?
-        .collections[self.workers[indexPath.row]]?.count.description ?? "0"
+        .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
+      
+      
+      
+      self.yieldLabel.attributedText = attributedStringForYieldCollection(
+        self.tracker?.totalCollected() ?? 0,
+        Int(Double(self.tracker?.totalCollected() ?? 0) * 1.1))
     }
     
     return cell
