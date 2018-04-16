@@ -107,6 +107,7 @@ class SignInViewController: UIViewController {
   }
   
   @IBAction func googleSignInTouchUp(_ sender: UIButton) {
+    isLoading = true
     GIDSignIn.sharedInstance().signIn()
   }
   
@@ -122,22 +123,8 @@ class SignInViewController: UIViewController {
     signUpVisualEffect.layer.cornerRadius = 10.5
     signUpVisualEffect.clipsToBounds = true
     
-    usernameTextField.leftViewMode = .always
-    let mailImageWrapper = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 22))
-    let mailImage = UIImageView(frame: CGRect(x: 8, y: 3, width: 24, height: 16))
-    mailImage.image = #imageLiteral(resourceName: "Mail")
-    mailImage.contentMode = .scaleAspectFit
-    mailImageWrapper.addSubview(mailImage)
-    usernameTextField.leftView = mailImageWrapper
-    
-    
-    passwordTextField.leftViewMode = .always
-    let lockImageWrapper = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 22))
-    let lockImage = UIImageView(frame: CGRect(x: 8, y: 3, width: 24, height: 16))
-    lockImage.image = #imageLiteral(resourceName: "Lock")
-    lockImage.contentMode = .scaleAspectFit
-    lockImageWrapper.addSubview(lockImage)
-    passwordTextField.leftView = lockImageWrapper
+    usernameTextField.addLeftImage(#imageLiteral(resourceName: "Mail"))
+    passwordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
     
     if let username = UserDefaults.standard.getUsername(),
       let password = UserDefaults.standard.getPassword() {
@@ -152,6 +139,10 @@ class SignInViewController: UIViewController {
       isLoading = true
       GIDSignIn.sharedInstance().signIn()
     }
+  }
+  
+  override var prefersStatusBarHidden: Bool {
+    return true
   }
 
   override func didReceiveMemoryWarning() {

@@ -114,3 +114,15 @@ extension UIView {
     layer.insertSublayer(gradient, at: 0)
   }
 }
+
+extension UITextField {
+  func addLeftImage(_ image: UIImage) {
+    leftViewMode = .always
+    let wrapper = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 22))
+    let imageView = UIImageView(frame: CGRect(x: 8, y: 3, width: 24, height: 16))
+    imageView.image = image
+    imageView.contentMode = .scaleAspectFit
+    wrapper.addSubview(imageView)
+    leftView = wrapper
+  }
+}
