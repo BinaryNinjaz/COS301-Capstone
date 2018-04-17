@@ -23,7 +23,7 @@ class SignInViewController: UIViewController {
   var isLoading: Bool = false {
     didSet {
       signInButton.isHidden = isLoading
-      signUpButton.isHidden = isLoading
+      signUpButton.isButtonEnabled = !isLoading
       googleSignInButton.isHidden = isLoading
       if isLoading  {
         activityIndicator.startAnimating()

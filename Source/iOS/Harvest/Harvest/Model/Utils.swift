@@ -56,6 +56,13 @@ extension UIColor {
       
       return [s, e]
     }
+    
+    static var disabled: [UIColor] {
+      let s = UIColor(white: 0.25, alpha: 1)
+      let e = UIColor(white: 0.5, alpha: 1)
+      
+      return [s, e]
+    }
   }
   
   
@@ -105,6 +112,13 @@ extension CAGradientLayer {
                     cornerRadius: 5,
                     borderColor: UIColor.Bootstrap.google[1])
   }
+  
+  static var disabled: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.disabled,
+                    locations: [0.0, 1.0],
+                    cornerRadius: 5,
+                    borderColor: UIColor.Bootstrap.disabled[1])
+  }
 }
 
 extension UIView {
@@ -124,5 +138,17 @@ extension UITextField {
     imageView.contentMode = .scaleAspectFit
     wrapper.addSubview(imageView)
     leftView = wrapper
+  }
+}
+
+extension UIView {
+  var isButtonEnabled: Bool {
+    get {
+      return isUserInteractionEnabled
+    }
+    set(value) {
+      isUserInteractionEnabled = value
+      apply(gradient: .disabled)
+    }
   }
 }
