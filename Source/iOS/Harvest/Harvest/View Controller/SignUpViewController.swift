@@ -21,6 +21,23 @@ class SignUpViewController: UIViewController {
   @IBOutlet weak var signUpVisualEffect: UIVisualEffectView!
   @IBOutlet weak var backgroundImageView: UIImageView!
   
+  var isLoading: Bool = false {
+    didSet {
+      UIView.animate(withDuration: 0.5) {
+        signUpButton.alpha = isLoading ? 0 : 1
+        cancelButton.alpha = isLoading ? 0 : 1
+        
+        if isLoading {
+          activityIndicator.startAnimating()
+        } else {
+          activityIndicator.stopAnimatin()
+        }
+        
+      }
+    }
+  }
+  
+  
   @IBAction func signUpTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text else {
       let alert = UIAlertController.alertController(
@@ -90,9 +107,7 @@ class SignUpViewController: UIViewController {
       return
     }
     
-    signUpButton.isHidden = true
-    cancelButton.isHidden = true
-    activityIndicator.startAnimating()
+    isLoading = true
     HarvestDB.signUp(withEmail: username, andPassword: password, name: (fname, lname), on: self) {w in
       if w {
         HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
@@ -102,14 +117,10 @@ class SignUpViewController: UIViewController {
               .instantiateViewController(withIdentifier: "mainTabBarViewController") {
             self.present(vc, animated: true, completion: nil)
           }
-          self.signUpButton.isHidden = false
-          self.cancelButton.isHidden = false
-          self.activityIndicator.stopAnimating()
+          self.isLoading = false
         }
       } else {
-        self.signUpButton.isHidden = false
-        self.cancelButton.isHidden = false
-        self.activityIndicator.stopAnimating()
+        self.isLoading = false
       }
     }
     
