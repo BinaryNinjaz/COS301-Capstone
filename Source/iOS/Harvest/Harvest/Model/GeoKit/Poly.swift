@@ -48,7 +48,7 @@ extension Poly {
   
   func intersectionPoints(onLineXEqual x: Number) -> [Point<Number>] {
     return edges
-      .flatMap {
+      .compactMap {
         guard let p = $0.intersection(onLineXEqual: x) else {
           return nil
         }

@@ -191,9 +191,18 @@ extension SignInViewController : GIDSignInDelegate {
         return
       }
       
-      if let e = user?.email {
-        UserDefaults.standard.set(username: e)
+      guard let user = user else {
+        let alert = UIAlertController.alertController(
+          title: "Sign In Failure",
+          message: "Unknown Error Occured")
+        self.present(alert, animated: true, completion: nil)
+        return
       }
+      
+      UserDefaults.standard.set(username: user.email!)
+      HarvestUser.current.email = user.email!
+      HarvestUser.current.displayName = user.displayName ?? ""
+      HarvestUser.current.uid = user.uid
       
       if let vc = self
         .storyboard?

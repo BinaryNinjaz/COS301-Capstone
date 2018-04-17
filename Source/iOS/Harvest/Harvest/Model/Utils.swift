@@ -58,8 +58,8 @@ extension UIColor {
     }
     
     static var disabled: [UIColor] {
-      let s = UIColor(white: 0.25, alpha: 1)
-      let e = UIColor(white: 0.5, alpha: 1)
+      let s = UIColor(white: 0.5, alpha: 1)
+      let e = UIColor(white: 0.25, alpha: 1)
       
       return [s, e]
     }
