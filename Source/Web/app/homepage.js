@@ -4,11 +4,15 @@ var locations = [];
 var map;
 function initMap() {
   navigator.geolocation.getCurrentPosition(function(loc) {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: loc.coords.latitude, lng: loc.coords.longitude },
-      zoom: 14
-    });
+    var latLng = new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude);
+    map.setCenter(latLng);
   });
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -25, lng: 28 },
+    zoom: 14,
+    mapTypeId: 'satellite'
+  });
+  displayForemanLocation();
 }
 
 function initials(name) {
@@ -23,6 +27,7 @@ function initials(name) {
 }
 
 function displayForemanLocation() {
+  locationsRef.off();
   locationsRef.on('value', function(snapshot) {
     locations = [];
     snapshot.forEach(function (child) {
@@ -38,4 +43,3 @@ function displayForemanLocation() {
     });
   });
 }
-displayForemanLocation();
