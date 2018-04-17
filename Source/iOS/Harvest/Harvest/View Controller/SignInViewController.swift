@@ -23,9 +23,17 @@ class SignInViewController: UIViewController {
   @IBOutlet weak var backgroundImageView: UIImageView!
   var isLoading: Bool = false {
     didSet {
-      signInButton.isHidden = isLoading
-      signUpButton.isButtonEnabled = !isLoading
-      googleSignInButton.isHidden = isLoading
+      UIView.animate(withDuration: 0.5) {
+        self.signInButton.alpha = self.isLoading ? 0 : 1
+        self.googleSignInButton.alpha = self.isLoading ? 0 : 1
+        self.signUpVisualEffect.alpha = self.isLoading ? 0 : 1
+        self.signUpVisualEffect.frame = CGRect(
+          x: self.signUpVisualEffect.frame.origin.x,
+          y: self.signUpVisualEffect.frame.origin.y + (self.isLoading ? 203 : -203),
+          width: self.signUpVisualEffect.frame.width,
+          height: self.signUpVisualEffect.frame.height + (self.isLoading ? -103 : 103))
+      }
+      
       if isLoading  {
         activityIndicator.startAnimating()
       } else {
