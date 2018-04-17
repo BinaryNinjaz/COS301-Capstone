@@ -141,7 +141,8 @@ class SignUpViewController: UIViewController {
     signUpVisualEffect.layer.cornerRadius = 24
     signUpVisualEffect.clipsToBounds = true
     
-    backgroundImageView.parallaxEffect(x: (-30, 30), y: (-20, 20))
+    backgroundImageView.parallaxEffect(x: (-64, 64), y: (-64, 64))
+    signUpVisualEffect.parallaxEffect(x: (-16, 16), y: (-16, 16))
     
     firstnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))
     lastnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))

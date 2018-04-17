@@ -133,6 +133,8 @@ class SignInViewController: UIViewController {
     signUpVisualEffect.clipsToBounds = true
     
     backgroundImageView.parallaxEffect(x: (-64, 64), y: (-64, 64))
+    signInVisualEffect.parallaxEffect(x: (-16, 16), y: (-16, 16))
+    signUpVisualEffect.parallaxEffect(x: (-16, 16), y: (-16, 16))
     
     usernameTextField.addLeftImage(#imageLiteral(resourceName: "Mail"))
     passwordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
