@@ -8,6 +8,7 @@
 
 import UIKit
 
-class StartingWorkingCollectionViewCell: UICollectionViewCell {
-    
+class LabelWorkingCollectionViewCell: UICollectionViewCell {
+  @IBOutlet weak var textLabel: UILabel!
+  
 }

@@ -26,7 +26,7 @@ class SettingsTableViewController: UITableViewController {
     
     
     switch section {
-    case 1:
+    case 0:
       switch row {
       case 0:
         HarvestDB.signOut(on: self) { w in
