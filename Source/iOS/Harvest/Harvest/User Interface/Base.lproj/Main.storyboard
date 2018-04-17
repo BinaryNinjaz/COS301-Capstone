@@ -206,7 +206,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="mVT-pI-LjO"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Last Session" id="2Kf-5z-PEx"/>
+                    <tabBarItem key="tabBarItem" title="Last Session" image="Location" id="2Kf-5z-PEx"/>
                     <connections>
                         <outlet property="mapView" destination="Wcr-nI-2ez" id="4ym-v2-PEG"/>
                         <outlet property="titleLabel" destination="J7i-TL-Ftg" id="5Wz-Dj-zVM"/>
@@ -399,7 +399,7 @@ Expected Yield: 0</string>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gY2-33-92o"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Yield Tracker" id="i4D-U6-cRY"/>
+                    <tabBarItem key="tabBarItem" title="Yield Tracker" image="Add" id="i4D-U6-cRY"/>
                     <connections>
                         <outlet property="searchBar" destination="8FH-FL-a95" id="lAQ-ee-WXo"/>
                         <outlet property="startSessionButton" destination="nb1-AJ-Upq" id="pHu-m5-OxK"/>
@@ -415,7 +415,7 @@ Expected Yield: 0</string>
         <scene sceneID="NmB-Kb-7b3">
             <objects>
                 <navigationController title="SettingsNavCon" id="vND-wI-MtW" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Settings" id="i44-ev-d3M"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="Settings" id="i44-ev-d3M"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="00C-Y5-g8b">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -595,6 +595,9 @@ Expected Yield: 0</string>
         </scene>
     </scenes>
     <resources>
+        <image name="Add" width="30" height="30"/>
+        <image name="Location" width="30" height="30"/>
+        <image name="Settings" width="30" height="30"/>
         <image name="SignUpBackground" width="8192" height="3470"/>
     </resources>
     <color key="tintColor" red="0.1629850102" green="0.73037697209999997" blue="0.36622702639999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -178,3 +178,16 @@ extension UIView {
     addMotionEffect(motionEffectGroup)
   }
 }
+
+extension UIImage {
+  func resizeImage(toWidth w: CGFloat) -> UIImage? {
+    let scale = w / size.width
+    let newHeight = size.height * scale
+    UIGraphicsBeginImageContext(CGSize(width: w, height: newHeight))
+    draw(in: CGRect(x: 0, y: 0, width: w, height: newHeight))
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    return newImage
+  }
+}

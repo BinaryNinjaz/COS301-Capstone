@@ -33,6 +33,7 @@
 		16C82F5E20819B6E0074595C /* Poly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5920819B6E0074595C /* Poly.swift */; };
 		16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */; };
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
+		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
 		2246F7A4FADAD9C7BD1EE2D8 /* libPods-Harvest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */; };
 		B7A9FFC5EFF7E01DA1441BF9 /* libPods-HarvestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 74FD0ED4702F6DC1CD4761E8 /* libPods-HarvestTests.a */; };
@@ -88,6 +89,7 @@
 		16C82F5920819B6E0074595C /* Poly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly.swift; sourceTree = "<group>"; };
 		16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerClickerSearchCollectionReusableView.swift; sourceTree = "<group>"; };
 		16C82F66208407730074595C /* GeoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKitTests.swift; sourceTree = "<group>"; };
+		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
 		6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Harvest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -222,6 +224,7 @@
 		16420FC720696B6500E1A292 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				16C82F6A20862A100074595C /* Tabs */,
 				16F2BA4B20766041007652E8 /* Cells */,
 				16420FC820696B8F00E1A292 /* QuickAlert.swift */,
 			);
@@ -256,6 +259,14 @@
 				16C82F5920819B6E0074595C /* Poly.swift */,
 			);
 			path = GeoKit;
+			sourceTree = "<group>";
+		};
+		16C82F6A20862A100074595C /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */,
+			);
+			path = Tabs;
 			sourceTree = "<group>";
 		};
 		16F2BA4B20766041007652E8 /* Cells */ = {
@@ -550,6 +561,7 @@
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
+				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
 				1604E4A5206958E900E9BA15 /* SignInViewController.swift in Sources */,
 				1604E4A3206958E900E9BA15 /* AppDelegate.swift in Sources */,
 				16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */,

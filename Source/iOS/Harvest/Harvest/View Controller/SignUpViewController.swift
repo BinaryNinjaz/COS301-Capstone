@@ -24,13 +24,13 @@ class SignUpViewController: UIViewController {
   var isLoading: Bool = false {
     didSet {
       UIView.animate(withDuration: 0.5) {
-        signUpButton.alpha = isLoading ? 0 : 1
-        cancelButton.alpha = isLoading ? 0 : 1
+        self.signUpButton.alpha = self.isLoading ? 0 : 1
+        self.cancelButton.alpha = self.isLoading ? 0 : 1
         
-        if isLoading {
-          activityIndicator.startAnimating()
+        if self.isLoading {
+          self.activityIndicator.startAnimating()
         } else {
-          activityIndicator.stopAnimatin()
+          self.activityIndicator.stopAnimating()
         }
         
       }
