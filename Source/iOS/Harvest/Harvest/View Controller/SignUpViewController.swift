@@ -19,7 +19,7 @@ class SignUpViewController: UIViewController {
   @IBOutlet weak var cancelButton: UIButton!
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
   @IBOutlet weak var signUpVisualEffect: UIVisualEffectView!
-  
+  @IBOutlet weak var backgroundImageView: UIImageView!
   
   @IBAction func signUpTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text else {
@@ -129,6 +129,8 @@ class SignUpViewController: UIViewController {
     
     signUpVisualEffect.layer.cornerRadius = 24
     signUpVisualEffect.clipsToBounds = true
+    
+    backgroundImageView.parallaxEffect(x: (-30, 30), y: (-20, 20))
     
     firstnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))
     lastnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))

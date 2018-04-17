@@ -20,6 +20,7 @@ class SignInViewController: UIViewController {
   @IBOutlet weak var signInVisualEffect: UIVisualEffectView!
   @IBOutlet weak var signUpVisualEffect: UIVisualEffectView!
   
+  @IBOutlet weak var backgroundImageView: UIImageView!
   var isLoading: Bool = false {
     didSet {
       signInButton.isHidden = isLoading
@@ -122,6 +123,8 @@ class SignInViewController: UIViewController {
     signInVisualEffect.clipsToBounds = true
     signUpVisualEffect.layer.cornerRadius = 10.5
     signUpVisualEffect.clipsToBounds = true
+    
+    backgroundImageView.parallaxEffect(x: (-30, 30), y: (-20, 20))
     
     usernameTextField.addLeftImage(#imageLiteral(resourceName: "Mail"))
     passwordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))

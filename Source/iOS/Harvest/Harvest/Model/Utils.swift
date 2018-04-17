@@ -152,3 +152,29 @@ extension UIView {
     }
   }
 }
+
+extension UIView {
+  func parallaxEffect(
+    x: (min: CGFloat, max: CGFloat),
+    y: (min: CGFloat, max: CGFloat),
+    enable: Bool = true
+  ) {
+    guard enable else {
+      motionEffects.removeAll()
+      return
+    }
+    
+    let xMotion = UIInterpolatingMotionEffect(keyPath: "layer.transform.translation.x", type: .tiltAlongHorizontalAxis)
+    xMotion.minimumRelativeValue = x.min
+    xMotion.maximumRelativeValue = x.max
+    
+    let yMotion = UIInterpolatingMotionEffect(keyPath: "layer.transform.translation.y", type: .tiltAlongVerticalAxis)
+    yMotion.minimumRelativeValue = y.min
+    yMotion.maximumRelativeValue = y.max
+    
+    let motionEffectGroup = UIMotionEffectGroup()
+    motionEffectGroup.motionEffects = [xMotion, yMotion]
+    
+    addMotionEffect(motionEffectGroup)
+  }
+}
