@@ -26,15 +26,19 @@ function refreshPage() {
 }*/
 
 // This is automatic whenever there's a change to a users authorization
-/*firebase.auth().onAuthStateChanged(function (user) {
+firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         // user logged in
         // window.location.href = "HomePage.html";
     } else {
         // user logged out
-        window.location.href = "DynamicLoginRegister.html";
+        let pathComponents = window.location.href.split("/");
+        let page = pathComponents[pathComponents.length - 1];
+        if (page !== "DynamicLoginRegister.html") {
+            window.location.href = "DynamicLoginRegister.html";
+        }
     }
-});*/
+});
 
 function firebaseRegister(email, password) {
     if(password.length < 6) {
