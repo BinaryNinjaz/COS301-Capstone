@@ -9,6 +9,7 @@ popFarm();
 document.getElementById("col2").innerHTML = "";
 
 
+/*Populates the list of farms in col2*/
 function popFarm() {
   const col2 = document.getElementById("col2");
   col2.innerHTML = "<h2>Loading Farm List...</h2>";
@@ -29,6 +30,7 @@ function popFarm() {
   });
 }
 
+/*Displays a farm in col 3, the farm displayed is set by the id. If -1 is received then display to create a new farm.*/
 function dispFarm(id) {
   const col3 = document.getElementById("col3");
 
@@ -84,6 +86,7 @@ function dispFarm(id) {
   }
 }
 
+/*Handles the saving of a farm with the set id, if it receives 0, the farm is created, else it is updated.*/
 function farmSave(type, id) {
   /*0 means create, 1 means modify*/
 
@@ -105,6 +108,7 @@ function farmSave(type, id) {
   dispFarm(id);
 }
 
+/*Displays in col 3, the interface to modify a farm*/
 function farmMod(id) {
   firebase.database().ref('/farms/' + id).once('value').then(function (snapshot) {
     document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delFarm(" + id + ")'>Delete</button>";
@@ -130,11 +134,14 @@ function farmMod(id) {
   });
 }
 
+/*Delets a given farm*/
 function delFarm(id) {
   firebase.database().ref('/farms/' + id).remove();
   popFarm();
   clear3();
 }
+
+/*From here, all the functions are similar to that of above.*/
 
 
 function popOrch() {
