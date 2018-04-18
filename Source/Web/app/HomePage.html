@@ -33,24 +33,30 @@
                 </script>
     </head>
     <body>
-	<!-- I am about to change this navbar -->
+	<!-- I (teboho Mokoena) am about to change this navbar -->
     <div class="topnav">
         <ul class="nav navbar-nav">
-            <a class="active" href="HomePage.html">Harvest Home</a>
-            <a href="Information.html">View/Edit Information</a>
-            <a href="HeatMap.html">Heatmap</a>
+            <li><a class="active" href="HomePage.html"><img width="15" heigh="15" src="leaf2.png" alt="Dispute Bills">Harvest Home</a><li>
+            <li><a href="#" data-toggle="modal" data-target="#selectFarm">Select Farm</a></li>
+            <!--<a href="HeatMap.html">Heatmap</a>-->
         </ul>
 
         <ul class="pull-right nav navbar-nav">
-            <a href="Settings.html" id="emailInNav"></a>
-            <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
+            <li><a href="Settings.html" id="emailInNav"></a></li>
+            <li><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-            </button>
+            </button></li>
         </ul>
     </div>
+	<div class="bottomnav">
+		<ul class="nav navbar-nav">
+            <li><a id="info" href="Information.html">Information</a></li>
+            <li><a id="analytics" href="HeatMap.html">Analytics</a></li>
+        </ul>
+	</div>
     
     <div class="container">
         <div class="row">
@@ -69,7 +75,6 @@
                 <div id="map"></div>
             </div>
         </div>
-    </div>
-        
+    </div>   
     </body>
 </html>
