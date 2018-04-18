@@ -22,6 +22,8 @@ class TextFieldGroupView: UIView {
     UIColor.clear.setFill()
     UIBezierPath(rect: rect).fill()
     
+    UIGraphicsGetCurrentContext()?.setLineWidth(10)
+    
     let back = UIColor(white: 1.0, alpha: 0.8)
     let border = UIColor(white: 0.9, alpha: 1)
     

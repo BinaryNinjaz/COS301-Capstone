@@ -134,7 +134,8 @@ extension UITextField {
     leftViewMode = .always
     let wrapper = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 22))
     let imageView = UIImageView(frame: CGRect(x: 8, y: 3, width: 24, height: 16))
-    imageView.image = image
+    imageView.image = image.withRenderingMode(.alwaysTemplate)
+    imageView.tintColor = UIColor(white: 0.5, alpha: 1)
     imageView.contentMode = .scaleAspectFit
     wrapper.addSubview(imageView)
     leftView = wrapper
