@@ -18,6 +18,7 @@
 		16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FC820696B8F00E1A292 /* QuickAlert.swift */; };
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
+		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
 		168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* TrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* TrackerModel.swift */; };
@@ -74,6 +75,7 @@
 		16420FC820696B8F00E1A292 /* QuickAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlert.swift; sourceTree = "<group>"; };
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
 		168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* TrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerModel.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 		16420FC720696B6500E1A292 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				165697D42087B27E002CBCEE /* Views */,
 				16C82F6A20862A100074595C /* Tabs */,
 				16F2BA4B20766041007652E8 /* Cells */,
 				16420FC820696B8F00E1A292 /* QuickAlert.swift */,
@@ -237,6 +240,14 @@
 				16420FCB2069718400E1A292 /* Database.swift */,
 			);
 			path = Database;
+			sourceTree = "<group>";
+		};
+		165697D42087B27E002CBCEE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				165697D52087B29F002CBCEE /* TextFieldGroupView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		169E5195206C62D6006B923E /* Model */ = {
@@ -577,6 +588,7 @@
 				169E519B206C6C8D006B923E /* Utils.swift in Sources */,
 				16C82F5B20819B6E0074595C /* Ellipse.swift in Sources */,
 				16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */,
+				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,
 				168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

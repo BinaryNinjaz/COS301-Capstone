@@ -18,7 +18,9 @@ class SignInViewController: UIViewController {
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
   @IBOutlet weak var googleSignInButton: UIButton!
   @IBOutlet weak var signInVisualEffect: UIVisualEffectView!
-  @IBOutlet weak var signUpVisualEffect: UIVisualEffectView!
+  @IBOutlet weak var forgotAccountButton: UIButton!
+  @IBOutlet weak var textGroupView: TextFieldGroupView!
+  @IBOutlet weak var orLabel: UILabel!
   
   @IBOutlet weak var backgroundImageView: UIImageView!
   var isLoading: Bool = false {
@@ -26,12 +28,9 @@ class SignInViewController: UIViewController {
       UIView.animate(withDuration: 0.5) {
         self.signInButton.alpha = self.isLoading ? 0 : 1
         self.googleSignInButton.alpha = self.isLoading ? 0 : 1
-        self.signUpVisualEffect.alpha = self.isLoading ? 0 : 1
-        self.signUpVisualEffect.frame = CGRect(
-          x: self.signUpVisualEffect.frame.origin.x,
-          y: self.signUpVisualEffect.frame.origin.y + (self.isLoading ? 203 : -203),
-          width: self.signUpVisualEffect.frame.width,
-          height: self.signUpVisualEffect.frame.height + (self.isLoading ? -103 : 103))
+        self.signUpButton.alpha = self.isLoading ? 0 : 1
+        self.forgotAccountButton.alpha = self.isLoading ? 0 : 1
+        self.orLabel.alpha = self.isLoading ? 0 : 1
       }
       
       if isLoading  {
@@ -129,15 +128,11 @@ class SignInViewController: UIViewController {
     googleSignInButton.apply(gradient: .google)
     signInVisualEffect.layer.cornerRadius = 24
     signInVisualEffect.clipsToBounds = true
-    signUpVisualEffect.layer.cornerRadius = 10.5
-    signUpVisualEffect.clipsToBounds = true
-    
-    backgroundImageView.parallaxEffect(x: (-64, 64), y: (-64, 64))
-    signInVisualEffect.parallaxEffect(x: (-16, 16), y: (-16, 16))
-    signUpVisualEffect.parallaxEffect(x: (-16, 16), y: (-16, 16))
     
     usernameTextField.addLeftImage(#imageLiteral(resourceName: "Mail"))
     passwordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
+    
+    textGroupView.layer.cornerRadius = 5
     
     if let username = UserDefaults.standard.getUsername(),
       let password = UserDefaults.standard.getPassword() {
@@ -173,8 +168,6 @@ extension SignInViewController : GIDSignInDelegate {
       let alert = UIAlertController.alertController(
         title: "An Error Occured",
         message: error.localizedDescription)
-      
-      
       
       self.present(alert, animated: true, completion: nil)
       isLoading = false
