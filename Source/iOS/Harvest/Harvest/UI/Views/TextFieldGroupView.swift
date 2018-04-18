@@ -19,13 +19,9 @@ class TextFieldGroupView: UIView {
   }
   
   override func draw(_ rect: CGRect) {
-    UIColor.clear.setFill()
-    UIBezierPath(rect: rect).fill()
-    
-    UIGraphicsGetCurrentContext()?.setLineWidth(10)
-    
-    let back = UIColor(white: 1.0, alpha: 0.8)
-    let border = UIColor(white: 0.9, alpha: 1)
+    let leftInset: CGFloat = 32.0
+    let back = UIColor(white: 1, alpha: 0.75)
+    let border = UIColor(white: 0.75, alpha: 1)
     
     let path = UIBezierPath(rect: rect)
     back.setFill()
@@ -34,13 +30,16 @@ class TextFieldGroupView: UIView {
     path.fill()
     let seps = Int((rect.height - 42) / 38)
     
-    let line = UIBezierPath(rect: CGRect(x: 0.0, y: 42, width: rect.width, height: 1.0))
+    let line = UIBezierPath(rect: CGRect(x: leftInset,
+                                         y: 42,
+                                         width: rect.width - leftInset,
+                                         height: 1.0))
     border.setFill()
     line.fill()
     for i in 1..<seps {
-      let line = UIBezierPath(rect: CGRect(x: 0.0,
+      let line = UIBezierPath(rect: CGRect(x: leftInset,
                                            y: 42 + CGFloat(i) * 38,
-                                           width: rect.width,
+                                           width: rect.width - leftInset,
                                            height: 1.0))
       line.fill()
     }
