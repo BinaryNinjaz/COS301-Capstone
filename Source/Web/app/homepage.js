@@ -1,30 +1,45 @@
-// A reference to the database location
-var yieldRef = firebase.database().ref('yields');
-// When a yield is added, changed or deleted
-yieldRef.on('value', function (snapshot) {
-  // snapshot is the part of the database that was changed
+const locationsRef = firebase.database().ref('/locations');
+var locations = [];
 
-  var yields = document.getElementById('yields');
-  yields.innerHTML = "";
-
-  // yields has multiple yield inputs
-  // so we iterate over each yield individually
-  snapshot.forEach(function (childSnapshot) {
-    // we use val() to get the actual data.
-    // the we can obj like it was just a normal object with fields
-    var obj = childSnapshot.val();
-
-    var date = obj.date;
-    var duration = obj.duration;
-    var email = obj.email;
-    var lat = obj.location.lat;
-    var lng = obj.location.lng;
-    var yieldAmount = obj.yield;
-
-    yields.innerHTML += "<b>Date: </b>" + date + "</br>";
-    yields.innerHTML += "<b>Duration: </b>" + duration + "</br>";
-    yields.innerHTML += "<b>Email: </b>" + email + "</br>";
-    yields.innerHTML += "<b>Location: </b>" + lat + "," + lng + "</br>";
-    yields.innerHTML += "<b>Yield: </b>" + yieldAmount + "</br></br>";
+var map;
+function initMap() {
+  navigator.geolocation.getCurrentPosition(function(loc) {
+    var latLng = new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude);
+    map.setCenter(latLng);
   });
-});
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -25, lng: 28 },
+    zoom: 14,
+    mapTypeId: 'satellite'
+  });
+  displayForemanLocation();
+}
+
+function initials(name) {
+  var f = name[0];
+  var e = " ";
+  for (var i = 0; i < name.length; i++) {
+    if (name[i] === " " && i < name.length - 1) {
+      e = name[i + 1];
+    }
+  }
+  return f + e
+}
+
+function displayForemanLocation() {
+  locationsRef.off();
+  locationsRef.on('value', function(snapshot) {
+    locations = [];
+    snapshot.forEach(function (child) {
+      let loc = child.val();
+      
+      var marker = new google.maps.Marker({
+        position: loc.coord,
+        map: map,
+        title: loc.display,
+        label: initials(loc.display)
+      });
+      marker.setTitle(loc.display);
+    });
+  });
+}
