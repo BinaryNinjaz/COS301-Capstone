@@ -12,16 +12,22 @@ class TextFieldGroupView: UIView {
 
   override init(frame: CGRect) {
     super.init(frame: frame)
+    clearsContextBeforeDrawing = true
+    isOpaque = false
+    backgroundColor = UIColor(white: 0, alpha: 0)
   }
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
+    clearsContextBeforeDrawing = true
+    isOpaque = false
+    backgroundColor = UIColor(white: 0, alpha: 0)
   }
   
   override func draw(_ rect: CGRect) {
     let leftInset: CGFloat = 32.0
-    let back = UIColor(white: 1, alpha: 0.75)
-    let border = UIColor(white: 0.75, alpha: 1)
+    let back = UIColor(white: 1, alpha: 0.67)
+    let border = UIColor(white: 0.67, alpha: 1)
     
     let path = UIBezierPath(rect: rect)
     back.setFill()
