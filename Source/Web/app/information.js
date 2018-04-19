@@ -6,11 +6,13 @@ const farmRef = firebase.database().ref('/farms');
 popOrch();
 popWork();
 popFarm();
+let findables = [];
 document.getElementById("col2").innerHTML = "";
 
 
 /*Populates the list of farms in col2*/
 function popFarm() {
+  findables = [];
   const col2 = document.getElementById("col2");
   col2.innerHTML = "<h2>Loading Farm List...</h2>";
   farmRef.off();
@@ -21,12 +23,16 @@ function popFarm() {
     ;
 
     snapshot.forEach(function (child) {
-      col2.innerHTML += "" +
-        "<button type='button' class='btn btn-info' onclick='dispFarm(" + child.key + ")'>" + child.val().name + "</button>"
-      ;
+      // col2.innerHTML += "" +
+      //   "<button type='button' class='btn btn-info' onclick='dispFarm(" + child.key + ")'>" + child.val().name + "</button>"
+      // ;
+      let temp = {
+        Name : child.val().name,
+        Button : "<button type='button' class='btn btn-info' onclick='dispFarm(" + child.key + ")'>" + child.val().name + "</button>"
+      };
+      findables.push(temp);
       newId = child.key;
     });
-
   });
 }
 
@@ -145,6 +151,7 @@ function delFarm(id) {
 
 
 function popOrch() {
+  findables = [];
   const col2 = document.getElementById("col2");
   col2.innerHTML = "<h2>Loading Orchard List...</h2>";
   orchardsRef.off();
@@ -155,9 +162,14 @@ function popOrch() {
     ;
 
     snapshot.forEach(function (child) {
-      col2.innerHTML += "" +
-        "<button type='button' class='btn btn-info' onclick='dispOrch(" + child.key + ")'>" + child.val().name + "</button>"
-      ;
+      // col2.innerHTML += "" +
+      //   "<button type='button' class='btn btn-info' onclick='dispOrch(" + child.key + ")'>" + child.val().name + "</button>"
+      // ;
+      let temp = {
+        Name : child.val().name,
+        Button : "<button type='button' class='btn btn-info' onclick='dispOrch(" + child.key + ")'>" + child.val().name + "</button>"
+      };
+      findables.push(temp);
       newId = child.key;
     });
 
@@ -376,6 +388,7 @@ function delOrch(id) {
 
 
 function popWork() {
+  findables = [];
   const col2 = document.getElementById("col2");
   col2.innerHTML = "<h2>Loading Worker List...</h2>";
 
@@ -387,9 +400,15 @@ function popWork() {
     ;
 
     snapshot.forEach(function (child) {
-      col2.innerHTML += "" +
-        "<button type='button' class='btn btn-info' onclick='dispWork(" + child.key + ")'>" + child.val().name + " " + child.val().surname + "</button>"
-      ;
+      // col2.innerHTML += "" +
+      //   "<button type='button' class='btn btn-info' onclick='dispWork(" + child.key + ")'>" + child.val().name + " " + child.val().surname + "</button>"
+      // ;
+      let temp = {
+        fName : child.val().name,
+        sName : child.val().surname,
+        Button : "<button type='button' class='btn btn-info' onclick='dispWork(" + child.key + ")'>" + child.val().name + " " + child.val().surname + "</button>"
+      };
+      findables.push(temp);
       newId = child.key;
     });
 
