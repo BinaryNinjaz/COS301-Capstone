@@ -19,6 +19,18 @@
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
 		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
+		167448AF2089271400FA605C /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448AE2089271400FA605C /* Worker.swift */; };
+		167448B12089299B00FA605C /* Orchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B02089299B00FA605C /* Orchard.swift */; };
+		167448B320892AE900FA605C /* Farm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B220892AE900FA605C /* Farm.swift */; };
+		167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B520892BB500FA605C /* InfoRepresentation.swift */; };
+		167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */; };
+		167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */; };
+		167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */; };
+		167448C220893B8200FA605C /* SortedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BE20893B8100FA605C /* SortedSet.swift */; };
+		167448C320893B8200FA605C /* SortedCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BF20893B8100FA605C /* SortedCollection.swift */; };
+		167448C420893B8200FA605C /* SortedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C020893B8200FA605C /* SortedDictionary.swift */; };
+		167448C520893B8200FA605C /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C120893B8200FA605C /* SortedArray.swift */; };
+		167448C72089430C00FA605C /* EntityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C62089430C00FA605C /* EntityViewController.swift */; };
 		168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* TrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* TrackerModel.swift */; };
@@ -36,8 +48,8 @@
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
 		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
-		2246F7A4FADAD9C7BD1EE2D8 /* libPods-Harvest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */; };
-		B7A9FFC5EFF7E01DA1441BF9 /* libPods-HarvestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 74FD0ED4702F6DC1CD4761E8 /* libPods-HarvestTests.a */; };
+		3ECB54CBF16E9C8D2770A5D3 /* Pods_Harvest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */; };
+		D7583D7CD8D538EE68CCF745 /* Pods_HarvestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +88,18 @@
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
+		167448AE2089271400FA605C /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
+		167448B02089299B00FA605C /* Orchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orchard.swift; sourceTree = "<group>"; };
+		167448B220892AE900FA605C /* Farm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farm.swift; sourceTree = "<group>"; };
+		167448B520892BB500FA605C /* InfoRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoRepresentation.swift; sourceTree = "<group>"; };
+		167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityCollectionViewController.swift; sourceTree = "<group>"; };
+		167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityCollectionViewCell.swift; sourceTree = "<group>"; };
+		167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityItemTableViewController.swift; sourceTree = "<group>"; };
+		167448BE20893B8100FA605C /* SortedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedSet.swift; sourceTree = "<group>"; };
+		167448BF20893B8100FA605C /* SortedCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedCollection.swift; sourceTree = "<group>"; };
+		167448C020893B8200FA605C /* SortedDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedDictionary.swift; sourceTree = "<group>"; };
+		167448C120893B8200FA605C /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
+		167448C62089430C00FA605C /* EntityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityViewController.swift; sourceTree = "<group>"; };
 		168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* TrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerModel.swift; sourceTree = "<group>"; };
@@ -94,8 +118,8 @@
 		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
-		6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Harvest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		74FD0ED4702F6DC1CD4761E8 /* libPods-HarvestTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HarvestTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HarvestTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Harvest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AEA05C55967C38BA2131585 /* Pods-Harvest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.release.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.release.xcconfig"; sourceTree = "<group>"; };
 		E0D60F92B255F7D5058B9A59 /* Pods-HarvestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarvestTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests.release.xcconfig"; sourceTree = "<group>"; };
 		ECF34B9EDF02391429AB7361 /* Pods-HarvestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarvestTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -107,7 +131,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				169E5199206C66D6006B923E /* MapKit.framework in Frameworks */,
-				2246F7A4FADAD9C7BD1EE2D8 /* libPods-Harvest.a in Frameworks */,
+				3ECB54CBF16E9C8D2770A5D3 /* Pods_Harvest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,7 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7A9FFC5EFF7E01DA1441BF9 /* libPods-HarvestTests.a in Frameworks */,
+				D7583D7CD8D538EE68CCF745 /* Pods_HarvestTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +226,9 @@
 				169E5193206C623F006B923E /* TrackerViewController.swift */,
 				168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */,
 				16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */,
+				167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */,
+				167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */,
+				167448C62089430C00FA605C /* EntityViewController.swift */,
 			);
 			path = "View Controller";
 			sourceTree = "<group>";
@@ -250,9 +277,33 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		167448AD208926E000FA605C /* Information */ = {
+			isa = PBXGroup;
+			children = (
+				167448AE2089271400FA605C /* Worker.swift */,
+				167448B02089299B00FA605C /* Orchard.swift */,
+				167448B220892AE900FA605C /* Farm.swift */,
+				167448B520892BB500FA605C /* InfoRepresentation.swift */,
+			);
+			path = Information;
+			sourceTree = "<group>";
+		};
+		167448BD20893B4F00FA605C /* SortedCollections */ = {
+			isa = PBXGroup;
+			children = (
+				167448C120893B8200FA605C /* SortedArray.swift */,
+				167448BF20893B8100FA605C /* SortedCollection.swift */,
+				167448C020893B8200FA605C /* SortedDictionary.swift */,
+				167448BE20893B8100FA605C /* SortedSet.swift */,
+			);
+			path = SortedCollections;
+			sourceTree = "<group>";
+		};
 		169E5195206C62D6006B923E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				167448BD20893B4F00FA605C /* SortedCollections */,
+				167448AD208926E000FA605C /* Information */,
 				16C82F5420819B4C0074595C /* GeoKit */,
 				169E5196206C62E6006B923E /* TrackerModel.swift */,
 				169E519A206C6C8D006B923E /* Utils.swift */,
@@ -287,6 +338,7 @@
 				16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */,
 				16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */,
 				16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */,
+				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -295,8 +347,8 @@
 			isa = PBXGroup;
 			children = (
 				169E5198206C66D6006B923E /* MapKit.framework */,
-				6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */,
-				74FD0ED4702F6DC1CD4761E8 /* libPods-HarvestTests.a */,
+				6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */,
+				443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -476,13 +528,21 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-frameworks.sh",
-				"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework",
-				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Eureka/Eureka.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-f0850809/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Eureka.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -513,9 +573,14 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-Defines-NSData+zlib/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -547,13 +612,11 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-resources.sh",
-				"${PODS_ROOT}/GTMOAuth2/Source/Touch/GTMOAuth2ViewTouch.xib",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GTMOAuth2ViewTouch.nib",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 			);
@@ -570,17 +633,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
+				167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
 				1604E4A5206958E900E9BA15 /* SignInViewController.swift in Sources */,
 				1604E4A3206958E900E9BA15 /* AppDelegate.swift in Sources */,
 				16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */,
+				167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */,
 				16420FCC2069718400E1A292 /* Database.swift in Sources */,
+				167448C420893B8200FA605C /* SortedDictionary.swift in Sources */,
+				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
+				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
+				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
+				167448AF2089271400FA605C /* Worker.swift in Sources */,
+				167448B12089299B00FA605C /* Orchard.swift in Sources */,
 				16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */,
+				167448C72089430C00FA605C /* EntityViewController.swift in Sources */,
 				16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */,
 				16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */,
 				169E5197206C62E6006B923E /* TrackerModel.swift in Sources */,
@@ -589,6 +661,9 @@
 				16C82F5B20819B6E0074595C /* Ellipse.swift in Sources */,
 				16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */,
 				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,
+				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
+				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
+				167448C320893B8200FA605C /* SortedCollection.swift in Sources */,
 				168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

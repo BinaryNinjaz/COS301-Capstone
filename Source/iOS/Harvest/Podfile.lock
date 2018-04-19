@@ -1,4 +1,5 @@
 PODS:
+  - Eureka (4.1.1)
   - Firebase (4.11.0):
     - Firebase/Core (= 4.11.0)
   - Firebase/Auth (4.11.0):
@@ -62,6 +63,7 @@ PODS:
   - nanopb/encode (0.3.8)
 
 DEPENDENCIES:
+  - Eureka
   - Firebase
   - Firebase/Auth
   - Firebase/Core
@@ -70,6 +72,7 @@ DEPENDENCIES:
   - GoogleSignIn
 
 SPEC CHECKSUMS:
+  Eureka: b88fb930e42c79f8c03c373d0fcdc28c1d6c50ed
   Firebase: cc13dfab1038c8b45d7903e01fc690451d6d0b24
   FirebaseAnalytics: 3dfae28d4a5e06f86c4fae830efc2ad3fadb19bc
   FirebaseAuth: 147bf340a0706b44ca1753d6b41ebafd9687cfe6
@@ -84,6 +87,6 @@ SPEC CHECKSUMS:
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
 
-PODFILE CHECKSUM: 3b442dde64eebf236ca1401c09dfd13dc559ef0b
+PODFILE CHECKSUM: 5cc1db8aadbb592f8ad70020af0a51ab6b556555
 
 COCOAPODS: 1.4.0

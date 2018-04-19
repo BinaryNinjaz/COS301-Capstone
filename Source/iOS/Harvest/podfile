@@ -1,11 +1,13 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '9.0'
+use_frameworks!
 target 'Harvest' do
   pod 'GoogleMaps'
   pod 'Firebase/Core'
   pod 'Firebase/Database'
   pod 'Firebase/Auth'
   pod 'GoogleSignIn'
+  pod 'Eureka'
   
   target 'HarvestTests' do
     inherit! :search_paths

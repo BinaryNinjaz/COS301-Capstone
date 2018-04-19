@@ -20,32 +20,6 @@ struct HarvestUser {
   static var current = HarvestUser(email: "", displayName: "", uid: "")
 }
 
-struct Worker :  Hashable {
-  var firstname: String
-  var lastname: String
-  
-  static func ==(lhs: Worker, rhs: Worker) -> Bool {
-    return lhs.firstname == rhs.firstname && lhs.lastname == rhs.lastname
-  }
-  
-  var hashValue: Int {
-    return "\(firstname)\(lastname)".hashValue
-  }
-}
-
-struct Orchard {
-  var bagMass: Double
-  var coords: [CLLocationCoordinate2D]
-  var crop: String
-  var date: Date
-  var farm: Int
-  var futher: String
-  var name: String
-  var unit: String
-  var xDim: Double
-  var yDim: Double
-}
-
 
 struct HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
@@ -180,12 +154,14 @@ struct HarvestDB {
     wref.observe(.value) { (snapshot) in
       var workers = [Worker]()
       for _child in snapshot.children {
-        guard let worker = (_child as? DataSnapshot)?.value as? [String: Any] else {
+        guard let child = _child as? DataSnapshot else {
           continue
         }
-        let fn = worker["name"] as? String ?? ""
-        let ln = worker["surname"] as? String ?? ""
-        let w = Worker(firstname: fn, lastname: ln)
+        
+        guard let worker = child.value as? [String: Any] else {
+          continue
+        }
+        let w = Worker(json: worker, id: child.key)
         workers.append(w)
       }
       completion(workers)
@@ -299,43 +275,57 @@ struct HarvestDB {
     oref.observe(.value) { (snapshot) in
       var orchards = [Orchard]()
       for _child in snapshot.children {
-        guard let orchard = (_child as? DataSnapshot)?.value as? [String: Any] else {
+        guard let child = _child as? DataSnapshot else {
           continue
         }
-        let bagMass = orchard["bagMass"] as? Double ?? 0.0
-        let crop = orchard["crop"] as? String ?? ""
-        let date = Date(timeIntervalSince1970: orchard["date"] as? Double ?? 0.0)
-        let farm = orchard["farm"] as? Int ?? 0
-        let further = orchard["further"] as? String ?? ""
-        let name = orchard["name"] as? String ?? ""
-        let unit = orchard["unit"] as? String ?? ""
-        let xDim = orchard["xDim"] as? Double ?? 0.0
-        let yDim = orchard["yDim"] as? Double ?? 0.0
         
-        let cs = orchard["coords"] as? [Any] ?? []
-        var coords = [CLLocationCoordinate2D]()
-        
-        
-        for c in cs {
-          guard let c = c as? [String: Any] else {
-            continue
-          }
-          guard let lat = c["lat"] as? Double else {
-            continue
-          }
-          guard let lng = c["lng"] as? Double else {
-            continue
-          }
-          
-          coords.append(CLLocationCoordinate2D(latitude: lat, longitude: lng))
+        guard let orchard = child.value as? [String: Any] else {
+          continue
         }
         
-        let o = Orchard(bagMass: bagMass, coords: coords, crop: crop, date: date, farm: farm, futher: further, name: name, unit: unit, xDim: xDim, yDim: yDim)
-        
+        let o = Orchard(json: orchard, id: child.key)
         orchards.append(o)
       }
       completion(orchards)
     }
+  }
+  
+  static func getFarms(_ completion: @escaping ([Farm]) -> ()) {
+    let fref = ref.child(Path.farms)
+    fref.observe(.value) { (snapshot) in
+      var farms = [Farm]()
+      for _child in snapshot.children {
+        guard let child = _child as? DataSnapshot else {
+          continue
+        }
+        
+        guard let farm = child.value as? [String: Any] else {
+          continue
+        }
+        
+        let f = Farm(json: farm, id: child.key)
+        farms.append(f)
+      }
+      completion(farms)
+    }
+  }
+  
+  static func save(farm: Farm) {
+    let farms = ref.child(Path.farms)
+    let update = farm.json()
+    farms.updateChildValues(update)
+  }
+  
+  static func save(orchard: Orchard) {
+    let orchards = ref.child(Path.orchards)
+    let update = orchard.json()
+    orchards.updateChildValues(update)
+  }
+  
+  static func save(worker: Worker) {
+    let workers = ref.child(Path.workers)
+    let update = worker.json()
+    workers.updateChildValues(update)
   }
 }
 

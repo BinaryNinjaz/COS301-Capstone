@@ -24,7 +24,6 @@ class MainTabBarViewController: UITabBarController {
   }
   
   override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-    print(467)
     item.image = item.image?.resizeImage(toWidth: 22)
   }
   
