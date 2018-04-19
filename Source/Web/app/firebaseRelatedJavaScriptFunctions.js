@@ -32,8 +32,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         // window.location.href = "HomePage.html";
     } else {
         // user logged out
-        let pathComponents = window.location.href.split("/");
-        let page = pathComponents[pathComponents.length - 1];
+        let page = window.location.href.replace(/^.*[\\\/]/, '');
         if (page !== "DynamicLoginRegister.html") {
             window.location.href = "DynamicLoginRegister.html";
         }
