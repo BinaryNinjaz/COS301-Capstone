@@ -1,10 +1,7 @@
 const database = firebase.database();
 let newId = -1;
-popOrch();
-popWork();
-popFarm();
-let findables = [];
-const user = firbase.auth().currentUser;
+let findables = [1];
+const user = firebase.auth().currentUser;
 let userID;
 if (user == null){
   userID = 0;
@@ -13,21 +10,25 @@ if (user == null){
 else {
   userID = user.uid;
 }
-const orchardsRef = firebase.database().ref('/' + userID +'/' + userID + '/orchards');
-const workersRef = firebase.database().ref('/' + userID +'/' + userID + '/workers');
-const farmRef = firebase.database().ref('/' + userID +'/' + userID + '/farms');
-document.getElementById("col2").innerHTML = "";
+const orchardsRef = firebase.database().ref('/' + userID  + '/orchards');
+const workersRef = firebase.database().ref('/' + userID + '/workers');
+const farmRef = firebase.database().ref('/' + userID + '/farms');
+popOrch();
+popWork();
+popFarm();
+clear3();
 
 
 /*Populates the list of farms in col2*/
 function popFarm() {
   findables = [];
-  const col2 = document.getElementById("col2");
-  col2.innerHTML = "<h2>Loading Farm List...</h2>";
+  const add = document.getElementById("AddButt");
+  add.innerHTML = "<h2>Loading Farm List...</h2>";
+  document.getElementById("SearchSpace").innerHTML = "";
   farmRef.off();
 
   farmRef.on('value', function (snapshot) {
-    col2.innerHTML = "" +
+    add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispFarm(-1)'>Add Farm</button>"
     ;
 
@@ -42,6 +43,7 @@ function popFarm() {
       findables.push(temp);
       newId = child.key;
     });
+    searchDisp();
   });
 }
 
@@ -68,7 +70,7 @@ function dispFarm(id) {
   }
   else {
 
-    firebase.database().ref('/' + userID +'/' + userID + '/farms/' + id).once('value').then(function (snapshot) {
+    firebase.database().ref('/' + userID + '/farms/' + id).once('value').then(function (snapshot) {
 
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
@@ -87,7 +89,7 @@ function dispFarm(id) {
         "</form>"
       ;
 
-      firebase.database().ref('/' + userID +'/' + userID + "/orchards").once('value').then(function (workers) {
+      firebase.database().ref('/' + userID + "/orchards").once('value').then(function (workers) {
         const buttons = document.getElementById("orchardButtons");
         workers.forEach(function (orchard) {
           if (orchard.val().farm == id) {
@@ -107,7 +109,7 @@ function farmSave(type, id) {
 
   if (type === 0) {
     newId++;
-    firebase.database().ref('/' + userID +'/' + userID + "/farms/" + newId).set({
+    firebase.database().ref('/' + userID + "/farms/" + newId).set({
       name: document.getElementById("farmName").value,
       further: document.getElementById("farmFurther").value
     });
@@ -115,7 +117,7 @@ function farmSave(type, id) {
     popFarm();
   }
   else if (type === 1) {
-    firebase.database().ref('/' + userID +'/' + userID + "/farms/" + id).update({
+    firebase.database().ref('/' + userID + "/farms/" + id).update({
       name: document.getElementById("farmName").value,
       further: document.getElementById("farmFurther").value
     });
@@ -125,7 +127,7 @@ function farmSave(type, id) {
 
 /*Displays in col 3, the interface to modify a farm*/
 function farmMod(id) {
-  firebase.database().ref('/' + userID +'/' + userID + '/farms/' + id).once('value').then(function (snapshot) {
+  firebase.database().ref('/' + userID + '/farms/' + id).once('value').then(function (snapshot) {
     document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delFarm(" + id + ")'>Delete</button>";
     document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name;
     document.getElementById('col3').innerHTML = "" +
@@ -151,7 +153,7 @@ function farmMod(id) {
 
 /*Delets a given farm*/
 function delFarm(id) {
-  firebase.database().ref('/' + userID +'/' + userID + '/farms/' + id).remove();
+  firebase.database().ref('/' + userID + '/farms/' + id).remove();
   popFarm();
   clear3();
 }
@@ -161,12 +163,13 @@ function delFarm(id) {
 
 function popOrch() {
   findables = [];
-  const col2 = document.getElementById("col2");
-  col2.innerHTML = "<h2>Loading Orchard List...</h2>";
+  const add = document.getElementById("AddButt");
+  add.innerHTML = "<h2>Loading Orchard List...</h2>";
+  document.getElementById("SearchSpace").innerHTML = "";
   orchardsRef.off();
 
   orchardsRef.on('value', function (snapshot) {
-    col2.innerHTML = "" +
+    add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispOrch(-1)'>Add Orchard</button>"
     ;
 
@@ -181,7 +184,7 @@ function popOrch() {
       findables.push(temp);
       newId = child.key;
     });
-
+    searchDisp();
   });
 }
 
@@ -191,7 +194,7 @@ function dispOrch(id) {
   if (id === -1) {
     /*Create New Orchard*/
 
-    firebase.database().ref('/' + userID +'/' + userID + '/farms').once('value').then(function (snapshot) {
+    firebase.database().ref('/' + userID + '/farms').once('value').then(function (snapshot) {
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -236,7 +239,7 @@ function dispOrch(id) {
   }
   else {
 
-    firebase.database().ref('/' + userID +'/' + userID + '/orchards/' + id).once('value').then(function (snapshot) {
+    firebase.database().ref('/' + userID + '/orchards/' + id).once('value').then(function (snapshot) {
       farmRef.once('value').then(function (farmSnapshot) {
         col3.innerHTML = "" +
           "<form class='form-horizontal'>" +
@@ -278,7 +281,7 @@ function dispOrch(id) {
           }
         });
 
-        firebase.database().ref('/' + userID +'/' + userID + "/workers").once('value').then(function (workers) {
+        firebase.database().ref('/' + userID + "/workers").once('value').then(function (workers) {
           const buttons = document.getElementById("workerButtons");
           workers.forEach(function (worker) {
             if (worker.val().orchard == id) {
@@ -398,13 +401,14 @@ function delOrch(id) {
 
 function popWork() {
   findables = [];
-  const col2 = document.getElementById("col2");
-  col2.innerHTML = "<h2>Loading Worker List...</h2>";
+  const add = document.getElementById("AddButt");
+  add.innerHTML = "<h2>Loading Worker List...</h2>";
+  document.getElementById("SearchSpace").innerHTML = "";
 
   workersRef.off();
 
   workersRef.on('value', function (snapshot) {
-    col2.innerHTML = "" +
+    add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispWork(-1)'>Add Worker</button>"
     ;
 
@@ -413,14 +417,13 @@ function popWork() {
       //   "<button type='button' class='btn btn-info' onclick='dispWork(" + child.key + ")'>" + child.val().name + " " + child.val().surname + "</button>"
       // ;
       let temp = {
-        fName : child.val().name,
-        sName : child.val().surname,
+        Name : child.val().name + " " + child.val().surname,
         Button : "<button type='button' class='btn btn-info' onclick='dispWork(" + child.key + ")'>" + child.val().name + " " + child.val().surname + "</button>"
       };
       findables.push(temp);
       newId = child.key;
     });
-
+    searchDisp();
   });
 }
 
@@ -635,7 +638,56 @@ function delWork(id) {
   clear3();
 }
 
+/*This filters displayed items in col2, based on what is present in the search box*/
+function searchDisp(){
+  document.getElementById("SearchSpace").innerHTML = "" +
+    "" +
+    "<input class='form-control' type='text' placeholder='Search' id='SearchBar' oninput='popResults()'>" +
+    ""
+  ;
+
+  findables.sort(function (a, b) {
+    return a.Name.localeCompare(b.Name);
+  });
+
+  const buttons = document.getElementById("DispButt");
+  buttons.innerHTML = "";
+
+  findables.forEach(function (item, index) {
+    buttons.innerHTML += item.Button;
+  });
+
+}
+
+/*This populates the found results.*/
+function popResults() {
+  const searchText = document.getElementById("SearchBar").value;
+  const buttons = document.getElementById("DispButt");
+  buttons.innerHTML = "";
+  findables.forEach(function (item, index) {
+    if (isValid(searchText, item.Name)){
+      buttons.innerHTML += item.Button;
+    }
+  });
+}
+
+/*This checks if the given name is a valid find*/
+function isValid(search, name) {
+  /*This should get fancy, in time, for now just check if the characters match a pattern, and are in the correct order*/
+  for (let i = 0; i < search.length; i++){
+    if (i === name.length){
+      return true;
+    }
+    if (search.charAt(i).toLowerCase() !== name.charAt(i).toLowerCase()) {
+      return false;
+    }
+  }
+  return true;
+}
+
 
 function clear3() {
-  document.getElementById("col3").innerHTML = "";
+  document.getElementById("AddButt").innerHTML = "";
+  document.getElementById("SearchBar").innerHTML = "";
+  document.getElementById("DispButt").innerHTML = "";
 }
