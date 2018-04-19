@@ -13,10 +13,18 @@ class TrackerViewController: UIViewController {
   var tracker: Tracker?
   var locationManager: CLLocationManager!
   var currentLocation: CLLocation?
-  var workers: [Worker] = []
+  var workers: [Worker] = [] {
+    didSet {
+      filteredWorkers = workers
+    }
+  }
+  var lastLocationPoll: Date? = nil
+  var filteredWorkers: [Worker] = []
   
   @IBOutlet weak var startSessionButton: UIButton!
   @IBOutlet weak var workerCollectionView: UICollectionView!
+  @IBOutlet weak var searchBar: UISearchBar!
+  @IBOutlet weak var yieldLabel: UILabel!
   
   
   @IBAction func startSession(_ sender: Any) {
@@ -36,6 +44,7 @@ class TrackerViewController: UIViewController {
         startSessionButton.apply(gradient: sessionLayer)
         
         tracker = Tracker()
+        searchBar.isUserInteractionEnabled = true
         
         workerCollectionView.reloadData()
       }
@@ -54,26 +63,10 @@ class TrackerViewController: UIViewController {
       present(alert, animated: true, completion: nil)
       
       tracker = nil
+      searchBar.isUserInteractionEnabled = false
       
       workerCollectionView.reloadData()
     }
-  }
-  
-  @IBAction func collectYield(_ sender: Any) {
-    guard let idx = workerCollectionView.indexPathsForSelectedItems?.first else {
-      return
-    }
-    
-    guard let loc = currentLocation else {
-      let alert = UIAlertController.alertController(
-        title: "Location Unavailable",
-        message: "Please allow location service from the 'Settings' app")
-      
-      present(alert, animated: true, completion: nil)
-      return
-    }
-    
-    tracker?.collect(for: workers[idx.row], at: loc)
   }
   
   func updateWorkerCells(with newWorkers: [Worker]) {
@@ -91,6 +84,7 @@ class TrackerViewController: UIViewController {
     startSessionButton.layer.cornerRadius = 40
     hideKeyboardWhenTappedAround()
     
+    
     let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
     startSessionButton.apply(gradient: sessionLayer)
     
@@ -99,6 +93,13 @@ class TrackerViewController: UIViewController {
     }
     
     workerCollectionView.accessibilityIdentifier = "workerClickerCollectionView"
+    
+    workerCollectionView.contentInset = UIEdgeInsets(top: 0,
+                                                     left: 0,
+                                                     bottom: 106,
+                                                     right: 0)
+    
+    yieldLabel.attributedText = attributedStringForYieldCollection(0, 0)
   }
 
   override func didReceiveMemoryWarning() {
@@ -114,25 +115,54 @@ extension TrackerViewController : CLLocationManagerDelegate {
     }
     currentLocation = loc
     tracker?.track(location: loc)
+    if (lastLocationPoll == nil || Date().timeIntervalSince(lastLocationPoll!) > 60) {
+      HarvestDB.update(location: loc.coordinate)
+      lastLocationPoll = Date()
+    }
   }
 }
 
+func attributedStringForYieldCollection(_ a: Int, _ p: Int) -> NSAttributedString {
+  let boldFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
+  let regularFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .regular)]
+  
+  let current = NSAttributedString(string: "Current Yield: ", attributes: boldFont)
+  let currentAmount = NSAttributedString(string: a.description, attributes: regularFont)
+  let expected = NSAttributedString(string: "\nExpected Yield: ", attributes: boldFont)
+  let expectedAmount = NSAttributedString(string: p.description, attributes: regularFont)
+  
+  let result = NSMutableAttributedString()
+  result.append(current)
+  result.append(currentAmount)
+  result.append(expected)
+  result.append(expectedAmount)
+  
+  return result
+}
+
 extension TrackerViewController : UICollectionViewDataSource {
+  
+  var shouldDisplayMessage: Bool {
+    return tracker == nil
+      || workers.isEmpty
+      || filteredWorkers.isEmpty
+  }
+  
   func numberOfSections(in collectionView: UICollectionView) -> Int {
     return 1
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return tracker == nil || workers.isEmpty ? 1 : workers.count
+    return shouldDisplayMessage ? 1 : filteredWorkers.count
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     guard tracker != nil else {
-      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "startingWorkerCollectionViewCell", for: indexPath) as? StartingWorkingCollectionViewCell else {
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "labelWorkerCollectionViewCell", for: indexPath) as? LabelWorkingCollectionViewCell else {
         return UICollectionViewCell()
       }
-      
+      cell.textLabel.text = "Press 'Start' to begin tracking worker collections"
       return cell
     }
     
@@ -140,7 +170,19 @@ extension TrackerViewController : UICollectionViewDataSource {
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "loadingWorkerCollectionViewCell", for: indexPath) as? LoadingWorkerCollectionViewCell else {
         return UICollectionViewCell()
       }
-      
+//      cell.textLabel.text = "No workers were added to your farm"
+      return cell
+    }
+    
+    guard !filteredWorkers.isEmpty else {
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "labelWorkerCollectionViewCell", for: indexPath) as? LabelWorkingCollectionViewCell else {
+        return UICollectionViewCell()
+      }
+      guard let searchText = searchBar.text else {
+        cell.textLabel.text = "Unknown Error Occured"
+        return cell
+      }
+      cell.textLabel.text = "No workers that contains '\(searchText)' in their name"
       return cell
     }
     
@@ -149,7 +191,7 @@ extension TrackerViewController : UICollectionViewDataSource {
       return UICollectionViewCell()
     }
     
-    let worker = workers[indexPath.row]
+    let worker = filteredWorkers[indexPath.row]
     
     cell.myBackgroundView.frame.size = cell.frame.size
     
@@ -177,11 +219,15 @@ extension TrackerViewController : UICollectionViewDataSource {
         return
       }
       
-      self.tracker?.collect(for: self.workers[indexPath.row], at: loc)
+      self.tracker?.collect(for: self.filteredWorkers[indexPath.row], at: loc)
       
       this.yieldLabel.text = self
         .tracker?
-        .collections[self.workers[indexPath.row]]?.count.description ?? "0"
+        .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
+      
+      self.yieldLabel.attributedText = attributedStringForYieldCollection(
+        self.tracker?.totalCollected() ?? 0,
+        Int(Double(self.tracker?.totalCollected() ?? 0) * 1.1))
     }
     
     cell.dec = { this in
@@ -194,11 +240,17 @@ extension TrackerViewController : UICollectionViewDataSource {
         return
       }
       
-      self.tracker?.pop(for: self.workers[indexPath.row])
+      self.tracker?.pop(for: self.filteredWorkers[indexPath.row])
       
       this.yieldLabel.text = self
         .tracker?
-        .collections[self.workers[indexPath.row]]?.count.description ?? "0"
+        .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
+      
+      
+      
+      self.yieldLabel.attributedText = attributedStringForYieldCollection(
+        self.tracker?.totalCollected() ?? 0,
+        Int(Double(self.tracker?.totalCollected() ?? 0) * 1.1))
     }
     
     return cell
@@ -217,13 +269,29 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
     
     let w = collectionView.frame.width
-    let h = collectionView.frame.height - 186
+    let h = collectionView.frame.height - 300
     
     let n = CGFloat(Int(w / 186))
     
     let cw = w / n - ((n - 1) / n)
     
-    return CGSize(width: tracker == nil || workers.isEmpty ? w - 2 : cw,
-                  height: tracker == nil || workers.isEmpty ? h : 109);
+    return CGSize(width: shouldDisplayMessage ? w - 2 : cw,
+                  height: shouldDisplayMessage ? h : 109);
+  }
+}
+
+extension TrackerViewController : UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    filteredWorkers = workers.filter({ (worker) -> Bool in
+      guard searchText != "" else {
+        return true
+      }
+      return (worker.firstname + " " + worker.lastname)
+        .uppercased()
+        .contains(searchText.uppercased())
+    })
+    
+    workerCollectionView.reloadData()
+    searchBar.becomeFirstResponder()
   }
 }

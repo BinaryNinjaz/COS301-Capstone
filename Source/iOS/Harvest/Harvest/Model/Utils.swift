@@ -49,6 +49,13 @@ extension UIColor {
       
       return [s, e]
     }
+    
+    static var google: [UIColor] {
+      let s = UIColor(hue: 8.0 / 360.0, saturation: 0.73, brightness: 0.93, alpha: 1)
+      let e = UIColor(hue: 8.0 / 360.0, saturation: 0.73, brightness: 0.85, alpha: 1)
+      
+      return [s, e]
+    }
   }
   
   
@@ -91,6 +98,13 @@ extension CAGradientLayer {
                     cornerRadius: 5,
                     borderColor: UIColor.Bootstrap.orange[1])
   }
+  
+  static var google: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.google,
+                    locations: [0.0, 1.0],
+                    cornerRadius: 5,
+                    borderColor: UIColor.Bootstrap.google[1])
+  }
 }
 
 extension UIView {
@@ -98,5 +112,17 @@ extension UIView {
     layer.sublayers?.remove(at: 0)
     gradient.frame = bounds
     layer.insertSublayer(gradient, at: 0)
+  }
+}
+
+extension UITextField {
+  func addLeftImage(_ image: UIImage) {
+    leftViewMode = .always
+    let wrapper = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 22))
+    let imageView = UIImageView(frame: CGRect(x: 8, y: 3, width: 24, height: 16))
+    imageView.image = image
+    imageView.contentMode = .scaleAspectFit
+    wrapper.addSubview(imageView)
+    leftView = wrapper
   }
 }

@@ -26,47 +26,93 @@
        
         <link href="home.css" rel="stylesheet" type="text/css" />
         <script src="navbar.js" type="text/javascript"></script>
+        
+        <!-- Google Maps -->
+        <script async defer
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap">
+                </script>
     </head>
     <body>
-
+	<!-- I (teboho Mokoena) am about to change this navbar -->
     <div class="topnav">
         <ul class="nav navbar-nav">
-            <a class="active" href="HomePage.html">Harvest Home</a>
-            <a href="Information.html">View/Edit Information</a>
-            <a href="HeatMap.html">Heatmap</a>
+            <li><a class="active" href="HomePage.html"><img width="15" heigh="15" src="leaf2.png" alt="Dispute Bills">Harvest Home</a><li>
+            <li><a href="#" data-toggle="modal" data-target="#selectFarm">Select Farm</a></li>
+            <!--<a href="HeatMap.html">Heatmap</a>-->
         </ul>
 
         <ul class="pull-right nav navbar-nav">
-            <a href="Settings.html" id="emailInNav"></a>
-            <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
+            <li><a href="Settings.html" id="emailInNav"></a></li>
+            <li><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-            </button>
+            </button></li>
         </ul>
     </div>
-
-        <table>
-			<tr style="text-align:center; ">
-				<th class="feeds"> 
-					<h1>Live feeds</h1>
-				</th>
-				<th class="mapOv">
-					<h2>Live Map Overview</h2>
-				</th>
-			</tr>
-			<tr>
-				<td class="feeds">
-					<div id="yields">
-				
+	<!-- This is the bottom navigation bar -->
+	<div class="bottomnav">
+		<!-- I added two links, one for information, the other is for the analytics -->
+		<ul class="nav navbar-nav">
+            <li><a id="info" href="Information.html">Information</a></li>
+            <li><a id="analytics" href="HeatMap.html">Analytics</a></li>
+        </ul>
+	</div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h1>Live feeds</h1>
+            </div>
+            <div class="col-sm-9">
+                <h1>Live Map Overview</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                
+            </div>
+            <div class="col-sm-9">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+		<!--***********************************Selected Farm***************************************-->
+		<div id="selectFarm" class="modal fade" role="dialog" data-backdrop="static">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Select Farm or Add Farm</h4>
+						<!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
 					</div>
-				</td>
-				<td class="mapOv">
-					<img alt="404" style="width:900px;" src="mapSample.jpg"/>
-				</td>
-			</tr>
-		</table>
-		<hr />
+					<div class="modal-body" id="createAdModalBody">
+						<form name="postAd" action="#" method="post" id="form" enctype="multipart/form-data">
+							<div class="form-group">
+								<label for="itemName" class="control-label">Add Farm (By Name):</label> <!-- This will most likely change -->
+								<input type="text" class="form-control" id="itemName" name="itemName"/>
+							</div>
+							
+							<div class="form-group">
+								<label for="category">Available Farms:</label> <!-- This is if the farmer will have many farms -->
+								<select class="form-control" name="category" id="category">
+									<option>Farm added by you</option>
+									<option>Farm added by you</option>
+									<option>Farm added by you</option>
+								</select>
+							</div>
+							
+
+							<div class="form-group">
+								<input type="submit" class="btn btn-default" class="form-control" value="Submit" name="createAd" id="createAd"/>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
     </body>
 </html>

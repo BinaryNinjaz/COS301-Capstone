@@ -8,13 +8,16 @@
 
 import Firebase
 import CoreLocation
+import GoogleSignIn
 
 let passwordPadding = "s3cr3ts4uc3"
 
 struct HarvestUser {
-  var name: String
+  var email: String
+  var displayName: String
+  var uid: String
   
-  static var current = HarvestUser(name: "")
+  static var current = HarvestUser(email: "", displayName: "", uid: "")
 }
 
 struct Worker :  Hashable {
@@ -30,12 +33,27 @@ struct Worker :  Hashable {
   }
 }
 
+struct Orchard {
+  var bagMass: Double
+  var coords: [CLLocationCoordinate2D]
+  var crop: String
+  var date: Date
+  var farm: Int
+  var futher: String
+  var name: String
+  var unit: String
+  var xDim: Double
+  var yDim: Double
+}
+
 
 struct HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
   
   enum Path: String {
-    case yields = "mockfarm/yields"
+    case yields = "yields"
+    case locations = "locations"
+    case orchards = "orchards"
   }
   
   //MARK: - Authentication
@@ -71,7 +89,9 @@ struct HarvestDB {
       }
       UserDefaults.standard.set(password: password)
       UserDefaults.standard.set(username: email)
-      HarvestUser.current.name = user.email!
+      HarvestUser.current.email = user.email!
+      HarvestUser.current.displayName = user.displayName ?? ""
+      HarvestUser.current.uid = user.uid
       completion(true)
     }
   }
@@ -124,6 +144,8 @@ struct HarvestDB {
   ) {
     do {
       try Auth.auth().signOut()
+      GIDSignIn.sharedInstance().disconnect()
+      GIDSignIn.sharedInstance().signOut()
     } catch {
 //      #warning("Complete with proper errors")
       let alert = UIAlertController.alertController(
@@ -167,28 +189,8 @@ struct HarvestDB {
     }
   }
   
-  
-  static func collect(yield: Double,
-                      from email: String,
-                      inAmountOfSeconds amount: TimeInterval,
-                      at loc: CLLocationCoordinate2D,
-                      on date: Date) {
-    let cref = ref.child(Path.yields.rawValue)
-    let key = cref.childByAutoId().key
-    let data: [String: Any] = [
-      "date": date.timeIntervalSince1970,
-      "yield": yield,
-      "email": email,
-      "duration": amount,
-      "location": ["lat": loc.latitude, "lng": loc.longitude]
-    ]
-    let updates = ["yields/\(key)": data]
-    
-    ref.updateChildValues(updates)
-  }
-  
   static func collect(from workers: [Worker: WorkerCollection],
-                      by email: String,
+                      by user: (display: String, uid: String),
                       on date: Date,
                       track: [(Double, Double)]) {
     let cref = ref.child(Path.yields.rawValue)
@@ -221,13 +223,11 @@ struct HarvestDB {
       cs[f + " " + l] = collections
     }
     
-    print(cs)
-    print(track.firbaseCoordRepresentation())
-    
     let data: [String: Any] = [
       "start_date": date.timeIntervalSince1970,
       "end_date": Date().timeIntervalSince1970,
-      "email": email,
+      "display": user.display,
+      "uid": user.uid,
       "collections": cs,
       "track": track.firbaseCoordRepresentation()
     ]
@@ -260,6 +260,66 @@ struct HarvestDB {
           return
         }
       }
+    }
+  }
+  
+  static func update(location: CLLocationCoordinate2D) {
+    let path = Path.locations.rawValue + "/" + HarvestUser.current.uid
+    let updates =
+    [
+      path: [
+        "coord": [
+          "lat": location.latitude,
+          "lng": location.longitude
+        ],
+        "display": HarvestUser.current.displayName
+      ]
+    ]
+    
+    ref.updateChildValues(updates)
+  }
+  
+  static func getOrchards(_ completion: @escaping ([Orchard]) -> ()) {
+    let oref = ref.child(Path.orchards.rawValue)
+    oref.observe(.value) { (snapshot) in
+      var orchards = [Orchard]()
+      for _child in snapshot.children {
+        guard let orchard = (_child as? DataSnapshot)?.value as? [String: Any] else {
+          continue
+        }
+        let bagMass = orchard["bagMass"] as? Double ?? 0.0
+        let crop = orchard["crop"] as? String ?? ""
+        let date = Date(timeIntervalSince1970: orchard["date"] as? Double ?? 0.0)
+        let farm = orchard["farm"] as? Int ?? 0
+        let further = orchard["further"] as? String ?? ""
+        let name = orchard["name"] as? String ?? ""
+        let unit = orchard["unit"] as? String ?? ""
+        let xDim = orchard["xDim"] as? Double ?? 0.0
+        let yDim = orchard["yDim"] as? Double ?? 0.0
+        
+        let cs = orchard["coords"] as? [Any] ?? []
+        var coords = [CLLocationCoordinate2D]()
+        
+        
+        for c in cs {
+          guard let c = c as? [String: Any] else {
+            continue
+          }
+          guard let lat = c["lat"] as? Double else {
+            continue
+          }
+          guard let lng = c["lng"] as? Double else {
+            continue
+          }
+          
+          coords.append(CLLocationCoordinate2D(latitude: lat, longitude: lng))
+        }
+        
+        let o = Orchard(bagMass: bagMass, coords: coords, crop: crop, date: date, farm: farm, futher: further, name: name, unit: unit, xDim: xDim, yDim: yDim)
+        
+        orchards.append(o)
+      }
+      completion(orchards)
     }
   }
 }

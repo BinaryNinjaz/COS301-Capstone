@@ -25,19 +25,19 @@ function refreshPage() {
     });
 }*/
 
-const title = document.getElementsByTagName("title")[0].innerHTML;
-if (title !== "Harvest | Login and Register") {
-// This is automatic whenever there's a change to a users authorization
-  firebase.auth().onAuthStateChanged(function (user) {
+
+firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // user logged in
       // window.location.href = "HomePage.html";
     } else {
-      // user logged out
-      window.location.href = "DynamicLoginRegister.html";
+        // user logged out
+        let page = window.location.href.replace(/^.*[\\\/]/, '');
+        if (page !== "DynamicLoginRegister.html") {
+            window.location.href = "DynamicLoginRegister.html";
+        }
     }
-  });
-}
+});
 
 function firebaseRegister(email, password) {
     if(password.length < 6) {

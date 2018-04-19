@@ -1,10 +1,30 @@
-.feeds{
-	width:300px;
+#map {
+	height: 100%;
+	width: 100%;
+	background-color: #EFEEEC;
 }
 
-table{
-	width:90em;
+/* Black background colour to the top navigation */
+.bottomnav {
+    background-color: #333;
+    overflow: hidden;
 }
-.mapOv{
-	width:500px;
+
+/* Style the links inside the navigation bar */
+.bottomnav a {
+    float: left;
+    color: whitesmoke;
+    text-align: center;
+    padding: 19px 22px;
+    text-decoration: none;
+    font-size: 18px;
 }
+
+/* Change the colour of links on hover */
+.bottomnav a:hover {
+    background-color: #ddd; /*Grey*/
+    color: black;
+}
+
+#info {	width: 160px;}
+#analytics {	width: 130px;}
