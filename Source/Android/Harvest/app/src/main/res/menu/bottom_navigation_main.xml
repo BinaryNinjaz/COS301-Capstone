@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/actionYieldTracker"
+        android:enabled="true"
+        android:title="@string/yieldTracker"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actionSettings"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings_white"
+        android:title="@string/menuSettings"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actionLastSession"
+        android:enabled="true"
+        android:title="@string/last_session"
+        app:showAsAction="ifRoom" />
+</menu>

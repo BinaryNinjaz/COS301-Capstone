@@ -1,0 +1,45 @@
+package za.org.samac.harvest;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
+
+import za.org.samac.harvest.util.AppUtil;
+
+public class SplashScreenActivity extends AppCompatActivity {
+
+    private TextView tvAppName;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash_screen);
+        tvAppName = findViewById(R.id.tvAppName);
+        tvAppName.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if(AppUtil.isUserSignedIn(getApplicationContext())) {
+                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+            }
+        }, 2500);
+    }
+
+}

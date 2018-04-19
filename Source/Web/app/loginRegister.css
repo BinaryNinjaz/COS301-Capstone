@@ -1,0 +1,71 @@
+body {
+    background-color: whitesmoke;
+    background-image: url("backgrdSmaller.jpg");
+    height: 100%;
+    font-family: Sans-Serif;
+   
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.inputBlock {
+    margin: auto;
+    border: 4px solid green;
+    border-radius: 10px;
+    padding: 7px;
+    text-align: center;
+    background-color: whitesmoke;
+    width: 280px;
+
+    // margin-top: 10%;
+    margin-bottom: 10%;
+}
+.left{
+    text-align: left;
+    width: 40%;      
+    float: left;
+}
+.right{
+    margin-left: 40%;    
+    color: black;
+    outline-color: #006633;
+    outline-width: 2px;
+     letter-spacing: 3px;
+    font-size: 30px;
+}
+.list-heading {
+    font-weight: bolder;
+    font-size: 35px;
+
+}
+.center {
+
+    position: fixed; 
+    /*this to solve "the content will not be cut when the window is smaller than the content": */
+    max-width: 100%;
+    overflow: scroll;
+
+    text-align: center;
+    margin-top: 50px;
+    margin-right: auto;
+
+}
+
+.sec {
+    text-align: left;
+    width: 99%;
+    height: 80%;
+    margin: auto;
+    padding: 10px;
+}
+
+ul {
+    list-style-type: ico;
+}
+
+ul.ico {
+    list-style-image: url('leaf2.png');// no-repeat left top;
+   
+}

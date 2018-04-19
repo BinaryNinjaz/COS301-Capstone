@@ -1,0 +1,65 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\begin{document}
+\author{}
+\title{Harvest Requirements and Design Documentation}
+\date{\today}
+\maketitle
+\center{\textbf{Team Name:} Binary Ninjaz\\}
+\center{\textbf{Team Members:\\} 
+Teboho Mokoena (u14415888)\\
+Sizo Duma (u15245579)\\
+Letanyan Delon Arumugam (u14228123)\\
+John Ojo (u15096794)\\
+Kevin Reid (u15008739)\\
+Shaun Yates (u16007493)\\ }
+
+\newpage{
+\center{\textbf{Introduction}\\ 	
+\center{This is where we will place the succinct App and Web Info} .
+\newline\newline
+\flushleft
+\textbf{Functional Requirements:}
+\item[$\bullet$]Harvest application must be accessible from a smartphone/tablet/desktop computer.
+\item[$\bullet$]Harvest application must check whether the user is registered before signing them in. 
+\item[$\bullet$]Harvest application must create an profile of the user when registering them.
+\item[$\bullet$]Harvest application must measures yield, by combining a clocking system with yield data, through the input view of the mobile interface.
+\item[$\bullet$]Harvest application must display data on a heat map through the summary view of the web interface.
+\item[$\bullet$]Harvest application must accepts detailed information about produce through the admin web view interface. 
+\item[$\bullet$]Harvest application must track the farmer in real time through the GPS on the foreman’s phone.
+\item[$\bullet$]Harvest application must do administrative tasks through the web interface.
+	
+}
+\newpage{
+\center{\textbf{The Domain Model}\\ 
+\includegraphics[width=1\linewidth]{DModel2}
+\center{\textbf{Architectural Design Process}\\ 
+The architectural structural design of our system is a 4-tier architecture. The system has a number of layers, each depending on the lower level layer. The Login or Sign Up interface layer, the Data capturing interface layer, and the web interface layer all depend on the Abstract interface layer (Backend Layer) which also depends on the Database layer. \\
+\includegraphics[width=1\linewidth]{4-Tier}
+	
+
+	\center{\subsubsection{Determining Type of System}}
+\flushleft
+		The system under development is identified as an Object persistence subsystem (also known as a Database subystem), because it uses a database for efficient data storage and retrieval. It also hides the database from the rest of the system and uses an abstract interface to perform changes to the database (when storing) and retrieval.  
+		
+	\subsubsection{Specifying subsystem functions, interfaces, and interaction behaviour}
+\flushleft
+		\item[$\bullet$]\textbf{The Application Interface: }This interface will have the functionality for login in and signing up (of unregistered users), it will have yeild data recording functionality and worker performance capturing functionality.
+		\item[$\bullet$]\textbf{The Web Application Interface: }Much of the administrative tasks will be carried out on the Interface (Like adding worker and Orchard Details per farm)
+		\item[$\bullet$]\textbf{The Database Interface: }This interface will maintain strict access, it will only be accessed through an abstract interface (Backend) only to store and retrieve data, nothing else. \newline\newline
+\includegraphics[width=1\linewidth]{ModellingInteraction}
+	\subsubsection{Reviewing the architectural design}
+		\item[$\bullet$]Harvest application is accessible from a smartphone/tablet/desktop computer.
+		\item[$\bullet$]Harvest application does check whether the user is registered before signing them in. 
+		\item[$\bullet$]Harvest application does create an profile of the user when registering them.
+		\item[$\bullet$]Harvest application does measures yield, by combining a clocking system with yield data, through the input view of the mobile interface.
+		\item[$\bullet$]Harvest application does facilitate GPS data filtering and Web Functionality
+		\item[$\bullet$]Harvest application does facilitate the idea of tracking
+		
+	
+		
+}
+
+
+\end{document} 
+
