@@ -50,10 +50,25 @@ struct Orchard {
 struct HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
   
-  enum Path: String {
-    case yields = "yields"
-    case locations = "locations"
-    case orchards = "orchards"
+  struct Path {
+    static var parent: String {
+      return HarvestUser.current.email.removedFirebaseInvalids()
+    }
+    static var yields: String {
+      return "\(Path.parent)/yields"
+    }
+    static var locations: String {
+      return "\(Path.parent)/locations"
+    }
+    static var farms: String {
+      return "\(Path.parent)/farms"
+    }
+    static var workers: String {
+      return "\(Path.parent)/workers"
+    }
+    static var orchards: String {
+      return "\(Path.parent)/orchards"
+    }
   }
   
   //MARK: - Authentication
@@ -161,7 +176,7 @@ struct HarvestDB {
   // MARK: - Yield
   
   static func getWorkers(_ completion: @escaping ([Worker]) -> ()) {
-    let wref = ref.child("/workers").queryOrdered(byChild: "surname")
+    let wref = ref.child(Path.workers).queryOrdered(byChild: "surname")
     wref.observe(.value) { (snapshot) in
       var workers = [Worker]()
       for _child in snapshot.children {
@@ -180,7 +195,7 @@ struct HarvestDB {
   static func onLastSession(
     _ completion: @escaping ([String: Any]) -> ()
   ) {
-    let wref = ref.child("/yields").queryLimited(toLast: 1)
+    let wref = ref.child(Path.yields).queryLimited(toLast: 1)
     wref.observe(.value) { (snapshot) in
       guard let session = snapshot.value as? [String: Any] else {
         return
@@ -193,7 +208,7 @@ struct HarvestDB {
                       by user: (display: String, uid: String),
                       on date: Date,
                       track: [(Double, Double)]) {
-    let cref = ref.child(Path.yields.rawValue)
+    let cref = ref.child(Path.yields)
     let key = cref.childByAutoId().key
     
     var cs = [String: Any]()
@@ -242,7 +257,7 @@ struct HarvestDB {
     on date: Date,
     completion: @escaping (DataSnapshot) -> ()
   ) {
-    let yields = ref.child(Path.yields.rawValue)
+    let yields = ref.child(Path.yields)
     yields.observeSingleEvent(of: .value) { (snapshot) in
       for _child in snapshot.children {
         guard let child = (_child as? DataSnapshot)?.value as? [String: Any] else {
@@ -264,7 +279,7 @@ struct HarvestDB {
   }
   
   static func update(location: CLLocationCoordinate2D) {
-    let path = Path.locations.rawValue + "/" + HarvestUser.current.uid
+    let path = Path.locations + "/" + HarvestUser.current.uid
     let updates =
     [
       path: [
@@ -280,7 +295,7 @@ struct HarvestDB {
   }
   
   static func getOrchards(_ completion: @escaping ([Orchard]) -> ()) {
-    let oref = ref.child(Path.orchards.rawValue)
+    let oref = ref.child(Path.orchards)
     oref.observe(.value) { (snapshot) in
       var orchards = [Orchard]()
       for _child in snapshot.children {
@@ -344,6 +359,8 @@ extension String {
     for c in self {
       if !"[.*$#]".contains(c) {
         result += "\(c)"
+      } else {
+        result += " "
       }
     }
     
