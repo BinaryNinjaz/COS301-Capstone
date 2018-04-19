@@ -134,18 +134,16 @@ class SignInViewController: UIViewController {
     
     textGroupView.layer.cornerRadius = 5
     
-    if let username = UserDefaults.standard.getUsername(),
-      let password = UserDefaults.standard.getPassword() {
-      attempSignIn(username: username, password: password)
-      return
-    }
-    
     GIDSignIn.sharedInstance().delegate = self
     GIDSignIn.sharedInstance().uiDelegate = self
     
-    if let _ = UserDefaults.standard.getUsername() {
-      isLoading = true
-      GIDSignIn.sharedInstance().signIn()
+    if let username = UserDefaults.standard.getUsername() {
+      if let password = UserDefaults.standard.getPassword() {
+        attempSignIn(username: username, password: password)
+      } else {
+        isLoading = true
+        GIDSignIn.sharedInstance().signIn()
+      }
     }
   }
   
