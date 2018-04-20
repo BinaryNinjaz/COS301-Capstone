@@ -51,6 +51,11 @@ class EntityViewController: FormViewController {
         HarvestDB.save(worker: t)
         self.navigationItem.rightBarButtonItem?.isEnabled = false
       }
+    case let .session(s):
+      if let t = s.tempory {
+        HarvestDB.save(session: t)
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+      }
     }
   }
   

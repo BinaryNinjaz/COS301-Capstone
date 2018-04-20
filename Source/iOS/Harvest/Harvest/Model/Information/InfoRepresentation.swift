@@ -313,44 +313,19 @@ extension Orchard {
   }
 }
 
+extension Session {
+  func information(for form: Form, onChange: @escaping () -> ()) {
+    
+  }
+}
+
 extension EntityItem {
   func information(for form: Form, onChange: @escaping () -> ()) {
     switch self {
     case let .worker(w): w.information(for: form, onChange: onChange)
     case let .orchard(o): o.information(for: form, onChange: onChange)
     case let .farm(f): f.information(for: form, onChange: onChange)
-    }
-  }
-}
-
-extension Array where Element == EntityItem {
-  func orchards() -> [Orchard] {
-    return compactMap {
-      if case let .orchard(o) = $0 {
-        return o
-      } else {
-        return nil
-      }
-    }
-  }
-  
-  func workers() -> [Worker] {
-    return compactMap {
-      if case let .worker(w) = $0 {
-        return w
-      } else {
-        return nil
-      }
-    }
-  }
-  
-  func farms() -> [Farm] {
-    return compactMap {
-      if case let .farm(f) = $0 {
-        return f
-      } else {
-        return nil
-      }
+    case let .session(s): s.information(for: form, onChange: onChange)
     }
   }
 }

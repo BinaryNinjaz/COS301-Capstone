@@ -66,7 +66,7 @@ class Orchard {
       "unit": distanceUnit,
       "xDim": xDim,
       "yDim": yDim,
-      "coords": coords.map { ($0.latitude, $0.longitude) }.firbaseCoordRepresentation()
+      "coords": coords.firbaseCoordRepresentation()
     ]]
   }
 }

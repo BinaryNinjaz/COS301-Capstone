@@ -15,7 +15,6 @@ struct CollectionPoint {
 }
 
 struct WorkerCollection {
-  var count: Int
   var collectionPoints: [CollectionPoint]
 }
 
@@ -23,7 +22,7 @@ struct Tracker {
   private(set) var trackCount: Int
   private(set) var sessionStart: Date
   private(set) var lastCollection: Date
-  private(set) var collections: [Worker: WorkerCollection]
+  private(set) var collections: [Worker: [CollectionPoint]]
   
   init() {
     trackCount = 0
@@ -35,25 +34,22 @@ struct Tracker {
   mutating func collect(for worker: Worker, at loc: CLLocation) {
     guard var collection = collections[worker] else {
       let cp = CollectionPoint(location: loc, date: Date())
-      let c = WorkerCollection(count: 1, collectionPoints: [cp])
-      collections[worker] = c
+      collections[worker] = [cp]
       return
     }
     
-    collection.count += 1
-    collection.collectionPoints.append(CollectionPoint(location: loc, date: Date()))
+    collection.append(CollectionPoint(location: loc, date: Date()))
     
     collections[worker] = collection
   }
   
   mutating func pop(for worker: Worker) {
     guard var collection = collections[worker],
-      !collection.collectionPoints.isEmpty else {
+      !collection.isEmpty else {
       return
     }
     
-    collection.count -= 1
-    collection.collectionPoints.removeLast()
+    collection.removeLast()
     
     collections[worker] = collection
   }
@@ -63,14 +59,14 @@ struct Tracker {
     trackCount += 1
   }
   
-  func pathTracked() -> [(Double, Double)] {
-    var result = [(Double, Double)]()
+  func pathTracked() -> [CLLocationCoordinate2D] {
+    var result = [CLLocationCoordinate2D]()
     
     for i in 0..<trackCount {
       let d = i.description
       let lat = UserDefaults.standard.double(forKey: "lat" + d)
       let lng = UserDefaults.standard.double(forKey: "lng" + d)
-      result.append((lat, lng))
+      result.append(CLLocationCoordinate2D(latitude: lat, longitude: lng))
     }
     
     return result

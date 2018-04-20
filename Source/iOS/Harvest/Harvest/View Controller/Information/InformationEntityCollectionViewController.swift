@@ -12,7 +12,7 @@ private let reuseIdentifier = "informationEntityCell"
 
 class InformationEntityCollectionViewController: UICollectionViewController {
   
-  let entities = ["Farms", "Orchards", "Workers"]
+  let entities = ["Farms", "Orchards", "Workers", "Sessions"]
   var entity = ""
   var selectedKind: EntityItem.Kind = .none
   var goingToIndexPath: IndexPath? = nil {
@@ -133,6 +133,13 @@ class InformationEntityCollectionViewController: UICollectionViewController {
         self.goingToIndexPath = nil
       }
       
+    case "Sessions":
+      Entities.shared.getOnce(.session) { es in
+        self.selectedKind = .session
+        self.performSegue(withIdentifier: "EntityToItems", sender: self)
+        self.goingToIndexPath = nil
+      }
+      
     default:
       break
     }
@@ -145,13 +152,21 @@ extension InformationEntityCollectionViewController : UICollectionViewDelegateFl
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
-    let w = collectionView.frame.width * 0.95
+    
+    let w: CGFloat
+    if collectionView.frame.width * 0.95 < 412 {
+      w = collectionView.frame.width * 0.95
+    } else {
+      let n = CGFloat(Int(collectionView.frame.width / 412))
+      w = collectionView.frame.width / n - ((n - 1) / n)
+    }
+    
     let spacing = 64 as CGFloat
     let h = collectionView.frame.height
       - (navigationController?.navigationBar.frame.height ?? 0.0)
       - (tabBarController?.tabBar.frame.height ?? 0.0)
       - spacing
     
-    return CGSize(width: w - 2, height: h / 3)
+    return CGSize(width: w - 2, height: h / 3.5)
   }
 }

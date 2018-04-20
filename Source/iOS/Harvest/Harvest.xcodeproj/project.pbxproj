@@ -37,6 +37,8 @@
 		167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CE208A5B8B00FA605C /* DBOrchard.swift */; };
 		167448D1208A5B9800FA605C /* DBFarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D0208A5B9800FA605C /* DBFarm.swift */; };
 		167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D2208A5C3C00FA605C /* DBTracker.swift */; };
+		167448DA208A83E300FA605C /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D9208A83E300FA605C /* Session.swift */; };
+		167448DC208A897C00FA605C /* DBSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448DB208A897C00FA605C /* DBSession.swift */; };
 		168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* TrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* TrackerModel.swift */; };
@@ -112,6 +114,8 @@
 		167448CE208A5B8B00FA605C /* DBOrchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBOrchard.swift; sourceTree = "<group>"; };
 		167448D0208A5B9800FA605C /* DBFarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBFarm.swift; sourceTree = "<group>"; };
 		167448D2208A5C3C00FA605C /* DBTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTracker.swift; sourceTree = "<group>"; };
+		167448D9208A83E300FA605C /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		167448DB208A897C00FA605C /* DBSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSession.swift; sourceTree = "<group>"; };
 		168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* TrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerModel.swift; sourceTree = "<group>"; };
@@ -233,14 +237,11 @@
 		1604E4D12069597D00E9BA15 /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
-				1604E4A4206958E900E9BA15 /* SignInViewController.swift */,
-				16420FCD2069738200E1A292 /* SignUpViewController.swift */,
-				169E5193206C623F006B923E /* TrackerViewController.swift */,
-				168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */,
+				167448D5208A837400FA605C /* Sign In */,
+				167448D8208A839700FA605C /* Tracker */,
+				167448D6208A838300FA605C /* Settings */,
 				16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */,
-				167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */,
-				167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */,
-				167448C62089430C00FA605C /* EntityViewController.swift */,
+				167448D7208A838D00FA605C /* Information */,
 			);
 			path = "View Controller";
 			sourceTree = "<group>";
@@ -282,6 +283,7 @@
 				167448CE208A5B8B00FA605C /* DBOrchard.swift */,
 				167448D0208A5B9800FA605C /* DBFarm.swift */,
 				167448D2208A5C3C00FA605C /* DBTracker.swift */,
+				167448DB208A897C00FA605C /* DBSession.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -301,6 +303,7 @@
 				167448AE2089271400FA605C /* Worker.swift */,
 				167448B02089299B00FA605C /* Orchard.swift */,
 				167448B220892AE900FA605C /* Farm.swift */,
+				167448D9208A83E300FA605C /* Session.swift */,
 				167448B520892BB500FA605C /* InfoRepresentation.swift */,
 			);
 			path = Information;
@@ -315,6 +318,41 @@
 				167448BE20893B8100FA605C /* SortedSet.swift */,
 			);
 			path = SortedCollections;
+			sourceTree = "<group>";
+		};
+		167448D5208A837400FA605C /* Sign In */ = {
+			isa = PBXGroup;
+			children = (
+				1604E4A4206958E900E9BA15 /* SignInViewController.swift */,
+				16420FCD2069738200E1A292 /* SignUpViewController.swift */,
+			);
+			path = "Sign In";
+			sourceTree = "<group>";
+		};
+		167448D6208A838300FA605C /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		167448D7208A838D00FA605C /* Information */ = {
+			isa = PBXGroup;
+			children = (
+				167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */,
+				167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */,
+				167448C62089430C00FA605C /* EntityViewController.swift */,
+			);
+			path = Information;
+			sourceTree = "<group>";
+		};
+		167448D8208A839700FA605C /* Tracker */ = {
+			isa = PBXGroup;
+			children = (
+				169E5193206C623F006B923E /* TrackerViewController.swift */,
+			);
+			path = Tracker;
 			sourceTree = "<group>";
 		};
 		169E5195206C62D6006B923E /* Model */ = {
@@ -670,6 +708,7 @@
 				167448CD208A5B8100FA605C /* DMWorker.swift in Sources */,
 				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
+				167448DA208A83E300FA605C /* Session.swift in Sources */,
 				167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */,
 				167448AF2089271400FA605C /* Worker.swift in Sources */,
 				167448C9208A49F700FA605C /* FarmEntity.swift in Sources */,
@@ -685,6 +724,7 @@
 				16C82F5B20819B6E0074595C /* Ellipse.swift in Sources */,
 				16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */,
 				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,
+				167448DC208A897C00FA605C /* DBSession.swift in Sources */,
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
 				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
 				167448C320893B8200FA605C /* SortedCollection.swift in Sources */,

@@ -11,10 +11,10 @@ import CoreLocation
 import GoogleSignIn
 
 extension HarvestDB {
-  static func collect(from workers: [Worker: WorkerCollection],
+  static func collect(from workers: [Worker: [CollectionPoint]],
                       by user: (display: String, uid: String),
                       on date: Date,
-                      track: [(Double, Double)]) {
+                      track: [CLLocationCoordinate2D]) {
     let cref = ref.child(Path.yields)
     let key = cref.childByAutoId().key
     
@@ -24,7 +24,7 @@ extension HarvestDB {
       var collections = [String: Any]()
       var i = 0
       
-      for cp in c.collectionPoints {
+      for cp in c {
         let d = cp.date.timeIntervalSince1970
         let lat = cp.location.coordinate.latitude
         let lng = cp.location.coordinate.longitude

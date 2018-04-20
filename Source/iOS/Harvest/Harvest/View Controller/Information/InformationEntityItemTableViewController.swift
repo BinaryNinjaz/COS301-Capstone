@@ -10,7 +10,11 @@ import UIKit
 
 class InformationEntityItemTableViewController: UITableViewController {
   var selectedEntity: EntityItem? = nil
-  var kind: EntityItem.Kind = .none
+  var kind: EntityItem.Kind = .none {
+    didSet {
+      navigationItem.rightBarButtonItem?.isEnabled = kind != .session
+    }
+  }
   
   var items: SortedEntity? {
     return Entities.shared.items(for: kind)
@@ -61,6 +65,10 @@ class InformationEntityItemTableViewController: UITableViewController {
       let orchard = Orchard(json: [:], id: "")
       selectedEntity = .orchard(orchard)
       performSegue(withIdentifier: "EntitiesToDetail", sender: self)
+      
+    case .session:
+      break
+      
     case .none:
       break
     }
@@ -68,15 +76,23 @@ class InformationEntityItemTableViewController: UITableViewController {
   
 
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return 1
+    return kind == .session ? Entities.shared.sessionDates().count : 1
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return items?.count ?? 0
+    return kind == .session
+      ? Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[section]).count
+      : (items?.count ?? 0)
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "informationEntityItemCell", for: indexPath)
+    
+    guard kind != .session else {
+      let items = Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[indexPath.section])
+      cell.textLabel?.text = items[indexPath.row].display
+      return cell
+    }
     
     guard let item = items?[indexPath.row] else {
       return cell
@@ -89,6 +105,8 @@ class InformationEntityItemTableViewController: UITableViewController {
       cell.textLabel?.text = o.name
     case let .farm(f):
       cell.textLabel?.text = f.name
+    case let .session(s):
+      cell.textLabel?.text = s.display
     }
     
     return cell
@@ -97,6 +115,14 @@ class InformationEntityItemTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
     selectedEntity = items?[indexPath.row]
     return indexPath
+  }
+  
+  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .medium
+    let date = Entities.shared.sessionDates()[section]
+    
+    return kind == .session ? formatter.string(from: date)  : nil
   }
 
   // MARK: - Navigation
@@ -110,5 +136,5 @@ class InformationEntityItemTableViewController: UITableViewController {
       entityViewController.title = selectedEntity?.name
     }
   }
-
+  
 }

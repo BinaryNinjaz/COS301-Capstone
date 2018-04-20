@@ -26,7 +26,7 @@ struct HarvestDB {
   
   struct Path {
     static var parent: String {
-      return "" //HarvestUser.current.email.removedFirebaseInvalids()
+      return "" //HarvestUser.current.email.removedFirebaseInvalids() // FIXME
     }
     static var yields: String {
       return "\(Path.parent)/yields"
@@ -43,10 +43,10 @@ struct HarvestDB {
     static var orchards: String {
       return "\(Path.parent)/orchards"
     }
+    static var sessions: String {
+      return "\(Path.parent)/yields" // FIXME
+    }
   }
-  
-  // MARK: - Yield
-  
   
   // FIXME: -
   static func onLastSession(
@@ -59,19 +59,6 @@ struct HarvestDB {
       }
       completion(session)
     }
-  }
-}
-
-extension Array where Element == (Double, Double) {
-  func firbaseCoordRepresentation() -> [String: Any] {
-    var result = [String: Any]()
-    var id = 0
-    for (lat, lng) in self {
-      let coord = ["lat": lat, "lng": lng]
-      result[id.description] = coord
-      id += 1
-    }
-    return result
   }
 }
 
@@ -106,5 +93,44 @@ public extension UserDefaults {
   
   public func getPassword() -> String? {
     return string(forKey: "password")
+  }
+}
+
+extension Array where Element == CLLocationCoordinate2D {
+  func firbaseCoordRepresentation() -> [String: Any] {
+    var result = [String: Any]()
+    var id = 0
+    for loc in self {
+      let coord = ["lat": loc.latitude, "lng": loc.longitude]
+      result[id.description] = coord
+      id += 1
+    }
+    return result
+  }
+}
+
+extension Dictionary where Key == Worker, Value == [CollectionPoint] {
+  func firebaseCoordRepresentation() -> [String: Any] {
+    var result = [String: Any]()
+    
+    for (key, collectionPoints) in self {
+      var collections: [String: Any] = [:]
+      var i = 0
+      
+      for collection in collectionPoints {
+        collections[i.description] = [
+          "coord": [
+            "lat": collection.location.coordinate.latitude,
+            "lng": collection.location.coordinate.longitude
+          ],
+          "date": collection.date.timeIntervalSince1970
+        ]
+        i += 1
+      }
+      
+      result[key.id] = collections
+    }
+    
+    return result
   }
 }
