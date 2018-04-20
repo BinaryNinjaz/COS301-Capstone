@@ -36,3 +36,9 @@ extension Farm : Equatable {
       && lhs.details == rhs.details
   }
 }
+
+extension Farm : CustomStringConvertible {
+  var description: String {
+    return name
+  }
+}

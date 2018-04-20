@@ -8,6 +8,16 @@
 
 import Swift
 
+extension Dictionary where Key == String, Value == Any {
+  func orchards() -> [String] {
+    guard let _orchards = self["orchards"] as? [String] else {
+      return []
+    }
+    
+    return _orchards
+  }
+}
+
 class Worker {
   enum Kind {
     case worker, foreman
@@ -15,7 +25,7 @@ class Worker {
   
   var firstname: String
   var lastname: String
-  var assignedOrchard: String
+  var assignedOrchards: [String]
   var kind: Kind
   var details: String
   var email: String
@@ -26,7 +36,7 @@ class Worker {
     self.id = id
     firstname = json["name"] as? String ?? ""
     lastname = json["surname"] as? String ?? ""
-    assignedOrchard = json["orchard"] as? String ?? ""
+    assignedOrchards = json.orchards()
     details = json["info"] as? String ?? ""
     email = json["email"] as? String ?? ""
     
@@ -44,7 +54,7 @@ class Worker {
     return [id: [
       "name": firstname,
       "surname": lastname,
-      "orchard": assignedOrchard,
+      "orchards": assignedOrchards,
       "info": details,
       "email": email,
       "type": kind == .foreman ? "Foreman" : "Worker"
@@ -57,7 +67,7 @@ extension Worker : Hashable {
     return lhs.id == rhs.id
       && lhs.firstname == rhs.firstname
       && lhs.lastname == rhs.lastname
-      && lhs.assignedOrchard == rhs.assignedOrchard
+      && lhs.assignedOrchards == rhs.assignedOrchards
       && lhs.kind == rhs.kind
       && lhs.details == rhs.details
       && lhs.email == rhs.email
@@ -65,5 +75,11 @@ extension Worker : Hashable {
   
   var hashValue: Int {
     return "\(firstname)\(lastname)".hashValue
+  }
+}
+
+extension Worker : CustomStringConvertible {
+  var description: String {
+    return firstname + " " + lastname
   }
 }

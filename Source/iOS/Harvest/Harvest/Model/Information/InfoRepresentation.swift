@@ -16,30 +16,46 @@ extension Worker {
     
     let orchardSection = SelectableSection<ListCheckRow<Orchard>>(
       "Assigned Orchard",
-      selectionType: .singleSelection(enableDeselection: true))
+      selectionType: .multipleSelection)
     
     for (_, orchardEntity) in orchards {
       let orchard = orchardEntity.orchard!
       orchardSection <<< ListCheckRow<Orchard>(orchard.name) { row in
         row.title = orchard.name
         row.selectableValue = orchard
-        row.value = orchard.id == assignedOrchard ? orchard : nil
+        row.value = assignedOrchards.contains(orchard.id) ? orchard : nil
       }.onChange { (row) in
-        self.tempory?.assignedOrchard = row.value?.id ?? ""
-        onChange()
+        if let sel = row.value {
+          guard let idx = self.tempory?.assignedOrchards.index(of: orchard.id) else {
+            self.tempory?.assignedOrchards.append(orchard.id)
+            onChange()
+            return
+          }
+          self.tempory?.assignedOrchards[idx] = sel.id
+          onChange()
+        } else {
+          print(">>>>", self.tempory?.assignedOrchards as Any, orchard.id)
+          guard let idx = self.tempory?.assignedOrchards.index(of: orchard.id) else {
+            return
+          }
+          self.tempory?.assignedOrchards.remove(at: idx)
+          onChange()
+        }
       }
     }
     
-    let firstnameRow = TextRow() { row in
+    let firstnameRow = NameRow() { row in
       row.title = "Worker Name"
       row.value = firstname
+      row.placeholder = "Firstname"
     }.onChange { (row) in
       self.tempory?.firstname = row.value ?? ""
       onChange()
     }
-    let lastnameRow = TextRow() { row in
+    let lastnameRow = NameRow() { row in
       row.title = "Worker Surname"
       row.value = lastname
+      row.placeholder = "Surname"
     }.onChange { (row) in
       self.tempory?.lastname = row.value ?? ""
       onChange()
@@ -58,6 +74,7 @@ extension Worker {
       })
       row.title = "Email"
       row.value = email
+      row.placeholder = "henry@gmail.com"
     }.onChange { row in
       self.tempory?.email = row.value ?? ""
       onChange()
@@ -65,6 +82,7 @@ extension Worker {
     
     let infoRow = TextAreaRow() { row in
       row.value = details
+      row.placeholder = "Any extra information"
     }.onChange { row in
       self.tempory?.details = row.value ?? ""
       onChange()
@@ -90,9 +108,10 @@ extension Farm {
   func information(for form: Form, onChange: @escaping () -> ()) {
     tempory = Farm(json: json()[id] ?? [:], id: id)
     
-    let nameRow = TextRow() { row in
+    let nameRow = NameRow() { row in
       row.title = "Farm Name"
       row.value = name
+      row.placeholder = "Name of the farm"
     }.onChange { row in
       self.tempory?.name = row.value ?? ""
       onChange()
@@ -100,6 +119,7 @@ extension Farm {
     let detailsRow = TextAreaRow() { row in
       row.title = "Details"
       row.value = details
+      row.placeholder = "Any extra information"
     }.onChange { row in
       self.tempory?.details = row.value ?? ""
       onChange()
@@ -117,27 +137,12 @@ extension Orchard {
   func information(for form: Form, onChange: @escaping () -> ()) {
     tempory = Orchard(json: json()[id] ?? [:], id: id)
     
-    let farmSelection = SelectableSection<ListCheckRow<Farm>>(
-      "Assigned Farm",
-      selectionType: .singleSelection(enableDeselection: true))
-    
     let farms = Entities.shared.items(for: .farm)!
     
-    for (_, farmEntity) in farms {
-      let farm = farmEntity.farm!
-      farmSelection <<< ListCheckRow<Farm>(farm.name) { row in
-        row.title = farm.name
-        row.selectableValue = farm
-        row.value = farm.id == assignedFarm ? farm : nil
-      }.onChange { (row) in
-        self.tempory?.assignedFarm = row.value?.id ?? ""
-        onChange()
-      }
-    }
-    
-    let nameRow = TextRow() { row in
+    let nameRow = NameRow() { row in
       row.title = "Orchard Name"
       row.value = name
+      row.placeholder = "Name of the orchard"
     }.onChange { row in
       self.tempory?.name = row.value ?? ""
       onChange()
@@ -146,14 +151,16 @@ extension Orchard {
     let cropRow = TextRow() { row in
       row.title = "Orchard Crop"
       row.value = crop
+      row.placeholder = "Crop farmed on the orchard"
     }.onChange { row in
       self.tempory?.crop = row.value ?? ""
       onChange()
     }
     
     let bagMassRow = DecimalRow() { row in
-      row.title = "Mean Bag Mass"
+      row.title = "Bag Mass"
       row.value = bagMass
+      row.placeholder = "Average mass of a bag"
     }.onChange { row in
       self.tempory?.bagMass = row.value ?? 0.0
       onChange()
@@ -170,6 +177,7 @@ extension Orchard {
     let widthRow = DecimalRow() { row in
       row.title = "width"
       row.value = xDim
+      row.placeholder = "Horizontal Spacing"
     }.onChange { row in
       self.tempory?.xDim = row.value ?? 0.0
       onChange()
@@ -178,14 +186,16 @@ extension Orchard {
     let heightRow = DecimalRow() { row in
       row.title = "height"
       row.value = yDim
+      row.placeholder = "Vertical Spacing"
     }.onChange { row in
       self.tempory?.yDim = row.value ?? 0.0
       onChange()
     }
     
     let unitRow = TextRow() { row in
-      row.title = "Distance measurement unit (eg. m)"
+      row.title = "Distance unit"
       row.value = distanceUnit == "" ? "m" : distanceUnit
+      row.placeholder = "Measurement unit (eg. m)"
     }.onChange { row in
       self.tempory?.distanceUnit = row.value ?? ""
       onChange()
@@ -193,8 +203,26 @@ extension Orchard {
     
     let detailsRow = TextAreaRow { row in
       row.value = details
+      row.placeholder = "Any extra information"
     }.onChange { row in
       self.tempory?.details = row.value ?? ""
+      onChange()
+    }
+    
+    let farmSelection = PickerRow<Farm>() { row in
+      row.options = []
+      var aFarm: Farm? = nil
+      
+      for (_, farmEntity) in farms {
+        let farm = farmEntity.farm!
+        row.options.append(farm)
+        if farm.id == assignedFarm {
+          aFarm = farm
+        }
+      }
+      row.value = aFarm
+    }.onChange { (row) in
+      self.tempory?.assignedFarm = row.value?.id ?? ""
       onChange()
     }
     
@@ -219,7 +247,8 @@ extension Orchard {
       +++ Section("Information")
       <<< detailsRow
     
-      +++ farmSelection
+      +++ Section("Farm Selection")
+      <<< farmSelection
   }
 }
 

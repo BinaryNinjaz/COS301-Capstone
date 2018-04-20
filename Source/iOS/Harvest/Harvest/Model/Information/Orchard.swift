@@ -87,6 +87,12 @@ extension Orchard : Equatable {
   }
 }
 
+extension Orchard : CustomStringConvertible {
+  var description: String {
+    return name
+  }
+}
+
 extension CLLocationCoordinate2D : Equatable {
   public static func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
     return lhs.latitude == rhs.latitude
