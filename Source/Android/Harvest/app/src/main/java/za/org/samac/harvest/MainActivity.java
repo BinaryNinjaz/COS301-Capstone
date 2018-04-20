@@ -51,10 +51,11 @@ public class MainActivity extends AppCompatActivity {
     int trackCount = 0;
     boolean namesShowing = false;
 
+    //used same names as IDs in xml
     private Button btnStart;
     private ProgressBar progressBar;
     private RelativeLayout relLayout;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
     private WorkerRecyclerViewAdapter adapter;
     private LocationManager locationManager;
     private Location location;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("workers");
+        DatabaseReference ref = database.getReference("workers");//Firebase reference
         Query q = ref.orderByChild("name");
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -89,8 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 if (dataSnapshot.getValue() != null) {
                     collectWorkers((Map<String, Object>) dataSnapshot.getValue());
                 }
-                progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);//remove progress bar
                 relLayout.setVisibility(View.VISIBLE);
+                //user pressed start and all went well with retrieving data
             }
 
             @Override
@@ -101,17 +103,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);//stet R to be referenced from specified xml file
         relLayout = findViewById(R.id.relLayout);
         progressBar = findViewById(R.id.progressBar);
         btnStart = findViewById(R.id.button_start);
-        btnStart.setTag("green");
+        btnStart.setTag("green");//it is best not to use the tag to identify button status
 
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         relLayout.setVisibility(View.GONE);
 
-        workers = new ArrayList<>();
-        recyclerView = findViewById(R.id.recyclerView);
+        workers = new ArrayList<>();//stores worker names
+        recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, GridLayoutManager.VERTICAL));
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setVisibility(View.GONE);
 
-
+        //bottom navigation bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -192,12 +194,13 @@ public class MainActivity extends AppCompatActivity {
             int h = (int) ((elapsedTime / 1000) / 3600);
             int m = (int) (((elapsedTime / 1000) / 60) % 60);
             int s = (int) ((elapsedTime / 1000) % 60);
+            //this is the output of the pop up when the user clicks stop (the session)
             String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
             String msg = "A total of " + adapter.totalBagsCollected + " bags have been collected in " + timeTaken + ".";
             if (locationEnabled) {
                 locationManager.removeUpdates(mLocationListener);
             }
-            adapter.totalBagsCollected = 0;
+            adapter.totalBagsCollected = 0;//reset total number of bags collected for all workers
             adapter.setPlusEnabled(false);
             adapter.setMinusEnabled(false);
             collections collectionObj = adapter.getCollectionObj();
@@ -214,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
             });
             dlgAlert.setCancelable(false);
             dlgAlert.create().show();
-            //
+
             btnStart.setBackgroundColor(Color.parseColor("#FF0CCB29"));
 
             btnStart.setText("Start");
