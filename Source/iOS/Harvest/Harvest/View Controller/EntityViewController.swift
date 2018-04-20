@@ -40,16 +40,19 @@ class EntityViewController: FormViewController {
       if let t = f.tempory {
         HarvestDB.save(farm: t)
         f.tempory = nil
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
       }
     case let .orchard(o):
       if let t = o.tempory {
         HarvestDB.save(orchard: t)
         o.tempory = nil
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
       }
     case let .worker(w):
       if let t = w.tempory {
         HarvestDB.save(worker: t)
         w.tempory = nil
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
       }
     }
   }

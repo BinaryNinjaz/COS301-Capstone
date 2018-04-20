@@ -829,7 +829,7 @@ Expected Yield: 0</string>
             </objects>
             <point key="canvasLocation" x="3084" y="757.87106446776613"/>
         </scene>
-        <!--Information Entity Item Table View Controller-->
+        <!--Title-->
         <scene sceneID="DUs-2r-oz4">
             <objects>
                 <tableViewController id="GXM-Pb-AvJ" customClass="InformationEntityItemTableViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
@@ -855,7 +855,7 @@ Expected Yield: 0</string>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="s2o-6U-1Nl" kind="show" id="5Mu-K2-yP6"/>
+                                    <segue destination="s2o-6U-1Nl" kind="show" identifier="EntitiesToDetail" id="5Mu-K2-yP6"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -864,6 +864,13 @@ Expected Yield: 0</string>
                             <outlet property="delegate" destination="GXM-Pb-AvJ" id="E3w-sS-bMt"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Title" id="xBX-qF-BND">
+                        <barButtonItem key="rightBarButtonItem" title="New" id="huK-nP-j0R">
+                            <connections>
+                                <action selector="newButtonTouchUp:" destination="GXM-Pb-AvJ" id="Uxi-n5-xp7"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a0L-PU-yzu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

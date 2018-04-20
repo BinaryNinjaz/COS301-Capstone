@@ -40,11 +40,32 @@ class InformationEntityItemTableViewController: UITableViewController {
     if let sel = tableView.indexPathForSelectedRow {
       tableView.deselectRow(at: sel, animated: false)
     }
+    tableView.reloadData()
   }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
+  
+  @IBAction func newButtonTouchUp(_ sender: UIBarButtonItem) {
+    switch kind {
+    case .farm:
+      let farm = Farm(json: [:], id: "")
+      selectedEntity = .farm(farm)
+      performSegue(withIdentifier: "EntitiesToDetail", sender: self)
+    case .worker:
+      let worker = Worker(json: [:], id: "")
+      selectedEntity = .worker(worker)
+      performSegue(withIdentifier: "EntitiesToDetail", sender: self)
+    case .orchard:
+      let orchard = Orchard(json: [:], id: "")
+      selectedEntity = .orchard(orchard)
+      performSegue(withIdentifier: "EntitiesToDetail", sender: self)
+    case .none:
+      break
+    }
+  }
+  
 
   override func numberOfSections(in tableView: UITableView) -> Int {
     return 1

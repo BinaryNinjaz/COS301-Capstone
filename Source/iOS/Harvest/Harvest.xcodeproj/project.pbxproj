@@ -32,6 +32,11 @@
 		167448C520893B8200FA605C /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C120893B8200FA605C /* SortedArray.swift */; };
 		167448C72089430C00FA605C /* EntityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C62089430C00FA605C /* EntityViewController.swift */; };
 		167448C9208A49F700FA605C /* FarmEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C8208A49F700FA605C /* FarmEntity.swift */; };
+		167448CB208A5B5D00FA605C /* DBAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CA208A5B5D00FA605C /* DBAuth.swift */; };
+		167448CD208A5B8100FA605C /* DMWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CC208A5B8100FA605C /* DMWorker.swift */; };
+		167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CE208A5B8B00FA605C /* DBOrchard.swift */; };
+		167448D1208A5B9800FA605C /* DBFarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D0208A5B9800FA605C /* DBFarm.swift */; };
+		167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D2208A5C3C00FA605C /* DBTracker.swift */; };
 		168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* TrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* TrackerModel.swift */; };
@@ -102,6 +107,11 @@
 		167448C120893B8200FA605C /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
 		167448C62089430C00FA605C /* EntityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityViewController.swift; sourceTree = "<group>"; };
 		167448C8208A49F700FA605C /* FarmEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmEntity.swift; sourceTree = "<group>"; };
+		167448CA208A5B5D00FA605C /* DBAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBAuth.swift; sourceTree = "<group>"; };
+		167448CC208A5B8100FA605C /* DMWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMWorker.swift; sourceTree = "<group>"; };
+		167448CE208A5B8B00FA605C /* DBOrchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBOrchard.swift; sourceTree = "<group>"; };
+		167448D0208A5B9800FA605C /* DBFarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBFarm.swift; sourceTree = "<group>"; };
+		167448D2208A5C3C00FA605C /* DBTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTracker.swift; sourceTree = "<group>"; };
 		168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* TrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerModel.swift; sourceTree = "<group>"; };
@@ -267,6 +277,11 @@
 			isa = PBXGroup;
 			children = (
 				16420FCB2069718400E1A292 /* Database.swift */,
+				167448CA208A5B5D00FA605C /* DBAuth.swift */,
+				167448CC208A5B8100FA605C /* DMWorker.swift */,
+				167448CE208A5B8B00FA605C /* DBOrchard.swift */,
+				167448D0208A5B9800FA605C /* DBFarm.swift */,
+				167448D2208A5C3C00FA605C /* DBTracker.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -636,10 +651,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
+				167448D1208A5B9800FA605C /* DBFarm.swift in Sources */,
 				167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
+				167448CB208A5B5D00FA605C /* DBAuth.swift in Sources */,
 				1604E4A5206958E900E9BA15 /* SignInViewController.swift in Sources */,
 				1604E4A3206958E900E9BA15 /* AppDelegate.swift in Sources */,
 				16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */,
@@ -650,11 +667,14 @@
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
 				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
+				167448CD208A5B8100FA605C /* DMWorker.swift in Sources */,
 				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
+				167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */,
 				167448AF2089271400FA605C /* Worker.swift in Sources */,
 				167448C9208A49F700FA605C /* FarmEntity.swift in Sources */,
 				167448B12089299B00FA605C /* Orchard.swift in Sources */,
+				167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */,
 				16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */,
 				167448C72089430C00FA605C /* EntityViewController.swift in Sources */,
 				16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */,
