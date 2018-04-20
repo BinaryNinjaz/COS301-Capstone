@@ -254,7 +254,7 @@
         <!--Last Session-->
         <scene sceneID="UxO-mw-jlo">
             <objects>
-                <viewController id="YDK-CO-F7N" customClass="MapViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="sessionTrackedViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="YDK-CO-F7N" customClass="MapViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6NQ-cT-1Kh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

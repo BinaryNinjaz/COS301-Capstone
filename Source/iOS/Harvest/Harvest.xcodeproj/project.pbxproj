@@ -39,6 +39,7 @@
 		167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D2208A5C3C00FA605C /* DBTracker.swift */; };
 		167448DA208A83E300FA605C /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D9208A83E300FA605C /* Session.swift */; };
 		167448DC208A897C00FA605C /* DBSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448DB208A897C00FA605C /* DBSession.swift */; };
+		167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448DD208A9F4900FA605C /* SessionEurekaCell.swift */; };
 		168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* TrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* TrackerModel.swift */; };
@@ -116,6 +117,7 @@
 		167448D2208A5C3C00FA605C /* DBTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTracker.swift; sourceTree = "<group>"; };
 		167448D9208A83E300FA605C /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		167448DB208A897C00FA605C /* DBSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSession.swift; sourceTree = "<group>"; };
+		167448DD208A9F4900FA605C /* SessionEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionEurekaCell.swift; sourceTree = "<group>"; };
 		168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* TrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerModel.swift; sourceTree = "<group>"; };
@@ -395,6 +397,7 @@
 				16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */,
 				16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */,
 				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
+				167448DD208A9F4900FA605C /* SessionEurekaCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -689,6 +692,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
+				167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */,
 				167448D1208A5B9800FA605C /* DBFarm.swift in Sources */,
 				167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */,

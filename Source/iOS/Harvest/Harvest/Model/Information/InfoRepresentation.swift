@@ -315,7 +315,47 @@ extension Orchard {
 
 extension Session {
   func information(for form: Form, onChange: @escaping () -> ()) {
+    tempory = Session(json: json(), id: id)
     
+    let display = NameRow() { row in
+      row.title = "Foreman"
+      row.value = self.display
+      row.placeholder = "Name of the foreman"
+    }.onChange { row in
+      self.tempory?.display = row.value ?? ""
+      onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
+    }
+    
+    let startDate = DateTimeRow() { row in
+      row.title = "Time Started"
+      row.value = self.startDate
+    }.onChange { row in
+      self.tempory?.startDate = row.value ?? Date()
+      onChange()
+    }
+    
+    let endDate = DateTimeRow() { row in
+      row.title = "Time Ended"
+      row.value = self.endDate
+    }.onChange { row in
+      self.tempory?.endDate = row.value ?? Date()
+      onChange()
+    }
+    
+    form
+      +++ Section("Foreman")
+      <<< display
+    
+      +++ Section("Duration")
+      <<< startDate
+      <<< endDate
+    
+      +++ Section("Tracking")
+      <<< SessionRow()
   }
 }
 

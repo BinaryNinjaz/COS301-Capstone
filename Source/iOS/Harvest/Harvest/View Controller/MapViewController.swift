@@ -9,9 +9,15 @@
 import UIKit
 import Firebase
 import GoogleMaps
+import Eureka
 
-
-class MapViewController: UIViewController, GMSMapViewDelegate {
+public class MapViewController: UIViewController, GMSMapViewDelegate, TypedRowControllerType {
+  public var row: RowOf<Session>!
+  
+  public typealias RowValue = Session
+  
+  public var onDismissCallback: ((UIViewController) -> Void)?
+  
   var locationManager = CLLocationManager()
   var currentLocation: CLLocation?
   var zoomLevel: Float = 15.0
@@ -22,7 +28,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
   @IBOutlet weak var mapView: GMSMapView!
   @IBOutlet weak var titleLabel: UILabel!
   
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     
     mapView.isMyLocationEnabled = true
@@ -118,7 +124,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
     
   }
   
-  override func didReceiveMemoryWarning() {
+  public override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
@@ -127,7 +133,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
 
 extension MapViewController : CLLocationManagerDelegate {
   // Handle incoming location events.
-  func locationManager(
+  public func locationManager(
     _ manager: CLLocationManager,
     didUpdateLocations locations: [CLLocation]
     ) {
@@ -161,7 +167,7 @@ extension MapViewController : CLLocationManagerDelegate {
   }
   
   // Handle authorization for the location manager.
-  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+  public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
     switch status {
     case .restricted:
       print("Location access was restricted.")
@@ -176,7 +182,7 @@ extension MapViewController : CLLocationManagerDelegate {
   }
   
   // Handle location manager errors.
-  func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+  public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
     locationManager.stopUpdatingLocation()
     print("Error: \(error)")
   }

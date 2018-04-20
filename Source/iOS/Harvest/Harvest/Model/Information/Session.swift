@@ -85,7 +85,7 @@ extension Dictionary where Key == String, Value == Any {
 }
 
 
-class Session {
+public class Session {
   
   var endDate: Date
   var startDate: Date
@@ -127,7 +127,7 @@ class Session {
 }
 
 extension Session : Equatable {
-  static func ==(lhs: Session, rhs: Session) -> Bool {
+  public static func ==(lhs: Session, rhs: Session) -> Bool {
     return lhs.id == rhs.id
       && lhs.startDate == rhs.startDate
       && lhs.endDate == rhs.endDate
@@ -139,7 +139,7 @@ extension Session : Equatable {
 }
 
 extension Session : CustomStringConvertible {
-  var description: String {
+  public var description: String {
     let formatter = DateFormatter()
     formatter.dateStyle = .medium
     
