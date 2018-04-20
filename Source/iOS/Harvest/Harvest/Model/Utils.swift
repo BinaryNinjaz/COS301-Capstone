@@ -65,7 +65,9 @@ extension UIColor {
     }
   }
   
-  
+  static var titleLabel: UIColor {
+    return UIColor(white: 0.85, alpha: 1)
+  }
 }
 
 extension CAGradientLayer {

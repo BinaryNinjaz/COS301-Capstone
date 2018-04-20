@@ -34,7 +34,6 @@ extension Worker {
           self.tempory?.assignedOrchards[idx] = sel.id
           onChange()
         } else {
-          print(">>>>", self.tempory?.assignedOrchards as Any, orchard.id)
           guard let idx = self.tempory?.assignedOrchards.index(of: orchard.id) else {
             return
           }
@@ -51,6 +50,10 @@ extension Worker {
     }.onChange { (row) in
       self.tempory?.firstname = row.value ?? ""
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
     }
     let lastnameRow = NameRow() { row in
       row.title = "Worker Surname"
@@ -59,6 +62,10 @@ extension Worker {
     }.onChange { (row) in
       self.tempory?.lastname = row.value ?? ""
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
     }
     
     let isForemanRow = SwitchRow("isForemanTag") { row in
@@ -78,6 +85,10 @@ extension Worker {
     }.onChange { row in
       self.tempory?.email = row.value ?? ""
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
     }
     
     let infoRow = TextAreaRow() { row in
@@ -115,6 +126,10 @@ extension Farm {
     }.onChange { row in
       self.tempory?.name = row.value ?? ""
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
     }
     let detailsRow = TextAreaRow() { row in
       row.title = "Details"
@@ -146,6 +161,10 @@ extension Orchard {
     }.onChange { row in
       self.tempory?.name = row.value ?? ""
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
     }
     
     let cropRow = TextRow() { row in
@@ -155,6 +174,10 @@ extension Orchard {
     }.onChange { row in
       self.tempory?.crop = row.value ?? ""
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
     }
     
     let bagMassRow = DecimalRow() { row in
@@ -164,6 +187,17 @@ extension Orchard {
     }.onChange { row in
       self.tempory?.bagMass = row.value ?? 0.0
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
+      if let dt = cell.textField.text {
+        cell.textField.text = Double(dt) == 0.0 ? "" : dt
+      }
+    }.onCellSelection { (cell, row) in
+      if let dt = cell.textField.text {
+        cell.textField.text = Double(dt) == 0.0 ? "" : dt
+      }
     }
     
     let dateRow = DateRow() { row in
@@ -175,21 +209,43 @@ extension Orchard {
     }
     
     let widthRow = DecimalRow() { row in
-      row.title = "width"
+      row.title = "Width"
       row.value = xDim
       row.placeholder = "Horizontal Spacing"
     }.onChange { row in
       self.tempory?.xDim = row.value ?? 0.0
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
+      if let dt = cell.textField.text {
+        cell.textField.text = Double(dt) == 0.0 ? "" : dt
+      }
+    }.onCellSelection { (cell, row) in
+      if let dt = cell.textField.text {
+        cell.textField.text = Double(dt) == 0.0 ? "" : dt
+      }
     }
     
     let heightRow = DecimalRow() { row in
-      row.title = "height"
+      row.title = "Height"
       row.value = yDim
       row.placeholder = "Vertical Spacing"
     }.onChange { row in
       self.tempory?.yDim = row.value ?? 0.0
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
+      if let dt = cell.textField.text {
+        cell.textField.text = Double(dt) == 0.0 ? "" : dt
+      }
+    }.onCellSelection { (cell, row) in
+      if let dt = cell.textField.text {
+        cell.textField.text = Double(dt) == 0.0 ? "" : dt
+      }
     }
     
     let unitRow = TextRow() { row in
@@ -199,6 +255,11 @@ extension Orchard {
     }.onChange { row in
       self.tempory?.distanceUnit = row.value ?? ""
       onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
+      cell.textField.autocapitalizationType = .none
     }
     
     let detailsRow = TextAreaRow { row in
