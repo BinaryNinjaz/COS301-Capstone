@@ -31,6 +31,7 @@
 		167448C420893B8200FA605C /* SortedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C020893B8200FA605C /* SortedDictionary.swift */; };
 		167448C520893B8200FA605C /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C120893B8200FA605C /* SortedArray.swift */; };
 		167448C72089430C00FA605C /* EntityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C62089430C00FA605C /* EntityViewController.swift */; };
+		167448C9208A49F700FA605C /* FarmEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C8208A49F700FA605C /* FarmEntity.swift */; };
 		168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* TrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* TrackerModel.swift */; };
@@ -100,6 +101,7 @@
 		167448C020893B8200FA605C /* SortedDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedDictionary.swift; sourceTree = "<group>"; };
 		167448C120893B8200FA605C /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
 		167448C62089430C00FA605C /* EntityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityViewController.swift; sourceTree = "<group>"; };
+		167448C8208A49F700FA605C /* FarmEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmEntity.swift; sourceTree = "<group>"; };
 		168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* TrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerModel.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 		167448AD208926E000FA605C /* Information */ = {
 			isa = PBXGroup;
 			children = (
+				167448C8208A49F700FA605C /* FarmEntity.swift */,
 				167448AE2089271400FA605C /* Worker.swift */,
 				167448B02089299B00FA605C /* Orchard.swift */,
 				167448B220892AE900FA605C /* Farm.swift */,
@@ -650,6 +653,7 @@
 				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
 				167448AF2089271400FA605C /* Worker.swift in Sources */,
+				167448C9208A49F700FA605C /* FarmEntity.swift in Sources */,
 				167448B12089299B00FA605C /* Orchard.swift in Sources */,
 				16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */,
 				167448C72089430C00FA605C /* EntityViewController.swift in Sources */,

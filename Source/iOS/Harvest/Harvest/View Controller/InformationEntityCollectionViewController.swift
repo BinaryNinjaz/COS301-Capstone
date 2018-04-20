@@ -10,27 +10,11 @@ import UIKit
 
 private let reuseIdentifier = "informationEntityCell"
 
-enum EntityItem {
-  case farm(Farm)
-  case orchard(Orchard)
-  case worker(Worker)
-  case userInfo(Any)
-  
-  var name: String {
-    switch self {
-    case let .farm(f): return f.name
-    case let .orchard(o): return o.name
-    case let .worker(w): return w.firstname + " " + w.lastname
-    case .userInfo: return ""
-    }
-  }
-}
-
 class InformationEntityCollectionViewController: UICollectionViewController {
   
   let entities = ["Farms", "Orchards", "Workers"]
   var entity = ""
-  var items = SortedDictionary<String, EntityItem>(<)
+  var selectedKind: EntityItem.Kind = .none
   var goingToIndexPath: IndexPath? = nil {
     willSet {
       if let currentIndexPath = goingToIndexPath {
@@ -51,8 +35,8 @@ class InformationEntityCollectionViewController: UICollectionViewController {
   }
   
   override func viewDidAppear(_ animated: Bool) {
-    items = SortedDictionary<String, EntityItem>(<)
     entity = ""
+    selectedKind = .none
   }
 
   override func didReceiveMemoryWarning() {
@@ -70,8 +54,8 @@ class InformationEntityCollectionViewController: UICollectionViewController {
     switch vc {
     case is InformationEntityItemTableViewController:
       let tableViewController = vc as! InformationEntityItemTableViewController
-      tableViewController.items = items
       tableViewController.navigationItem.title = entity
+      tableViewController.kind = selectedKind
       
     default:
       break
@@ -79,7 +63,7 @@ class InformationEntityCollectionViewController: UICollectionViewController {
   }
   
   override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-    if items.isEmpty {
+    if selectedKind == .none {
       return false
     }
     return true
@@ -129,41 +113,22 @@ class InformationEntityCollectionViewController: UICollectionViewController {
     
     switch entity {
     case "Workers":
-      HarvestDB.getWorkers { (workers) in
-        HarvestDB.getOrchards({ (orchards) in
-          self.items = SortedDictionary(
-            uniqueKeysWithValues: workers.map { worker in
-              return (worker.firstname + " " + worker.lastname, .worker(worker))
-          }, <)
-          self.items["___orchards___"] = .userInfo(orchards.map { EntityItem.orchard($0) })
-          Entities.shared.workers = items
-          self.performSegue(withIdentifier: "EntityToItems", sender: self)
-          self.goingToIndexPath = nil
-        })
-        
+      Entities.shared.getMultiplesOnce([.worker, .orchard]) { es in
+        self.selectedKind = .worker
+        self.performSegue(withIdentifier: "EntityToItems", sender: self)
+        self.goingToIndexPath = nil
       }
       
     case "Orchards":
-      HarvestDB.getOrchards { (orchards) in
-        HarvestDB.getFarms({ (farms) in
-          self.items = SortedDictionary(
-            uniqueKeysWithValues: orchards.map { orchard in
-              return (orchard.name, .orchard(orchard))
-          }, <)
-          self.items["___farms___"] = .userInfo(farms.map { EntityItem.farm($0) })
-          Entities.shared.orchards = items
-          self.performSegue(withIdentifier: "EntityToItems", sender: self)
-          self.goingToIndexPath = nil
-        })
+      Entities.shared.getMultiplesOnce([.orchard, .farm]) { es in
+        self.selectedKind = .orchard
+        self.performSegue(withIdentifier: "EntityToItems", sender: self)
+        self.goingToIndexPath = nil
       }
       
     case "Farms":
-      HarvestDB.getFarms { (farms) in
-        self.items = SortedDictionary(
-          uniqueKeysWithValues: farms.map { farm in
-            return (farm.name, .farm(farm))
-        }, <)
-        Entities.shared.farms = items
+      Entities.shared.getOnce(.farm) { es in
+        self.selectedKind = .farm
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
       }

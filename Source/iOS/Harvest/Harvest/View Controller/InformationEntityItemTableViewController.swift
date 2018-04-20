@@ -9,11 +9,31 @@
 import UIKit
 
 class InformationEntityItemTableViewController: UITableViewController {
-  var items = SortedDictionary<String, EntityItem>(<)
   var selectedEntity: EntityItem? = nil
+  var kind: EntityItem.Kind = .none
+  
+  var items: SortedEntity? {
+    return Entities.shared.items(for: kind)
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    refreshControl = UIRefreshControl()
+    refreshControl?.addTarget(self,
+                             action: #selector(refreshList(_:)),
+                             for: .valueChanged)
+    
+    if refreshControl != nil {
+      tableView.addSubview(refreshControl!)
+    }
+  }
+  
+  @objc func refreshList(_ refreshControl: UIRefreshControl) {
+    Entities.shared.getOnce(kind) { (es) in
+      self.refreshControl?.endRefreshing()
+      self.tableView.reloadData();
+    }
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -31,13 +51,13 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return items.count
+    return items?.count ?? 0
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "informationEntityItemCell", for: indexPath)
     
-    guard let item = items[indexPath.row] else {
+    guard let item = items?[indexPath.row] else {
       return cell
     }
     
@@ -48,15 +68,13 @@ class InformationEntityItemTableViewController: UITableViewController {
       cell.textLabel?.text = o.name
     case let .farm(f):
       cell.textLabel?.text = f.name
-    case .userInfo:
-      break
     }
     
     return cell
   }
   
   override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-    selectedEntity = items[indexPath.row]
+    selectedEntity = items?[indexPath.row]
     return indexPath
   }
 
@@ -69,20 +87,6 @@ class InformationEntityItemTableViewController: UITableViewController {
     if let entityViewController = vc as? EntityViewController {
       entityViewController.entity = selectedEntity
       entityViewController.title = selectedEntity?.name
-      if navigationItem.title == "Workers" {
-        guard let item = items["___orchards___"],
-          case let .userInfo(userInfo) = item else {
-          return
-        }
-        entityViewController.other = userInfo as? [EntityItem] ?? []
-      } else if navigationItem.title == "Orchards" {
-        guard let item = items["___farms___"],
-          case let .userInfo(userInfo) = item else {
-            return
-        }
-        entityViewController.other = userInfo as? [EntityItem] ?? []
-      }
-      
     }
   }
 

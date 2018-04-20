@@ -880,7 +880,7 @@ Expected Yield: 0</string>
                         <viewLayoutGuide key="safeArea" id="Qkx-5z-2hx"/>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="sHH-Xw-rQH">
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="rtm-UZ-IuW">
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Save" id="rtm-UZ-IuW">
                             <connections>
                                 <action selector="saveButtonTouchUp:" destination="s2o-6U-1Nl" id="uC0-or-tOk"/>
                             </connections>

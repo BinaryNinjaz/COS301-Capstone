@@ -10,14 +10,15 @@ import Eureka
 
 class EntityViewController: FormViewController {
   var entity: EntityItem? = nil
-  var other: [EntityItem] = []
   
   @IBOutlet weak var saveButton: UIBarButtonItem!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    entity?.information(using: other, for: form)
+    entity?.information(for: form) {
+      self.navigationItem.rightBarButtonItem?.isEnabled = true
+    }
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -50,9 +51,6 @@ class EntityViewController: FormViewController {
         HarvestDB.save(worker: t)
         w.tempory = nil
       }
-      
-    case .userInfo:
-      break
     }
   }
   

@@ -61,7 +61,7 @@ class Orchard {
       "crop": crop,
       "date": date.timeIntervalSince1970,
       "farm": assignedFarm,
-      "further": details,
+      "info": details,
       "name": name,
       "unit": distanceUnit,
       "xDim": xDim,
@@ -73,6 +73,23 @@ class Orchard {
 
 extension Orchard : Equatable {
   static func ==(lhs: Orchard, rhs: Orchard) -> Bool {
-    return lhs.name == rhs.name
+    return lhs.id == rhs.id
+      && lhs.bagMass == rhs.bagMass
+      && lhs.crop == rhs.crop
+      && lhs.date == rhs.date
+      && lhs.assignedFarm == rhs.assignedFarm
+      && lhs.details == rhs.details
+      && lhs.name == rhs.name
+      && lhs.distanceUnit == rhs.distanceUnit
+      && lhs.xDim == rhs.xDim
+      && lhs.yDim == rhs.yDim
+      && lhs.coords == rhs.coords
+  }
+}
+
+extension CLLocationCoordinate2D : Equatable {
+  public static func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+    return lhs.latitude == rhs.latitude
+      && lhs.longitude == rhs.longitude
   }
 }

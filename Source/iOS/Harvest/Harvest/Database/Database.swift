@@ -349,6 +349,26 @@ struct HarvestDB {
     }
   }
   
+  static func watchFarms(_ completion: @escaping ([Farm]) -> ()) {
+    let fref = ref.child(Path.farms)
+    fref.observe(.value) { (snapshot) in
+      var farms = [Farm]()
+      for _child in snapshot.children {
+        guard let child = _child as? DataSnapshot else {
+          continue
+        }
+        
+        guard let farm = child.value as? [String: Any] else {
+          continue
+        }
+        
+        let f = Farm(json: farm, id: child.key)
+        farms.append(f)
+      }
+      completion(farms)
+    }
+  }
+  
   static func save(farm: Farm) {
     let farms = ref.child(Path.farms)
     let update = farm.json()

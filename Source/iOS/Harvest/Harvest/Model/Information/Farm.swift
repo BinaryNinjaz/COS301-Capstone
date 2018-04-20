@@ -24,13 +24,15 @@ class Farm {
   func json() -> [String: [String: Any]] {
     return [id: [
       "name": name,
-      "details": details
+      "info": details
     ]]
   }
 }
 
 extension Farm : Equatable {
   static func ==(lhs: Farm, rhs: Farm) -> Bool {
-    return lhs.name == rhs.name
+    return lhs.id == rhs.id
+      && lhs.name == rhs.name
+      && lhs.details == rhs.details
   }
 }

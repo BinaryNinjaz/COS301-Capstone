@@ -54,7 +54,13 @@ class Worker {
 
 extension Worker : Hashable {
   static func ==(lhs: Worker, rhs: Worker) -> Bool {
-    return lhs.firstname == rhs.firstname && lhs.lastname == rhs.lastname
+    return lhs.id == rhs.id
+      && lhs.firstname == rhs.firstname
+      && lhs.lastname == rhs.lastname
+      && lhs.assignedOrchard == rhs.assignedOrchard
+      && lhs.kind == rhs.kind
+      && lhs.details == rhs.details
+      && lhs.email == rhs.email
   }
   
   var hashValue: Int {
