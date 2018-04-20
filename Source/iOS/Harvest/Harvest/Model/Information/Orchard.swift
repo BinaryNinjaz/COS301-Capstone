@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-struct Orchard {
+class Orchard {
   var bagMass: Double
   var coords: [CLLocationCoordinate2D]
   var crop: String
@@ -21,12 +21,13 @@ struct Orchard {
   var xDim: Double
   var yDim: Double
   var id: String
+  var tempory: Orchard?
   
   init(json: [String: Any], id: String) {
     self.id = id
-    bagMass = Double(json["bagMass"] as? String ?? "0") ?? 0.0
+    bagMass = json["bagMass"] as? Double ?? 0.0
     crop = json["crop"] as? String ?? ""
-    date = Date(timeIntervalSince1970: Double(json["date"] as? String ?? "0") ?? 0.0)
+    date = Date(timeIntervalSince1970: json["date"] as? Double ?? 0.0)
     assignedFarm = json["farm"] as? String ?? ""
     details = json["further"] as? String ?? ""
     name = json["name"] as? String ?? ""
@@ -50,6 +51,8 @@ struct Orchard {
       
       coords.append(CLLocationCoordinate2D(latitude: lat, longitude: lng))
     }
+    
+    tempory = nil
   }
   
   func json() -> [String: [String: Any]] {

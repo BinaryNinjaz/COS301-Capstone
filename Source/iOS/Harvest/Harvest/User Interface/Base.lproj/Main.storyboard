@@ -869,7 +869,7 @@ Expected Yield: 0</string>
             </objects>
             <point key="canvasLocation" x="3855" y="758"/>
         </scene>
-        <!--Entity View Controller-->
+        <!--Title-->
         <scene sceneID="2WV-pD-EGt">
             <objects>
                 <viewController id="s2o-6U-1Nl" customClass="EntityViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
@@ -879,6 +879,16 @@ Expected Yield: 0</string>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="Qkx-5z-2hx"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Title" id="sHH-Xw-rQH">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="rtm-UZ-IuW">
+                            <connections>
+                                <action selector="saveButtonTouchUp:" destination="s2o-6U-1Nl" id="uC0-or-tOk"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="saveButton" destination="rtm-UZ-IuW" id="jPN-ny-qzQ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gzd-AZ-EdU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

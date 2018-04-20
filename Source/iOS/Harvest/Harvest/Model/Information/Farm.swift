@@ -8,18 +8,20 @@
 
 import Swift
 
-struct Farm {
+class Farm {
   var name: String
   var details: String
   var id: String
+  var tempory: Farm?
   
   init(json: [String: Any], id: String) {
     self.id = id
     name = json["name"] as? String ?? ""
     details = json["further"] as? String ?? ""
+    tempory = nil
   }
   
-  func json() -> [String: Any] {
+  func json() -> [String: [String: Any]] {
     return [id: [
       "name": name,
       "details": details

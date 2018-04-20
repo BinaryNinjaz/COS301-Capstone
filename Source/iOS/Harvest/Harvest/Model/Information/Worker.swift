@@ -8,7 +8,7 @@
 
 import Swift
 
-struct Worker {
+class Worker {
   enum Kind {
     case worker, foreman
   }
@@ -20,6 +20,7 @@ struct Worker {
   var details: String
   var email: String
   var id: String
+  var tempory: Worker?
   
   init(json: [String: Any], id: String) {
     self.id = id
@@ -36,6 +37,7 @@ struct Worker {
     } else {
       kind = .worker
     }
+    tempory = nil
   }
   
   func json() -> [String: [String: Any]] {

@@ -151,6 +151,25 @@ struct HarvestDB {
   
   static func getWorkers(_ completion: @escaping ([Worker]) -> ()) {
     let wref = ref.child(Path.workers).queryOrdered(byChild: "surname")
+    wref.observeSingleEvent(of: .value) { (snapshot) in
+      var workers = [Worker]()
+      for _child in snapshot.children {
+        guard let child = _child as? DataSnapshot else {
+          continue
+        }
+        
+        guard let worker = child.value as? [String: Any] else {
+          continue
+        }
+        let w = Worker(json: worker, id: child.key)
+        workers.append(w)
+      }
+      completion(workers)
+    }
+  }
+  
+  static func watchWorkers(_ completion: @escaping ([Worker]) -> ()) {
+    let wref = ref.child(Path.workers).queryOrdered(byChild: "surname")
     wref.observe(.value) { (snapshot) in
       var workers = [Worker]()
       for _child in snapshot.children {
@@ -272,6 +291,26 @@ struct HarvestDB {
   
   static func getOrchards(_ completion: @escaping ([Orchard]) -> ()) {
     let oref = ref.child(Path.orchards)
+    oref.observeSingleEvent(of: .value) { (snapshot) in
+      var orchards = [Orchard]()
+      for _child in snapshot.children {
+        guard let child = _child as? DataSnapshot else {
+          continue
+        }
+        
+        guard let orchard = child.value as? [String: Any] else {
+          continue
+        }
+        
+        let o = Orchard(json: orchard, id: child.key)
+        orchards.append(o)
+      }
+      completion(orchards)
+    }
+  }
+  
+  static func watchOrchards(_ completion: @escaping ([Orchard]) -> ()) {
+    let oref = ref.child(Path.orchards)
     oref.observe(.value) { (snapshot) in
       var orchards = [Orchard]()
       for _child in snapshot.children {
@@ -292,7 +331,7 @@ struct HarvestDB {
   
   static func getFarms(_ completion: @escaping ([Farm]) -> ()) {
     let fref = ref.child(Path.farms)
-    fref.observe(.value) { (snapshot) in
+    fref.observeSingleEvent(of: .value) { (snapshot) in
       var farms = [Farm]()
       for _child in snapshot.children {
         guard let child = _child as? DataSnapshot else {

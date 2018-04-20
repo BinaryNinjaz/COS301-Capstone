@@ -68,6 +68,7 @@ class InformationEntityItemTableViewController: UITableViewController {
     
     if let entityViewController = vc as? EntityViewController {
       entityViewController.entity = selectedEntity
+      entityViewController.title = selectedEntity?.name
       if navigationItem.title == "Workers" {
         guard let item = items["___orchards___"],
           case let .userInfo(userInfo) = item else {

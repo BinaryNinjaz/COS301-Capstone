@@ -15,6 +15,15 @@ enum EntityItem {
   case orchard(Orchard)
   case worker(Worker)
   case userInfo(Any)
+  
+  var name: String {
+    switch self {
+    case let .farm(f): return f.name
+    case let .orchard(o): return o.name
+    case let .worker(w): return w.firstname + " " + w.lastname
+    case .userInfo: return ""
+    }
+  }
 }
 
 class InformationEntityCollectionViewController: UICollectionViewController {
@@ -127,6 +136,7 @@ class InformationEntityCollectionViewController: UICollectionViewController {
               return (worker.firstname + " " + worker.lastname, .worker(worker))
           }, <)
           self.items["___orchards___"] = .userInfo(orchards.map { EntityItem.orchard($0) })
+          Entities.shared.workers = items
           self.performSegue(withIdentifier: "EntityToItems", sender: self)
           self.goingToIndexPath = nil
         })
@@ -141,6 +151,7 @@ class InformationEntityCollectionViewController: UICollectionViewController {
               return (orchard.name, .orchard(orchard))
           }, <)
           self.items["___farms___"] = .userInfo(farms.map { EntityItem.farm($0) })
+          Entities.shared.orchards = items
           self.performSegue(withIdentifier: "EntityToItems", sender: self)
           self.goingToIndexPath = nil
         })
@@ -152,6 +163,7 @@ class InformationEntityCollectionViewController: UICollectionViewController {
           uniqueKeysWithValues: farms.map { farm in
             return (farm.name, .farm(farm))
         }, <)
+        Entities.shared.farms = items
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
       }

@@ -100,7 +100,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate {
 //      polyline.map = self.mapView
     }
     
-    HarvestDB.getOrchards { (orchards) in
+    HarvestDB.watchOrchards { (orchards) in
       self.mapView.clear()
       self.orchards = orchards
       for orchard in orchards {

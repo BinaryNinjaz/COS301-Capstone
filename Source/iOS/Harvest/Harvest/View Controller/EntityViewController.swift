@@ -12,6 +12,8 @@ class EntityViewController: FormViewController {
   var entity: EntityItem? = nil
   var other: [EntityItem] = []
   
+  @IBOutlet weak var saveButton: UIBarButtonItem!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -27,7 +29,33 @@ class EntityViewController: FormViewController {
     // Dispose of any resources that can be recreated.
   }
   
-
+  @IBAction func saveButtonTouchUp(_ sender: Any) {
+    guard let entity = entity else {
+      return
+    }
+    
+    switch entity {
+    case let .farm(f):
+      if let t = f.tempory {
+        HarvestDB.save(farm: t)
+        f.tempory = nil
+      }
+    case let .orchard(o):
+      if let t = o.tempory {
+        HarvestDB.save(orchard: t)
+        o.tempory = nil
+      }
+    case let .worker(w):
+      if let t = w.tempory {
+        HarvestDB.save(worker: t)
+        w.tempory = nil
+      }
+      
+    case .userInfo:
+      break
+    }
+  }
+  
   /*
   // MARK: - Navigation
 
