@@ -15,7 +15,7 @@ extension HarvestDB {
                       byUserId uid: String,
                       on date: Date,
                       track: [CLLocationCoordinate2D]) {
-    let cref = ref.child(Path.yields)
+    let cref = ref.child(Path.sessions)
     let key = cref.childByAutoId().key
     
     var cs = [String: Any]()
@@ -53,9 +53,9 @@ extension HarvestDB {
       "track": track.firbaseCoordRepresentation()
     ]
     
-    let updates = ["yields/\(key)": data]
+    let updates = [key: data]
     
-    ref.updateChildValues(updates)
+    cref.updateChildValues(updates)
   }
   
   static func yieldCollection(

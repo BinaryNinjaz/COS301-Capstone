@@ -10,7 +10,15 @@ import UIKit
 import CoreLocation
 
 class TrackerViewController: UIViewController {
-  var tracker: Tracker?
+  static var tracker: Tracker? = nil
+  var tracker: Tracker? {
+    get {
+      return TrackerViewController.tracker
+    }
+    set {
+      TrackerViewController.tracker = newValue
+    }
+  }
   var locationManager: CLLocationManager!
   var currentLocation: CLLocation?
   var workers: [Worker] = [] {
@@ -61,13 +69,6 @@ class TrackerViewController: UIViewController {
       let alert = UIAlertController.alertController(title: "\(amount) Bags Collected", message: "The session duration was \(tracker?.durationFormatted() ?? "")")
       
       present(alert, animated: true, completion: nil)
-      
-      if let tracker = tracker {
-        HarvestDB.collect(from: tracker.collections,
-                          byUserId: HarvestUser.current.uid,
-                          on: tracker.sessionStart,
-                          track: tracker.pathTracked())
-      }
       
       tracker = nil
       searchBar.isUserInteractionEnabled = false

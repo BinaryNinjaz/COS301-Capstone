@@ -8,13 +8,14 @@
 
 import UIKit
 import CoreLocation
+import Disk
 
 struct CollectionPoint {
   var location: CLLocationCoordinate2D
   var date: Date
 }
 
-struct Tracker {
+struct Tracker : Codable {
   private(set) var trackCount: Int
   private(set) var sessionStart: Date
   private(set) var lastCollection: Date
@@ -27,6 +28,10 @@ struct Tracker {
     collections = [:]
   }
   
+  func saveState() {
+    try? Disk.save(self, to: .applicationSupport, as: "session")
+  }
+  
   mutating func collect(for worker: Worker, at loc: CLLocation) {
     guard var collection = collections[worker] else {
       let cp = CollectionPoint(location: loc.coordinate, date: Date())
@@ -37,6 +42,8 @@ struct Tracker {
     collection.append(CollectionPoint(location: loc.coordinate, date: Date()))
     
     collections[worker] = collection
+    
+    saveState()
   }
   
   mutating func pop(for worker: Worker) {
@@ -48,11 +55,14 @@ struct Tracker {
     collection.removeLast()
     
     collections[worker] = collection
+    
+    saveState()
   }
   
   mutating func track(location: CLLocation) {
     UserDefaults.standard.track(location: location, index: trackCount)
     trackCount += 1
+    saveState()
   }
   
   func pathTracked() -> [CLLocationCoordinate2D] {
@@ -73,6 +83,8 @@ struct Tracker {
                       byUserId: HarvestUser.current.uid,
                       on: sessionStart,
                       track: pathTracked())
+    
+    try? Disk.remove("session", from: .applicationSupport)
   }
   
   func totalCollected() -> Int {
@@ -91,6 +103,31 @@ struct Tracker {
     formatter.allowedUnits = [.minute, .second, .hour]
     
     return formatter.string(from: end.timeIntervalSince(sessionStart)) ?? ""
+  }
+  
+  enum CodingKeys : String, CodingKey {
+    case trackCount
+    case sessionStart
+    case lastCollection
+    case collections
+  }
+  
+  public init(from decoder: Decoder) throws {
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    
+    trackCount = try values.decode(Int.self, forKey: .trackCount)
+    sessionStart = try values.decode(Date.self, forKey: .sessionStart)
+    lastCollection = try values.decode(Date.self, forKey: .lastCollection)
+    collections = try values.decode([Worker: [CollectionPoint]].self, forKey: .collections)
+  }
+  
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    
+    try container.encode(trackCount, forKey: .trackCount)
+    try container.encode(sessionStart, forKey: .sessionStart)
+    try container.encode(lastCollection, forKey: .lastCollection)
+    try container.encode(collections, forKey: .collections)
   }
 }
 

@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import GoogleSignIn
+import Disk
 
 class SignInViewController: UIViewController {
   @IBOutlet weak var usernameTextField: UITextField!
@@ -216,6 +217,9 @@ extension SignInViewController : GIDSignInDelegate {
         }
         self.isLoading = false
       })
+      if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
+        oldSession.storeSession()
+      }
     }
   }
 }

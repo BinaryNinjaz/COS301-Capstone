@@ -18,8 +18,8 @@ extension Dictionary where Key == String, Value == Any {
   }
 }
 
-class Worker {
-  enum Kind {
+final class Worker {
+  enum Kind : Int, Codable {
     case worker, foreman
   }
   

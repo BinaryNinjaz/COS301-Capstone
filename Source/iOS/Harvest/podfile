@@ -8,6 +8,7 @@ target 'Harvest' do
   pod 'Firebase/Auth'
   pod 'GoogleSignIn'
   pod 'Eureka'
+  pod 'Disk'
   
   target 'HarvestTests' do
     inherit! :search_paths

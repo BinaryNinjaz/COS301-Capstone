@@ -9,6 +9,7 @@
 import Firebase
 import CoreLocation
 import GoogleSignIn
+import Disk
 
 extension HarvestDB {
   static func signIn(
@@ -53,6 +54,9 @@ extension HarvestDB {
         HarvestUser.current.workingForIDs.append(contentsOf: uids)
         completion(true)
       })
+      if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
+        oldSession.storeSession()
+      }
     }
   }
   
@@ -103,6 +107,7 @@ extension HarvestDB {
     completion: @escaping (Bool) -> () = { _ in }
     ) {
     do {
+      TrackerViewController.tracker?.storeSession()
       try Auth.auth().signOut()
       GIDSignIn.sharedInstance().disconnect()
       GIDSignIn.sharedInstance().signOut()
