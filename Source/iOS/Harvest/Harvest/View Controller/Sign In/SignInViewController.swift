@@ -204,13 +204,18 @@ extension SignInViewController : GIDSignInDelegate {
       HarvestUser.current.email = user.email!
       HarvestUser.current.displayName = user.displayName ?? ""
       HarvestUser.current.uid = user.uid
-      
-      if let vc = self
-        .storyboard?
-        .instantiateViewController(withIdentifier: "mainTabBarViewController") {
-        self.present(vc, animated: true, completion: nil)
-      }
-      self.isLoading = false
+      HarvestUser.current.selectedOrganization = UserDefaults.standard.getOrganization()
+      HarvestUser.current.organizationName = UserDefaults.standard.getMyName() ?? ""
+      HarvestUser.current.workingForIDs.removeAll(keepingCapacity: true)
+      HarvestDB.getWorkingFor(completion: { (uids) in
+        HarvestUser.current.workingForIDs.append(contentsOf: uids)
+        if let vc = self
+          .storyboard?
+          .instantiateViewController(withIdentifier: "mainTabBarViewController") {
+          self.present(vc, animated: true, completion: nil)
+        }
+        self.isLoading = false
+      })
     }
   }
 }

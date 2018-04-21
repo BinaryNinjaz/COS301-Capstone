@@ -20,9 +20,14 @@ class HarvestUser {
   var organizationName: String {
     didSet {
       UserDefaults.standard.set(myname: organizationName)
+      print(organizationName)
     }
   }
-  var selectedOrganization: String? = nil
+  var selectedOrganization: String? = nil {
+    didSet {
+      UserDefaults.standard.set(organization: selectedOrganization)
+    }
+  }
   
   init() {
     workingForIDs = []
@@ -104,23 +109,23 @@ extension String {
 
 public extension UserDefaults {
   var uid: String {
-    return HarvestUser.current.uid
+    return HarvestUser.current.email
   }
   
   public func set(username: String) {
-    set(username, forKey: uid + "username")
+    set(username, forKey: "username")
   }
   
   public func getUsername() -> String? {
-    return string(forKey: uid + "username")
+    return string(forKey: "username")
   }
   
   public func set(password: String) {
-    set(password, forKey: uid + "password")
+    set(password, forKey: "password")
   }
   
   public func getPassword() -> String? {
-    return string(forKey: uid + "password")
+    return string(forKey: "password")
   }
   
   public func set(organization: String?) {

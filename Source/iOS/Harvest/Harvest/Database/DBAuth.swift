@@ -42,10 +42,11 @@ extension HarvestDB {
       }
       UserDefaults.standard.set(password: password)
       UserDefaults.standard.set(username: email)
-      HarvestUser.current.selectedOrganization = UserDefaults.standard.getOrganization()
+      
       HarvestUser.current.email = user.email!
       HarvestUser.current.displayName = user.displayName ?? ""
       HarvestUser.current.uid = user.uid
+      HarvestUser.current.selectedOrganization = UserDefaults.standard.getOrganization()
       HarvestUser.current.organizationName = UserDefaults.standard.getMyName() ?? ""
       HarvestUser.current.workingForIDs.removeAll(keepingCapacity: true)
       HarvestDB.getWorkingFor(completion: { (uids) in
@@ -105,6 +106,14 @@ extension HarvestDB {
       try Auth.auth().signOut()
       GIDSignIn.sharedInstance().disconnect()
       GIDSignIn.sharedInstance().signOut()
+      
+      HarvestUser.current.displayName = ""
+      HarvestUser.current.email = ""
+      HarvestUser.current.organizationName = ""
+      HarvestUser.current.selectedOrganization = nil
+      HarvestUser.current.uid = ""
+      HarvestUser.current.workingForIDs.removeAll()
+      
     } catch {
       //    FIXME  #warning("Complete with proper errors")
       let alert = UIAlertController.alertController(
