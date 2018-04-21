@@ -113,6 +113,12 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+    guard kind != .session else {
+      let items = Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[indexPath.section])
+      selectedEntity = .session(items[indexPath.row])
+      return indexPath
+    }
+    
     selectedEntity = items?[indexPath.row]
     return indexPath
   }

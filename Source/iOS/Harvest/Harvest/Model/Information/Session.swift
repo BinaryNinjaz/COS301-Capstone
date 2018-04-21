@@ -39,7 +39,6 @@ extension Dictionary where Key == String, Value == Any {
     guard let _collections = self["collections"] as? [String: Any] else {
       return [:]
     }
-    
     var result: [Worker: [CollectionPoint]] = [:]
     
     for (key, _collectionPoints) in _collections {

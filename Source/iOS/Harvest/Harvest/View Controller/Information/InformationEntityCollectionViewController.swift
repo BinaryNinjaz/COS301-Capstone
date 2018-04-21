@@ -134,7 +134,7 @@ class InformationEntityCollectionViewController: UICollectionViewController {
       }
       
     case "Sessions":
-      Entities.shared.getOnce(.session) { es in
+      Entities.shared.getMultiplesOnce([.session, .orchard, .worker]) { es in
         self.selectedKind = .session
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil

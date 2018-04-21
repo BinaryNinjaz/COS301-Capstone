@@ -317,9 +317,10 @@ extension Session {
   func information(for form: Form, onChange: @escaping () -> ()) {
     tempory = Session(json: json(), id: id)
     
-    let display = NameRow() { row in
+    let displayRow = NameRow() { row in
       row.title = "Foreman"
       row.value = self.display
+      print(self.display)
       row.placeholder = "Name of the foreman"
     }.onChange { row in
       self.tempory?.display = row.value ?? ""
@@ -330,7 +331,7 @@ extension Session {
       cell.textField.clearButtonMode = .whileEditing
     }
     
-    let startDate = DateTimeRow() { row in
+    let startDateRow = DateTimeRow() { row in
       row.title = "Time Started"
       row.value = self.startDate
     }.onChange { row in
@@ -338,7 +339,7 @@ extension Session {
       onChange()
     }
     
-    let endDate = DateTimeRow() { row in
+    let endDateRow = DateTimeRow() { row in
       row.title = "Time Ended"
       row.value = self.endDate
     }.onChange { row in
@@ -346,16 +347,23 @@ extension Session {
       onChange()
     }
     
+    let sessionRow = SessionRow() { row in
+      row.title = "Tracked Path and Collection Points"
+      row.value = self
+    }.cellUpdate { (cell, row) in
+      cell.detailTextLabel?.text = ""
+    }
+    
     form
       +++ Section("Foreman")
-      <<< display
+      <<< displayRow
     
       +++ Section("Duration")
-      <<< startDate
-      <<< endDate
+      <<< startDateRow
+      <<< endDateRow
     
       +++ Section("Tracking")
-      <<< SessionRow()
+      <<< sessionRow
   }
 }
 
