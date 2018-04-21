@@ -62,6 +62,13 @@ class TrackerViewController: UIViewController {
       
       present(alert, animated: true, completion: nil)
       
+      if let tracker = tracker {
+        HarvestDB.collect(from: tracker.collections,
+                          byUserId: HarvestUser.current.uid,
+                          on: tracker.sessionStart,
+                          track: tracker.pathTracked())
+      }
+      
       tracker = nil
       searchBar.isUserInteractionEnabled = false
       

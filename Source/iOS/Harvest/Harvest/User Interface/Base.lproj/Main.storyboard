@@ -576,8 +576,30 @@ Expected Yield: 0</string>
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
+                                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ux3-K1-NGT">
+                                            <rect key="frame" x="16" y="164" width="342.5" height="40"/>
+                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="jpW-aI-HSM">
+                                                <rect key="frame" x="0.0" y="0.0" width="342.5" height="40"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sign up for Harvest" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="qql-QC-qt1">
+                                                        <rect key="frame" x="0.0" y="0.0" width="342" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                            </view>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="40" id="VaO-ep-iN3"/>
+                                            </constraints>
+                                            <vibrancyEffect>
+                                                <blurEffect style="light"/>
+                                            </vibrancyEffect>
+                                        </visualEffectView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZvG-cL-Cbw" customClass="TextFieldGroupView" customModule="Harvest" customModuleProvider="target">
-                                            <rect key="frame" x="16.5" y="154" width="342.5" height="199"/>
+                                            <rect key="frame" x="16.5" y="212" width="342.5" height="199"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="cCy-0d-jRH">
                                                     <rect key="frame" x="0.0" y="84" width="342" height="30"/>
@@ -622,7 +644,7 @@ Expected Yield: 0</string>
                                             </constraints>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uTy-Kq-vtX">
-                                            <rect key="frame" x="16.5" y="361" width="342.5" height="40"/>
+                                            <rect key="frame" x="16" y="419" width="342.5" height="40"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="40" id="4bx-p5-tLM"/>
                                             </constraints>
@@ -635,10 +657,6 @@ Expected Yield: 0</string>
                                                 <action selector="signUpTouchUp:" destination="wzz-PV-SJ5" eventType="touchUpInside" id="pZw-7w-khj"/>
                                             </connections>
                                         </button>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="gxY-EB-oYQ">
-                                            <rect key="frame" x="169" y="363" width="37" height="37"/>
-                                            <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </activityIndicatorView>
                                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dmy-LW-Sze">
                                             <rect key="frame" x="16.5" y="609" width="342.5" height="40"/>
                                             <constraints>
@@ -652,28 +670,10 @@ Expected Yield: 0</string>
                                                 <action selector="cancelTouchUp:" destination="wzz-PV-SJ5" eventType="touchUpInside" id="S5I-yL-Gbn"/>
                                             </connections>
                                         </button>
-                                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ux3-K1-NGT">
-                                            <rect key="frame" x="16.5" y="106" width="342.5" height="40"/>
-                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="jpW-aI-HSM">
-                                                <rect key="frame" x="0.0" y="0.0" width="342.5" height="40"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sign up for Harvest" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="qql-QC-qt1">
-                                                        <rect key="frame" x="0.0" y="0.0" width="342" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
-                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                            </view>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="40" id="VaO-ep-iN3"/>
-                                            </constraints>
-                                            <vibrancyEffect>
-                                                <blurEffect style="light"/>
-                                            </vibrancyEffect>
-                                        </visualEffectView>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="gxY-EB-oYQ">
+                                            <rect key="frame" x="169" y="421" width="37" height="37"/>
+                                            <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Dmy-LW-Sze" firstAttribute="trailing" secondItem="uTy-Kq-vtX" secondAttribute="trailing" id="5wz-jB-W20"/>
@@ -681,15 +681,15 @@ Expected Yield: 0</string>
                                         <constraint firstItem="Dmy-LW-Sze" firstAttribute="leading" secondItem="uTy-Kq-vtX" secondAttribute="leading" id="ByV-Ed-0fU"/>
                                         <constraint firstItem="uTy-Kq-vtX" firstAttribute="trailing" secondItem="ZvG-cL-Cbw" secondAttribute="trailing" id="GeW-mD-e5i"/>
                                         <constraint firstItem="Ux3-K1-NGT" firstAttribute="trailing" secondItem="ZvG-cL-Cbw" secondAttribute="trailing" id="NhK-VM-zro"/>
+                                        <constraint firstItem="ZvG-cL-Cbw" firstAttribute="top" secondItem="Ux3-K1-NGT" secondAttribute="bottom" constant="8" id="S5w-Iw-SJa"/>
+                                        <constraint firstItem="uTy-Kq-vtX" firstAttribute="top" secondItem="ZvG-cL-Cbw" secondAttribute="bottom" constant="8" id="SAa-Ts-cBP"/>
                                         <constraint firstItem="Ux3-K1-NGT" firstAttribute="leading" secondItem="ZvG-cL-Cbw" secondAttribute="leading" id="WZ6-Mi-PiV"/>
-                                        <constraint firstItem="uTy-Kq-vtX" firstAttribute="top" secondItem="ZvG-cL-Cbw" secondAttribute="bottom" constant="8" id="jll-xO-Jgn"/>
-                                        <constraint firstItem="ZvG-cL-Cbw" firstAttribute="top" secondItem="Ux3-K1-NGT" secondAttribute="bottom" constant="8" id="oba-b3-4ei"/>
                                         <constraint firstItem="uTy-Kq-vtX" firstAttribute="leading" secondItem="ZvG-cL-Cbw" secondAttribute="leading" id="qXO-e1-Ds5"/>
                                     </constraints>
                                 </view>
                                 <constraints>
                                     <constraint firstItem="ZvG-cL-Cbw" firstAttribute="leading" secondItem="A6r-Bj-bTp" secondAttribute="leading" priority="250" constant="16" id="7fu-1M-Ddt"/>
-                                    <constraint firstItem="uTy-Kq-vtX" firstAttribute="centerY" secondItem="A6r-Bj-bTp" secondAttribute="centerY" priority="750" constant="47.5" id="JMW-HM-Bit"/>
+                                    <constraint firstItem="uTy-Kq-vtX" firstAttribute="centerY" secondItem="A6r-Bj-bTp" secondAttribute="centerY" priority="750" constant="105.5" id="JMW-HM-Bit"/>
                                     <constraint firstItem="ZvG-cL-Cbw" firstAttribute="centerX" secondItem="A6r-Bj-bTp" secondAttribute="centerX" id="Ju1-Gm-8SI"/>
                                     <constraint firstAttribute="trailing" secondItem="ZvG-cL-Cbw" secondAttribute="trailing" priority="250" constant="16" id="e1J-GW-PU9"/>
                                 </constraints>
@@ -698,12 +698,12 @@ Expected Yield: 0</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="ZvG-cL-Cbw" firstAttribute="centerY" secondItem="wTx-9L-FN9" secondAttribute="centerY" constant="-32" id="3Nu-7Z-xjJ"/>
                             <constraint firstItem="wTx-9L-FN9" firstAttribute="bottom" secondItem="Dmy-LW-Sze" secondAttribute="bottom" constant="18" id="Dsk-Wg-ltp"/>
                             <constraint firstAttribute="trailing" secondItem="A6r-Bj-bTp" secondAttribute="trailing" id="HMo-5v-LhB"/>
                             <constraint firstAttribute="trailingMargin" secondItem="kAN-Ug-MLQ" secondAttribute="trailing" constant="-16" id="N7Y-cK-cyO"/>
                             <constraint firstItem="gxY-EB-oYQ" firstAttribute="centerX" secondItem="wTx-9L-FN9" secondAttribute="centerX" id="V9l-Xq-qnX"/>
                             <constraint firstAttribute="bottom" secondItem="kAN-Ug-MLQ" secondAttribute="bottom" id="VBz-UN-rLe"/>
-                            <constraint firstItem="Ux3-K1-NGT" firstAttribute="top" secondItem="wTx-9L-FN9" secondAttribute="top" constant="86" id="lzy-iH-l6W"/>
                             <constraint firstItem="kAN-Ug-MLQ" firstAttribute="leading" secondItem="xUj-dA-DtK" secondAttribute="leadingMargin" constant="-16" id="nUv-ho-SgE"/>
                             <constraint firstAttribute="top" secondItem="A6r-Bj-bTp" secondAttribute="top" id="pOd-53-MBd"/>
                             <constraint firstItem="A6r-Bj-bTp" firstAttribute="leading" secondItem="xUj-dA-DtK" secondAttribute="leading" id="td9-Fq-TKP"/>

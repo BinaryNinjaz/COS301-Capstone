@@ -12,7 +12,7 @@ import GoogleSignIn
 
 extension HarvestDB {
   static func collect(from workers: [Worker: [CollectionPoint]],
-                      by user: (display: String, uid: String),
+                      byUserId uid: String,
                       on date: Date,
                       track: [CLLocationCoordinate2D]) {
     let cref = ref.child(Path.yields)
@@ -48,8 +48,7 @@ extension HarvestDB {
     let data: [String: Any] = [
       "start_date": date.timeIntervalSince1970,
       "end_date": Date().timeIntervalSince1970,
-      "display": user.display,
-      "uid": user.uid,
+      "uid": uid,
       "collections": cs,
       "track": track.firbaseCoordRepresentation()
     ]

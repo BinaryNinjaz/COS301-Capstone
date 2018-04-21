@@ -317,14 +317,13 @@ extension Session {
   func information(for form: Form, onChange: @escaping () -> ()) {
     tempory = Session(json: json(), id: id)
     
+    // FIXME Maybe allow changing these details or not? If change then
+    // allow foreman select else disallow artificial changes
+    
     let displayRow = NameRow() { row in
       row.title = "Foreman"
-      row.value = self.display
-      print(self.display)
+      row.value = foreman.description
       row.placeholder = "Name of the foreman"
-    }.onChange { row in
-      self.tempory?.display = row.value ?? ""
-      onChange()
     }.cellUpdate { (cell, row) in
       cell.textField.textAlignment = .left
       cell.titleLabel?.textColor = .titleLabel
@@ -333,7 +332,7 @@ extension Session {
     
     let startDateRow = DateTimeRow() { row in
       row.title = "Time Started"
-      row.value = self.startDate
+      row.value = startDate
     }.onChange { row in
       self.tempory?.startDate = row.value ?? Date()
       onChange()
@@ -341,7 +340,7 @@ extension Session {
     
     let endDateRow = DateTimeRow() { row in
       row.title = "Time Ended"
-      row.value = self.endDate
+      row.value = endDate
     }.onChange { row in
       self.tempory?.endDate = row.value ?? Date()
       onChange()

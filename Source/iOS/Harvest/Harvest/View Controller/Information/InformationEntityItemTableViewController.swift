@@ -90,7 +90,7 @@ class InformationEntityItemTableViewController: UITableViewController {
     
     guard kind != .session else {
       let items = Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[indexPath.section])
-      cell.textLabel?.text = items[indexPath.row].display
+      cell.textLabel?.text = items[indexPath.row].foreman.description
       return cell
     }
     
@@ -106,7 +106,7 @@ class InformationEntityItemTableViewController: UITableViewController {
     case let .farm(f):
       cell.textLabel?.text = f.name
     case let .session(s):
-      cell.textLabel?.text = s.display
+      cell.textLabel?.text = s.foreman.description
     }
     
     return cell
@@ -126,7 +126,12 @@ class InformationEntityItemTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     let formatter = DateFormatter()
     formatter.dateStyle = .medium
-    let date = Entities.shared.sessionDates()[section]
+    let dates = Entities.shared.sessionDates()
+    guard dates.count > 0 else {
+      return nil
+    }
+    
+    let date = dates[section]
     
     return kind == .session ? formatter.string(from: date)  : nil
   }

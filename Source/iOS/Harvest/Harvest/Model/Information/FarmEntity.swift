@@ -27,6 +27,15 @@ enum EntityItem {
     }
   }
   
+  var id: String {
+    switch self {
+    case let .farm(f): return f.id
+    case let .orchard(o): return o.id
+    case let .worker(w): return w.id
+    case let .session(s): return s.id
+    }
+  }
+  
   var farm: Farm? {
     switch self {
     case let .farm(f): return f
@@ -303,5 +312,18 @@ class Entities {
     }
     
     return result
+  }
+  
+  func worker(withId id: String) -> Worker? {
+    guard let entity = workers
+      .first(where: { $0.1.id == id })?
+    .value else {
+      return nil
+    }
+    
+    if case let .worker(w) = entity {
+      return w
+    }
+    return nil
   }
 }

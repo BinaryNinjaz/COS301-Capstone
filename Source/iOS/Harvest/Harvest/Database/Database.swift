@@ -26,7 +26,7 @@ struct HarvestDB {
   
   struct Path {
     static var parent: String {
-      return "" //HarvestUser.current.email.removedFirebaseInvalids() // FIXME
+      return HarvestUser.current.email.removedFirebaseInvalids()
     }
     static var yields: String {
       return "\(Path.parent)/yields"
@@ -44,7 +44,7 @@ struct HarvestDB {
       return "\(Path.parent)/orchards"
     }
     static var sessions: String {
-      return "\(Path.parent)/yields" // FIXME
+      return "\(Path.parent)/sessions"
     }
   }
   
