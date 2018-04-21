@@ -12,12 +12,27 @@ import GoogleSignIn
 
 let passwordPadding = "s3cr3ts4uc3"
 
-struct HarvestUser {
+class HarvestUser {
+  var workingForIDs: [(uid: String, name: String)]
   var email: String
   var displayName: String
   var uid: String
+  var organizationName: String {
+    didSet {
+      UserDefaults.standard.set(myname: organizationName)
+    }
+  }
+  var selectedOrganization: String? = nil
   
-  static var current = HarvestUser(email: "", displayName: "", uid: "")
+  init() {
+    workingForIDs = []
+    email = ""
+    displayName = ""
+    uid = ""
+    organizationName = ""
+  }
+  
+  static var current = HarvestUser()
 }
 
 
@@ -26,7 +41,9 @@ struct HarvestDB {
   
   struct Path {
     static var parent: String {
-      return HarvestUser.current.email.removedFirebaseInvalids()
+      return HarvestUser.current.selectedOrganization == nil
+        ? HarvestUser.current.uid
+        : HarvestUser.current.selectedOrganization!
     }
     static var yields: String {
       return "\(Path.parent)/yields"
@@ -46,6 +63,13 @@ struct HarvestDB {
     static var sessions: String {
       return "\(Path.parent)/sessions"
     }
+    static var workingFor: String {
+      return "WorkingFor"
+    }
+  }
+  
+  static func saveFarmName() {
+    
   }
   
   // FIXME: -
@@ -79,20 +103,45 @@ extension String {
 }
 
 public extension UserDefaults {
+  var uid: String {
+    return HarvestUser.current.uid
+  }
+  
   public func set(username: String) {
-    set(username, forKey: "username")
+    set(username, forKey: uid + "username")
   }
   
   public func getUsername() -> String? {
-    return string(forKey: "username")
+    return string(forKey: uid + "username")
   }
   
   public func set(password: String) {
-    set(password, forKey: "password")
+    set(password, forKey: uid + "password")
   }
   
   public func getPassword() -> String? {
-    return string(forKey: "password")
+    return string(forKey: uid + "password")
+  }
+  
+  public func set(organization: String?) {
+    guard let o = organization else {
+      removeObject(forKey: uid + "organization")
+      return
+    }
+    
+    set(o, forKey: uid + "organization")
+  }
+  
+  public func getOrganization() -> String? {
+    return string(forKey: uid + "organization")
+  }
+  
+  public func set(myname: String) {
+    set(myname, forKey: uid + "myname")
+  }
+  
+  public func getMyName() -> String? {
+    return string(forKey: uid + "myname")
   }
 }
 

@@ -42,10 +42,16 @@ extension HarvestDB {
       }
       UserDefaults.standard.set(password: password)
       UserDefaults.standard.set(username: email)
+      HarvestUser.current.selectedOrganization = UserDefaults.standard.getOrganization()
       HarvestUser.current.email = user.email!
       HarvestUser.current.displayName = user.displayName ?? ""
       HarvestUser.current.uid = user.uid
-      completion(true)
+      HarvestUser.current.organizationName = UserDefaults.standard.getMyName() ?? ""
+      HarvestUser.current.workingForIDs.removeAll(keepingCapacity: true)
+      HarvestDB.getWorkingFor(completion: { (uids) in
+        HarvestUser.current.workingForIDs.append(contentsOf: uids)
+        completion(true)
+      })
     }
   }
   
@@ -100,7 +106,7 @@ extension HarvestDB {
       GIDSignIn.sharedInstance().disconnect()
       GIDSignIn.sharedInstance().signOut()
     } catch {
-      //      #warning("Complete with proper errors")
+      //    FIXME  #warning("Complete with proper errors")
       let alert = UIAlertController.alertController(
         title: "Sign Out Failure",
         message: "An unknown error occured")
@@ -109,5 +115,28 @@ extension HarvestDB {
       return
     }
     completion(true)
+  }
+  
+  static func getWorkingFor(completion: @escaping ([(uid: String, name: String)]) -> ()){
+    let wfref = ref.child(Path.workingFor + "/" + HarvestUser.current.email.removedFirebaseInvalids())
+    wfref.observeSingleEvent(of: .value) { (snapshot) in
+      guard let _uids = snapshot.value as? [String: Any] else {
+        completion([])
+        return
+      }
+      
+      var result = [(String, String)]()
+      
+      for (uid, _name) in _uids {
+        guard let name = _name as? String else {
+          result.append((uid, ""))
+          continue
+        }
+        
+        result.append((uid, name))
+      }
+      
+      completion(result)
+    }
   }
 }

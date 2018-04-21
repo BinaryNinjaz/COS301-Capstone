@@ -56,5 +56,17 @@ extension HarvestDB {
     }
     let update = worker.json()
     workers.updateChildValues(update)
+    if worker.email != "" {
+      saveWorkerReference(worker)
+    }
+  }
+  
+  static func saveWorkerReference(_ worker: Worker) {
+    let workerRefs = ref.child(Path.workingFor + "/" + worker.email.removedFirebaseInvalids())
+    
+    let update = [
+      HarvestUser.current.uid: HarvestUser.current.organizationName
+    ]
+    workerRefs.updateChildValues(update)
   }
 }

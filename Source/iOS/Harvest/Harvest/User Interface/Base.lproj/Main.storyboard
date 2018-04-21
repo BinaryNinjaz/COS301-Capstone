@@ -508,53 +508,26 @@ Expected Yield: 0</string>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="xEn-Me-W74" kind="relationship" relationship="rootViewController" id="QAN-fR-JtZ"/>
+                        <segue destination="6EI-eH-l6b" kind="relationship" relationship="rootViewController" id="8DJ-tU-OTt"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PPD-wy-gUn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2257" y="1441"/>
         </scene>
-        <!--Settings-->
-        <scene sceneID="lDn-ff-Giw">
+        <!--Settings Eureka View Controller-->
+        <scene sceneID="sZ8-hf-0aD">
             <objects>
-                <tableViewController title="Settings" id="xEn-Me-W74" customClass="SettingsTableViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="N0x-YI-1y9">
+                <viewController id="6EI-eH-l6b" customClass="SettingsEurekaViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lLg-Ia-biB">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <sections>
-                            <tableViewSection headerTitle="Account" id="FxL-pY-gH6">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="QqZ-ab-8TC">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QqZ-ab-8TC" id="CKw-cw-6Mw">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Log Out" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AyY-r5-fUe">
-                                                    <rect key="frame" x="16" y="11" width="343" height="22"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                        </sections>
-                        <connections>
-                            <outlet property="dataSource" destination="xEn-Me-W74" id="WVp-Ae-du9"/>
-                            <outlet property="delegate" destination="xEn-Me-W74" id="fou-bu-MWm"/>
-                        </connections>
-                    </tableView>
-                    <tabBarItem key="tabBarItem" title="Item" id="E0x-x5-6mm"/>
-                    <navigationItem key="navigationItem" id="cWu-ns-BUm"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="aEi-dg-DJI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="QqY-vy-pzZ"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="5zD-Mi-3hf"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rnN-uo-A6x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3084" y="1441"/>
         </scene>

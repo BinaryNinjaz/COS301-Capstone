@@ -41,7 +41,7 @@
 		167448DC208A897C00FA605C /* DBSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448DB208A897C00FA605C /* DBSession.swift */; };
 		167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448DD208A9F4900FA605C /* SessionEurekaCell.swift */; };
 		167448E1208B2E2F00FA605C /* GMSConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E0208B2E2F00FA605C /* GMSConverter.swift */; };
-		168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */; };
+		167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
@@ -120,7 +120,7 @@
 		167448DB208A897C00FA605C /* DBSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSession.swift; sourceTree = "<group>"; };
 		167448DD208A9F4900FA605C /* SessionEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionEurekaCell.swift; sourceTree = "<group>"; };
 		167448E0208B2E2F00FA605C /* GMSConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSConverter.swift; sourceTree = "<group>"; };
-		168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEurekaViewController.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -336,7 +336,7 @@
 		167448D6208A838300FA605C /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */,
+				167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -720,6 +720,7 @@
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
 				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
+				167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */,
 				167448CD208A5B8100FA605C /* DMWorker.swift in Sources */,
 				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
@@ -744,7 +745,6 @@
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
 				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
 				167448C320893B8200FA605C /* SortedCollection.swift in Sources */,
-				168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
