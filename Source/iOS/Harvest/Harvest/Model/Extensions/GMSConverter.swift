@@ -53,7 +53,7 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
     formatter.timeStyle = .short
     for (key, value) in self {
       for point in value {
-        let marker = GMSMarker(position: point.location.coordinate)
+        let marker = GMSMarker(position: point.location)
         marker.title = key.description + " - " + formatter.string(from: point.date)
         marker.map = mapView
         result.append(marker)

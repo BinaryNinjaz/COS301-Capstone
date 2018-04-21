@@ -68,7 +68,7 @@ extension Dictionary where Key == String, Value == Any {
           continue
         }
         
-        let loc = CLLocation(latitude: lat, longitude: lng)
+        let loc = CLLocationCoordinate2D(latitude: lat, longitude: lng)
         let date = Date(timeIntervalSince1970: _date)
         
         colps.append(CollectionPoint(location: loc, date: date))

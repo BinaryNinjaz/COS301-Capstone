@@ -26,8 +26,8 @@ extension HarvestDB {
       
       for cp in c {
         let d = cp.date.timeIntervalSince1970
-        let lat = cp.location.coordinate.latitude
-        let lng = cp.location.coordinate.longitude
+        let lat = cp.location.latitude
+        let lng = cp.location.longitude
         
         collections[i.description] = [
           "date": d,

@@ -10,12 +10,8 @@ import UIKit
 import CoreLocation
 
 struct CollectionPoint {
-  var location: CLLocation
+  var location: CLLocationCoordinate2D
   var date: Date
-}
-
-struct WorkerCollection {
-  var collectionPoints: [CollectionPoint]
 }
 
 struct Tracker {
@@ -33,12 +29,12 @@ struct Tracker {
   
   mutating func collect(for worker: Worker, at loc: CLLocation) {
     guard var collection = collections[worker] else {
-      let cp = CollectionPoint(location: loc, date: Date())
+      let cp = CollectionPoint(location: loc.coordinate, date: Date())
       collections[worker] = [cp]
       return
     }
     
-    collection.append(CollectionPoint(location: loc, date: Date()))
+    collection.append(CollectionPoint(location: loc.coordinate, date: Date()))
     
     collections[worker] = collection
   }

@@ -174,8 +174,8 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
       for collection in collectionPoints {
         collections[i.description] = [
           "coord": [
-            "lat": collection.location.coordinate.latitude,
-            "lng": collection.location.coordinate.longitude
+            "lat": collection.location.latitude,
+            "lng": collection.location.longitude
           ],
           "date": collection.date.timeIntervalSince1970
         ]
