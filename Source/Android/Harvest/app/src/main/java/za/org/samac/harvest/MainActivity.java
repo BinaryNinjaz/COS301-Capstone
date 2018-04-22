@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,13 +46,15 @@ import java.util.Map;
 import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
 import za.org.samac.harvest.adapter.collections;
+import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.WorkerComparator;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private static final String TAG = "Clicker";
 
-    private ArrayList<String> workers;
-    private ArrayList<String> workersSearch;
+    private ArrayList<Worker> workers;
+    private ArrayList<Worker> workersSearch;
     private Map<Integer, Location> track;
     int trackCount = 0;
     boolean namesShowing = false;
@@ -68,6 +71,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
+
+    FirebaseDatabase database;
+    DatabaseReference ref;//Firebase reference
+    Query q;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,14 +93,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setLocation(location);
         }
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("workers");//Firebase reference
-        Query q = ref.orderByChild("name");
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("workers");//Firebase reference
+        q = ref.orderByChild("name");
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    collectWorkers((Map<String, Object>) dataSnapshot.getValue());
+                if (dataSnapshot.getValue() != null && dataSnapshot.getKey() != null) {
+                    collectWorkers((Map<String, Object>) dataSnapshot.getValue(), dataSnapshot.getKey());
                 }
                 progressBar.setVisibility(View.GONE);//remove progress bar
                 relLayout.setVisibility(View.VISIBLE);
@@ -178,14 +185,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      */
 
 
-    protected void collectWorkers(Map<String, Object> users) {
+    protected void collectWorkers(Map<String, Object> users, Object key) {
         for (Map.Entry<String, Object> entry : users.entrySet()) {
             Map singleUser = (Map) entry.getValue();
             String fullName = singleUser.get("name") + " " + singleUser.get("surname");
-            workers.add(fullName);
+            Worker workerObj = new Worker();
+            workerObj.setName(fullName);
+            workerObj.setValue(0);
+            workerObj.setID(key);
+            workers.add(workerObj);
         }
 
-        Collections.sort(workers);
+        Collections.sort(workers, new WorkerComparator());
+
         workersSearch.addAll(workers);
         //adapter.notifyDataSetChanged();
     }
@@ -352,10 +364,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void doWorkersClientSideSearch(String searchText) {
         workersSearch.clear();
         if(searchText != null && !searchText.equals("")) {
-            List<String> results = new ArrayList<>();
-            for (String search : workers) {
-                if(search.toLowerCase().contains(searchText.toLowerCase())){
-                    results.add(search);
+            List<Worker> results = new ArrayList<>();
+            for (Worker worker : workers) {
+                if(worker.getName().toLowerCase().contains(searchText.toLowerCase())){
+                    results.add(worker);
                 }
             }
             workersSearch.addAll(results);

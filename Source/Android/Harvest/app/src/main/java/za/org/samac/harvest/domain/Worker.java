@@ -4,6 +4,7 @@ public class Worker {
 
     private String name;
     private Integer value;
+    private Object ID;
 
     public String getName() {
         return name;
@@ -19,5 +20,13 @@ public class Worker {
 
     public void setValue(Integer value) {
         this.value = value;
+    }
+
+    public Object getID() {
+        return ID;
+    }
+
+    public void setID(Object value) {
+        this.ID = ID;
     }
 }

@@ -15,11 +15,12 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 
 import za.org.samac.harvest.R;
+import za.org.samac.harvest.domain.Worker;
 
 public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecyclerViewAdapter.WorkerViewHolder> {
 
     public Context context;//made it private initially
-    private ArrayList<String> workers;
+    private ArrayList<Worker> workers;
     private ArrayList<Button> plus;
     private ArrayList<Button> minus;
     private ArrayList<TextView> incrementViews;
@@ -28,7 +29,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private FirebaseAuth mAuth;
     private collections collectionObj;
 
-    public WorkerRecyclerViewAdapter(Context context, ArrayList<String> workers) {
+    public WorkerRecyclerViewAdapter(Context context, ArrayList<Worker> workers) {
         this.context = context;
         this.workers = workers;
         this.totalBagsCollected = 0;
@@ -59,15 +60,15 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
     @Override
     public void onBindViewHolder(final WorkerViewHolder holder, int position) {
-
-        final String personName = this.workers.get(position);
+        final Worker worker = this.workers.get(position);
+        final String personName = worker.getName();
         holder.workerName.setText(personName);
 
         incrementViews.add(holder.increment);
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Long value = Long.valueOf(holder.increment.getText().toString()) + 1;
+                Integer value = worker.getValue() + 1;
                 holder.increment.setText(String.format("%d", value));
 
                 //make changes on firebase
@@ -80,9 +81,9 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         holder.btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Long currentValue = Long.valueOf(holder.increment.getText().toString());
+                Integer currentValue = worker.getValue();
                 if(currentValue > 0) {
-                    Long value = currentValue - 1;
+                    Integer value = currentValue - 1;
                     holder.increment.setText(String.format("%d", value));
 
                     //make changes on firebase
@@ -108,6 +109,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
             btnMinus = view.findViewById(R.id.btnMinus);
         }
     }
+
     public void setPlusEnabled(boolean state) {
         for(int i = 0 ; i < plus.size() ; i++) {
             Button btn = plus.get(i);
