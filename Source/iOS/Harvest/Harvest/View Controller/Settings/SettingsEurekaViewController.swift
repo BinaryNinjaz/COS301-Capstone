@@ -64,6 +64,12 @@ class SettingsEurekaViewController : FormViewController {
     }
     
     
+    let userRow = LabelRow() { row in
+      row.title = """
+      \(HarvestUser.current.email) (\(HarvestUser.current.displayName))
+      """
+    }
+    
     let logoutRow = ButtonRow() { row in
       row.title = "Logout"
     }.onCellSelection { (cell, row) in
@@ -87,6 +93,7 @@ class SettingsEurekaViewController : FormViewController {
       <<< organizationRow
       
       +++ Section("Account")
+      <<< emailRow
       <<< logoutRow
   }
   
