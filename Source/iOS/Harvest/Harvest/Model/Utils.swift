@@ -30,15 +30,15 @@ extension UIColor {
   
   enum Bootstrap {
     static var green: [UIColor] {
-      let s = UIColor(hue: 109.0 / 360.0, saturation: 0.44, brightness: 0.71, alpha: 1)
-      let e = UIColor(hue: 109.0 / 360.0, saturation: 0.49, brightness: 0.58, alpha: 1)
+      let s = UIColor(hue: 141.0 / 360.0, saturation: 0.78, brightness: 0.73, alpha: 1)
+      let e = UIColor(hue: 141.0 / 360.0, saturation: 0.98, brightness: 0.5, alpha: 1)
       
       return [s, e]
     }
     
     static var blue: [UIColor] {
-      let s = UIColor(hue: 211.0 / 360.0, saturation: 0.61, brightness: 0.69, alpha: 1)
-      let e = UIColor(hue: 211.0 / 360.0, saturation: 0.61, brightness: 0.52, alpha: 1)
+      let s = UIColor(hue: 211.0 / 360.0, saturation: 0.77, brightness: 0.69, alpha: 1)
+      let e = UIColor(hue: 211.0 / 360.0, saturation: 0.77, brightness: 0.52, alpha: 1)
       
       return [s, e]
     }
@@ -80,19 +80,22 @@ extension UIColor {
     
     q.getRed(&qr, green: &qg, blue: &qb, alpha: &qa)
     
-    let (r, g, b, a) = (pr + a * qr, pg + a * qg, pb + a * qb, pa + a * qa)
+    let bb = (1.0 - a)
     
-    return UIColor(red: r, green: g, blue: b, alpha: a)
+    let (r, g, b, al) = (bb * pr + a * qr, bb * pg + a * qg, bb * pb + a * qb, bb * pa + a * qa)
+    
+    return UIColor(red: r, green: g, blue: b, alpha: al)
   }
   
   static var harvestGreen: [UIColor] {
     let s = UIColor(hue: 141.0 / 360.0, saturation: 0.78, brightness: 0.73, alpha: 1)
-    let e = UIColor(hue: 141.0 / 360.0, saturation: 0.58, brightness: 0.2, alpha: 1)
+    let e = UIColor(hue: 141.0 / 360.0, saturation: 0.98, brightness: 0.5, alpha: 1)
     
     return [s, e]
   }
   
   static func green(atFraction a: CGFloat) -> UIColor {
+    let a = max(min(a, 1), 0)
     return color(between: UIColor.harvestGreen[0], and: UIColor.harvestGreen[1], atFraction: a)
   }
   
