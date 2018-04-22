@@ -23,11 +23,11 @@ class HarvestTests: XCTestCase {
       super.tearDown()
   }
   
-  func setUpYieldTracker() -> (Tracker, [CLLocation], [String: Worker]) {
+  func setUpYieldTracker() -> (Tracker, [CLLocationCoordinate2D], [String: Worker]) {
     var tracker = Tracker()
     
-    let workerA = Worker(firstname: "Andy", lastname: "Andrews")
-    let workerB = Worker(firstname: "Ben", lastname: "Bennet")
+    let workerA = Worker(json: ["name": "Andy", "surname": "Andrews"], id: "1")
+    let workerB = Worker(json: ["name": "Ben", "surname": "Bennet"], id: "1")
     
     let rand = {
       return Double(arc4random()) / Double(UInt32.max) * 60 - 30
@@ -50,7 +50,7 @@ class HarvestTests: XCTestCase {
     tracker.collect(for: workerB, at: loc2)
     tracker.collect(for: workerB, at: loc1)
     
-    return (tracker, [loc0, loc1, loc2], ["A": workerA, "B": workerB])
+    return (tracker, [loc0.coordinate, loc1.coordinate, loc2.coordinate], ["A": workerA, "B": workerB])
   }
   
   func testYieldCollectionAmount() {
@@ -58,12 +58,10 @@ class HarvestTests: XCTestCase {
     
     let collectionPointsA = tracker
       .collections[workers["A"]!]?
-      .collectionPoints
       .map { $0.location }
     
     let collectionPointsB = tracker
       .collections[workers["B"]!]?
-      .collectionPoints
       .map { $0.location }
     
     XCTAssertEqual(collectionPointsA?.count, 2)
@@ -75,12 +73,10 @@ class HarvestTests: XCTestCase {
     
     let collectionPointsA = tracker
       .collections[workers["A"]!]?
-      .collectionPoints
       .map { $0.location }
     
     let collectionPointsB = tracker
       .collections[workers["B"]!]?
-      .collectionPoints
       .map { $0.location }
     
     XCTAssertEqual(collectionPointsA, [locs[0], locs[1]])
@@ -128,8 +124,8 @@ class HarvestTests: XCTestCase {
     }
     
     for (x, y) in zip(tracker.pathTracked(), locsTuple) {
-      XCTAssertEqual(x.0, y.0)
-      XCTAssertEqual(x.1, y.1)
+      XCTAssertEqual(x.latitude, y.0)
+      XCTAssertEqual(x.longitude, y.1)
     }
   }
     

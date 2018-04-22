@@ -60,6 +60,13 @@ final class Worker {
       "type": kind == .foreman ? "Foreman" : "Worker"
     ]]
   }
+  
+  static var currentWorker: Worker {
+    return Worker(json: [
+      "name": HarvestUser.current.displayName,
+      "email": HarvestUser.current.email
+    ], id: HarvestUser.current.uid)
+  }
 }
 
 extension Worker : Hashable {

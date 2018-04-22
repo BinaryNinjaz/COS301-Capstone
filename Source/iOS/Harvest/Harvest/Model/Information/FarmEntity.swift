@@ -315,6 +315,10 @@ class Entities {
   }
   
   func worker(withId id: String) -> Worker? {
+    if id == HarvestUser.current.uid {
+      return Worker.currentWorker
+    }
+    
     guard let entity = workers
       .first(where: { $0.1.id == id })?
     .value else {

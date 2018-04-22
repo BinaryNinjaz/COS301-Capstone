@@ -18,38 +18,11 @@ extension HarvestDB {
     let cref = ref.child(Path.sessions)
     let key = cref.childByAutoId().key
     
-    var cs = [String: Any]()
-    
-    for (w, c) in workers {
-      var collections = [String: Any]()
-      var i = 0
-      
-      for cp in c {
-        let d = cp.date.timeIntervalSince1970
-        let lat = cp.location.latitude
-        let lng = cp.location.longitude
-        
-        collections[i.description] = [
-          "date": d,
-          "coord": [
-            "lat": lat,
-            "lng": lng
-          ]
-        ]
-        
-        i += 1
-      }
-      
-      let (f, l) = (w.firstname.removedFirebaseInvalids(),
-                    w.lastname.removedFirebaseInvalids())
-      cs[f + " " + l] = collections
-    }
-    
     let data: [String: Any] = [
       "start_date": date.timeIntervalSince1970,
       "end_date": Date().timeIntervalSince1970,
       "uid": uid,
-      "collections": cs,
+      "collections": workers.firebaseSessionRepresentation(),
       "track": track.firbaseCoordRepresentation()
     ]
     

@@ -33,7 +33,7 @@
 		167448C72089430C00FA605C /* EntityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C62089430C00FA605C /* EntityViewController.swift */; };
 		167448C9208A49F700FA605C /* FarmEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C8208A49F700FA605C /* FarmEntity.swift */; };
 		167448CB208A5B5D00FA605C /* DBAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CA208A5B5D00FA605C /* DBAuth.swift */; };
-		167448CD208A5B8100FA605C /* DMWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CC208A5B8100FA605C /* DMWorker.swift */; };
+		167448CD208A5B8100FA605C /* DBWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CC208A5B8100FA605C /* DBWorker.swift */; };
 		167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CE208A5B8B00FA605C /* DBOrchard.swift */; };
 		167448D1208A5B9800FA605C /* DBFarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D0208A5B9800FA605C /* DBFarm.swift */; };
 		167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D2208A5C3C00FA605C /* DBTracker.swift */; };
@@ -43,6 +43,7 @@
 		167448E1208B2E2F00FA605C /* GMSConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E0208B2E2F00FA605C /* GMSConverter.swift */; };
 		167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */; };
 		167448E9208BD6F900FA605C /* Codables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E8208BD6F900FA605C /* Codables.swift */; };
+		167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448EA208C085900FA605C /* FirebaseConverter.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
@@ -113,7 +114,7 @@
 		167448C62089430C00FA605C /* EntityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityViewController.swift; sourceTree = "<group>"; };
 		167448C8208A49F700FA605C /* FarmEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmEntity.swift; sourceTree = "<group>"; };
 		167448CA208A5B5D00FA605C /* DBAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBAuth.swift; sourceTree = "<group>"; };
-		167448CC208A5B8100FA605C /* DMWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMWorker.swift; sourceTree = "<group>"; };
+		167448CC208A5B8100FA605C /* DBWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBWorker.swift; sourceTree = "<group>"; };
 		167448CE208A5B8B00FA605C /* DBOrchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBOrchard.swift; sourceTree = "<group>"; };
 		167448D0208A5B9800FA605C /* DBFarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBFarm.swift; sourceTree = "<group>"; };
 		167448D2208A5C3C00FA605C /* DBTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTracker.swift; sourceTree = "<group>"; };
@@ -123,6 +124,7 @@
 		167448E0208B2E2F00FA605C /* GMSConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSConverter.swift; sourceTree = "<group>"; };
 		167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEurekaViewController.swift; sourceTree = "<group>"; };
 		167448E8208BD6F900FA605C /* Codables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codables.swift; sourceTree = "<group>"; };
+		167448EA208C085900FA605C /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -285,7 +287,7 @@
 			children = (
 				16420FCB2069718400E1A292 /* Database.swift */,
 				167448CA208A5B5D00FA605C /* DBAuth.swift */,
-				167448CC208A5B8100FA605C /* DMWorker.swift */,
+				167448CC208A5B8100FA605C /* DBWorker.swift */,
 				167448CE208A5B8B00FA605C /* DBOrchard.swift */,
 				167448D0208A5B9800FA605C /* DBFarm.swift */,
 				167448D2208A5C3C00FA605C /* DBTracker.swift */,
@@ -366,6 +368,7 @@
 			children = (
 				167448E0208B2E2F00FA605C /* GMSConverter.swift */,
 				167448E8208BD6F900FA605C /* Codables.swift */,
+				167448EA208C085900FA605C /* FirebaseConverter.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -728,13 +731,14 @@
 				16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */,
 				167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */,
 				16420FCC2069718400E1A292 /* Database.swift in Sources */,
+				167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */,
 				167448C420893B8200FA605C /* SortedDictionary.swift in Sources */,
 				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
 				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
 				167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */,
-				167448CD208A5B8100FA605C /* DMWorker.swift in Sources */,
+				167448CD208A5B8100FA605C /* DBWorker.swift in Sources */,
 				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
 				167448DA208A83E300FA605C /* Session.swift in Sources */,

@@ -120,7 +120,7 @@ public class Session {
       "end_date": endDate.timeIntervalSince1970,
       "uid": foreman.id,
       "track": track.firbaseCoordRepresentation(),
-      "collections": collections.firebaseCoordRepresentation()
+      "collections": collections.firebaseSessionRepresentation()
     ]]
   }
 }
@@ -132,7 +132,7 @@ extension Session : Equatable {
       && lhs.endDate == rhs.endDate
       && lhs.foreman == rhs.foreman
       && lhs.track == rhs.track
-//      && lhs.collections == rhs.collections // FIXME MAYBE?
+//      && lhs.collections == rhs.collections // FIXME MAYBE WE MAKE EDIT COLLECTION POINT?
   }
 }
 
