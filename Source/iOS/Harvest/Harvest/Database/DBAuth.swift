@@ -54,7 +54,8 @@ extension HarvestDB {
         HarvestUser.current.workingForIDs.append(contentsOf: uids)
         completion(true)
       })
-      if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
+      if let oldSession = try? Disk
+        .retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
       }
     }

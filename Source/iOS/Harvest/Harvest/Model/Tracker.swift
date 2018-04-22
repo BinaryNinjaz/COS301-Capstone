@@ -16,12 +16,14 @@ struct CollectionPoint {
 }
 
 struct Tracker : Codable {
+  private(set) var uid: String
   private(set) var trackCount: Int
   private(set) var sessionStart: Date
   private(set) var lastCollection: Date
   private(set) var collections: [Worker: [CollectionPoint]]
   
-  init() {
+  init(uid: String) {
+    self.uid = uid
     trackCount = 0
     sessionStart = Date()
     lastCollection = sessionStart
@@ -80,7 +82,7 @@ struct Tracker : Codable {
   
   func storeSession() {
     HarvestDB.collect(from: collections,
-                      byUserId: HarvestUser.current.uid,
+                      byUserId: uid,
                       on: sessionStart,
                       track: pathTracked())
     
@@ -106,6 +108,7 @@ struct Tracker : Codable {
   }
   
   enum CodingKeys : String, CodingKey {
+    case uid
     case trackCount
     case sessionStart
     case lastCollection
@@ -115,6 +118,7 @@ struct Tracker : Codable {
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
     
+    uid = try values.decode(String.self, forKey: .uid)
     trackCount = try values.decode(Int.self, forKey: .trackCount)
     sessionStart = try values.decode(Date.self, forKey: .sessionStart)
     lastCollection = try values.decode(Date.self, forKey: .lastCollection)
@@ -124,6 +128,7 @@ struct Tracker : Codable {
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     
+    try container.encode(uid, forKey: .uid)
     try container.encode(trackCount, forKey: .trackCount)
     try container.encode(sessionStart, forKey: .sessionStart)
     try container.encode(lastCollection, forKey: .lastCollection)
