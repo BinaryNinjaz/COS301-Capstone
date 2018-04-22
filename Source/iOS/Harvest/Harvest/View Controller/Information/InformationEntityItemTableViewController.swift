@@ -135,6 +135,44 @@ class InformationEntityItemTableViewController: UITableViewController {
     
     return kind == .session ? formatter.string(from: date)  : nil
   }
+  
+  override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    return UITableViewCellEditingStyle.delete
+  }
+  
+  override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    if editingStyle == .delete {
+      guard kind != .session else {
+        let items = Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[indexPath.section])
+        let item = items[indexPath.row]
+        
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        HarvestDB.delete(session: item) { err, ref in
+          tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+        
+        return
+      }
+      
+      guard let item = items?[indexPath.row] else {
+        return
+      }
+      
+      if let w = item.worker {
+        HarvestDB.delete(worker: w) { err, ref in
+          tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+      } else if let f = item.farm {
+        HarvestDB.delete(farm: f) { err, ref in
+          tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+      } else if let o = item.orchard {
+        HarvestDB.delete(orchard: o) { err, ref in
+          tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+      }
+    }
+  }
 
   // MARK: - Navigation
 

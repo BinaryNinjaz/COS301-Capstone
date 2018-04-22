@@ -59,4 +59,14 @@ extension HarvestDB {
     let update = farm.json()
     farms.updateChildValues(update)
   }
+  
+  static func delete(farm: Farm, completion: @escaping (Error?, DatabaseReference) -> ()) {
+    let farms = ref.child(Path.farms)
+    guard farm.id != "" else {
+      return
+    }
+    farms.child(farm.id).removeValue(completionBlock: { (err, ref) in
+      completion(err, ref)
+    })
+  }
 }

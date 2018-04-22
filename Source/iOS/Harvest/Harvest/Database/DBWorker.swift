@@ -69,4 +69,14 @@ extension HarvestDB {
     ]
     workerRefs.updateChildValues(update)
   }
+  
+  static func delete(worker: Worker, completion: @escaping (Error?, DatabaseReference) -> ()) {
+    let workers = ref.child(Path.workers)
+    guard worker.id != "" else {
+      return
+    }
+    workers.child(worker.id).removeValue(completionBlock: { (err, ref) in
+      completion(err, ref)
+    })
+  }
 }
