@@ -65,6 +65,37 @@ extension UIColor {
     }
   }
   
+  static func color(between p: UIColor, and q: UIColor, atFraction a: CGFloat) -> UIColor {
+    var pr: CGFloat = 0.0,
+        pg: CGFloat = 0.0,
+        pb: CGFloat = 0.0,
+        pa: CGFloat = 0.0
+    
+    p.getRed(&pr, green: &pg, blue: &pb, alpha: &pa)
+    
+    var qr: CGFloat = 0.0,
+        qg: CGFloat = 0.0,
+        qb: CGFloat = 0.0,
+        qa: CGFloat = 0.0
+    
+    q.getRed(&qr, green: &qg, blue: &qb, alpha: &qa)
+    
+    let (r, g, b, a) = (pr + a * qr, pg + a * qg, pb + a * qb, pa + a * qa)
+    
+    return UIColor(red: r, green: g, blue: b, alpha: a)
+  }
+  
+  static var harvestGreen: [UIColor] {
+    let s = UIColor(hue: 141.0 / 360.0, saturation: 0.78, brightness: 0.73, alpha: 1)
+    let e = UIColor(hue: 141.0 / 360.0, saturation: 0.58, brightness: 0.2, alpha: 1)
+    
+    return [s, e]
+  }
+  
+  static func green(atFraction a: CGFloat) -> UIColor {
+    return color(between: UIColor.harvestGreen[0], and: UIColor.harvestGreen[1], atFraction: a)
+  }
+  
   static var titleLabel: UIColor {
     return UIColor(white: 0.85, alpha: 1)
   }

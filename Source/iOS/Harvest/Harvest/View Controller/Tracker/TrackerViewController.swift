@@ -203,7 +203,23 @@ extension TrackerViewController : UICollectionViewDataSource {
     
     cell.myBackgroundView.frame.size = cell.frame.size
     
-    cell.myBackgroundView.apply(gradient: CAGradientLayer.blue)
+    let r = collectionView.convert(cell.frame.origin, to: collectionView)
+    
+    let h = collectionView.frame.height
+    
+    let cy = r.y
+    let ch = cell.frame.size.height
+    let g = CAGradientLayer.gradient(
+      colors: [
+        UIColor.green(atFraction: cy / h),
+        UIColor.green(atFraction: (cy + ch) / h)
+      ],
+      locations: [0, 1],
+      cornerRadius: 5,
+      borderColor: .clear)
+    
+    cell.myBackgroundView.apply(gradient: g)
+    
     cell.nameLabel.text = worker.firstname + " " + worker.lastname
     cell.yieldLabel.text = String(tracker?.collections[worker]?.count ?? 0)
     
@@ -262,6 +278,34 @@ extension TrackerViewController : UICollectionViewDataSource {
     }
     
     return cell
+  }
+  
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    let cells = workerCollectionView.visibleCells
+    
+    for cell in cells {
+      guard let cell = cell as? WorkerCollectionViewCell else {
+        continue
+      }
+      
+      let r = workerCollectionView.convert(cell.frame.origin, to: workerCollectionView.superview)
+      
+      let h = workerCollectionView.frame.height
+      
+      let cy = r.y
+      let ch = cell.frame.size.height
+      
+      let g = CAGradientLayer.gradient(
+        colors: [
+          UIColor.green(atFraction: cy / h),
+          UIColor.green(atFraction: (cy + ch) / h)
+        ],
+        locations: [0, 1],
+        cornerRadius: 5,
+        borderColor: .clear)
+      
+      cell.myBackgroundView.apply(gradient: g)
+    }
   }
 }
 
