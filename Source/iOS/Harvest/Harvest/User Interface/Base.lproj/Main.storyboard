@@ -785,6 +785,7 @@ Expected Yield: 0</string>
                                         </visualEffectView>
                                     </subviews>
                                 </view>
+                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <outlet property="activityIndicator" destination="fUG-eE-3Sc" id="h2K-IJ-dtn"/>
                                     <outlet property="image" destination="6pW-lx-r7r" id="r48-hd-uLX"/>

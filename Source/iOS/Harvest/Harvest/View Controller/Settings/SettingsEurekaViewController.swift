@@ -93,7 +93,7 @@ class SettingsEurekaViewController : FormViewController {
       <<< organizationRow
       
       +++ Section("Account")
-      <<< emailRow
+      <<< userRow
       <<< logoutRow
   }
   

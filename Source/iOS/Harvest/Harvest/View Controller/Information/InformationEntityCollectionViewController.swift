@@ -21,11 +21,13 @@ class InformationEntityCollectionViewController: UICollectionViewController {
         let cell = collectionView?.cellForItem(at: currentIndexPath)
           as? InformationEntityCollectionViewCell
         cell?.activityIndicator.stopAnimating()
+        cell?.image.alpha = 1.0
       }
       if let newIndexPath = newValue {
         let cell = collectionView?.cellForItem(at: newIndexPath)
           as? InformationEntityCollectionViewCell
         cell?.activityIndicator.startAnimating()
+        cell?.image.alpha = 0.5
       }
     }
   }
@@ -94,11 +96,12 @@ class InformationEntityCollectionViewController: UICollectionViewController {
     cell.textLabel.text = entity
     if goingToIndexPath == indexPath {
       cell.activityIndicator.startAnimating()
+      cell.image.alpha = 0.75
     } else {
       cell.activityIndicator.stopAnimating()
+      cell.image.alpha = 1.0
     }
     
-  
     cell.layer.cornerRadius = 16
     
     return cell
