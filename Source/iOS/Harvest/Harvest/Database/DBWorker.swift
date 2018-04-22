@@ -51,12 +51,15 @@ extension HarvestDB {
   
   static func save(worker: Worker) {
     let workers = ref.child(Path.workers)
+    let foremen = ref.child(Path.foremen)
+    
     if worker.id == "" {
       worker.id = workers.childByAutoId().key
     }
     let update = worker.json()
     workers.updateChildValues(update)
     if worker.email != "" {
+      foremen.updateChildValues([worker.email.removedFirebaseInvalids(): true])
       saveWorkerReference(worker)
     }
   }

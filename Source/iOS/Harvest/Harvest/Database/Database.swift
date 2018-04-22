@@ -62,6 +62,9 @@ struct HarvestDB {
     static var workers: String {
       return "\(Path.parent)/workers"
     }
+    static var foremen: String {
+      return "\(Path.parent)/foremen"
+    }
     static var orchards: String {
       return "\(Path.parent)/orchards"
     }
@@ -96,10 +99,10 @@ extension String {
     var result = ""
     
     for c in self {
-      if !"[.*$#]".contains(c) {
+      if !".".contains(c) {
         result += "\(c)"
       } else {
-        result += " "
+        result += ","
       }
     }
     
