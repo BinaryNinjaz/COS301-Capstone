@@ -23,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     GMSServices.provideAPIKey("AIzaSyCqLn8RGeR84StTCIA1uvoO_iWGhXw8vAU")
     FirebaseApp.configure()
     
+    Database.database().isPersistenceEnabled = true
+    
     GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
     
     return true
