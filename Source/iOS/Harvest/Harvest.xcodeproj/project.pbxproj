@@ -45,10 +45,13 @@
 		167448E9208BD6F900FA605C /* Codables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E8208BD6F900FA605C /* Codables.swift */; };
 		167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448EA208C085900FA605C /* FirebaseConverter.swift */; };
 		16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */; };
+		16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906055208E7FFA00BE5ADE /* ColorScheme.swift */; };
+		16906058208E801800BE5ADE /* Gradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906057208E801800BE5ADE /* Gradients.swift */; };
+		1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906059208E803300BE5ADE /* ViewControllerExtensions.swift */; };
+		1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605B208E805400BE5ADE /* ViewExtensions.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
-		169E519B206C6C8D006B923E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E519A206C6C8D006B923E /* Utils.swift */; };
 		16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */; };
 		16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */; };
 		16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */; };
@@ -127,10 +130,13 @@
 		167448E8208BD6F900FA605C /* Codables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codables.swift; sourceTree = "<group>"; };
 		167448EA208C085900FA605C /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
 		16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrchardInFarmEurekaCell.swift; sourceTree = "<group>"; };
+		16906055208E7FFA00BE5ADE /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
+		16906057208E801800BE5ADE /* Gradients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradients.swift; sourceTree = "<group>"; };
+		16906059208E803300BE5ADE /* ViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtensions.swift; sourceTree = "<group>"; };
+		1690605B208E805400BE5ADE /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		169E519A206C6C8D006B923E /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingWorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWorkingCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -371,7 +377,10 @@
 				167448E8208BD6F900FA605C /* Codables.swift */,
 				167448EA208C085900FA605C /* FirebaseConverter.swift */,
 				16420FC820696B8F00E1A292 /* QuickAlert.swift */,
-				169E519A206C6C8D006B923E /* Utils.swift */,
+				16906055208E7FFA00BE5ADE /* ColorScheme.swift */,
+				16906057208E801800BE5ADE /* Gradients.swift */,
+				16906059208E803300BE5ADE /* ViewControllerExtensions.swift */,
+				1690605B208E805400BE5ADE /* ViewExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -723,14 +732,18 @@
 			files = (
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
 				167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */,
+				16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */,
 				167448D1208A5B9800FA605C /* DBFarm.swift in Sources */,
 				167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */,
+				1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */,
+				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
 				167448CB208A5B5D00FA605C /* DBAuth.swift in Sources */,
 				1604E4A5206958E900E9BA15 /* SignInViewController.swift in Sources */,
 				1604E4A3206958E900E9BA15 /* AppDelegate.swift in Sources */,
+				16906058208E801800BE5ADE /* Gradients.swift in Sources */,
 				16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */,
 				167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */,
 				16420FCC2069718400E1A292 /* Database.swift in Sources */,
@@ -759,7 +772,6 @@
 				167448E1208B2E2F00FA605C /* GMSConverter.swift in Sources */,
 				167448E9208BD6F900FA605C /* Codables.swift in Sources */,
 				16C82F5E20819B6E0074595C /* Poly.swift in Sources */,
-				169E519B206C6C8D006B923E /* Utils.swift in Sources */,
 				16C82F5B20819B6E0074595C /* Ellipse.swift in Sources */,
 				16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */,
 				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,
