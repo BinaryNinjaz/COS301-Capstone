@@ -77,7 +77,7 @@ extension UIColor {
   
   static var harvestGreen: [UIColor] {
     let s = UIColor(hue: 141.0 / 360.0, saturation: 0.78, brightness: 0.73, alpha: 1)
-    let e = UIColor(hue: 141.0 / 360.0, saturation: 0.98, brightness: 0.5, alpha: 1)
+    let e = UIColor(hue: 141.0 / 360.0, saturation: 0.98, brightness: 0.25, alpha: 1)
     
     return [s, e]
   }

@@ -24,10 +24,8 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
     }
   }
   
-  override public func viewWillAppear(_ animated: Bool) {
-//    entity?.information(for: form) {
-//      self.navigationItem.rightBarButtonItem?.isEnabled = true
-//    }
+  override public func viewDidAppear(_ animated: Bool) {
+    
   }
 
   override public func didReceiveMemoryWarning() {
