@@ -109,6 +109,7 @@ extension HarvestDB {
     ) {
     do {
       TrackerViewController.tracker?.storeSession()
+      TrackerViewController.tracker = nil
       try Auth.auth().signOut()
       GIDSignIn.sharedInstance().disconnect()
       GIDSignIn.sharedInstance().signOut()
