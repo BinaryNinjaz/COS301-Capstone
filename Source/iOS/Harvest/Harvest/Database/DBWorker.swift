@@ -75,11 +75,14 @@ extension HarvestDB {
   
   static func delete(worker: Worker, completion: @escaping (Error?, DatabaseReference) -> ()) {
     let workers = ref.child(Path.workers)
+    let foremen = ref.child(Path.foremen)
     guard worker.id != "" else {
       return
     }
-    workers.child(worker.id).removeValue(completionBlock: { (err, ref) in
-      completion(err, ref)
+    workers.child(worker.id).removeValue(completionBlock: { err, ref in
+      foremen.child(worker.email.removedFirebaseInvalids()).removeValue() { err, ref in
+        completion(err, ref)
+      }
     })
   }
 }
