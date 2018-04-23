@@ -49,7 +49,7 @@ extension HarvestDB {
     }
   }
   
-  static func save(worker: Worker) {
+  static func save(worker: Worker, oldEmail: String) {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
     
@@ -60,15 +60,18 @@ extension HarvestDB {
     workers.updateChildValues(update)
     if worker.email != "" {
       foremen.updateChildValues([worker.email.removedFirebaseInvalids(): true])
-      saveWorkerReference(worker)
+      saveWorkerReference(worker, oldEmail)
+      if oldEmail != "" && worker.email != oldEmail {
+        foremen.child(oldEmail.removedFirebaseInvalids()).removeValue()
+      }
     }
   }
   
-  static func saveWorkerReference(_ worker: Worker) {
+  static func saveWorkerReference(_ worker: Worker, _ oldEmail: String) {
     let workerRefs = ref.child(Path.workingFor + "/" + worker.email.removedFirebaseInvalids())
     
     let update = [
-      HarvestUser.current.uid: HarvestUser.current.organizationName
+      HarvestUser.current.selectedOrganiztionUIDOrMine: HarvestUser.current.selectedOrganiztionNameOrMine
     ]
     workerRefs.updateChildValues(update)
   }
@@ -76,12 +79,17 @@ extension HarvestDB {
   static func delete(worker: Worker, completion: @escaping (Error?, DatabaseReference) -> ()) {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
+    let workingFor = ref.child(Path.workingFor)
+    
     guard worker.id != "" else {
       return
     }
     workers.child(worker.id).removeValue(completionBlock: { err, ref in
       foremen.child(worker.email.removedFirebaseInvalids()).removeValue() { err, ref in
         completion(err, ref)
+      }
+      if let orgUID = HarvestUser.current.selectedOrganizationUID {
+        workingFor.child(worker.email.removedFirebaseInvalids() + "/" + orgUID).removeValue()
       }
     })
   }

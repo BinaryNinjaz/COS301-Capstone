@@ -52,13 +52,13 @@ class SettingsEurekaViewController : FormViewController {
       for organ in HarvestUser.current.workingForIDs {
         let o = OrganizationInfo(organ.uid, organ.name)
         row.options.append(o)
-        if o.uid == HarvestUser.current.selectedOrganization {
+        if o.uid == HarvestUser.current.selectedOrganizationUID {
           aOrgan = o
         }
       }
       row.value = aOrgan
     }.onChange { row in
-      HarvestUser.current.selectedOrganization = row.value?.uid == "My Organization"
+      HarvestUser.current.selectedOrganizationUID = row.value?.uid == "My Organization"
         ? nil
         : row.value?.uid
     }

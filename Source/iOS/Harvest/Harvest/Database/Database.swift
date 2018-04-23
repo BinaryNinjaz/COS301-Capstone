@@ -23,10 +23,16 @@ class HarvestUser {
       print(organizationName)
     }
   }
-  var selectedOrganization: String? = nil {
+  var selectedOrganizationUID: String? = nil {
     didSet {
-      UserDefaults.standard.set(organization: selectedOrganization)
+      UserDefaults.standard.set(organization: selectedOrganizationUID)
     }
+  }
+  var selectedOrganiztionUIDOrMine: String {
+    return selectedOrganizationUID ?? uid
+  }
+  var selectedOrganiztionNameOrMine: String {
+    return workingForName(byUID: selectedOrganiztionUIDOrMine) ?? organizationName
   }
   
   init() {
@@ -38,6 +44,15 @@ class HarvestUser {
   }
   
   static var current = HarvestUser()
+  
+  func workingForName(byUID uid: String) -> String? {
+    for (id, name) in workingForIDs {
+      if id == uid {
+        return name
+      }
+    }
+    return nil
+  }
 }
 
 
@@ -46,9 +61,9 @@ struct HarvestDB {
   
   struct Path {
     static var parent: String {
-      return HarvestUser.current.selectedOrganization == nil
+      return HarvestUser.current.selectedOrganizationUID == nil
         ? HarvestUser.current.uid
-        : HarvestUser.current.selectedOrganization!
+        : HarvestUser.current.selectedOrganizationUID!
     }
     static var yields: String {
       return "\(Path.parent)/yields"

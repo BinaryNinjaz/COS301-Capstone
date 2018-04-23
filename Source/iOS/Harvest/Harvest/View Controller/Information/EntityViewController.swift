@@ -48,7 +48,8 @@ class EntityViewController: FormViewController {
       }
     case let .worker(w):
       if let t = w.tempory {
-        HarvestDB.save(worker: t)
+        HarvestDB.save(worker: t, oldEmail: w.email)
+        w.email = t.email
         self.navigationItem.rightBarButtonItem?.isEnabled = false
       }
     case let .session(s):
