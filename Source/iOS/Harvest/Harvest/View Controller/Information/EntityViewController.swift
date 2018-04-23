@@ -8,24 +8,29 @@
 
 import Eureka
 
-class EntityViewController: FormViewController {
+public class EntityViewController: FormViewController, TypedRowControllerType {
+  public var row: RowOf<Orchard>!
+  public typealias RowValue = Orchard
+  public var onDismissCallback: ((UIViewController) -> Void)?
+  
   var entity: EntityItem? = nil
   
   @IBOutlet weak var saveButton: UIBarButtonItem!
   
-  override func viewDidLoad() {
+  override public func viewDidLoad() {
     super.viewDidLoad()
-    
     entity?.information(for: form) {
       self.navigationItem.rightBarButtonItem?.isEnabled = true
     }
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    
+  override public func viewWillAppear(_ animated: Bool) {
+//    entity?.information(for: form) {
+//      self.navigationItem.rightBarButtonItem?.isEnabled = true
+//    }
   }
 
-  override func didReceiveMemoryWarning() {
+  override public func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }

@@ -58,10 +58,10 @@ extension HarvestDB {
   }
   
   static func update(location: CLLocationCoordinate2D) {
-    let path = Path.locations + "/" + HarvestUser.current.uid
+    let locations = ref.child(Path.locations)
     let updates =
       [
-        path: [
+        HarvestUser.current.uid: [
           "coord": [
             "lat": location.latitude,
             "lng": location.longitude
@@ -70,6 +70,6 @@ extension HarvestDB {
         ]
     ]
     
-    ref.updateChildValues(updates)
+    locations.updateChildValues(updates)
   }
 }

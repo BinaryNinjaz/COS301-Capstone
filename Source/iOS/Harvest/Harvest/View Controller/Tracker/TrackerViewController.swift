@@ -123,7 +123,7 @@ extension TrackerViewController : CLLocationManagerDelegate {
     }
     currentLocation = loc
     tracker?.track(location: loc)
-    if (lastLocationPoll == nil || Date().timeIntervalSince(lastLocationPoll!) > 60) {
+    if (lastLocationPoll == nil || Date().timeIntervalSince(lastLocationPoll!) > 60 || true) {
       HarvestDB.update(location: loc.coordinate)
       lastLocationPoll = Date()
     }

@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-class Orchard {
+final public class Orchard {
   var bagMass: Double
   var coords: [CLLocationCoordinate2D]
   var crop: String
@@ -72,7 +72,7 @@ class Orchard {
 }
 
 extension Orchard : Equatable {
-  static func ==(lhs: Orchard, rhs: Orchard) -> Bool {
+  static public func ==(lhs: Orchard, rhs: Orchard) -> Bool {
     return lhs.id == rhs.id
       && lhs.bagMass == rhs.bagMass
       && lhs.crop == rhs.crop
@@ -88,7 +88,7 @@ extension Orchard : Equatable {
 }
 
 extension Orchard : CustomStringConvertible {
-  var description: String {
+  public var description: String {
     return name
   }
 }

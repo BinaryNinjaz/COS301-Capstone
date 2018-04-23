@@ -139,12 +139,37 @@ extension Farm {
       self.tempory?.details = row.value ?? ""
       onChange()
     }
+    let o = Orchard(json: ["farm": id], id: "")
+    let orchardRow = OrchardInFarmRow(tag: nil, orchard: o) { row in
+      row.value = o
+      row.title = "Add Orchard to \(self.name)"
+    }.cellUpdate { (cell, row) in
+      cell.textLabel?.textColor = UIColor.Bootstrap.blue[1]
+      cell.textLabel?.textAlignment = .center
+    }
+    
+    let orchardsSection = Section("Orchards in \(name)")
+    
+    for orchard in Entities.shared.orchardsList() {
+      let oRow = OrchardInFarmRow(tag: nil, orchard: orchard) { row in
+        row.value = orchard
+        row.title = orchard.name
+      }
+      if orchard.assignedFarm == id {
+        orchardsSection <<< oRow
+      }
+    }
     
     form +++ Section("Farm")
       <<< nameRow
       
       +++ Section("Details")
       <<< detailsRow
+    
+      +++ Section()
+      <<< orchardRow
+    
+      +++ orchardsSection
   }
 }
 

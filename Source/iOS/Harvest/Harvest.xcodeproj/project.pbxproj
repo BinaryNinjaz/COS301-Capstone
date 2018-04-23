@@ -44,6 +44,7 @@
 		167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */; };
 		167448E9208BD6F900FA605C /* Codables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E8208BD6F900FA605C /* Codables.swift */; };
 		167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448EA208C085900FA605C /* FirebaseConverter.swift */; };
+		16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
@@ -125,6 +126,7 @@
 		167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEurekaViewController.swift; sourceTree = "<group>"; };
 		167448E8208BD6F900FA605C /* Codables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codables.swift; sourceTree = "<group>"; };
 		167448EA208C085900FA605C /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
+		16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrchardInFarmEurekaCell.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -277,7 +279,6 @@
 				165697D42087B27E002CBCEE /* Views */,
 				16C82F6A20862A100074595C /* Tabs */,
 				16F2BA4B20766041007652E8 /* Cells */,
-				16420FC820696B8F00E1A292 /* QuickAlert.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -369,6 +370,8 @@
 				167448E0208B2E2F00FA605C /* GMSConverter.swift */,
 				167448E8208BD6F900FA605C /* Codables.swift */,
 				167448EA208C085900FA605C /* FirebaseConverter.swift */,
+				16420FC820696B8F00E1A292 /* QuickAlert.swift */,
+				169E519A206C6C8D006B923E /* Utils.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -389,7 +392,6 @@
 				167448AD208926E000FA605C /* Information */,
 				16C82F5420819B4C0074595C /* GeoKit */,
 				169E5196206C62E6006B923E /* Tracker.swift */,
-				169E519A206C6C8D006B923E /* Utils.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -423,6 +425,7 @@
 				16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */,
 				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
 				167448DD208A9F4900FA605C /* SessionEurekaCell.swift */,
+				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -742,6 +745,7 @@
 				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
 				167448DA208A83E300FA605C /* Session.swift in Sources */,
+				16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */,
 				167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */,
 				167448AF2089271400FA605C /* Worker.swift in Sources */,
 				167448C9208A49F700FA605C /* FarmEntity.swift in Sources */,

@@ -130,7 +130,7 @@ class InformationEntityCollectionViewController: UICollectionViewController {
       }
       
     case "Farms":
-      Entities.shared.getOnce(.farm) { es in
+      Entities.shared.getMultiplesOnce([.farm, .orchard]) { es in
         self.selectedKind = .farm
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
