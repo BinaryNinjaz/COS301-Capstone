@@ -104,17 +104,17 @@ extension SortedDictionary where Key: Comparable {
   }
 }
 
-//extension SortedDictionary : RangeRemovableCollection {
-//  mutating func removeSubrange(_ bounds: Range<Index>) {
-//    for ref_offset in bounds {
-//      guard let idx = _dict.index(forKey: _ref[ref_offset.boxed]) else {
-//        continue
-//      }
-//      _dict.remove(at: idx)
-//    }
-//    _ref.removeSubrange(bounds.lowerBound.boxed..<bounds.upperBound.boxed)
-//  }
-//}
+extension SortedDictionary : RangeRemovableCollection {
+  mutating func removeSubrange(_ bounds: Range<Index>) {
+    for ref_offset in stride(from: bounds.lowerBound, to: bounds.upperBound, by: 1) {
+      guard let idx = _dict.index(forKey: _ref[ref_offset.boxed]) else {
+        continue
+      }
+      _dict.remove(at: idx)
+    }
+    _ref.removeSubrange(bounds.lowerBound.boxed..<bounds.upperBound.boxed)
+  }
+}
 
 extension SortedDictionary : RandomAccessCollection {
   subscript(key: Key) -> Value? {

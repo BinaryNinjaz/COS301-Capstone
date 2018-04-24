@@ -49,6 +49,7 @@
 		16906058208E801800BE5ADE /* Gradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906057208E801800BE5ADE /* Gradients.swift */; };
 		1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906059208E803300BE5ADE /* ViewControllerExtensions.swift */; };
 		1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605B208E805400BE5ADE /* ViewExtensions.swift */; };
+		1690605E208F61DF00BE5ADE /* DBUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605D208F61DF00BE5ADE /* DBUser.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
@@ -134,6 +135,7 @@
 		16906057208E801800BE5ADE /* Gradients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradients.swift; sourceTree = "<group>"; };
 		16906059208E803300BE5ADE /* ViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtensions.swift; sourceTree = "<group>"; };
 		1690605B208E805400BE5ADE /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		1690605D208F61DF00BE5ADE /* DBUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBUser.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -294,6 +296,7 @@
 			children = (
 				16420FCB2069718400E1A292 /* Database.swift */,
 				167448CA208A5B5D00FA605C /* DBAuth.swift */,
+				1690605D208F61DF00BE5ADE /* DBUser.swift */,
 				167448CC208A5B8100FA605C /* DBWorker.swift */,
 				167448CE208A5B8B00FA605C /* DBOrchard.swift */,
 				167448D0208A5B9800FA605C /* DBFarm.swift */,
@@ -734,6 +737,7 @@
 				167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */,
 				16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */,
 				167448D1208A5B9800FA605C /* DBFarm.swift in Sources */,
+				1690605E208F61DF00BE5ADE /* DBUser.swift in Sources */,
 				167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */,
 				1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */,
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,

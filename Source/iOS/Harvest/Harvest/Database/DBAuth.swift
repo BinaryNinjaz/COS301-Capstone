@@ -41,19 +41,9 @@ extension HarvestDB {
         completion(false)
         return
       }
-      UserDefaults.standard.set(password: password)
-      UserDefaults.standard.set(username: email)
       
-      HarvestUser.current.email = user.email!
-      HarvestUser.current.displayName = user.displayName ?? ""
-      HarvestUser.current.uid = user.uid
-      HarvestUser.current.selectedOrganizationUID = UserDefaults.standard.getOrganization()
-      HarvestUser.current.organizationName = UserDefaults.standard.getMyName() ?? ""
-      HarvestUser.current.workingForIDs.removeAll(keepingCapacity: true)
-      HarvestDB.getWorkingFor(completion: { (uids) in
-        HarvestUser.current.workingForIDs.append(contentsOf: uids)
-        completion(true)
-      })
+      HarvestUser.current.setUser(user, password, completion)
+      
       if let oldSession = try? Disk
         .retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
@@ -114,12 +104,8 @@ extension HarvestDB {
       GIDSignIn.sharedInstance().disconnect()
       GIDSignIn.sharedInstance().signOut()
       
-      HarvestUser.current.displayName = ""
-      HarvestUser.current.email = ""
-      HarvestUser.current.organizationName = ""
-      HarvestUser.current.selectedOrganizationUID = nil
-      HarvestUser.current.uid = ""
-      HarvestUser.current.workingForIDs.removeAll()
+      HarvestUser.current.reset()
+      Entities.shared.reset()
       
     } catch {
       //    FIXME  #warning("Complete with proper errors")

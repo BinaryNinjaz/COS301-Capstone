@@ -167,6 +167,13 @@ class Entities {
     watch(.session)
   }
   
+  func reset() {
+    farms.removeAll()
+    workers.removeAll()
+    orchards.removeAll()
+    sessions.removeAll()
+  }
+  
   func getOnce(_ kind: EntityItem.Kind, completion: @escaping (Entities) -> ()) {
     switch kind {
     case .worker:

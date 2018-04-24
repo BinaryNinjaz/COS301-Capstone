@@ -137,22 +137,15 @@ class SignInViewController: UIViewController {
     
     if let user = Auth.auth().currentUser {
       isLoading = true
-      UserDefaults.standard.set(username: user.email!)
-      HarvestUser.current.email = user.email!
-      HarvestUser.current.displayName = user.displayName ?? ""
-      HarvestUser.current.uid = user.uid
-      HarvestUser.current.selectedOrganizationUID = UserDefaults.standard.getOrganization()
-      HarvestUser.current.organizationName = UserDefaults.standard.getMyName() ?? ""
-      HarvestUser.current.workingForIDs.removeAll(keepingCapacity: true)
-      HarvestDB.getWorkingFor(completion: { (uids) in
-        HarvestUser.current.workingForIDs.append(contentsOf: uids)
+      HarvestUser.current.setUser(user, nil) { (valid) in
         if let vc = self
           .storyboard?
           .instantiateViewController(withIdentifier: "mainTabBarViewController") {
           self.present(vc, animated: true, completion: nil)
         }
         self.isLoading = false
-      })
+      }
+      
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
       }
@@ -224,22 +217,14 @@ extension SignInViewController : GIDSignInDelegate {
         return
       }
       
-      UserDefaults.standard.set(username: user.email!)
-      HarvestUser.current.email = user.email!
-      HarvestUser.current.displayName = user.displayName ?? ""
-      HarvestUser.current.uid = user.uid
-      HarvestUser.current.selectedOrganizationUID = UserDefaults.standard.getOrganization()
-      HarvestUser.current.organizationName = UserDefaults.standard.getMyName() ?? ""
-      HarvestUser.current.workingForIDs.removeAll(keepingCapacity: true)
-      HarvestDB.getWorkingFor(completion: { (uids) in
-        HarvestUser.current.workingForIDs.append(contentsOf: uids)
+      HarvestUser.current.setUser(user, nil) { valid in
         if let vc = self
           .storyboard?
           .instantiateViewController(withIdentifier: "mainTabBarViewController") {
           self.present(vc, animated: true, completion: nil)
         }
         self.isLoading = false
-      })
+      }
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
       }

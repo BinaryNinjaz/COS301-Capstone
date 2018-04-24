@@ -34,10 +34,10 @@ class SettingsEurekaViewController : FormViewController {
     
     let nameRow = NameRow() { row in
       row.title = "Organization Name"
-      row.value = HarvestUser.current.organizationName
-      row.placeholder = "Name of the organiztion"
+      row.value = HarvestUser.current.myOrganizationName
+      row.placeholder = HarvestUser.current.myOrganizationName
     }.onChange { row in
-      HarvestUser.current.organizationName = row.value ?? ""
+      HarvestUser.current.myOrganizationName = row.value ?? ""
     }.cellUpdate { (cell, row) in
       cell.textField.textAlignment = .left
       cell.titleLabel?.textColor = .titleLabel
@@ -78,8 +78,6 @@ class SettingsEurekaViewController : FormViewController {
           let vc = self
             .storyboard?
             .instantiateViewController(withIdentifier: "signInViewController") {
-          UserDefaults.standard.removeObject(forKey: "username")
-          UserDefaults.standard.removeObject(forKey: "password")
           self.present(vc, animated: true, completion: nil)
         }
       }

@@ -24,6 +24,10 @@ extension RangeRemovableCollection {
   mutating func removeFirst(_ n: Int) {
     removeSubrange(startIndex..<index(startIndex, offsetBy: n))
   }
+  
+  mutating func removeAll() {
+    removeSubrange(startIndex..<endIndex)
+  }
 }
 
 extension RangeRemovableCollection where Self: BidirectionalCollection {
