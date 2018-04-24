@@ -1,14 +1,14 @@
 //
-//  NewOrchardInFarmEurekaCell.swift
+//  AdminEurekaCell.swift
 //  Harvest
 //
-//  Created by Letanyan Arumugam on 2018/04/23.
+//  Created by Letanyan Arumugam on 2018/04/24.
 //  Copyright © 2018 Letanyan Arumugam. All rights reserved.
 //
 
 import Eureka
 
-public final class OrchardInFarmRow: OptionsRow<PushSelectorCell<Box>>, PresenterRowType, RowType {
+public final class AdminRow: OptionsRow<PushSelectorCell<Box>>, PresenterRowType, RowType {
   
   public typealias PresenterRow = EntityViewController
   
@@ -30,14 +30,14 @@ public final class OrchardInFarmRow: OptionsRow<PushSelectorCell<Box>>, Presente
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })
   }
   
-  public required init(tag: String?, orchard: Orchard, callback: @escaping (OrchardInFarmRow) -> ()) {
+  public required init(tag: String?, admin: HarvestUser, callback: @escaping (AdminRow) -> ()) {
     super.init(tag: tag)
     presentationMode = .show(
       controllerProvider: ControllerProvider.callback {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let vc = storyboard.instantiateViewController(withIdentifier: "entityViewController")
         let evc = vc as! EntityViewController
-        evc.entity = EntityItem.orchard(orchard)
+        evc.entity = EntityItem.user(admin)
         return evc
       },
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })

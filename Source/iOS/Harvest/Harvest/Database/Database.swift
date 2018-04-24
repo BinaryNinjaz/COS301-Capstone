@@ -46,6 +46,9 @@ struct HarvestDB {
     static var workingFor: String {
       return "WorkingFor"
     }
+    static var admin: String {
+      return "\(Path.parent)/admin"
+    }
   }
   
   static func saveFarmName() {

@@ -64,10 +64,12 @@ class SettingsEurekaViewController : FormViewController {
     }
     
     
-    let userRow = LabelRow() { row in
-      row.title = """
+    let userRow = """
       \(HarvestUser.current.email) (\(HarvestUser.current.displayName))
       """
+    
+    let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
+      row.title = "Admin"
     }
     
     let logoutRow = ButtonRow() { row in
@@ -90,8 +92,8 @@ class SettingsEurekaViewController : FormViewController {
       +++ Section("Current Organization")
       <<< organizationRow
       
-      +++ Section("Account")
-      <<< userRow
+      +++ Section(userRow)
+      <<< adminRow
       <<< logoutRow
   }
   

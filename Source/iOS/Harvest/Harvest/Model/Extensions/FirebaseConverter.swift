@@ -46,3 +46,15 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
     return result
   }
 }
+
+extension Array where Element == (uid: String, name: String) {
+  func firebaseWorkingForRepresentation() -> [String: Any] {
+    var result = [String: Any]()
+    
+    for (i, n) in self {
+      result[i] = n
+    }
+    
+    return result
+  }
+}

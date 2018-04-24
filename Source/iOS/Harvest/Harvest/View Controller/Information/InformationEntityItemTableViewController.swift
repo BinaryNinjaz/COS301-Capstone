@@ -69,6 +69,9 @@ class InformationEntityItemTableViewController: UITableViewController {
     case .session:
       break
       
+    case .user:
+      break
+      
     case .none:
       break
     }
@@ -107,6 +110,8 @@ class InformationEntityItemTableViewController: UITableViewController {
       cell.textLabel?.text = f.name
     case let .session(s):
       cell.textLabel?.text = s.foreman.description
+    case .user:
+      cell.textLabel?.text = ""
     }
     
     return cell

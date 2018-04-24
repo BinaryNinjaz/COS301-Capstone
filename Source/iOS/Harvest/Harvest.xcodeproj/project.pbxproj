@@ -50,6 +50,8 @@
 		1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906059208E803300BE5ADE /* ViewControllerExtensions.swift */; };
 		1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605B208E805400BE5ADE /* ViewExtensions.swift */; };
 		1690605E208F61DF00BE5ADE /* DBUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605D208F61DF00BE5ADE /* DBUser.swift */; };
+		16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605F208F6A9400BE5ADE /* HarvestUser.swift */; };
+		16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906061208F748600BE5ADE /* AdminEurekaCell.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
@@ -136,6 +138,8 @@
 		16906059208E803300BE5ADE /* ViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtensions.swift; sourceTree = "<group>"; };
 		1690605B208E805400BE5ADE /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		1690605D208F61DF00BE5ADE /* DBUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBUser.swift; sourceTree = "<group>"; };
+		1690605F208F6A9400BE5ADE /* HarvestUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUser.swift; sourceTree = "<group>"; };
+		16906061208F748600BE5ADE /* AdminEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminEurekaCell.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -322,6 +326,7 @@
 				167448B02089299B00FA605C /* Orchard.swift */,
 				167448B220892AE900FA605C /* Farm.swift */,
 				167448D9208A83E300FA605C /* Session.swift */,
+				1690605F208F6A9400BE5ADE /* HarvestUser.swift */,
 				167448B520892BB500FA605C /* InfoRepresentation.swift */,
 			);
 			path = Information;
@@ -438,6 +443,7 @@
 				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
 				167448DD208A9F4900FA605C /* SessionEurekaCell.swift */,
 				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
+				16906061208F748600BE5ADE /* AdminEurekaCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -742,6 +748,7 @@
 				1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */,
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */,
+				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
 				167448CB208A5B5D00FA605C /* DBAuth.swift in Sources */,
@@ -782,6 +789,7 @@
 				167448DC208A897C00FA605C /* DBSession.swift in Sources */,
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
 				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
+				16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */,
 				167448C320893B8200FA605C /* SortedCollection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

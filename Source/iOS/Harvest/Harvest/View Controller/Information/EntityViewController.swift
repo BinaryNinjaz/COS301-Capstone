@@ -8,9 +8,12 @@
 
 import Eureka
 
+public struct Box : Equatable {
+}
+
 public class EntityViewController: FormViewController, TypedRowControllerType {
-  public var row: RowOf<Orchard>!
-  public typealias RowValue = Orchard
+  public var row: RowOf<Box>!
+  public typealias RowValue = Box
   public var onDismissCallback: ((UIViewController) -> Void)?
   
   var entity: EntityItem? = nil
@@ -58,6 +61,12 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
     case let .session(s):
       if let t = s.tempory {
         HarvestDB.save(session: t)
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+      }
+    case let .user(u):
+      if let t = u.temporary {
+        HarvestDB.save(harvestUser: t)
+        HarvestUser.current = HarvestUser(json: t.json())
         self.navigationItem.rightBarButtonItem?.isEnabled = false
       }
     }

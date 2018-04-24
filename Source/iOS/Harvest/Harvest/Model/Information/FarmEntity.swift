@@ -10,13 +10,14 @@ import Foundation
 
 enum EntityItem {
   enum Kind {
-    case farm, orchard, worker, session, none
+    case farm, orchard, worker, session, user, none
   }
   
   case farm(Farm)
   case orchard(Orchard)
   case worker(Worker)
   case session(Session)
+  case user(HarvestUser)
   
   var name: String {
     switch self {
@@ -24,6 +25,7 @@ enum EntityItem {
     case let .orchard(o): return o.name
     case let .worker(w): return w.firstname + " " + w.lastname
     case let .session(s): return s.description // FIXME
+    case let .user(u): return u.displayName
     }
   }
   
@@ -33,6 +35,7 @@ enum EntityItem {
     case let .orchard(o): return o.id
     case let .worker(w): return w.id
     case let .session(s): return s.id
+    case .user: return HarvestDB.Path.admin
     }
   }
   
@@ -60,6 +63,13 @@ enum EntityItem {
   var session: Session? {
     switch self {
     case let .session(s): return s
+    default: return nil
+    }
+  }
+  
+  var user: HarvestUser? {
+    switch self {
+    case let .user(u): return u
     default: return nil
     }
   }
@@ -209,6 +219,7 @@ class Entities {
         completion(self)
       }
       
+    case .user: break
     case .none: break
     }
   }
@@ -258,6 +269,7 @@ class Entities {
         }, <)
       }
       
+    case .user: break
     case .none: break
     }
   }
@@ -268,6 +280,7 @@ class Entities {
     case .orchard: return orchards
     case .worker: return workers
     case .session: return sessions
+    case .user: return nil
     case .none: return nil
     }
   }

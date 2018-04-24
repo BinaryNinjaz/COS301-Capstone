@@ -89,6 +89,8 @@ extension HarvestDB {
       changeRequest.displayName = name.first + " " + name.last
       changeRequest.commitChanges(completion: nil)
       
+      HarvestDB.save(harvestUser: HarvestUser.current)
+      
       completion(true)
     }
   }

@@ -141,7 +141,6 @@ extension Farm {
     }
     let o = Orchard(json: ["farm": id], id: "")
     let orchardRow = OrchardInFarmRow(tag: nil, orchard: o) { row in
-      row.value = o
       row.title = "Add Orchard to \(self.name)"
     }.cellUpdate { (cell, row) in
       cell.textLabel?.textColor = UIColor.Bootstrap.blue[1]
@@ -152,7 +151,6 @@ extension Farm {
     
     for orchard in Entities.shared.orchardsList() {
       let oRow = OrchardInFarmRow(tag: nil, orchard: orchard) { row in
-        row.value = orchard
         row.title = orchard.name
       }
       if orchard.assignedFarm == id {
@@ -391,6 +389,44 @@ extension Session {
   }
 }
 
+extension HarvestUser {
+  func information(for form: Form, onChange: @escaping () -> ()) {
+    temporary = HarvestUser(json: json())
+    
+    let firstnameRow = TextRow() { row in
+      row.title = "First Name"
+      row.value = HarvestUser.current.firstname
+      row.placeholder = ""
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
+    }.onChange { row in
+      self.temporary?.firstname = row.value ?? ""
+      onChange()
+    }
+    
+    let lastnameRow = TextRow() { row in
+      row.title = "Last Name"
+      row.value = HarvestUser.current.lastname
+      row.placeholder = ""
+    }.cellUpdate { (cell, row) in
+      cell.textField.textAlignment = .left
+      cell.titleLabel?.textColor = .titleLabel
+      cell.textField.clearButtonMode = .whileEditing
+    }.onChange { row in
+      self.temporary?.lastname = row.value ?? ""
+      onChange()
+    }
+    
+    
+    form
+      +++ Section("Name")
+      <<< firstnameRow
+      <<< lastnameRow
+  }
+}
+
 extension EntityItem {
   func information(for form: Form, onChange: @escaping () -> ()) {
     switch self {
@@ -398,6 +434,7 @@ extension EntityItem {
     case let .orchard(o): o.information(for: form, onChange: onChange)
     case let .farm(f): f.information(for: form, onChange: onChange)
     case let .session(s): s.information(for: form, onChange: onChange)
+    case let .user(u): u.information(for: form, onChange: onChange)
     }
   }
 }

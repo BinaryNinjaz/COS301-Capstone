@@ -198,6 +198,9 @@ extension SignInViewController : GIDSignInDelegate {
       withIDToken: authentication.idToken,
       accessToken: authentication.accessToken)
     
+    HarvestUser.current.firstname = user.profile.givenName
+    HarvestUser.current.lastname = user.profile.familyName
+    
     Auth.auth().signIn(with: credential) { (user, error) in
       if let error = error {
         let alert = UIAlertController.alertController(
