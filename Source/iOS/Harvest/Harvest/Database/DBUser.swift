@@ -11,10 +11,11 @@ import CoreLocation
 import GoogleSignIn
 
 extension HarvestDB {
-  static func getHarvestUser(_ completion: @escaping (HarvestUser) -> ()) {
+  static func getHarvestUser(_ completion: @escaping (HarvestUser?) -> ()) {
     let aref = ref.child(Path.admin)
     aref.observeSingleEvent(of: .value) { snapshot in
       guard let user = snapshot.value as? [String: Any] else {
+        completion(nil)
         return
       }
       

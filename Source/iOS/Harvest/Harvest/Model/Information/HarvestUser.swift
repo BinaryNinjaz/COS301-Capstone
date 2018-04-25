@@ -91,19 +91,22 @@ final public class HarvestUser {
     HarvestUser.current.selectedOrganizationUID = UserDefaults.standard.getOrganization()
     HarvestUser.current.myOrganizationName = UserDefaults.standard.getMyName() ?? ""
     HarvestUser.current.workingForIDs.removeAll(keepingCapacity: true)
-//    HarvestDB.getWorkingFor(completion: { (uids) in
-//      HarvestUser.current.workingForIDs.append(contentsOf: uids)
-//      completion(true)
-//    })
     
-    HarvestDB.getHarvestUser { (user) in
-      HarvestUser.current.firstname = user.firstname
-      HarvestUser.current.lastname = user.lastname
-      HarvestUser.current.workingForIDs = user.workingForIDs
-      HarvestUser.current.selectedOrganizationUID = user.selectedOrganizationUID
-      HarvestUser.current.myOrganizationName = user.myOrganizationName
-      completion(true)
-    }
+    HarvestDB.getWorkingFor(completion: { (uids) in
+      HarvestUser.current.workingForIDs.append(contentsOf: uids)
+      HarvestDB.getHarvestUser { (user) in
+        guard let user = user else {
+          completion(true)
+          return
+        }
+        
+        HarvestUser.current.firstname = user.firstname
+        HarvestUser.current.lastname = user.lastname
+        completion(true)
+      }
+    })
+    
+    
   }
   
   func reset() {
