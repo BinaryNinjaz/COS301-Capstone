@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import GoogleMaps
+import GoogleSignIn
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,9 +22,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     GMSServices.provideAPIKey("AIzaSyCqLn8RGeR84StTCIA1uvoO_iWGhXw8vAU")
     FirebaseApp.configure()
     
-    
+    GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
     
     return true
+  }
+  
+  func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    return GIDSignIn
+      .sharedInstance()
+      .handle(
+        url,
+        sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+        annotation: [:])
+  }
+  
+  func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+    // user signed out
   }
 
   func applicationWillResignActive(_ application: UIApplication) {

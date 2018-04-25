@@ -1,10 +1,5 @@
-.feeds{
-	width:300px;
-}
-
-table{
-	width:90em;
-}
-.mapOv{
-	width:500px;
+#map {
+	height: 100%;
+	width: 100%;
+	background-color: #EFEEEC;
 }
