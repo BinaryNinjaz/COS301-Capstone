@@ -100,6 +100,7 @@ final public class HarvestUser {
           return
         }
         
+        HarvestUser.current.myOrganizationName = user.myOrganizationName
         HarvestUser.current.firstname = user.firstname
         HarvestUser.current.lastname = user.lastname
         completion(true)
