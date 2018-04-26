@@ -78,7 +78,8 @@ struct Tracker {
   
   func storeSession() {
     HarvestDB.collect(from: collections,
-                      by: HarvestUser.current.name,
+                      by: (HarvestUser.current.displayName,
+                           HarvestUser.current.uid),
                       on: sessionStart,
                       track: pathTracked())
   }

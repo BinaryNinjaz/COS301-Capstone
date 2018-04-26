@@ -26,6 +26,11 @@
        
         <link href="home.css" rel="stylesheet" type="text/css" />
         <script src="navbar.js" type="text/javascript"></script>
+        
+        <!-- Google Maps -->
+        <script async defer
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap">
+                </script>
     </head>
     <body>
 
@@ -46,27 +51,25 @@
             </button>
         </ul>
     </div>
-
-        <table>
-			<tr style="text-align:center; ">
-				<th class="feeds"> 
-					<h1>Live feeds</h1>
-				</th>
-				<th class="mapOv">
-					<h2>Live Map Overview</h2>
-				</th>
-			</tr>
-			<tr>
-				<td class="feeds">
-					<div id="yields">
-				
-					</div>
-				</td>
-				<td class="mapOv">
-					<img alt="404" style="width:900px;" src="mapSample.jpg"/>
-				</td>
-			</tr>
-		</table>
-		<hr />
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <h1>Live feeds</h1>
+            </div>
+            <div class="col-sm-9">
+                <h1>Live Map Overview</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                
+            </div>
+            <div class="col-sm-9">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+        
     </body>
 </html>

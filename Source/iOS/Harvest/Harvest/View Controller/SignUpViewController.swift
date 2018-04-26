@@ -18,6 +18,7 @@ class SignUpViewController: UIViewController {
   @IBOutlet weak var signUpButton: UIButton!
   @IBOutlet weak var cancelButton: UIButton!
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+  @IBOutlet weak var signUpVisualEffect: UIVisualEffectView!
   
   
   @IBAction func signUpTouchUp(_ sender: UIButton) {
@@ -125,8 +126,20 @@ class SignUpViewController: UIViewController {
     
     signUpButton.apply(gradient: .green)
     cancelButton.apply(gradient: .blue)
+    
+    signUpVisualEffect.layer.cornerRadius = 24
+    signUpVisualEffect.clipsToBounds = true
+    
+    firstnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))
+    lastnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))
+    usernameTextField.addLeftImage(#imageLiteral(resourceName: "Mail"))
+    passwordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
+    confirmPasswordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
   }
 
+  override var prefersStatusBarHidden: Bool {
+    return true
+  }
   
   
   

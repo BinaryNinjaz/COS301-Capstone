@@ -1,5 +1,0 @@
-source 'https://github.com/CocoaPods/Specs.git'
-target 'WorkerTimer' do
-  pod 'GoogleMaps'
-  pod 'Firebase/Core'
-end
