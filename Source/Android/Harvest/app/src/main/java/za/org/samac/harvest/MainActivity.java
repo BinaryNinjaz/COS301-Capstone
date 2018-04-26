@@ -232,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setText("Stop");
             btnStart.setTag("orange");
         } else {
+            //TODO: save data
             stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             // do something with time
@@ -244,7 +245,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             if (locationEnabled) {
                 locationManager.removeUpdates(mLocationListener);
             }
+
             adapter.totalBagsCollected = 0;//reset total number of bags collected for all workers
+            for(int i = 0 ; i < workers.size() ; i++) {
+                workers.get(i).setValue(0);
+            }
             adapter.setPlusEnabled(false);
             adapter.setMinusEnabled(false);
             collections collectionObj = adapter.getCollectionObj();

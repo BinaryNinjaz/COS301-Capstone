@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
+import za.org.samac.harvest.Manifest;
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.domain.Worker;
 
@@ -36,10 +38,10 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         plus = new ArrayList<>();
         minus = new ArrayList<>();
         incrementViews = new ArrayList<>();
-        String email="";
+        String email = "";
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user =  mAuth.getCurrentUser();
-        if(user!=null) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
             email = user.getEmail();
         }
         collectionObj = new collections(email);
@@ -58,11 +60,37 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         return this.workers.size();
     }
 
+    /*@Override
+    public void locationPermissions() {
+        ArrayList<String> permissions = new ArrayList<>();
+        PermissionUtils permissionUtils;
+
+        permissionUtils=new
+
+        PermissionUtils(MyLocationUsingLocationAPI.this);
+
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+
+            permissionUtils.check_permission(permissions,"Need GPS permission for getting your location",1);
+
+        GoogleApiClient mGoogleApiClient;
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
+
+        mGoogleApiClient.connect();
+    }*/
+
+
     @Override
     public void onBindViewHolder(final WorkerViewHolder holder, int position) {
-        final Worker worker = this.workers.get(position);
+        final Worker worker = this.workers.get(position);//set worker object that is being clicked on
         final String personName = worker.getName();
-        holder.workerName.setText(personName);
+        holder.workerName.setText(personName);//set name of the worker
+        holder.increment.setText(String.format("%d", worker.getValue()));//set incrementer of the worker (fixed not updating of increments)
 
         incrementViews.add(holder.increment);
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
@@ -71,9 +99,12 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 Integer value = worker.getValue() + 1;
                 holder.increment.setText(String.format("%d", value));
 
-                //make changes on firebase
+                //make changes on client side file (encrypt using SQLite)
+                //get coordinates
+                //get time
                 collectionObj.addCollection(personName, location);
                 ++totalBagsCollected;
+                worker.setValue(value);
             }
         });
         plus.add(holder.btnPlus);
@@ -89,6 +120,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     //make changes on firebase
                     collectionObj.removeCollection(personName);
                     --totalBagsCollected;
+                    worker.setValue(value);
                 }
             }
         });
@@ -129,7 +161,9 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     public void setIncrement(){
         for(int i = 0 ; i < incrementViews.size() ; i++) {
             TextView text = incrementViews.get(i);
+            //TODO: save data before this
             text.setText("0");
+            workers.get(i).setValue(0);
             incrementViews.set(i, text);
         }
     }

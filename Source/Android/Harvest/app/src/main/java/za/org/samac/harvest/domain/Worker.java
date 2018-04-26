@@ -1,10 +1,13 @@
 package za.org.samac.harvest.domain;
 
+import java.util.ArrayList;
+
 public class Worker {
 
     private String name;
     private Integer value;
     private Object ID;
+    private ArrayList<String> assignedOrchards;//the orchards the worker is assigned to may or may not be more than one
 
     public String getName() {
         return name;
