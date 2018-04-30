@@ -72,15 +72,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private WorkerRecyclerViewAdapter adapter;
     private LocationManager locationManager;
     private Location location;
-    private FirebaseAuth mAuth;
+    //private FirebaseAuth mAuth;
     private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
     private Date startSessionTime;
     private Date endSessionTime;
-    private FirebaseUser user = mAuth.getCurrentUser();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserEmail;
-
+    private String userUid;
+    public static String childKey;
 
     FirebaseDatabase database;
     DatabaseReference ref;//Firebase reference to workers collection
@@ -90,6 +91,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        workers = new ArrayList<>();//stores worker names
+        workersSearch = new ArrayList<>();//stores worker names
+        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
+
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -140,13 +146,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         relLayout.setVisibility(View.GONE);
 
-        workers = new ArrayList<>();//stores worker names
-        workersSearch = new ArrayList<>();//stores worker names
         recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, GridLayoutManager.VERTICAL));
-        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
+
         recyclerView.setAdapter(adapter);
         recyclerView.setVisibility(View.GONE);
 
@@ -206,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             Worker workerObj = new Worker();
             workerObj.setName(fullName);
             workerObj.setValue(0);
-            workerObj.setID(key);
+            workerObj.setID(entry.getKey());
             workers.add(workerObj);
         }
 
@@ -226,6 +230,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
+        userUid = user.getUid();
+        myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
+        childKey = myRef.push().getKey();//childByAutoKey
+
+
         currentUserEmail = user.getEmail();
         startSessionTime = Calendar.getInstance().getTime();//get time at the start of session
 
@@ -294,19 +303,40 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    private void addYield(String userId, String username, String title, String body) {
+    /*private void addYield(String userId, String username, String title, String body) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("yields");
+        userUid = user.getUid();
+        myRef = database.getReference(userUid + "/sessions/");
+
+        childKey = myRef.push().getKey();//childByAutoKey
+
         //String key = myRef.push().getKey();
 
+        Map<String, Object> parentHashcollections = new HashMap<>();
+        parentHashcollections.put(childKey + "/collections/", parentHashcollections);
+        //childUpdates.put(childKey + "/email", currentUserEmail);
+        childUpdates.put(childKey + "/end_date", startSessionTime);
+        childUpdates.put(childKey + "/start_date", endSessionTime);
+
+        Map<String, Object> parentHashtrack = new HashMap<>();
+
+        Map<String, Object> hashcoordinates = new HashMap<>();
+
+        parentHashcollections.put("getWorkerID/incrementID or index/", hashcoordinates);
+        parentHashcollections.put("getWorkerID/incrementID or index/timeWhenPlusWasClicked", time);
+
+
+
+        parentHashcollections.put("childByAutoKey/email", currentUserEmail);
+
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/collections/", );
-        childUpdates.put("email", currentUserEmail);
-        childUpdates.put("end_date", startSessionTime);
-        childUpdates.put("start_date", endSessionTime);
-        childUpdates.put("/track/", );
+        childUpdates.put(childKey + "/collections/", parentHashcollections);
+        childUpdates.put(childKey + "/email", currentUserEmail);
+        childUpdates.put(childKey + "/end_date", startSessionTime);
+        childUpdates.put(childKey + "/start_date", endSessionTime);
+        childUpdates.put(childKey + "/track/", parentHashtrack);
 
         myRef.updateChildren(childUpdates);
 
@@ -314,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         //database.collection("cities").document(key).set(childUpdates, SetOptions.merge());
 
         myRef.updateChildren(childUpdates);
-    }
+    }*/
 
     private void writeToFirebase(collections collectionObj) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();

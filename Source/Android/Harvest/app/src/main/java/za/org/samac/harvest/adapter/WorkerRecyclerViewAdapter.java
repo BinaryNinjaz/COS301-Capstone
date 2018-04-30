@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import za.org.samac.harvest.LocationHelper;
+import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.Manifest;
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.domain.Worker;
@@ -42,13 +43,17 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private ArrayList<TextView> incrementViews;
     private Location location;
     public int totalBagsCollected;
-    private FirebaseAuth mAuth;
+    //private FirebaseAuth mAuth;
     private collections collectionObj;
     FirebaseDatabase database;
     DatabaseReference myRef;
     double currentLat;
     double currentLong;
-    Date currentTime;
+    private Date currentTime;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String childKey;
+    private String workerID;
+    private String workerIncrement;
 
     public WorkerRecyclerViewAdapter(Context context, ArrayList<Worker> workers) {
         this.context = context;
@@ -58,8 +63,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         minus = new ArrayList<>();
         incrementViews = new ArrayList<>();
         String email = "";
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
+        //mAuth = FirebaseAuth.getInstance();
+        //FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             email = user.getEmail();
         }
@@ -79,18 +84,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         return this.workers.size();
     }
 
-    private void addYield(String userId, String username, String title, String body) {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = database.child("yields").push().getKey();
-        Post post = new Post(userId, username, title, body);
-        Map<String, Object> postValues = post.toMap();
+    private void makeChangesToData(String userId, String username, String title, String body) {
 
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/end_date/" + key, postValues);
-        childUpdates.put("/end_start/" + userId + "/" + key, postValues);
-
-        database.updateChildren(childUpdates);
     }
 
     @Override
@@ -117,10 +112,43 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
                 //make changes on Firebase or make changes on client side file (encrypt using SQLite)
                 database = FirebaseDatabase.getInstance();
-                myRef = database.getReference("yields");
-                myRef.setValue()
+                String userUid = user.getUid();
+                myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
 
-                myRef.setValue("Hello, World!");
+                childKey = MainActivity.childKey;//childByAutoKey
+
+                Map<String, Object> collections = new HashMap<>();//stores collections in Firebase
+                workerID = worker.getID();//get worker ID
+                workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
+
+                Map<String, Object> coordinates = new HashMap<>();
+                coordinates.put("lat", currentLat);
+                coordinates.put("lng", currentLong);
+
+                Map<String, Object> collectionPoint = new HashMap<>();
+                collectionPoint.put("coord", coordinates);
+                collectionPoint.put("date", currentTime);
+
+                Map<String, Object> workerInc = new HashMap<>();
+                workerInc.put("" + workerIncrement, collectionPoint);
+
+                Map<String, Object> workerItem = new HashMap<>();
+                workerItem.put(workerID, workerInc);
+
+                //collections.put(workerID + "/" + workerIncrement + "/coord/", coordinates);//store coordinates in collections path
+                //collections.put(workerID + "/" + workerIncrement + "/date", currentTime);//store time in collections path
+                collections.put("collections", workerItem);//store coordinates in collections path
+                //collections.put(workerID + "/" + workerIncrement + "/date", currentTime);//store time in collections path
+
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put(childKey, collections);//append changes all into one path
+
+                System.out.println(childKey + "$$$$$$$$$$$$$$$$$");
+                System.out.println(workerID + "#################");
+                System.out.println(workerIncrement + "@@@@@@@@@@@@");
+
+                myRef.updateChildren(childUpdates);//store plus button info in Firebase
+
                 collectionObj.addCollection(personName, location);
                 ++totalBagsCollected;
                 worker.setValue(value);
@@ -145,6 +173,14 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     Date currentTime = Calendar.getInstance().getTime();
 
                     //make changes on firebase
+                    database = FirebaseDatabase.getInstance();
+                    String userUid = user.getUid();
+                    workerID = worker.getID();//get worker ID
+                    workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
+                    myRef = database.getReference(userUid + "/sessions/" + childKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
+
+                    myRef.removeValue();//remove latest increment
+
                     collectionObj.removeCollection(personName);
                     --totalBagsCollected;
                     worker.setValue(value);
