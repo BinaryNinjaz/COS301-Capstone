@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,7 +28,9 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,8 +39,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -71,9 +76,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
+    private Date startSessionTime;
+    private Date endSessionTime;
+    private FirebaseUser user = mAuth.getCurrentUser();
+    private String currentUserEmail;
+
 
     FirebaseDatabase database;
-    DatabaseReference ref;//Firebase reference
+    DatabaseReference ref;//Firebase reference to workers collection
+    DatabaseReference myRef;//Firebase reference to yields collection
     Query q;
 
     @Override
@@ -92,6 +103,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
             adapter.setLocation(location);
         }
+
+        locationPermissions();
+        new LocationHelper().getLocation(this);
 
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("workers");//Firebase reference
@@ -212,6 +226,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
+        currentUserEmail = user.getEmail();
+        startSessionTime = Calendar.getInstance().getTime();//get time at the start of session
+
         recyclerView.setVisibility(View.VISIBLE);
         if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
@@ -232,7 +249,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setText("Stop");
             btnStart.setTag("orange");
         } else {
-            //TODO: save data
+            //TODO: check if app closes or crashes
+            //TODO: save data to Firebase
+            endSessionTime = Calendar.getInstance().getTime();//get time at the end of session
+
             stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             // do something with time
@@ -272,6 +292,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setText("Start");
             btnStart.setTag("green");
         }
+    }
+
+    private void addYield(String userId, String username, String title, String body) {
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("yields");
+        //String key = myRef.push().getKey();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/collections/", );
+        childUpdates.put("email", currentUserEmail);
+        childUpdates.put("end_date", startSessionTime);
+        childUpdates.put("start_date", endSessionTime);
+        childUpdates.put("/track/", );
+
+        myRef.updateChildren(childUpdates);
+
+
+        //database.collection("cities").document(key).set(childUpdates, SetOptions.merge());
+
+        myRef.updateChildren(childUpdates);
     }
 
     private void writeToFirebase(collections collectionObj) {
@@ -364,6 +406,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextChange(String s) {
         doWorkersClientSideSearch(s);
         return false;
+    }
+
+    public void locationPermissions() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+
+        }
     }
 
     private void doWorkersClientSideSearch(String searchText) {
