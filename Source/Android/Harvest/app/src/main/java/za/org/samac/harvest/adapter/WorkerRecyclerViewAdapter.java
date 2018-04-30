@@ -143,10 +143,6 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 Map<String, Object> childUpdates = new HashMap<>();
                 childUpdates.put(childKey, collections);//append changes all into one path
 
-                System.out.println(childKey + "$$$$$$$$$$$$$$$$$");
-                System.out.println(workerID + "#################");
-                System.out.println(workerIncrement + "@@@@@@@@@@@@");
-
                 myRef.updateChildren(childUpdates);//store plus button info in Firebase
 
                 collectionObj.addCollection(personName, location);
