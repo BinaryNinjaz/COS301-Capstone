@@ -49,7 +49,9 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     DatabaseReference myRef;
     double currentLat;
     double currentLong;
-    private Date currentTime;
+    //private Date currentTime;
+    private double currentTime;
+    double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String childKey;
     private String workerID;
@@ -108,24 +110,25 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 currentLong = LocationHelper.currentLong;
 
                 //get time
-                currentTime = Calendar.getInstance().getTime();
+                currentTime = (System.currentTimeMillis()/divideBy1000Var);//seconds since January 1, 1970 00:00:00 UTC
+                //currentTime = Calendar.getInstance().getTime();
 
                 //make changes on Firebase or make changes on client side file (encrypt using SQLite)
                 database = FirebaseDatabase.getInstance();
-                String userUid = user.getUid();
-                myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
+                String userUid = user.getUid();//ID or key of the current user
+                //myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
 
-                childKey = MainActivity.childKey;//childByAutoKey
-
-                Map<String, Object> collections = new HashMap<>();//stores collections in Firebase
+                childKey = MainActivity.childKey;//generate key for a session
                 workerID = worker.getID();//get worker ID
                 workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
+
+                myRef = database.getReference(userUid + "/sessions/" + childKey + "/collections/" + workerID + "/" + workerIncrement + "/");//path to sessions increment in Firebase
 
                 Map<String, Object> coordinates = new HashMap<>();
                 coordinates.put("lat", currentLat);
                 coordinates.put("lng", currentLong);
 
-                Map<String, Object> collectionPoint = new HashMap<>();
+                /*Map<String, Object> collectionPoint = new HashMap<>();
                 collectionPoint.put("coord", coordinates);
                 collectionPoint.put("date", currentTime);
 
@@ -135,13 +138,13 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 Map<String, Object> workerItem = new HashMap<>();
                 workerItem.put(workerID, workerInc);
 
-                //collections.put(workerID + "/" + workerIncrement + "/coord/", coordinates);//store coordinates in collections path
-                //collections.put(workerID + "/" + workerIncrement + "/date", currentTime);//store time in collections path
-                collections.put("collections", workerItem);//store coordinates in collections path
-                //collections.put(workerID + "/" + workerIncrement + "/date", currentTime);//store time in collections path
+                Map<String, Object> collections = new HashMap<>();//stores collections in Firebase
+                collections.put("collections", workerItem);//store coordinates in collections path*/
 
                 Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put(childKey, collections);//append changes all into one path
+                //childUpdates.put(childKey, collections);//append changes all into one path
+                childUpdates.put("coord", coordinates);
+                childUpdates.put("date", currentTime);
 
                 myRef.updateChildren(childUpdates);//store plus button info in Firebase
 
@@ -161,12 +164,9 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     Integer value = currentValue - 1;
                     holder.increment.setText(String.format("%d", value));
 
-                    //get coordinates
-                    currentLat = LocationHelper.currentLat;
-                    currentLong = LocationHelper.currentLong;
-
-                    //get time
-                    Date currentTime = Calendar.getInstance().getTime();
+                    collectionObj.removeCollection(personName);
+                    --totalBagsCollected;
+                    worker.setValue(value);
 
                     //make changes on firebase
                     database = FirebaseDatabase.getInstance();
@@ -174,12 +174,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     workerID = worker.getID();//get worker ID
                     workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
                     myRef = database.getReference(userUid + "/sessions/" + childKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
-
                     myRef.removeValue();//remove latest increment
-
-                    collectionObj.removeCollection(personName);
-                    --totalBagsCollected;
-                    worker.setValue(value);
                 }
             }
         });

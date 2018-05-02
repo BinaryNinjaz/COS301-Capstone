@@ -220,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         //adapter.notifyDataSetChanged();
     }
 
-
     /*******************************
      Code below handles the stop/start button, runs a timer and displays how many
      bags were collected in the elapsed time. It then clears for another timer to start.
