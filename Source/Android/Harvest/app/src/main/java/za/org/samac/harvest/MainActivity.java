@@ -76,17 +76,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
-    private Date startSessionTime;
-    private Date endSessionTime;
+    private double startSessionTime;
+    private double endSessionTime;
+    private double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserEmail;
     private String userUid;
-    public static String childKey;
+    public static String sessionKey;
 
-    FirebaseDatabase database;
-    DatabaseReference ref;//Firebase reference to workers collection
-    DatabaseReference myRef;//Firebase reference to yields collection
-    Query q;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;//Firebase reference to workers collection
+    private DatabaseReference myRef;//Firebase reference to yields collection
+    private Query q;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,11 +232,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void onClickStart(View v) {
         userUid = user.getUid();
         myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
-        childKey = myRef.push().getKey();//childByAutoKey
-
-
         currentUserEmail = user.getEmail();
-        startSessionTime = Calendar.getInstance().getTime();//get time at the start of session
+        startSessionTime = (System.currentTimeMillis()/divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
+
+        myRef = database.getReference(userUid + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
+        Map<String, Object> sessionDate = new HashMap<>();
+        sessionDate.put("start_date", startSessionTime);
 
         recyclerView.setVisibility(View.VISIBLE);
         if (!namesShowing) {
@@ -245,6 +247,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.notifyDataSetChanged();
         }
         if (btnStart.getTag() == "green") {
+            sessionKey = myRef.push().getKey();//generate key/ID for a session
+
             adapter.setPlusEnabled(true);
             adapter.setMinusEnabled(true);
             track = new HashMap<Integer, Location>(); //used in firebase function
@@ -258,8 +262,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("orange");
         } else {
             //TODO: check if app closes or crashes
-            //TODO: save data to Firebase
-            endSessionTime = Calendar.getInstance().getTime();//get time at the end of session
+            endSessionTime = (System.currentTimeMillis()/divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
+            sessionDate.put("end_date", endSessionTime);
+            myRef.updateChildren(sessionDate);//save data to Firebase
 
             stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
@@ -301,49 +306,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("green");
         }
     }
-
-    /*private void addYield(String userId, String username, String title, String body) {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        database = FirebaseDatabase.getInstance();
-        userUid = user.getUid();
-        myRef = database.getReference(userUid + "/sessions/");
-
-        childKey = myRef.push().getKey();//childByAutoKey
-
-        //String key = myRef.push().getKey();
-
-        Map<String, Object> parentHashcollections = new HashMap<>();
-        parentHashcollections.put(childKey + "/collections/", parentHashcollections);
-        //childUpdates.put(childKey + "/email", currentUserEmail);
-        childUpdates.put(childKey + "/end_date", startSessionTime);
-        childUpdates.put(childKey + "/start_date", endSessionTime);
-
-        Map<String, Object> parentHashtrack = new HashMap<>();
-
-        Map<String, Object> hashcoordinates = new HashMap<>();
-
-        parentHashcollections.put("getWorkerID/incrementID or index/", hashcoordinates);
-        parentHashcollections.put("getWorkerID/incrementID or index/timeWhenPlusWasClicked", time);
-
-
-
-        parentHashcollections.put("childByAutoKey/email", currentUserEmail);
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(childKey + "/collections/", parentHashcollections);
-        childUpdates.put(childKey + "/email", currentUserEmail);
-        childUpdates.put(childKey + "/end_date", startSessionTime);
-        childUpdates.put(childKey + "/start_date", endSessionTime);
-        childUpdates.put(childKey + "/track/", parentHashtrack);
-
-        myRef.updateChildren(childUpdates);
-
-
-        //database.collection("cities").document(key).set(childUpdates, SetOptions.merge());
-
-        myRef.updateChildren(childUpdates);
-    }*/
 
     private void writeToFirebase(collections collectionObj) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();

@@ -45,15 +45,15 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     public int totalBagsCollected;
     //private FirebaseAuth mAuth;
     private collections collectionObj;
-    FirebaseDatabase database;
-    DatabaseReference myRef;
-    double currentLat;
-    double currentLong;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private double currentLat;
+    private double currentLong;
     //private Date currentTime;
     private double currentTime;
-    double divideBy1000Var = 1000.0000000;
+    private double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private String childKey;
+    private String sessionKey;
     private String workerID;
     private String workerIncrement;
 
@@ -118,11 +118,11 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 String userUid = user.getUid();//ID or key of the current user
                 //myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
 
-                childKey = MainActivity.childKey;//generate key for a session
+                sessionKey = MainActivity.sessionKey;//get key/ID for a session
                 workerID = worker.getID();//get worker ID
                 workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
 
-                myRef = database.getReference(userUid + "/sessions/" + childKey + "/collections/" + workerID + "/" + workerIncrement + "/");//path to sessions increment in Firebase
+                myRef = database.getReference(userUid + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement + "/");//path to sessions increment in Firebase
 
                 Map<String, Object> coordinates = new HashMap<>();
                 coordinates.put("lat", currentLat);
@@ -172,8 +172,10 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     database = FirebaseDatabase.getInstance();
                     String userUid = user.getUid();
                     workerID = worker.getID();//get worker ID
+                    sessionKey = MainActivity.sessionKey;//get key/ID for a session
                     workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
-                    myRef = database.getReference(userUid + "/sessions/" + childKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
+
+                    myRef = database.getReference(userUid + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
                     myRef.removeValue();//remove latest increment
                 }
             }

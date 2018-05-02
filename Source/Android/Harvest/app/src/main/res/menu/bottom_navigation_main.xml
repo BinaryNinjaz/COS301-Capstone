@@ -7,14 +7,14 @@
         android:title="@string/yieldTracker"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/actionLastSession"
+        android:enabled="true"
+        android:title="@string/information"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/actionSettings"
         android:enabled="true"
         android:icon="@drawable/ic_settings_white"
         android:title="@string/menuSettings"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/actionLastSession"
-        android:enabled="true"
-        android:title="@string/last_session"
         app:showAsAction="ifRoom" />
 </menu>
