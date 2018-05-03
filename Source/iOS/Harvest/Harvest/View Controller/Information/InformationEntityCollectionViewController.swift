@@ -12,7 +12,7 @@ private let reuseIdentifier = "informationEntityCell"
 
 class InformationEntityCollectionViewController: UICollectionViewController {
   
-  let entities = ["Farms", "Orchards", "Workers", "Sessions"]
+  let entities = ["Farms", "Orchards", "Workers"]
   var entity = ""
   var selectedKind: EntityItem.Kind = .none
   var goingToIndexPath: IndexPath? = nil {

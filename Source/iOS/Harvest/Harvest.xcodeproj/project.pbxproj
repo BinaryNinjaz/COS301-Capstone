@@ -15,6 +15,7 @@
 		1604E4B8206958E900E9BA15 /* HarvestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4B7206958E900E9BA15 /* HarvestTests.swift */; };
 		1604E4C3206958E900E9BA15 /* HarvestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4C2206958E900E9BA15 /* HarvestUITests.swift */; };
 		1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */; };
+		160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */; };
 		16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FC820696B8F00E1A292 /* QuickAlert.swift */; };
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
@@ -103,6 +104,7 @@
 		1604E4C2206958E900E9BA15 /* HarvestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUITests.swift; sourceTree = "<group>"; };
 		1604E4C4206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInformationViewController.swift; sourceTree = "<group>"; };
 		16420FC820696B8F00E1A292 /* QuickAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlert.swift; sourceTree = "<group>"; };
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 			children = (
 				167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */,
 				167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */,
+				160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */,
 				167448C62089430C00FA605C /* EntityViewController.swift */,
 			);
 			path = Information;
@@ -769,6 +772,7 @@
 				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
 				167448DA208A83E300FA605C /* Session.swift in Sources */,
+				160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */,
 				16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */,
 				167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */,
 				167448AF2089271400FA605C /* Worker.swift in Sources */,
