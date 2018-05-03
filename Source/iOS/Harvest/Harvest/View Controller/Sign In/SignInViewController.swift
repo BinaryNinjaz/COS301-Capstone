@@ -46,9 +46,11 @@ class SignInViewController: UIViewController {
     let result: UIViewController?
     
     if HarvestUser.current.workingForID != nil {
-      result = storyboard?.instantiateViewController(withIdentifier: "trackerViewController")
+      result = storyboard?.instantiateViewController(withIdentifier: "mainTabBarViewController")
+      (result as? MainTabBarViewController)?.setUpForForeman()
     } else {
       result = storyboard?.instantiateViewController(withIdentifier: "mainTabBarViewController")
+      (result as? MainTabBarViewController)?.setUpForFarmer()
     }
     
     return result

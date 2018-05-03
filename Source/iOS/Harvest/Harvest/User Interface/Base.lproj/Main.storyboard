@@ -230,10 +230,10 @@
             </objects>
             <point key="canvasLocation" x="26" y="54"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Main Tab Bar View Controller-->
         <scene sceneID="264-Fa-FqB">
             <objects>
-                <tabBarController storyboardIdentifier="mainTabBarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0CY-nj-Oaw" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="mainTabBarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0CY-nj-Oaw" customClass="MainTabBarViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="gLj-KZ-6ZV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -501,7 +501,7 @@ Expected Yield: 0</string>
         <!--SettingsNavCon-->
         <scene sceneID="NmB-Kb-7b3">
             <objects>
-                <navigationController title="SettingsNavCon" id="vND-wI-MtW" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="settingsViewController" title="SettingsNavCon" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vND-wI-MtW" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Settings" image="Settings" id="i44-ev-d3M"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="00C-Y5-g8b">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -705,7 +705,7 @@ Expected Yield: 0</string>
         <!--Infomation-->
         <scene sceneID="mK2-uN-hZX">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="P1R-gw-ymn" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="informationViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="P1R-gw-ymn" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Infomation" image="Infomation" id="QhI-wQ-ho6"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="wGa-NH-LJN">

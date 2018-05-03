@@ -13,9 +13,6 @@ class MainTabBarViewController: UITabBarController {
     super.viewDidLoad()
 
     // Do any additional setup after loading the view.
-    for item in tabBar.items ?? [] {
-      item.image = item.image?.resizeImage(toWidth: 22)
-    }
   }
 
   override func didReceiveMemoryWarning() {
@@ -23,13 +20,24 @@ class MainTabBarViewController: UITabBarController {
     // Dispose of any resources that can be recreated.
   }
   
-  override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-    item.image = item.image?.resizeImage(toWidth: 22)
+  func setUpForForeman() {
+    guard let idx = viewControllers?
+      .index(where: { $0.restorationIdentifier == "informationViewController" }) else {
+      return
+    }
+    viewControllers?.remove(at: idx)
   }
   
-  override func tabBar(_ tabBar: UITabBar, didEndCustomizing items: [UITabBarItem], changed: Bool) {
-    for item in items {
-      item.image = item.image?.resizeImage(toWidth: 22)
+  func setUpForFarmer() {
+    guard nil == viewControllers?
+      .index(where: { $0.restorationIdentifier == "informationViewController" }) else {
+        return
     }
+    
+    guard let infoVC = storyboard?.instantiateViewController(withIdentifier: "informationViewController") else {
+      return
+    }
+    
+    viewControllers?.insert(infoVC, at: 1)
   }
 }

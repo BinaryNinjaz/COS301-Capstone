@@ -50,10 +50,27 @@ class SettingsEurekaViewController : FormViewController {
       }
     }
     
-    form
-      +++ Section(userRow)
-      <<< adminRow
-      <<< logoutRow
+    let resignRow = ButtonRow() { row in
+      row.title = "Resign"
+    }.onCellSelection { (cell, row) in
+      HarvestDB.resign { _, _ in
+        if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInViewController") {
+          self.present(vc, animated: true, completion: nil)
+        }
+      }
+    }
+    
+    let section = Section(userRow)
+    
+    if HarvestUser.current.workingForID == nil {
+      section <<< adminRow
+    } else {
+      section <<< resignRow
+    }
+    
+    section <<< logoutRow
+    
+    form +++ section
   }
   
 }

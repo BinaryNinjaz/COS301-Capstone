@@ -67,7 +67,7 @@ extension HarvestDB {
         foremen.child(oldEmail.removedFirebaseInvalids()).removeValue()
       }
     } else if worker.email != "" {
-      foremen.child(worker.email.removedFirebaseInvalids()).removeValue() { err, ref in }
+      foremen.child(worker.email.removedFirebaseInvalids()).removeValue() { _, _ in }
       workingFor.child(worker.email.removedFirebaseInvalids()).removeValue()
     }
   }
@@ -93,7 +93,19 @@ extension HarvestDB {
       foremen.child(worker.email.removedFirebaseInvalids()).removeValue() { err, ref in
         completion(err, ref)
       }
-      workingFor.child(worker.email.removedFirebaseInvalids() + "/" + HarvestUser.current.uid).removeValue()
+      workingFor.child(worker.email.removedFirebaseInvalids()).removeValue()
     })
+  }
+  
+  static func resign(completion: @escaping (Error?, DatabaseReference) -> ()) {
+    let workers = Entities.shared.workersList()
+    guard let workerIdx = workers.index(where: { (w) -> Bool in
+      w.email == HarvestUser.current.email
+    }) else {
+      return
+    }
+    
+    let worker = workers[workerIdx]
+    delete(worker: worker, completion: completion)
   }
 }
