@@ -114,23 +114,23 @@ extension HarvestDB {
     completion(true)
   }
   
-  static func getWorkingFor(completion: @escaping ([(uid: String, name: String)]) -> ()){
+  static func getWorkingFor(completion: @escaping (String?) -> ()){
     let wfref = ref.child(Path.workingFor + "/" + HarvestUser.current.email.removedFirebaseInvalids())
     wfref.observeSingleEvent(of: .value) { (snapshot) in
       guard let _uids = snapshot.value as? [String: Any] else {
-        completion([])
+        completion(nil)
         return
       }
       
-      var result = [(String, String)]()
+      var result: String? = nil
       
       for (uid, _name) in _uids {
-        guard let name = _name as? String else {
-          result.append((uid, ""))
+        guard let _ = _name as? String else {
+          result = uid
           continue
         }
         
-        result.append((uid, name))
+        result = uid
       }
       
       completion(result)

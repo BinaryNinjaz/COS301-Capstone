@@ -9,43 +9,23 @@
 import Firebase
 
 final public class HarvestUser {
-  var workingForIDs: [(uid: String, name: String)]
+  var workingForID: String?
   var email: String
   var firstname: String
   var lastname: String
   var uid: String
   var temporary: HarvestUser? = nil
-  var myOrganizationName: String {
-    didSet {
-      UserDefaults.standard.set(myname: myOrganizationName)
-    }
-  }
-  var selectedOrganizationUID: String? = nil {
-    didSet {
-      UserDefaults.standard.set(organization: selectedOrganizationUID)
-    }
-  }
   
   var displayName: String {
     return firstname + " " + lastname
   }
-  var selectedOrganiztionUIDOrMine: String {
-    return selectedOrganizationUID ?? uid
-  }
-  var selectedOrganiztionNameOrMine: String {
-    return workingForName(byUID: selectedOrganiztionUIDOrMine)
-      ?? (myOrganizationName == ""
-        ? displayName + " Farms"
-        : myOrganizationName)
-  }
   
   init() {
-    workingForIDs = []
+    workingForID = nil
     email = ""
     firstname = ""
     lastname = ""
     uid = ""
-    myOrganizationName = ""
   }
   
   init(json: [String: Any]) {
@@ -53,21 +33,7 @@ final public class HarvestUser {
     firstname = json["firstname"] as? String ?? ""
     lastname = json["lastname"] as? String ?? ""
     email = json["email"] as? String ?? ""
-    myOrganizationName = json["myOrganizationName"] as? String ?? ""
-    selectedOrganizationUID = json["selectedOrganiztionUID"] as? String
-    
-    workingForIDs = []
-    guard let _workingForIDs = json["workingFor"] as? [String: Any] else {
-      return
-    }
-    
-    for (keyuid, _name) in _workingForIDs {
-      guard let name = _name as? String else {
-        workingForIDs.append((keyuid, ""))
-        continue
-      }
-      workingForIDs.append((keyuid, name))
-    }
+    workingForID = nil
   }
   
   func json() -> [String: Any] {
@@ -75,9 +41,7 @@ final public class HarvestUser {
       "firstname": firstname,
       "lastname": lastname,
       "email": email,
-      "myOrganizationName": myOrganizationName,
-      "selectedOrganizationUID": selectedOrganizationUID ?? "",
-      "workingFor": workingForIDs.firebaseWorkingForRepresentation(),
+      "workingFor": workingForID ?? "",
       "uid": uid
     ]
   }
@@ -88,54 +52,36 @@ final public class HarvestUser {
     
     email = user.email ?? ""
     uid = user.uid
-    HarvestUser.current.selectedOrganizationUID = UserDefaults.standard.getOrganization()
-    HarvestUser.current.myOrganizationName = UserDefaults.standard.getMyName() ?? ""
-    HarvestUser.current.workingForIDs.removeAll(keepingCapacity: true)
     
-    HarvestDB.getWorkingFor(completion: { (uids) in
-      HarvestUser.current.workingForIDs.append(contentsOf: uids)
+    HarvestDB.getWorkingFor(completion: { uid in
+      HarvestUser.current.workingForID = uid
+      
       HarvestDB.getHarvestUser { (user) in
         guard let user = user else {
           completion(true)
           return
         }
         
-        HarvestUser.current.myOrganizationName = user.myOrganizationName
         HarvestUser.current.firstname = user.firstname
         HarvestUser.current.lastname = user.lastname
         completion(true)
       }
     })
-    
-    
   }
   
   func reset() {
-    UserDefaults.standard.set(organization: nil)
-    UserDefaults.standard.set(myname: nil)
     UserDefaults.standard.set(username: nil)
     UserDefaults.standard.set(password: nil)
     
     HarvestUser.current.firstname = ""
     HarvestUser.current.lastname = ""
     HarvestUser.current.email = ""
-    HarvestUser.current.myOrganizationName = ""
-    HarvestUser.current.selectedOrganizationUID = nil
     HarvestUser.current.uid = ""
-    HarvestUser.current.workingForIDs.removeAll()
+    HarvestUser.current.workingForID = nil
   }
   
   
   static var current = HarvestUser()
-  
-  func workingForName(byUID uid: String) -> String? {
-    for (id, name) in workingForIDs {
-      if id == uid {
-        return name
-      }
-    }
-    return nil
-  }
 }
 
 public extension UserDefaults {
@@ -167,31 +113,5 @@ public extension UserDefaults {
   
   public func getPassword() -> String? {
     return string(forKey: "password")
-  }
-  
-  public func set(organization: String?) {
-    guard let o = organization else {
-      removeObject(forKey: uid + "organization")
-      return
-    }
-    
-    set(o, forKey: uid + "organization")
-  }
-  
-  public func getOrganization() -> String? {
-    return string(forKey: uid + "organization")
-  }
-  
-  public func set(myname: String?) {
-    guard let n = myname else {
-      removeObject(forKey: uid + "myname")
-      return
-    }
-    
-    set(n, forKey: uid + "myname")
-  }
-  
-  public func getMyName() -> String? {
-    return string(forKey: uid + "myname")
   }
 }

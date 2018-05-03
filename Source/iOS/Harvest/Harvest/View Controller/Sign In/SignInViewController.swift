@@ -42,13 +42,22 @@ class SignInViewController: UIViewController {
     }
   }
   
+  func mainViewToPresent() -> UIViewController? {
+    let result: UIViewController?
+    
+    if HarvestUser.current.workingForID != nil {
+      result = storyboard?.instantiateViewController(withIdentifier: "trackerViewController")
+    } else {
+      result = storyboard?.instantiateViewController(withIdentifier: "mainTabBarViewController")
+    }
+    
+    return result
+  }
+  
   func attempSignIn(username: String, password: String) {
     isLoading = true
     HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
-      if w,
-        let vc = self
-          .storyboard?
-          .instantiateViewController(withIdentifier: "mainTabBarViewController") {
+      if w, let vc = self.mainViewToPresent() {
         self.present(vc, animated: true, completion: nil)
       }
       self.isLoading = false
@@ -138,9 +147,7 @@ class SignInViewController: UIViewController {
     if let user = Auth.auth().currentUser {
       isLoading = true
       HarvestUser.current.setUser(user, nil) { (valid) in
-        if let vc = self
-          .storyboard?
-          .instantiateViewController(withIdentifier: "mainTabBarViewController") {
+        if let vc = self.mainViewToPresent() {
           self.present(vc, animated: true, completion: nil)
         }
         self.isLoading = false
@@ -221,9 +228,7 @@ extension SignInViewController : GIDSignInDelegate {
       }
       
       HarvestUser.current.setUser(user, nil) { valid in
-        if let vc = self
-          .storyboard?
-          .instantiateViewController(withIdentifier: "mainTabBarViewController") {
+        if let vc = self.mainViewToPresent() {
           self.present(vc, animated: true, completion: nil)
         }
         self.isLoading = false

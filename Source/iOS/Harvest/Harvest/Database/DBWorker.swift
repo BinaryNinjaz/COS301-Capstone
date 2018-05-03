@@ -52,18 +52,23 @@ extension HarvestDB {
   static func save(worker: Worker, oldEmail: String) {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
+    let workingFor = ref.child(Path.workingFor)
     
     if worker.id == "" {
       worker.id = workers.childByAutoId().key
     }
     let update = worker.json()
     workers.updateChildValues(update)
-    if worker.email != "" {
+    
+    if worker.kind == .foreman && worker.email != "" {
       foremen.updateChildValues([worker.email.removedFirebaseInvalids(): true])
       saveWorkerReference(worker, oldEmail)
       if oldEmail != "" && worker.email != oldEmail {
         foremen.child(oldEmail.removedFirebaseInvalids()).removeValue()
       }
+    } else if worker.email != "" {
+      foremen.child(worker.email.removedFirebaseInvalids()).removeValue() { err, ref in }
+      workingFor.child(worker.email.removedFirebaseInvalids()).removeValue()
     }
   }
   
@@ -71,7 +76,7 @@ extension HarvestDB {
     let workerRefs = ref.child(Path.workingFor + "/" + worker.email.removedFirebaseInvalids())
     
     let update = [
-      HarvestUser.current.selectedOrganiztionUIDOrMine: HarvestUser.current.selectedOrganiztionNameOrMine
+      HarvestUser.current.uid: true
     ]
     workerRefs.updateChildValues(update)
   }
@@ -88,9 +93,7 @@ extension HarvestDB {
       foremen.child(worker.email.removedFirebaseInvalids()).removeValue() { err, ref in
         completion(err, ref)
       }
-      if let orgUID = HarvestUser.current.selectedOrganizationUID {
-        workingFor.child(worker.email.removedFirebaseInvalids() + "/" + orgUID).removeValue()
-      }
+      workingFor.child(worker.email.removedFirebaseInvalids() + "/" + HarvestUser.current.uid).removeValue()
     })
   }
 }

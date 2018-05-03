@@ -15,9 +15,7 @@ struct HarvestDB {
   
   struct Path {
     static var parent: String {
-      return HarvestUser.current.selectedOrganizationUID == nil
-        ? HarvestUser.current.uid
-        : HarvestUser.current.selectedOrganizationUID!
+      return HarvestUser.current.workingForID ?? HarvestUser.current.uid
     }
     static var yields: String {
       return "\(Path.parent)/yields"

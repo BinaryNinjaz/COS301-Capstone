@@ -37,6 +37,17 @@ class SignUpViewController: UIViewController {
     }
   }
   
+  func mainViewToPresent() -> UIViewController? {
+    let result: UIViewController?
+    
+    if HarvestUser.current.workingForID != nil {
+      result = storyboard?.instantiateViewController(withIdentifier: "trackerViewController")
+    } else {
+      result = storyboard?.instantiateViewController(withIdentifier: "mainTabBarViewController")
+    }
+    
+    return result
+  }
   
   @IBAction func signUpTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text else {
@@ -112,9 +123,7 @@ class SignUpViewController: UIViewController {
       if w {
         HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
           if w,
-            let vc = self
-              .storyboard?
-              .instantiateViewController(withIdentifier: "mainTabBarViewController") {
+            let vc = self.mainViewToPresent() {
             self.present(vc, animated: true, completion: nil)
           }
           self.isLoading = false
