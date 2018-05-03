@@ -9,32 +9,53 @@
 import Foundation
 import CoreLocation
 
+enum IrrigationKind : String {
+  case micro = "Micro"
+  case drip = "Drip"
+  case floppy = "Floppy"
+  case dragLines = "Drag Lines"
+  case other = "Other"
+  case none = "None (dry land)"
+  
+  static var allCases = [
+    IrrigationKind.micro,
+    .drip,
+    .floppy,
+    .dragLines,
+    .other,
+    .none
+  ]
+}
+
 final public class Orchard {
   var bagMass: Double
   var coords: [CLLocationCoordinate2D]
   var crop: String
+  var cultivars: [String]
   var date: Date
   var assignedFarm: String
   var details: String
   var name: String
-  var distanceUnit: String
-  var xDim: Double
-  var yDim: Double
+  var treeSpacing: Double
+  var rowSpacing: Double
+  var irrigationKind: IrrigationKind
+  
   var id: String
   var tempory: Orchard?
+  
   
   init(json: [String: Any], id: String) {
     self.id = id
     bagMass = json["bagMass"] as? Double ?? 0.0
     crop = json["crop"] as? String ?? ""
+    cultivars = json["cultivars"] as? [String] ?? []
     date = Date(timeIntervalSince1970: json["date"] as? Double ?? 0.0)
     assignedFarm = json["farm"] as? String ?? ""
     details = json["further"] as? String ?? ""
     name = json["name"] as? String ?? ""
-    distanceUnit = json["unit"] as? String ?? ""
-    xDim = json["xDim"] as? Double ?? 0.0
-    yDim = json["yDim"] as? Double ?? 0.0
-    
+    treeSpacing = json["treeSpacing"] as? Double ?? 0.0
+    rowSpacing = json["rowSpacing"] as? Double ?? 0.0
+    irrigationKind = IrrigationKind(rawValue: json["irrigation"] as? String ?? "") ?? .none
     
     coords = [CLLocationCoordinate2D]()
     let cs = json["coords"] as? [Any] ?? []
@@ -63,10 +84,11 @@ final public class Orchard {
       "farm": assignedFarm,
       "info": details,
       "name": name,
-      "unit": distanceUnit,
-      "xDim": xDim,
-      "yDim": yDim,
-      "coords": coords.firbaseCoordRepresentation()
+      "treeSpacing": treeSpacing,
+      "rowSpacing": rowSpacing,
+      "coords": coords.firbaseCoordRepresentation(),
+      "cultivars": cultivars,
+      "irrigation": irrigationKind.rawValue
     ]]
   }
 }
@@ -80,10 +102,11 @@ extension Orchard : Equatable {
       && lhs.assignedFarm == rhs.assignedFarm
       && lhs.details == rhs.details
       && lhs.name == rhs.name
-      && lhs.distanceUnit == rhs.distanceUnit
-      && lhs.xDim == rhs.xDim
-      && lhs.yDim == rhs.yDim
+      && lhs.treeSpacing == rhs.treeSpacing
+      && lhs.rowSpacing == rhs.rowSpacing
       && lhs.coords == rhs.coords
+      && lhs.cultivars == rhs.cultivars
+      && lhs.irrigationKind == rhs.irrigationKind
   }
 }
 

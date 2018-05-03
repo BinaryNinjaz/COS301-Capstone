@@ -46,25 +46,21 @@ extension Worker {
     let firstnameRow = NameRow() { row in
       row.title = "Worker Name"
       row.value = firstname
-      row.placeholder = "Firstname"
+      row.placeholder = "John"
     }.onChange { (row) in
       self.tempory?.firstname = row.value ?? ""
       onChange()
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
     }
     let lastnameRow = NameRow() { row in
       row.title = "Worker Surname"
       row.value = lastname
-      row.placeholder = "Surname"
+      row.placeholder = "Appleseed"
     }.onChange { (row) in
       self.tempory?.lastname = row.value ?? ""
       onChange()
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
     }
     
@@ -81,14 +77,30 @@ extension Worker {
       })
       row.title = "Email"
       row.value = email
-      row.placeholder = "henry@gmail.com"
+      row.placeholder = "johnapp@gmail.com"
     }.onChange { row in
       self.tempory?.email = row.value ?? ""
       onChange()
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
+    }
+    
+    let phoneRow = PhoneRow() { row in
+      row.title = "Phone Number"
+      row.value = phoneNumber
+      row.placeholder = "012 3456789"
+    }.onChange { row in
+      self.tempory?.phoneNumber = row.value ?? ""
+      onChange()
+    }
+    
+    let idRow = TextRow() { row in
+      row.title = "ID Number"
+      row.value = idNumber
+      row.placeholder = "8001011234567"
+    }.onChange { row in
+      self.tempory?.idNumber = row.value ?? ""
+      onChange()
     }
     
     let infoRow = TextAreaRow() { row in
@@ -103,10 +115,14 @@ extension Worker {
       +++ Section()
       <<< firstnameRow
       <<< lastnameRow
+      <<< idRow
       
       +++ Section("Role")
       <<< isForemanRow
       <<< emailRow
+      
+      +++ Section("Contact")
+      <<< phoneRow
     
       +++ Section("Information")
       <<< infoRow
@@ -127,10 +143,62 @@ extension Farm {
       self.tempory?.name = row.value ?? ""
       onChange()
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
     }
+    let companyRow = NameRow() { row in
+      row.title = "Company Name"
+      row.value = companyName
+      row.placeholder = "Name of the company"
+    }.onChange { row in
+      self.tempory?.companyName = row.value ?? ""
+      onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.clearButtonMode = .whileEditing
+    }
+    
+    let emailRow = EmailRow() { row in
+      row.title = "Farm Email"
+      row.value = email
+      row.placeholder = "Farms email address"
+    }.onChange { row in
+      self.tempory?.email = row.value ?? ""
+      onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.clearButtonMode = .whileEditing
+    }
+    let phoneRow = PhoneRow() { row in
+      row.title = "Contact Number"
+      row.value = contactNumber
+      row.placeholder = "Phone number of the farm"
+    }.onChange { row in
+      self.tempory?.contactNumber = row.value ?? ""
+      onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.clearButtonMode = .whileEditing
+    }
+    
+    let provinceRow = NameRow() { row in
+      row.title = "Province"
+      row.value = province
+      row.placeholder = "Province location of the farm"
+    }.onChange { row in
+      self.tempory?.province = row.value ?? ""
+      onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.clearButtonMode = .whileEditing
+    }
+    let nearestTownRow = NameRow() { row in
+      row.title = "Nearest Town"
+      row.value = nearestTown
+      row.placeholder = "Town nearest to the farm"
+    }.onChange { row in
+      self.tempory?.nearestTown = row.value ?? ""
+      onChange()
+    }.cellUpdate { (cell, row) in
+      cell.textField.clearButtonMode = .whileEditing
+    }
+    
+    
     let detailsRow = TextAreaRow() { row in
       row.title = "Details"
       row.value = details
@@ -160,14 +228,59 @@ extension Farm {
     
     form +++ Section("Farm")
       <<< nameRow
+      <<< companyRow
+      
+      +++ Section("Contact")
+      <<< emailRow
+      <<< phoneRow
+      
+      +++ Section("Location")
+      <<< provinceRow
+      <<< nearestTownRow
       
       +++ Section("Details")
       <<< detailsRow
     
-      +++ Section()
-      <<< orchardRow
-    
       +++ orchardsSection
+      <<< orchardRow
+  }
+}
+
+public class DeletableMultivaluedSection : MultivaluedSection {
+  var onRowsRemoved: ((IndexSet) -> ())? = nil
+  
+  required public init<S>(_ elements: S) where S : Sequence, S.Element == BaseRow {
+    fatalError("init has not been implemented")
+  }
+  
+  required public init() {
+    fatalError("init() has not been implemented")
+  }
+  
+  required public init(multivaluedOptions: MultivaluedOptions = MultivaluedOptions.Insert.union(.Delete),
+                       header: String = "",
+                       footer: String = "",
+                       _ initializer: (MultivaluedSection) -> Void = { _ in }) {
+    
+    super.init(header: header, footer: footer, {section in initializer(section) })
+    self.multivaluedOptions = multivaluedOptions
+    guard multivaluedOptions.contains(.Insert) else { return }
+//    initialize()
+    
+//    super.init(multivaluedOptions: multivaluedOptions, header: header, footer: footer, initializer)
+  }
+  
+  func initialize() {
+    let addRow = addButtonProvider(self)
+    addRow.onCellSelection { cell, row in
+      guard let tableView = cell.formViewController()?.tableView, let indexPath = row.indexPath else { return }
+      cell.formViewController()?.tableView(tableView, commit: .insert, forRowAt: indexPath)
+    }
+    self <<< addRow
+  }
+  
+  override public func rowsHaveBeenRemoved(_ rows: [BaseRow], at: IndexSet) {
+    onRowsRemoved?(at)
   }
 }
 
@@ -176,6 +289,42 @@ extension Orchard {
     tempory = Orchard(json: json()[id] ?? [:], id: id)
     
     let farms = Entities.shared.items(for: .farm)!
+    
+    let cultivarsRow = DeletableMultivaluedSection(
+      multivaluedOptions: [.Insert, .Delete],
+      header: "Cultivars",
+      footer: "") { (section) in
+        section.addButtonProvider = { sectionB in
+          return ButtonRow() {
+            $0.title = "Add Another Cultivar"
+          }
+        }
+        for (idx, cultivar) in cultivars.enumerated() {
+          section <<< TextRow() {
+            $0.placeholder = "Cultivar"
+            $0.value = cultivar
+          }.onChange { row in
+            self.tempory?.cultivars[idx] = row.value ?? ""
+            onChange()
+          }
+        }
+        
+        section.multivaluedRowToInsertAt = { index in
+          self.tempory?.cultivars.append("")
+          return TextRow() {
+            $0.placeholder = "Cultivar"
+          }.onChange { row in
+            self.tempory?.cultivars[index] = row.value ?? ""
+            onChange()
+          }
+        }
+      }
+    cultivarsRow.onRowsRemoved = { indexes in
+      for i in indexes {
+        self.tempory?.cultivars.remove(at: i)
+      }
+      onChange()
+    }
     
     let nameRow = NameRow() { row in
       row.title = "Orchard Name"
@@ -204,7 +353,7 @@ extension Orchard {
     }
     
     let bagMassRow = DecimalRow() { row in
-      row.title = "Bag Mass"
+      row.title = "Bag Mass (kilogram)"
       row.value = bagMass
       row.placeholder = "Average mass of a bag"
     }.onChange { row in
@@ -231,12 +380,21 @@ extension Orchard {
       onChange()
     }
     
+    let irrigationRow = PushRow<IrrigationKind>() { row in
+      row.title = "Irrigation Kind"
+      row.options = IrrigationKind.allCases
+      row.value = irrigationKind
+    }.onChange { row in
+      self.tempory?.irrigationKind = row.value ?? .none
+      onChange()
+    }
+    
     let widthRow = DecimalRow() { row in
-      row.title = "Width"
-      row.value = xDim
+      row.title = "Tree Spacing (meter)"
+      row.value = treeSpacing
       row.placeholder = "Horizontal Spacing"
     }.onChange { row in
-      self.tempory?.xDim = row.value ?? 0.0
+      self.tempory?.treeSpacing = row.value ?? 0.0
       onChange()
     }.cellUpdate { (cell, row) in
       cell.textField.textAlignment = .left
@@ -252,11 +410,11 @@ extension Orchard {
     }
     
     let heightRow = DecimalRow() { row in
-      row.title = "Height"
-      row.value = yDim
+      row.title = "Row Spacing (meter)"
+      row.value = rowSpacing
       row.placeholder = "Vertical Spacing"
     }.onChange { row in
-      self.tempory?.yDim = row.value ?? 0.0
+      self.tempory?.rowSpacing = row.value ?? 0.0
       onChange()
     }.cellUpdate { (cell, row) in
       cell.textField.textAlignment = .left
@@ -269,20 +427,6 @@ extension Orchard {
       if let dt = cell.textField.text {
         cell.textField.text = Double(dt) == 0.0 ? "" : dt
       }
-    }
-    
-    let unitRow = TextRow() { row in
-      row.title = "Distance unit"
-      row.value = distanceUnit == "" ? "m" : distanceUnit
-      row.placeholder = "Measurement unit (eg. m)"
-    }.onChange { row in
-      self.tempory?.distanceUnit = row.value ?? ""
-      onChange()
-    }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
-      cell.textField.clearButtonMode = .whileEditing
-      cell.textField.autocapitalizationType = .none
     }
     
     let detailsRow = TextAreaRow { row in
@@ -321,17 +465,19 @@ extension Orchard {
       <<< bagMassRow
       
       +++ Section("Plantation Details")
+      <<< irrigationRow
       <<< dateRow
+      
+      +++ cultivarsRow
       
       +++ Section("Crop Dimensions")
       <<< widthRow
       <<< heightRow
-      <<< unitRow
     
       +++ Section("Information")
       <<< detailsRow
     
-      +++ Section("Farm Selection")
+      +++ Section("Part of Farm")
       <<< farmSelection
   }
 }

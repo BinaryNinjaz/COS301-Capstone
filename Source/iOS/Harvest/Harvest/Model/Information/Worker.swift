@@ -29,6 +29,8 @@ final class Worker {
   var kind: Kind
   var details: String
   var email: String
+  var phoneNumber: String
+  var idNumber: String
   var id: String
   var tempory: Worker?
   
@@ -39,6 +41,8 @@ final class Worker {
     assignedOrchards = json.orchards()
     details = json["info"] as? String ?? ""
     email = json["email"] as? String ?? ""
+    phoneNumber = json["phoneNumber"] as? String ?? ""
+    idNumber = json["idNumber"] as? String ?? ""
     
     if let kinds = json["type"] as? String {
       kind = kinds == "Foreman"
@@ -57,7 +61,9 @@ final class Worker {
       "orchards": assignedOrchards,
       "info": details,
       "email": email,
-      "type": kind == .foreman ? "Foreman" : "Worker"
+      "type": kind == .foreman ? "Foreman" : "Worker",
+      "phoneNumber": phoneNumber,
+      "idNumber": idNumber
     ]]
   }
   
@@ -78,10 +84,12 @@ extension Worker : Hashable {
       && lhs.kind == rhs.kind
       && lhs.details == rhs.details
       && lhs.email == rhs.email
+      && lhs.phoneNumber == rhs.phoneNumber
+      && lhs.idNumber == rhs.idNumber
   }
   
   var hashValue: Int {
-    return "\(firstname)\(lastname)".hashValue
+    return id.hashValue
   }
 }
 
