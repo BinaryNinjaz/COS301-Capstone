@@ -88,13 +88,13 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         setContentView(R.layout.activity_sign_up);
         // Set up the sign up form.
         edtFirstName = findViewById(R.id.edtFirstName);
-        populateAutoComplete();
+        //populateAutoComplete();
 
         edtSurname = findViewById(R.id.edtSurname);
-        populateAutoComplete();
+        //populateAutoComplete();
 
         edtEmail = findViewById(R.id.edtEmail);
-        populateAutoComplete();
+        //populateAutoComplete();
 
         edtPassword = findViewById(R.id.edtPassword);
         /*edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -336,7 +336,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     /**
      * Callback received when a permissions request has been completed.
      */
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
@@ -344,7 +344,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 populateAutoComplete();
             }
         }
-    }
+    }*/
 
 
     /**

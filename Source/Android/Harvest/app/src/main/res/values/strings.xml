@@ -41,4 +41,5 @@
     <string name="start">Start</string>
     <string name="search">Search</string>
     <string name="information">Information</string>
+    <string name="loginWithGoogle">Log in with Google</string>
 </resources>

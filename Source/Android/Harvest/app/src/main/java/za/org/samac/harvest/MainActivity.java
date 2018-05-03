@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("workers");//Firebase reference
-        q = ref.orderByChild("name");
+        q = ref.orderByChild("name");//TODO: maybe make it last name
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

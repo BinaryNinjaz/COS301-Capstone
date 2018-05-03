@@ -38,6 +38,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -78,10 +83,15 @@ public class LoginActivity extends AppCompatActivity {
     private View login_form;
     private Button btnSignup;
     private Button btnLogin;
+    private Button btnLoginWithGoogle;
     private TextView linkForgotAccountDetails;
 
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
     private static final String TAG = "EmailPassword";
+    private GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInOptions gso;
+    private static int RC_SIGN_IN = 100;
+    private static GoogleSignInAccount account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +129,26 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
+            }
+        });
+
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        //user presses Log in with Google button, validates and if all is well goes to actual app screen
+        btnLoginWithGoogle = findViewById(R.id.btnLoginWithGoogle);
+        btnLoginWithGoogle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.btnLoginWithGoogle:
+                        signInWithGoogle();
+                        break;
+                }
             }
         });
 
@@ -194,6 +224,70 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);//had to create method for this
+
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        /*GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account == null) {
+            Intent intent = new Intent(LoginActivity.this, LoginActivity.class);//go to log in screen
+            startActivity(intent);
+            finish();//kill current Activity
+        } else {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();//kill current Activity
+        }*/
+        //updateUI(account);
+    }
+
+    private void signInWithGoogle() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            account = completedTask.getResult(ApiException.class);
+            account.getId();
+
+            // Signed in successfully, show authenticated UI.
+            //updateUI(account);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);//go to actual app
+            startActivity(intent);
+            finish();//kill current Activity
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            //updateUI(null);
+
+            // If sign in fails, display a message to the user.
+
+            login_form.setVisibility(View.VISIBLE);
+            login_progress.setVisibility(View.GONE);
+            Snackbar.make(login_form, "Email or password incorrect. Please try again.", Snackbar.LENGTH_LONG)
+                    .setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    })
+                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                    .show();
+        }
     }
 
     private void updateUI(FirebaseUser currentUser) {
@@ -288,7 +382,7 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
-    private boolean mayRequestContacts() {
+    /*private boolean mayRequestContacts() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
@@ -308,71 +402,18 @@ public class LoginActivity extends AppCompatActivity {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
         }
         return false;
-    }
+    }*/
 
     /**
      * Callback received when a permissions request has been completed.
      */
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
             }
-        }
-    }
-
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    /*private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        edtEmail.setError(null);
-        edtPassword.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = edtEmail.getText().toString();
-        String password = edtPassword.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            edtPassword.setError(getString(R.string.error_invalid_password));
-            focusView = edtPassword;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            edtEmail.setError(getString(R.string.error_field_required));
-            focusView = edtEmail;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            edtEmail.setError(getString(R.string.error_invalid_email));
-            focusView = edtEmail;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
         }
     }*/
 
