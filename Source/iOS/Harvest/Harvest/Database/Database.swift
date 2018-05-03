@@ -10,9 +10,6 @@ import Firebase
 import CoreLocation
 import GoogleSignIn
 
-let passwordPadding = "s3cr3ts4uc3"
-
-
 struct HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
   

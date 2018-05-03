@@ -18,11 +18,6 @@ extension HarvestDB {
     on controller: UIViewController,
     completion: @escaping (Bool) -> () = { _ in }
     ) {
-    var password = password
-    if password.count < 6 {
-      password += passwordPadding
-    }
-    
     Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
       if let err = error {
         let alert = UIAlertController.alertController(
@@ -58,11 +53,6 @@ extension HarvestDB {
     on controller: UIViewController,
     completion: @escaping (Bool) -> () = { _ in }
     ) {
-    var password = password
-    if password.count < 6 {
-      password += passwordPadding
-    }
-    
     Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
       if let err = error {
         let alert = UIAlertController.alertController(
