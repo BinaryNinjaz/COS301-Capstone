@@ -45,6 +45,7 @@ function showLogin(){
 
 }
 
+/* This function is used to make the page dynamic, in that if user presses the registration button, it should render a registration form - Teboho Mokoena */
 function showRegister(){
 	page = 1;
     document.getElementById("pageCon").innerHTML = '<div class="container">'
