@@ -9,7 +9,7 @@
 import Firebase
 
 final public class HarvestUser {
-  var workingForID: String?
+  var workingForID: (uid: String, wid: String)?
   var email: String
   var firstname: String
   var lastname: String
@@ -53,8 +53,8 @@ final public class HarvestUser {
     email = user.email ?? ""
     uid = user.uid
     
-    HarvestDB.getWorkingFor(completion: { uid in
-      HarvestUser.current.workingForID = uid
+    HarvestDB.getWorkingFor(completion: { id in
+      HarvestUser.current.workingForID = id
       
       HarvestDB.getHarvestUser { (user) in
         guard let user = user else {

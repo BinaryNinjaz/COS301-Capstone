@@ -10,11 +10,12 @@ import UIKit
 
 class SessionInformationViewController: InformationEntityItemTableViewController {
   override func viewDidLoad() {
+    super.viewDidLoad()
     kind = .session
     
     refreshControl?.beginRefreshing()
     
-    Entities.shared.getMultiplesOnce([.session, .orchard, .worker]) { _ in
+    Entities.shared.getMultiplesOnce([.worker, .session, .orchard]) { _ in
       self.tableView.reloadData()
       self.refreshControl?.endRefreshing()
     }

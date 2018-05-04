@@ -462,7 +462,6 @@ extension Orchard {
     }
       
     orchardAreaRow.actuallyChanged = { (row) in
-      print(1)
       self.tempory?.coords = row.value?.coords ?? []
       onChange()
     }

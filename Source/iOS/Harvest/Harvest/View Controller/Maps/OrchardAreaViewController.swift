@@ -36,7 +36,6 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
     data["coords"] = collections.firbaseCoordRepresentation()
     row.value = Orchard(json: data, id: row.value?.id ?? "")
     orchardPolygon = row.value?.coords.gmsPolygon(mapView: mapView)
-    print(2)
     actuallyChanged?(row)
   }
   

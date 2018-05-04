@@ -76,7 +76,7 @@ extension HarvestDB {
     let workerRefs = ref.child(Path.workingFor + "/" + worker.email.removedFirebaseInvalids())
     
     let update = [
-      HarvestUser.current.uid: true
+      HarvestUser.current.uid: worker.id
     ]
     workerRefs.updateChildValues(update)
   }

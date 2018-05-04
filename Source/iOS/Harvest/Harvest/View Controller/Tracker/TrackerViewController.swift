@@ -51,7 +51,7 @@ class TrackerViewController: UIViewController {
         let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.orange[1])
         startSessionButton.apply(gradient: sessionLayer)
         
-        tracker = Tracker(uid: HarvestUser.current.uid)
+        tracker = Tracker(wid: HarvestUser.current.workingForID?.wid ?? HarvestUser.current.uid)
         searchBar.isUserInteractionEnabled = true
         
         workerCollectionView.reloadData()

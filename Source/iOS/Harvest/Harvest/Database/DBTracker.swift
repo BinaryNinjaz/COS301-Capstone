@@ -12,7 +12,7 @@ import GoogleSignIn
 
 extension HarvestDB {
   static func collect(from workers: [Worker: [CollectionPoint]],
-                      byUserId uid: String,
+                      byWorkerId wid: String,
                       on date: Date,
                       track: [CLLocationCoordinate2D]) {
     let cref = ref.child(Path.sessions)
@@ -21,7 +21,7 @@ extension HarvestDB {
     let data: [String: Any] = [
       "start_date": date.timeIntervalSince1970,
       "end_date": Date().timeIntervalSince1970,
-      "uid": uid,
+      "wid": wid,
       "collections": workers.firebaseSessionRepresentation(),
       "track": track.firbaseCoordRepresentation()
     ]

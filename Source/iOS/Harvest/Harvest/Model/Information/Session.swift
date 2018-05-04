@@ -105,8 +105,8 @@ public class Session {
     startDate = Date(timeIntervalSince1970: json["start_date"] as? Double ?? 0.0)
     endDate = Date(timeIntervalSince1970: json["end_date"] as? Double ?? 0.0)
     
-    let uid = json["uid"] as? String ?? ""
-    foreman = Entities.shared.worker(withId: uid) ?? Worker(json: [:], id: HarvestUser.current.uid)
+    let wid = json["wid"] as? String ?? ""
+    foreman = Entities.shared.worker(withId: wid) ?? Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid)
     
     track = json.track()
     collections = json.collections()
@@ -118,7 +118,7 @@ public class Session {
     return [id: [
       "start_date": startDate.timeIntervalSince1970,
       "end_date": endDate.timeIntervalSince1970,
-      "uid": foreman.id,
+      "wid": foreman.id,
       "track": track.firbaseCoordRepresentation(),
       "collections": collections.firebaseSessionRepresentation()
     ]]
