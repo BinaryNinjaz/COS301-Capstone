@@ -1,0 +1,2 @@
+/* I am suspecting that this file is no longer in use, since our login is dynamic now - Teboho Mokoena */
+/* Javascript implementation of the login form is implemented in the file 'dynamicLoginRegister.js' - Teboho Mokoena */
