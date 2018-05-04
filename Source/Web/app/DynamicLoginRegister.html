@@ -22,7 +22,8 @@
                 integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-        <script src="dynamicLoginRegister.js" type="text/javascript"></script>
+       <!-- Please not that the declaration of the javascript file (dynamicLoginRegister.js) has been placed at the bottom, to mitigate the error rendered by the listen event -->
+	   <!-- These changes were made by Teboho Mokoena -->
 
         <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
         <link href="loginRegister.css" rel="stylesheet" type="text/css"/>
@@ -57,7 +58,8 @@
                                         <input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">
                                     </div>
 									<!-- So Vincent is the one that made the login form have access to keyboard shortcuts 04/05/2018 -->
-                                    <button onclick="firebaseLogin()" class="btn btn-success">Log In</button><!-- Log In button -->
+									<!-- I also added the id ('myInput') of the submit button to make it accessible. -->
+                                    <button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button><!-- Log In button -->
                                     
                                     <br>
                                     <button onclick='showRegister()' class='btn btn-primary'>Don't have an account? Sign Up</button>
@@ -92,7 +94,9 @@
         <!--<script src="tests.js"></script>-->
 
   </body>
-
+  <!-- I have moved this here to mitigate the "null" error produced by the event listener complaining that the password input box is null -->
+  <!-- If you move it to the top, javascript will render errors on the browser -->
+ <script src="dynamicLoginRegister.js" type="text/javascript"></script>
 <div id="ModalSpace"></div>=
 
 </html>

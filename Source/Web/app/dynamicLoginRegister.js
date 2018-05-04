@@ -1,3 +1,15 @@
+/* This section of code was added by Vincent, to listen for the Enter shortcut on the keyboard*/
+var input = document.getElementById("password");
+input.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        document.getElementById("myInput").click();
+    }
+});
+/* What Vincent Added on 04/05/2018 ends here. */
+
+
+
 let page = 0; //0 being login, 1 being sign up
 
 // var navBar = document.getElementsById("navHighlight");
