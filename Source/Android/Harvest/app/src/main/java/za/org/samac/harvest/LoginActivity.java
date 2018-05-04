@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private UserLoginTask mAuthTask = null;
 
-    // UI references.
+    //used same names as IDs in xml
     private EditText edtEmail;
     private EditText edtPassword;
     private View login_progress;
@@ -215,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
                 password += '#';
             }*/
 
-            password += "s3cr3ts4uc3";
+            password += "s3cr3ts4uc3";//Letanyans idea for padding
         }
 
         mAuth.signInWithEmailAndPassword(email, password)
@@ -266,7 +266,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    //firebase suggested validate
     private boolean validateForm() {
         boolean valid = true;
 

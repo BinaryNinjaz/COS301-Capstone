@@ -28,14 +28,14 @@ function refreshPage() {
 // This is automatic whenever there's a change to a users authorization
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-        // user logged in
-        // window.location.href = "HomePage.html";
+      // user logged in
+      // window.location.href = "HomePage.html";
     } else {
-        // user logged out
-        let page = window.location.href.replace(/^.*[\\\/]/, '');
-        if (page !== "DynamicLoginRegister.html") {
-            window.location.href = "DynamicLoginRegister.html";
-        }
+      // user logged out
+      let page = window.location.href.replace(/^.*[\\\/]/, '');
+      if (page !== "DynamicLoginRegister.html") {
+          window.location.href = "DynamicLoginRegister.html";
+      }
     }
 });
 
