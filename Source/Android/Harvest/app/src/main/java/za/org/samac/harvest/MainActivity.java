@@ -114,8 +114,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         locationPermissions();
         new LocationHelper().getLocation(this);
 
+        userUid = user.getUid();
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference("workers");//Firebase reference
+        ref = database.getReference(userUid + "/workers");//Firebase reference
+        /*String = ref.ge
+        for (:
+             ) {
+
+        }*/
         q = ref.orderByChild("name");//TODO: maybe make it last name
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -230,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
-        userUid = user.getUid();
+        //userUid = user.getUid();
         myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
         currentUserEmail = user.getEmail();
         startSessionTime = (System.currentTimeMillis()/divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC

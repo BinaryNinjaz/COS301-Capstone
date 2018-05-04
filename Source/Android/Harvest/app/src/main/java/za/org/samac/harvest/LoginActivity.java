@@ -262,6 +262,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             account = completedTask.getResult(ApiException.class);
             account.getId();
+            account.getEmail();
 
             // Signed in successfully, show authenticated UI.
             //updateUI(account);
