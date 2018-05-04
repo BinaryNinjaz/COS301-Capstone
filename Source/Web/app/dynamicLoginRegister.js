@@ -87,6 +87,7 @@ function showRegister(){
 						+'</div>'
 }
 
+/* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
 function register() {
 	const email = document.getElementById("email").value;
 	const pass = document.getElementById("password").value;
