@@ -15,15 +15,50 @@
 		1604E4B8206958E900E9BA15 /* HarvestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4B7206958E900E9BA15 /* HarvestTests.swift */; };
 		1604E4C3206958E900E9BA15 /* HarvestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4C2206958E900E9BA15 /* HarvestUITests.swift */; };
 		1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */; };
+		160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */; };
+		160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */; };
+		160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */; };
 		16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FC820696B8F00E1A292 /* QuickAlert.swift */; };
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
-		168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */; };
+		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
+		167448AF2089271400FA605C /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448AE2089271400FA605C /* Worker.swift */; };
+		167448B12089299B00FA605C /* Orchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B02089299B00FA605C /* Orchard.swift */; };
+		167448B320892AE900FA605C /* Farm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B220892AE900FA605C /* Farm.swift */; };
+		167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B520892BB500FA605C /* InfoRepresentation.swift */; };
+		167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */; };
+		167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */; };
+		167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */; };
+		167448C220893B8200FA605C /* SortedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BE20893B8100FA605C /* SortedSet.swift */; };
+		167448C320893B8200FA605C /* SortedCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BF20893B8100FA605C /* SortedCollection.swift */; };
+		167448C420893B8200FA605C /* SortedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C020893B8200FA605C /* SortedDictionary.swift */; };
+		167448C520893B8200FA605C /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C120893B8200FA605C /* SortedArray.swift */; };
+		167448C72089430C00FA605C /* EntityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C62089430C00FA605C /* EntityViewController.swift */; };
+		167448C9208A49F700FA605C /* FarmEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448C8208A49F700FA605C /* FarmEntity.swift */; };
+		167448CB208A5B5D00FA605C /* DBAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CA208A5B5D00FA605C /* DBAuth.swift */; };
+		167448CD208A5B8100FA605C /* DBWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CC208A5B8100FA605C /* DBWorker.swift */; };
+		167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448CE208A5B8B00FA605C /* DBOrchard.swift */; };
+		167448D1208A5B9800FA605C /* DBFarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D0208A5B9800FA605C /* DBFarm.swift */; };
+		167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D2208A5C3C00FA605C /* DBTracker.swift */; };
+		167448DA208A83E300FA605C /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448D9208A83E300FA605C /* Session.swift */; };
+		167448DC208A897C00FA605C /* DBSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448DB208A897C00FA605C /* DBSession.swift */; };
+		167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448DD208A9F4900FA605C /* SessionEurekaCell.swift */; };
+		167448E1208B2E2F00FA605C /* GMSConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E0208B2E2F00FA605C /* GMSConverter.swift */; };
+		167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */; };
+		167448E9208BD6F900FA605C /* Codables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E8208BD6F900FA605C /* Codables.swift */; };
+		167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448EA208C085900FA605C /* FirebaseConverter.swift */; };
+		16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */; };
+		16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906055208E7FFA00BE5ADE /* ColorScheme.swift */; };
+		16906058208E801800BE5ADE /* Gradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906057208E801800BE5ADE /* Gradients.swift */; };
+		1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906059208E803300BE5ADE /* ViewControllerExtensions.swift */; };
+		1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605B208E805400BE5ADE /* ViewExtensions.swift */; };
+		1690605E208F61DF00BE5ADE /* DBUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605D208F61DF00BE5ADE /* DBUser.swift */; };
+		16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605F208F6A9400BE5ADE /* HarvestUser.swift */; };
+		16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906061208F748600BE5ADE /* AdminEurekaCell.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
-		169E5197206C62E6006B923E /* TrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* TrackerModel.swift */; };
+		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
-		169E519B206C6C8D006B923E /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E519A206C6C8D006B923E /* Utils.swift */; };
-		16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */; };
+		16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */; };
 		16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */; };
 		16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */; };
 		16C82F5A20819B6E0074595C /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5520819B6E0074595C /* Edge.swift */; };
@@ -33,9 +68,10 @@
 		16C82F5E20819B6E0074595C /* Poly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5920819B6E0074595C /* Poly.swift */; };
 		16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */; };
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
+		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
-		2246F7A4FADAD9C7BD1EE2D8 /* libPods-Harvest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */; };
-		B7A9FFC5EFF7E01DA1441BF9 /* libPods-HarvestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 74FD0ED4702F6DC1CD4761E8 /* libPods-HarvestTests.a */; };
+		3ECB54CBF16E9C8D2770A5D3 /* Pods_Harvest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */; };
+		D7583D7CD8D538EE68CCF745 /* Pods_HarvestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,15 +106,50 @@
 		1604E4C2206958E900E9BA15 /* HarvestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUITests.swift; sourceTree = "<group>"; };
 		1604E4C4206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInformationViewController.swift; sourceTree = "<group>"; };
+		160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaViewController.swift; sourceTree = "<group>"; };
+		160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaEurekaCell.swift; sourceTree = "<group>"; };
 		16420FC820696B8F00E1A292 /* QuickAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlert.swift; sourceTree = "<group>"; };
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
-		168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
+		167448AE2089271400FA605C /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
+		167448B02089299B00FA605C /* Orchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orchard.swift; sourceTree = "<group>"; };
+		167448B220892AE900FA605C /* Farm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farm.swift; sourceTree = "<group>"; };
+		167448B520892BB500FA605C /* InfoRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoRepresentation.swift; sourceTree = "<group>"; };
+		167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityCollectionViewController.swift; sourceTree = "<group>"; };
+		167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityCollectionViewCell.swift; sourceTree = "<group>"; };
+		167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityItemTableViewController.swift; sourceTree = "<group>"; };
+		167448BE20893B8100FA605C /* SortedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedSet.swift; sourceTree = "<group>"; };
+		167448BF20893B8100FA605C /* SortedCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedCollection.swift; sourceTree = "<group>"; };
+		167448C020893B8200FA605C /* SortedDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedDictionary.swift; sourceTree = "<group>"; };
+		167448C120893B8200FA605C /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
+		167448C62089430C00FA605C /* EntityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityViewController.swift; sourceTree = "<group>"; };
+		167448C8208A49F700FA605C /* FarmEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarmEntity.swift; sourceTree = "<group>"; };
+		167448CA208A5B5D00FA605C /* DBAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBAuth.swift; sourceTree = "<group>"; };
+		167448CC208A5B8100FA605C /* DBWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBWorker.swift; sourceTree = "<group>"; };
+		167448CE208A5B8B00FA605C /* DBOrchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBOrchard.swift; sourceTree = "<group>"; };
+		167448D0208A5B9800FA605C /* DBFarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBFarm.swift; sourceTree = "<group>"; };
+		167448D2208A5C3C00FA605C /* DBTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBTracker.swift; sourceTree = "<group>"; };
+		167448D9208A83E300FA605C /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		167448DB208A897C00FA605C /* DBSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBSession.swift; sourceTree = "<group>"; };
+		167448DD208A9F4900FA605C /* SessionEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionEurekaCell.swift; sourceTree = "<group>"; };
+		167448E0208B2E2F00FA605C /* GMSConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GMSConverter.swift; sourceTree = "<group>"; };
+		167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEurekaViewController.swift; sourceTree = "<group>"; };
+		167448E8208BD6F900FA605C /* Codables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codables.swift; sourceTree = "<group>"; };
+		167448EA208C085900FA605C /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
+		16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrchardInFarmEurekaCell.swift; sourceTree = "<group>"; };
+		16906055208E7FFA00BE5ADE /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
+		16906057208E801800BE5ADE /* Gradients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradients.swift; sourceTree = "<group>"; };
+		16906059208E803300BE5ADE /* ViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtensions.swift; sourceTree = "<group>"; };
+		1690605B208E805400BE5ADE /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		1690605D208F61DF00BE5ADE /* DBUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBUser.swift; sourceTree = "<group>"; };
+		1690605F208F6A9400BE5ADE /* HarvestUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUser.swift; sourceTree = "<group>"; };
+		16906061208F748600BE5ADE /* AdminEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminEurekaCell.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
-		169E5196206C62E6006B923E /* TrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerModel.swift; sourceTree = "<group>"; };
+		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		169E519A206C6C8D006B923E /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
 		16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingWorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWorkingCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F5520819B6E0074595C /* Edge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Edge.swift; sourceTree = "<group>"; };
@@ -88,10 +159,11 @@
 		16C82F5920819B6E0074595C /* Poly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly.swift; sourceTree = "<group>"; };
 		16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerClickerSearchCollectionReusableView.swift; sourceTree = "<group>"; };
 		16C82F66208407730074595C /* GeoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKitTests.swift; sourceTree = "<group>"; };
+		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
-		6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Harvest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		74FD0ED4702F6DC1CD4761E8 /* libPods-HarvestTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HarvestTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HarvestTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Harvest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AEA05C55967C38BA2131585 /* Pods-Harvest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.release.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.release.xcconfig"; sourceTree = "<group>"; };
 		E0D60F92B255F7D5058B9A59 /* Pods-HarvestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarvestTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests.release.xcconfig"; sourceTree = "<group>"; };
 		ECF34B9EDF02391429AB7361 /* Pods-HarvestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarvestTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -103,7 +175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				169E5199206C66D6006B923E /* MapKit.framework in Frameworks */,
-				2246F7A4FADAD9C7BD1EE2D8 /* libPods-Harvest.a in Frameworks */,
+				3ECB54CBF16E9C8D2770A5D3 /* Pods_Harvest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,7 +183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7A9FFC5EFF7E01DA1441BF9 /* libPods-HarvestTests.a in Frameworks */,
+				D7583D7CD8D538EE68CCF745 /* Pods_HarvestTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,11 +265,11 @@
 		1604E4D12069597D00E9BA15 /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
-				1604E4A4206958E900E9BA15 /* SignInViewController.swift */,
-				16420FCD2069738200E1A292 /* SignUpViewController.swift */,
-				169E5193206C623F006B923E /* TrackerViewController.swift */,
-				168493F8206FD169006B7DB3 /* SettingsTableViewController.swift */,
-				16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */,
+				160A1E1A209BCCBE000A1E0F /* Maps */,
+				167448D5208A837400FA605C /* Sign In */,
+				167448D8208A839700FA605C /* Tracker */,
+				167448D6208A838300FA605C /* Settings */,
+				167448D7208A838D00FA605C /* Information */,
 			);
 			path = "View Controller";
 			sourceTree = "<group>";
@@ -219,11 +291,21 @@
 			path = "User Interface";
 			sourceTree = "<group>";
 		};
+		160A1E1A209BCCBE000A1E0F /* Maps */ = {
+			isa = PBXGroup;
+			children = (
+				16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */,
+				160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */,
+			);
+			path = Maps;
+			sourceTree = "<group>";
+		};
 		16420FC720696B6500E1A292 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				165697D42087B27E002CBCEE /* Views */,
+				16C82F6A20862A100074595C /* Tabs */,
 				16F2BA4B20766041007652E8 /* Cells */,
-				16420FC820696B8F00E1A292 /* QuickAlert.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -232,16 +314,117 @@
 			isa = PBXGroup;
 			children = (
 				16420FCB2069718400E1A292 /* Database.swift */,
+				167448CA208A5B5D00FA605C /* DBAuth.swift */,
+				1690605D208F61DF00BE5ADE /* DBUser.swift */,
+				167448CC208A5B8100FA605C /* DBWorker.swift */,
+				167448CE208A5B8B00FA605C /* DBOrchard.swift */,
+				167448D0208A5B9800FA605C /* DBFarm.swift */,
+				167448D2208A5C3C00FA605C /* DBTracker.swift */,
+				167448DB208A897C00FA605C /* DBSession.swift */,
 			);
 			path = Database;
+			sourceTree = "<group>";
+		};
+		165697D42087B27E002CBCEE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				165697D52087B29F002CBCEE /* TextFieldGroupView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		167448AD208926E000FA605C /* Information */ = {
+			isa = PBXGroup;
+			children = (
+				167448C8208A49F700FA605C /* FarmEntity.swift */,
+				167448AE2089271400FA605C /* Worker.swift */,
+				167448B02089299B00FA605C /* Orchard.swift */,
+				167448B220892AE900FA605C /* Farm.swift */,
+				167448D9208A83E300FA605C /* Session.swift */,
+				1690605F208F6A9400BE5ADE /* HarvestUser.swift */,
+				167448B520892BB500FA605C /* InfoRepresentation.swift */,
+			);
+			path = Information;
+			sourceTree = "<group>";
+		};
+		167448BD20893B4F00FA605C /* SortedCollections */ = {
+			isa = PBXGroup;
+			children = (
+				167448C120893B8200FA605C /* SortedArray.swift */,
+				167448BF20893B8100FA605C /* SortedCollection.swift */,
+				167448C020893B8200FA605C /* SortedDictionary.swift */,
+				167448BE20893B8100FA605C /* SortedSet.swift */,
+			);
+			path = SortedCollections;
+			sourceTree = "<group>";
+		};
+		167448D5208A837400FA605C /* Sign In */ = {
+			isa = PBXGroup;
+			children = (
+				1604E4A4206958E900E9BA15 /* SignInViewController.swift */,
+				16420FCD2069738200E1A292 /* SignUpViewController.swift */,
+			);
+			path = "Sign In";
+			sourceTree = "<group>";
+		};
+		167448D6208A838300FA605C /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		167448D7208A838D00FA605C /* Information */ = {
+			isa = PBXGroup;
+			children = (
+				167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */,
+				167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */,
+				160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */,
+				167448C62089430C00FA605C /* EntityViewController.swift */,
+			);
+			path = Information;
+			sourceTree = "<group>";
+		};
+		167448D8208A839700FA605C /* Tracker */ = {
+			isa = PBXGroup;
+			children = (
+				169E5193206C623F006B923E /* TrackerViewController.swift */,
+			);
+			path = Tracker;
+			sourceTree = "<group>";
+		};
+		167448DF208B2E1200FA605C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				167448E0208B2E2F00FA605C /* GMSConverter.swift */,
+				167448E8208BD6F900FA605C /* Codables.swift */,
+				167448EA208C085900FA605C /* FirebaseConverter.swift */,
+				16420FC820696B8F00E1A292 /* QuickAlert.swift */,
+				16906055208E7FFA00BE5ADE /* ColorScheme.swift */,
+				16906057208E801800BE5ADE /* Gradients.swift */,
+				16906059208E803300BE5ADE /* ViewControllerExtensions.swift */,
+				1690605B208E805400BE5ADE /* ViewExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		167448E7208BD6D500FA605C /* Codable */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Codable;
 			sourceTree = "<group>";
 		};
 		169E5195206C62D6006B923E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				167448E7208BD6D500FA605C /* Codable */,
+				167448DF208B2E1200FA605C /* Extensions */,
+				167448BD20893B4F00FA605C /* SortedCollections */,
+				167448AD208926E000FA605C /* Information */,
 				16C82F5420819B4C0074595C /* GeoKit */,
-				169E5196206C62E6006B923E /* TrackerModel.swift */,
-				169E519A206C6C8D006B923E /* Utils.swift */,
+				169E5196206C62E6006B923E /* Tracker.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -258,6 +441,14 @@
 			path = GeoKit;
 			sourceTree = "<group>";
 		};
+		16C82F6A20862A100074595C /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
 		16F2BA4B20766041007652E8 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -265,6 +456,11 @@
 				16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */,
 				16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */,
 				16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */,
+				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
+				167448DD208A9F4900FA605C /* SessionEurekaCell.swift */,
+				160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */,
+				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
+				16906061208F748600BE5ADE /* AdminEurekaCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -273,8 +469,8 @@
 			isa = PBXGroup;
 			children = (
 				169E5198206C66D6006B923E /* MapKit.framework */,
-				6D99EDDD71EEF9E3EC41CE09 /* libPods-Harvest.a */,
-				74FD0ED4702F6DC1CD4761E8 /* libPods-HarvestTests.a */,
+				6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */,
+				443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -454,13 +650,23 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-frameworks.sh",
-				"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework",
-				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Disk/Disk.framework",
+				"${BUILT_PRODUCTS_DIR}/Eureka/Eureka.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-f0850809/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TwitterKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Disk.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Eureka.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -491,9 +697,14 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-Defines-NSData+zlib/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -525,13 +736,11 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-resources.sh",
-				"${PODS_ROOT}/GTMOAuth2/Source/Touch/GTMOAuth2ViewTouch.xib",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GTMOAuth2ViewTouch.nib",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 			);
@@ -548,24 +757,60 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
-				16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */,
+				167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */,
+				16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */,
+				167448D1208A5B9800FA605C /* DBFarm.swift in Sources */,
+				1690605E208F61DF00BE5ADE /* DBUser.swift in Sources */,
+				167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */,
+				1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */,
+				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
+				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
+				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
+				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
+				167448CB208A5B5D00FA605C /* DBAuth.swift in Sources */,
 				1604E4A5206958E900E9BA15 /* SignInViewController.swift in Sources */,
 				1604E4A3206958E900E9BA15 /* AppDelegate.swift in Sources */,
+				16906058208E801800BE5ADE /* Gradients.swift in Sources */,
 				16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */,
+				167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */,
 				16420FCC2069718400E1A292 /* Database.swift in Sources */,
+				167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */,
+				167448C420893B8200FA605C /* SortedDictionary.swift in Sources */,
+				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
+				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
+				167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */,
+				167448CD208A5B8100FA605C /* DBWorker.swift in Sources */,
+				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
+				167448DA208A83E300FA605C /* Session.swift in Sources */,
+				160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */,
+				16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */,
+				167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */,
+				167448AF2089271400FA605C /* Worker.swift in Sources */,
+				167448C9208A49F700FA605C /* FarmEntity.swift in Sources */,
+				167448B12089299B00FA605C /* Orchard.swift in Sources */,
+				167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */,
 				16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */,
+				167448C72089430C00FA605C /* EntityViewController.swift in Sources */,
 				16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */,
 				16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */,
-				169E5197206C62E6006B923E /* TrackerModel.swift in Sources */,
+				169E5197206C62E6006B923E /* Tracker.swift in Sources */,
+				167448E1208B2E2F00FA605C /* GMSConverter.swift in Sources */,
+				160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */,
+				167448E9208BD6F900FA605C /* Codables.swift in Sources */,
 				16C82F5E20819B6E0074595C /* Poly.swift in Sources */,
-				169E519B206C6C8D006B923E /* Utils.swift in Sources */,
 				16C82F5B20819B6E0074595C /* Ellipse.swift in Sources */,
 				16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */,
-				168493F9206FD169006B7DB3 /* SettingsTableViewController.swift in Sources */,
+				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,
+				167448DC208A897C00FA605C /* DBSession.swift in Sources */,
+				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
+				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
+				16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */,
+				160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */,
+				167448C320893B8200FA605C /* SortedCollection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

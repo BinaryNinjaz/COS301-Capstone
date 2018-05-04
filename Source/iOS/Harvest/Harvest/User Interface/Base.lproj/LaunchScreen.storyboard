@@ -19,25 +19,29 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Harvest" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HB6-ut-CKC">
-                                <rect key="frame" x="132" y="314" width="111" height="39"/>
+                                <rect key="frame" x="132" y="324" width="111" height="39"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="39" id="Yas-L3-FZk"/>
+                                    <constraint firstAttribute="width" constant="111" id="goW-FS-HOu"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HarvestLogo" translatesAutoresizingMaskIntoConstraints="NO" id="0XE-fH-4Pp">
-                                <rect key="frame" x="160" y="251" width="55" height="55"/>
+                                <rect key="frame" x="160" y="261" width="55" height="55"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="55" id="hEv-EB-Lqu"/>
                                     <constraint firstAttribute="height" constant="55" id="txW-R3-2zq"/>
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.16298501021388889" green="0.73037697212222219" blue="0.36622702638333338" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.1629008881679648" green="0.72999999999999998" blue="0.36074126304230714" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="HB6-ut-CKC" secondAttribute="bottom" constant="-333" id="0jh-Qd-uN5"/>
-                            <constraint firstItem="0XE-fH-4Pp" firstAttribute="centerX" secondItem="HB6-ut-CKC" secondAttribute="centerX" id="EXP-fT-d28"/>
-                            <constraint firstItem="HB6-ut-CKC" firstAttribute="top" secondItem="0XE-fH-4Pp" secondAttribute="bottom" constant="8" id="hlH-JL-HRC"/>
-                            <constraint firstItem="HB6-ut-CKC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-243" id="nfc-5Q-0HC"/>
+                            <constraint firstItem="HB6-ut-CKC" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="4b1-Eh-mtc"/>
+                            <constraint firstItem="HB6-ut-CKC" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Lzt-ec-e0v"/>
+                            <constraint firstItem="HB6-ut-CKC" firstAttribute="top" secondItem="0XE-fH-4Pp" secondAttribute="bottom" constant="8" id="M5e-eA-dOS"/>
+                            <constraint firstItem="0XE-fH-4Pp" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="QKn-B1-eed"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
