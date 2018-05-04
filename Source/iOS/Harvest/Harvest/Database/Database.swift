@@ -8,272 +8,59 @@
 
 import Firebase
 import CoreLocation
-
-let passwordPadding = "s3cr3ts4uc3"
-
-struct HarvestUser {
-  var name: String
-  
-  static var current = HarvestUser(name: "")
-}
-
-struct Worker :  Hashable {
-  var firstname: String
-  var lastname: String
-  
-  static func ==(lhs: Worker, rhs: Worker) -> Bool {
-    return lhs.firstname == rhs.firstname && lhs.lastname == rhs.lastname
-  }
-  
-  var hashValue: Int {
-    return "\(firstname)\(lastname)".hashValue
-  }
-}
-
+import GoogleSignIn
 
 struct HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
   
-  enum Path: String {
-    case yields = "mockfarm/yields"
+  struct Path {
+    static var parent: String {
+      return HarvestUser.current.workingForID?.uid ?? HarvestUser.current.uid
+    }
+    static var yields: String {
+      return "\(Path.parent)/yields"
+    }
+    static var locations: String {
+      return "\(Path.parent)/locations"
+    }
+    static var farms: String {
+      return "\(Path.parent)/farms"
+    }
+    static var workers: String {
+      return "\(Path.parent)/workers"
+    }
+    static var foremen: String {
+      return "\(Path.parent)/foremen"
+    }
+    static var orchards: String {
+      return "\(Path.parent)/orchards"
+    }
+    static var sessions: String {
+      return "\(Path.parent)/sessions"
+    }
+    static var workingFor: String {
+      return "WorkingFor"
+    }
+    static var admin: String {
+      return "\(Path.parent)/admin"
+    }
   }
   
-  //MARK: - Authentication
-  
-  static func signIn(
-    withEmail email: String,
-    andPassword password: String,
-    on controller: UIViewController,
-    completion: @escaping (Bool) -> () = { _ in }
-  ) {
-    var password = password
-    if password.count < 6 {
-      password += passwordPadding
-    }
+  static func saveFarmName() {
     
-    Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
-      if let err = error {
-        let alert = UIAlertController.alertController(
-          title: "Sign In Failure",
-          message: err.localizedDescription)
-        controller.present(alert, animated: true, completion: nil)
-        completion(false)
-        return
-      }
-      
-      guard let user = user else {
-        let alert = UIAlertController.alertController(
-          title: "Sign In Failure",
-          message: "Unknown Error Occured")
-        controller.present(alert, animated: true, completion: nil)
-        completion(false)
-        return
-      }
-      UserDefaults.standard.set(password: password)
-      UserDefaults.standard.set(username: email)
-      HarvestUser.current.name = user.email!
-      completion(true)
-    }
   }
   
-  static func signUp(
-    withEmail email: String,
-    andPassword password: String,
-    name: (first: String, last: String),
-    on controller: UIViewController,
-    completion: @escaping (Bool) -> () = { _ in }
-  ) {
-    var password = password
-    if password.count < 6 {
-      password += passwordPadding
-    }
-    
-    Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
-      if let err = error {
-        let alert = UIAlertController.alertController(
-          title: "Sign Up Failure",
-          message: err.localizedDescription)
-        controller.present(alert, animated: true, completion: nil)
-        completion(false)
-        return
-      }
-      
-      guard let user = user else {
-        let alert = UIAlertController.alertController(
-          title: "Sign Up Failure",
-          message: "An unknown error occured")
-        controller.present(alert, animated: true, completion: nil)
-        completion(false)
-        return
-      }
-      
-      UserDefaults.standard.set(password: password)
-      UserDefaults.standard.set(username: email)
-      
-      let changeRequest = user.createProfileChangeRequest()
-      changeRequest.displayName = name.first + " " + name.last
-      changeRequest.commitChanges(completion: nil)
-      
-      completion(true)
-    }
-  }
-  
-  static func signOut(
-    on controller: UIViewController,
-    completion: @escaping (Bool) -> () = { _ in }
-  ) {
-    do {
-      try Auth.auth().signOut()
-    } catch {
-//      #warning("Complete with proper errors")
-      let alert = UIAlertController.alertController(
-        title: "Sign Out Failure",
-        message: "An unknown error occured")
-      controller.present(alert, animated: true, completion: nil)
-      completion(false)
-      return
-    }
-    completion(true)
-  }
-  
-  // MARK: - Yield
-  
-  static func getWorkers(_ completion: @escaping ([Worker]) -> ()) {
-    let wref = ref.child("/workers").queryOrdered(byChild: "surname")
-    wref.observe(.value) { (snapshot) in
-      var workers = [Worker]()
-      for _child in snapshot.children {
-        guard let worker = (_child as? DataSnapshot)?.value as? [String: Any] else {
-          continue
-        }
-        let fn = worker["name"] as? String ?? ""
-        let ln = worker["surname"] as? String ?? ""
-        let w = Worker(firstname: fn, lastname: ln)
-        workers.append(w)
-      }
-      completion(workers)
-    }
-  }
-  
+  // FIXME: -
   static func onLastSession(
     _ completion: @escaping ([String: Any]) -> ()
   ) {
-    let wref = ref.child("/yields").queryLimited(toLast: 1)
+    let wref = ref.child(Path.yields).queryLimited(toLast: 1)
     wref.observe(.value) { (snapshot) in
       guard let session = snapshot.value as? [String: Any] else {
         return
       }
       completion(session)
     }
-  }
-  
-  
-  static func collect(yield: Double,
-                      from email: String,
-                      inAmountOfSeconds amount: TimeInterval,
-                      at loc: CLLocationCoordinate2D,
-                      on date: Date) {
-    let cref = ref.child(Path.yields.rawValue)
-    let key = cref.childByAutoId().key
-    let data: [String: Any] = [
-      "date": date.timeIntervalSince1970,
-      "yield": yield,
-      "email": email,
-      "duration": amount,
-      "location": ["lat": loc.latitude, "lng": loc.longitude]
-    ]
-    let updates = ["yields/\(key)": data]
-    
-    ref.updateChildValues(updates)
-  }
-  
-  static func collect(from workers: [Worker: WorkerCollection],
-                      by email: String,
-                      on date: Date,
-                      track: [(Double, Double)]) {
-    let cref = ref.child(Path.yields.rawValue)
-    let key = cref.childByAutoId().key
-    
-    var cs = [String: Any]()
-    
-    for (w, c) in workers {
-      var collections = [String: Any]()
-      var i = 0
-      
-      for cp in c.collectionPoints {
-        let d = cp.date.timeIntervalSince1970
-        let lat = cp.location.coordinate.latitude
-        let lng = cp.location.coordinate.longitude
-        
-        collections[i.description] = [
-          "date": d,
-          "coord": [
-            "lat": lat,
-            "lng": lng
-          ]
-        ]
-        
-        i += 1
-      }
-      
-      let (f, l) = (w.firstname.removedFirebaseInvalids(),
-                    w.lastname.removedFirebaseInvalids())
-      cs[f + " " + l] = collections
-    }
-    
-    print(cs)
-    print(track.firbaseCoordRepresentation())
-    
-    let data: [String: Any] = [
-      "start_date": date.timeIntervalSince1970,
-      "end_date": Date().timeIntervalSince1970,
-      "email": email,
-      "collections": cs,
-      "track": track.firbaseCoordRepresentation()
-    ]
-    
-    let updates = ["yields/\(key)": data]
-    
-    ref.updateChildValues(updates)
-  }
-  
-  static func yieldCollection(
-    for user: String,
-    on date: Date,
-    completion: @escaping (DataSnapshot) -> ()
-  ) {
-    let yields = ref.child(Path.yields.rawValue)
-    yields.observeSingleEvent(of: .value) { (snapshot) in
-      for _child in snapshot.children {
-        guard let child = (_child as? DataSnapshot)?.value as? [String: Any] else {
-          continue
-        }
-        guard let email = child["email"] as? String else {
-          continue
-        }
-        guard let cdate = child["date"] as? Date else {
-          continue
-        }
-        
-        if email == user && cdate == date {
-          completion(_child as! DataSnapshot)
-          return
-        }
-      }
-    }
-  }
-}
-
-extension Array where Element == (Double, Double) {
-  func firbaseCoordRepresentation() -> [String: Any] {
-    var result = [String: Any]()
-    var id = 0
-    for (lat, lng) in self {
-      let coord = ["lat": lat, "lng": lng]
-      result[id.description] = coord
-      id += 1
-    }
-    return result
   }
 }
 
@@ -282,29 +69,13 @@ extension String {
     var result = ""
     
     for c in self {
-      if !"[.*$#]".contains(c) {
+      if !".".contains(c) {
         result += "\(c)"
+      } else {
+        result += ","
       }
     }
     
     return result
-  }
-}
-
-public extension UserDefaults {
-  public func set(username: String) {
-    set(username, forKey: "username")
-  }
-  
-  public func getUsername() -> String? {
-    return string(forKey: "username")
-  }
-  
-  public func set(password: String) {
-    set(password, forKey: "password")
-  }
-  
-  public func getPassword() -> String? {
-    return string(forKey: "password")
   }
 }
