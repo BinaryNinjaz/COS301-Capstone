@@ -28,12 +28,13 @@ body {
     width: 40%;      
     float: left;
 }
+/* The right class should not be aligned, left margin should be 40%, color should be black , front size should be set to 30pxs*/
 .right{
     margin-left: 40%;    
     color: black;
     outline-color: #006633;
     outline-width: 2px;
-     letter-spacing: 3px;
+    letter-spacing: 3px;
     font-size: 30px;
 }
 .list-heading {
