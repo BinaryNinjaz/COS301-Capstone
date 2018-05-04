@@ -39,6 +39,7 @@
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="app_shared_prefrences">HARVEST_ SHARED_PREFRENCES</string>
     <string name="start">Start</string>
+    <string name="loginWithGoogle">Log in with Google</string>
 
     <string name="title_activity_settings">Settings</string>
 

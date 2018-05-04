@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +38,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -71,11 +76,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
+    private double startSessionTime;
+    private double endSessionTime;
+    private double divideBy1000Var = 1000.0000000;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String currentUserEmail;
+    private String uid;
+    public static String sessionKey;
     private boolean isFarmer = false;
 
-    FirebaseDatabase database;
-    DatabaseReference ref;//Firebase reference
-    Query q;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;//Firebase reference to workers collection
+    private DatabaseReference myRef;//Firebase reference to yields collection
+    private Query q;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,12 +107,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setLocation(location);
         }
 
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        locationPermissions();
+        new LocationHelper().getLocation(this);
+
+        uid = user.getUid();
         database = FirebaseDatabase.getInstance();
-        final String uid = user.getUid();
         ref = database.getReference(uid + "/" + "workers");//Firebase reference
         q = ref.orderByChild("name");
-
 
 
         DatabaseReference outerRef = database.getReference();
@@ -285,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             Worker workerObj = new Worker();
             workerObj.setName(fullName);
             workerObj.setValue(0);
-            workerObj.setID(key);
+            workerObj.setID(entry.getKey());
             workers.add(workerObj);
         }
 
@@ -294,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         workersSearch.addAll(workers);
         //adapter.notifyDataSetChanged();
     }
-
 
     /*******************************
      Code below handles the stop/start button, runs a timer and displays how many
@@ -305,6 +318,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
+        //userUid = user.getUid();
+        myRef = database.getReference(uid + "/sessions/");//path to sessions collection in Firebase
+        currentUserEmail = user.getEmail();
+        startSessionTime = (System.currentTimeMillis()/divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
+
+        myRef = database.getReference(uid + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
+        Map<String, Object> sessionDate = new HashMap<>();
+        sessionDate.put("start_date", startSessionTime);
+
         recyclerView.setVisibility(View.VISIBLE);
         if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
@@ -313,6 +335,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.notifyDataSetChanged();
         }
         if (btnStart.getTag() == "green") {
+            sessionKey = myRef.push().getKey();//generate key/ID for a session
+
             adapter.setPlusEnabled(true);
             adapter.setMinusEnabled(true);
             track = new HashMap<Integer, Location>(); //used in firebase function
@@ -325,7 +349,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setText("Stop");
             btnStart.setTag("orange");
         } else {
-            //TODO: save data
+            //TODO: check if app closes or crashes
+            endSessionTime = (System.currentTimeMillis()/divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
+            sessionDate.put("end_date", endSessionTime);
+            myRef.updateChildren(sessionDate);//save data to Firebase
+
             stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             // do something with time
@@ -457,6 +485,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onQueryTextChange(String s) {
         doWorkersClientSideSearch(s);
         return false;
+    }
+
+    public void locationPermissions() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+
+        }
     }
 
     private void doWorkersClientSideSearch(String searchText) {
