@@ -10,8 +10,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -29,6 +27,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +37,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -73,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
+    private boolean isFarmer = false;
 
     FirebaseDatabase database;
     DatabaseReference ref;//Firebase reference
@@ -95,67 +94,121 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setLocation(location);
         }
 
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference("workers");//Firebase reference
+        final String uid = user.getUid();
+        ref = database.getReference(uid + "/" + "workers");//Firebase reference
         q = ref.orderByChild("name");
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+
+        DatabaseReference outerRef = database.getReference();
+        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null && dataSnapshot.getKey() != null) {
-                    collectWorkers((Map<String, Object>) dataSnapshot.getValue(), dataSnapshot.getKey());
+
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    if (child.getKey().equals(uid)){
+                        isFarmer = true;
+                    }
                 }
-                progressBar.setVisibility(View.GONE);//remove progress bar
-                relLayout.setVisibility(View.VISIBLE);
-                //user pressed start and all went well with retrieving data
+
+                if (isFarmer){
+                    setContentView(R.layout.activity_farmer);
+                }
+                else {
+                    setContentView(R.layout.activity_foreman);
+                }
+
+                relLayout = findViewById(R.id.relLayout);
+                progressBar = findViewById(R.id.progressBar);
+                btnStart = findViewById(R.id.button_start);
+
+                progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+                relLayout.setVisibility(View.GONE);
+
+                q.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null && dataSnapshot.getKey() != null) {
+                            collectWorkers((Map<String, Object>) dataSnapshot.getValue(), dataSnapshot.getKey());
+                        }
+                        progressBar.setVisibility(View.GONE);//remove progress bar
+                        relLayout.setVisibility(View.VISIBLE);
+                        //user pressed start and all went well with retrieving data
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e("Error", databaseError.toString());
+                        progressBar.setVisibility(View.GONE);
+                        relLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                btnStart.setTag("green");//it is best not to use the tag to identify button status
+
+                workers = new ArrayList<>();//stores worker names
+                workersSearch = new ArrayList<>();//stores worker names
+                recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
+                adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("Error", databaseError.toString());
-                progressBar.setVisibility(View.GONE);
-                relLayout.setVisibility(View.VISIBLE);
+
             }
         });
 
-        setContentView(R.layout.activity_main);//stet R to be referenced from specified xml file
+//        if(isFarmer) {
+//            setContentView(R.layout.activity_farmer);//stet R to be referenced from specified xml file
+//        }
+//        else {
+//            setContentView(R.layout.activity_foreman);
+//        }
 
 
-        relLayout = findViewById(R.id.relLayout);
-        progressBar = findViewById(R.id.progressBar);
-        btnStart = findViewById(R.id.button_start);
-        btnStart.setTag("green");//it is best not to use the tag to identify button status
-
-        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
-        relLayout.setVisibility(View.GONE);
-
-        workers = new ArrayList<>();//stores worker names
-        workersSearch = new ArrayList<>();//stores worker names
-        recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, GridLayoutManager.VERTICAL));
-        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setVisibility(View.GONE);
+//        relLayout = findViewById(R.id.relLayout);
+//        progressBar = findViewById(R.id.progressBar);
+//        btnStart = findViewById(R.id.button_start);
+//        btnStart.setTag("green");//it is best not to use the tag to identify button status
+//
+//        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+//        relLayout.setVisibility(View.GONE);
+//
+//        workers = new ArrayList<>();//stores worker names
+//        workersSearch = new ArrayList<>();//stores worker names
+//        recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
+//        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+//        recyclerView.setLayoutManager(mLayoutManager);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this, GridLayoutManager.VERTICAL));
+//        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setVisibility(View.GONE);
 
         //bottom navigation bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.actionYieldTracker:
-
-                            case R.id.actionSettings:
-
-                            case R.id.actionLastSession:
-
-                        }
-                        return true;
-                    }
-                });
+//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+//
+//        bottomNavigationView.setOnNavigationItemSelectedListener(
+//                new BottomNavigationView.OnNavigationItemSelectedListener() {
+//                    @Override
+//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                        switch (item.getItemId()) {
+//                            case R.id.actionYieldTracker:
+//
+//                            case R.id.actionInformation:
+//
+//                            case R.id.actionSession:
+//
+//                        }
+//                        return true;
+//                    }
+//                });
     }
 
     @Override
@@ -211,8 +264,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 }
                 else {
-                    FirebaseAuth.getInstance().signOut();
+//                    FirebaseAuth.getInstance().signOut();
                 }
+                finish();
                 return true;
         }
         return false;
@@ -419,5 +473,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             workersSearch.addAll(workers);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    void updateFarmer(boolean setMe){
+        isFarmer = setMe;
     }
 }

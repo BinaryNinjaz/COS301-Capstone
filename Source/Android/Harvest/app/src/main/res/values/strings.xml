@@ -34,16 +34,23 @@
 
     <string name="forgotAccountDetails"><a>Forgot account details?</a></string>
     <string name="prompt_confirm_Password">Confirm Password</string>
-    <string name="yieldTracker">Yield Tracker</string>
-    <string name="menuSettings">Settings</string>
+
+
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="app_shared_prefrences">HARVEST_ SHARED_PREFRENCES</string>
     <string name="start">Start</string>
-    <string name="last_session">Last Session</string>
-    <string name="search">Search</string>
+
     <string name="title_activity_settings">Settings</string>
 
+    <!-- Strings related to bottom nav-->
+    <string name="bottomYieldTracker">Yield Tracker</string>
+    <string name="bottomInformation">Information</string>
+    <string name="bottomSession">Session</string>
+
+    <!-- Strings related to menu-->
     <string name="menuLeave">Log Off</string>
+    <string name="menuSettings">Settings</string>
+    <string name="menuSearch">Search</string>
 
     <!-- Strings related to Settings -->
 
