@@ -12,8 +12,7 @@ input.addEventListener("keyup", function(event) {
 
 let page = 0; //0 being login, 1 being sign up
 
-// var navBar = document.getElementsById("navHighlight");
-
+/* This function is used to make the page dynamic, in that if user presses the login button, it should render a login form - Teboho Mokoena */
 function showLogin(){
 	page = 0;
 	document.getElementById("pageCon").innerHTML = "<div class='container'>"
