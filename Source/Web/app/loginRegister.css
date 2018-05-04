@@ -22,8 +22,9 @@ body {
     // margin-top: 10%;
     margin-bottom: 10%;
 }
+/* The left class should be left aligned with a width of 40 , floated left */
 .left{
-    text-align: left;
+    text-align: left; 
     width: 40%;      
     float: left;
 }
