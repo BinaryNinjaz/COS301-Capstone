@@ -3,6 +3,7 @@ package za.org.samac.harvest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -47,6 +48,7 @@ import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
 import za.org.samac.harvest.adapter.collections;
 import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.WorkerComparator;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
@@ -159,24 +161,61 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu, menu);
-        MenuItem searchMenu = menu.findItem(R.id.search);
-        final SearchView searchView = (SearchView) searchMenu.getActionView();
-        searchView.setIconified(false);
-        searchView.requestFocusFromTouch();
-        searchView.setOnQueryTextListener(this);
-        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                return true;
-            }
-        });
+        inflater.inflate(R.menu.menu, menu);
+//        MenuItem searchMenu = menu.findItem(R.id.search);
+//        final SearchView searchView = (SearchView) searchMenu.getActionView();
+//        searchView.setIconified(false);
+//        searchView.requestFocusFromTouch();
+//        searchView.setOnQueryTextListener(this);
+//        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+//            @Override
+//            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+//                return true;
+//            }
+//        });
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.search:
+//                MenuItem searchMenu = menu.findItem(R.id.search);
+                final SearchView searchView = (SearchView) item.getActionView();
+                searchView.setIconified(false);
+                searchView.requestFocusFromTouch();
+                searchView.setOnQueryTextListener(this);
+                item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                        return true;
+                    }
+                });
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                return true;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                if(!AppUtil.isUserSignedIn()){
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+                else {
+                    FirebaseAuth.getInstance().signOut();
+                }
+                return true;
+        }
+        return false;
     }
 
     /***********************

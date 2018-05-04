@@ -6,4 +6,12 @@
         android:icon="@drawable/ic_search_white"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.widget.SearchView" />
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings_white"
+        android:title="@string/menuSettings" />
+    <item
+        android:id="@+id/logout"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="@string/menuLeave" />
 </menu>
