@@ -34,10 +34,10 @@ extension Array where Element == CLLocationCoordinate2D {
   func gmsPolygon(
     mapView: GMSMapView,
     color: UIColor = .red,
-    width: CGFloat = 1.0
+    width: CGFloat = 2.0
   ) -> GMSPolygon {
     let result = GMSPolygon(path: gmsPath())
-    result.fillColor = color.withAlphaComponent(0.75)
+    result.fillColor = color.withAlphaComponent(0.5)
     result.strokeColor = color
     result.strokeWidth = width
     result.map = mapView

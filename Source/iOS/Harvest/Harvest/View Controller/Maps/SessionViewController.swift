@@ -1,5 +1,5 @@
 //
-//  MapViewController.swift
+//  SessionViewController.swift
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/11.
@@ -11,17 +11,14 @@ import Firebase
 import GoogleMaps
 import Eureka
 
-public class MapViewController: UIViewController, GMSMapViewDelegate, TypedRowControllerType {
+public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedRowControllerType {
   public var row: RowOf<Session>!
   
   public typealias RowValue = Session
   
   public var onDismissCallback: ((UIViewController) -> Void)?
   
-//  var locationManager = CLLocationManager()
-//  var currentLocation: CLLocation?
   var zoomLevel: Float = 15.0
-//  var autoMoveCameraToCurrentLocation = false
   var collections = [(CLLocation, String)]()
   var orchards = [Orchard]()
   
@@ -35,16 +32,12 @@ public class MapViewController: UIViewController, GMSMapViewDelegate, TypedRowCo
   public override func viewDidLoad() {
     super.viewDidLoad()
     
-//    mapView.isMyLocationEnabled = true
     mapView.isHidden = false
     mapView.mapType = GMSMapViewType.normal
     mapView.settings.compassButton = true
     mapView.delegate = self
     mapView.settings.myLocationButton = true
     mapView.padding = UIEdgeInsets(top: 42, left: 0, bottom: 101, right: 0)
-    
-//    locationManager.delegate = self
-//    locationManager.startUpdatingLocation()
     
     guard let session = row.value else {
       return

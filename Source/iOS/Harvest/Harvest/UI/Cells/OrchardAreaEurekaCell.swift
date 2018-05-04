@@ -1,17 +1,17 @@
 //
-//  SessionEurekaCell.swift
+//  OrchardAreaEurekaCell.swift
 //  Harvest
 //
-//  Created by Letanyan Arumugam on 2018/04/21.
+//  Created by Letanyan Arumugam on 2018/05/04.
 //  Copyright © 2018 Letanyan Arumugam. All rights reserved.
 //
 
 import Eureka
 import CoreLocation
 
-public final class SessionRow: OptionsRow<PushSelectorCell<Session>>, PresenterRowType, RowType {
+public final class OrchardAreaRow: OptionsRow<PushSelectorCell<Orchard>>, PresenterRowType, RowType {
   
-  public typealias PresenterRow = SessionViewController
+  public typealias PresenterRow = OrchardAreaViewController
   
   /// Defines how the view controller will be presented, pushed, etc.
   open var presentationMode: PresentationMode<PresenterRow>?
@@ -19,13 +19,17 @@ public final class SessionRow: OptionsRow<PushSelectorCell<Session>>, PresenterR
   /// Will be called before the presentation occurs.
   open var onPresentCallback: ((FormViewController, PresenterRow) -> Void)?
   
+  var actuallyChanged: ((RowOf<Orchard>) -> ())? = nil
+  
   public required init(tag: String?) {
     super.init(tag: tag)
     presentationMode = .show(
       controllerProvider: ControllerProvider.callback {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        let vc = storyboard.instantiateViewController(withIdentifier: "sessionTrackedViewController")
-        return vc as! SessionViewController
+        let vc = storyboard.instantiateViewController(withIdentifier: "orchardAreaViewController")
+        let rowVC = vc as! OrchardAreaViewController
+        rowVC.actuallyChanged = self.actuallyChanged
+        return rowVC
       },
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })
   }

@@ -38,6 +38,13 @@ extension UIColor {
       return [s, e]
     }
     
+    static var red: [UIColor] {
+      let s = UIColor(hue: 5.0 / 360.0, saturation: 0.7, brightness: 0.8, alpha: 1)
+      let e = UIColor(hue: 5.0 / 360.0, saturation: 0.7, brightness: 0.7, alpha: 1)
+      
+      return [s, e]
+    }
+    
     static var google: [UIColor] {
       let s = UIColor(hue: 8.0 / 360.0, saturation: 0.73, brightness: 0.93, alpha: 1)
       let e = UIColor(hue: 8.0 / 360.0, saturation: 0.73, brightness: 0.85, alpha: 1)

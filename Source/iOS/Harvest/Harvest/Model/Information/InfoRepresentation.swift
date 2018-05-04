@@ -454,12 +454,26 @@ extension Orchard {
       onChange()
     }
     
+    let orchardAreaRow = OrchardAreaRow() { row in
+      row.title = "Orchard Location"
+      row.value = self
+    }.cellUpdate { (cell, row) in
+      cell.detailTextLabel?.text = ""
+    }
+      
+    orchardAreaRow.actuallyChanged = { (row) in
+      print(1)
+      self.tempory?.coords = row.value?.coords ?? []
+      onChange()
+    }
+    
     form
       +++ Section("Orchard")
       <<< nameRow
       <<< cropRow
     
       +++ Section("Orchard Location")
+      <<< orchardAreaRow
     
       +++ Section("Collection Details")
       <<< bagMassRow

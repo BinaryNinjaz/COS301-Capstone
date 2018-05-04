@@ -16,6 +16,8 @@
 		1604E4C3206958E900E9BA15 /* HarvestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4C2206958E900E9BA15 /* HarvestUITests.swift */; };
 		1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */; };
 		160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */; };
+		160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */; };
+		160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */; };
 		16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FC820696B8F00E1A292 /* QuickAlert.swift */; };
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
@@ -56,7 +58,7 @@
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
-		16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */; };
+		16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */; };
 		16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */; };
 		16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */; };
 		16C82F5A20819B6E0074595C /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5520819B6E0074595C /* Edge.swift */; };
@@ -105,6 +107,8 @@
 		1604E4C4206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInformationViewController.swift; sourceTree = "<group>"; };
+		160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaViewController.swift; sourceTree = "<group>"; };
+		160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaEurekaCell.swift; sourceTree = "<group>"; };
 		16420FC820696B8F00E1A292 /* QuickAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlert.swift; sourceTree = "<group>"; };
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
@@ -145,7 +149,7 @@
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
 		16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingWorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWorkingCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F5520819B6E0074595C /* Edge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Edge.swift; sourceTree = "<group>"; };
@@ -261,10 +265,10 @@
 		1604E4D12069597D00E9BA15 /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
+				160A1E1A209BCCBE000A1E0F /* Maps */,
 				167448D5208A837400FA605C /* Sign In */,
 				167448D8208A839700FA605C /* Tracker */,
 				167448D6208A838300FA605C /* Settings */,
-				16B3F1CD207E9E9200FC1F77 /* MapViewController.swift */,
 				167448D7208A838D00FA605C /* Information */,
 			);
 			path = "View Controller";
@@ -285,6 +289,15 @@
 				1604E4AB206958E900E9BA15 /* LaunchScreen.storyboard */,
 			);
 			path = "User Interface";
+			sourceTree = "<group>";
+		};
+		160A1E1A209BCCBE000A1E0F /* Maps */ = {
+			isa = PBXGroup;
+			children = (
+				16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */,
+				160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */,
+			);
+			path = Maps;
 			sourceTree = "<group>";
 		};
 		16420FC720696B6500E1A292 /* UI */ = {
@@ -445,6 +458,7 @@
 				16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */,
 				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
 				167448DD208A9F4900FA605C /* SessionEurekaCell.swift */,
+				160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */,
 				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
 				16906061208F748600BE5ADE /* AdminEurekaCell.swift */,
 			);
@@ -750,7 +764,7 @@
 				167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */,
 				1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */,
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
-				16B3F1CE207E9E9200FC1F77 /* MapViewController.swift in Sources */,
+				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
 				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
@@ -785,6 +799,7 @@
 				16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */,
 				169E5197206C62E6006B923E /* Tracker.swift in Sources */,
 				167448E1208B2E2F00FA605C /* GMSConverter.swift in Sources */,
+				160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */,
 				167448E9208BD6F900FA605C /* Codables.swift in Sources */,
 				16C82F5E20819B6E0074595C /* Poly.swift in Sources */,
 				16C82F5B20819B6E0074595C /* Ellipse.swift in Sources */,
@@ -794,6 +809,7 @@
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
 				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
 				16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */,
+				160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */,
 				167448C320893B8200FA605C /* SortedCollection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

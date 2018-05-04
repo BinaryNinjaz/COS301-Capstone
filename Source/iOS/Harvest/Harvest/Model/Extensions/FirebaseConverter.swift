@@ -9,12 +9,12 @@
 import CoreLocation
 
 extension Array where Element == CLLocationCoordinate2D {
-  func firbaseCoordRepresentation() -> [String: Any] {
-    var result = [String: Any]()
+  func firbaseCoordRepresentation() -> [Any] {
+    var result = [Any]()
     var id = 0
     for loc in self {
       let coord = ["lat": loc.latitude, "lng": loc.longitude]
-      result[id.description] = coord
+      result.append(coord)
       id += 1
     }
     return result
@@ -39,7 +39,6 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
         ]
         i += 1
       }
-      print(key.id)
       result[key.id] = collections
     }
     

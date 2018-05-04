@@ -46,6 +46,13 @@ extension CAGradientLayer {
                     borderColor: UIColor.Bootstrap.orange[1])
   }
   
+  static var red: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.red,
+                    locations: [0.0, 1.0],
+                    cornerRadius: 5,
+                    borderColor: UIColor.Bootstrap.red[1])
+  }
+  
   static var google: CAGradientLayer {
     return gradient(colors: UIColor.Bootstrap.google,
                     locations: [0.0, 1.0],
