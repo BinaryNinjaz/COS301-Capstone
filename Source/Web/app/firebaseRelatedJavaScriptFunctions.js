@@ -32,6 +32,7 @@ if (title !== "Harvest | Login and Register") {
     if (user) {
       // user logged in
       // window.location.href = "HomePage.html";
+      user
     } else {
       // user logged out
       window.location.href = "DynamicLoginRegister.html";
