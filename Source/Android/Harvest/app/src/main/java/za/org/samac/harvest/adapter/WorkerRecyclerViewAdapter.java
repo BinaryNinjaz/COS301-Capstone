@@ -98,7 +98,9 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         holder.increment.setText(String.format("%d", worker.getValue()));//set incrementer of the worker (fixed not updating of increments)
 
         //plus button is clicked
-        incrementViews.add(holder.increment);
+        if (!incrementViews.contains(holder.increment)) {
+            incrementViews.add(holder.increment);
+        }
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -217,7 +219,6 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     public void setIncrement(){
         for(int i = 0 ; i < incrementViews.size() ; i++) {
             TextView text = incrementViews.get(i);
-            //TODO: save data before this
             text.setText("0");
             workers.get(i).setValue(0);
             incrementViews.set(i, text);
