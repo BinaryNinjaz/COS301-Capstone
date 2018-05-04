@@ -1,18 +1,22 @@
 const database = firebase.database();
 let newId = -1;
 let findables = [1];
-const user = firebase.auth().currentUser;
-let userID;
-if (user == null){
-  userID = 0;
-  console.log("Failed to get userID");
+const user = function() { return firebase.auth().currentUser };
+const userID = function() { return user().uid }
+
+function orchardsRef() {
+  return firebase.database().ref('/' + userID()  + '/orchards');
 }
-else {
-  userID = user.uid;
+
+function workersRef() {
+  return firebase.database().ref('/' + userID()  + '/workers');
 }
-const orchardsRef = firebase.database().ref('/' + userID  + '/orchards');
-const workersRef = firebase.database().ref('/' + userID + '/workers');
-const farmRef = firebase.database().ref('/' + userID + '/farms');
+
+function farmsRef() {
+  return firebase.database().ref('/' + userID()  + '/farms');
+}
+
+
 popOrch();
 popWork();
 popFarm();
@@ -164,9 +168,9 @@ function popFarm() {
   const add = document.getElementById("AddButt");
   add.innerHTML = "<h2>Loading Farm List...</h2>";
   document.getElementById("SearchSpace").innerHTML = "";
-  farmRef.off();
+  farmsRef().off();
 
-  farmRef.on('value', function (snapshot) {
+  farmsRef().on('value', function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispFarm(-1)'>Add Farm</button>"
     ;
@@ -209,7 +213,7 @@ function dispFarm(id) {
   }
   else {
 
-    firebase.database().ref('/' + userID + '/farms/' + id).once('value').then(function (snapshot) {
+    firebase.database().ref('/' + userID() + '/farms/' + id).once('value').then(function (snapshot) {
 
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
@@ -228,7 +232,7 @@ function dispFarm(id) {
         "</form>"
       ;
 
-      firebase.database().ref('/' + userID + "/orchards").once('value').then(function (workers) {
+      firebase.database().ref('/' + userID() + "/orchards").once('value').then(function (workers) {
         const buttons = document.getElementById("orchardButtons");
         workers.forEach(function (orchard) {
           if (orchard.val().farm == id) {
@@ -248,7 +252,7 @@ function farmSave(type, id) {
 
   if (type === 0) {
     newId++;
-    firebase.database().ref('/' + userID + "/farms/" + newId).set({
+    firebase.database().ref('/' + userID() + "/farms/" + newId).set({
       name: document.getElementById("farmName").value,
       further: document.getElementById("farmFurther").value
     });
@@ -256,7 +260,7 @@ function farmSave(type, id) {
     popFarm();
   }
   else if (type === 1) {
-    firebase.database().ref('/' + userID + "/farms/" + id).update({
+    firebase.database().ref('/' + userID() + "/farms/" + id).update({
       name: document.getElementById("farmName").value,
       further: document.getElementById("farmFurther").value
     });
@@ -266,7 +270,7 @@ function farmSave(type, id) {
 
 /*Displays in col 3, the interface to modify a farm*/
 function farmMod(id) {
-  firebase.database().ref('/' + userID + '/farms/' + id).once('value').then(function (snapshot) {
+  firebase.database().ref('/' + userID() + '/farms/' + id).once('value').then(function (snapshot) {
     document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delFarm(" + id + ")'>Delete</button>";
     document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name;
     document.getElementById('col3').innerHTML = "" +
@@ -292,7 +296,7 @@ function farmMod(id) {
 
 /*Delets a given farm*/
 function delFarm(id) {
-  firebase.database().ref('/' + userID + '/farms/' + id).remove();
+  firebase.database().ref('/' + userID() + '/farms/' + id).remove();
   popFarm();
   clear3();
 }
@@ -305,9 +309,9 @@ function popOrch() {
   const add = document.getElementById("AddButt");
   add.innerHTML = "<h2>Loading Orchard List...</h2>";
   document.getElementById("SearchSpace").innerHTML = "";
-  orchardsRef.off();
+  orchardsRef().off();
 
-  orchardsRef.on('value', function (snapshot) {
+  orchardsRef().on('value', function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispOrch(-1)'>Add Orchard</button>"
     ;
@@ -333,7 +337,7 @@ function dispOrch(id) {
   if (id === -1) {
     /*Create New Orchard*/
 
-    firebase.database().ref('/' + userID + '/farms').once('value').then(function (snapshot) {
+    firebase.database().ref('/' + userID() + '/farms').once('value').then(function (snapshot) {
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -386,8 +390,8 @@ function dispOrch(id) {
   }
   else {
 
-    firebase.database().ref('/' + userID + '/orchards/' + id).once('value').then(function (snapshot) {
-      farmRef.once('value').then(function (farmSnapshot) {
+    firebase.database().ref('/' + userID() + '/orchards/' + id).once('value').then(function (snapshot) {
+      farmsRef().once('value').then(function (farmSnapshot) {
         col3.innerHTML = "" +
           "<form class='form-horizontal'>" +
           "" +
@@ -434,7 +438,7 @@ function dispOrch(id) {
           }
         });
 
-        firebase.database().ref('/' + userID + "/workers").once('value').then(function (workers) {
+        firebase.database().ref('/' + userID() + "/workers").once('value').then(function (workers) {
           const buttons = document.getElementById("workerButtons");
           workers.forEach(function (worker) {
             if (worker.val().orchard == id) {
@@ -455,7 +459,7 @@ function orchSave(type, id) {
   const farmID = farm.substring(farm.indexOf("<") + 1, farm.indexOf(">"));
   if (type === 0) {
     newId++;
-    firebase.database().ref('/' + userID +"/orchards/" + newId).set({
+    firebase.database().ref('/' + userID() +"/orchards/" + newId).set({
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
       further: document.getElementById("oi").value,
@@ -471,7 +475,7 @@ function orchSave(type, id) {
     popOrch();
   }
   else if (type === 1) {
-    firebase.database().ref('/' + userID +"/orchards/" + id).update({
+    firebase.database().ref('/' + userID() +"/orchards/" + id).update({
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
       further: document.getElementById("oi").value,
@@ -488,10 +492,10 @@ function orchSave(type, id) {
 }
 
 function orchMod(id) {
-  firebase.database().ref('/' + userID +'/orchards/' + id).once('value').then(function (snapshot) {
+  firebase.database().ref('/' + userID() +'/orchards/' + id).once('value').then(function (snapshot) {
     document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch(" + id + ")'>Delete</button>";
     document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name;
-    firebase.database().ref('/' + userID +'/farms').once('value').then(function (farm) {
+    firebase.database().ref('/' + userID() +'/farms').once('value').then(function (farm) {
       document.getElementById('col3').innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -556,7 +560,7 @@ function orchMod(id) {
 }
 
 function delOrch(id) {
-  firebase.database().ref('/' + userID +'/orchards/' + id).remove();
+  firebase.database().ref('/' + userID() +'/orchards/' + id).remove();
   popOrch();
   clear3();
 }
@@ -568,9 +572,9 @@ function popWork() {
   add.innerHTML = "<h2>Loading Worker List...</h2>";
   document.getElementById("SearchSpace").innerHTML = "";
 
-  workersRef.off();
+  workersRef().off();
 
-  workersRef.on('value', function (snapshot) {
+  workersRef().on('value', function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispWork(-1)'>Add Worker</button>"
     ;
@@ -597,7 +601,7 @@ function dispWork(id) {
     /*Create New Worker*/
 
 
-    firebase.database().ref('/' + userID +'/orchards').once('value').then(function (snapshot) {
+    orchardsRef().once('value').then(function (snapshot) {
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -632,9 +636,9 @@ function dispWork(id) {
     });
   }
   else {
-    firebase.database().ref('/' + userID +'/workers/' + id).once('value').then(function (snapshot) {
+    firebase.database().ref('/' + userID() +'/workers/' + id).once('value').then(function (snapshot) {
       // firebase.database().ref('/' + userID +'/orchards').once('value').then(function (orchardSnapshot) {
-      orchardsRef.once('value').then(function (orchardSnapshot) {
+      orchardsRef().once('value').then(function (orchardSnapshot) {
         col3.innerHTML = "" +
           "<form class='form-horizontal'>" +
           "" +
@@ -709,7 +713,7 @@ function workSave(type, id) {
   }
   if (type === 0) {
     newId++;
-    firebase.database().ref('/' + userID +"/workers/" + newId).set({
+    firebase.database().ref('/' + userID() +"/workers/" + newId).set({
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
       orchard: orchID,
@@ -721,7 +725,7 @@ function workSave(type, id) {
     popWork();
   }
   else if (type === 1) {
-    firebase.database().ref('/' + userID +"/workers/" + id).update({
+    firebase.database().ref('/' + userID() +"/workers/" + id).update({
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
       orchard: orchID,
@@ -734,10 +738,10 @@ function workSave(type, id) {
 }
 
 function workMod(id) {
-  firebase.database().ref('/' + userID +'/workers/' + id).once('value').then(function (snapshot) {
+  firebase.database().ref('/' + userID() +'/workers/' + id).once('value').then(function (snapshot) {
     document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delWork(" + id + ")'>Delete</button>";
     document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name + " " + snapshot.val().surname;
-    firebase.database().ref('/' + userID +'/orchards').once('value').then(function (orchard) {
+    firebase.database().ref('/' + userID() +'/orchards').once('value').then(function (orchard) {
       document.getElementById('col3').innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -796,7 +800,7 @@ function workMod(id) {
 }
 
 function delWork(id) {
-  firebase.database().ref('/' + userID +'/workers/' + id).remove();
+  firebase.database().ref('/' + userID() +'/workers/' + id).remove();
   popWork();
   clear3();
 }
