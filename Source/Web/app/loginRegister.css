@@ -9,7 +9,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
 }
-
+/* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
 .inputBlock {
     margin: auto;
     border: 4px solid green;
