@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference ref;//Firebase reference to workers collection
     private DatabaseReference myRef;//Firebase reference to yields collection
     private Query q;
+    private DatabaseReference workersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,9 +116,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         uid = user.getUid();
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference(uid + "/" + "workers");//Firebase reference
-        q = ref.orderByChild("name");
+        ref = database.getReference(uid);//Firebase reference
+        workersRef = ref.child("workers");
 
+        q = ref.orderByChild("name");
 
         DatabaseReference outerRef = database.getReference();
         outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -144,7 +146,29 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
                 relLayout.setVisibility(View.GONE);
 
-                q.addListenerForSingleValueEvent(new ValueEventListener() {
+                workersRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                            Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                            System.out.println("%%%%%%%%%%%%%%%%%%"+zoneSnapshot.child("name").getValue(String.class));
+                            collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.child("name").getKey());
+                        }
+                        progressBar.setVisibility(View.GONE);//remove progress bar
+                        relLayout.setVisibility(View.VISIBLE);
+                        //user pressed start and all went well with retrieving data
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "onCancelled", databaseError.toException());
+                        progressBar.setVisibility(View.GONE);
+                        relLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+
+                /*q.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null && dataSnapshot.getKey() != null) {
@@ -161,11 +185,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         progressBar.setVisibility(View.GONE);
                         relLayout.setVisibility(View.VISIBLE);
                     }
-                });
+                });*/
 
                 btnStart.setTag("green");//it is best not to use the tag to identify button status
 
-                workers = new ArrayList<>();//stores worker names
+                MainActivity.this.workers = new ArrayList<>();//stores worker names
                 workersSearch = new ArrayList<>();//stores worker names
                 recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
