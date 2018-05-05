@@ -153,8 +153,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
                             Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
-                            System.out.println("%%%%%%%%%%%%%%%%%%"+zoneSnapshot.child("name").getValue(String.class));
-                            collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.child("name").getKey());
+                            //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.child("name").getKey());
+                            //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.getKey());
+
+                            String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                            Worker workerObj = new Worker();
+                            workerObj.setName(fullName);
+                            workerObj.setValue(0);
+                            workerObj.setID(zoneSnapshot.getKey());
+                            workers.add(workerObj);
+
+                            Collections.sort(workers, new WorkerComparator());
+
+                            workersSearch.addAll(workers);
                         }
                         progressBar.setVisibility(View.GONE);//remove progress bar
                         relLayout.setVisibility(View.VISIBLE);
