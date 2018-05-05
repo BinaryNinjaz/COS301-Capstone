@@ -162,11 +162,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             workerObj.setValue(0);
                             workerObj.setID(zoneSnapshot.getKey());
                             workers.add(workerObj);
-
-                            Collections.sort(workers, new WorkerComparator());
-
-                            workersSearch.addAll(workers);
                         }
+
+                        Collections.sort(workers, new WorkerComparator());
+
+                        workersSearch.addAll(workers);
+
                         progressBar.setVisibility(View.GONE);//remove progress bar
                         relLayout.setVisibility(View.VISIBLE);
                         //user pressed start and all went well with retrieving data
