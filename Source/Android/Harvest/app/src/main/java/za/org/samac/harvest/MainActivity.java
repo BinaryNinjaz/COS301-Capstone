@@ -352,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         myRef = database.getReference(uid + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
         Map<String, Object> sessionDate = new HashMap<>();
         sessionDate.put("start_date", startSessionTime);
+        //sessionDate.put("wid", startSessionTime);//TODO: add uid
 
         recyclerView.setVisibility(View.VISIBLE);
         if (!namesShowing) {
