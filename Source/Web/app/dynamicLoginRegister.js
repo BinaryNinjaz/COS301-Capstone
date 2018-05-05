@@ -1,7 +1,18 @@
+/* This section of code was added by Vincent, to listen for the Enter shortcut on the keyboard*/
+var input = document.getElementById("password");
+input.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        document.getElementById("myInput").click();
+    }
+});
+/* What Vincent Added on 04/05/2018 ends here. */
+
+
+
 let page = 0; //0 being login, 1 being sign up
 
-// var navBar = document.getElementsById("navHighlight");
-
+/* This function is used to make the page dynamic, in that if user presses the login button, it should render a login form - Teboho Mokoena */
 function showLogin(){
 	page = 0;
 	document.getElementById("pageCon").innerHTML = "<div class='container'>"
@@ -34,6 +45,7 @@ function showLogin(){
 
 }
 
+/* This function is used to make the page dynamic, in that if user presses the registration button, it should render a registration form - Teboho Mokoena */
 function showRegister(){
 	page = 1;
     document.getElementById("pageCon").innerHTML = '<div class="container">'
@@ -75,6 +87,7 @@ function showRegister(){
 						+'</div>'
 }
 
+/* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
 function register() {
 	const email = document.getElementById("email").value;
 	const pass = document.getElementById("password").value;
