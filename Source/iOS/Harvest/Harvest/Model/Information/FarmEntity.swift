@@ -162,11 +162,13 @@ extension SortedDictionary where Key == String, Value == EntityItem {
 }
 
 
-class Entities {
+final class Entities {
   private(set) var farms = SortedEntity(<)
   private(set) var workers = SortedEntity(<)
   private(set) var orchards = SortedEntity(<)
   private(set) var sessions = SortedEntity(<)
+  
+  private(set) var listners: [() -> ()] = []
   
   static var shared = Entities()
   
@@ -182,6 +184,30 @@ class Entities {
     workers.removeAll()
     orchards.removeAll()
     sessions.removeAll()
+  }
+  
+  func registerListner(with f: @escaping () -> ()) -> Int {
+    listners.append(f)
+    return listners.count - 1
+  }
+  
+  func deregister(listner id: Int) {
+    _ = listners.remove(at: id)
+  }
+  
+  func runListners() {
+    listners.forEach { $0() }
+  }
+  
+  func listenOnce(with f: @escaping () -> ()) {
+    let id = listners.count
+    let g: () -> () = {
+      f()
+      self.deregister(listner: id)
+      print(self.listners)
+    }
+    
+    listners.append(g)
   }
   
   func getOnce(_ kind: EntityItem.Kind, completion: @escaping (Entities) -> ()) {
@@ -246,6 +272,7 @@ class Entities {
           uniqueKeysWithValues: workers.map { worker in
             return (worker.firstname + " " + worker.lastname, .worker(worker))
         }, <)
+        self.runListners()
       }
     case .orchard:
       HarvestDB.watchOrchards { (orchards) in
@@ -253,6 +280,7 @@ class Entities {
           uniqueKeysWithValues: orchards.map { orchard in
             return (orchard.name, .orchard(orchard))
         }, <)
+        self.runListners()
       }
     case .farm:
       HarvestDB.watchFarms { (farms) in
@@ -260,6 +288,7 @@ class Entities {
           uniqueKeysWithValues: farms.map { farm in
             return (farm.name, .farm(farm))
         }, <)
+        self.runListners()
       }
     case .session:
       HarvestDB.watchSessions { (sessions) in
@@ -267,6 +296,7 @@ class Entities {
           uniqueKeysWithValues: sessions.map { session in
             return (session.key, .session(session))
         }, <)
+        self.runListners()
       }
       
     case .user: break

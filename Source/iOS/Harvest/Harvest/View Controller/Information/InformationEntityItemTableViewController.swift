@@ -9,6 +9,7 @@
 import UIKit
 
 class InformationEntityItemTableViewController: UITableViewController {
+  var listnerId: Int? = nil
   var selectedEntity: EntityItem? = nil
   var kind: EntityItem.Kind = .none {
     didSet {
@@ -40,10 +41,18 @@ class InformationEntityItemTableViewController: UITableViewController {
     }
   }
   
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(true)
+    if let id = listnerId {
+      Entities.shared.deregister(listner: id)
+    }
+  }
+  
   override func viewWillAppear(_ animated: Bool) {
     if let sel = tableView.indexPathForSelectedRow {
       tableView.deselectRow(at: sel, animated: false)
     }
+    listnerId = Entities.shared.registerListner(with: { self.tableView.reloadData() })
     tableView.reloadData()
   }
 
@@ -142,9 +151,10 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-    return UITableViewCellEditingStyle.delete
+    return UITableViewCellEditingStyle.none
   }
   
+  /*
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     if editingStyle == .delete {
       guard kind != .session else {
@@ -171,6 +181,7 @@ class InformationEntityItemTableViewController: UITableViewController {
         HarvestDB.delete(farm: f) { err, ref in
           tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+        
       } else if let o = item.orchard {
         HarvestDB.delete(orchard: o) { err, ref in
           tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -178,6 +189,7 @@ class InformationEntityItemTableViewController: UITableViewController {
       }
     }
   }
+  */
 
   // MARK: - Navigation
 
