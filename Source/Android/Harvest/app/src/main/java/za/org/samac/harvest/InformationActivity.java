@@ -1,26 +1,33 @@
 package za.org.samac.harvest;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import za.org.samac.harvest.util.AppUtil;
 
-public class InformationActivity extends AppCompatActivity {
+public class InformationActivity extends AppCompatActivity{
+
+    private boolean navFragVisible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
 
-        //Disable up button, this is handled by the bottom nav.
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //bottom navigation bar
@@ -34,6 +41,7 @@ public class InformationActivity extends AppCompatActivity {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
                                 finish();
+//                                startActivity(new Intent(InformationActivity.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
                                 return true;
@@ -46,6 +54,63 @@ public class InformationActivity extends AppCompatActivity {
                     }
                 });
 
+        //Start the first fragment
+        showNavFrag();
+
+    }
+
+    private void showNavFrag(){
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        InfoNavFragment navFragment = new InfoNavFragment();
+        fragmentTransaction.replace(R.id.infoMainPart, navFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    //Handle fragment communication
+//    public void onFragmentInteraction(infoType selected){
+//        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+//        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        InfoNavFragment navFragment = new InfoNavFragment();
+//        InfoFarmsFragment newFragment = new InfoFarmsFragment();
+//
+//        if (selected == infoType.MAIN){
+//            fragmentTransaction.add(R.id.infoMainPart, navFragment);
+//            fragmentTransaction.commit();
+//        }
+//        else if (selected == infoType.FARMS){
+//            fragmentTransaction.add(R.id.infoMainPart, newFragment);
+//            fragmentTransaction.commit();
+//        }
+//    }
+
+    //Handle Buttons
+    public void onInfoNavButtClick(View view){
+        if(view.getTag().equals("farms")){
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            InfoFarmsFragment newFragment = new InfoFarmsFragment();
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.replace(R.id.infoMainPart, newFragment);
+            fragmentTransaction.commit();
+        }
+        else if (view.getTag().equals("orchards")){
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            InfoOrchardsFragment newFragment = new InfoOrchardsFragment();
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.replace(R.id.infoMainPart, newFragment);
+            fragmentTransaction.commit();
+        }
+        else if (view.getTag().equals("workers")){
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            InfoWorkersFragment newFragment = new InfoWorkersFragment();
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.replace(R.id.infoMainPart, newFragment);
+            fragmentTransaction.commit();
+        }
     }
 
     //Handle the menu
