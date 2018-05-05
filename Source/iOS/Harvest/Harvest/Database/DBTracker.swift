@@ -64,7 +64,7 @@ extension HarvestDB {
     
     let worker = Entities.shared.worker(withId: id.wid)
     
-    let name = (worker?.firstname ?? "") + (worker?.lastname ?? "")
+    let name = (worker?.firstname ?? "") + " " + (worker?.lastname ?? "")
     
     let locations = ref.child(Path.locations)
     let updates =
