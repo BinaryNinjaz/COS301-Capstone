@@ -91,7 +91,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
     private static final String TAG = "EmailPassword";
     private GoogleSignInClient mGoogleSignInClient;
-    private GoogleSignInOptions gso;
     private static int RC_SIGN_IN = 100;
     private static GoogleSignInAccount account;
 
@@ -135,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // Configure Google Sign In
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
