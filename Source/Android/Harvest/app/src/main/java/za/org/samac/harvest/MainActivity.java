@@ -93,6 +93,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
+
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -168,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
-                adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setVisibility(View.GONE);
             }
