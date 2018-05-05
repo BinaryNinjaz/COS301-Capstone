@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        MainActivity.this.workers = new ArrayList<>();//stores worker names
+        workersSearch = new ArrayList<>();//stores worker names
         adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
 
         if (ActivityCompat.checkSelfPermission(this,
@@ -189,8 +191,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 btnStart.setTag("green");//it is best not to use the tag to identify button status
 
-                MainActivity.this.workers = new ArrayList<>();//stores worker names
-                workersSearch = new ArrayList<>();//stores worker names
                 recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
                 recyclerView.setLayoutManager(mLayoutManager);
