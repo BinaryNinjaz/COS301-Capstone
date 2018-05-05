@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference myRef;//Firebase reference to yields collection
     private Query q;
     private DatabaseReference workersRef;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 if (isFarmer){
 
                     //bottom navigation bar
-                    BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+                    bottomNavigationView = findViewById(R.id.bottom_navigation);
 
                     bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
                     bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -291,6 +292,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //                    }
 //                });
     }
+
+//    @Override
+//    protected void onResume(){
+//        super.onResume();
+////        if(isFarmer) {
+////            bottomNavigationView.setSelectedItemId(R.id.actionInformation);
+////        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

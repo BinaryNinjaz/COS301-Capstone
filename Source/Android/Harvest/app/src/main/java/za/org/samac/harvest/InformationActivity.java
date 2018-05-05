@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -22,16 +23,21 @@ import za.org.samac.harvest.util.AppUtil;
 public class InformationActivity extends AppCompatActivity{
 
     private boolean navFragVisible = true;
+    private BottomNavigationView bottomNavigationView;
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionInformation);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
         //bottom navigation bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.BottomNav);
+        bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionInformation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -58,8 +64,8 @@ public class InformationActivity extends AppCompatActivity{
                 });
 
         //Start the first fragment
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         showNavFrag();
-
     }
 
     private void showNavFrag(){
@@ -88,30 +94,48 @@ public class InformationActivity extends AppCompatActivity{
 //        }
 //    }
 
+    //Override Back Button
+    @Override
+    public void onBackPressed(){
+        if(getSupportFragmentManager().getBackStackEntryCount() == 1){
+            finish();
+        }
+        else {
+            getSupportFragmentManager().popBackStack();
+            if(getSupportFragmentManager().getBackStackEntryCount() == 2){
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            }
+            else{
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        }
+    }
+
     //Handle Buttons
     public void onInfoNavButtClick(View view){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if(view.getTag().equals("farms")){
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             InfoFarmsFragment newFragment = new InfoFarmsFragment();
-            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.replace(R.id.infoMainPart, newFragment);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
         else if (view.getTag().equals("orchards")){
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             InfoOrchardsFragment newFragment = new InfoOrchardsFragment();
-            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.replace(R.id.infoMainPart, newFragment);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
         else if (view.getTag().equals("workers")){
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             InfoWorkersFragment newFragment = new InfoWorkersFragment();
-            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.replace(R.id.infoMainPart, newFragment);
+            fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }
     }
@@ -177,8 +201,14 @@ public class InformationActivity extends AppCompatActivity{
                 }
                 finish();
                 return true;
+//            case R.id.homeAsUp:
+//                onBackPressed();
+//                return true;
+            default:
+                super.onOptionsItemSelected(item);
+                return true;
         }
-        return false;
+//        return false;
     }
 }
 
