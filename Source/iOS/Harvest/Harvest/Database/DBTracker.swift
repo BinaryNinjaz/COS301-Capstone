@@ -58,18 +58,25 @@ extension HarvestDB {
   }
   
   static func update(location: CLLocationCoordinate2D) {
+    guard let id = HarvestUser.current.workingForID else {
+      return
+    }
+    
+    let worker = Entities.shared.worker(withId: id.wid)
+    
+    let name = (worker?.firstname ?? "") + (worker?.lastname ?? "")
+    
     let locations = ref.child(Path.locations)
     let updates =
       [
-        HarvestUser.current.uid: [
+        id.wid: [
           "coord": [
             "lat": location.latitude,
             "lng": location.longitude
           ],
-          "display": HarvestUser.current.displayName
+          "display": name
         ]
     ]
-    
     locations.updateChildValues(updates)
   }
 }
