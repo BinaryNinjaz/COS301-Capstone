@@ -1,4 +1,16 @@
-const locationsRef = firebase.database().ref('/locations');
+const user = function() { return firebase.auth().currentUser };
+const userID = function() { 
+  if (user() !== null) {
+    return user().uid
+  } else {
+    return ""
+  }
+}
+
+function locationsRef() {
+  return firebase.database().ref('/' + userID() + '/locations');
+}
+
 var locations = [];
 
 var map;
@@ -27,12 +39,11 @@ function initials(name) {
 }
 
 function displayForemanLocation() {
-  locationsRef.off();
-  locationsRef.on('value', function(snapshot) {
+  locationsRef().off();
+  locationsRef().on('value', function(snapshot) {
     locations = [];
     snapshot.forEach(function (child) {
       let loc = child.val();
-      
       var marker = new google.maps.Marker({
         position: loc.coord,
         map: map,
