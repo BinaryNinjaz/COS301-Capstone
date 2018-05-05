@@ -216,7 +216,7 @@ final class Entities {
       HarvestDB.getWorkers { (workers) in
         self.workers = SortedDictionary(
           uniqueKeysWithValues: workers.map { worker in
-            return (worker.firstname + " " + worker.lastname, .worker(worker))
+            return (worker.lastname + worker.firstname + worker.id, .worker(worker))
         }, <)
         completion(self)
       }
@@ -224,7 +224,7 @@ final class Entities {
       HarvestDB.getOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.name, .orchard(orchard))
+            return (orchard.name + orchard.id, .orchard(orchard))
         }, <)
         completion(self)
       }
@@ -232,7 +232,7 @@ final class Entities {
       HarvestDB.getFarms { (farms) in
         self.farms = SortedDictionary(
           uniqueKeysWithValues: farms.map { farm in
-            return (farm.name, .farm(farm))
+            return (farm.name + farm.id, .farm(farm))
         }, <)
         completion(self)
       }
