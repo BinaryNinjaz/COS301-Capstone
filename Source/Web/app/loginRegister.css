@@ -9,7 +9,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
 }
-
+/* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
 .inputBlock {
     margin: auto;
     border: 4px solid green;
@@ -22,17 +22,19 @@ body {
     // margin-top: 10%;
     margin-bottom: 10%;
 }
+/* The left class should be left aligned with a width of 40 , floated left */
 .left{
-    text-align: left;
+    text-align: left; 
     width: 40%;      
     float: left;
 }
+/* The right class should not be aligned, left margin should be 40%, color should be black , front size should be set to 30pxs*/
 .right{
     margin-left: 40%;    
     color: black;
     outline-color: #006633;
     outline-width: 2px;
-     letter-spacing: 3px;
+    letter-spacing: 3px;
     font-size: 30px;
 }
 .list-heading {
