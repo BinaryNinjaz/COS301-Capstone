@@ -20,10 +20,26 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import za.org.samac.harvest.util.AppUtil;
 
+import static za.org.samac.harvest.InformationActivity.Category.FARM;
+import static za.org.samac.harvest.InformationActivity.Category.NAV;
+import static za.org.samac.harvest.InformationActivity.Category.NOTHING;
+import static za.org.samac.harvest.InformationActivity.Category.ORCHARD;
+import static za.org.samac.harvest.InformationActivity.Category.WORKER;
+
 public class InformationActivity extends AppCompatActivity{
 
     private boolean navFragVisible = true;
     private BottomNavigationView bottomNavigationView;
+
+    protected enum Category{
+        FARM,
+        ORCHARD,
+        WORKER,
+        NOTHING,
+        NAV
+    }
+
+    Category selectedCat = NOTHING;
 
     @Override
     protected void onResume(){
@@ -75,24 +91,8 @@ public class InformationActivity extends AppCompatActivity{
         fragmentTransaction.replace(R.id.infoMainPart, navFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        selectedCat = NAV;
     }
-
-    //Handle fragment communication
-//    public void onFragmentInteraction(infoType selected){
-//        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-//        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        InfoNavFragment navFragment = new InfoNavFragment();
-//        InfoFarmsFragment newFragment = new InfoFarmsFragment();
-//
-//        if (selected == infoType.MAIN){
-//            fragmentTransaction.add(R.id.infoMainPart, navFragment);
-//            fragmentTransaction.commit();
-//        }
-//        else if (selected == infoType.FARMS){
-//            fragmentTransaction.add(R.id.infoMainPart, newFragment);
-//            fragmentTransaction.commit();
-//        }
-//    }
 
     //Override Back Button
     @Override
@@ -103,7 +103,9 @@ public class InformationActivity extends AppCompatActivity{
         else {
             getSupportFragmentManager().popBackStack();
             if(getSupportFragmentManager().getBackStackEntryCount() == 2){
+                //The root Nav fragment
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                setTitle("Information");
             }
             else{
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -113,30 +115,24 @@ public class InformationActivity extends AppCompatActivity{
 
     //Handle Buttons
     public void onInfoNavButtClick(View view){
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        InfoListFragment newFragment = new InfoListFragment();
+        fragmentTransaction.replace(R.id.infoMainPart, newFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
         if(view.getTag().equals("farms")){
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            InfoFarmsFragment newFragment = new InfoFarmsFragment();
-            fragmentTransaction.replace(R.id.infoMainPart, newFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            setTitle("Farms");
+            selectedCat = FARM;
         }
         else if (view.getTag().equals("orchards")){
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            InfoOrchardsFragment newFragment = new InfoOrchardsFragment();
-            fragmentTransaction.replace(R.id.infoMainPart, newFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            setTitle("Orchards");
+            selectedCat = ORCHARD;
         }
         else if (view.getTag().equals("workers")){
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            InfoWorkersFragment newFragment = new InfoWorkersFragment();
-            fragmentTransaction.replace(R.id.infoMainPart, newFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            setTitle("Workers");
+            selectedCat = WORKER;
         }
     }
 

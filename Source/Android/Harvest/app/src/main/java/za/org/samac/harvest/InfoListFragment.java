@@ -7,17 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class InfoNavFragment extends Fragment {
 
-    public InfoNavFragment() {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class InfoListFragment extends Fragment {
+
+    public InfoListFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_info_nav, container, false);
+        return inflater.inflate(R.layout.fragment_info_list, container, false);
     }
 
 }
