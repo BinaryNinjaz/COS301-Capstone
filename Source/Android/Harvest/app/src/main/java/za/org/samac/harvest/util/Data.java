@@ -93,7 +93,70 @@ public class Data {
                         case "orchards":
                             //Iterate through every data set
                             for (DataSnapshot dataSet : setOData.getChildren()) {
+                                String name = dataSet.child("name").getValue(String.class);
+                                String crop = dataSet.child("crop").getValue(String.class);
+                                //Iterate through coordinate sets
+                                Coordinates coords = new Coordinates();
+                                for (DataSnapshot coord : setOData.child("coords").getChildren()){
+                                    // Iterate through
+                                    Location tempLoc = new Location("");
+                                    coords.pushLocation(coord.child("lat").getValue(double.class), coord.child("lng").getValue(double.class));
+                                }
+                                String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
+                                float meanBagMass = Float.parseFloat(smeanBagMass);
+                                Calendar cal = new Calendar() {
+                                    @Override
+                                    protected void computeTime() {
 
+                                    }
+
+                                    @Override
+                                    protected void computeFields() {
+
+                                    }
+
+                                    @Override
+                                    public void add(int field, int amount) {
+
+                                    }
+
+                                    @Override
+                                    public void roll(int field, boolean up) {
+
+                                    }
+
+                                    @Override
+                                    public int getMinimum(int field) {
+                                        return 0;
+                                    }
+
+                                    @Override
+                                    public int getMaximum(int field) {
+                                        return 0;
+                                    }
+
+                                    @Override
+                                    public int getGreatestMinimum(int field) {
+                                        return 0;
+                                    }
+
+                                    @Override
+                                    public int getLeastMaximum(int field) {
+                                        return 0;
+                                    }
+                                };
+                                //Get and manipulate the date.
+                                String dateString[] = dataSet.child("date").getValue(String.class).split("-");
+                                cal.set(Integer.valueOf(dateString[0]), Integer.valueOf(dateString[1]) - 1, Integer.valueOf(dateString[2]));
+                                String sDimX = dataSet.child("xDim").getValue(String.class);
+                                String sDimY = dataSet.child("yDim").getValue(String.class);
+                                float dimX = Float.parseFloat(sDimX);
+                                float dimY = Float.parseFloat(sDimX);
+                                String dimUnit = dataSet.child("unit").getValue(String.class);
+                                String further = dataSet.child("further").getValue(String.class);
+                                String assignedFarmString = dataSet.child("farm").getValue(String.class);
+                                Farm assignedFarm = getFarmFromIDString(assignedFarmString);
+                                orchards.addElement(new Orchard(name, crop, coords, meanBagMass, cal, dimX, dimY, dimUnit, further, assignedFarm, dataSet.getKey()));
                             }
                             break;
 
@@ -101,7 +164,18 @@ public class Data {
                         case "workers":
                             //Iterate through every data set
                             for (DataSnapshot dataSet : setOData.getChildren()) {
-
+                                String fName = dataSet.child("name").getValue(String.class);
+                                String sName = dataSet.child("surname").getValue(String.class);
+                                Orchard assignedOrchard = getOrchardFromIDString(dataSet.child("orchard").getValue(String.class));
+                                String sType = dataSet.child("type").getValue(String.class);
+                                WorkerType type = WorkerType.WORKER;
+                                if (sType.equals("Foreman")){
+                                    type = WorkerType.FOREMAN;
+                                }
+                                String further = dataSet.child("info").getValue(String.class);
+                                String email = dataSet.child("email").getValue(String.class);
+                                String ID = dataSet.getKey();
+                                workers.addElement(new Worker(fName, sName, assignedOrchard, type, further, email, ID));
                             }
                             break;
                     }
@@ -143,7 +217,7 @@ public class Data {
         }
         else if(category == Category.ORCHARD){
             result = new String[orchards.size()];
-            for (int i = 0; i < farms.size(); i++) {
+            for (int i = 0; i < orchards.size(); i++) {
                 result[i] = orchards.elementAt(i).name;
             }
             return result;
@@ -154,6 +228,24 @@ public class Data {
                 result[i] = workers.elementAt(i).fName + " " + workers.elementAt(i).sName;
             }
             return result;
+        }
+        return null;
+    }
+
+    public Farm getFarmFromIDString(String findMe){
+        for (Farm current : farms) {
+            if (current.ID.equals(findMe)){
+                return current;
+            }
+        }
+        return null;
+    }
+
+    public Orchard getOrchardFromIDString(String findMe){
+        for (Orchard current: orchards){
+            if (current.ID.equals(findMe)){
+                return current;
+            }
         }
         return null;
     }
@@ -215,7 +307,7 @@ class Worker{
     protected WorkerType workerType;
     protected String further;
     protected String email;
-    protected String  ID;
+    protected String ID;
 
     public Worker(String fName, String sName, Orchard assignedOrchard, WorkerType workerType, String further, String email, String ID){
         this.fName = fName;

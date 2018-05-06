@@ -74,7 +74,7 @@ class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
 
         public ViewHolder(View view){
             super(view);
-            mTextView = view.findViewById(R.id.textView2);
+            mTextView = view.findViewById(R.id.info_list_butt);
         }
     }
 
