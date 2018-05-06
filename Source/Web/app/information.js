@@ -170,7 +170,7 @@ function popFarm() {
   document.getElementById("SearchSpace").innerHTML = "";
   farmsRef().off();
 
-  farmsRef().on('value', function (snapshot) {
+  farmsRef().once('value').then(function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispFarm(-1)'>Add Farm</button>"
     ;
@@ -257,7 +257,6 @@ function farmSave(type, id) {
       further: document.getElementById("farmFurther").value
     });
     id = newId;
-    popFarm();
   }
   else if (type === 1) {
     firebase.database().ref('/' + userID() + "/farms/" + id).update({
@@ -265,6 +264,7 @@ function farmSave(type, id) {
       further: document.getElementById("farmFurther").value
     });
   }
+  popFarm();
   dispFarm(id);
 }
 
@@ -309,9 +309,8 @@ function popOrch() {
   const add = document.getElementById("AddButt");
   add.innerHTML = "<h2>Loading Orchard List...</h2>";
   document.getElementById("SearchSpace").innerHTML = "";
-  orchardsRef().off();
 
-  orchardsRef().on('value', function (snapshot) {
+  orchardsRef().once('value').then(function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispOrch(-1)'>Add Orchard</button>"
     ;
@@ -472,7 +471,6 @@ function orchSave(type, id) {
       farm: farmID
     });
     id = newId;
-    popOrch();
   }
   else if (type === 1) {
     firebase.database().ref('/' + userID() +"/orchards/" + id).update({
@@ -488,6 +486,7 @@ function orchSave(type, id) {
       farm: farmID
     });
   }
+  popOrch();
   dispOrch(id);
 }
 
@@ -574,7 +573,7 @@ function popWork() {
 
   workersRef().off();
 
-  workersRef().on('value', function (snapshot) {
+  workersRef().once('value').then(function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispWork(-1)'>Add Worker</button>"
     ;
@@ -722,7 +721,6 @@ function workSave(type, id) {
       email: email
     });
     id = newId;
-    popWork();
   }
   else if (type === 1) {
     firebase.database().ref('/' + userID() +"/workers/" + id).update({
@@ -734,6 +732,7 @@ function workSave(type, id) {
       email: email
     });
   }
+  popWork();
   dispWork(id);
 }
 
