@@ -7,9 +7,17 @@ const userID = function() {
   }
 }
 
+var markers = [];
+
 function locationsRef() {
   return firebase.database().ref('/' + userID() + '/locations');
 }
+
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    initMap();
+  }
+});
 
 var locations = [];
 
@@ -38,9 +46,18 @@ function initials(name) {
   return f + e
 }
 
+function clearMarkers() {
+  while (markers.length > 0) {
+    let m = markers.pop()
+    m.setMap(null);
+  }
+}
+
 function displayForemanLocation() {
-  locationsRef().off();
-  locationsRef().on('value', function(snapshot) {
+  let locRef = firebase.database().ref('/' + userID() + '/locations');
+  locRef.off();
+  locRef.on('value', function(snapshot) {
+    clearMarkers();
     locations = [];
     snapshot.forEach(function (child) {
       let loc = child.val();
@@ -51,6 +68,7 @@ function displayForemanLocation() {
         label: initials(loc.display)
       });
       marker.setTitle(loc.display);
+      markers.push(marker);
     });
   });
 }
