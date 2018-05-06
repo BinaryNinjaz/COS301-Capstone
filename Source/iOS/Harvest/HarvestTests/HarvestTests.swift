@@ -24,7 +24,7 @@ class HarvestTests: XCTestCase {
   }
   
   func setUpYieldTracker() -> (Tracker, [CLLocationCoordinate2D], [String: Worker]) {
-    var tracker = Tracker(uid: "tf67gyu")
+    var tracker = Tracker(wid: "tf67gyu")
     
     let workerA = Worker(json: ["name": "Andy", "surname": "Andrews"], id: "1")
     let workerB = Worker(json: ["name": "Ben", "surname": "Bennet"], id: "1")
@@ -91,7 +91,7 @@ class HarvestTests: XCTestCase {
   }
   
   func testLocationTracking() {
-    var tracker = Tracker(uid: "y9w4f")
+    var tracker = Tracker(wid: "y9w4f")
     
     let rand = {
       return Double(arc4random()) / Double(UInt32.max) * 60 - 30
