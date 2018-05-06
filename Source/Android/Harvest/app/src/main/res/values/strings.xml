@@ -59,6 +59,11 @@
     <string name="infoWorkers">Workers</string>
     <string name="infoOrchards">Orchards</string>
 
+    <!--Strings related to Information on Farms-->
+    <string name="info_farm_name">Farm Name:</string>
+    <string name="info_farm_further">Further Information:</string>
+    <string name="info_farm_assignedOrchards">Assigned Orchards:</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

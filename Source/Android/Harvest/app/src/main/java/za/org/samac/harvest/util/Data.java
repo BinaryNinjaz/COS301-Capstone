@@ -35,6 +35,10 @@ public class Data {
 
     private FirebaseDatabase database;
     private DatabaseReference userRoot;
+    private String stringToFindBy;
+    private Farm activeFarm;
+    private Orchard activeOrchard;
+    private Worker activeWorker;
 
     protected Category category = Category.NOTHING;
 
@@ -232,7 +236,7 @@ public class Data {
         return null;
     }
 
-    public Farm getFarmFromIDString(String findMe){
+    private Farm getFarmFromIDString(String findMe){
         for (Farm current : farms) {
             if (current.ID.equals(findMe)){
                 return current;
@@ -241,11 +245,74 @@ public class Data {
         return null;
     }
 
-    public Orchard getOrchardFromIDString(String findMe){
+    private Orchard getOrchardFromIDString(String findMe){
         for (Orchard current: orchards){
             if (current.ID.equals(findMe)){
                 return current;
             }
+        }
+        return null;
+    }
+
+    public String getIDFromPosInArray(int pos){
+        switch (category){
+            case ORCHARD:
+                return orchards.elementAt(pos).ID;
+            case WORKER:
+                return workers.elementAt(pos).ID;
+            case FARM:
+                return farms.elementAt(pos).ID;
+        }
+        return null;
+    }
+
+    public void setStringID(String setMe){
+        if(category == Category.FARM){
+            for (Farm current : farms){
+                if(current.ID.equals(setMe)){
+                    activeFarm = current;
+                    return;
+                }
+            }
+        }
+        else if(category == Category.ORCHARD){
+            for (Orchard current : orchards){
+                if(current.ID.equals(setMe)){
+                    activeOrchard = current;
+                    return;
+                }
+            }
+        }
+        else if(category == Category.WORKER){
+            for (Worker current : workers){
+                if(current.ID.equals(setMe)){
+                    activeWorker = current;
+                    return;
+                }
+            }
+        }
+    }
+
+    public String getName(){
+        switch (category){
+            case FARM:
+                return activeFarm.name;
+            case ORCHARD:
+                return activeOrchard.name;
+            case WORKER:
+                return activeWorker.fName;
+        }
+        return null;
+    }
+
+    public String getFurther(){
+        switch (category){
+            case FARM:
+                return activeFarm.further;
+            case ORCHARD:
+                return activeOrchard.further;
+            case WORKER:
+                return activeWorker.further;
         }
         return null;
     }

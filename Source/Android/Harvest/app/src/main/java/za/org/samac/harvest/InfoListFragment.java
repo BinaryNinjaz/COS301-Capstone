@@ -1,7 +1,6 @@
 package za.org.samac.harvest;
 
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.Vector;
 
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
@@ -70,11 +67,11 @@ class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
     private Data data;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView mTextView;
+        public TextView mButton;
 
         public ViewHolder(View view){
             super(view);
-            mTextView = view.findViewById(R.id.info_list_butt);
+            mButton = view.findViewById(R.id.info_list_butt);
         }
     }
 
@@ -92,7 +89,8 @@ class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        holder.mTextView.setText(names[position]);
+        holder.mButton.setText(names[position]);
+        holder.mButton.setTag(data.getIDFromPosInArray(position));
     }
 
     @Override

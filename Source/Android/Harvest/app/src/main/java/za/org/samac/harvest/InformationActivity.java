@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -98,9 +99,10 @@ public class InformationActivity extends AppCompatActivity{
                 //The root Nav fragment
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 setTitle("Information");
+                selectedCat = NAV;
             }
             else{
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
     }
@@ -108,27 +110,44 @@ public class InformationActivity extends AppCompatActivity{
     //Handle Buttons
     public void onInfoNavButtClick(View view){
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(selectedCat == NAV) {
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            InfoListFragment newInfoListFragment = new InfoListFragment();
+            fragmentTransaction.replace(R.id.infoMainPart, newInfoListFragment);
+            fragmentTransaction.addToBackStack(null);
+            newInfoListFragment.setData(data);
+            if (view.getTag().equals("farms")) {
+                setTitle("Farms");
+                selectedCat = FARM;
+            } else if (view.getTag().equals("orchards")) {
+                setTitle("Orchards");
+                selectedCat = ORCHARD;
+            } else if (view.getTag().equals("workers")) {
+                setTitle("Workers");
+                selectedCat = WORKER;
+            }
+            newInfoListFragment.setCat(selectedCat);
+            fragmentTransaction.commit();
+//        newInfoListFragment.showList(selectedCat);
+        }
+    }
+
+
+    //If a farm, orchard, worker is selected
+    public void onSelectItemButtClick(View view){
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        InfoListFragment newInfoListFragment = new InfoListFragment();
-        fragmentTransaction.replace(R.id.infoMainPart, newInfoListFragment);
-        fragmentTransaction.addToBackStack(null);
-        newInfoListFragment.setData(data);
-        if(view.getTag().equals("farms")){
-            setTitle("Farms");
-            selectedCat = FARM;
+        if(selectedCat == FARM){
+            setTitle("View Farm");
+            InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+            fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+            fragmentTransaction.addToBackStack(null);
+            String ID = view.getTag().toString();
+            data.setStringID(ID);
+            newInfoFarmFragment.setFields(data.getName(), data.getFurther());
+            fragmentTransaction.commit();
         }
-        else if (view.getTag().equals("orchards")){
-            setTitle("Orchards");
-            selectedCat = ORCHARD;
-        }
-        else if (view.getTag().equals("workers")){
-            setTitle("Workers");
-            selectedCat = WORKER;
-        }
-        newInfoListFragment.setCat(selectedCat);
-        fragmentTransaction.commit();
-//        newInfoListFragment.showList(selectedCat);
     }
 
     //Handle the menu
