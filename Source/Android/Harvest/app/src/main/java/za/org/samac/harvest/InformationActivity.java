@@ -19,6 +19,7 @@ import android.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.Data;
 
 import static za.org.samac.harvest.InformationActivity.Category.FARM;
 import static za.org.samac.harvest.InformationActivity.Category.NAV;
@@ -125,6 +126,7 @@ public class InformationActivity extends AppCompatActivity{
         if(view.getTag().equals("farms")){
             setTitle("Farms");
             selectedCat = FARM;
+            Data data = new Data();
         }
         else if (view.getTag().equals("orchards")){
             setTitle("Orchards");
