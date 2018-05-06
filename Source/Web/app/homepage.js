@@ -53,6 +53,34 @@ function clearMarkers() {
   }
 }
 
+function displayDate(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let today = new Date();
+  
+  let Y = date.getYear();
+  let M = date.getMonth();
+  let D = date.getDate();
+  
+  let dw = date.getDay();
+  
+  let h = date.getHours();
+  let m = date.getMinutes();
+  
+  var t = h + ":" + m;
+  
+  // FIXME doesn't work must research js date stuff >:(
+  // Must show more date info progressivly as needed
+  /*
+  if (Y < today.getYear()) {
+    t = Y + "/" + M + "/" + D + " " + t;
+  } else if (M < today.getMonth() || D < today.getDate()) {
+    t = M + "/" + D + " " + t;
+  }
+  */
+  
+  return t;
+}
+
 function displayForemanLocation() {
   let locRef = firebase.database().ref('/' + userID() + '/locations');
   locRef.off();
@@ -61,13 +89,14 @@ function displayForemanLocation() {
     locations = [];
     snapshot.forEach(function (child) {
       let loc = child.val();
+      let date = displayDate(loc.date);
       var marker = new google.maps.Marker({
         position: loc.coord,
         map: map,
         title: loc.display,
         label: initials(loc.display)
       });
-      marker.setTitle(loc.display);
+      marker.setTitle(loc.display + " - " + date);
       markers.push(marker);
     });
   });
