@@ -74,7 +74,8 @@ extension HarvestDB {
             "lat": location.latitude,
             "lng": location.longitude
           ],
-          "display": name
+          "display": name,
+          "date": Date().timeIntervalSince1970
         ]
     ]
     locations.updateChildValues(updates)
