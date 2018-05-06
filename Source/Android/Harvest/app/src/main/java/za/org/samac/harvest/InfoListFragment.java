@@ -10,8 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.Vector;
+
+import za.org.samac.harvest.util.Category;
+import za.org.samac.harvest.util.Data;
 
 
 /**
@@ -22,6 +26,9 @@ public class InfoListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Category cat = Category.NOTHING;
+
+    private Data data;
 
     public InfoListFragment() {
         // Required empty public constructor
@@ -36,17 +43,60 @@ public class InfoListFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-//        mRecyclerView = (RecyclerView) getView().findViewById(R.id.showThings);
-//        mRecyclerView.setHasFixedSize(true);
-//        mLayoutManager = new LinearLayoutManager(getActivity());
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mAdapter = new infoAdapter(dataset);
-//        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView = getView().findViewById(R.id.showThings);
+
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        data.setCategory(cat);
+
+        mAdapter = new infoAdapter(data);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public void setData(Data data){
+        this.data = data;
+    }
+
+    public void setCat(Category cat){
+        this.cat = cat;
     }
 
 }
 
-//public class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
-//    private ?? dataset;
-//
-//}
+class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
+    private String[] names;
+    private Data data;
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        public TextView mTextView;
+
+        public ViewHolder(View view){
+            super(view);
+            mTextView = view.findViewById(R.id.textView2);
+        }
+    }
+
+    public infoAdapter(Data data){
+        this.data = data;
+        this.names = data.toNamesAsStringArray();
+    }
+
+    @Override
+    public infoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_list_item, parent, false);
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position){
+        holder.mTextView.setText(names[position]);
+    }
+
+    @Override
+    public int getItemCount(){
+        return names.length;
+    }
+}

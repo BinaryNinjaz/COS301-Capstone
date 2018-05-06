@@ -11,7 +11,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
-import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -33,8 +32,11 @@ public class Data {
     protected Vector<Orchard> orchards;
     protected Vector<Worker> workers;
     protected Vector<Changes> changes;
+
     private FirebaseDatabase database;
     private DatabaseReference userRoot;
+
+    protected Category category = Category.NOTHING;
 
     /**
      * Constructor
@@ -43,6 +45,9 @@ public class Data {
         database = FirebaseDatabase.getInstance();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         userRoot = database.getReference(uid + "/");
+        farms = new Vector<Farm>();
+        orchards = new Vector<Orchard>();
+        workers = new Vector<Worker>();
         pull();
     }
 
@@ -53,8 +58,8 @@ public class Data {
         /*
          * This may, or may not be real time, for now it's not, because my data
          * D:
-         * Would be nice to have a setting for it though. Looking at you Kevin, who needs to make the settings page.
-         * TODO: Add setting to configure if database is real time or not.
+         * Swipe to refresh will be the way to go, methinks.
+         * TODO: Add Swipe to refresh in list
          */
 
         userRoot.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -76,7 +81,11 @@ public class Data {
                         case "farms":
                             //Iterate through every data set
                             for (DataSnapshot dataSet : setOData.getChildren()) {
-                                farms.addElement(new Farm(dataSet.child("name").getValue(String.class), dataSet.child("further").getValue(String.class), dataSet.getKey()));
+                                String name = dataSet.child("name").getValue(String.class);
+                                String further = dataSet.child("further").getValue(String.class);
+                                String ID = dataSet.getKey();
+                                Farm temp = new Farm(name, further, ID);
+                                farms.add(temp);
                             }
                             break;
 
@@ -114,6 +123,40 @@ public class Data {
     }
 
     //TODO: Below needs to be a whole bunch of gets and sets
+
+    public void setCategory(Category category){
+        this.category = category;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public String[] toNamesAsStringArray(){
+        String[] result;
+        if (category == Category.FARM){
+            result = new String[farms.size()];
+            for (int i = 0; i < farms.size(); i++) {
+                result[i] = farms.elementAt(i).name;
+            }
+            return result;
+        }
+        else if(category == Category.ORCHARD){
+            result = new String[orchards.size()];
+            for (int i = 0; i < farms.size(); i++) {
+                result[i] = orchards.elementAt(i).name;
+            }
+            return result;
+        }
+        else if(category == Category.WORKER){
+            result = new String[workers.size()];
+            for (int i = 0; i < workers.size(); i++) {
+                result[i] = workers.elementAt(i).fName + " " + workers.elementAt(i).sName;
+            }
+            return result;
+        }
+        return null;
+    }
 }
 
 /**

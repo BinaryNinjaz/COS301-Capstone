@@ -1,44 +1,34 @@
 package za.org.samac.harvest;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
 
-import static za.org.samac.harvest.InformationActivity.Category.FARM;
-import static za.org.samac.harvest.InformationActivity.Category.NAV;
-import static za.org.samac.harvest.InformationActivity.Category.NOTHING;
-import static za.org.samac.harvest.InformationActivity.Category.ORCHARD;
-import static za.org.samac.harvest.InformationActivity.Category.WORKER;
+import static za.org.samac.harvest.util.Category.FARM;
+import static za.org.samac.harvest.util.Category.NAV;
+import static za.org.samac.harvest.util.Category.NOTHING;
+import static za.org.samac.harvest.util.Category.ORCHARD;
+import static za.org.samac.harvest.util.Category.WORKER;
 
 public class InformationActivity extends AppCompatActivity{
 
     private boolean navFragVisible = true;
     private BottomNavigationView bottomNavigationView;
+    private Data data;
 
-    protected enum Category{
-        FARM,
-        ORCHARD,
-        WORKER,
-        NOTHING,
-        NAV
-    }
+
 
     Category selectedCat = NOTHING;
 
@@ -52,6 +42,7 @@ public class InformationActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
+        data = new Data();
 
         //bottom navigation bar
         bottomNavigationView = findViewById(R.id.BottomNav);
@@ -119,14 +110,13 @@ public class InformationActivity extends AppCompatActivity{
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        InfoListFragment newFragment = new InfoListFragment();
-        fragmentTransaction.replace(R.id.infoMainPart, newFragment);
+        InfoListFragment newInfoListFragment = new InfoListFragment();
+        fragmentTransaction.replace(R.id.infoMainPart, newInfoListFragment);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        newInfoListFragment.setData(data);
         if(view.getTag().equals("farms")){
             setTitle("Farms");
             selectedCat = FARM;
-            Data data = new Data();
         }
         else if (view.getTag().equals("orchards")){
             setTitle("Orchards");
@@ -136,6 +126,9 @@ public class InformationActivity extends AppCompatActivity{
             setTitle("Workers");
             selectedCat = WORKER;
         }
+        newInfoListFragment.setCat(selectedCat);
+        fragmentTransaction.commit();
+//        newInfoListFragment.showList(selectedCat);
     }
 
     //Handle the menu
