@@ -108,8 +108,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 holder.increment.setText(String.format("%d", value));
 
                 //get coordinates
-                currentLat = LocationHelper.currentLat;
-                currentLong = LocationHelper.currentLong;
+                currentLat = location.getLatitude();
+                currentLong = location.getLongitude();
 
                 //get time
                 currentTime = (System.currentTimeMillis()/divideBy1000Var);//seconds since January 1, 1970 00:00:00 UTC

@@ -19,10 +19,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private String uid;
     public static String sessionKey;
     private boolean isFarmer = false;
+    //private Button actionSession;
 
     private FirebaseDatabase database;
     private DatabaseReference ref;//Firebase reference to workers collection
@@ -90,13 +93,29 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference workersRef;
     private BottomNavigationView bottomNavigationView;
 
+    private void init() {
+        track = new HashMap<>();
+        this.workers = new ArrayList<>();//stores worker names
+        workersSearch = new ArrayList<>();//stores worker names
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MainActivity.this.workers = new ArrayList<>();//stores worker names
-        workersSearch = new ArrayList<>();//stores worker names
+       init();
+
         adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
+
+        /*actionSession = findViewById(R.id.actionSession);
+        actionSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Analytics.class);
+                startActivity(intent);
+                finish();//kill current Activity
+            }
+        });*/
 
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -113,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
 
         locationPermissions();
-        new LocationHelper().getLocation(this);
+        //new LocationHelper().getLocation(this);
 
         uid = user.getUid();
         database = FirebaseDatabase.getInstance();
