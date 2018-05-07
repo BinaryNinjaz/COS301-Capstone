@@ -107,16 +107,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
 
-        /*actionSession = findViewById(R.id.actionSession);
-        actionSession.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Analytics.class);
-                startActivity(intent);
-                finish();//kill current Activity
-            }
-        });*/
-
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
