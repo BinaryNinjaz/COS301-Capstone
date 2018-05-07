@@ -104,7 +104,9 @@ public class Data {
                                 for (DataSnapshot coord : setOData.child("coords").getChildren()){
                                     // Iterate through
                                     Location tempLoc = new Location("");
-                                    coords.pushLocation(coord.child("lat").getValue(double.class), coord.child("lng").getValue(double.class));
+                                    String lats = coord.child("lat").getValue(String.class);
+                                    String lngs = coord.child("lng").getValue(String.class);
+                                    coords.pushLocation(Double.parseDouble(lats), Double.parseDouble(lngs));
                                 }
                                 String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
                                 float meanBagMass = Float.parseFloat(smeanBagMass);
