@@ -170,7 +170,7 @@ function popFarm() {
   document.getElementById("SearchSpace").innerHTML = "";
   farmsRef().off();
 
-  farmsRef().on('value', function (snapshot) {
+  farmsRef().once('value').then(function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispFarm(-1)'>Add Farm</button>"
     ;
@@ -181,7 +181,7 @@ function popFarm() {
       // ;
       let temp = {
         Name : child.val().name,
-        Button : "<button type='button' class='btn btn-info' onclick='dispFarm(" + child.key + ")'>" + child.val().name + "</button>"
+        Button : "<button type='button' class='btn btn-info' onclick='dispFarm(\"" + child.key + "\")'>" + child.val().name + "</button>"
       };
       findables.push(temp);
       newId = child.key;
@@ -236,7 +236,7 @@ function dispFarm(id) {
         const buttons = document.getElementById("orchardButtons");
         workers.forEach(function (orchard) {
           if (orchard.val().farm == id) {
-            buttons.innerHTML += "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispOrch(" + orchard.key + ")'>" + orchard.val().name + "</button></div>";
+            buttons.innerHTML += "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispOrch(\"" + orchard.key + "\")'>" + orchard.val().name + "</button></div>";
           }
         });
       });
@@ -257,7 +257,6 @@ function farmSave(type, id) {
       further: document.getElementById("farmFurther").value
     });
     id = newId;
-    popFarm();
   }
   else if (type === 1) {
     firebase.database().ref('/' + userID() + "/farms/" + id).update({
@@ -265,6 +264,7 @@ function farmSave(type, id) {
       further: document.getElementById("farmFurther").value
     });
   }
+  popFarm();
   dispFarm(id);
 }
 
@@ -309,9 +309,8 @@ function popOrch() {
   const add = document.getElementById("AddButt");
   add.innerHTML = "<h2>Loading Orchard List...</h2>";
   document.getElementById("SearchSpace").innerHTML = "";
-  orchardsRef().off();
 
-  orchardsRef().on('value', function (snapshot) {
+  orchardsRef().once('value').then(function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispOrch(-1)'>Add Orchard</button>"
     ;
@@ -322,7 +321,7 @@ function popOrch() {
       // ;
       let temp = {
         Name : child.val().name,
-        Button : "<button type='button' class='btn btn-info' onclick='dispOrch(" + child.key + ")'>" + child.val().name + "</button>"
+        Button : "<button type='button' class='btn btn-info' onclick='dispOrch(\"" + child.key + "\")'>" + child.val().name + "</button>"
       };
       findables.push(temp);
       newId = child.key;
@@ -434,7 +433,7 @@ function dispOrch(id) {
         farmSnapshot.forEach(function (farm) {
           if (farm.key === snapshot.val().farm) {
             // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
-            document.getElementById("orchFarmDisp").innerHTML = "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispFarm(" + farm.key + ")'>" + farm.val().name + "</button></div>";
+            document.getElementById("orchFarmDisp").innerHTML = "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispFarm(\"" + farm.key + "\")'>" + farm.val().name + "</button></div>";
           }
         });
 
@@ -442,7 +441,7 @@ function dispOrch(id) {
           const buttons = document.getElementById("workerButtons");
           workers.forEach(function (worker) {
             if (worker.val().orchard == id) {
-              buttons.innerHTML += "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispWork(" + worker.key + ")'>" + worker.val().name + " " + worker.val().surname + "</button></div>";
+              buttons.innerHTML += "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispWork(\"" + worker.key + "\")'>" + worker.val().name + " " + worker.val().surname + "</button></div>";
             }
           });
         });
@@ -472,7 +471,6 @@ function orchSave(type, id) {
       farm: farmID
     });
     id = newId;
-    popOrch();
   }
   else if (type === 1) {
     firebase.database().ref('/' + userID() +"/orchards/" + id).update({
@@ -488,6 +486,7 @@ function orchSave(type, id) {
       farm: farmID
     });
   }
+  popOrch();
   dispOrch(id);
 }
 
@@ -574,7 +573,7 @@ function popWork() {
 
   workersRef().off();
 
-  workersRef().on('value', function (snapshot) {
+  workersRef().once('value').then(function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispWork(-1)'>Add Worker</button>"
     ;
@@ -585,7 +584,7 @@ function popWork() {
       // ;
       let temp = {
         Name : child.val().name + " " + child.val().surname,
-        Button : "<button type='button' class='btn btn-info' onclick='dispWork(" + child.key + ")'>" + child.val().name + " " + child.val().surname + "</button>"
+        Button : "<button type='button' class='btn btn-info' onclick='dispWork(\"" + child.key + "\")'>" + child.val().name + " " + child.val().surname + "</button>"
       };
       findables.push(temp);
       newId = child.key;
@@ -596,7 +595,7 @@ function popWork() {
 
 function dispWork(id) {
   const col3 = document.getElementById("col3");
-
+  
   if (id === -1) {
     /*Create New Worker*/
 
@@ -669,7 +668,7 @@ function dispWork(id) {
         orchardSnapshot.forEach(function (orchard) {
           if (orchard.key === snapshot.val().orchard) {
             // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
-            document.getElementById("workOrchDisp").innerHTML = "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispOrch(" + orchard.key + ")'>" + orchard.val().name + "</button></div>";
+            document.getElementById("workOrchDisp").innerHTML = "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispOrch(\"" + orchard.key + "\")'>" + orchard.val().name + "</button></div>";
           }
         });
 
@@ -722,7 +721,6 @@ function workSave(type, id) {
       email: email
     });
     id = newId;
-    popWork();
   }
   else if (type === 1) {
     firebase.database().ref('/' + userID() +"/workers/" + id).update({
@@ -734,6 +732,7 @@ function workSave(type, id) {
       email: email
     });
   }
+  popWork();
   dispWork(id);
 }
 
