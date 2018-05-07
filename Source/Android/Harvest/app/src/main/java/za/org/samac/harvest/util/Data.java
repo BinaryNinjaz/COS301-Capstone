@@ -111,7 +111,7 @@ public class Data {
                                     }
                                 }
                                 String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
-                                float meanBagMass;
+                                Float meanBagMass = null;
                                 if (!smeanBagMass.equals("")) {
                                     meanBagMass = Float.parseFloat(smeanBagMass);
                                 }
@@ -161,10 +161,12 @@ public class Data {
                                 };
                                 //Get and manipulate the date.
                                 String dateString[] = dataSet.child("date").getValue(String.class).split("-");
-                                cal.set(Integer.valueOf(dateString[0]), Integer.valueOf(dateString[1]) - 1, Integer.valueOf(dateString[2]));
+                                if (dateString.length == 3) {
+                                    cal.set(Integer.valueOf(dateString[0]), Integer.valueOf(dateString[1]) - 1, Integer.valueOf(dateString[2]));
+                                }
                                 String sDimX = dataSet.child("xDim").getValue(String.class);
                                 String sDimY = dataSet.child("yDim").getValue(String.class);
-                                float dimX, dimY;
+                                Float dimX = null, dimY = null;
                                 if (!sDimX.equals("")) {
                                     dimX = Float.parseFloat(sDimX);
                                 }
@@ -353,15 +355,15 @@ class Orchard{
     protected String name;
     protected String crop;
     protected Coordinates coordinates;
-    protected float meanBagMass;
+    protected Float meanBagMass;
     protected Calendar datePlanted;
-    protected float dimX, dimY;
+    protected Float dimX, dimY;
     protected String dimUnit;
     protected String further;
     protected Farm assignedFarm;
     protected String ID;
 
-    public Orchard(String name, String crop, Coordinates coordinates, float meanBagMass, Calendar datePlanted, float dimX, float dimY, String dimUnit, String further, Farm assignedFarm, String ID){
+    public Orchard(String name, String crop, Coordinates coordinates, Float meanBagMass, Calendar datePlanted, Float dimX, Float dimY, String dimUnit, String further, Farm assignedFarm, String ID){
         this.name = name;
         this.crop = crop;
         this.meanBagMass = meanBagMass;
