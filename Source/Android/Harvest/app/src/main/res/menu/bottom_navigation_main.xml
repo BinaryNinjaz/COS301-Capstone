@@ -4,17 +4,16 @@
     <item
         android:id="@+id/actionYieldTracker"
         android:enabled="true"
-        android:title="@string/yieldTracker"
+        android:title="@string/bottomYieldTracker"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/actionSettings"
+        android:id="@+id/actionInformation"
         android:enabled="true"
-        android:icon="@drawable/ic_settings_white"
-        android:title="@string/menuSettings"
+        android:title="@string/bottomInformation"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/actionLastSession"
+        android:id="@+id/actionSession"
         android:enabled="true"
-        android:title="@string/last_session"
+        android:title="@string/bottomSession"
         app:showAsAction="ifRoom" />
 </menu>

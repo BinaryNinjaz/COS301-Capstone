@@ -6,7 +6,7 @@ public class Worker {
 
     private String name;
     private Integer value;
-    private Object ID;
+    private String ID;
     private ArrayList<String> assignedOrchards;//the orchards the worker is assigned to may or may not be more than one
 
     public String getName() {
@@ -25,11 +25,11 @@ public class Worker {
         this.value = value;
     }
 
-    public Object getID() {
+    public String getID() {
         return ID;
     }
 
-    public void setID(Object value) {
+    public void setID(String ID) {
         this.ID = ID;
     }
 }
