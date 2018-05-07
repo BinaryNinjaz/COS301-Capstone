@@ -22,6 +22,10 @@
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
 		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
+		1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */; };
+		1657B73E20A0E17300F5F478 /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73D20A0E17300F5F478 /* Stat.swift */; };
+		1657B74020A0E18600F5F478 /* StatKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73F20A0E18600F5F478 /* StatKind.swift */; };
+		1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B74120A0E53800F5F478 /* StatsViewController.swift */; };
 		167448AF2089271400FA605C /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448AE2089271400FA605C /* Worker.swift */; };
 		167448B12089299B00FA605C /* Orchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B02089299B00FA605C /* Orchard.swift */; };
 		167448B320892AE900FA605C /* Farm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B220892AE900FA605C /* Farm.swift */; };
@@ -113,6 +117,10 @@
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
+		1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatSetupViewController.swift; sourceTree = "<group>"; };
+		1657B73D20A0E17300F5F478 /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
+		1657B73F20A0E18600F5F478 /* StatKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatKind.swift; sourceTree = "<group>"; };
+		1657B74120A0E53800F5F478 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 		167448AE2089271400FA605C /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		167448B02089299B00FA605C /* Orchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orchard.swift; sourceTree = "<group>"; };
 		167448B220892AE900FA605C /* Farm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farm.swift; sourceTree = "<group>"; };
@@ -265,6 +273,7 @@
 		1604E4D12069597D00E9BA15 /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
+				1657B73820A0DB3400F5F478 /* Stats */,
 				160A1E1A209BCCBE000A1E0F /* Maps */,
 				167448D5208A837400FA605C /* Sign In */,
 				167448D8208A839700FA605C /* Tracker */,
@@ -331,6 +340,24 @@
 				165697D52087B29F002CBCEE /* TextFieldGroupView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		1657B73820A0DB3400F5F478 /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */,
+				1657B74120A0E53800F5F478 /* StatsViewController.swift */,
+			);
+			path = Stats;
+			sourceTree = "<group>";
+		};
+		1657B73C20A0E16300F5F478 /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				1657B73D20A0E17300F5F478 /* Stat.swift */,
+				1657B73F20A0E18600F5F478 /* StatKind.swift */,
+			);
+			path = Stats;
 			sourceTree = "<group>";
 		};
 		167448AD208926E000FA605C /* Information */ = {
@@ -424,6 +451,7 @@
 				167448BD20893B4F00FA605C /* SortedCollections */,
 				167448AD208926E000FA605C /* Information */,
 				16C82F5420819B4C0074595C /* GeoKit */,
+				1657B73C20A0E16300F5F478 /* Stats */,
 				169E5196206C62E6006B923E /* Tracker.swift */,
 			);
 			path = Model;
@@ -650,6 +678,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
 				"${BUILT_PRODUCTS_DIR}/Disk/Disk.framework",
 				"${BUILT_PRODUCTS_DIR}/Eureka/Eureka.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
@@ -660,6 +689,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Disk.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Eureka.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
@@ -780,10 +810,13 @@
 				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
+				1657B73E20A0E17300F5F478 /* Stat.swift in Sources */,
 				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
+				1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */,
 				167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */,
 				167448CD208A5B8100FA605C /* DBWorker.swift in Sources */,
 				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
+				1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
 				167448DA208A83E300FA605C /* Session.swift in Sources */,
 				160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */,
@@ -807,6 +840,7 @@
 				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,
 				167448DC208A897C00FA605C /* DBSession.swift in Sources */,
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
+				1657B74020A0E18600F5F478 /* StatKind.swift in Sources */,
 				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
 				16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */,
 				160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */,

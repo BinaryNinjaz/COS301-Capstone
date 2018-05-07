@@ -21,11 +21,24 @@ class MainTabBarViewController: UITabBarController {
   }
   
   func setUpForForeman() {
-    guard let idx = viewControllers?
+    guard let infoIdx = viewControllers?
       .index(where: { $0.restorationIdentifier == "informationViewController" }) else {
       return
     }
-    viewControllers?.remove(at: idx)
+    
+    guard let sessionIdx = viewControllers?
+      .index(where: { $0.restorationIdentifier == "sessionViewController" }) else {
+        return
+    }
+    
+    guard let statIdx = viewControllers?
+      .index(where: { $0.restorationIdentifier == "statViewController" }) else {
+        return
+    }
+    
+    viewControllers?.remove(at: infoIdx)
+    viewControllers?.remove(at: sessionIdx)
+    viewControllers?.remove(at: statIdx)
   }
   
   func setUpForFarmer() {
@@ -34,10 +47,31 @@ class MainTabBarViewController: UITabBarController {
         return
     }
     
+    guard nil == viewControllers?
+      .index(where: { $0.restorationIdentifier == "sessionViewController" }) else {
+        return
+    }
+    
+    guard nil == viewControllers?
+      .index(where: { $0.restorationIdentifier == "statViewController" }) else {
+        return
+    }
+    
     guard let infoVC = storyboard?.instantiateViewController(withIdentifier: "informationViewController") else {
       return
     }
     
+    guard let sessionVC = storyboard?.instantiateViewController(withIdentifier: "informationViewController") else {
+      return
+    }
+    
+    guard let statVC = storyboard?.instantiateViewController(withIdentifier: "informationViewController") else {
+      return
+    }
+    
+    viewControllers?.insert(statVC, at: 1)
+    viewControllers?.insert(sessionVC, at: 1)
     viewControllers?.insert(infoVC, at: 1)
+    
   }
 }
