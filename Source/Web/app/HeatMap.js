@@ -10,6 +10,12 @@ function yieldsRef() {
   return firebase.database().ref('/' + userID() + '/sessions');
 }
 
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    initMap();
+  }
+});
+
 var map;
 function initMap() {
   navigator.geolocation.getCurrentPosition(function(loc) {
@@ -23,6 +29,8 @@ function initMap() {
   });
   displayHeatMap();
 }
+
+
 
 function displayHeatMap() {
   yieldsRef().off();
