@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       init();
+        init();
 
         adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
 

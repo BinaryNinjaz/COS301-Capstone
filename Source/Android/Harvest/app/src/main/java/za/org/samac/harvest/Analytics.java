@@ -1,21 +1,64 @@
 package za.org.samac.harvest;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
 
+import za.org.samac.harvest.util.Category;
+
+import static za.org.samac.harvest.util.Category.NAV;
+import static za.org.samac.harvest.util.Category.NOTHING;
+
 public class Analytics extends AppCompatActivity {
+    private BottomNavigationView bottomNavigationView;
+    Category selectedCat = NOTHING;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analytics);
+
+        bottomNavigationView = findViewById(R.id.BottomNav);
+        bottomNavigationView.setSelectedItemId(R.id.actionInformation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.actionYieldTracker:
+                                Intent openMainActivity= new Intent(Analytics.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
+                                return true;
+                            case R.id.actionInformation:
+                                Intent openSessions= new Intent(Analytics.this, InformationActivity.class);
+                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openSessions, 0);
+                                return true;
+                            case R.id.actionSession:
+                                return true;
+
+                        }
+                        return true;
+                    }
+                });
+
+        //Start the first fragment
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        displayGraph();
     }
 
     public void displayGraph() {
