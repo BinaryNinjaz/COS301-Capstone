@@ -106,10 +106,18 @@ public class Data {
                                     Location tempLoc = new Location("");
                                     String lats = coord.child("lat").getValue(String.class);
                                     String lngs = coord.child("lng").getValue(String.class);
-                                    coords.pushLocation(Double.parseDouble(lats), Double.parseDouble(lngs));
+                                    if (!lats.equals("") && !lngs.equals("")) {
+                                        coords.pushLocation(Double.parseDouble(lats), Double.parseDouble(lngs));
+                                    }
                                 }
                                 String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
-                                float meanBagMass = Float.parseFloat(smeanBagMass);
+                                float meanBagMass;
+                                if (!smeanBagMass.equals("")) {
+                                    meanBagMass = Float.parseFloat(smeanBagMass);
+                                }
+//                                else {
+//                                    meanBagMass = 0;
+//                                }
                                 Calendar cal = new Calendar() {
                                     @Override
                                     protected void computeTime() {
@@ -156,8 +164,13 @@ public class Data {
                                 cal.set(Integer.valueOf(dateString[0]), Integer.valueOf(dateString[1]) - 1, Integer.valueOf(dateString[2]));
                                 String sDimX = dataSet.child("xDim").getValue(String.class);
                                 String sDimY = dataSet.child("yDim").getValue(String.class);
-                                float dimX = Float.parseFloat(sDimX);
-                                float dimY = Float.parseFloat(sDimX);
+                                float dimX, dimY;
+                                if (!sDimX.equals("")) {
+                                    dimX = Float.parseFloat(sDimX);
+                                }
+                                if (!sDimY.equals("")) {
+                                    dimY = Float.parseFloat(sDimX);
+                                }
                                 String dimUnit = dataSet.child("unit").getValue(String.class);
                                 String further = dataSet.child("further").getValue(String.class);
                                 String assignedFarmString = dataSet.child("farm").getValue(String.class);
