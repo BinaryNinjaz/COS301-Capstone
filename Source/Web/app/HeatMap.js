@@ -1,3 +1,21 @@
+const user = function() { return firebase.auth().currentUser };
+const userID = function() {
+  if (user() !== null) {
+    return user().uid 
+  } else {
+    return ""
+  }
+}
+function yieldsRef() {
+  return firebase.database().ref('/' + userID() + '/sessions');
+}
+
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    initMap();
+  }
+});
+
 var map;
 function initMap() {
   navigator.geolocation.getCurrentPosition(function(loc) {
@@ -12,10 +30,11 @@ function initMap() {
   displayHeatMap();
 }
 
-const yieldsRef = firebase.database().ref('/yields');
+
+
 function displayHeatMap() {
-  yieldsRef.off();
-  yieldsRef.on('value', function(snapshot) {
+  yieldsRef().off();
+  yieldsRef().on('value', function(snapshot) {
     locations = [];
     snapshot.forEach(function (child) {
       let cols = child.val().collections;
