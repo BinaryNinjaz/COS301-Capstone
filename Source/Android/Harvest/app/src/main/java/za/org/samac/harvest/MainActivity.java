@@ -10,6 +10,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +29,6 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,10 +39,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -90,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference myRef;//Firebase reference to yields collection
     private Query q;
     private DatabaseReference workersRef;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 for(DataSnapshot child : dataSnapshot.getChildren()){
                     if (child.getKey().equals(uid)){
                         isFarmer = true;
+                        break;
                     }
                 }
 
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null && dataSnapshot.getKey() != null) {
-                            collectWorkers((Map<String, Object>) dataSnapshot.getValue(), dataSnapshot.getKey());
+//                            collectWorkers((Map<String, Object>) dataSnapshot.getValue(), dataSnapshot.getKey());
                         }
                         progressBar.setVisibility(View.GONE);//remove progress bar
                         relLayout.setVisibility(View.VISIBLE);
@@ -209,6 +209,36 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
                 recyclerView.setAdapter(adapter);
                 recyclerView.setVisibility(View.GONE);
+
+                //Handle the bottom nav here
+                if (isFarmer){
+
+                    //bottom navigation bar
+                    bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+                    bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
+                    bottomNavigationView.setOnNavigationItemSelectedListener(
+                            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                                @Override
+                                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                                    switch (item.getItemId()) {
+                                        case R.id.actionYieldTracker:
+                                            return true;
+                                        case R.id.actionInformation:
+//                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
+                                            Intent openMainActivity= new Intent(MainActivity.this, InformationActivity.class);
+                                            openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                            startActivityIfNeeded(openMainActivity, 0);
+                                            return true;
+                                        case R.id.actionSession:
+
+                                            return true;
+
+                                    }
+                                    return true;
+                                }
+                            });
+                }
             }
 
             @Override
@@ -262,6 +292,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //                    }
 //                });
     }
+
+//    @Override
+//    protected void onResume(){
+//        super.onResume();
+////        if(isFarmer) {
+////            bottomNavigationView.setSelectedItemId(R.id.actionInformation);
+////        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

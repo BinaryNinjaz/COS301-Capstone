@@ -4,16 +4,19 @@
     <item
         android:id="@+id/actionYieldTracker"
         android:enabled="true"
+        android:icon="@android:drawable/ic_menu_add"
         android:title="@string/bottomYieldTracker"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/actionInformation"
         android:enabled="true"
+        android:icon="@android:drawable/ic_menu_save"
         android:title="@string/bottomInformation"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/actionSession"
         android:enabled="true"
+        android:icon="@android:drawable/ic_menu_view"
         android:title="@string/bottomSession"
         app:showAsAction="ifRoom" />
 </menu>
