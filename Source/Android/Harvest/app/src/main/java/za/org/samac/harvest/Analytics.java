@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -52,14 +53,9 @@ import static za.org.samac.harvest.util.Category.NOTHING;
 
 public class Analytics extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private String sessionKey;
-    private Query query;
-    private static final String TAG = "Analytics";
-    ArrayList<PieEntry> entries = new ArrayList<>();
-    PieChart pieChart;
+    private ArrayList<PieEntry> entries = new ArrayList<>();
+    private Button perSesWorkerComparison;
+    private Button orhHistPerformance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +76,9 @@ public class Analytics extends AppCompatActivity {
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                Intent openSessions= new Intent(Analytics.this, InformationActivity.class);
-                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openSessions, 0);
+                                Intent openInformation= new Intent(Analytics.this, InformationActivity.class);
+                                openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
                                 return true;
@@ -92,106 +88,25 @@ public class Analytics extends AppCompatActivity {
                     }
                 });
 
-        //Start the first fragment
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        displayGraph();
-    }
 
-    public void displayGraph() {
-        // To make vertical bar chart, initialize graph id this way
-        /*BarChart barChart = (BarChart) findViewById(R.id.chart);
-
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(4f, 0));
-        entries.add(new BarEntry(8f, 1));
-        entries.add(new BarEntry(6f, 2));
-        entries.add(new BarEntry(12f, 3));
-        entries.add(new BarEntry(18f, 4));
-        entries.add(new BarEntry(9f, 5));
-
-        BarDataSet dataset = new BarDataSet(entries, "# of Calls");
-
-        // creating labels
-        ArrayList<String> labels = new ArrayList<>();
-        labels.add("January");
-        labels.add("February");
-        labels.add("March");
-        labels.add("April");
-        labels.add("May");
-        labels.add("June");
-
-        BarData data = new BarData(dataset);//labels was one of the parameters
-        barChart.setData(data); // set the data and list of lables into chart
-
-        Description description = new Description();
-        description.setText("Description");
-        barChart.setDescription(description);*/  // set the description
-
-        /*LineChart lineChart = (LineChart) findViewById(R.id.chart);
-        // creating list of entry
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(0, 4f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-
-        LineDataSet dataset = new LineDataSet(entries, "# of Calls");
-
-        // creating labels
-        ArrayList<String> labels = new ArrayList<>();
-        labels.add("January");
-        labels.add("February");
-        labels.add("March");
-        labels.add("April");
-        labels.add("May");
-        labels.add("June");
-
-        LineData data = new LineData(dataset);
-        lineChart.setData(data); // set the data and list of lables into chart
-
-        Description description = new Description();
-        description.setText("Description");
-        lineChart.setDescription(description); */ // set the description
-
-        database = FirebaseDatabase.getInstance();
-        String userUid = user.getUid();//ID or key of the current user
-        sessionKey = MainActivity.sessionKey;//get key/ID for a session
-        myRef = database.getReference(userUid + "/sessions/");//path to sessions increment in Firebase
-
-        query = myRef.limitToLast(1);
-
-        pieChart = (PieChart)findViewById(R.id.chart);
-
-        query.addValueEventListener(new ValueEventListener() {
+        //user selects to see pie chart
+        perSesWorkerComparison = findViewById(R.id.perSesWorkerComparison);
+        perSesWorkerComparison.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    Map<String, Object> collection = (Map<String, Object>) zoneSnapshot.child("collections").getValue();
-                    for (String workerID :
-                            collection.keySet()) {
-                        Integer yield = ((ArrayList<Object>)collection.get(workerID)).size();
-                        entries.add(new PieEntry((float)yield, workerID));
-                    }
-                }
-
-                PieDataSet dataset = new PieDataSet(entries, "# of Calls");
-                dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
-
-                PieData data = new PieData(dataset);//labels was one of the parameters
-                pieChart.setData(data); // set the data and list of lables into chart
-
-                Description description = new Description();
-                description.setText("Description");
-                pieChart.setDescription(description); // set the description
-                pieChart.notifyDataSetChanged();
+            public void onClick(View view) {
+                Intent intent = new Intent(Analytics.this, za.org.samac.harvest.PieChart.class);
+                startActivity(intent);
             }
+        });
 
+        //user selects to see bar graph
+        orhHistPerformance = findViewById(R.id.orhHistPerformance);
+        orhHistPerformance.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
+            public void onClick(View view) {
+                Intent intent = new Intent(Analytics.this, BarGraph.class);
+                startActivity(intent);
             }
         });
     }

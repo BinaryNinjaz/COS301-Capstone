@@ -139,4 +139,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_analytics">Analytics</string>
+    <string name="PerSesWorkerComparison">Per Session Worker Performance</string>
+    <string name="OrhHistPerformance">Orchard Historical Performance</string>
+    <string name="title_stats">Stats</string>
 </resources>
