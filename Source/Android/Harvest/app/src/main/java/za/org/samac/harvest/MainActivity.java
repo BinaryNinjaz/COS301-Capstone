@@ -10,6 +10,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private static final String TAG = "Clicker";
 
-    private ArrayList<Worker> workers;
+    private static ArrayList<Worker> workers;
     private ArrayList<Worker> workersSearch;
     private Map<Integer, Location> track;
     int trackCount = 0;
@@ -89,10 +91,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference ref;//Firebase reference to workers collection
     private DatabaseReference myRef;//Firebase reference to yields collection
     private Query q;
+    private DatabaseReference workersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        MainActivity.this.workers = new ArrayList<>();//stores worker names
+        workersSearch = new ArrayList<>();//stores worker names
+        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
+
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -112,9 +120,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         uid = user.getUid();
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference(uid + "/" + "workers");//Firebase reference
+        ref = database.getReference(uid);//Firebase reference
+        workersRef = ref.child("workers");
         q = ref.orderByChild("name");
-
 
         DatabaseReference outerRef = database.getReference();
         outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -141,7 +149,41 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
                 relLayout.setVisibility(View.GONE);
 
-                q.addListenerForSingleValueEvent(new ValueEventListener() {
+                workersRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                            Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                            //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.child("name").getKey());
+                            //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.getKey());
+
+                            String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                            Worker workerObj = new Worker();
+                            workerObj.setName(fullName);
+                            workerObj.setValue(0);
+                            workerObj.setID(zoneSnapshot.getKey());
+                            workers.add(workerObj);
+                        }
+
+                        Collections.sort(workers, new WorkerComparator());
+
+                        workersSearch.addAll(workers);
+
+                        progressBar.setVisibility(View.GONE);//remove progress bar
+                        relLayout.setVisibility(View.VISIBLE);
+                        //user pressed start and all went well with retrieving data
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "onCancelled", databaseError.toException());
+                        progressBar.setVisibility(View.GONE);
+                        relLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+
+
+                /*q.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null && dataSnapshot.getKey() != null) {
@@ -158,22 +200,44 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         progressBar.setVisibility(View.GONE);
                         relLayout.setVisibility(View.VISIBLE);
                     }
-                });
+                });*/
 
                 btnStart.setTag("green");//it is best not to use the tag to identify button status
 
-                workers = new ArrayList<>();//stores worker names
-                workersSearch = new ArrayList<>();//stores worker names
                 recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
                 RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
-                adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setVisibility(View.GONE);
+
+                if(isFarmer) {
+                    //bottom navigation bar
+                    BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+                    bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
+                    bottomNavigationView.setOnNavigationItemSelectedListener(
+                            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                                @Override
+                                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                                    switch (item.getItemId()) {
+                                        case R.id.actionYieldTracker:
+                                            return true;
+                                        case R.id.actionInformation:
+                                            return true;
+                                        case R.id.actionSession:
+                                            startActivity(new Intent(MainActivity.this, Sessions.class));
+                                            return true;
+
+                                    }
+                                    return true;
+                                }
+                            });
+                }
             }
 
-            @Override
+
+        @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
@@ -326,6 +390,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         myRef = database.getReference(uid + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
         Map<String, Object> sessionDate = new HashMap<>();
         sessionDate.put("start_date", startSessionTime);
+        //sessionDate.put("wid", startSessionTime);//TODO: add uid
 
         recyclerView.setVisibility(View.VISIBLE);
         if (!namesShowing) {
@@ -395,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    private void writeToFirebase(collections collectionObj) {
+    /*private void writeToFirebase(collections collectionObj) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         String key = database.getReference("yields").push().getKey();
         DatabaseReference mRef = database.getReference().child("yields").child(key);
@@ -428,7 +493,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mRef.child("collections").setValue("end_date");
         mRef.child("collections").child("email").setValue(collectionObj.getForemanEmail());
         mRef.child("collections").child("start_date").setValue(collectionObj.getStart_date());
-        mRef.child("collections").child("end_date").setValue(collectionObj.getEnd_date());*/
+        mRef.child("collections").child("end_date").setValue(collectionObj.getEnd_date());
         mRef.setValue("track");
         Iterator it1 = track.entrySet().iterator();
         int count = 0;
@@ -446,7 +511,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
             ++count;
         }
-    }
+    }*/
 
     public Location getLocation() {
         return location;
@@ -457,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         public void onLocationChanged(final Location locationChange) {
             location = locationChange;
             trackCount++;
-            track.put(trackCount, location);
+           // track.put(trackCount, location);
             adapter.setLocation(location);
         }
 
@@ -516,4 +581,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     void updateFarmer(boolean setMe){
         isFarmer = setMe;
     }
+
+    public static ArrayList<Worker> getWorkers(){ return workers; }
 }

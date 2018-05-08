@@ -38,9 +38,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import za.org.samac.harvest.util.AppUtil;
 
@@ -81,6 +85,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
     private static final String TAG = "EmailPassword";//tag I used for log
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +202,20 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
                             Snackbar.make(signUp_form, "Registration Successful", Snackbar.LENGTH_LONG).show();
                             signUp_progress.setVisibility(View.GONE);
+
+                            //make changes to real time database
+                            database = FirebaseDatabase.getInstance();
+                            String userUid = user.getUid();//ID or key of the current user
+                            myRef = database.getReference(userUid + "/admin/");
+
+                            Map<String, Object> childUpdates = new HashMap<>();
+                            //childUpdates.put(childKey, collections);//append changes all into one path
+                            childUpdates.put("email", user.getEmail());
+                            childUpdates.put("firstname", edtFirstName.getText().toString());
+                            childUpdates.put("lastname", edtSurname.getText().toString());
+
+                            myRef.updateChildren(childUpdates);//store plus button info in Firebase
+
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
