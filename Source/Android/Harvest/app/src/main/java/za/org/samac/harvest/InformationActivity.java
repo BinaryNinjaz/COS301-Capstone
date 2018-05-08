@@ -1,5 +1,6 @@
 package za.org.samac.harvest;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -62,6 +62,7 @@ public class InformationActivity extends AppCompatActivity{
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
+                                showNavFrag();
                                 return true;
                             case R.id.actionSession:
 
@@ -80,6 +81,14 @@ public class InformationActivity extends AppCompatActivity{
     private void showNavFrag(){
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        //empty the back stack
+        if(fragmentManager.getBackStackEntryCount() != 0){
+            android.support.v4.app.FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(0);
+            fragmentManager.popBackStack(backStackEntry.getId(), android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragmentManager.executePendingTransactions();
+        }
+
         InfoNavFragment navFragment = new InfoNavFragment();
         fragmentTransaction.replace(R.id.infoMainPart, navFragment);
         fragmentTransaction.addToBackStack(null);
@@ -136,17 +145,53 @@ public class InformationActivity extends AppCompatActivity{
 
     //If a farm, orchard, worker is selected
     public void onSelectItemButtClick(View view){
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if(selectedCat == FARM){
-            setTitle("View Farm");
-            InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
-            fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
-            fragmentTransaction.addToBackStack(null);
-            String ID = view.getTag().toString();
-            data.setStringID(ID);
-            newInfoFarmFragment.setFields(data.getName(), data.getFurther());
-            fragmentTransaction.commit();
+//        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+//        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        if(selectedCat == FARM){
+//            setTitle("View Farm");
+//            InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+//            fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+//            fragmentTransaction.addToBackStack(null);
+//            newInfoFarmFragment.setData(data, view.getTag().toString());
+//            fragmentTransaction.commit();
+//        }
+//        else if(selectedCat == ORCHARD){
+//
+//        }
+//        else if(selectedCat == WORKER){
+//
+//        }
+        String tags[] = view.getTag().toString().split(" ");
+        if (tags.length == 2){
+            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            if (tags[1].equals("FARM")){
+                selectedCat = FARM;
+                setTitle("View Farm");
+                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+                fragmentTransaction.addToBackStack(null);
+                newInfoFarmFragment.setData(data, tags[0]);
+                fragmentTransaction.commit();
+            }
+            else if (tags[1].equals("ORCHARD")){
+                selectedCat = ORCHARD;
+                setTitle("View Orchard");
+//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+//                fragmentTransaction.addToBackStack(null);
+//                newInfoFarmFragment.setData(data, tags[0]);
+//                fragmentTransaction.commit();
+            }
+            else if (tags[1].equals("WORKER")){
+                selectedCat = WORKER;
+                setTitle("View Worker");
+//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+//                fragmentTransaction.addToBackStack(null);
+//                newInfoFarmFragment.setData(data, tags[0]);
+//                fragmentTransaction.commit();
+            }
         }
     }
 

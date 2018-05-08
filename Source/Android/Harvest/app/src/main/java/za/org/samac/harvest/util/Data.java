@@ -227,6 +227,14 @@ public class Data {
         return category;
     }
 
+    public String[] toNamesAsStringArray(Category cat){
+        Category temp = category;
+        this.category = cat;
+        String[] result = toNamesAsStringArray();
+        this.category = temp;
+        return result;
+    }
+
     public String[] toNamesAsStringArray(){
         String[] result;
         if (category == Category.FARM){
@@ -283,10 +291,10 @@ public class Data {
         return null;
     }
 
-    public void setStringID(String setMe){
+    public void findObject(String ID){
         if(category == Category.FARM){
             for (Farm current : farms){
-                if(current.ID.equals(setMe)){
+                if(current.ID.equals(ID)){
                     activeFarm = current;
                     return;
                 }
@@ -294,7 +302,7 @@ public class Data {
         }
         else if(category == Category.ORCHARD){
             for (Orchard current : orchards){
-                if(current.ID.equals(setMe)){
+                if(current.ID.equals(ID)){
                     activeOrchard = current;
                     return;
                 }
@@ -302,12 +310,19 @@ public class Data {
         }
         else if(category == Category.WORKER){
             for (Worker current : workers){
-                if(current.ID.equals(setMe)){
+                if(current.ID.equals(ID)){
                     activeWorker = current;
                     return;
                 }
             }
         }
+    }
+
+    public void findObject(String ID, Category cat){
+        Category temp = this.category;
+        category = cat;
+        findObject(ID);
+        category = temp;
     }
 
     public String getName(){

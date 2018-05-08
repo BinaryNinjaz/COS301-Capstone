@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import za.org.samac.harvest.util.Category;
@@ -67,7 +68,7 @@ class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
     private Data data;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView mButton;
+        public Button mButton;
 
         public ViewHolder(View view){
             super(view);
@@ -90,7 +91,7 @@ class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
         holder.mButton.setText(names[position]);
-        holder.mButton.setTag(data.getIDFromPosInArray(position));
+        holder.mButton.setTag(data.getIDFromPosInArray(position) + " " + "FARM");
     }
 
     @Override
