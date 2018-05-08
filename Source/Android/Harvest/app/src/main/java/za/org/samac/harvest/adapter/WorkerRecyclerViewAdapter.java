@@ -130,19 +130,6 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 coordinates.put("lat", currentLat);
                 coordinates.put("lng", currentLong);
 
-                /*Map<String, Object> collectionPoint = new HashMap<>();
-                collectionPoint.put("coord", coordinates);
-                collectionPoint.put("date", currentTime);
-
-                Map<String, Object> workerInc = new HashMap<>();
-                workerInc.put("" + workerIncrement, collectionPoint);
-
-                Map<String, Object> workerItem = new HashMap<>();
-                workerItem.put(workerID, workerInc);
-
-                Map<String, Object> collections = new HashMap<>();//stores collections in Firebase
-                collections.put("collections", workerItem);//store coordinates in collections path*/
-
                 Map<String, Object> childUpdates = new HashMap<>();
                 //childUpdates.put(childKey, collections);//append changes all into one path
                 childUpdates.put("coord", coordinates);
