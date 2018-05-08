@@ -1,6 +1,7 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaCas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class PieChart extends AppCompatActivity {
@@ -90,11 +92,15 @@ public class PieChart extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    Map<String, Object> collection = (Map<String, Object>) zoneSnapshot.child("collections").getValue();
-                    for (String workerID :
-                            collection.keySet()) {
-                        Integer yield = ((ArrayList<Object>)collection.get(workerID)).size();
-                        entries.add(new PieEntry((float)yield, workerID));
+                    List<Object> collections = (List<Object>) zoneSnapshot.child("collections").getValue();
+                   // Map<String, Object> collection = (Map<String, Object>) collections;
+
+                    for(int index = 0; index < collections.size(); index++) {
+                        Object workerId = collections.get(index);
+                        if(workerId != null) {
+                            Integer yield = ((ArrayList<Object>) workerId).size();
+                            entries.add(new PieEntry((float)yield, workerId));
+                        }
                     }
                 }
 
