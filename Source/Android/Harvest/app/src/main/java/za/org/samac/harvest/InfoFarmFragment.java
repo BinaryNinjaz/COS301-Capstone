@@ -12,8 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Vector;
+
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Farm;
+import za.org.samac.harvest.util.Orchard;
 
 
 /**
@@ -31,6 +35,15 @@ public class InfoFarmFragment extends Fragment {
     private Data data;
     private String ID;
 
+    private boolean editable = false;
+    private boolean newCreation = false;
+
+    private Farm farm;
+
+    private TextView name;
+    private TextView further;
+
+
     public InfoFarmFragment() {
         // Required empty public constructor
     }
@@ -45,10 +58,32 @@ public class InfoFarmFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
         data.findObject(ID);
-        TextView temp = getView().findViewById(R.id.info_farm_name_look);
-        temp.setText(data.getName());
-        temp = getView().findViewById(R.id.info_farm_further_look);
-        temp.setText(data.getFurther());
+        farm = data.getActiveFarm();
+
+        if (editable){
+            getView().findViewById(R.id.info_farm_name_look).setVisibility(View.GONE);
+            getView().findViewById(R.id.info_farm_further_look).setVisibility(View.GONE);
+            name = getView().findViewById(R.id.info_farm_name_edit);
+            name.setVisibility(View.VISIBLE);
+            name.setText(farm.getName());
+            further = getView().findViewById(R.id.info_farm_further_edit);
+            further.setText(farm.getFurther());
+            further.setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.info_farm_butt_edit).setVisibility(View.INVISIBLE);
+            View temp = getView().findViewById(R.id.info_farm_butt_save);
+            temp.setVisibility(View.VISIBLE);
+            temp.setTag("SAVE " + ID);
+            getView().findViewById(R.id.info_farm_butt_del).setTag("EDIT " + ID);
+        }
+        else {
+            TextView temp = getView().findViewById(R.id.info_farm_name_look);
+            temp.setText(farm.getName());
+            temp = getView().findViewById(R.id.info_farm_further_look);
+            temp.setText(farm.getFurther());
+            getView().findViewById(R.id.info_farm_butt_edit).setTag(ID + " FARM");
+            getView().findViewById(R.id.info_farm_butt_del).setTag("LOOK " + ID);
+
+        }
 
         mRecyclerView = getView().findViewById(R.id.info_farm_orchards_look);
         mRecyclerView.setHasFixedSize(true);
@@ -63,10 +98,21 @@ public class InfoFarmFragment extends Fragment {
         this.data = data;
         this.ID = ID;
     }
+
+    public void beEditable(final boolean editable){
+        this.editable = editable;
+    }
+
+    public void saveEvent(){
+        farm.setName(name.getText().toString());
+        farm.setFurther(further.getText().toString());
+        data.modifyActiveFarm(farm, false);
+    }
 }
 
 class OrchardAdapter extends RecyclerView.Adapter<OrchardAdapter.ViewHolder>{
-    private String[] orchards;
+//    private String[] orchards;
+    private Vector<String> orchards;
     private Data data;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -81,7 +127,15 @@ class OrchardAdapter extends RecyclerView.Adapter<OrchardAdapter.ViewHolder>{
 
     public OrchardAdapter(Data data){
         this.data = data;
-        this.orchards = data.toNamesAsStringArray(Category.ORCHARD);
+        orchards = new Vector<String>();
+        for (Orchard current : data.getOrchards()){
+            if (current.getAssignedFarm() != null) {
+                if (current.getAssignedFarm().getID().equals(data.getActiveFarm().getID())) {
+                    orchards.addElement(current.getName());
+                }
+            }
+        }
+//        this.orchards = data.toNamesAsStringArray(Category.ORCHARD);
     }
 
     @Override
@@ -93,12 +147,12 @@ class OrchardAdapter extends RecyclerView.Adapter<OrchardAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        holder.mButton.setText(orchards[position]);
+        holder.mButton.setText(orchards.elementAt(position));
         holder.mButton.setTag(data.getIDFromPosInArray(position) + " " + "ORCHARD");
     }
 
     @Override
     public int getItemCount(){
-        return orchards.length;
+        return orchards.size();
     }
 }

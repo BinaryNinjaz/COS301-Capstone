@@ -1,6 +1,9 @@
 package za.org.samac.harvest;
 
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,6 +16,8 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Vector;
+
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
@@ -23,13 +28,15 @@ import static za.org.samac.harvest.util.Category.NOTHING;
 import static za.org.samac.harvest.util.Category.ORCHARD;
 import static za.org.samac.harvest.util.Category.WORKER;
 
+//TODO: Returning overwrites progress here.
+//TODO: Leaving app/locking device resets.
+
 public class InformationActivity extends AppCompatActivity{
 
     private boolean navFragVisible = true;
     private BottomNavigationView bottomNavigationView;
     private Data data;
-
-
+    private boolean editing = false;
 
     Category selectedCat = NOTHING;
 
@@ -103,6 +110,9 @@ public class InformationActivity extends AppCompatActivity{
             finish();
         }
         else {
+            if (editing){
+                editing = false;
+            }
             getSupportFragmentManager().popBackStack();
             if(getSupportFragmentManager().getBackStackEntryCount() == 2){
                 //The root Nav fragment
@@ -115,6 +125,9 @@ public class InformationActivity extends AppCompatActivity{
             }
         }
     }
+
+    //TODO: Remember to double pop when backing out of a save.
+
 
     //Handle Buttons
     public void onInfoNavButtClick(View view){
@@ -145,54 +158,141 @@ public class InformationActivity extends AppCompatActivity{
 
     //If a farm, orchard, worker is selected
     public void onSelectItemButtClick(View view){
-//        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-//        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        if(selectedCat == FARM){
-//            setTitle("View Farm");
-//            InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
-//            fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
-//            fragmentTransaction.addToBackStack(null);
-//            newInfoFarmFragment.setData(data, view.getTag().toString());
-//            fragmentTransaction.commit();
-//        }
-//        else if(selectedCat == ORCHARD){
-//
-//        }
-//        else if(selectedCat == WORKER){
-//
-//        }
         String tags[] = view.getTag().toString().split(" ");
         if (tags.length == 2){
-            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            if (tags[1].equals("FARM")){
-                selectedCat = FARM;
-                setTitle("View Farm");
-                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
-                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
-                fragmentTransaction.addToBackStack(null);
-                newInfoFarmFragment.setData(data, tags[0]);
-                fragmentTransaction.commit();
+            if (tags[1].equals("FARM")) {
+                showObject(tags[0], FARM);
             }
-            else if (tags[1].equals("ORCHARD")){
-                selectedCat = ORCHARD;
-                setTitle("View Orchard");
-//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
-//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
-//                fragmentTransaction.addToBackStack(null);
-//                newInfoFarmFragment.setData(data, tags[0]);
-//                fragmentTransaction.commit();
+            else if (tags[1].equals("ORCHARD")) {
+                showObject(tags[0], ORCHARD);
             }
-            else if (tags[1].equals("WORKER")){
-                selectedCat = WORKER;
-                setTitle("View Worker");
-//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
-//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
-//                fragmentTransaction.addToBackStack(null);
-//                newInfoFarmFragment.setData(data, tags[0]);
-//                fragmentTransaction.commit();
+            else if (tags[1].equals("WORKER")) {
+                showObject(tags[0], WORKER);
             }
         }
+    }
+
+    private void showObject(String ID, Category category){
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (category == FARM){
+            selectedCat = FARM;
+            setTitle("View Farm");
+            InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+            fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+            fragmentTransaction.addToBackStack(null);
+            newInfoFarmFragment.setData(data, ID);
+            fragmentTransaction.commit();
+        }
+        else if (category == ORCHARD){
+            selectedCat = ORCHARD;
+            setTitle("View Orchard");
+//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+//                fragmentTransaction.addToBackStack(null);
+//                newInfoFarmFragment.setData(data, tags[0]);
+//                fragmentTransaction.commit();
+        }
+        else if (category == WORKER){
+            selectedCat = WORKER;
+            setTitle("View Worker");
+//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+//                fragmentTransaction.addToBackStack(null);
+//                newInfoFarmFragment.setData(data, tags[0]);
+//                fragmentTransaction.commit();
+        }
+    }
+
+    //Switch to Editing
+    public void onEditChosen(View view){
+        String[] tags = view.getTag().toString().split(" ");
+//        getSupportFragmentManager().popBackStack();
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch (selectedCat) {
+            case FARM:
+                setTitle("Editing Farm");
+                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment, "EDIT");
+                fragmentTransaction.addToBackStack(null);
+                newInfoFarmFragment.setData(data, tags[0]);
+                newInfoFarmFragment.beEditable(true);
+                fragmentTransaction.commit();
+                editing = true;
+                return;
+            case ORCHARD:
+                return;
+            case WORKER:
+        }
+    }
+
+    //Handle a save event
+    public void onSaveChosen(View view){
+        String[] tags = view.getTag().toString().split(" ");
+        if (tags[0].equals("SAVE")){
+            switch (selectedCat) {
+                case FARM:
+                    InfoFarmFragment temp = (InfoFarmFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
+                    temp.saveEvent();
+                    getSupportFragmentManager().popBackStack();
+                    getSupportFragmentManager().popBackStack();
+                    showObject(tags[1], selectedCat);
+                    return;
+                case ORCHARD:
+                    return;
+                case WORKER:
+            }
+        }
+        data.push();
+    }
+
+    //Handle a delete event
+    public void onDeleteChosen(View view){
+        final String[] tags = view.getTag().toString().split(" ");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        String cat = "", name = "";
+        switch (selectedCat){
+            case WORKER:
+                cat = "worker";
+                name = data.getActiveWorker().getfName() + " " + data.getActiveWorker().getsName();
+                break;
+            case ORCHARD:
+                cat = "orchard";
+                name = data.getActiveOrchard().getName();
+                break;
+            case FARM:
+                cat = "farm";
+                name = data.getActiveFarm().getName();
+        }
+
+        builder.setMessage("Are you sure you wish to delete " + cat + " " + name).setTitle(R.string.sure);
+
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (tags[0].equals("LOOK")){
+                    getSupportFragmentManager().popBackStack();
+                }
+                else{
+                    getSupportFragmentManager().popBackStack();
+                    getSupportFragmentManager().popBackStack();
+                }
+                data.deleteObject(selectedCat, tags[1]);
+                data.push();
+            }
+        });
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Do nothing.
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     //Handle the menu
