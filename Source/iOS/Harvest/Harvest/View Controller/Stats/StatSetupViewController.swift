@@ -77,7 +77,6 @@ public final class StatSetupViewController: FormViewController {
     }
     
     Entities.shared.getMultiplesOnce([.orchard, .session, .worker]) { (entities) in
-      print(entities.orchards)
       self.form
         +++ Section()
         <<< statKind

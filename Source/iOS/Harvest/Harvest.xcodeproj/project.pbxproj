@@ -232,7 +232,7 @@
 			children = (
 				169E5195206C62D6006B923E /* Model */,
 				16420FCA2069717200E1A292 /* Database */,
-				16420FC720696B6500E1A292 /* UI */,
+				16420FC720696B6500E1A292 /* UI Components */,
 				1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */,
 				1604E4D02069597200E9BA15 /* App Delegate */,
 				1604E4D12069597D00E9BA15 /* View Controller */,
@@ -309,14 +309,14 @@
 			path = Maps;
 			sourceTree = "<group>";
 		};
-		16420FC720696B6500E1A292 /* UI */ = {
+		16420FC720696B6500E1A292 /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
 				165697D42087B27E002CBCEE /* Views */,
 				16C82F6A20862A100074595C /* Tabs */,
 				16F2BA4B20766041007652E8 /* Cells */,
 			);
-			path = UI;
+			path = "UI Components";
 			sourceTree = "<group>";
 		};
 		16420FCA2069717200E1A292 /* Database */ = {

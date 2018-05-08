@@ -204,7 +204,6 @@ final class Entities {
     let g: () -> () = {
       f()
       self.deregister(listner: id)
-      print(self.listners)
     }
     
     listners.append(g)

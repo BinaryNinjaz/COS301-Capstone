@@ -54,11 +54,11 @@ enum Stat {
     return result
   }
   
-  func orchardHistoryData() -> LineChartDataSet? {
+  func orchardHistoryData() -> (dates: [Double], amount: [Double])? {
     guard case .orchardHistory(let orchard) = self else {
       return nil
     }
-    var interResult = [Date: Double]()
+    var interResult = SortedDictionary<Date, Double>()
     let sessions = Entities.shared.sessionsList()
     
     let poly = Poly(orchard.coords.map { Point($0.longitude, $0.latitude) })
@@ -69,7 +69,7 @@ enum Stat {
         points.forEach { point in
           let p = Point<CLLocationDegrees>.init(point.location.longitude, point.location.latitude)
           if poly.contains(p) {
-            var comps = calendar.dateComponents([.era, .calendar, .month, .day], from: point.date)
+            var comps = calendar.dateComponents([.era, .calendar, .year, .month, .day], from: point.date)
             comps.hour = 0
             interResult[calendar.date(from: comps)!, default: 0] += 1
           }
@@ -77,14 +77,14 @@ enum Stat {
       }
     }
     
-    let result = LineChartDataSet()
-    result.label = orchard.description
+    var dates = [Double]()
+    var amounts = [Double]()
     for (d, amount) in interResult {
-      result.values.append(ChartDataEntry(x: d.timeIntervalSince1970, y: amount))
+      dates.append(d.timeIntervalSince1970)
+      amounts.append(amount)
     }
-    print(interResult)
     
-    return result
+    return (dates, amounts)
     
   }
 }

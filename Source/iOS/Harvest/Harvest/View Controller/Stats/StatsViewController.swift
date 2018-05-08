@@ -35,6 +35,10 @@ class StatsViewController : UIViewController {
     view.addSubview(barChart!)
     view.addSubview(pieChart!)
     view.addSubview(lineChart!)
+    
+    setUpLineChart()
+    setUpBarChart()
+    pieChart?.chartDescription = nil
   }
   
   func drawChart() {
@@ -53,12 +57,13 @@ class StatsViewController : UIViewController {
     guard let pieDataSet = stat?.perSessionWorkersData() else {
       return
     }
-    pieDataSet.colors = ChartColorTemplates.joyful()
+    pieDataSet.colors = ChartColorTemplates.material()
     
     let pieData = PieChartData(dataSet: pieDataSet)
     pieChart?.data = pieData
     pieChart?.notifyDataSetChanged()
     pieChart?.isHidden = false
+    pieChart?.animate(xAxisDuration: 3.0, yAxisDuration: 3.0, easingOption: .easeOutCubic)
   }
   
   func drawWorkerHistory() {
@@ -66,31 +71,35 @@ class StatsViewController : UIViewController {
       return
     }
     lineDataSet.colors = [NSUIColor.Bootstrap.green[0]]
-    lineDataSet.circleColors = [NSUIColor.Bootstrap.green[1]]
+    lineDataSet.drawCirclesEnabled = false
+    lineDataSet.mode = .linear
+    lineDataSet.lineWidth = 4.0
     
     let lineData = LineChartData(dataSet: lineDataSet)
     lineChart?.data = lineData
-    lineChart?.drawGridBackgroundEnabled = false
-    lineChart?.gridBackgroundColor = NSUIColor.clear
     lineChart?.notifyDataSetChanged()
-    lineChart?.xAxis.valueFormatter = DateFormatter.with(format: "MM/dd")
     lineChart?.isHidden = false
+    lineChart?.animate(xAxisDuration: 3.0, yAxisDuration: 3.0, easingOption: .easeOutCubic)
   }
   
   func drawOrchardHistory() {
-    guard let lineDataSet = stat?.orchardHistoryData() else {
+    guard let (dates, amounts) = stat?.orchardHistoryData() else {
       return
     }
-    lineDataSet.colors = [NSUIColor.Bootstrap.green[0]]
-    lineDataSet.circleColors = [NSUIColor.Bootstrap.green[1]]
     
-    let lineData = LineChartData(dataSet: lineDataSet)
-    lineChart?.data = lineData
-    lineChart?.drawGridBackgroundEnabled = false
-    lineChart?.gridBackgroundColor = NSUIColor.clear
-    lineChart?.notifyDataSetChanged()
-    lineChart?.xAxis.valueFormatter = DateFormatter.with(format: "MM/dd")
-    lineChart?.isHidden = false
+    
+    let barDataSet = BarChartDataSet()
+    for (i, amount) in zip(0..., amounts) {
+      barDataSet.values.append(BarChartDataEntry(x: Double(i), y: amount))
+    }
+    barDataSet.colors = ChartColorTemplates.material()
+    
+    let barData = BarChartData(dataSet: barDataSet)
+    barChart?.xAxis.valueFormatter = OrchardDateFormatter(dates, "dd MMM")
+    barChart?.data = barData
+    barChart?.notifyDataSetChanged()
+    barChart?.isHidden = false
+    barChart?.animate(xAxisDuration: 3.0, yAxisDuration: 3.0, easingOption: .easeOutCubic)
   }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -98,6 +107,30 @@ class StatsViewController : UIViewController {
     case .perSessionWorkers: return .all
     case .workerHistory, .orchardHistory: return .allButUpsideDown
     }
+  }
+  
+  func setUpLineChart() {
+    lineChart?.drawGridBackgroundEnabled = false
+    lineChart?.gridBackgroundColor = NSUIColor.clear
+    lineChart?.xAxis.valueFormatter = DateFormatter.with(format: "dd MMM")
+    lineChart?.chartDescription?.enabled = false
+    lineChart?.dragEnabled = true
+    lineChart?.setScaleEnabled(true)
+    lineChart?.pinchZoomEnabled = true
+    lineChart?.xAxis.drawGridLinesEnabled = false
+    lineChart?.xAxis.labelPosition = .bottom
+    lineChart?.rightAxis.drawGridLinesEnabled = false
+  }
+  
+  func setUpBarChart() {
+    barChart?.chartDescription?.enabled = false
+    barChart?.dragEnabled = true
+    barChart?.setScaleEnabled(true)
+    barChart?.pinchZoomEnabled = true
+    barChart?.xAxis.drawGridLinesEnabled = false
+    barChart?.xAxis.labelPosition = .bottom
+    barChart?.rightAxis.drawGridLinesEnabled = false
+    barChart?.legend.enabled = false
   }
 }
 
@@ -117,5 +150,21 @@ extension DateFormatter : IAxisValueFormatter {
     let result = DateFormatter()
     result.dateFormat = format
     return result
+  }
+}
+
+final class OrchardDateFormatter  : IAxisValueFormatter {
+  var formatter: DateFormatter
+  var range: [Double]
+  
+  init(_ range: [Double], _ format: String) {
+    formatter = DateFormatter()
+    formatter.dateFormat = format
+    self.range = range
+  }
+  
+  public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+    let d = range[Int(truncating: NSNumber(value: value))]
+    return formatter.string(from: Date(timeIntervalSince1970: d))
   }
 }
