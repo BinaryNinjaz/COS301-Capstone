@@ -57,46 +57,71 @@ public class InfoFarmFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        data.findObject(ID);
-        farm = data.getActiveFarm();
 
-        if (editable){
+        if ((editable && newCreation)) throw new AssertionError();
+
+        if (newCreation) {
             getView().findViewById(R.id.info_farm_name_look).setVisibility(View.GONE);
             getView().findViewById(R.id.info_farm_further_look).setVisibility(View.GONE);
             name = getView().findViewById(R.id.info_farm_name_edit);
             name.setVisibility(View.VISIBLE);
-            name.setText(farm.getName());
             further = getView().findViewById(R.id.info_farm_further_edit);
-            further.setText(farm.getFurther());
             further.setVisibility(View.VISIBLE);
             getView().findViewById(R.id.info_farm_butt_edit).setVisibility(View.INVISIBLE);
             View temp = getView().findViewById(R.id.info_farm_butt_save);
             temp.setVisibility(View.VISIBLE);
-            temp.setTag("SAVE " + ID);
+            temp.setTag("CREATE " + ID);
             getView().findViewById(R.id.info_farm_butt_del).setTag("EDIT " + ID);
+            getView().findViewById(R.id.info_farm_orchards_card).setVisibility(View.GONE);
+            getView().findViewById(R.id.info_farm_butt_del).setVisibility(View.GONE);
         }
         else {
-            TextView temp = getView().findViewById(R.id.info_farm_name_look);
-            temp.setText(farm.getName());
-            temp = getView().findViewById(R.id.info_farm_further_look);
-            temp.setText(farm.getFurther());
-            getView().findViewById(R.id.info_farm_butt_edit).setTag(ID + " FARM");
-            getView().findViewById(R.id.info_farm_butt_del).setTag("LOOK " + ID);
+            data.findObject(ID);
+            farm = data.getActiveFarm();
 
+            if (editable) {
+                getView().findViewById(R.id.info_farm_name_look).setVisibility(View.GONE);
+                getView().findViewById(R.id.info_farm_further_look).setVisibility(View.GONE);
+                name = getView().findViewById(R.id.info_farm_name_edit);
+                name.setVisibility(View.VISIBLE);
+                name.setText(farm.getName());
+                further = getView().findViewById(R.id.info_farm_further_edit);
+                further.setText(farm.getFurther());
+                further.setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.info_farm_butt_edit).setVisibility(View.INVISIBLE);
+                View temp = getView().findViewById(R.id.info_farm_butt_save);
+                temp.setVisibility(View.VISIBLE);
+                temp.setTag("SAVE " + ID);
+                getView().findViewById(R.id.info_farm_butt_del).setTag("EDIT " + ID);
+
+                //Maybe we want this, no harm in leaving it in, but it's something not editable.
+                getView().findViewById(R.id.info_farm_orchards_card).setVisibility(View.GONE);
+            } else {
+                TextView temp = getView().findViewById(R.id.info_farm_name_look);
+                temp.setText(farm.getName());
+                temp = getView().findViewById(R.id.info_farm_further_look);
+                temp.setText(farm.getFurther());
+                getView().findViewById(R.id.info_farm_butt_edit).setTag(ID + " FARM");
+                getView().findViewById(R.id.info_farm_butt_del).setTag("LOOK " + ID);
+            }
+
+            mRecyclerView = getView().findViewById(R.id.info_farm_orchards_look);
+            mRecyclerView.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(getActivity());
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mAdapter = new OrchardAdapter(data);
+            mRecyclerView.setAdapter(mAdapter);
         }
-
-        mRecyclerView = getView().findViewById(R.id.info_farm_orchards_look);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new OrchardAdapter(data);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
-    public void setData(Data data, String ID){
+    public void setDataAndID(Data data, String ID){
 //        this.name = getView().findViewById(R.id.thing);
         this.data = data;
         this.ID = ID;
+    }
+
+    public void setData(Data data){
+        this.data = data;
     }
 
     public void beEditable(final boolean editable){
@@ -107,6 +132,15 @@ public class InfoFarmFragment extends Fragment {
         farm.setName(name.getText().toString());
         farm.setFurther(further.getText().toString());
         data.modifyActiveFarm(farm, false);
+    }
+
+    public void beNew(final boolean newThing){
+        newCreation = newThing;
+    }
+
+    public void createEvent(){
+        Farm newFarm = new Farm(name.getText().toString(), further.getText().toString(), data.getNextIDForAddition());
+        data.addFarm(newFarm);
     }
 }
 
@@ -126,12 +160,15 @@ class OrchardAdapter extends RecyclerView.Adapter<OrchardAdapter.ViewHolder>{
     }
 
     public OrchardAdapter(Data data){
-        this.data = data;
-        orchards = new Vector<String>();
-        for (Orchard current : data.getOrchards()){
-            if (current.getAssignedFarm() != null) {
-                if (current.getAssignedFarm().getID().equals(data.getActiveFarm().getID())) {
-                    orchards.addElement(current.getName());
+        if (data != null) {
+            this.data = data;
+            orchards = new Vector<String>();
+
+            for (Orchard current : data.getOrchards()) {
+                if (current.getAssignedFarm() != null) {
+                    if (current.getAssignedFarm().getID().equals(data.getActiveFarm().getID())) {
+                        orchards.addElement(current.getName());
+                    }
                 }
             }
         }

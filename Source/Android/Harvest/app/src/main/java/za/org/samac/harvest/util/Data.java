@@ -40,6 +40,8 @@ public class Data {
     private Orchard activeOrchard;
     private Worker activeWorker;
 
+    private int nextID = 0;
+
     protected Category category = Category.NOTHING;
 
     /**
@@ -215,11 +217,27 @@ public class Data {
      * Apply all changes to Firebase
      */
     public void push(){
+        nextID = 0;
         while (changes.unSavedChange()){
             Change currentChange = changes.getNextChange(true);
             DatabaseReference objectRoot = userRoot;
             switch (currentChange.changeType){
                 case ADD:
+                    switch (currentChange.category){
+                        case FARM:
+                            objectRoot = userRoot.child("farms");
+                            String newKey = objectRoot.push().getKey();
+                            Farm newFarm = getFarmFromIDString(currentChange.ID);
+                            newFarm.setID(newKey);
+                            objectRoot = objectRoot.child(newKey);
+                            objectRoot.child("name").setValue(newFarm.name);
+                            objectRoot.child("further").setValue(newFarm.further);
+                            break;
+                        case ORCHARD:
+                            break;
+                        case WORKER:
+                            break;
+                    }
                     break;
 
                 case MODIFY:
@@ -227,6 +245,8 @@ public class Data {
                     switch (currentChange.category){
                         case FARM:
                             objectRoot = objectRoot.child("farms").child(currentChange.ID);
+                            objectRoot.child("name").setValue(activeFarm.name);
+                            objectRoot.child("further").setValue(activeFarm.further);
                             break;
                         case ORCHARD:
                             objectRoot = database.getReference(userRoot.toString() + "/orchards/" + currentChange.ID);
@@ -235,10 +255,7 @@ public class Data {
                             objectRoot = database.getReference(userRoot.toString() + "/workers/" + currentChange.ID);
                             break;
                     }
-                    objectRoot.child("name").setValue(activeFarm.name);
-                    objectRoot.child("further").setValue(activeFarm.further);
                     break;
-
                 case DELETE:
                     findObject(currentChange.ID, currentChange.category);
                     switch (currentChange.category){
@@ -256,8 +273,6 @@ public class Data {
             }
         }
     }
-
-    //TODO: Below needs to be a whole bunch of gets and sets
 
     public void deleteObject(Category category, String ID){
         changes.Delete(category, ID);
@@ -442,6 +457,25 @@ public class Data {
             this.activeWorker = activeWorker;
             changes.Modify(category, activeWorker.ID);
         }
+    }
+
+    public String getNextIDForAddition(){
+        return "N00B - " + nextID++;
+    }
+
+    public void addFarm(Farm addMe){
+        farms.addElement(addMe);
+        changes.Add(Category.FARM, addMe.getID());
+    }
+
+    public void addOrchard(Orchard addMe){
+        orchards.addElement(addMe);
+        changes.Add(Category.ORCHARD, addMe.getID());
+    }
+
+    public void addWorker(Worker addMe){
+        workers.addElement(addMe);
+        changes.Add(Category.WORKER, addMe.getID());
     }
 }
 

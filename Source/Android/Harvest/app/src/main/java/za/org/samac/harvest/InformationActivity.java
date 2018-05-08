@@ -1,8 +1,6 @@
 package za.org.samac.harvest;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -15,8 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Vector;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
@@ -126,10 +122,30 @@ public class InformationActivity extends AppCompatActivity{
         }
     }
 
-    //TODO: Remember to double pop when backing out of a save.
-
 
     //Handle Buttons
+    public void onCreateButtClick(View view){
+        String choice = view.getTag().toString();
+        switch (choice){
+            case "FARM":
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment, "CREATE");
+                fragmentTransaction.addToBackStack(null);
+                newInfoFarmFragment.beNew(true);
+                newInfoFarmFragment.setData(data);
+//                setTitle("Create Farm");
+                selectedCat = FARM;
+                fragmentTransaction.commit();
+                return;
+            case "ORCHARD":
+                return;
+            case "WORKER":
+
+        }
+    }
+
     public void onInfoNavButtClick(View view){
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if(selectedCat == NAV) {
@@ -140,13 +156,13 @@ public class InformationActivity extends AppCompatActivity{
             fragmentTransaction.addToBackStack(null);
             newInfoListFragment.setData(data);
             if (view.getTag().equals("farms")) {
-                setTitle("Farms");
+//                setTitle("Farms");
                 selectedCat = FARM;
             } else if (view.getTag().equals("orchards")) {
-                setTitle("Orchards");
+//                setTitle("Orchards");
                 selectedCat = ORCHARD;
             } else if (view.getTag().equals("workers")) {
-                setTitle("Workers");
+//                setTitle("Workers");
                 selectedCat = WORKER;
             }
             newInfoListFragment.setCat(selectedCat);
@@ -177,29 +193,29 @@ public class InformationActivity extends AppCompatActivity{
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (category == FARM){
             selectedCat = FARM;
-            setTitle("View Farm");
+//            setTitle("View Farm");
             InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
             fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
             fragmentTransaction.addToBackStack(null);
-            newInfoFarmFragment.setData(data, ID);
+            newInfoFarmFragment.setDataAndID(data, ID);
             fragmentTransaction.commit();
         }
         else if (category == ORCHARD){
             selectedCat = ORCHARD;
-            setTitle("View Orchard");
+//            setTitle("View Orchard");
 //                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
 //                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
 //                fragmentTransaction.addToBackStack(null);
-//                newInfoFarmFragment.setData(data, tags[0]);
+//                newInfoFarmFragment.setDataAndID(data, tags[0]);
 //                fragmentTransaction.commit();
         }
         else if (category == WORKER){
             selectedCat = WORKER;
-            setTitle("View Worker");
+//            setTitle("View Worker");
 //                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
 //                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
 //                fragmentTransaction.addToBackStack(null);
-//                newInfoFarmFragment.setData(data, tags[0]);
+//                newInfoFarmFragment.setDataAndID(data, tags[0]);
 //                fragmentTransaction.commit();
         }
     }
@@ -212,11 +228,11 @@ public class InformationActivity extends AppCompatActivity{
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (selectedCat) {
             case FARM:
-                setTitle("Editing Farm");
+//                setTitle("Editing Farm");
                 InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
                 fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment, "EDIT");
                 fragmentTransaction.addToBackStack(null);
-                newInfoFarmFragment.setData(data, tags[0]);
+                newInfoFarmFragment.setDataAndID(data, tags[0]);
                 newInfoFarmFragment.beEditable(true);
                 fragmentTransaction.commit();
                 editing = true;
@@ -238,10 +254,26 @@ public class InformationActivity extends AppCompatActivity{
                     getSupportFragmentManager().popBackStack();
                     getSupportFragmentManager().popBackStack();
                     showObject(tags[1], selectedCat);
-                    return;
+                    break;
                 case ORCHARD:
-                    return;
+                    break;
                 case WORKER:
+                    break;
+            }
+        }
+        else if(tags[0].equals("CREATE")){
+            switch (selectedCat){
+                case FARM:
+                    InfoFarmFragment temp = (InfoFarmFragment) getSupportFragmentManager().findFragmentByTag("CREATE");
+                    temp.createEvent();
+                    getSupportFragmentManager().popBackStack();
+//                    showObject(tags[1], selectedCat);
+                    showNavFrag();
+                    break;
+                case ORCHARD:
+                    break;
+                case WORKER:
+                    break;
             }
         }
         data.push();

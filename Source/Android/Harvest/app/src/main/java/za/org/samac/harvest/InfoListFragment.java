@@ -41,6 +41,20 @@ public class InfoListFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+        String catString = "";
+        switch (cat){
+            case FARM:
+                catString = "FARM";
+                break;
+            case ORCHARD:
+                catString = "ORCHARD";
+                break;
+            case WORKER:
+                catString = "WORKER";
+                break;
+        }
+        getView().findViewById(R.id.addSomething).setTag(catString);
+
         mRecyclerView = getView().findViewById(R.id.showThings);
 
         mRecyclerView.setHasFixedSize(true);
