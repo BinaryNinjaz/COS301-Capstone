@@ -82,6 +82,8 @@ public class Analytics extends AppCompatActivity {
                                 return true;
                             case R.id.actionSession:
                                 return true;
+                            case R.id.actionStats:
+                                return true;
 
                         }
                         return true;

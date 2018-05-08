@@ -64,6 +64,8 @@ public class InformationActivity extends AppCompatActivity{
                             case R.id.actionInformation:
                                 return true;
                             case R.id.actionSession:
+                                return true;
+                            case R.id.actionStats:
                                 Intent openSessions= new Intent(InformationActivity.this, Analytics.class);
                                 openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openSessions, 0);

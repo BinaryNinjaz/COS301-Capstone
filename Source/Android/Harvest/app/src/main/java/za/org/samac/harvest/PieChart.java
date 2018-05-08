@@ -60,6 +60,8 @@ public class PieChart extends AppCompatActivity {
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
+                                return true;
+                            case R.id.actionStats:
                                 Intent openPieChart= new Intent(PieChart.this, Analytics.class);
                                 openPieChart.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openPieChart, 0);
