@@ -96,7 +96,10 @@ class TrackerViewController: UIViewController {
     let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
     startSessionButton.apply(gradient: sessionLayer)
     
+    Entities.shared.getOnce(.worker) { _ in }
+    
     HarvestDB.watchWorkers { (workers) in
+      
       self.updateWorkerCells(with: workers)
     }
     

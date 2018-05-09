@@ -9,6 +9,7 @@
 import UIKit
 
 class InformationEntityItemTableViewController: UITableViewController {
+  var listnerId: Int? = nil
   var selectedEntity: EntityItem? = nil
   var kind: EntityItem.Kind = .none {
     didSet {
@@ -31,6 +32,10 @@ class InformationEntityItemTableViewController: UITableViewController {
     if refreshControl != nil {
       tableView.addSubview(refreshControl!)
     }
+    
+    if listnerId == nil {
+      listnerId = Entities.shared.listen { self.tableView.reloadData() }
+    }
   }
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
@@ -40,9 +45,20 @@ class InformationEntityItemTableViewController: UITableViewController {
     }
   }
   
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(true)
+    if let id = listnerId {
+      listnerId = nil
+      Entities.shared.deregister(listner: id)
+    }
+  }
+  
   override func viewWillAppear(_ animated: Bool) {
     if let sel = tableView.indexPathForSelectedRow {
       tableView.deselectRow(at: sel, animated: false)
+    }
+    if listnerId == nil {
+      listnerId = Entities.shared.listen { self.tableView.reloadData() }
     }
     tableView.reloadData()
   }
@@ -142,9 +158,10 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-    return UITableViewCellEditingStyle.delete
+    return UITableViewCellEditingStyle.none
   }
   
+  /*
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     if editingStyle == .delete {
       guard kind != .session else {
@@ -171,6 +188,7 @@ class InformationEntityItemTableViewController: UITableViewController {
         HarvestDB.delete(farm: f) { err, ref in
           tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+        
       } else if let o = item.orchard {
         HarvestDB.delete(orchard: o) { err, ref in
           tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -178,6 +196,7 @@ class InformationEntityItemTableViewController: UITableViewController {
       }
     }
   }
+  */
 
   // MARK: - Navigation
 
