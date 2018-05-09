@@ -1,0 +1,76 @@
+<html>
+<!-- Vincent worked on this on 9/05/2018 -->
+  <head>
+  <meta charset="utf-8" />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart1);
+
+      function drawChart1() {
+        var data1 = google.visualization.arrayToDataTable([
+          ['Weeks Of The Month', 'Orchard A', 'Orchard B', 'Orchard C', 'Orchard D'],
+          ['1',  1000,      400,	500,      600],
+          ['2',  1170,      460,	560,      400],
+          ['3',  800,       520,	700,      820],
+		  ['4',  1000,       500,	600,      700],
+		  ['5',  1200,       540,	1000,      600]
+        ]);
+
+        var options1 = {
+          title: 'Graph Showing Orchard Performance',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart1 = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart1.draw(data1, options1);
+      }
+	  
+/*      						This is the beggining of the pie						*/
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(drawChart);
+
+	function drawChart() {
+
+	var data = google.visualization.arrayToDataTable([
+	  ['Orchard', 'Number of Bags for Month'],
+	  ['Orchard A',     11],
+	  ['Orchard B',      2],
+	  ['Orchard C',  2],
+	  ['Orchard D',    7]
+	]);
+
+	var options = {
+	  title: 'Overall Orchard performance Per Month'
+	};
+
+	var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+	chart.draw(data, options);
+	}
+    </script>
+	 <!-- Bootstrap-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	 <link href="graphCSS.css" rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+	<div class="topnav">
+        <ul class="nav navbar-nav">
+        <a class="active" href="HomePage.html">Back to Home</a>
+        </ul>
+	</div>
+	<div class="container">
+	<div class="left">
+	<div id="piechart" style="width: 900px; height: 500px;"></div>
+	</div>
+	<div class="right" >
+	<div id="curve_chart" style="width: 900px; height: 500px"></div>
+	</div>
+	</div>
+  </body>
+</html>
