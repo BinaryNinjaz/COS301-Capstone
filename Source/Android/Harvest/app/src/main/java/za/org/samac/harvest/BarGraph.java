@@ -26,6 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Map;
 
+import za.org.samac.harvest.util.AppUtil;
+
 public class BarGraph extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseDatabase database;
@@ -174,5 +176,52 @@ public class BarGraph extends AppCompatActivity {
                 Log.w(TAG, "onCancelled", databaseError.toException());
             }
         });*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.search:
+
+                //The search button will have different functionality than the main.
+
+//                MenuItem searchMenu = menu.findItem(R.id.search);
+//                final SearchView searchView = (SearchView) item.getActionView();
+//                searchView.setIconified(false);
+//                searchView.requestFocusFromTouch();
+//                searchView.setOnQueryTextListener(this);
+//                item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+//                    @Override
+//                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+//                        return true;
+//                    }
+//                });
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(BarGraph.this, SettingsActivity.class));
+                return true;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                if(!AppUtil.isUserSignedIn()){
+                    startActivity(new Intent(BarGraph.this, LoginActivity.class));
+                }
+                else {
+//                    FirebaseAuth.getInstance().signOut();
+                }
+                finish();
+                return true;
+//            case R.id.homeAsUp:
+//                onBackPressed();
+//                return true;
+            default:
+                super.onOptionsItemSelected(item);
+                return true;
+        }
+//        return false;
     }
 }

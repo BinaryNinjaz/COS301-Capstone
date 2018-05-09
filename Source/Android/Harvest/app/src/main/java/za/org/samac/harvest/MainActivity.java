@@ -166,11 +166,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.getKey());
 
                             String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
-                            Worker workerObj = new Worker();
-                            workerObj.setName(fullName);
-                            workerObj.setValue(0);
-                            workerObj.setID(zoneSnapshot.getKey());
-                            workers.add(workerObj);
+                            //only add if person is a worker (not a foreman)
+                            if(zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
+                                Worker workerObj = new Worker();
+                                workerObj.setName(fullName);
+                                workerObj.setValue(0);
+                                workerObj.setID(zoneSnapshot.getKey());
+                                workers.add(workerObj);
+                            }
                         }
 
                         Collections.sort(workers, new WorkerComparator());

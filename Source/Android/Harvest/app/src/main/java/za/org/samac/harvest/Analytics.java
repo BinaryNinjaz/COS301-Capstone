@@ -45,6 +45,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.WorkerComparator;
 
@@ -111,5 +112,52 @@ public class Analytics extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.search:
+
+                //The search button will have different functionality than the main.
+
+//                MenuItem searchMenu = menu.findItem(R.id.search);
+//                final SearchView searchView = (SearchView) item.getActionView();
+//                searchView.setIconified(false);
+//                searchView.requestFocusFromTouch();
+//                searchView.setOnQueryTextListener(this);
+//                item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+//                    @Override
+//                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+//                        return true;
+//                    }
+//                });
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(Analytics.this, SettingsActivity.class));
+                return true;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                if(!AppUtil.isUserSignedIn()){
+                    startActivity(new Intent(Analytics.this, LoginActivity.class));
+                }
+                else {
+//                    FirebaseAuth.getInstance().signOut();
+                }
+                finish();
+                return true;
+//            case R.id.homeAsUp:
+//                onBackPressed();
+//                return true;
+            default:
+                super.onOptionsItemSelected(item);
+                return true;
+        }
+//        return false;
     }
 }
