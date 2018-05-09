@@ -71,7 +71,7 @@ public class InfoFarmFragment extends Fragment {
             View temp = getView().findViewById(R.id.info_farm_butt_save);
             temp.setVisibility(View.VISIBLE);
             temp.setTag("CREATE " + ID);
-            getView().findViewById(R.id.info_farm_butt_del).setTag("EDIT " + ID);
+
             getView().findViewById(R.id.info_farm_orchards_card).setVisibility(View.GONE);
             getView().findViewById(R.id.info_farm_butt_del).setVisibility(View.GONE);
         }
@@ -102,6 +102,7 @@ public class InfoFarmFragment extends Fragment {
                 temp = getView().findViewById(R.id.info_farm_further_look);
                 temp.setText(farm.getFurther());
                 getView().findViewById(R.id.info_farm_butt_edit).setTag(ID + " FARM");
+                getView().findViewById(R.id.info_farm_butt_save).setVisibility(View.INVISIBLE);
                 getView().findViewById(R.id.info_farm_butt_del).setTag("LOOK " + ID);
             }
 

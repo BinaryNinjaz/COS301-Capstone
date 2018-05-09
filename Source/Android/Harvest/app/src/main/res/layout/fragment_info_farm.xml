@@ -21,6 +21,8 @@
             android:onClick="onEditChosen"
             android:src="@android:drawable/ic_menu_edit"
             android:tag="FARM"
+            android:visibility="visible"
+            app:backgroundTint="@android:color/holo_blue_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -33,7 +35,8 @@
             android:clickable="true"
             android:onClick="onSaveChosen"
             android:src="@android:drawable/ic_menu_save"
-            android:visibility="invisible"
+            android:visibility="visible"
+            app:backgroundTint="@android:color/holo_blue_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -46,8 +49,9 @@
             android:clickable="true"
             android:onClick="onDeleteChosen"
             android:src="@android:drawable/ic_menu_delete"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/info_farm_butt_edit" />
+            app:backgroundTint="@android:color/holo_red_light"
+            app:layout_constraintBottom_toTopOf="@+id/info_farm_butt_save"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"

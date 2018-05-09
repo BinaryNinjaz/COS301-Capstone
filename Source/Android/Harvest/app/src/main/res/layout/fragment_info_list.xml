@@ -20,6 +20,7 @@
             android:focusable="true"
             android:onClick="onCreateButtClick"
             android:src="@android:drawable/ic_input_add"
+            app:backgroundTint="@color/colorPrimaryLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
