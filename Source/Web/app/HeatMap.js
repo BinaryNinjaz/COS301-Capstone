@@ -49,15 +49,9 @@ function displayHeatMap() {
         }
       }
     });
-    var g = [
-    'rgba(0, 0, 0, 0)',
-    'rgba(0, 128, 255, 0.7)',
-    'rgba(0, 64, 255, 0.7)',
-    'rgba(0, 0, 255, 0.7)',]
     var heatmap = new google.maps.visualization.HeatmapLayer({
       data: locations,
       dissipating: true,
-      gradient: g,
       radius: 50,
       map: map
     });
