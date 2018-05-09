@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,16 @@ import android.widget.TextView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +38,7 @@ import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.Manifest;
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.WorkerComparator;
 
 public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecyclerViewAdapter.WorkerViewHolder> {
 
@@ -56,6 +62,11 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private String sessionKey;
     private String workerID;
     private String workerIncrement;
+    //private String userUid;
+    private String farmerKey;
+    private boolean gotCorrectFarmerKey;
+    private DatabaseReference workersRef;
+    private static final String TAG = "Button";
 
     public WorkerRecyclerViewAdapter(Context context, ArrayList<Worker> workers) {
         this.context = context;
@@ -86,8 +97,54 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         return this.workers.size();
     }
 
-    private void makeChangesToData(String userId, String username, String title, String body) {
+    public void getFarmKey() {
+        gotCorrectFarmerKey = false;
+        DatabaseReference outerRef = database.getReference();
+        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    farmerKey = child.getKey();
+                    myRef = database.getReference(farmerKey);//Firebase reference
+                    workersRef = myRef.child("workers");
+
+                    workersRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                                Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                                //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.child("name").getKey());
+                                //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.getKey());
+
+                                String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                                //only add if person is a worker (not a foreman)
+                                if(zoneSnapshot.child("type").getValue(String.class).equals("Foreman")) {
+                                    if (zoneSnapshot.child("email").getValue(String.class).equals(user.getEmail())) {
+                                        gotCorrectFarmerKey = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "onCancelled", databaseError.toException());
+                        }
+                    });
+
+                    if (gotCorrectFarmerKey) {
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -117,14 +174,15 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
                 //make changes on Firebase or make changes on client side file (encrypt using SQLite)
                 database = FirebaseDatabase.getInstance();
-                String userUid = user.getUid();//ID or key of the current user
+                //userUid = user.getUid();//ID or key of the current user
                 //myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
 
                 sessionKey = MainActivity.sessionKey;//get key/ID for a session
                 workerID = worker.getID();//get worker ID
                 workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
 
-                myRef = database.getReference(userUid + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement + "/");//path to sessions increment in Firebase
+                farmerKey = MainActivity.farmerKey;
+                myRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement + "/");//path to sessions increment in Firebase
 
                 Map<String, Object> coordinates = new HashMap<>();
                 coordinates.put("lat", currentLat);
@@ -159,12 +217,13 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
                     //make changes on firebase
                     database = FirebaseDatabase.getInstance();
-                    String userUid = user.getUid();
+                    //String userUid = user.getUid();
                     workerID = worker.getID();//get worker ID
                     sessionKey = MainActivity.sessionKey;//get key/ID for a session
                     workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
 
-                    myRef = database.getReference(userUid + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
+                    farmerKey = MainActivity.farmerKey;
+                    myRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
                     myRef.removeValue();//remove latest increment
                 }
             }
