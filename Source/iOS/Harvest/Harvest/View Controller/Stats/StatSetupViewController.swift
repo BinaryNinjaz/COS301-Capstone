@@ -9,6 +9,10 @@
 import Eureka
 
 public final class StatSetupViewController: FormViewController {
+  var workersRow: PushRow<Worker>! = nil
+  var sessionsRow: PushRow<Session>! = nil
+  var orchardsRow: PushRow<Orchard>! = nil
+  
   public override func viewDidLoad() {
     super.viewDidLoad()
     let statKind = PickerRow<StatKind>("Stat Kind") { row in
@@ -16,7 +20,7 @@ public final class StatSetupViewController: FormViewController {
       row.value = .perSessionWorkers
     }
     
-    let workers = PushRow<Worker>() { row in
+    workersRow = PushRow<Worker>() { row in
       row.title = "Worker Selection"
       row.options = Entities.shared.workersList()
       row.value = row.options?.first
@@ -24,9 +28,11 @@ public final class StatSetupViewController: FormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .workerHistory
       }
+    }.cellUpdate{ cell, row in
+      row.options = Entities.shared.workersList()
     }
     
-    let sessions = PushRow<Session>() { row in
+    sessionsRow = PushRow<Session>() { row in
       row.title = "Session Selection"
       row.options = Entities.shared.sessionsList()
       row.value = row.options?.last
@@ -34,9 +40,11 @@ public final class StatSetupViewController: FormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .perSessionWorkers
       }
+    }.cellUpdate{ cell, row in
+      row.options = Entities.shared.sessionsList()
     }
     
-    let orchards = PushRow<Orchard>() { row in
+    orchardsRow = PushRow<Orchard>() { row in
       row.title = "Orchard Selection"
       row.options = Entities.shared.orchardsList()
       row.value = row.options?.first
@@ -44,6 +52,8 @@ public final class StatSetupViewController: FormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .orchardHistory
       }
+    }.cellUpdate{ cell, row in
+      row.options = Entities.shared.orchardsList()
     }
     
     let showStats = ButtonRow() { row in
@@ -60,15 +70,15 @@ public final class StatSetupViewController: FormViewController {
       let kind = statKind.value ?? .perSessionWorkers
       switch kind {
       case .perSessionWorkers:
-        if let s = sessions.value {
+        if let s = self.sessionsRow.value {
           svc.stat = Stat.perSessionWorkers(s)
         }
       case .workerHistory:
-        if let w = workers.value {
+        if let w = self.workersRow.value {
           svc.stat = Stat.workerHistory(w)
         }
       case .orchardHistory:
-        if let o = orchards.value {
+        if let o = self.orchardsRow.value {
           svc.stat = Stat.orchardHistory(o)
         }
       }
@@ -82,12 +92,21 @@ public final class StatSetupViewController: FormViewController {
         <<< statKind
         
         +++ Section()
-        <<< workers
-        <<< sessions
-        <<< orchards
+        <<< self.workersRow
+        <<< self.sessionsRow
+        <<< self.orchardsRow
         
         +++ Section()
         <<< showStats
     }
+  }
+  
+  public override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+  }
+  
+  public override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    tableView.reloadData()
   }
 }

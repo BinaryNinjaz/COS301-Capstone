@@ -140,7 +140,7 @@ extension Session : CustomStringConvertible {
   public var description: String {
     let formatter = DateFormatter()
     formatter.dateStyle = .medium
-    formatter.timeStyle = .short
+    formatter.timeStyle = .medium
     
     return formatter.string(from: startDate) + " " + foreman.description
   }

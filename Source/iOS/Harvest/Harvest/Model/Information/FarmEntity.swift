@@ -168,7 +168,7 @@ final class Entities {
   private(set) var orchards = SortedEntity(<)
   private(set) var sessions = SortedEntity(<)
   
-  private(set) var listners: [() -> ()] = []
+  private(set) var listners: [Int: () -> ()] = [:]
   
   static var shared = Entities()
   
@@ -186,17 +186,17 @@ final class Entities {
     sessions.removeAll()
   }
   
-  func registerListner(with f: @escaping () -> ()) -> Int {
-    listners.append(f)
+  func listen(with f: @escaping () -> ()) -> Int {
+    listners[listners.count] = f
     return listners.count - 1
   }
   
   func deregister(listner id: Int) {
-    _ = listners.remove(at: id)
+    _ = listners.removeValue(forKey: id)
   }
   
   func runListners() {
-    listners.forEach { $0() }
+    listners.forEach { $0.1() }
   }
   
   func listenOnce(with f: @escaping () -> ()) {
@@ -206,7 +206,7 @@ final class Entities {
       self.deregister(listner: id)
     }
     
-    listners.append(g)
+    listners[listners.count] = g
   }
   
   func getOnce(_ kind: EntityItem.Kind, completion: @escaping (Entities) -> ()) {
@@ -269,7 +269,7 @@ final class Entities {
       HarvestDB.watchWorkers { (workers) in
         self.workers = SortedDictionary(
           uniqueKeysWithValues: workers.map { worker in
-            return (worker.firstname + " " + worker.lastname, .worker(worker))
+            return (worker.firstname + " " + worker.lastname + worker.id, .worker(worker))
         }, <)
         self.runListners()
       }
@@ -277,7 +277,7 @@ final class Entities {
       HarvestDB.watchOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.name, .orchard(orchard))
+            return (orchard.name + orchard.id, .orchard(orchard))
         }, <)
         self.runListners()
       }
@@ -285,7 +285,7 @@ final class Entities {
       HarvestDB.watchFarms { (farms) in
         self.farms = SortedDictionary(
           uniqueKeysWithValues: farms.map { farm in
-            return (farm.name, .farm(farm))
+            return (farm.name + farm.id, .farm(farm))
         }, <)
         self.runListners()
       }
@@ -293,7 +293,7 @@ final class Entities {
       HarvestDB.watchSessions { (sessions) in
         self.sessions = SortedDictionary(
           uniqueKeysWithValues: sessions.map { session in
-            return (session.key, .session(session))
+            return (session.key + session.id, .session(session))
         }, <)
         self.runListners()
       }

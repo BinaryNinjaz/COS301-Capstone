@@ -32,6 +32,10 @@ class InformationEntityItemTableViewController: UITableViewController {
     if refreshControl != nil {
       tableView.addSubview(refreshControl!)
     }
+    
+    if listnerId == nil {
+      listnerId = Entities.shared.listen { self.tableView.reloadData() }
+    }
   }
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
@@ -44,6 +48,7 @@ class InformationEntityItemTableViewController: UITableViewController {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(true)
     if let id = listnerId {
+      listnerId = nil
       Entities.shared.deregister(listner: id)
     }
   }
@@ -52,7 +57,9 @@ class InformationEntityItemTableViewController: UITableViewController {
     if let sel = tableView.indexPathForSelectedRow {
       tableView.deselectRow(at: sel, animated: false)
     }
-    listnerId = Entities.shared.registerListner(with: { self.tableView.reloadData() })
+    if listnerId == nil {
+      listnerId = Entities.shared.listen { self.tableView.reloadData() }
+    }
     tableView.reloadData()
   }
 
