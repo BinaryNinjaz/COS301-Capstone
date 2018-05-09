@@ -5,7 +5,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']}); //This takes google API package to using charts
-      google.charts.setOnLoadCallback(drawChart1);
+      google.charts.setOnLoadCallback(drawChart1); //This is googles event handler to load the chart we are gonna draw
 
       function drawChart1() {
         var data1 = google.visualization.arrayToDataTable([
