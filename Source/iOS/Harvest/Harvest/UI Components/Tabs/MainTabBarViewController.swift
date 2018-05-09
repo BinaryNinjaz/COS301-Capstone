@@ -20,58 +20,47 @@ class MainTabBarViewController: UITabBarController {
     // Dispose of any resources that can be recreated.
   }
   
+  let informationViewControllerKey = "informationViewController"
+  let statViewControllerKey = "statViewController"
+  let sessionsViewControllerKey = "sessionViewController"
+  
   func setUpForForeman() {
-    guard let infoIdx = viewControllers?
-      .index(where: { $0.restorationIdentifier == "informationViewController" }) else {
-      return
+    if let infoIdx = viewControllers?
+      .index(where: { $0.restorationIdentifier == informationViewControllerKey}) {
+      viewControllers?.remove(at: infoIdx)
     }
     
-    guard let sessionIdx = viewControllers?
-      .index(where: { $0.restorationIdentifier == "sessionViewController" }) else {
-        return
+    
+    if let sessionIdx = viewControllers?
+      .index(where: { $0.restorationIdentifier == sessionsViewControllerKey }) {
+        viewControllers?.remove(at: sessionIdx)
     }
     
-    guard let statIdx = viewControllers?
-      .index(where: { $0.restorationIdentifier == "statViewController" }) else {
-        return
+    
+    if let statIdx = viewControllers?
+      .index(where: { $0.restorationIdentifier == statViewControllerKey }) {
+        viewControllers?.remove(at: statIdx)
     }
     
-    viewControllers?.remove(at: infoIdx)
-    viewControllers?.remove(at: sessionIdx)
-    viewControllers?.remove(at: statIdx)
   }
   
   func setUpForFarmer() {
-    guard nil == viewControllers?
-      .index(where: { $0.restorationIdentifier == "informationViewController" }) else {
-        return
+    if viewControllers?.index(where: { $0.restorationIdentifier == statViewControllerKey }) == nil {
+      if let infoVC = storyboard?.instantiateViewController(withIdentifier: statViewControllerKey) {
+        viewControllers?.insert(infoVC, at: 1)
+      }
     }
     
-    guard nil == viewControllers?
-      .index(where: { $0.restorationIdentifier == "sessionViewController" }) else {
-        return
+    if viewControllers?.index(where: { $0.restorationIdentifier == sessionsViewControllerKey }) == nil {
+      if let sessionVC = storyboard?.instantiateViewController(withIdentifier: sessionsViewControllerKey) {
+        viewControllers?.insert(sessionVC, at: 1)
+      }
     }
     
-    guard nil == viewControllers?
-      .index(where: { $0.restorationIdentifier == "statViewController" }) else {
-        return
+    if viewControllers?.index(where: { $0.restorationIdentifier == informationViewControllerKey }) == nil {
+      if let statVC = storyboard?.instantiateViewController(withIdentifier: informationViewControllerKey) {
+        viewControllers?.insert(statVC, at: 1)
+      }
     }
-    
-    guard let infoVC = storyboard?.instantiateViewController(withIdentifier: "informationViewController") else {
-      return
-    }
-    
-    guard let sessionVC = storyboard?.instantiateViewController(withIdentifier: "informationViewController") else {
-      return
-    }
-    
-    guard let statVC = storyboard?.instantiateViewController(withIdentifier: "informationViewController") else {
-      return
-    }
-    
-    viewControllers?.insert(statVC, at: 1)
-    viewControllers?.insert(sessionVC, at: 1)
-    viewControllers?.insert(infoVC, at: 1)
-    
   }
 }
