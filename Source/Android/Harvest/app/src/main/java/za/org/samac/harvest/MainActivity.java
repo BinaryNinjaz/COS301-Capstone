@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);
             location = locationManager
-                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
             adapter.setLocation(location);
         }
 
