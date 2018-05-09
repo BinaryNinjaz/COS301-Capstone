@@ -46,7 +46,7 @@ class GeoKitTests: XCTestCase {
     let b = Point(10, 30)
     let c = Point(20, 30)
     
-    XCTAssertEqual(Edge(a, b).gradient(), .infinity)
+    XCTAssertEqual(Edge(a, b).gradient(), 0)
     XCTAssertEqual(Edge(b, c).gradient(), 0)
     XCTAssertEqual(Edge(a, c).gradient(), 1)
   }
