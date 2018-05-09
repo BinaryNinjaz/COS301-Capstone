@@ -22,7 +22,8 @@
           curveType: 'function', /* The curve type is a function */
           legend: { position: 'bottom' }
         };
-
+		
+		//Store the google visualization of a line chart into a variable
         var chart1 = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
         chart1.draw(data1, options1);
