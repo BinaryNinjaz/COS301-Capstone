@@ -40,13 +40,27 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   }
   
   @IBAction func removeAllCoords(_ sender: Any) {
-    collections.removeAll()
-    updatePolygon()
+    if !collections.isEmpty {
+      collections.removeAll()
+      updatePolygon()
+    } else {
+      let alert = UIAlertController.alertController(title: "No Points", message: "There are no more points in the orchard to delete")
+      
+      present(alert, animated: true, completion: nil)
+    }
+    
   }
   
   @IBAction func removeLastCoord(_ sender: Any) {
-    collections.removeLast()
-    updatePolygon()
+    if !collections.isEmpty {
+      collections.removeLast()
+      updatePolygon()
+    } else {
+      let alert = UIAlertController.alertController(title: "No Points", message: "There are no more points in the orchard to delete")
+      
+      present(alert, animated: true, completion: nil)
+    }
+    
   }
   
   public override func viewDidLoad() {
