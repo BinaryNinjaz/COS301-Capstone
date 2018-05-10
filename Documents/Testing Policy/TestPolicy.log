@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.30)  10 MAY 2018 22:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.30)  10 MAY 2018 23:08
 entering extended mode
 **./TestPolicy.tex
 (TestPolicy.tex
@@ -44,11 +44,11 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] (TestPolicy.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 7.
+(Font)              <12> on input line 6.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 7.
+(Font)              <8> on input line 6.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 7.
+(Font)              <6> on input line 6.
 )
 \tf@toc=\write3
 \openout3 = `TestPolicy.toc'.
@@ -92,7 +92,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 31--32
 
  []
 
-[4] [5] (TestPolicy.aux) ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--34
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--36
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--38
+
+ []
+
+[4]
+Underfull \hbox (badness 10000) in paragraph at lines 39--40
+
+ []
+
+[5] [6] (TestPolicy.aux) ) 
 Here is how much of TeX's memory you used:
  238 strings out of 493323
  2548 string characters out of 3139065
@@ -105,9 +125,9 @@ Here is how much of TeX's memory you used:
 nts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
 mr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb>
 
-Output written on TestPolicy.pdf (5 pages, 53734 bytes).
+Output written on TestPolicy.pdf (6 pages, 56537 bytes).
 PDF statistics:
- 30 PDF objects out of 1000 (max. 8388607)
+ 33 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
