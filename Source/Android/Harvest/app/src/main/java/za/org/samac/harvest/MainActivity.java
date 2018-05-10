@@ -81,17 +81,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserEmail;
+    private String emailInDB;
     private String uid;
+    private String foremanID;
     private DatabaseReference currUserRef;
     private DatabaseReference farmRef;
     private DatabaseReference sessRef;
-    private DatabaseReference workersRefListener;
     private DatabaseReference farmLevelRef;
-    private boolean gotCorrectFarmerKey;
     public static String sessionKey;
     public static String farmerKey;
     private boolean isFarmer = false;
-    private ArrayList<String> topLevelKeys;
     //private Button actionSession;
 
     private FirebaseDatabase database;
@@ -131,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         //new LocationHelper().getLocation(this);
 
         uid = user.getUid();
+        currentUserEmail = user.getEmail();
         database = FirebaseDatabase.getInstance();
 
         setContentView(R.layout.activity_main);
@@ -319,6 +319,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         workerObj.setValue(0);
                         workerObj.setID(zoneSnapshot.getKey());
                         workers.add(workerObj);
+                    } else {
+                        if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
+                            foremanID = zoneSnapshot.getKey();
+                        }
                     }
                 }
 
@@ -341,69 +345,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void getFarmKey() {
-        gotCorrectFarmerKey = false;
-        topLevelKeys = new ArrayList<>();
-        DatabaseReference outerRef = database.getReference();
+        String convertEmail = currentUserEmail;
+        emailInDB = convertEmail.replace(".", ",");
+        DatabaseReference outerRef = database.getReference("WorkingFor/"+emailInDB);
         outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int c = 0;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     farmerKey = child.getKey();
+
+                    farmerKey = child.getKey();
                     farmLevelRef = database.getReference(farmerKey);//Firebase reference
-
-                    /*int indexOfAtSign = user.getEmail().indexOf("@");
-                    String partOfEmail = "";
-                    for (int i = 0; i<indexOfAtSign; i++) {
-                        partOfEmail = partOfEmail + "" + user.getEmail().charAt(i);
-                    }*/
-                    topLevelKeys.add(farmerKey);
-
-                    System.out.println("@@@@@@@@@@@@ "+farmLevelRef.getKey()+" ^^^^^^^^^^^^^^ "+topLevelKeys.get(c)+" *********************** "+c);
-                    c++;
+                    workersRef = farmLevelRef.child("workers");
+                    collectWorkers();
                 }
 
-                for (int i = 0; i<topLevelKeys.size(); i++) {
-                    farmLevelRef = database.getReference(topLevelKeys.get(i));//Firebase reference
-                    workersRefListener = farmLevelRef.child("workers");
-                    System.out.println("@@@@@@@@@@@@ "+farmLevelRef.getKey()+" &&&&&&&&&&&&& "+topLevelKeys.size());
-                    listenForWorkers();
-                }
-
-                if (gotCorrectFarmerKey == false) {
-                    //progressBar.setVisibility(View.VISIBLE);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-            }
-        });
-    }
-
-    public void listenForWorkers() {
-        workersRefListener.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
-                    Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
-
-                    String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
-                    //only add if person is a worker (not a foreman)
-                    //System.out.println("$$$$$$$$$$$$$$$ "+farmerKey);
-                    //System.out.println("&&&&&&&&&&&& "+zoneSnapshot.child("type").getValue(String.class));
-                    if (zoneSnapshot.child("type").getValue(String.class).equals("Foreman")) {
-                        if (zoneSnapshot.child("email").getValue(String.class).equals(user.getEmail())) {
-                            gotCorrectFarmerKey = true;
-                            farmRef = database.getReference(farmerKey);//Firebase reference
-                            workersRef = farmRef.child("workers");
-                            collectWorkers();
-                            break;
-                        }
-                    }
-                }
             }
 
             @Override
@@ -422,14 +378,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
-        currentUserEmail = user.getEmail();
         startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
 
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
         Map<String, Object> sessionDate = new HashMap<>();
         sessionDate.put("start_date", startSessionTime);
-        sessionDate.put("wid", uid);//add uid
+        sessionDate.put("wid", foremanID);//add wid
 
         recyclerView.setVisibility(View.VISIBLE);
         if (!namesShowing) {
