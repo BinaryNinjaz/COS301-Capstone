@@ -23,6 +23,9 @@ class SignInViewController: UIViewController {
   @IBOutlet weak var textGroupView: TextFieldGroupView!
   @IBOutlet weak var orLabel: UILabel!
   @IBOutlet weak var inputTextFieldGroup: TextFieldGroupView!
+  @IBOutlet weak var forgotAccountVisualEffectView: UIVisualEffectView!
+  @IBOutlet weak var orLabelVisualEffectView: UIVisualEffectView!
+  @IBOutlet weak var titleLabelVisualEffectView: UIVisualEffectView!
   
   @IBOutlet weak var backgroundImageView: UIImageView!
   var isLoading: Bool = false {
@@ -140,12 +143,6 @@ class SignInViewController: UIViewController {
     
     hideKeyboardWhenTappedAround()
     
-    signInButton.apply(gradient: .green)
-    signUpButton.apply(gradient: .blue)
-    googleSignInButton.apply(gradient: .google)
-    signInVisualEffect.layer.cornerRadius = 24
-    signInVisualEffect.clipsToBounds = true
-    
     usernameTextField.delegate = self
     passwordTextField.delegate = self
     
@@ -258,20 +255,51 @@ extension SignInViewController : UITextFieldDelegate {
   
   @objc func keyboardWillShow(notification: NSNotification) {
     if let keyboardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-      if googleSignInButton.frame.origin.y + googleSignInButton.frame.height > keyboardFrame.height {
+      if googleSignInButton.frame.origin.y + googleSignInButton.frame.height > view.frame.height - keyboardFrame.height
+      && self.view.frame.origin.y == 0 {
         let group = self.inputTextFieldGroup.frame
-        self.view.frame.origin.y -= group.origin.y - 48
+        if #available(iOS 11.0, *) {
+          self.view.frame.origin.y -= group.origin.y - 48 - view.safeAreaInsets.top
+        } else {
+          self.view.frame.origin.y -= group.origin.y - 48
+        }
       }
       
     }
   }
   
   @objc func keyboardWillHide(notification: NSNotification) {
-    if let keyboardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-      if googleSignInButton.frame.origin.y + googleSignInButton.frame.height > keyboardFrame.height {
-        let group = self.inputTextFieldGroup.frame
-        self.view.frame.origin.y += group.origin.y - 48
-      }
-    }
+    self.view.frame.origin.y = 0
+  }
+}
+
+extension SignInViewController {
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    
+    
+    textGroupView.setWidth(min(view.frame.width - 32, 342))
+    textGroupView.setOriginX(view.frame.width / 2 - textGroupView.frame.width / 2)
+    
+    signInButton.setWidth(textGroupView.frame.width)
+    signInButton.setOriginX(textGroupView.frame.origin.x)
+    googleSignInButton.setWidth(textGroupView.frame.width)
+    googleSignInButton.setOriginX(textGroupView.frame.origin.x)
+    
+    signUpButton.setWidth(textGroupView.frame.width)
+    signUpButton.setOriginX(textGroupView.frame.origin.x)
+    forgotAccountButton.setWidth(textGroupView.frame.width)
+    forgotAccountVisualEffectView.setOriginX(textGroupView.frame.origin.x)
+    forgotAccountVisualEffectView.setOriginY(view.frame.height - forgotAccountButton.frame.height - 16)
+    signUpButton.setOriginY(forgotAccountVisualEffectView.frame.origin.y - signUpButton.frame.height - 8)
+    
+    titleLabelVisualEffectView.setOriginX(view.frame.width / 2 - titleLabelVisualEffectView.frame.width / 2)
+    orLabel.setOriginX(view.frame.width / 2 - orLabel.frame.width / 2)
+    activityIndicator.setOriginX(view.frame.width / 2 - activityIndicator.frame.width / 2)
+    
+    
+    signInButton.apply(gradient: .green)
+    signUpButton.apply(gradient: .blue)
+    googleSignInButton.apply(gradient: .google)
   }
 }

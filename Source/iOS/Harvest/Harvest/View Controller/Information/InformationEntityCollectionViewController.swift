@@ -156,20 +156,22 @@ extension InformationEntityCollectionViewController : UICollectionViewDelegateFl
                       sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
     
-    let w: CGFloat
-    if collectionView.frame.width * 0.95 < 412 {
-      w = collectionView.frame.width * 0.95
-    } else {
-      let n = CGFloat(Int(collectionView.frame.width / 412))
-      w = collectionView.frame.width / n - ((n - 1) / n)
+    let w = collectionView.frame.width
+    let h = collectionView.frame.height / 3.0
+    
+    let n = CGFloat(Int(w / min(400, collectionView.frame.width - 1)))
+    
+    let cw = n == 1 ? w - 2 : w / n - ((n - 1) / n)
+    
+    return CGSize(width: cw, height: h);
+  }
+  
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    guard let flowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout else {
+      return
     }
     
-    let spacing = 64 as CGFloat
-    let h = collectionView.frame.height
-      - (navigationController?.navigationBar.frame.height ?? 0.0)
-      - (tabBarController?.tabBar.frame.height ?? 0.0)
-      - spacing
-    
-    return CGSize(width: w - 2, height: h / 3.5)
+    flowLayout.invalidateLayout()
   }
 }

@@ -67,6 +67,24 @@ extension UIView {
   }
 }
 
+extension UIView {
+  func setWidth(_ w: CGFloat) {
+    frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: w, height: frame.height)
+  }
+  
+  func setHeight(_ h: CGFloat) {
+    frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: frame.width, height: h)
+  }
+  
+  func setOriginX(_ x: CGFloat) {
+    frame = CGRect(x: x, y: frame.origin.y, width: frame.width, height: frame.height)
+  }
+  
+  func setOriginY(_ y: CGFloat) {
+    frame = CGRect(x: frame.origin.x, y: y, width: frame.width, height: frame.height)
+  }
+}
+
 extension UIImage {
   func resizeImage(toWidth w: CGFloat) -> UIImage? {
     let scale = w / size.width

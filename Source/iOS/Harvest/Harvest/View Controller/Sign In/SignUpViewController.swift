@@ -21,6 +21,7 @@ class SignUpViewController: UIViewController {
   @IBOutlet weak var signUpVisualEffect: UIVisualEffectView!
   @IBOutlet weak var backgroundImageView: UIImageView!
   @IBOutlet weak var inputTextFieldGroup: TextFieldGroupView!
+  @IBOutlet weak var titleLabelVisualEffectView: UIVisualEffectView!
   
   var isLoading: Bool = false {
     didSet {
@@ -159,12 +160,6 @@ class SignUpViewController: UIViewController {
     
     hideKeyboardWhenTappedAround()
     
-    signUpButton.apply(gradient: .green)
-    cancelButton.apply(gradient: .blue)
-    
-    signUpVisualEffect.layer.cornerRadius = 24
-    signUpVisualEffect.clipsToBounds = true
-    
     firstnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))
     lastnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))
     usernameTextField.addLeftImage(#imageLiteral(resourceName: "Mail"))
@@ -211,15 +206,43 @@ extension SignUpViewController : UITextFieldDelegate {
   
   @objc func keyboardWillShow(notification: NSNotification) {
     if let keyboardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-      if signUpButton.frame.origin.y + signUpButton.frame.height > keyboardFrame.height
-      && view.frame.origin.y == 0 {
+      if signUpButton.frame.origin.y + signUpButton.frame.height > view.frame.height - keyboardFrame.height
+      && self.view.frame.origin.y == 0 {
         let group = self.inputTextFieldGroup.frame
-        self.view.frame.origin.y -= group.origin.y - 48
+        if #available(iOS 11.0, *) {
+          self.view.frame.origin.y -= group.origin.y - 48 - view.safeAreaInsets.top
+        } else {
+          self.view.frame.origin.y -= group.origin.y - 48
+        }
       }
     }
   }
   
   @objc func keyboardWillHide(notification: NSNotification) {
     self.view.frame.origin.y = 0
+  }
+}
+
+extension SignUpViewController {
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    
+    inputTextFieldGroup.setWidth(min(view.frame.width - 32, 342))
+    inputTextFieldGroup.setOriginX(view.frame.width / 2 - inputTextFieldGroup.frame.width / 2)
+    
+    signUpButton.setWidth(inputTextFieldGroup.frame.width)
+    signUpButton.setOriginX(inputTextFieldGroup.frame.origin.x)
+    
+    cancelButton.setWidth(inputTextFieldGroup.frame.width)
+    cancelButton.setOriginX(inputTextFieldGroup.frame.origin.x)
+    cancelButton.setOriginY(view.frame.height - cancelButton.frame.height - 16)
+    
+    activityIndicator.setOriginX(view.frame.width / 2 - activityIndicator.frame.width / 2)
+    
+    titleLabelVisualEffectView.setWidth(inputTextFieldGroup.frame.width)
+    titleLabelVisualEffectView.setOriginX(inputTextFieldGroup.frame.origin.x)
+    
+    signUpButton.apply(gradient: .green)
+    cancelButton.apply(gradient: .blue)
   }
 }
