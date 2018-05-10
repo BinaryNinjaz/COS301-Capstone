@@ -92,7 +92,7 @@ class TrackerViewController: UIViewController {
       }
       
       alert.addAction(collect)
-      alert.addAction(discard)
+//      alert.addAction(discard)
       alert.addAction(cancel)
       
       present(alert, animated: true, completion: nil)
