@@ -52,7 +52,7 @@ class SignUpViewController: UIViewController {
   }
   
   @IBAction func signUpTouchUp(_ sender: UIButton) {
-    guard let username = usernameTextField.text else {
+    guard let username = usernameTextField.text, username != "" else {
       let alert = UIAlertController.alertController(
         title: "No email address provided",
         message: "Please provide an email address to create an account")
@@ -62,7 +62,15 @@ class SignUpViewController: UIViewController {
       return
     }
     
-    let password = passwordTextField.text ?? ""
+    guard let password = passwordTextField.text, password.count >= 6 else {
+      let alert = UIAlertController.alertController(
+        title: "Password too short",
+        message: "Password must be at least 6 characters long")
+      
+      present(alert, animated: true, completion: nil)
+      
+      return
+    }
     
     let emailRegex = try! NSRegularExpression(
       pattern: "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
@@ -80,7 +88,7 @@ class SignUpViewController: UIViewController {
       return
     }
     
-    guard let fname = firstnameTextField.text else {
+    guard let fname = firstnameTextField.text, fname != "" else {
       let alert = UIAlertController.alertController(
         title: "No first name provided",
         message: "Please provide a first name to create an account")
@@ -90,7 +98,7 @@ class SignUpViewController: UIViewController {
       return
     }
     
-    guard let lname = lastnameTextField.text else {
+    guard let lname = lastnameTextField.text, lname != "" else {
       let alert = UIAlertController.alertController(
         title: "No last name provided",
         message: "Please provide a last name to create an account")
@@ -100,7 +108,7 @@ class SignUpViewController: UIViewController {
       return
     }
     
-    guard let confirmedPassword = confirmPasswordTextField.text else {
+    guard let confirmedPassword = confirmPasswordTextField.text, confirmedPassword != "" else {
       let alert = UIAlertController.alertController(
         title: "No confirm password provided",
         message: "Please provide a confirm password to create an account")
@@ -157,6 +165,12 @@ class SignUpViewController: UIViewController {
     usernameTextField.addLeftImage(#imageLiteral(resourceName: "Mail"))
     passwordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
     confirmPasswordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
+    
+    firstnameTextField.delegate = self
+    lastnameTextField.delegate = self
+    usernameTextField.delegate = self
+    passwordTextField.delegate = self
+    confirmPasswordTextField.delegate = self
   }
 
   override var prefersStatusBarHidden: Bool {
@@ -169,5 +183,24 @@ class SignUpViewController: UIViewController {
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
+  }
+}
+
+extension SignUpViewController : UITextFieldDelegate {
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    
+    if textField === firstnameTextField {
+      lastnameTextField.becomeFirstResponder()
+    } else if textField === lastnameTextField {
+      usernameTextField.becomeFirstResponder()
+    } else if textField === usernameTextField {
+      passwordTextField.becomeFirstResponder()
+    } else if textField === passwordTextField {
+      confirmPasswordTextField.becomeFirstResponder()
+    } else if textField === confirmPasswordTextField {
+      signUpTouchUp(signUpButton)
+    }
+    
+    return true
   }
 }

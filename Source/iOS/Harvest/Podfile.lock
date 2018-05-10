@@ -1,4 +1,7 @@
 PODS:
+  - Charts (3.1.0):
+    - Charts/Core (= 3.1.0)
+  - Charts/Core (3.1.0)
   - Disk (0.3.3)
   - Eureka (4.1.1)
   - Firebase (4.11.0):
@@ -64,6 +67,7 @@ PODS:
   - nanopb/encode (0.3.8)
 
 DEPENDENCIES:
+  - Charts
   - Disk
   - Eureka
   - Firebase
@@ -74,6 +78,7 @@ DEPENDENCIES:
   - GoogleSignIn
 
 SPEC CHECKSUMS:
+  Charts: 0b0c96f6118b6ce63f11adbcaa3b31045ee4d772
   Disk: d1f55cd61f6ca20f368232d0c6e37e3c3dfcb63e
   Eureka: b88fb930e42c79f8c03c373d0fcdc28c1d6c50ed
   Firebase: cc13dfab1038c8b45d7903e01fc690451d6d0b24
@@ -90,6 +95,6 @@ SPEC CHECKSUMS:
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
 
-PODFILE CHECKSUM: e05d69ac20deca6378d02755673aa506aeaf48dc
+PODFILE CHECKSUM: b499525656f2e4f3f057d6e91eaea86ee59c1633
 
 COCOAPODS: 1.4.0

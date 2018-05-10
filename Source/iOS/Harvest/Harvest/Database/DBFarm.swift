@@ -65,6 +65,7 @@ extension HarvestDB {
     guard farm.id != "" else {
       return
     }
+    
     farms.child(farm.id).removeValue(completionBlock: { (err, ref) in
       completion(err, ref)
     })
