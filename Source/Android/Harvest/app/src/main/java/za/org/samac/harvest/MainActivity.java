@@ -132,6 +132,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         uid = user.getUid();
         database = FirebaseDatabase.getInstance();
 
+        setContentView(R.layout.activity_main);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
     }
 
@@ -149,9 +152,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
 
                 if (isFarmer){
+                    progressBar.setVisibility(View.GONE);//remove progress bar
                     setContentView(R.layout.activity_farmer);
                 }
                 else {
+                    progressBar.setVisibility(View.GONE);//remove progress bar
                     setContentView(R.layout.activity_foreman);
                 }
 
@@ -345,9 +350,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     farmerKey = child.getKey();
                     farmLevelRef = database.getReference(farmerKey);//Firebase reference
                     workersRefListener = farmLevelRef.child("workers");
-                    System.out.println("@@@@@@@@@@@@ "+farmLevelRef.getKey());
+                    /*int indexOfAtSign = user.getEmail().indexOf("@");
+                    String partOfEmail = "";
+                    for (int i = 0; i<indexOfAtSign; i++) {
+                        partOfEmail = partOfEmail + "" + user.getEmail().charAt(i);
+                    }
+                    System.out.println("@@@@@@@@@@@@ "+farmLevelRef.getKey()+" &&&&&&&&&&&&& "+database.getReference(farmerKey).child("workers").child("17").child("email").child(partOfEmail));
                     ArrayList<String> topLevelKeys = new ArrayList<>();
                     topLevelKeys.add(farmLevelRef.getKey());
+                    */
                     listenForWorkers();
 
                     if (gotCorrectFarmerKey) {
@@ -372,8 +383,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                     String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
                     //only add if person is a worker (not a foreman)
-                    System.out.println("$$$$$$$$$$$$$$$ "+farmerKey);
-                    System.out.println("&&&&&&&&&&&& "+zoneSnapshot.child("type").getValue(String.class));
+                    //System.out.println("$$$$$$$$$$$$$$$ "+farmerKey);
+                    //System.out.println("&&&&&&&&&&&& "+zoneSnapshot.child("type").getValue(String.class));
                     if (zoneSnapshot.child("type").getValue(String.class).equals("Foreman")) {
                         if (zoneSnapshot.child("email").getValue(String.class).equals(user.getEmail())) {
                             gotCorrectFarmerKey = true;

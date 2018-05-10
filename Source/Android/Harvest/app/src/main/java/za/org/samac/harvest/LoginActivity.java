@@ -324,12 +324,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signInToAccount(String email, String password) {
         Log.d(TAG, "signInToAccount:" + email);
+        login_form.setVisibility(View.INVISIBLE);
+        login_progress.setVisibility(View.VISIBLE);
         if (!validateForm()) {
             return;
         }
 
-        login_form.setVisibility(View.INVISIBLE);
-        login_progress.setVisibility(View.VISIBLE);
         if (password.length() < 6) {
             //int paddingCount = 6 - password.length();
 
