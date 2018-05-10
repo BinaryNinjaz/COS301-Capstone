@@ -58,19 +58,27 @@ class SettingsEurekaViewController : FormViewController {
           self.present(vc, animated: true, completion: nil)
         }
       }
+    }.cellUpdate { (cell, row) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
     }
-    
-    let section = Section(userRow)
     
     if HarvestUser.current.workingForID == nil {
-      section <<< adminRow
+      form
+        +++ Section(userRow)
+        <<< adminRow
+        <<< logoutRow
     } else {
-      section <<< resignRow
+      form
+        +++ Section(userRow)
+        <<< logoutRow
+        +++ Section()
+        <<< resignRow
     }
     
-    section <<< logoutRow
     
-    form +++ section
+    
+    
   }
   
 }
