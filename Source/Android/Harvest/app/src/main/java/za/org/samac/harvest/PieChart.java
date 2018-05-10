@@ -9,6 +9,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
@@ -39,11 +41,16 @@ public class PieChart extends AppCompatActivity {
     private static final String TAG = "Analytics";
     ArrayList<PieEntry> entries = new ArrayList<>();
     com.github.mikephil.charting.charts.PieChart pieChart;
+    private ProgressBar progressBar;
+    private com.github.mikephil.charting.charts.PieChart pieChartView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pie_chart);
+
+        progressBar = findViewById(R.id.progressBar);
+        pieChartView = findViewById(R.id.pieChart);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
@@ -107,14 +114,17 @@ public class PieChart extends AppCompatActivity {
                     }
                 }
 
-                PieDataSet dataset = new PieDataSet(entries, "# of Calls");
+                progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+                pieChartView.setVisibility(View.VISIBLE);
+
+                PieDataSet dataset = new PieDataSet(entries, "Dataset");
                 dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
 
                 PieData data = new PieData(dataset);//labels was one of the parameters
                 pieChart.setData(data); // set the data and list of lables into chart
 
                 Description description = new Description();
-                description.setText("Description");
+                description.setText("Worker Performance");
                 pieChart.setDescription(description); // set the description
                 pieChart.notifyDataSetChanged();
             }
