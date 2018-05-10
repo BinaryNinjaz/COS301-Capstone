@@ -69,7 +69,7 @@
 
         <activity
             android:name=".SessionsMap"
-            android:label="@string/title_activity_sessions_map"></activity>
+            android:label="@string/title_activity_sessions_map" />
     </application>
 
 </manifest>

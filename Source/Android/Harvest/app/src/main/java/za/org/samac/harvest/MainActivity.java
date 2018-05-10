@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                         case R.id.actionInformation:
                                             return true;
                                         case R.id.actionSession:
-                                            startActivity(new Intent(MainActivity.this, Sessions.class));
+                                            startActivity(new Intent(MainActivity.this, SessionsMap.class));
                                             return true;
 
                                     }
