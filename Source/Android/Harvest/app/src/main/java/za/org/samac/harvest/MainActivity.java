@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static String sessionKey;
     public static String farmerKey;
     private boolean isFarmer = false;
+    private ArrayList<String> topLevelKeys;
     //private Button actionSession;
 
     private FirebaseDatabase database;
@@ -341,30 +342,38 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     public void getFarmKey() {
         gotCorrectFarmerKey = false;
+        topLevelKeys = new ArrayList<>();
         DatabaseReference outerRef = database.getReference();
         outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                int c = 0;
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     farmerKey = child.getKey();
                     farmLevelRef = database.getReference(farmerKey);//Firebase reference
-                    workersRefListener = farmLevelRef.child("workers");
+
                     /*int indexOfAtSign = user.getEmail().indexOf("@");
                     String partOfEmail = "";
                     for (int i = 0; i<indexOfAtSign; i++) {
                         partOfEmail = partOfEmail + "" + user.getEmail().charAt(i);
-                    }
-                    System.out.println("@@@@@@@@@@@@ "+farmLevelRef.getKey()+" &&&&&&&&&&&&& "+database.getReference(farmerKey).child("workers").child("17").child("email").child(partOfEmail));
-                    ArrayList<String> topLevelKeys = new ArrayList<>();
-                    topLevelKeys.add(farmLevelRef.getKey());
-                    */
-                    listenForWorkers();
+                    }*/
+                    topLevelKeys.add(farmerKey);
 
-                    if (gotCorrectFarmerKey) {
-                        break;
-                    }
+                    System.out.println("@@@@@@@@@@@@ "+farmLevelRef.getKey()+" ^^^^^^^^^^^^^^ "+topLevelKeys.get(c)+" *********************** "+c);
+                    c++;
                 }
+
+                for (int i = 0; i<topLevelKeys.size(); i++) {
+                    farmLevelRef = database.getReference(topLevelKeys.get(i));//Firebase reference
+                    workersRefListener = farmLevelRef.child("workers");
+                    System.out.println("@@@@@@@@@@@@ "+farmLevelRef.getKey()+" &&&&&&&&&&&&& "+topLevelKeys.size());
+                    listenForWorkers();
+                }
+
+                if (gotCorrectFarmerKey == false) {
+                    //progressBar.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override
