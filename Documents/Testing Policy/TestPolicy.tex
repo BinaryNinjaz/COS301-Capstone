@@ -1,10 +1,20 @@
 \documentclass[12pt]{article}
+\usepackage{graphicx}
 \title{Testing Policy}
 \author{Binary Ninjaz}
 \date{}
-
 \begin{document}
   \maketitle
+
+\begin{flushright} \large
+\includegraphics[width=30px]{leaf2}\emph{} \newline\newline 
+Teboho Mokoena \emph{14415888} \newline
+Sizo Duma \emph{15245579} \newline
+Shaun Yates 	\emph{11111111} \newline
+Letanyan  \emph{11111111} \newline
+Kevin Reid\emph{11111111} \newline
+John Ojo \emph{11111111} \newline
+\end{flushright}
   \newpage
   
   \tableofcontents
@@ -44,9 +54,14 @@ The test method employed will depend on the context in which the product will ul
 \subsection{Principle 7: The absence-of-errors fallacy. }
 Tracing and rectifying defects will be of no benefit if the system is unusable  and/or does not fulfil the needs and expectations of the end-users. \newline
 
-  \section{TESTING TOOLS}
+  \section{TESTING TOOLS - unit testing level}
+Unit tests (otherwise known as component tests) seek to identify defects in, and verify the functioning of, testable software modules, programs, items, classes etc. \newline\newline
+Unit tests are capable of verifying functionalities, as well as non-functional characteristics. The test cases are based on work products, such as the specifications of a component, the software design or the data model. Unit tests are used in order to be certain that the individual components are working correctly. \newline\newline 
+Unit tests mainly make use of white-box testing techniques and are therefore carried out with a knowledge of the code being tested and possibly also with the support of the development environment (the unit test framework, debugging tool, etc.). That is why these tests are often carried out by the developer that wrote the code or by a party of a similar calibre. Any defects identified are resolved as soon as they are detected. \newline\newline
   \subsection{Android Studio}
-  The JUnit framwork will be used for out automated testing purposes. To run tests one will need Android Stuio. To execute the tests one can right click on the tests directory and select 'Run tests.'
+  The JUnit framwork will be used for out automated testing purposes. To run tests one will need Android Studio. To execute the tests one can right click on the tests directory and select 'Run tests.'
+\subsection{IOS Application Testing}
+
   \subsection{NPM}
   The Ava framework will be used for automated testing purposes. To run tests one will need to run "npm test" from the testing directory.
   \subsection{XCode}
@@ -59,7 +74,7 @@ Tracing and rectifying defects will be of no benefit if the system is unusable  
   Automated test provide developers with the ability to have safe of mind that they have not made any changes that break the program in any way or introduce bugs in any part of the program.
   Forcing developers to write tests forces them to check every part of code they write making tests a form of documentation of a projects requirements.
   
-  \section{Test Evaluation}
+  \section{TEST EVALUATION}
   Strict zero test case failure will be followed. Any branch with a failing test case will never be merged into master. Hence we will ensure that every branch runs tests before a pull request.
   
 \end{document}
