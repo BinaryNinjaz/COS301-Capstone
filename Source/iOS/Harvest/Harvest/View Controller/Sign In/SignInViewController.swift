@@ -22,6 +22,7 @@ class SignInViewController: UIViewController {
   @IBOutlet weak var forgotAccountButton: UIButton!
   @IBOutlet weak var textGroupView: TextFieldGroupView!
   @IBOutlet weak var orLabel: UILabel!
+  @IBOutlet weak var inputTextFieldGroup: TextFieldGroupView!
   
   @IBOutlet weak var backgroundImageView: UIImageView!
   var isLoading: Bool = false {
@@ -133,6 +134,10 @@ class SignInViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    
     hideKeyboardWhenTappedAround()
     
     signInButton.apply(gradient: .green)
@@ -249,5 +254,24 @@ extension SignInViewController : UITextFieldDelegate {
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     signInTouchUp(signInButton)
     return true
+  }
+  
+  @objc func keyboardWillShow(notification: NSNotification) {
+    if let keyboardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+      if googleSignInButton.frame.origin.y + googleSignInButton.frame.height > keyboardFrame.height {
+        let group = self.inputTextFieldGroup.frame
+        self.view.frame.origin.y -= group.origin.y - 48
+      }
+      
+    }
+  }
+  
+  @objc func keyboardWillHide(notification: NSNotification) {
+    if let keyboardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+      if googleSignInButton.frame.origin.y + googleSignInButton.frame.height > keyboardFrame.height {
+        let group = self.inputTextFieldGroup.frame
+        self.view.frame.origin.y += group.origin.y - 48
+      }
+    }
   }
 }

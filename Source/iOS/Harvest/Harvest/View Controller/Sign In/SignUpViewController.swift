@@ -20,6 +20,7 @@ class SignUpViewController: UIViewController {
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
   @IBOutlet weak var signUpVisualEffect: UIVisualEffectView!
   @IBOutlet weak var backgroundImageView: UIImageView!
+  @IBOutlet weak var inputTextFieldGroup: TextFieldGroupView!
   
   var isLoading: Bool = false {
     didSet {
@@ -152,6 +153,10 @@ class SignUpViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    
     hideKeyboardWhenTappedAround()
     
     signUpButton.apply(gradient: .green)
@@ -202,5 +207,19 @@ extension SignUpViewController : UITextFieldDelegate {
     }
     
     return true
+  }
+  
+  @objc func keyboardWillShow(notification: NSNotification) {
+    if let keyboardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+      if signUpButton.frame.origin.y + signUpButton.frame.height > keyboardFrame.height
+      && view.frame.origin.y == 0 {
+        let group = self.inputTextFieldGroup.frame
+        self.view.frame.origin.y -= group.origin.y - 48
+      }
+    }
+  }
+  
+  @objc func keyboardWillHide(notification: NSNotification) {
+    self.view.frame.origin.y = 0
   }
 }

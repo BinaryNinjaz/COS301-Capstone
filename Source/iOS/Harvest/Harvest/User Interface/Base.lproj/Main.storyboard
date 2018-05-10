@@ -76,6 +76,7 @@
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jNF-TA-p9f">
                                             <rect key="frame" x="20.5" y="267" width="342.5" height="40"/>
+                                            <color key="backgroundColor" red="0.16290088820000001" green="0.72999999999999998" blue="0.36074126299999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="40" id="bF7-rI-7vN"/>
                                             </constraints>
@@ -217,6 +218,7 @@
                         <outlet property="backgroundImageView" destination="LFx-Gb-M2a" id="UQ7-ff-s6K"/>
                         <outlet property="forgotAccountButton" destination="uzn-pZ-5PW" id="2z7-sX-HWe"/>
                         <outlet property="googleSignInButton" destination="tzK-mB-yiL" id="cfX-5s-YPB"/>
+                        <outlet property="inputTextFieldGroup" destination="Ydh-DC-G5M" id="hVc-zx-1ZK"/>
                         <outlet property="orLabel" destination="L26-sU-krO" id="CbD-Dx-aw8"/>
                         <outlet property="passwordTextField" destination="R87-SE-52j" id="SEc-HY-5Gn"/>
                         <outlet property="signInButton" destination="jNF-TA-p9f" id="I5f-hW-IHN"/>
@@ -768,6 +770,7 @@ Expected Yield: 0</string>
                         <outlet property="cancelButton" destination="Dmy-LW-Sze" id="Eld-LS-eWk"/>
                         <outlet property="confirmPasswordTextField" destination="qH2-qA-xKO" id="BMD-qk-wQg"/>
                         <outlet property="firstnameTextField" destination="IAm-oA-gf5" id="YrN-ye-Ewu"/>
+                        <outlet property="inputTextFieldGroup" destination="ZvG-cL-Cbw" id="NOm-S0-Xyd"/>
                         <outlet property="lastnameTextField" destination="RgB-HZ-SJS" id="bRK-QA-ZXu"/>
                         <outlet property="passwordTextField" destination="0g0-MQ-2fW" id="gCn-te-rQL"/>
                         <outlet property="signUpButton" destination="uTy-Kq-vtX" id="2t6-9a-JyG"/>

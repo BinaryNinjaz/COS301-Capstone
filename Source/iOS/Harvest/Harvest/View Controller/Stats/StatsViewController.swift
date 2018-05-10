@@ -63,7 +63,7 @@ class StatsViewController : UIViewController {
     pieChart?.data = pieData
     pieChart?.notifyDataSetChanged()
     pieChart?.isHidden = false
-    pieChart?.animate(xAxisDuration: 3.0, yAxisDuration: 3.0, easingOption: .easeOutCubic)
+    pieChart?.animate(xAxisDuration: 3.0, yAxisDuration: 1.0, easingOption: .easeOutCubic)
   }
   
   func drawWorkerHistory() {
@@ -79,7 +79,7 @@ class StatsViewController : UIViewController {
     lineChart?.data = lineData
     lineChart?.notifyDataSetChanged()
     lineChart?.isHidden = false
-    lineChart?.animate(xAxisDuration: 3.0, yAxisDuration: 3.0, easingOption: .easeOutCubic)
+    lineChart?.animate(xAxisDuration: 1.5, easingOption: .easeOutCubic)
   }
   
   func drawOrchardHistory() {
@@ -99,7 +99,7 @@ class StatsViewController : UIViewController {
     barChart?.data = barData
     barChart?.notifyDataSetChanged()
     barChart?.isHidden = false
-    barChart?.animate(xAxisDuration: 3.0, yAxisDuration: 3.0, easingOption: .easeOutCubic)
+    barChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
   }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
