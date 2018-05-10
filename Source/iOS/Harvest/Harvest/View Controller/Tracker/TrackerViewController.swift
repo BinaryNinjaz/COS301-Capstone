@@ -326,12 +326,21 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
     let w = collectionView.frame.width
     let h = collectionView.frame.height - 300
     
-    let n = CGFloat(Int(w / 186))
+    let n = CGFloat(Int(w / 156))
     
     let cw = w / n - ((n - 1) / n)
     
     return CGSize(width: shouldDisplayMessage ? w - 2 : cw,
                   height: shouldDisplayMessage ? h : 109);
+  }
+  
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    super.viewWillTransition(to: size, with: coordinator)
+    guard let flowLayout = workerCollectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+      return
+    }
+    flowLayout.invalidateLayout()
+    workerCollectionView.reloadData()
   }
 }
 
