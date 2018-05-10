@@ -8,5 +8,6 @@
     <color name="black">#000000</color>
     <color name="blueLinks">#007aff</color>
     <color name="grey">#808080</color>
+    <color name="androidGrey">#d3d3d3</color>
     <color name="colorGoogleRed">#e3674b</color>
 </resources>

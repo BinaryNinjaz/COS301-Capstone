@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -114,29 +116,18 @@ public class Analytics extends AppCompatActivity {
         });
     }
 
+    //Handle the menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.search:
-
-                //The search button will have different functionality than the main.
-
-//                MenuItem searchMenu = menu.findItem(R.id.search);
-//                final SearchView searchView = (SearchView) item.getActionView();
-//                searchView.setIconified(false);
-//                searchView.requestFocusFromTouch();
-//                searchView.setOnQueryTextListener(this);
-//                item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//                    @Override
-//                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-//                        return true;
-//                    }
-//                });
                 return true;
             case R.id.settings:
                 startActivity(new Intent(Analytics.this, SettingsActivity.class));

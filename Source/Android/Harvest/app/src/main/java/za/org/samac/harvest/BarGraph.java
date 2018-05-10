@@ -182,25 +182,6 @@ public class BarGraph extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.search:
-
-                //The search button will have different functionality than the main.
-
-//                MenuItem searchMenu = menu.findItem(R.id.search);
-//                final SearchView searchView = (SearchView) item.getActionView();
-//                searchView.setIconified(false);
-//                searchView.requestFocusFromTouch();
-//                searchView.setOnQueryTextListener(this);
-//                item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//                    @Override
-//                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-//                        return true;
-//                    }
-//                });
                 return true;
             case R.id.settings:
                 startActivity(new Intent(BarGraph.this, SettingsActivity.class));
