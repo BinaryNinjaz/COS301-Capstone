@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-enum IrrigationKind : String {
+enum IrrigationKind : String, CustomStringConvertible {
   case micro = "Micro"
   case drip = "Drip"
   case floppy = "Floppy"
@@ -25,6 +25,10 @@ enum IrrigationKind : String {
     .other,
     .none
   ]
+  
+  var description: String {
+    return self.rawValue
+  }
 }
 
 final public class Orchard {
@@ -46,15 +50,15 @@ final public class Orchard {
   
   init(json: [String: Any], id: String) {
     self.id = id
-    bagMass = json["bagMass"] as? Double ?? 0.0
+    bagMass = json["bagMass"] as? Double ?? .nan
     crop = json["crop"] as? String ?? ""
     cultivars = json["cultivars"] as? [String] ?? []
     date = Date(timeIntervalSince1970: json["date"] as? Double ?? 0.0)
     assignedFarm = json["farm"] as? String ?? ""
     details = json["further"] as? String ?? ""
     name = json["name"] as? String ?? ""
-    treeSpacing = json["treeSpacing"] as? Double ?? 0.0
-    rowSpacing = json["rowSpacing"] as? Double ?? 0.0
+    treeSpacing = json["treeSpacing"] as? Double ?? .nan
+    rowSpacing = json["rowSpacing"] as? Double ?? .nan
     irrigationKind = IrrigationKind(rawValue: json["irrigation"] as? String ?? "") ?? .none
     
     coords = [CLLocationCoordinate2D]()
@@ -78,14 +82,14 @@ final public class Orchard {
   
   func json() -> [String: [String: Any]] {
     return [id: [
-      "bagMass": bagMass,
+      "bagMass": bagMass.isNaN ? "" : bagMass,
       "crop": crop,
       "date": date.timeIntervalSince1970,
       "farm": assignedFarm,
       "info": details,
       "name": name,
-      "treeSpacing": treeSpacing,
-      "rowSpacing": rowSpacing,
+      "treeSpacing": treeSpacing.isNaN ? "" : treeSpacing,
+      "rowSpacing": rowSpacing.isNaN ? "" : rowSpacing,
       "coords": coords.firbaseCoordRepresentation(),
       "cultivars": cultivars,
       "irrigation": irrigationKind.rawValue
@@ -112,7 +116,10 @@ extension Orchard : Equatable {
 
 extension Orchard : CustomStringConvertible {
   public var description: String {
-    return name
+    guard let farm = Entities.shared.farmsList().first(where: { $0.id == assignedFarm }) else {
+      return name + " – " + Date().description
+    }
+    return farm.name + " – " + name
   }
 }
 

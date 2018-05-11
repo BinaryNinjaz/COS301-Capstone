@@ -223,7 +223,7 @@ final class Entities {
       HarvestDB.getOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.name + orchard.id, .orchard(orchard))
+            return (orchard.assignedFarm + orchard.name + orchard.id, .orchard(orchard))
         }, <)
         completion(self)
       }
