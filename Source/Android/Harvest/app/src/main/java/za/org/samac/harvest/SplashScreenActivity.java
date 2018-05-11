@@ -23,7 +23,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);//makes things less expensive
+        FirebaseDatabase.getInstance().setPersistenceEnabled(false);//makes things less expensive
         tvAppName = findViewById(R.id.tvAppName);
         tvAppName.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
 
