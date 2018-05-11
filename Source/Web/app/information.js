@@ -391,6 +391,7 @@ function dispOrch(id) {
 
     firebase.database().ref('/' + userID() + '/orchards/' + id).once('value').then(function (snapshot) {
       farmsRef().once('value').then(function (farmSnapshot) {
+          const date = new Date(snapshot.val().date * 1000);
         col3.innerHTML = "" +
           "<form class='form-horizontal'>" +
           "" +
@@ -409,7 +410,7 @@ function dispOrch(id) {
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().bagMass + " Kg</p></div> </div>" +
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().date + "</p></div></div> " +
+          "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
           "<div class='col-sm-9'><p class ='form-control-static'>" + snapshot.val().xDim + " x " + snapshot.val().yDim + " " + snapshot.val().unit + "</p></div>" +
@@ -456,13 +457,16 @@ function orchSave(type, id) {
   /*0 means create, 1 means modify*/
   const farm = document.getElementById("orchFarm").value;
   const farmID = farm.substring(farm.indexOf("<") + 1, farm.indexOf(">"));
+  let d = new Date(document.getElementById("orchDate").valueAsDate);
+  let seconds = d.getTime() / 1000;
   if (type === 0) {
     newId++;
     firebase.database().ref('/' + userID() +"/orchards/" + newId).set({
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
       further: document.getElementById("oi").value,
-      date: document.getElementById("orchDate").value,
+      // date: document.getElementById("orchDate").value,
+      date: seconds,
       xDim: document.getElementById("orchDimX").value,
       yDim: document.getElementById("orchDimY").value,
       unit: document.getElementById("orchDimUnit").value,
@@ -477,7 +481,7 @@ function orchSave(type, id) {
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
       further: document.getElementById("oi").value,
-      date: document.getElementById("orchDate").value,
+      date: seconds,
       xDim: document.getElementById("orchDimX").value,
       yDim: document.getElementById("orchDimY").value,
       unit: document.getElementById("orchDimUnit").value,
@@ -495,6 +499,7 @@ function orchMod(id) {
     document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch(" + id + ")'>Delete</button>";
     document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name;
     firebase.database().ref('/' + userID() +'/farms').once('value').then(function (farm) {
+        const date = new Date(snapshot.val().date * 1000);
       document.getElementById('col3').innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -522,7 +527,7 @@ function orchMod(id) {
         "</div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
-        "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + snapshot.val().date + "'></div></div> " +
+        "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
         "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimX' value ='" + snapshot.val().xDim + "'></div>" +
