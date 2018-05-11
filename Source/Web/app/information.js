@@ -169,7 +169,7 @@ function popFarm() {
   document.getElementById("SearchSpace").innerHTML = "";
   farmsRef().off();
 
-  farmsRef().on('value', function (snapshot) {
+  farmsRef().once('value').then(function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispFarm(\"-1\")'>Add Farm</button>"
     ;
@@ -262,6 +262,7 @@ function farmSave(type, id) {
       further: document.getElementById("farmFurther").value
     });
   }
+  popFarm();
   dispFarm(id);
 }
 
@@ -306,9 +307,8 @@ function popOrch() {
   const add = document.getElementById("AddButt");
   add.innerHTML = "<h2>Loading Orchard List...</h2>";
   document.getElementById("SearchSpace").innerHTML = "";
-  orchardsRef().off();
 
-  orchardsRef().on('value', function (snapshot) {
+  orchardsRef().once('value').then(function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispOrch(\"-1\")'>Add Orchard</button>"
     ;
@@ -486,6 +486,7 @@ function orchSave(type, id) {
       farm: farmID
     });
   }
+  popOrch();
   dispOrch(id);
 }
 
@@ -573,7 +574,7 @@ function popWork() {
 
   workersRef().off();
 
-  workersRef().on('value', function (snapshot) {
+  workersRef().once('value').then(function (snapshot) {
     add.innerHTML = "" +
       "<button type='button' class='btn btn-success' onclick='dispWork(\"-1\")'>Add Worker</button>"
     ;
@@ -635,6 +636,7 @@ function dispWork(id) {
   }
   else {
     firebase.database().ref('/' + userID() +'/workers/' + id).once('value').then(function (snapshot) {
+
         // firebase.database().ref('/' + userID() + '/orchards').once('value').then(function (orchardSnapshot) {
             orchardsRef().once('value').then(function (orchardSnapshot) {
                 col3.innerHTML = "" +
@@ -751,6 +753,7 @@ function workSave(type, id) {
           });
       }
   }
+  popWork();
   dispWork(id);
 }
 
