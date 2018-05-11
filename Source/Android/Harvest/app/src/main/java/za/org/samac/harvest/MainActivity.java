@@ -574,4 +574,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     void updateFarmer(boolean setMe) {
         isFarmer = setMe;
     }
+
+    public static ArrayList<Worker> getWorkers(){ return workers; }
 }
