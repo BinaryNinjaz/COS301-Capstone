@@ -86,7 +86,7 @@ extension Dictionary where Key == String, Value == Any {
 }
 
 
-public class Session {
+public final class Session {
   
   var endDate: Date
   var startDate: Date
