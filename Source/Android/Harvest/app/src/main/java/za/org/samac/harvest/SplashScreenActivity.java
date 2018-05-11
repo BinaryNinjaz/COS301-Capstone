@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import za.org.samac.harvest.util.AppUtil;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -23,7 +25,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         tvAppName = findViewById(R.id.tvAppName);
         tvAppName.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);//makes things less expensive
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

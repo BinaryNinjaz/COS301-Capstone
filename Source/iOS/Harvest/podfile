@@ -9,6 +9,7 @@ target 'Harvest' do
   pod 'GoogleSignIn'
   pod 'Eureka'
   pod 'Disk'
+  pod 'Charts'
   
   target 'HarvestTests' do
     inherit! :search_paths

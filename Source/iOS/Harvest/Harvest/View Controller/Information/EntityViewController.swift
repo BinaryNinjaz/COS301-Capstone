@@ -22,7 +22,7 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
   
   override public func viewDidLoad() {
     super.viewDidLoad()
-    entity?.information(for: form) {
+    entity?.information(for: self) {
       self.navigationItem.rightBarButtonItem?.isEnabled = true
     }
   }

@@ -71,6 +71,7 @@
                 <Button
                     android:id="@+id/btnLoginWithGoogle"
                     style="@style/Button"
+                    android:background="@color/colorGoogleRed"
                     android:text="@string/loginWithGoogle" />
 
                 <TextView

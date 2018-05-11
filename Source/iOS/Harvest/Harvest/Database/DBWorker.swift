@@ -90,6 +90,9 @@ extension HarvestDB {
       return
     }
     workers.child(worker.id).removeValue(completionBlock: { err, ref in
+      guard worker.email != "" else {
+        return
+      }
       foremen.child(worker.email.removedFirebaseInvalids()).removeValue() { err, ref in
         completion(err, ref)
       }

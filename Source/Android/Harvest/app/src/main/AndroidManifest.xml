@@ -54,6 +54,15 @@
         <activity android:name=".InformationActivity"
             android:label="@string/titleInformation"
             ></activity>
+        <activity
+            android:name=".Analytics"
+            android:label="@string/title_stats" />
+        <activity
+            android:name=".PieChart"
+            android:label="@string/title_stats" />
+        <activity
+            android:name=".BarGraph"
+            android:label="@string/title_stats" />
     </application>
 
 </manifest>
