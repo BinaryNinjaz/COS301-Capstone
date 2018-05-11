@@ -19,12 +19,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -37,7 +35,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -208,6 +205,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                             startActivityIfNeeded(openMainActivity, 0);
                                             return true;
                                         case R.id.actionSession:
+                                            Intent openSessions= new Intent(MainActivity.this, SessionsMap.class);
+                                            openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                            startActivityIfNeeded(openSessions, 0);
                                             return true;
                                         case R.id.actionStats:
                                             Intent openAnalytics= new Intent(MainActivity.this, Analytics.class);
@@ -574,4 +574,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     void updateFarmer(boolean setMe) {
         isFarmer = setMe;
     }
+
+    public static ArrayList<Worker> getWorkers(){return workers;}
 }
