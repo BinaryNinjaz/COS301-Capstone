@@ -1,8 +1,8 @@
 package za.org.samac.harvest;
 
-import android.support.v4.app.FragmentActivity;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -11,8 +11,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import za.org.samac.harvest.domain.Worker;
+
+import static za.org.samac.harvest.MainActivity.getWorkers;
 
 public class SessionsMap extends FragmentActivity implements OnMapReadyCallback {
 
@@ -80,7 +83,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         checkPlayServices();
 
 
-        workers = MainActivity.getWorkers(); // get worker info to loop through it
+        workers = getWorkers(); // get worker info to loop through it
         workerID = new HashMap<>();
         for(int i = 0 ; i < workers.size() ; ++i) {
             String id = workers.get(i).getID();
@@ -148,17 +151,21 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         }else{
             //hard-coding sessions due to current firebase bug
             mMap.addMarker(new MarkerOptions().position(
-                    new LatLng(-25.73866109, 28.49997623)).title("Rob Kingston"));
+                    new LatLng(-25.72866109, 28.49997623)).title("Rob Kingston"));
             mMap.addMarker(new MarkerOptions().position(
-                    new LatLng(-25.73866123, 28.50094444)).title("Sally Benjamin"));
+                    new LatLng(-25.72866123, 28.50094444)).title("Sally Benjamin"));
             mMap.addMarker(new MarkerOptions().position(
                     new LatLng(-25.72866321, 28.50095555)).title("Ryan Benjamin"));
             mMap.addMarker(new MarkerOptions().position(
                     new LatLng(-25.7282345, 28.50123401)).title("James Worker"));
             mMap.addMarker(new MarkerOptions().position(
                     new LatLng(-25.7281111, 28.50095678)).title("Rob Kingston"));
-            moveMapHere = new LatLng(-25.728662134, 28.504356);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(moveMapHere,10));
+            moveMapHere = new LatLng(-25.72866109, 28.49997623);
+            mMap.addPolyline(new PolylineOptions()
+                    .add(new LatLng(-25.7281111, 28.49997623), new LatLng(-25.72866321, 28.50095555))
+                    .width(5)
+                    .color(Color.BLUE));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(moveMapHere,15));
         }
     }
 

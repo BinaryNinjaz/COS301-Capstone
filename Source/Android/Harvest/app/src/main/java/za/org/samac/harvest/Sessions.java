@@ -39,6 +39,8 @@ import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.SessionsViewAdapter;
 import za.org.samac.harvest.domain.Worker;
 
+import static za.org.samac.harvest.MainActivity.getWorkers;
+
 public class Sessions extends AppCompatActivity {
 
     private Map<String, ArrayList<String>> sessions; //used to store session data
@@ -59,7 +61,7 @@ public class Sessions extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessions);
 
-        workers = MainActivity.getWorkers(); // get worker info to loop through it
+        workers = getWorkers(); // get worker info to loop through it
         workerID = new HashMap<>();
         for(int i = 0 ; i < workers.size() ; ++i) {
             String id = workers.get(i).getID();
