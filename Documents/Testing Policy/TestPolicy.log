@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.30)  11 MAY 2018 12:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.30)  11 MAY 2018 12:52
 entering extended mode
 **./TestPolicy.tex
 (TestPolicy.tex
@@ -224,22 +224,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 55--56
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 58--61
+Underfull \hbox (badness 10000) in paragraph at lines 58--62
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 58--61
+Underfull \hbox (badness 10000) in paragraph at lines 58--62
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 58--61
+Underfull \hbox (badness 10000) in paragraph at lines 58--62
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 58--61
+Underfull \hbox (badness 10000) in paragraph at lines 58--62
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 58--62
 
  []
 
@@ -247,10 +252,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 58--61
 File: images/FailedLoginTest.png Graphic file (type png)
 
 <use images/FailedLoginTest.png>
-Package pdftex.def Info: images/FailedLoginTest.png used on input line 63.
+Package pdftex.def Info: images/FailedLoginTest.png used on input line 64.
 (pdftex.def)             Requested size: 401.50146pt x 225.73732pt.
 
-Overfull \hbox (11.50146pt too wide) in paragraph at lines 62--64
+Overfull \hbox (11.50146pt too wide) in paragraph at lines 63--65
 [] 
  []
 
@@ -258,25 +263,25 @@ Overfull \hbox (11.50146pt too wide) in paragraph at lines 62--64
 File: images/iostest.png Graphic file (type png)
 
 <use images/iostest.png>
-Package pdftex.def Info: images/iostest.png used on input line 65.
+Package pdftex.def Info: images/iostest.png used on input line 66.
 (pdftex.def)             Requested size: 401.50146pt x 228.11742pt.
 
-Overfull \hbox (11.50146pt too wide) in paragraph at lines 65--66
+Overfull \hbox (11.50146pt too wide) in paragraph at lines 66--67
 [] 
  []
 
 [7 <./images/FailedLoginTest.png> <./images/iostest.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 72--74
+Underfull \hbox (badness 10000) in paragraph at lines 73--75
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--74
+Underfull \hbox (badness 10000) in paragraph at lines 73--75
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--80
+Underfull \hbox (badness 10000) in paragraph at lines 80--81
 
  []
 
@@ -293,28 +298,28 @@ Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
 
-Underfull \hbox (badness 10000) in paragraph at lines 81--83
+Underfull \hbox (badness 10000) in paragraph at lines 82--84
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 84.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 85.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 84.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 85.
  [8]
-Underfull \hbox (badness 10000) in paragraph at lines 90--91
+Underfull \hbox (badness 10000) in paragraph at lines 91--92
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 100--101
+Underfull \hbox (badness 10000) in paragraph at lines 101--102
 
  []
 
 [9]
-Underfull \hbox (badness 10000) in paragraph at lines 109--110
+Underfull \hbox (badness 10000) in paragraph at lines 110--111
 
  []
 
@@ -332,7 +337,7 @@ Here is how much of TeX's memory you used:
 2.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:
 /Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program
  Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on TestPolicy.pdf (10 pages, 1651329 bytes).
+Output written on TestPolicy.pdf (10 pages, 1651375 bytes).
 PDF statistics:
  61 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
