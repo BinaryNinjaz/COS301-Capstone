@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.30)  11 MAY 2018 00:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.30)  11 MAY 2018 12:06
 entering extended mode
 **./TestPolicy.tex
 (TestPolicy.tex
@@ -243,22 +243,45 @@ Underfull \hbox (badness 10000) in paragraph at lines 58--61
 
  []
 
-[5] [6] [7] (TestPolicy.aux) ) 
+[5] <images/FailedLoginTest.png, id=23, 1028.34187pt x 578.16pt>
+File: images/FailedLoginTest.png Graphic file (type png)
+
+<use images/FailedLoginTest.png>
+Package pdftex.def Info: images/FailedLoginTest.png used on input line 63.
+(pdftex.def)             Requested size: 401.50146pt x 225.73732pt.
+
+Overfull \hbox (11.50146pt too wide) in paragraph at lines 62--64
+[] 
+ []
+
+[6] <images/iostest.png, id=27, 2503.3525pt x 1422.31375pt>
+File: images/iostest.png Graphic file (type png)
+
+<use images/iostest.png>
+Package pdftex.def Info: images/iostest.png used on input line 65.
+(pdftex.def)             Requested size: 401.50146pt x 228.11742pt.
+
+Overfull \hbox (11.50146pt too wide) in paragraph at lines 65--66
+[] 
+ []
+
+[7 <./images/FailedLoginTest.png> <./images/iostest.png>] [8] (TestPolicy.aux) 
+) 
 Here is how much of TeX's memory you used:
- 1501 strings out of 493323
- 21189 string characters out of 3139065
+ 1512 strings out of 493323
+ 21440 string characters out of 3139065
  81833 words of memory out of 3000000
- 5047 multiletter control sequences out of 15000+200000
+ 5055 multiletter control sequences out of 15000+200000
  9155 words of font info for 32 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  39i,6n,25p,1185b,200s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
-msfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
-cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.
-pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on TestPolicy.pdf (7 pages, 70311 bytes).
+<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pro
+gram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program File
+s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX 
+2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on TestPolicy.pdf (8 pages, 1639262 bytes).
 PDF statistics:
- 44 PDF objects out of 1000 (max. 8388607)
+ 51 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
