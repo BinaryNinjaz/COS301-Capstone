@@ -365,8 +365,6 @@ extension Orchard {
       self.tempory?.name = row.value ?? ""
       onChange()
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
     }
     
@@ -378,29 +376,18 @@ extension Orchard {
       self.tempory?.crop = row.value ?? ""
       onChange()
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
     }
     
     let bagMassRow = DecimalRow() { row in
       row.title = "Bag Mass (kilogram)"
-      row.value = bagMass
+      row.value = bagMass.isNaN ? nil : bagMass
       row.placeholder = "Average mass of a bag"
     }.onChange { row in
-      self.tempory?.bagMass = row.value ?? 0.0
+      self.tempory?.bagMass = row.value ?? .nan
       onChange()
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
-    }.onCellSelection { (cell, row) in
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
     }
     
     let dateRow = DateRow() { row in
@@ -422,42 +409,24 @@ extension Orchard {
     
     let widthRow = DecimalRow() { row in
       row.title = "Tree Spacing (meter)"
-      row.value = treeSpacing
+      row.value = treeSpacing.isNaN ? nil : treeSpacing
       row.placeholder = "Horizontal Spacing"
     }.onChange { row in
-      self.tempory?.treeSpacing = row.value ?? 0.0
+      self.tempory?.treeSpacing = row.value ?? .nan
       onChange()
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
-    }.onCellSelection { (cell, row) in
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
     }
     
     let heightRow = DecimalRow() { row in
       row.title = "Row Spacing (meter)"
-      row.value = rowSpacing
+      row.value = rowSpacing.isNaN ? nil : rowSpacing
       row.placeholder = "Vertical Spacing"
     }.onChange { row in
-      self.tempory?.rowSpacing = row.value ?? 0.0
+      self.tempory?.rowSpacing = row.value ?? .nan
       onChange()
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
-    }.onCellSelection { (cell, row) in
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
     }
     
     let detailsRow = TextAreaRow { row in
@@ -599,8 +568,6 @@ extension HarvestUser {
       row.value = HarvestUser.current.firstname
       row.placeholder = ""
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
     }.onChange { row in
       self.temporary?.firstname = row.value ?? ""
@@ -612,8 +579,6 @@ extension HarvestUser {
       row.value = HarvestUser.current.lastname
       row.placeholder = ""
     }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
       cell.textField.clearButtonMode = .whileEditing
     }.onChange { row in
       self.temporary?.lastname = row.value ?? ""
