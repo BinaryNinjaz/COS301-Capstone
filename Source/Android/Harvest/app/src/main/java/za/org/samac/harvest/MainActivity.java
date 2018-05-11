@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private static final String TAG = "Clicker";
 
-    private ArrayList<Worker> workers;
+    private static ArrayList<Worker> workers;
     private ArrayList<Worker> workersSearch;
     private Map<Integer, Location> track;
     int trackCount = 0;
@@ -384,7 +384,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         Map<String, Object> sessionDate = new HashMap<>();
         sessionDate.put("start_date", startSessionTime);
-        sessionDate.put("wid", foremanID);//add wid
 
         recyclerView.setVisibility(View.VISIBLE);
         if (!namesShowing) {
