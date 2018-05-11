@@ -164,7 +164,7 @@ The iOS application currently requires:
 	\item Location Services
 \end{itemize}
 \subsubsection{Website}
-The website requires any modern up-to-date web browser such as Vivaldi, Firefox, Opera, Chrome, Safari, or any other.
+The website requires any modern up-to-date web browser such as Firefox, Opera, Chrome, Safari, Vivaldi, Edge, or any other.
 
 \subsection{Communications}
 All of the subsystems---Android, iOS, and website---run independently, but use Firebase\footnote{\url{https://firebase.google.com}} to store and retrieve data from a common source. This can be seen in \ref{Communications}
@@ -178,7 +178,7 @@ All of the subsystems---Android, iOS, and website---run independently, but use F
 
 \subsection{Installation}
 \subsubsection{Android}
-The application will be available on the Google Play Store.
+The application will be available for download on the Google Play Store.
 \subsubsection{iOS}
 The application will be available for download on the Apple App Store.
 \subsubsection{Website}
@@ -195,25 +195,40 @@ With regards to configuring the iOS and Android applications: location services 
 \subsubsection{Creating an Account}
 The application will open by default on the log in screen. If you do not have an account you can press the "Sign Up" button. Once on the sign up page enter your details an press "Create Account". You will then be logged in accordingly.
 
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=6cm, keepaspectratio]{Images/signupIOS.png}
+ \caption{Sign Up Mobile Form}
+ \label{SignUpMobile}
+\end{figure}
+
 \subsubsection{Logging In}
-When on the log in screen enter your email and its password you used to create the account. If you have already logged in the app will keep you logged in until you log out.
+When on the log in screen enter your email and its password you used to create the account, alternatively click log in with Google to use Google credentials if they have been linked with Harvest. If you have already logged in the app will keep you logged in until you log out.
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=6cm, keepaspectratio]{Images/loginIOS.png}
+ \caption{Log In Mobile Form}
+ \label{LogInMobile}
+\end{figure}
 
 \subsubsection{Logging Out}
 The Log out button can be found at the bottom of the Harvest "Settings" Tab.
 
 \subsection{Website}
 
-\begin{figure}
+
+
+\textit{For ease of visualization, a diagram representing a map of the website is given in \ref{WebsiteMap}: each web page is given, indicating to where, and how a traversal is possible from that page.}
+
+\begin{figure}[h]
  \centering
  \includegraphics[width=12cm, keepaspectratio]{Images/Map.png}
  \caption{Website Map}
  \label{WebsiteMap}
 \end{figure}
 
-\textit{For ease of visualization, a diagram representing a map of the website is given in \ref{WebsiteMap}: each web page is given, indicating to where, and how a traversal is possible from that page.}
-
 \subsubsection{Registering}
-\paragraph{Finding the Register Page}The login and registration page can be found at <Web Link>, and once there the user will be presented with the page as seen in \ref{LoginPage}. To now create an account the user must click on the blue \texttt{Don't have an account? Sign Up} button. They will now be presented with \ref{ResiterPage}.
+\paragraph{Finding the Register Page}The login and registration page can be found at <Web Link>, and once there the user will be presented with the page as seen in \ref{LoginPage}. To now create an account the user must click on the blue \texttt{Don't have an account? Sign Up} button. They will now be presented with the above page.
 
 \begin{figure}
  \centering
@@ -243,13 +258,22 @@ Once the user has logged in, they will be taken to the home page, as seen in \re
 Once the user is logged in, all web pages follow a similar design, so that use is consistent and manageable. The navbar that appears at the top of all logged in screens is consistent. Buttons in the navbar, from left to right are (note that the active page is always highlighted in green): 
 \paragraph{Harvest Home}Takes the user to the home page, as seen in \ref{HomePage}.
 \paragraph{View/Edit Information}Takes the user to the View/Edit Information page, as seen in \ref{InformationPage}.
-\paragraph{Sign Out}Logs the user out of the system, and returns them to the login page, as seen in \ref{LoginPage}
+\paragraph{Heatmap}Takes the user to the heatmap page, as seen in 
+\ref{HeatMap}.
+\paragraph{Sign Out}Logs the user out of the system, and returns them to the login page, as seen in 
+\ref{LoginPage}
 
 \begin{figure}
  \centering
  \includegraphics[width=12cm, keepaspectratio]{Images/Home-Page.png}
  \caption{Home Page}
  \label{HomePage}
+\end{figure}
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/heatMapWeb.png}
+ \caption{Heat Map}
+ \label{HeatMap}
 \end{figure}
 
 \newpage
