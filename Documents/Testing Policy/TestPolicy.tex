@@ -80,13 +80,31 @@ We now intend to go through each of those 3 phases, each phase is made up of its
 \subsection{Test specification}
 The test specification can be subdivided into 2 parts. On the one hand, we have “Planning and verification”, whilst on the other, we have “Analysis, design and implementation”. \newline
 Planning and verification may consist of the following activities: \newline
-\begin{enumerate}
+\begin{itemize}
  \item Specifying the scope and the risks and defining the objectives of the tests 
 \item Determining the strategy
 \item Taking decisions with regard to what must be tested, what roles apply, how the test activities will take place and how the outcomes of the tests will be implemented. 
 \item Planning of the test design activities
 \item Planning of implementation and evaluation
-\end{enumerate}
+\end{itemize}
+During the analysis, design and implementation, the test objectives will be transformed into specific test conditions and test cases. This may involve the following activities: \newline
+\begin{itemize}
+ \item A review of the test base (such as requirements, architecture, design, interfaces) 
+\item Evaluation of the testability of the test base and the test objects 
+\item Identification and prioritisation of the test conditions 
+\item Designing of the test cases
+\item Identifying the necessary test data in order to support the test cases 
+\item Designing the test environment and identifying the infrastructure and tools 
+\end{itemize}
+\subsection{Implementation of tests}
+The implementation of tests forms the phase in which the test procedures and scripts are implemented and the results of these (including incidents) are logged. This may involve the following activities: \newline
+\begin{itemize}
+ \item Implementation of the tests, manually or by means of a tool  
+\item Logging the results of the implementation 
+\item Comparing the results with the result that had been predicted 
+\item Reporting any setbacks in the form of incidents and analysing these in order to identify the cause 
+\item Repeating the tests as a result of the incidents identified 
+\end{itemize}
   \section{TESTING PHILOSOPHY}
   Implementation of both simple and holistic tests will be of concern. However, holistic testing will be of more interest. Testing workflows are of vital importance. The project does not have many simple tasks that could provide us with the safety guarantees we would like. We instead seek to find safety in implementing tests that check the whole interaction of these few unit cases.
   

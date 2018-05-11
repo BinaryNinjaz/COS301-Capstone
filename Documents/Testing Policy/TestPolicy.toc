@@ -17,6 +17,7 @@
 \contentsline {subsection}{\numberline {6.4}XCode}{8}
 \contentsline {section}{\numberline {7}TEST PROCESS}{8}
 \contentsline {subsection}{\numberline {7.1}Test specification}{8}
-\contentsline {section}{\numberline {8}TESTING PHILOSOPHY}{9}
-\contentsline {subsection}{\numberline {8.1}Benefits}{9}
-\contentsline {section}{\numberline {9}TEST EVALUATION}{9}
+\contentsline {subsection}{\numberline {7.2}Implementation of tests}{9}
+\contentsline {section}{\numberline {8}TESTING PHILOSOPHY}{10}
+\contentsline {subsection}{\numberline {8.1}Benefits}{10}
+\contentsline {section}{\numberline {9}TEST EVALUATION}{10}
