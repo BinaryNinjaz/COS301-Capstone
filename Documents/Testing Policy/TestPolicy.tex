@@ -68,7 +68,25 @@ JUnit is a unit test for the Java development language. This is important in the
   The Ava framework will be used for automated testing purposes. To run tests one will need to run "npm test" from the testing directory.
   \subsection{XCode}
   The XCTest framework will be used for out automated testing purposes. To run tests one will need XCode. To execute the tests one will need to use XCodes build command.
-  
+ \section{TEST PROCESS}
+In this section, we will illustrate a simple test process, based on IEEE-829 in order to fulfil the requirements stated in this document. \newline\newline
+We can distinguish between 3 phases within the test process: \newline
+\begin{enumerate}
+	\item "Test specification"
+	\item "Test implementation"  
+	\item "Test reporting" 	
+\end{enumerate}
+We now intend to go through each of those 3 phases, each phase is made up of its own activities \newline
+\subsection{Test specification}
+The test specification can be subdivided into 2 parts. On the one hand, we have “Planning and verification”, whilst on the other, we have “Analysis, design and implementation”. \newline
+Planning and verification may consist of the following activities: \newline
+\begin{enumerate}
+ \item Specifying the scope and the risks and defining the objectives of the tests 
+\item Determining the strategy
+\item Taking decisions with regard to what must be tested, what roles apply, how the test activities will take place and how the outcomes of the tests will be implemented. 
+\item Planning of the test design activities
+\item Planning of implementation and evaluation
+\end{enumerate}
   \section{TESTING PHILOSOPHY}
   Implementation of both simple and holistic tests will be of concern. However, holistic testing will be of more interest. Testing workflows are of vital importance. The project does not have many simple tasks that could provide us with the safety guarantees we would like. We instead seek to find safety in implementing tests that check the whole interaction of these few unit cases.
   
