@@ -35,7 +35,6 @@
             android:text="@string/app_name"
             style="@style/TextView.Heading" />
 
-            <!--  TODO: shift hints up when information is being entered -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,6 +67,12 @@
                     android:id="@+id/btnLogin"
                     style="@style/Button"
                     android:text="@string/login" />
+
+                <Button
+                    android:id="@+id/btnLoginWithGoogle"
+                    style="@style/Button"
+                    android:background="@color/colorGoogleRed"
+                    android:text="@string/loginWithGoogle" />
 
                 <TextView
                     android:text="OR"

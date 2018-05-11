@@ -38,9 +38,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import za.org.samac.harvest.util.AppUtil;
 
@@ -88,13 +92,13 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         setContentView(R.layout.activity_sign_up);
         // Set up the sign up form.
         edtFirstName = findViewById(R.id.edtFirstName);
-        populateAutoComplete();
+        //populateAutoComplete();
 
         edtSurname = findViewById(R.id.edtSurname);
-        populateAutoComplete();
+        //populateAutoComplete();
 
         edtEmail = findViewById(R.id.edtEmail);
-        populateAutoComplete();
+        //populateAutoComplete();
 
         edtPassword = findViewById(R.id.edtPassword);
         /*edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -196,6 +200,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
                             Snackbar.make(signUp_form, "Registration Successful", Snackbar.LENGTH_LONG).show();
                             signUp_progress.setVisibility(View.GONE);
+
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -336,7 +341,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     /**
      * Callback received when a permissions request has been completed.
      */
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
@@ -344,7 +349,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                 populateAutoComplete();
             }
         }
-    }
+    }*/
 
 
     /**

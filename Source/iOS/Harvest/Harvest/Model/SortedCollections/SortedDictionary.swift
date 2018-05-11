@@ -139,6 +139,20 @@ extension SortedDictionary : RandomAccessCollection {
     }
   }
   
+  subscript(key: Key, default def: Value) -> Value {
+    get {
+      return self[key] ?? def
+    }
+    
+    set {
+      if self[key] == nil {
+        self[key] = def
+      } else {
+        self[key] = newValue
+      }
+    }
+  }
+  
   subscript(index: Int) -> Value? {
     get {
       return _dict[_ref[index]]

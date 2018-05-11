@@ -141,6 +141,9 @@ class SignInViewController: UIViewController {
     signInVisualEffect.layer.cornerRadius = 24
     signInVisualEffect.clipsToBounds = true
     
+    usernameTextField.delegate = self
+    passwordTextField.delegate = self
+    
     usernameTextField.addLeftImage(#imageLiteral(resourceName: "Mail"))
     passwordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
     
@@ -242,3 +245,9 @@ extension SignInViewController : GIDSignInDelegate {
   }
 }
 
+extension SignInViewController : UITextFieldDelegate {
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    signInTouchUp(signInButton)
+    return true
+  }
+}

@@ -1,8 +1,15 @@
 package za.org.samac.harvest.adapter;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +19,26 @@ import android.widget.TextView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import za.org.samac.harvest.LocationHelper;
+import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.Manifest;
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.WorkerComparator;
 
 public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecyclerViewAdapter.WorkerViewHolder> {
 
@@ -28,8 +49,24 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private ArrayList<TextView> incrementViews;
     private Location location;
     public int totalBagsCollected;
-    private FirebaseAuth mAuth;
+    //private FirebaseAuth mAuth;
     private collections collectionObj;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private double currentLat;
+    private double currentLong;
+    //private Date currentTime;
+    private double currentTime;
+    private double divideBy1000Var = 1000.0000000;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String sessionKey;
+    private String workerID;
+    private String workerIncrement;
+    //private String userUid;
+    private String farmerKey;
+    private boolean gotCorrectFarmerKey;
+    private DatabaseReference workersRef;
+    private static final String TAG = "Button";
 
     public WorkerRecyclerViewAdapter(Context context, ArrayList<Worker> workers) {
         this.context = context;
@@ -39,8 +76,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         minus = new ArrayList<>();
         incrementViews = new ArrayList<>();
         String email = "";
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
+        //mAuth = FirebaseAuth.getInstance();
+        //FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             email = user.getEmail();
         }
@@ -60,30 +97,55 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         return this.workers.size();
     }
 
-    /*@Override
-    public void locationPermissions() {
-        ArrayList<String> permissions = new ArrayList<>();
-        PermissionUtils permissionUtils;
+    public void getFarmKey() {
+        gotCorrectFarmerKey = false;
+        DatabaseReference outerRef = database.getReference();
+        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-        permissionUtils=new
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    farmerKey = child.getKey();
+                    myRef = database.getReference(farmerKey);//Firebase reference
+                    workersRef = myRef.child("workers");
 
-        PermissionUtils(MyLocationUsingLocationAPI.this);
+                    workersRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                                Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                                //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.child("name").getKey());
+                                //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.getKey());
 
-            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-            permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+                                String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                                //only add if person is a worker (not a foreman)
+                                if(zoneSnapshot.child("type").getValue(String.class).equals("Foreman")) {
+                                    if (zoneSnapshot.child("email").getValue(String.class).equals(user.getEmail())) {
+                                        gotCorrectFarmerKey = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
 
-            permissionUtils.check_permission(permissions,"Need GPS permission for getting your location",1);
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "onCancelled", databaseError.toException());
+                        }
+                    });
 
-        GoogleApiClient mGoogleApiClient;
+                    if (gotCorrectFarmerKey) {
+                        break;
+                    }
+                }
+            }
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API).build();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        mGoogleApiClient.connect();
-    }*/
-
+            }
+        });
+    }
 
     @Override
     public void onBindViewHolder(final WorkerViewHolder holder, int position) {
@@ -92,16 +154,47 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         holder.workerName.setText(personName);//set name of the worker
         holder.increment.setText(String.format("%d", worker.getValue()));//set incrementer of the worker (fixed not updating of increments)
 
-        incrementViews.add(holder.increment);
+        //plus button is clicked
+        if (!incrementViews.contains(holder.increment)) {
+            incrementViews.add(holder.increment);
+        }
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Integer value = worker.getValue() + 1;
                 holder.increment.setText(String.format("%d", value));
 
-                //make changes on client side file (encrypt using SQLite)
                 //get coordinates
+                currentLat = location.getLatitude();
+                currentLong = location.getLongitude();
+
                 //get time
+                currentTime = (System.currentTimeMillis()/divideBy1000Var);//seconds since January 1, 1970 00:00:00 UTC
+                //currentTime = Calendar.getInstance().getTime();
+
+                //make changes on Firebase or make changes on client side file (encrypt using SQLite)
+                database = FirebaseDatabase.getInstance();
+                //userUid = user.getUid();//ID or key of the current user
+                //myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
+
+                sessionKey = MainActivity.sessionKey;//get key/ID for a session
+                workerID = worker.getID();//get worker ID
+                workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
+
+                farmerKey = MainActivity.farmerKey;
+                myRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement + "/");//path to sessions increment in Firebase
+
+                Map<String, Object> coordinates = new HashMap<>();
+                coordinates.put("lat", currentLat);
+                coordinates.put("lng", currentLong);
+
+                Map<String, Object> childUpdates = new HashMap<>();
+                //childUpdates.put(childKey, collections);//append changes all into one path
+                childUpdates.put("coord", coordinates);
+                childUpdates.put("date", currentTime);
+
+                myRef.updateChildren(childUpdates);//store plus button info in Firebase
+
                 collectionObj.addCollection(personName, location);
                 ++totalBagsCollected;
                 worker.setValue(value);
@@ -109,6 +202,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         });
         plus.add(holder.btnPlus);
 
+        //minus button is clicked
         holder.btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,10 +211,20 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     Integer value = currentValue - 1;
                     holder.increment.setText(String.format("%d", value));
 
-                    //make changes on firebase
                     collectionObj.removeCollection(personName);
                     --totalBagsCollected;
                     worker.setValue(value);
+
+                    //make changes on firebase
+                    database = FirebaseDatabase.getInstance();
+                    //String userUid = user.getUid();
+                    workerID = worker.getID();//get worker ID
+                    sessionKey = MainActivity.sessionKey;//get key/ID for a session
+                    workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
+
+                    farmerKey = MainActivity.farmerKey;
+                    myRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
+                    myRef.removeValue();//remove latest increment
                 }
             }
         });
@@ -161,7 +265,6 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     public void setIncrement(){
         for(int i = 0 ; i < incrementViews.size() ; i++) {
             TextView text = incrementViews.get(i);
-            //TODO: save data before this
             text.setText("0");
             workers.get(i).setValue(0);
             incrementViews.set(i, text);

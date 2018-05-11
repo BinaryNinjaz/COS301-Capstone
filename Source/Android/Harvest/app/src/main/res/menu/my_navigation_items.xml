@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/btnYieldTracker"
-        android:title="@string/yieldTracker"/>
-    <item android:id="@+id/btnSettings"
-        android:title="@string/menuSettings"/>
-</menu>

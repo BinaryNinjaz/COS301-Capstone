@@ -9,7 +9,8 @@
 import Eureka
 
 extension Worker {
-  func information(for form: Form, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+    let form = formVC.form
     tempory = Worker(json: json()[id] ?? [:], id: id)
     
     let orchards = Entities.shared.items(for: .orchard)!
@@ -111,6 +112,17 @@ extension Worker {
       onChange()
     }
     
+    let deleteWorkerRow = ButtonRow() { row in
+      row.title = "Delete Worker"
+    }.onCellSelection { (cell, row) in
+      HarvestDB.delete(worker: self) { (err, ref) in
+        formVC.navigationController?.popViewController(animated: true)
+      }
+    }.cellUpdate { (cell, row) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
+    }
+    
     form
       +++ Section()
       <<< firstnameRow
@@ -128,11 +140,15 @@ extension Worker {
       <<< infoRow
     
       +++ orchardSection
+    
+      +++ Section()
+      <<< deleteWorkerRow
   }
 }
 
 extension Farm {
-  func information(for form: Form, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+    let form = formVC.form
     tempory = Farm(json: json()[id] ?? [:], id: id)
     
     let nameRow = NameRow() { row in
@@ -226,6 +242,17 @@ extension Farm {
       }
     }
     
+    let deleteFarmRow = ButtonRow() { row in
+      row.title = "Delete Farm"
+    }.onCellSelection { (cell, row) in
+      HarvestDB.delete(farm: self) { (err, ref) in
+        formVC.navigationController?.popViewController(animated: true)
+      }
+    }.cellUpdate { (cell, row) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
+    }
+    
     form +++ Section("Farm")
       <<< nameRow
       <<< companyRow
@@ -243,6 +270,9 @@ extension Farm {
     
       +++ orchardsSection
       <<< orchardRow
+    
+      +++ Section()
+      <<< deleteFarmRow
   }
 }
 
@@ -285,7 +315,8 @@ public class DeletableMultivaluedSection : MultivaluedSection {
 }
 
 extension Orchard {
-  func information(for form: Form, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+    let form = formVC.form
     tempory = Orchard(json: json()[id] ?? [:], id: id)
     
     let farms = Entities.shared.items(for: .farm)!
@@ -466,6 +497,17 @@ extension Orchard {
       onChange()
     }
     
+    let deleteOrchardRow = ButtonRow() { row in
+      row.title = "Delete Orchard"
+    }.onCellSelection { (cell, row) in
+      HarvestDB.delete(orchard: self) { (err, ref) in
+        formVC.navigationController?.popViewController(animated: true)
+      }
+    }.cellUpdate { (cell, row) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
+    }
+    
     form
       +++ Section("Orchard")
       <<< nameRow
@@ -492,24 +534,23 @@ extension Orchard {
     
       +++ Section("Part of Farm")
       <<< farmSelection
+    
+      +++ Section()
+      <<< deleteOrchardRow
   }
 }
 
 extension Session {
-  func information(for form: Form, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+    let form = formVC.form
     tempory = Session(json: json(), id: id)
     
     // FIXME Maybe allow changing these details or not? If change then
     // allow foreman select else disallow artificial changes
     
-    let displayRow = NameRow() { row in
+    let displayRow = LabelRow() { row in
       row.title = "Foreman"
       row.value = foreman.description
-      row.placeholder = "Name of the foreman"
-    }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
-      cell.textField.clearButtonMode = .whileEditing
     }
     
     let startDateRow = DateTimeRow() { row in
@@ -549,7 +590,8 @@ extension Session {
 }
 
 extension HarvestUser {
-  func information(for form: Form, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+    let form = formVC.form
     temporary = HarvestUser(json: json())
     
     let firstnameRow = TextRow() { row in
@@ -587,13 +629,13 @@ extension HarvestUser {
 }
 
 extension EntityItem {
-  func information(for form: Form, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
     switch self {
-    case let .worker(w): w.information(for: form, onChange: onChange)
-    case let .orchard(o): o.information(for: form, onChange: onChange)
-    case let .farm(f): f.information(for: form, onChange: onChange)
-    case let .session(s): s.information(for: form, onChange: onChange)
-    case let .user(u): u.information(for: form, onChange: onChange)
+    case let .worker(w): w.information(for: formVC, onChange: onChange)
+    case let .orchard(o): o.information(for: formVC, onChange: onChange)
+    case let .farm(f): f.information(for: formVC, onChange: onChange)
+    case let .session(s): s.information(for: formVC, onChange: onChange)
+    case let .user(u): u.information(for: formVC, onChange: onChange)
     }
   }
 }

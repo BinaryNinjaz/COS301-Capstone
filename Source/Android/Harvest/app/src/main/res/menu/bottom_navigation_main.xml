@@ -4,17 +4,25 @@
     <item
         android:id="@+id/actionYieldTracker"
         android:enabled="true"
-        android:title="@string/yieldTracker"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/bottomYieldTracker"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/actionSettings"
+        android:id="@+id/actionInformation"
         android:enabled="true"
-        android:icon="@drawable/ic_settings_white"
-        android:title="@string/menuSettings"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="@string/bottomInformation"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/actionLastSession"
+        android:id="@+id/actionSession"
         android:enabled="true"
-        android:title="@string/last_session"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="Sessions"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actionStats"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="@string/title_stats"
         app:showAsAction="ifRoom" />
 </menu>

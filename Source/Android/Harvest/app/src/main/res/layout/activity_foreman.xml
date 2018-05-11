@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayourMainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/relLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="100dp"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
+
+
+        <!-- used to align start button and expected yield to the bottom -->
+
+        <LinearLayout
+            android:id="@+id/mLlayoutBottomButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_start"
+                android:layout_width="90dp"
+                android:layout_height="45dp"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:onClick="onClickStart"
+                android:tag="green"
+                android:text="@string/start"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="550dp"
+                tools:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="292dp"
+                android:layout_height="45dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="Expected Yield: 30"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                tools:layout_editor_absoluteX="92dp"
+                tools:layout_editor_absoluteY="550dp"
+                tools:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/navYieldTracker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="Yield Tracker"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/navSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:gravity="center"
+                android:text="Settings"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/navLastSession"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="Last Session"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <android.support.design.widget.BottomNavigationView
+                android:id="@+id/navigation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="0dp"
+                android:background="?android:attr/windowBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:menu="@menu/navigation" />
+
+        </LinearLayout> -->
+        <TextView
+            android:id="@+id/startText"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:text="Press 'Start' to begin tracking worker collections"
+            android:textSize="18sp"
+            tools:maxLines="2"
+            tools:textSize="22sp" />
+
+
+        <!--<android.support.design.widget.BottomNavigationView-->
+            <!--android:id="@+id/bottom_navigation"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--app:itemBackground="@color/colorPrimary"-->
+            <!--app:itemIconTint="@color/white"-->
+            <!--app:itemTextColor="@color/white"-->
+            <!--app:menu="@menu/bottom_navigation_main" />-->
+    </RelativeLayout>
+
+</LinearLayout>

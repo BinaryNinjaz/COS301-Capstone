@@ -162,11 +162,13 @@ extension SortedDictionary where Key == String, Value == EntityItem {
 }
 
 
-class Entities {
+final class Entities {
   private(set) var farms = SortedEntity(<)
   private(set) var workers = SortedEntity(<)
   private(set) var orchards = SortedEntity(<)
   private(set) var sessions = SortedEntity(<)
+  
+  private(set) var listners: [Int: () -> ()] = [:]
   
   static var shared = Entities()
   
@@ -184,13 +186,36 @@ class Entities {
     sessions.removeAll()
   }
   
+  func listen(with f: @escaping () -> ()) -> Int {
+    listners[listners.count] = f
+    return listners.count - 1
+  }
+  
+  func deregister(listner id: Int) {
+    _ = listners.removeValue(forKey: id)
+  }
+  
+  func runListners() {
+    listners.forEach { $0.1() }
+  }
+  
+  func listenOnce(with f: @escaping () -> ()) {
+    let id = listners.count
+    let g: () -> () = {
+      f()
+      self.deregister(listner: id)
+    }
+    
+    listners[listners.count] = g
+  }
+  
   func getOnce(_ kind: EntityItem.Kind, completion: @escaping (Entities) -> ()) {
     switch kind {
     case .worker:
       HarvestDB.getWorkers { (workers) in
         self.workers = SortedDictionary(
           uniqueKeysWithValues: workers.map { worker in
-            return (worker.firstname + " " + worker.lastname, .worker(worker))
+            return (worker.lastname + worker.firstname + worker.id, .worker(worker))
         }, <)
         completion(self)
       }
@@ -198,7 +223,7 @@ class Entities {
       HarvestDB.getOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.name, .orchard(orchard))
+            return (orchard.name + orchard.id, .orchard(orchard))
         }, <)
         completion(self)
       }
@@ -206,7 +231,7 @@ class Entities {
       HarvestDB.getFarms { (farms) in
         self.farms = SortedDictionary(
           uniqueKeysWithValues: farms.map { farm in
-            return (farm.name, .farm(farm))
+            return (farm.name + farm.id, .farm(farm))
         }, <)
         completion(self)
       }
@@ -244,29 +269,33 @@ class Entities {
       HarvestDB.watchWorkers { (workers) in
         self.workers = SortedDictionary(
           uniqueKeysWithValues: workers.map { worker in
-            return (worker.firstname + " " + worker.lastname, .worker(worker))
+            return (worker.firstname + " " + worker.lastname + worker.id, .worker(worker))
         }, <)
+        self.runListners()
       }
     case .orchard:
       HarvestDB.watchOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.name, .orchard(orchard))
+            return (orchard.name + orchard.id, .orchard(orchard))
         }, <)
+        self.runListners()
       }
     case .farm:
       HarvestDB.watchFarms { (farms) in
         self.farms = SortedDictionary(
           uniqueKeysWithValues: farms.map { farm in
-            return (farm.name, .farm(farm))
+            return (farm.name + farm.id, .farm(farm))
         }, <)
+        self.runListners()
       }
     case .session:
       HarvestDB.watchSessions { (sessions) in
         self.sessions = SortedDictionary(
           uniqueKeysWithValues: sessions.map { session in
-            return (session.key, .session(session))
+            return (session.key + session.id, .session(session))
         }, <)
+        self.runListners()
       }
       
     case .user: break
