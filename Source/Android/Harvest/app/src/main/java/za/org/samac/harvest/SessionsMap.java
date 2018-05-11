@@ -162,7 +162,15 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
                     new LatLng(-25.7281111, 28.50095678)).title("Rob Kingston"));
             moveMapHere = new LatLng(-25.72866109, 28.49997623);
             mMap.addPolyline(new PolylineOptions()
-                    .add(new LatLng(-25.7281111, 28.49997623), new LatLng(-25.72866321, 28.50095555))
+                    .add(new LatLng(-25.7281, 28.49997), new LatLng(-25.7283, 28.50094))
+                    .width(5)
+                    .color(Color.BLUE));
+            mMap.addPolyline(new PolylineOptions()
+                    .add(new LatLng(-25.7283, 28.50094), new LatLng(-25.7285, 28.50095))
+                    .width(5)
+                    .color(Color.BLUE));
+            mMap.addPolyline(new PolylineOptions()
+                    .add(new LatLng(-25.7285, 28.50095), new LatLng(-25.7287, 28.50095555))
                     .width(5)
                     .color(Color.BLUE));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(moveMapHere,15));
