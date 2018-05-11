@@ -57,23 +57,45 @@ class TrackerViewController: UIViewController {
         workerCollectionView.reloadData()
       }
     } else {
-      locationManager.stopUpdatingLocation()
-      
-      startSessionButton.setTitle("Start", for: .normal)
-      let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
-      startSessionButton.apply(gradient: sessionLayer)
-      tracker?.storeSession()
-      
-      
       let amount = tracker?.totalCollected() ?? 0
-      let alert = UIAlertController.alertController(title: "\(amount) Bags Collected", message: "The session duration was \(tracker?.durationFormatted() ?? "")")
+      let alert = UIAlertController(title: "\(amount) Bags Collected", message: "The session duration was \(tracker?.durationFormatted() ?? "")", preferredStyle: .alert)
+      
+      let collect = UIAlertAction(title: "Finish Collecting", style: .default) { action in
+        self.locationManager.stopUpdatingLocation()
+        
+        self.startSessionButton.setTitle("Start", for: .normal)
+        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
+        self.startSessionButton.apply(gradient: sessionLayer)
+        self.tracker?.storeSession()
+        
+        self.tracker = nil
+        self.searchBar.isUserInteractionEnabled = false
+        
+        self.workerCollectionView.reloadData()
+      }
+      
+      let cancel = UIAlertAction(title: "Cancel", style: .cancel) { action in
+        
+      }
+      
+      let discard = UIAlertAction(title: "Discard All Collections", style: .default) { action in
+        self.locationManager.stopUpdatingLocation()
+        
+        self.startSessionButton.setTitle("Start", for: .normal)
+        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
+        self.startSessionButton.apply(gradient: sessionLayer)
+        
+        self.tracker = nil
+        self.searchBar.isUserInteractionEnabled = false
+        
+        self.workerCollectionView.reloadData()
+      }
+      
+      alert.addAction(collect)
+//      alert.addAction(discard)
+      alert.addAction(cancel)
       
       present(alert, animated: true, completion: nil)
-      
-      tracker = nil
-      searchBar.isUserInteractionEnabled = false
-      
-      workerCollectionView.reloadData()
     }
   }
   
