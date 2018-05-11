@@ -8,7 +8,7 @@
 
 import Firebase
 
-final public class HarvestUser {
+public final class HarvestUser {
   var workingForID: (uid: String, wid: String)?
   var email: String
   var firstname: String

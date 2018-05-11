@@ -8,7 +8,7 @@
 
 import Swift
 
-class Farm : Codable {
+final class Farm : Codable {
   var name: String
   var companyName: String
   var email: String

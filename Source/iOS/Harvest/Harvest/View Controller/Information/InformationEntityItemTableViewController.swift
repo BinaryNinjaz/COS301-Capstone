@@ -121,7 +121,7 @@ class InformationEntityItemTableViewController: UITableViewController {
     case let .worker(w):
       cell.textLabel?.text = w.firstname + " " + w.lastname
     case let .orchard(o):
-      cell.textLabel?.text = o.name
+      cell.textLabel?.text = o.description
     case let .farm(f):
       cell.textLabel?.text = f.name
     case let .session(s):

@@ -31,7 +31,7 @@ enum IrrigationKind : String, CustomStringConvertible {
   }
 }
 
-final public class Orchard {
+public final class Orchard {
   var bagMass: Double
   var coords: [CLLocationCoordinate2D]
   var crop: String
