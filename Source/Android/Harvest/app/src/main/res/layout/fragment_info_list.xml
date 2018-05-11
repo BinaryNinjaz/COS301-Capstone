@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".InfoListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -20,7 +18,9 @@
             android:layout_marginEnd="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="onCreateButtClick"
             android:src="@android:drawable/ic_input_add"
+            app:backgroundTint="@color/colorPrimaryLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

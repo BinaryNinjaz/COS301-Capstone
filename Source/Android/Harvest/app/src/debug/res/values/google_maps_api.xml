@@ -1,0 +1,5 @@
+<resources>
+    <!--suppress AndroidDomInspection -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        AIzaSyBtiN19ceNDoVtaqt1i6c3EEtMkLtcemEI</string>
+</resources>

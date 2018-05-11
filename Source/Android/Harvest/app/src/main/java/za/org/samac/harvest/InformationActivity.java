@@ -1,5 +1,7 @@
 package za.org.samac.harvest;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -23,13 +24,15 @@ import static za.org.samac.harvest.util.Category.NOTHING;
 import static za.org.samac.harvest.util.Category.ORCHARD;
 import static za.org.samac.harvest.util.Category.WORKER;
 
+//TODO: Returning overwrites progress here.
+//TODO: Leaving app/locking device resets.
+
 public class InformationActivity extends AppCompatActivity{
 
     private boolean navFragVisible = true;
     private BottomNavigationView bottomNavigationView;
     private Data data;
-
-
+    private boolean editing = false;
 
     Category selectedCat = NOTHING;
 
@@ -62,9 +65,14 @@ public class InformationActivity extends AppCompatActivity{
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
+                                showNavFrag();
                                 return true;
                             case R.id.actionSession:
-
+                                return true;
+                            case R.id.actionStats:
+                                Intent openSessions= new Intent(InformationActivity.this, Analytics.class);
+                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openSessions, 0);
                                 return true;
 
                         }
@@ -80,6 +88,14 @@ public class InformationActivity extends AppCompatActivity{
     private void showNavFrag(){
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        //empty the back stack
+        if(fragmentManager.getBackStackEntryCount() != 0){
+            android.support.v4.app.FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(0);
+            fragmentManager.popBackStack(backStackEntry.getId(), android.support.v4.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragmentManager.executePendingTransactions();
+        }
+
         InfoNavFragment navFragment = new InfoNavFragment();
         fragmentTransaction.replace(R.id.infoMainPart, navFragment);
         fragmentTransaction.addToBackStack(null);
@@ -94,6 +110,9 @@ public class InformationActivity extends AppCompatActivity{
             finish();
         }
         else {
+            if (editing){
+                editing = false;
+            }
             getSupportFragmentManager().popBackStack();
             if(getSupportFragmentManager().getBackStackEntryCount() == 2){
                 //The root Nav fragment
@@ -107,7 +126,30 @@ public class InformationActivity extends AppCompatActivity{
         }
     }
 
+
     //Handle Buttons
+    public void onCreateButtClick(View view){
+        String choice = view.getTag().toString();
+        switch (choice){
+            case "FARM":
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment, "CREATE");
+                fragmentTransaction.addToBackStack(null);
+                newInfoFarmFragment.beNew(true);
+                newInfoFarmFragment.setData(data);
+//                setTitle("Create Farm");
+                selectedCat = FARM;
+                fragmentTransaction.commit();
+                return;
+            case "ORCHARD":
+                return;
+            case "WORKER":
+
+        }
+    }
+
     public void onInfoNavButtClick(View view){
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if(selectedCat == NAV) {
@@ -118,13 +160,13 @@ public class InformationActivity extends AppCompatActivity{
             fragmentTransaction.addToBackStack(null);
             newInfoListFragment.setData(data);
             if (view.getTag().equals("farms")) {
-                setTitle("Farms");
+//                setTitle("Farms");
                 selectedCat = FARM;
             } else if (view.getTag().equals("orchards")) {
-                setTitle("Orchards");
+//                setTitle("Orchards");
                 selectedCat = ORCHARD;
             } else if (view.getTag().equals("workers")) {
-                setTitle("Workers");
+//                setTitle("Workers");
                 selectedCat = WORKER;
             }
             newInfoListFragment.setCat(selectedCat);
@@ -136,18 +178,157 @@ public class InformationActivity extends AppCompatActivity{
 
     //If a farm, orchard, worker is selected
     public void onSelectItemButtClick(View view){
+        String tags[] = view.getTag().toString().split(" ");
+        if (tags.length == 2){
+            if (tags[1].equals("FARM")) {
+                showObject(tags[0], FARM);
+            }
+            else if (tags[1].equals("ORCHARD")) {
+                showObject(tags[0], ORCHARD);
+            }
+            else if (tags[1].equals("WORKER")) {
+                showObject(tags[0], WORKER);
+            }
+        }
+    }
+
+    private void showObject(String ID, Category category){
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if(selectedCat == FARM){
-            setTitle("View Farm");
+        if (category == FARM){
+            selectedCat = FARM;
+//            setTitle("View Farm");
             InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
             fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
             fragmentTransaction.addToBackStack(null);
-            String ID = view.getTag().toString();
-            data.setStringID(ID);
-            newInfoFarmFragment.setFields(data.getName(), data.getFurther());
+            newInfoFarmFragment.setDataAndID(data, ID);
             fragmentTransaction.commit();
         }
+        else if (category == ORCHARD){
+            selectedCat = ORCHARD;
+//            setTitle("View Orchard");
+//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+//                fragmentTransaction.addToBackStack(null);
+//                newInfoFarmFragment.setDataAndID(data, tags[0]);
+//                fragmentTransaction.commit();
+        }
+        else if (category == WORKER){
+            selectedCat = WORKER;
+//            setTitle("View Worker");
+//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
+//                fragmentTransaction.addToBackStack(null);
+//                newInfoFarmFragment.setDataAndID(data, tags[0]);
+//                fragmentTransaction.commit();
+        }
+    }
+
+    //Switch to Editing
+    public void onEditChosen(View view){
+        String[] tags = view.getTag().toString().split(" ");
+//        getSupportFragmentManager().popBackStack();
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch (selectedCat) {
+            case FARM:
+//                setTitle("Editing Farm");
+                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
+                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment, "EDIT");
+                fragmentTransaction.addToBackStack(null);
+                newInfoFarmFragment.setDataAndID(data, tags[0]);
+                newInfoFarmFragment.beEditable(true);
+                fragmentTransaction.commit();
+                editing = true;
+                return;
+            case ORCHARD:
+                return;
+            case WORKER:
+        }
+    }
+
+    //Handle a save event
+    public void onSaveChosen(View view){
+        String[] tags = view.getTag().toString().split(" ");
+        if (tags[0].equals("SAVE")){
+            switch (selectedCat) {
+                case FARM:
+                    InfoFarmFragment temp = (InfoFarmFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
+                    temp.saveEvent();
+                    getSupportFragmentManager().popBackStack();
+                    getSupportFragmentManager().popBackStack();
+                    showObject(tags[1], selectedCat);
+                    break;
+                case ORCHARD:
+                    break;
+                case WORKER:
+                    break;
+            }
+        }
+        else if(tags[0].equals("CREATE")){
+            switch (selectedCat){
+                case FARM:
+                    InfoFarmFragment temp = (InfoFarmFragment) getSupportFragmentManager().findFragmentByTag("CREATE");
+                    temp.createEvent();
+                    getSupportFragmentManager().popBackStack();
+//                    showObject(tags[1], selectedCat);
+                    showNavFrag();
+                    break;
+                case ORCHARD:
+                    break;
+                case WORKER:
+                    break;
+            }
+        }
+        data.push();
+    }
+
+    //Handle a delete event
+    public void onDeleteChosen(View view){
+        final String[] tags = view.getTag().toString().split(" ");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        String cat = "", name = "";
+        switch (selectedCat){
+            case WORKER:
+                cat = "worker";
+                name = data.getActiveWorker().getfName() + " " + data.getActiveWorker().getsName();
+                break;
+            case ORCHARD:
+                cat = "orchard";
+                name = data.getActiveOrchard().getName();
+                break;
+            case FARM:
+                cat = "farm";
+                name = data.getActiveFarm().getName();
+        }
+
+        builder.setMessage("Are you sure you wish to delete " + cat + " " + name).setTitle(R.string.sure);
+
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (tags[0].equals("LOOK")){
+                    getSupportFragmentManager().popBackStack();
+                }
+                else{
+                    getSupportFragmentManager().popBackStack();
+                    getSupportFragmentManager().popBackStack();
+                }
+                data.deleteObject(selectedCat, tags[1]);
+                data.push();
+            }
+        });
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //Do nothing.
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     //Handle the menu

@@ -1,9 +1,9 @@
 package za.org.samac.harvest.util;
 
 import android.location.Location;
+import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,17 +28,19 @@ public class Data {
      *    that last point means that any changes need to be saved to the device, along with a timestamp, so that when connection
      *    is available, the push can resolve any conflicts.
      */
+
     protected Vector<Farm> farms;
     protected Vector<Orchard> orchards;
     protected Vector<Worker> workers;
-    protected Vector<Changes> changes;
+    protected Changes changes;
 
     private FirebaseDatabase database;
     private DatabaseReference userRoot;
-    private String stringToFindBy;
     private Farm activeFarm;
     private Orchard activeOrchard;
     private Worker activeWorker;
+
+    private int nextID = 0;
 
     protected Category category = Category.NOTHING;
 
@@ -49,9 +51,10 @@ public class Data {
         database = FirebaseDatabase.getInstance();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         userRoot = database.getReference(uid + "/");
-        farms = new Vector<Farm>();
-        orchards = new Vector<Orchard>();
-        workers = new Vector<Worker>();
+        farms = new Vector<>();
+        orchards = new Vector<>();
+        workers = new Vector<>();
+        changes = new Changes();
         pull();
     }
 
@@ -214,10 +217,89 @@ public class Data {
      * Apply all changes to Firebase
      */
     public void push(){
+        nextID = 0;
+        while (changes.unSavedChange()){
+            Change currentChange = changes.getNextChange(true);
+            DatabaseReference objectRoot = userRoot;
+            switch (currentChange.changeType){
+                case ADD:
+                    switch (currentChange.category){
+                        case FARM:
+                            objectRoot = userRoot.child("farms");
+                            String newKey = objectRoot.push().getKey();
+                            Farm newFarm = getFarmFromIDString(currentChange.ID);
+                            newFarm.setID(newKey);
+                            objectRoot = objectRoot.child(newKey);
+                            objectRoot.child("name").setValue(newFarm.name);
+                            objectRoot.child("further").setValue(newFarm.further);
+                            break;
+                        case ORCHARD:
+                            break;
+                        case WORKER:
+                            break;
+                    }
+                    break;
 
+                case MODIFY:
+                    findObject(currentChange.ID, currentChange.category);
+                    switch (currentChange.category){
+                        case FARM:
+                            objectRoot = objectRoot.child("farms").child(currentChange.ID);
+                            objectRoot.child("name").setValue(activeFarm.name);
+                            objectRoot.child("further").setValue(activeFarm.further);
+                            break;
+                        case ORCHARD:
+                            objectRoot = database.getReference(userRoot.toString() + "/orchards/" + currentChange.ID);
+                            break;
+                        case WORKER:
+                            objectRoot = database.getReference(userRoot.toString() + "/workers/" + currentChange.ID);
+                            break;
+                    }
+                    break;
+                case DELETE:
+                    findObject(currentChange.ID, currentChange.category);
+                    switch (currentChange.category){
+                        case FARM:
+                            userRoot.child("farms").child(currentChange.ID).setValue(null);
+                            break;
+                        case ORCHARD:
+                            userRoot.child("orchards").child(currentChange.ID).setValue(null);
+                            break;
+                        case WORKER:
+                            userRoot.child("workers").child(currentChange.ID).setValue(null);
+                            break;
+                    }
+                    break;
+            }
+        }
     }
 
-    //TODO: Below needs to be a whole bunch of gets and sets
+    public void deleteObject(Category category, String ID){
+        changes.Delete(category, ID);
+        switch (category){
+            case FARM:
+                for(Farm current: farms){
+                    if (current.getID().equals(ID)){
+                        farms.remove(current);
+                        return;
+                    }
+                }
+            case ORCHARD:
+                for(Orchard current: orchards){
+                    if (current.getID().equals(ID)){
+                        orchards.remove(current);
+                        return;
+                    }
+                }
+            case WORKER:
+                for(Worker current: workers){
+                    if (current.getID().equals(ID)){
+                        workers.remove(current);
+                        return;
+                    }
+                }
+        }
+    }
 
     public void setCategory(Category category){
         this.category = category;
@@ -225,6 +307,14 @@ public class Data {
 
     public Category getCategory() {
         return category;
+    }
+
+    public String[] toNamesAsStringArray(Category cat){
+        Category temp = category;
+        this.category = cat;
+        String[] result = toNamesAsStringArray();
+        this.category = temp;
+        return result;
     }
 
     public String[] toNamesAsStringArray(){
@@ -253,6 +343,7 @@ public class Data {
         return null;
     }
 
+    @Nullable
     private Farm getFarmFromIDString(String findMe){
         for (Farm current : farms) {
             if (current.ID.equals(findMe)){
@@ -262,6 +353,7 @@ public class Data {
         return null;
     }
 
+    @Nullable
     private Orchard getOrchardFromIDString(String findMe){
         for (Orchard current: orchards){
             if (current.ID.equals(findMe)){
@@ -272,21 +364,26 @@ public class Data {
     }
 
     public String getIDFromPosInArray(int pos){
-        switch (category){
-            case ORCHARD:
-                return orchards.elementAt(pos).ID;
-            case WORKER:
-                return workers.elementAt(pos).ID;
-            case FARM:
-                return farms.elementAt(pos).ID;
+        try {
+            switch (category) {
+                case ORCHARD:
+                    return orchards.elementAt(pos).ID;
+                case WORKER:
+                    return workers.elementAt(pos).ID;
+                case FARM:
+                    return farms.elementAt(pos).ID;
+            }
+            return null;
         }
-        return null;
+        catch (ArrayIndexOutOfBoundsException e){
+            return null;
+        }
     }
 
-    public void setStringID(String setMe){
+    public void findObject(String ID){
         if(category == Category.FARM){
             for (Farm current : farms){
-                if(current.ID.equals(setMe)){
+                if(current.ID.equals(ID)){
                     activeFarm = current;
                     return;
                 }
@@ -294,7 +391,7 @@ public class Data {
         }
         else if(category == Category.ORCHARD){
             for (Orchard current : orchards){
-                if(current.ID.equals(setMe)){
+                if(current.ID.equals(ID)){
                     activeOrchard = current;
                     return;
                 }
@@ -302,7 +399,7 @@ public class Data {
         }
         else if(category == Category.WORKER){
             for (Worker current : workers){
-                if(current.ID.equals(setMe)){
+                if(current.ID.equals(ID)){
                     activeWorker = current;
                     return;
                 }
@@ -310,126 +407,75 @@ public class Data {
         }
     }
 
-    public String getName(){
-        switch (category){
-            case FARM:
-                return activeFarm.name;
-            case ORCHARD:
-                return activeOrchard.name;
-            case WORKER:
-                return activeWorker.fName;
+    public void findObject(String ID, Category cat){
+        Category temp = this.category;
+        category = cat;
+        findObject(ID);
+        category = temp;
+    }
+
+    public Worker getActiveWorker(){
+        return activeWorker;
+    }
+
+    public Orchard getActiveOrchard() {
+        return activeOrchard;
+    }
+
+    public Farm getActiveFarm() {
+        return activeFarm;
+    }
+
+    public Vector<Farm> getFarms() {
+        return farms;
+    }
+
+    public Vector<Worker> getWorkers() {
+        return workers;
+    }
+
+    public Vector<Orchard> getOrchards() {
+        return orchards;
+    }
+
+    public void modifyActiveFarm(Farm activeFarm, boolean overwriteID) {
+        if ((!this.activeFarm.ID.equals(activeFarm.ID) && overwriteID) || this.activeFarm.ID.equals(activeFarm.ID)) {
+            this.activeFarm = activeFarm;
+            changes.Modify(category, activeFarm.ID);
         }
-        return null;
     }
 
-    public String getFurther(){
-        switch (category){
-            case FARM:
-                return activeFarm.further;
-            case ORCHARD:
-                return activeOrchard.further;
-            case WORKER:
-                return activeWorker.further;
+    public void modifyActiveOrchard(Orchard activeOrchard, boolean overwriteID) {
+        if ((!this.activeOrchard.ID.equals(activeOrchard.ID) && overwriteID) || this.activeOrchard.ID.equals(activeOrchard.ID)) {
+            this.activeOrchard = activeOrchard;
+            changes.Modify(category, activeOrchard.ID);
         }
-        return null;
-    }
-}
-
-/**
- * Below are all of the classes that will store and manipulate all of the individual information.
- */
-
-class Farm{
-    protected String further;
-    protected String name;
-    protected String ID;
-
-    public Farm(String name, String further, String  ID){
-        this.further = further;
-        this.name = name;
-        this.ID = ID;
-    }
-}
-
-class Orchard{
-    protected String name;
-    protected String crop;
-    protected Coordinates coordinates;
-    protected Float meanBagMass;
-    protected Calendar datePlanted;
-    protected Float dimX, dimY;
-    protected String dimUnit;
-    protected String further;
-    protected Farm assignedFarm;
-    protected String ID;
-
-    public Orchard(String name, String crop, Coordinates coordinates, Float meanBagMass, Calendar datePlanted, Float dimX, Float dimY, String dimUnit, String further, Farm assignedFarm, String ID){
-        this.name = name;
-        this.crop = crop;
-        this.meanBagMass = meanBagMass;
-        this.dimX = dimX;
-        this.dimY = dimY;
-        this.dimUnit = dimUnit;
-        this.further = further;
-        this.assignedFarm = assignedFarm;
-        this.coordinates = coordinates;
-        this.datePlanted = datePlanted;
-        this.ID = ID;
-    }
-}
-
-enum WorkerType{
-    NOTHING,
-    WORKER,
-    FOREMAN,
-    FARMER
-}
-
-class Worker{
-    protected String fName, sName;
-    protected Orchard assignedOrchard;
-    protected WorkerType workerType;
-    protected String further;
-    protected String email;
-    protected String ID;
-
-    public Worker(String fName, String sName, Orchard assignedOrchard, WorkerType workerType, String further, String email, String ID){
-        this.fName = fName;
-        this.sName = sName;
-        this.assignedOrchard = assignedOrchard;
-        this.workerType = workerType;
-        this.further = further;
-        this.email = email;
-        this.ID = ID;
     }
 
-}
-
-class Coordinates{
-    private Vector<Location> coordinates;
-
-    public Coordinates(){
-        coordinates = new Vector<Location>();
+    public void modifyActiveWorker(Worker activeWorker, boolean overwriteID) {
+        if ((!this.activeWorker.ID.equals(activeWorker.ID) && overwriteID) || this.activeWorker.ID.equals(activeWorker.ID)) {
+            this.activeWorker = activeWorker;
+            changes.Modify(category, activeWorker.ID);
+        }
     }
 
-    public void pushLocation(Location location){
-        coordinates.addElement(location);
+    public String getNextIDForAddition(){
+        return "N00B - " + nextID++;
     }
 
-    public void pushLocation(double lat, double lng){
-        Location temp = new Location("");
-        temp.setLatitude(lat);
-        temp.setLongitude(lng);
-        temp.setAccuracy(0);
-        coordinates.addElement(temp);
+    public void addFarm(Farm addMe){
+        farms.addElement(addMe);
+        changes.Add(Category.FARM, addMe.getID());
     }
 
-    public int getSize(){
-        return coordinates.size();
+    public void addOrchard(Orchard addMe){
+        orchards.addElement(addMe);
+        changes.Add(Category.ORCHARD, addMe.getID());
     }
 
-    public Location getCoordinate(int at){
-        return coordinates.elementAt(at);
+    public void addWorker(Worker addMe){
+        workers.addElement(addMe);
+        changes.Add(Category.WORKER, addMe.getID());
     }
 }
 
@@ -444,22 +490,15 @@ enum ChangeType{
     MODIFY
 }
 
-enum DataType{
-    NOTHING,
-    FARM,
-    ORCHARD,
-    WORKER
-}
-
 class Change{
     protected ChangeType changeType;
-    protected DataType dataType;
+    protected Category category;
     protected String ID;
     protected Calendar timestamp;
 
-    public Change(ChangeType changeType, DataType dataType, String ID){
+    public Change(ChangeType changeType, Category category, String ID){
         this.changeType = changeType;
-        this.dataType = dataType;
+        this.category = category;
         this.ID = ID;
         timestamp = Calendar.getInstance();
     }
@@ -467,24 +506,35 @@ class Change{
 
 class Changes{
     //Turn and face the strange
-    Stack<Change> changes;
+    Stack<Change> localChanges;
 
     public Changes(){
-
+        localChanges = new Stack<>();
     }
 
-    public void Delete(DataType dataType, String ID){
-        Change temp = new Change(ChangeType.DELETE, dataType, ID);
-        changes.addElement(temp);
+    public void Delete(Category category, String ID){
+        Change temp = new Change(ChangeType.DELETE, category, ID);
+        localChanges.addElement(temp);
     }
 
-    public void Modify(DataType dataType, String ID){
-        Change temp = new Change(ChangeType.MODIFY, dataType, ID);
-        changes.addElement(temp);
+    public void Modify(Category category, String ID){
+        Change temp = new Change(ChangeType.MODIFY, category, ID);
+        localChanges.addElement(temp);
     }
 
-    public void Add(DataType dataType, String ID){
-        Change temp = new Change(ChangeType.ADD, dataType, ID);
-        changes.addElement(temp);
+    public void Add(Category category, String ID){
+        Change temp = new Change(ChangeType.ADD, category, ID);
+        localChanges.addElement(temp);
+    }
+
+    public Change getNextChange(boolean pop){
+        if (pop){
+            return localChanges.pop();
+        }
+        return localChanges.peek();
+    }
+
+    public boolean unSavedChange(){
+        return !localChanges.empty();
     }
 }

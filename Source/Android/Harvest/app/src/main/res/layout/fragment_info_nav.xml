@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".InfoNavFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -19,7 +17,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@color/colorPrimaryDark"
             android:onClick="onInfoNavButtClick"
             android:tag="farms"
             android:text="@string/infoFarms"
@@ -34,7 +31,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@color/colorPrimaryDark"
             android:onClick="onInfoNavButtClick"
             android:tag="orchards"
             android:text="@string/infoOrchards"
@@ -50,7 +46,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@color/colorPrimaryDark"
             android:onClick="onInfoNavButtClick"
             android:tag="workers"
             android:text="@string/infoWorkers"

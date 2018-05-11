@@ -17,6 +17,12 @@
         android:id="@+id/actionSession"
         android:enabled="true"
         android:icon="@android:drawable/ic_menu_view"
-        android:title="@string/bottomSession"
+        android:title="Sessions"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/actionStats"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="@string/title_stats"
         app:showAsAction="ifRoom" />
 </menu>
