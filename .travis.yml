@@ -8,9 +8,10 @@ matrix:
       
       env:
         - WORKSPACE: "Source/iOS/Harvest/Harvest.xcworkspace"
-        
+      
+      podfile: Source/iOS/Harvest/podfile
       script:
         - set -o pipefail
-        - rm Podfile.lock
-        - pod install
+        - rm Source/iOS/Harvest/Podfile.lock
+        - pod install --project-directory=Source/iOS/Harvest
         - xcodebuild -workspace "$WORKSPACE" -scheme Harvest -destination "platform=iOS Simulator,name=iPhone 6S" test
