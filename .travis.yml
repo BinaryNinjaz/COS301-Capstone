@@ -3,7 +3,7 @@ matrix:
     - langauge: objective-c
       osx_image: xcode9.3
       env:
-        - WORKSPACE="/Source/iOS/Harvest/Harvest.xcworkspace"
+        - WORKSPACE="Source/iOS/Harvest/Harvest.xcworkspace"
         
       script:
         - set -o pipefail
