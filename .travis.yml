@@ -2,7 +2,16 @@ matrix:
   include:
     - langauge: objective-c
       osx_image: xcode9.3
+      os: osx
+      xcode_workspace: Source/iOS/Harvest/Harvest.xcworkspace
+      xcode_scheme: Harvest
+      
+      env:
+        - WORKSPACE: "Source/iOS/Harvest/Harvest.xcworkspace"
+      
+      podfile: Source/iOS/Harvest/podfile
       script:
-        - cd /Source/iOS/Harvest
         - set -o pipefail
-        - xcodebuild -workspace Harvest.xcworkspace -scheme Harvest -destination "platform=iOS Simulator,name=iPhone 6S" test
+        - rm Source/iOS/Harvest/Podfile.lock
+        - pod install --project-directory=Source/iOS/Harvest
+        - xcodebuild -workspace "$WORKSPACE" -scheme Harvest -destination "platform=iOS Simulator,name=iPhone 6S" test
