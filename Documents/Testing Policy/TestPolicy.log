@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.30)  13 MAY 2018 22:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.10.30)  13 MAY 2018 23:02
 entering extended mode
 **./TestPolicy.tex
 (TestPolicy.tex
@@ -224,6 +224,8 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 7.
 LaTeX Info: Redefining \pageref on input line 7.
 LaTeX Info: Redefining \nameref on input line 7.
+
+(TestPolicy.out) (TestPolicy.out)
 \@outlinefile=\write3
 \openout3 = `TestPolicy.out'.
 
@@ -231,22 +233,27 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <14.4> on input line 9.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 9.
-
-<leaf2.png, id=3, 433.62pt x 433.62pt>
+ <leaf2.png, id=99, 433.62pt x 433.62pt>
 File: leaf2.png Graphic file (type png)
- <use leaf2.png>
+
+<use leaf2.png>
 Package pdftex.def Info: leaf2.png used on input line 11.
 (pdftex.def)             Requested size: 30.11261pt x 30.11168pt.
  [1
 
-{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map} <./leaf2.png>]
-
-Package hyperref Warning: old toc file detected, not used; run LaTeX again.
-
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map} <./leaf2.png>] (TestPolicy
+.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 6.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 6.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 6.
+)
 \tf@toc=\write4
 \openout4 = `TestPolicy.toc'.
 
-[2]
+ [2]
 Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ú in font cmr12!
@@ -344,52 +351,55 @@ Underfull \hbox (badness 10000) in paragraph at lines 59--63
 
  []
 
-[5] <images/FailedLoginTest.png, id=46, 1028.34187pt x 578.16pt>
+[5] <images/FailedLoginTest.png, id=154, 1028.34187pt x 578.16pt>
 File: images/FailedLoginTest.png Graphic file (type png)
 
 <use images/FailedLoginTest.png>
-Package pdftex.def Info: images/FailedLoginTest.png used on input line 66.
+Package pdftex.def Info: images/FailedLoginTest.png used on input line 65.
 (pdftex.def)             Requested size: 401.50146pt x 225.73732pt.
 
-Overfull \hbox (465.03975pt too wide) in paragraph at lines 64--67
-\OT1/cmr/m/n/12 https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Sou
-rce/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/LogInActivity
-Test.java 
+Underfull \hbox (badness 10000) in paragraph at lines 64--68
+
  []
 
 
-Overfull \hbox (11.50146pt too wide) in paragraph at lines 64--67
-[] 
- []
-
-[6] <images/iostest.png, id=53, 2503.3525pt x 1422.31375pt>
-File: images/iostest.png Graphic file (type png)
-
-<use images/iostest.png>
-Package pdftex.def Info: images/iostest.png used on input line 68.
-(pdftex.def)             Requested size: 401.50146pt x 228.11742pt.
-
-Overfull \hbox (11.50146pt too wide) in paragraph at lines 68--71
+Overfull \hbox (11.50146pt too wide) in paragraph at lines 64--68
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--71
+Underfull \hbox (badness 10000) in paragraph at lines 64--68
+
+ []
+
+[6] <images/iostest.png, id=160, 2503.3525pt x 1422.31375pt>
+File: images/iostest.png Graphic file (type png)
+
+<use images/iostest.png>
+Package pdftex.def Info: images/iostest.png used on input line 69.
+(pdftex.def)             Requested size: 401.50146pt x 228.11742pt.
+
+Overfull \hbox (11.50146pt too wide) in paragraph at lines 69--72
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--72
 
  []
 
 [7 <./images/FailedLoginTest.png> <./images/iostest.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 77--79
+Underfull \hbox (badness 10000) in paragraph at lines 78--80
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 77--79
+Underfull \hbox (badness 10000) in paragraph at lines 78--80
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 84--85
+Underfull \hbox (badness 10000) in paragraph at lines 85--86
 
  []
 
@@ -406,54 +416,48 @@ Missing character: There is no ‚ in font cmr12!
 Missing character: There is no Ä in font cmr12!
 Missing character: There is no ù in font cmr12!
 
-Underfull \hbox (badness 10000) in paragraph at lines 86--88
+Underfull \hbox (badness 10000) in paragraph at lines 87--89
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 89.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 90.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 89.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 90.
  [8]
-Underfull \hbox (badness 10000) in paragraph at lines 95--96
+Underfull \hbox (badness 10000) in paragraph at lines 96--97
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 105--106
+Underfull \hbox (badness 10000) in paragraph at lines 106--107
 
  []
 
 [9]
-Underfull \hbox (badness 10000) in paragraph at lines 114--115
+Underfull \hbox (badness 10000) in paragraph at lines 115--116
 
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 130.
 [10]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 130.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 131.
+ [11]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 131.
  (TestPolicy.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 130.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 130.
-
-
-Package rerunfilecheck Warning: File `TestPolicy.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `TestPolicy.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  7E73CE9EE0F2FB1EF7D70C2AAE2C00C1;1649.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 130.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 131.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 131.
+Package rerunfilecheck Info: File `TestPolicy.out' has not changed.
+(rerunfilecheck)             Checksum: 7E73CE9EE0F2FB1EF7D70C2AAE2C00C1;1649.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 131.
  ) 
 Here is how much of TeX's memory you used:
- 5126 strings out of 493323
- 76090 string characters out of 3139065
- 161373 words of memory out of 3000000
- 8611 multiletter control sequences out of 15000+200000
- 6667 words of font info for 24 fonts, out of 3000000 for 9000
+ 5175 strings out of 493323
+ 76705 string characters out of 3139065
+ 162477 words of memory out of 3000000
+ 8647 multiletter control sequences out of 15000+200000
+ 9155 words of font info for 32 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  28i,6n,28p,1185b,381s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Pr
@@ -461,9 +465,9 @@ ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Fil
 es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX
  2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fon
 ts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on TestPolicy.pdf (10 pages, 1656268 bytes).
+Output written on TestPolicy.pdf (11 pages, 1668576 bytes).
 PDF statistics:
- 116 PDF objects out of 1000 (max. 8388607)
- 42 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 219 PDF objects out of 1000 (max. 8388607)
+ 43 named destinations out of 1000 (max. 500000)
+ 208 words of extra memory for PDF output out of 10000 (max. 10000000)
 
