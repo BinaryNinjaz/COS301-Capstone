@@ -11,4 +11,6 @@ matrix:
         
       script:
         - set -o pipefail
+        - rm Podfile.lock
+        - pod install
         - xcodebuild -workspace "$WORKSPACE" -scheme Harvest -destination "platform=iOS Simulator,name=iPhone 6S" test
