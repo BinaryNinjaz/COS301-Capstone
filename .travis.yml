@@ -2,7 +2,9 @@ matrix:
   include:
     - langauge: objective-c
       osx_image: xcode9.3
+      env:
+        - WORKSPACE="/Source/iOS/Harvest/Harvest.xcworkspace"
+        
       script:
-        - cd /Source/iOS/Harvest
         - set -o pipefail
-        - xcodebuild -workspace Harvest.xcworkspace -scheme Harvest -destination "platform=iOS Simulator,name=iPhone 6S" test
+        - xcodebuild -workspace "$WORKSPACE" -scheme Harvest -destination "platform=iOS Simulator,name=iPhone 6S" test
