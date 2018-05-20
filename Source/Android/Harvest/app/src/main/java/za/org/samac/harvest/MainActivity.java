@@ -2,6 +2,7 @@ package za.org.samac.harvest;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         track = new HashMap<>();
         this.workers = new ArrayList<>();//stores worker names
         workersSearch = new ArrayList<>();//stores worker names
+        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
     }
 
     @Override
@@ -106,8 +109,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
 
         init();
-
-        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
 
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -118,9 +119,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);
-            location = locationManager
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
-            adapter.setLocation(location);
+
+            List<String> providers = locationManager.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                location = locationManager.getLastKnownLocation(provider);
+                //Log.d("last known location, provider: %s, location: %s", provider, location);
+
+                if (location == null) {
+                    continue;
+                }
+                if (bestLocation == null
+                        || location.getAccuracy() < bestLocation.getAccuracy()) {
+                    //Log.d("found best last known location: %s", location);
+                    bestLocation = location;
+                }
+            }
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+            //adapter.setLocation(location);
         }
 
         locationPermissions();
@@ -134,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
+        statusCheck();
     }
 
     private void determineIfFarmer() {
@@ -369,6 +386,33 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
+    public void statusCheck() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     /*******************************
      Code below handles the stop/start button, runs a timer and displays how many
      bags were collected in the elapsed time. It then clears for another timer to start.
@@ -378,6 +422,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
+        if(location == null) {
+            progressBar.setVisibility(View.VISIBLE);
+            Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
 
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
@@ -385,7 +436,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         Map<String, Object> sessionDate = new HashMap<>();
         sessionDate.put("start_date", startSessionTime);
 
-        recyclerView.setVisibility(View.VISIBLE);
         if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
             textView.setVisibility(View.GONE);
@@ -517,6 +567,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             trackCount++;
             track.put(trackCount, location);
             adapter.setLocation(location);
+            recyclerView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         }
 
         @Override

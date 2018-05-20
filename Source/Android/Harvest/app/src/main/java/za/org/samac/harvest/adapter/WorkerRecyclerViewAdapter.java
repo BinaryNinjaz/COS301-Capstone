@@ -266,8 +266,12 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         for(int i = 0 ; i < incrementViews.size() ; i++) {
             TextView text = incrementViews.get(i);
             text.setText("0");
-            workers.get(i).setValue(0);
+            //workers.get(i).setValue(0);
             incrementViews.set(i, text);
+        }
+
+        for(int i = 0 ; i < workers.size() ; i++) {
+            workers.get(i).setValue(0);
         }
     }
 

@@ -102,14 +102,14 @@ public class PieChart extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    List<Object> collections = (List<Object>) zoneSnapshot.child("collections").getValue();
-                   // Map<String, Object> collection = (Map<String, Object>) collections;
+                    //List<Object> collections = (List<Object>) zoneSnapshot.child("collections").getValue();
+                    Map<String, Object> collections = (Map<String, Object>) zoneSnapshot.child("collections").getValue();
 
                     for(int index = 0; index < collections.size(); index++) {
                         Object workerId = collections.get(index);
                         if(workerId != null) {
-                            Integer yield = ((ArrayList<Object>) workerId).size();
-                            entries.add(new PieEntry((float)yield, workerId));
+                            Integer yield = ((ArrayList)workerId).size();
+                            entries.add(new PieEntry((float)yield, index));//exchange index with Worker Name
                         }
                     }
                 }
