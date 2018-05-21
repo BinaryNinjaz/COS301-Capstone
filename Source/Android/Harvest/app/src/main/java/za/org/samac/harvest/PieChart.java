@@ -113,6 +113,10 @@ public class PieChart extends AppCompatActivity {
                     //List<Object> collections = (List<Object>) zoneSnapshot.child("collections").getValue();
                     Map<String, Object> collections = (Map<String, Object>) zoneSnapshot.child("collections").getValue();
 
+                    if (collections.equals(null)) {
+
+                    }
+
                     for(String key : collections.keySet()) {
                         Object workerId = collections.get(key);
 
