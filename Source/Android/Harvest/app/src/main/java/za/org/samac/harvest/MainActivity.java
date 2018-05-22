@@ -352,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 progressBar.setVisibility(View.GONE);//remove progress bar
                 relLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
                 //user pressed start and all went well with retrieving data
             }
 
@@ -493,6 +494,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
                     dialog.dismiss();
                 }
             });
@@ -570,7 +572,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             trackCount++;
             track.put(trackCount, location);
             adapter.setLocation(location);
-            recyclerView.setVisibility(View.VISIBLE);
+            relLayout.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
 
