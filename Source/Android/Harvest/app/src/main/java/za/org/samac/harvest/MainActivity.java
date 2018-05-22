@@ -572,7 +572,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             trackCount++;
             track.put(trackCount, location);
             adapter.setLocation(location);
-            relLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
 
