@@ -84,6 +84,9 @@ public class Analytics extends AppCompatActivity {
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
+                                Intent openSessions= new Intent(Analytics.this, SessionsMap.class);
+                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openSessions, 0);
                                 return true;
                             case R.id.actionStats:
                                 return true;

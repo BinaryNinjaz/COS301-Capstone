@@ -63,7 +63,9 @@
         <activity
             android:name=".BarGraph"
             android:label="@string/title_stats" />
-            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ForemenPerSession"
+            android:label="@string/title_stats" />
         <activity
             android:name=".Sessions"
             android:label="@string/title_activity_sessions"

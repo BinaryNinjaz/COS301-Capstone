@@ -439,6 +439,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         Map<String, Object> sessionDate = new HashMap<>();
         sessionDate.put("start_date", startSessionTime);
+        sessionDate.put("wid", foremanID);//add foreman database ID to session;
 
         if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
