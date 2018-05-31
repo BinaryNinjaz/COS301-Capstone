@@ -39,9 +39,9 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
-    Entities.shared.getOnce(kind) { (es) in
+    Entities.shared.getOnce(kind) { (_) in
       self.refreshControl?.endRefreshing()
-      self.tableView.reloadData();
+      self.tableView.reloadData()
     }
   }
   
@@ -157,12 +157,19 @@ class InformationEntityItemTableViewController: UITableViewController {
     return kind == .session ? formatter.string(from: date)  : nil
   }
   
-  override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+  override func tableView(
+    _ tableView: UITableView,
+    editingStyleForRowAt indexPath: IndexPath
+  ) -> UITableViewCellEditingStyle {
     return UITableViewCellEditingStyle.none
   }
   
   /*
-  override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+  override func tableView(
+   _ tableView: UITableView,
+   commit editingStyle: UITableViewCellEditingStyle,
+   forRowAt indexPath: IndexPath
+  ) {
     if editingStyle == .delete {
       guard kind != .session else {
         let items = Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[indexPath.section])

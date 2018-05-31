@@ -53,7 +53,10 @@ extension HarvestDB {
     on controller: UIViewController,
     completion: @escaping (Bool) -> () = { _ in }
     ) {
-    Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
+    Auth.auth().createUser(
+      withEmail: email,
+      password: password
+    ) { (user, error) in
       if let err = error {
         let alert = UIAlertController.alertController(
           title: "Sign Up Failure",
@@ -114,8 +117,13 @@ extension HarvestDB {
     completion(true)
   }
   
-  static func getWorkingFor(completion: @escaping ((uid: String, wid: String)?) -> ()){
-    let wfref = ref.child(Path.workingFor + "/" + HarvestUser.current.email.removedFirebaseInvalids())
+  static func getWorkingFor(
+    completion: @escaping ((uid: String, wid: String)?) -> ()
+  ) {
+    let wfref = ref.child(
+      Path.workingFor
+        + "/"
+        + HarvestUser.current.email.removedFirebaseInvalids())
     wfref.observeSingleEvent(of: .value) { (snapshot) in
       guard let _uids = snapshot.value as? [String: Any] else {
         completion(nil)

@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 class TrackerViewController: UIViewController {
-  static var tracker: Tracker? = nil
+  static var tracker: Tracker?
   var tracker: Tracker? {
     get {
       return TrackerViewController.tracker
@@ -26,7 +26,7 @@ class TrackerViewController: UIViewController {
       filteredWorkers = workers
     }
   }
-  var lastLocationPoll: Date? = nil
+  var lastLocationPoll: Date?
   var filteredWorkers: [Worker] = []
   
   @IBOutlet weak var startSessionButton: UIButton!
@@ -48,7 +48,10 @@ class TrackerViewController: UIViewController {
         locationManager.startUpdatingLocation()
         
         startSessionButton.setTitle("Stop", for: .normal)
-        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.orange[1])
+        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange,
+                                                    locations: [0, 1],
+                                                    cornerRadius: 40,
+                                                    borderColor: UIColor.Bootstrap.orange[1])
         startSessionButton.apply(gradient: sessionLayer)
         
         tracker = Tracker(wid: HarvestUser.current.workingForID?.wid ?? HarvestUser.current.uid)
@@ -58,13 +61,18 @@ class TrackerViewController: UIViewController {
       }
     } else {
       let amount = tracker?.totalCollected() ?? 0
-      let alert = UIAlertController(title: "\(amount) Bags Collected", message: "The session duration was \(tracker?.durationFormatted() ?? "")", preferredStyle: .alert)
+      let alert = UIAlertController(title: "\(amount) Bags Collected",
+        message: "The session duration was \(tracker?.durationFormatted() ?? "")",
+        preferredStyle: .alert)
       
-      let collect = UIAlertAction(title: "Finish Collecting", style: .default) { action in
+      let collect = UIAlertAction(title: "Finish Collecting", style: .default) { _ in
         self.locationManager.stopUpdatingLocation()
         
         self.startSessionButton.setTitle("Start", for: .normal)
-        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
+        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green,
+                                                    locations: [0, 1],
+                                                    cornerRadius: 40,
+                                                    borderColor: UIColor.Bootstrap.green[1])
         self.startSessionButton.apply(gradient: sessionLayer)
         self.tracker?.storeSession()
         
@@ -74,15 +82,18 @@ class TrackerViewController: UIViewController {
         self.workerCollectionView.reloadData()
       }
       
-      let cancel = UIAlertAction(title: "Cancel", style: .cancel) { action in
+      let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
         
       }
       
-      let discard = UIAlertAction(title: "Discard All Collections", style: .default) { action in
+      let discard = UIAlertAction(title: "Discard All Collections", style: .default) { _ in
         self.locationManager.stopUpdatingLocation()
         
         self.startSessionButton.setTitle("Start", for: .normal)
-        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
+        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green,
+                                                    locations: [0, 1],
+                                                    cornerRadius: 40,
+                                                    borderColor: UIColor.Bootstrap.green[1])
         self.startSessionButton.apply(gradient: sessionLayer)
         
         self.tracker = nil
@@ -92,7 +103,7 @@ class TrackerViewController: UIViewController {
       }
       
       alert.addAction(collect)
-//      alert.addAction(discard)
+      alert.addAction(discard)
       alert.addAction(cancel)
       
       present(alert, animated: true, completion: nil)
@@ -115,7 +126,10 @@ class TrackerViewController: UIViewController {
     hideKeyboardWhenTappedAround()
     
     
-    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green, locations: [0, 1], cornerRadius: 40, borderColor: UIColor.Bootstrap.green[1])
+    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green,
+                                                locations: [0, 1],
+                                                cornerRadius: 40,
+                                                borderColor: UIColor.Bootstrap.green[1])
     startSessionButton.apply(gradient: sessionLayer)
     
     Entities.shared.getOnce(.worker) { _ in }
@@ -148,7 +162,7 @@ extension TrackerViewController : CLLocationManagerDelegate {
     }
     currentLocation = loc
     tracker?.track(location: loc)
-    if (lastLocationPoll == nil || Date().timeIntervalSince(lastLocationPoll!) > 60 || true) {
+    if lastLocationPoll == nil || Date().timeIntervalSince(lastLocationPoll!) > 60 || true {
       HarvestDB.update(location: loc.coordinate)
       lastLocationPoll = Date()
     }
@@ -189,10 +203,15 @@ extension TrackerViewController : UICollectionViewDataSource {
     return shouldDisplayMessage ? 1 : filteredWorkers.count
   }
   
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    
+  func collectionView(
+    _ collectionView: UICollectionView,
+    cellForItemAt indexPath: IndexPath
+  ) -> UICollectionViewCell {
     guard tracker != nil else {
-      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "labelWorkerCollectionViewCell", for: indexPath) as? LabelWorkingCollectionViewCell else {
+      guard let cell = collectionView
+        .dequeueReusableCell(withReuseIdentifier: "labelWorkerCollectionViewCell",
+                             for: indexPath
+      ) as? LabelWorkingCollectionViewCell else {
         return UICollectionViewCell()
       }
       cell.textLabel.text = "Press 'Start' to begin tracking worker collections"
@@ -200,7 +219,10 @@ extension TrackerViewController : UICollectionViewDataSource {
     }
     
     guard !workers.isEmpty else {
-      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "loadingWorkerCollectionViewCell", for: indexPath) as? LoadingWorkerCollectionViewCell else {
+      guard let cell = collectionView
+        .dequeueReusableCell(withReuseIdentifier: "loadingWorkerCollectionViewCell",
+                             for: indexPath
+      ) as? LoadingWorkerCollectionViewCell else {
         return UICollectionViewCell()
       }
 //      cell.textLabel.text = "No workers were added to your farm"
@@ -208,7 +230,10 @@ extension TrackerViewController : UICollectionViewDataSource {
     }
     
     guard !filteredWorkers.isEmpty else {
-      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "labelWorkerCollectionViewCell", for: indexPath) as? LabelWorkingCollectionViewCell else {
+      guard let cell = collectionView
+        .dequeueReusableCell(withReuseIdentifier: "labelWorkerCollectionViewCell",
+                             for: indexPath
+      ) as? LabelWorkingCollectionViewCell else {
         return UICollectionViewCell()
       }
       guard let searchText = searchBar.text else {
@@ -220,7 +245,10 @@ extension TrackerViewController : UICollectionViewDataSource {
     }
     
     
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "workerCollectionViewCell", for: indexPath) as? WorkerCollectionViewCell else {
+    guard let cell = collectionView
+      .dequeueReusableCell(withReuseIdentifier: "workerCollectionViewCell",
+                           for: indexPath
+    ) as? WorkerCollectionViewCell else {
       return UICollectionViewCell()
     }
     
@@ -353,7 +381,7 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
     let cw = w / n - ((n - 1) / n)
     
     return CGSize(width: shouldDisplayMessage ? w - 2 : cw,
-                  height: shouldDisplayMessage ? h : 109);
+                  height: shouldDisplayMessage ? h : 109)
   }
   
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

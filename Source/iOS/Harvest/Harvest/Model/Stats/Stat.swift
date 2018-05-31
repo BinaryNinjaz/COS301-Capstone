@@ -65,7 +65,7 @@ enum Stat {
     let calendar = Calendar.current
     
     for session in sessions {
-      session.collections.forEach { w, points in
+      session.collections.forEach { _, points in
         points.forEach { point in
           let p = Point<CLLocationDegrees>.init(point.location.longitude, point.location.latitude)
           if poly.contains(p) {

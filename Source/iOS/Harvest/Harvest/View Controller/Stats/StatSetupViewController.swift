@@ -20,7 +20,7 @@ public final class StatSetupViewController: FormViewController {
       row.value = .perSessionWorkers
     }
     
-    workersRow = PushRow<Worker>() { row in
+    workersRow = PushRow<Worker> { row in
       row.title = "Worker Selection"
       row.options = Entities.shared.workersList()
       row.value = row.options?.first
@@ -28,11 +28,11 @@ public final class StatSetupViewController: FormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .workerHistory
       }
-    }.cellUpdate{ cell, row in
+    }.cellUpdate { _, row in
       row.options = Entities.shared.workersList()
     }
     
-    sessionsRow = PushRow<Session>() { row in
+    sessionsRow = PushRow<Session> { row in
       row.title = "Session Selection"
       row.options = Entities.shared.sessionsList()
       row.value = row.options?.last
@@ -40,11 +40,11 @@ public final class StatSetupViewController: FormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .perSessionWorkers
       }
-    }.cellUpdate{ cell, row in
+    }.cellUpdate { _, row in
       row.options = Entities.shared.sessionsList()
     }
     
-    orchardsRow = PushRow<Orchard>() { row in
+    orchardsRow = PushRow<Orchard> { row in
       row.title = "Orchard Selection"
       row.options = Entities.shared.orchardsList()
       row.value = row.options?.first
@@ -52,13 +52,13 @@ public final class StatSetupViewController: FormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .orchardHistory
       }
-    }.cellUpdate{ cell, row in
+    }.cellUpdate { _, row in
       row.options = Entities.shared.orchardsList()
     }
     
-    let showStats = ButtonRow() { row in
+    let showStats = ButtonRow { row in
       row.title = "Display Stats"
-    }.onCellSelection { cell, row in
+    }.onCellSelection { _, _ in
       guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
         return
       }
@@ -86,7 +86,7 @@ public final class StatSetupViewController: FormViewController {
       self.navigationController?.pushViewController(svc, animated: true)
     }
     
-    Entities.shared.getMultiplesOnce([.orchard, .session, .worker]) { (entities) in
+    Entities.shared.getMultiplesOnce([.orchard, .session, .worker]) { (_) in
       self.form
         +++ Section()
         <<< statKind

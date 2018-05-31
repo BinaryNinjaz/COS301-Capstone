@@ -77,7 +77,7 @@ class SignUpViewController: UIViewController {
     let emailRegex = try! NSRegularExpression(
       pattern: "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
 
-    let urange = NSMakeRange(0, username.count)
+    let urange = NSRange(location: 0, length: username.count)
     let match = emailRegex.rangeOfFirstMatch(in: username, range: urange)
 
     guard match == urange else {
@@ -155,8 +155,18 @@ class SignUpViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    NotificationCenter
+      .default
+      .addObserver(self,
+                   selector: #selector(keyboardWillShow),
+                   name: NSNotification.Name.UIKeyboardWillShow,
+                   object: nil)
+    NotificationCenter
+      .default
+      .addObserver(self,
+                   selector: #selector(keyboardWillHide),
+                   name: NSNotification.Name.UIKeyboardWillHide,
+                   object: nil)
     
     hideKeyboardWhenTappedAround()
     

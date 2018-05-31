@@ -52,7 +52,9 @@ extension Poly {
         guard let p = $0.intersection(onLineXEqual: x) else {
           return nil
         }
-        return number(p.x, isBetweenUnorderedRange: ($0.start.x, $0.end.x)) ? p : nil
+        return number(p.x, isBetweenUnorderedRange: ($0.start.x, $0.end.x))
+          ? p
+          : nil
       }
       .sorted { $0.y < $1.y }
   }
@@ -75,7 +77,10 @@ extension Poly {
     return result
   }
   
-  func number(_ a: Number, isBetweenUnorderedRange r: (Number, Number)) -> Bool {
+  func number(
+    _ a: Number,
+    isBetweenUnorderedRange r: (Number, Number)
+  ) -> Bool {
     return (r.0 < a && a <= r.1) || (r.1 < a && a <= r.0)
   }
   

@@ -83,7 +83,10 @@ class InformationEntityCollectionViewController: UICollectionViewController {
     return entities.count
   }
 
-  override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+  override func collectionView(
+    _ collectionView: UICollectionView,
+    cellForItemAt indexPath: IndexPath
+  ) -> UICollectionViewCell {
     guard let cell = collectionView
       .dequeueReusableCell(withReuseIdentifier: "informationEntityCell", for: indexPath)
       as? InformationEntityCollectionViewCell else {
@@ -116,28 +119,28 @@ class InformationEntityCollectionViewController: UICollectionViewController {
     
     switch entity {
     case "Workers":
-      Entities.shared.getMultiplesOnce([.worker, .orchard]) { es in
+      Entities.shared.getMultiplesOnce([.worker, .orchard]) { _ in
         self.selectedKind = .worker
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
       }
       
     case "Orchards":
-      Entities.shared.getMultiplesOnce([.orchard, .farm]) { es in
+      Entities.shared.getMultiplesOnce([.orchard, .farm]) { _ in
         self.selectedKind = .orchard
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
       }
       
     case "Farms":
-      Entities.shared.getMultiplesOnce([.farm, .orchard]) { es in
+      Entities.shared.getMultiplesOnce([.farm, .orchard]) { _ in
         self.selectedKind = .farm
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
       }
       
     case "Sessions":
-      Entities.shared.getMultiplesOnce([.session, .orchard, .worker]) { es in
+      Entities.shared.getMultiplesOnce([.session, .orchard, .worker]) { _ in
         self.selectedKind = .session
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
@@ -163,7 +166,7 @@ extension InformationEntityCollectionViewController : UICollectionViewDelegateFl
     
     let cw = n == 1 ? w - 2 : w / n - ((n - 1) / n)
     
-    return CGSize(width: cw, height: h);
+    return CGSize(width: cw, height: h)
   }
   
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

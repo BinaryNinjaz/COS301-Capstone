@@ -38,7 +38,7 @@ class SignInViewController: UIViewController {
         self.orLabel.alpha = self.isLoading ? 0 : 1
       }
       
-      if isLoading  {
+      if isLoading {
         activityIndicator.startAnimating()
       } else {
         activityIndicator.stopAnimating()
@@ -88,9 +88,13 @@ class SignInViewController: UIViewController {
   
   @IBAction func forgotAccountTouchUp(_ sender: UIButton) {
     
-    let emailRequest = UIAlertController(title: "Reset Password",
-                                         message: "Please enter your email, you will receive an email to reset your password.",
-                                         preferredStyle: .alert)
+    let emailRequest = UIAlertController(
+      title: "Reset Password",
+      message: """
+        Please enter your email, you will receive an email to reset your\
+        password.
+      """,
+      preferredStyle: .alert)
     
     emailRequest.addTextField { (email) in email.keyboardType = .emailAddress }
     
@@ -138,8 +142,18 @@ class SignInViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    NotificationCenter
+      .default
+      .addObserver(self,
+                   selector: #selector(keyboardWillShow),
+                   name: NSNotification.Name.UIKeyboardWillShow,
+                   object: nil)
+    NotificationCenter
+      .default
+      .addObserver(self,
+                   selector: #selector(keyboardWillHide),
+                   name: NSNotification.Name.UIKeyboardWillHide,
+                   object: nil)
     
     hideKeyboardWhenTappedAround()
     
@@ -153,7 +167,7 @@ class SignInViewController: UIViewController {
     
     if let user = Auth.auth().currentUser {
       isLoading = true
-      HarvestUser.current.setUser(user, nil) { (valid) in
+      HarvestUser.current.setUser(user, nil) { (_) in
         if let vc = self.mainViewToPresent() {
           self.present(vc, animated: true, completion: nil)
         }
@@ -193,7 +207,7 @@ extension SignInViewController : GIDSignInUIDelegate {
 
 extension SignInViewController : GIDSignInDelegate {
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-    if let error = error  {
+    if let error = error {
       let alert = UIAlertController.alertController(
         title: "An Error Occured",
         message: error.localizedDescription)
@@ -234,7 +248,7 @@ extension SignInViewController : GIDSignInDelegate {
         return
       }
       
-      HarvestUser.current.setUser(user, nil) { valid in
+      HarvestUser.current.setUser(user, nil) { _ in
         if let vc = self.mainViewToPresent() {
           self.present(vc, animated: true, completion: nil)
         }

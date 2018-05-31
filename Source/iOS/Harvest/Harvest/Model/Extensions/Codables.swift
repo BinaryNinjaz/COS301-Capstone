@@ -65,7 +65,8 @@ extension Worker : Codable {
     
     firstname = try values.decode(String.self, forKey: .firstname)
     lastname = try values.decode(String.self, forKey: .lastname)
-    assignedOrchards = try values.decode(Array<String>.self, forKey: .assignedOrchards)
+    assignedOrchards = try values.decode(Array<String>.self,
+                                         forKey: .assignedOrchards)
     kind = try values.decode(Worker.Kind.self, forKey: .kind)
     details = try values.decode(String.self, forKey: .details)
     email = try values.decode(String.self, forKey: .email)
