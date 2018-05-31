@@ -60,7 +60,10 @@ extension HarvestDB {
     sessions.updateChildValues(update)
   }
   
-  static func delete(session: Session, completion: @escaping (Error?, DatabaseReference) -> ()) {
+  static func delete(
+    session: Session,
+    completion: @escaping (Error?, DatabaseReference) -> ()
+  ) {
     let sessions = ref.child(Path.sessions)
     guard session.id != "" else {
       return

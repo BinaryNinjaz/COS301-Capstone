@@ -60,7 +60,10 @@ extension HarvestDB {
     orchards.updateChildValues(update)
   }
   
-  static func delete(orchard: Orchard, completion: @escaping (Error?, DatabaseReference) -> ()) {
+  static func delete(
+    orchard: Orchard,
+    completion: @escaping (Error?, DatabaseReference) -> ()
+  ) {
     let orchards = ref.child(Path.orchards)
     guard orchard.id != "" else {
       return

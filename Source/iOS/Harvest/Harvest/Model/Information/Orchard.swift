@@ -59,7 +59,9 @@ public final class Orchard {
     name = json["name"] as? String ?? ""
     treeSpacing = json["treeSpacing"] as? Double ?? .nan
     rowSpacing = json["rowSpacing"] as? Double ?? .nan
-    irrigationKind = IrrigationKind(rawValue: json["irrigation"] as? String ?? "") ?? .none
+    irrigationKind = IrrigationKind(rawValue:
+      json["irrigation"] as? String ?? ""
+    ) ?? .none
     
     coords = [CLLocationCoordinate2D]()
     let cs = json["coords"] as? [Any] ?? []
@@ -116,7 +118,10 @@ extension Orchard : Equatable {
 
 extension Orchard : CustomStringConvertible {
   public var description: String {
-    guard let farm = Entities.shared.farmsList().first(where: { $0.id == assignedFarm }) else {
+    guard let farm = Entities
+      .shared
+      .farmsList()
+      .first(where: { $0.id == assignedFarm }) else {
       return name + " – " + Date().description
     }
     return farm.name + " – " + name
@@ -124,7 +129,10 @@ extension Orchard : CustomStringConvertible {
 }
 
 extension CLLocationCoordinate2D : Equatable {
-  public static func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+  public static func ==(
+    lhs: CLLocationCoordinate2D,
+    rhs: CLLocationCoordinate2D
+  ) -> Bool {
     return lhs.latitude == rhs.latitude
       && lhs.longitude == rhs.longitude
   }

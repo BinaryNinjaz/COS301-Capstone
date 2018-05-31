@@ -37,9 +37,9 @@ class SettingsEurekaViewController : FormViewController {
       row.title = "Admin"
     }
     
-    let logoutRow = ButtonRow() { row in
+    let logoutRow = ButtonRow { row in
       row.title = "Logout"
-    }.onCellSelection { (cell, row) in
+    }.onCellSelection { (_, _) in
       HarvestDB.signOut(on: self) { w in
         if w,
           let vc = self
@@ -50,15 +50,15 @@ class SettingsEurekaViewController : FormViewController {
       }
     }
     
-    let resignRow = ButtonRow() { row in
+    let resignRow = ButtonRow { row in
       row.title = "Resign"
-    }.onCellSelection { (cell, row) in
+    }.onCellSelection { (_, _) in
       HarvestDB.resign { _, _ in
         if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInViewController") {
           self.present(vc, animated: true, completion: nil)
         }
       }
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
     }

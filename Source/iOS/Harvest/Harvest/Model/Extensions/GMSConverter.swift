@@ -54,7 +54,9 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
     for (key, value) in self {
       for point in value {
         let marker = GMSMarker(position: point.location)
-        marker.title = key.description + " - " + formatter.string(from: point.date)
+        marker.title = key.description
+          + " - "
+          + formatter.string(from: point.date)
         marker.map = mapView
         result.append(marker)
       }

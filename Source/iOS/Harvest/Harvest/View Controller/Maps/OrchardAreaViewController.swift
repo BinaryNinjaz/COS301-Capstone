@@ -44,7 +44,9 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       collections.removeAll()
       updatePolygon()
     } else {
-      let alert = UIAlertController.alertController(title: "No Points", message: "There are no more points in the orchard to delete")
+      let alert = UIAlertController.alertController(
+        title: "No Points",
+        message: "There are no more points in the orchard to delete")
       
       present(alert, animated: true, completion: nil)
     }
@@ -56,7 +58,9 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       collections.removeLast()
       updatePolygon()
     } else {
-      let alert = UIAlertController.alertController(title: "No Points", message: "There are no more points in the orchard to delete")
+      let alert = UIAlertController.alertController(
+        title: "No Points",
+        message: "There are no more points in the orchard to delete")
       
       present(alert, animated: true, completion: nil)
     }
