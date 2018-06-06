@@ -227,7 +227,7 @@ extension Farm {
     let orchardRow = OrchardInFarmRow(tag: nil, orchard: o) { row in
       row.title = "Add Orchard to \(self.name)"
     }.cellUpdate { (cell, _) in
-      cell.textLabel?.textColor = UIColor.Bootstrap.blue[1]
+      cell.textLabel?.textColor = [UIColor].blue[1]
       cell.textLabel?.textAlignment = .center
     }
     

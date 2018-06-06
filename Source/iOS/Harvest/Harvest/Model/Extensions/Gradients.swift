@@ -26,44 +26,44 @@ extension CAGradientLayer {
   }
   
   static var green: CAGradientLayer {
-    return gradient(colors: UIColor.Bootstrap.green,
+    return gradient(colors: .green,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: UIColor.Bootstrap.green[1])
+                    borderColor: [UIColor].green[1])
   }
   
   static var blue: CAGradientLayer {
-    return gradient(colors: UIColor.Bootstrap.blue,
+    return gradient(colors: .blue,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: UIColor.Bootstrap.blue[1])
+                    borderColor: [UIColor].blue[1])
   }
   
   static var orange: CAGradientLayer {
-    return gradient(colors: UIColor.Bootstrap.orange,
+    return gradient(colors: .orange,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: UIColor.Bootstrap.orange[1])
+                    borderColor:[UIColor].orange[1])
   }
   
   static var red: CAGradientLayer {
-    return gradient(colors: UIColor.Bootstrap.red,
+    return gradient(colors: .red,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: UIColor.Bootstrap.red[1])
+                    borderColor: [UIColor].red[1])
   }
   
   static var google: CAGradientLayer {
-    return gradient(colors: UIColor.Bootstrap.google,
+    return gradient(colors: .google,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: UIColor.Bootstrap.google[1])
+                    borderColor: [UIColor].google[1])
   }
   
   static var disabled: CAGradientLayer {
-    return gradient(colors: UIColor.Bootstrap.disabled,
+    return gradient(colors: .disabled,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: UIColor.Bootstrap.disabled[1])
+                    borderColor: [UIColor].disabled[1])
   }
 }

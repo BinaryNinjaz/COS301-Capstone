@@ -48,10 +48,10 @@ class TrackerViewController: UIViewController {
         locationManager.startUpdatingLocation()
         
         startSessionButton.setTitle("Stop", for: .normal)
-        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.orange,
+        let sessionLayer = CAGradientLayer.gradient(colors: .orange,
                                                     locations: [0, 1],
                                                     cornerRadius: 40,
-                                                    borderColor: UIColor.Bootstrap.orange[1])
+                                                    borderColor: [UIColor].orange[1])
         startSessionButton.apply(gradient: sessionLayer)
         
         tracker = Tracker(wid: HarvestUser.current.workingForID?.wid ?? HarvestUser.current.uid)
@@ -69,10 +69,10 @@ class TrackerViewController: UIViewController {
         self.locationManager.stopUpdatingLocation()
         
         self.startSessionButton.setTitle("Start", for: .normal)
-        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green,
+        let sessionLayer = CAGradientLayer.gradient(colors: .green,
                                                     locations: [0, 1],
                                                     cornerRadius: 40,
-                                                    borderColor: UIColor.Bootstrap.green[1])
+                                                    borderColor: [UIColor].green[1])
         self.startSessionButton.apply(gradient: sessionLayer)
         self.tracker?.storeSession()
         
@@ -90,10 +90,10 @@ class TrackerViewController: UIViewController {
         self.locationManager.stopUpdatingLocation()
         
         self.startSessionButton.setTitle("Start", for: .normal)
-        let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green,
+        let sessionLayer = CAGradientLayer.gradient(colors: .green,
                                                     locations: [0, 1],
                                                     cornerRadius: 40,
-                                                    borderColor: UIColor.Bootstrap.green[1])
+                                                    borderColor: [UIColor].green[1])
         self.startSessionButton.apply(gradient: sessionLayer)
         
         self.tracker = nil
@@ -126,10 +126,10 @@ class TrackerViewController: UIViewController {
     hideKeyboardWhenTappedAround()
     
     
-    let sessionLayer = CAGradientLayer.gradient(colors: UIColor.Bootstrap.green,
+    let sessionLayer = CAGradientLayer.gradient(colors: .green,
                                                 locations: [0, 1],
                                                 cornerRadius: 40,
-                                                borderColor: UIColor.Bootstrap.green[1])
+                                                borderColor: [UIColor].green[1])
     startSessionButton.apply(gradient: sessionLayer)
     
     Entities.shared.getOnce(.worker) { _ in }
@@ -264,11 +264,11 @@ extension TrackerViewController : UICollectionViewDataSource {
     let ch = cell.frame.size.height
     let g = CAGradientLayer.gradient(
       colors: [
-        UIColor.green(atFraction: cy / h),
-        UIColor.green(atFraction: (cy + ch) / h)
+        UIColor.gradient(.lightTile, atFraction: cy / h),
+        UIColor.gradient(.lightTile, atFraction: (cy + ch) / h)
       ],
       locations: [0, 1],
-      cornerRadius: 5,
+      cornerRadius: 0,
       borderColor: .clear)
     
     cell.myBackgroundView.apply(gradient: g)
@@ -276,6 +276,10 @@ extension TrackerViewController : UICollectionViewDataSource {
     cell.nameLabel.text = worker.firstname + " " + worker.lastname
     cell.yieldLabel.text = String(tracker?.collections[worker]?.count ?? 0)
     
+    cell.nameLabel.textColor = UIColor.gradient(.green, atFraction: cy / h)
+    cell.yieldLabel.textColor = UIColor.gradient(.green, atFraction: (cy + ch) / h)
+    cell.incButton.setTitleColor(cell.yieldLabel.textColor, for: .normal)
+    cell.decButton.setTitleColor(cell.yieldLabel.textColor, for: .normal)
     
     cell.inc = { this in
       guard self.tracker != nil else {
@@ -341,6 +345,8 @@ extension TrackerViewController : UICollectionViewDataSource {
         continue
       }
       
+      cell.myBackgroundView.frame.size = cell.frame.size
+      
       let r = workerCollectionView.convert(cell.frame.origin, to: workerCollectionView.superview)
       
       let h = workerCollectionView.frame.height
@@ -350,14 +356,19 @@ extension TrackerViewController : UICollectionViewDataSource {
       
       let g = CAGradientLayer.gradient(
         colors: [
-          UIColor.green(atFraction: cy / h),
-          UIColor.green(atFraction: (cy + ch) / h)
+          UIColor.gradient(.lightTile, atFraction: cy / h),
+          UIColor.gradient(.lightTile, atFraction: (cy + ch) / h)
         ],
         locations: [0, 1],
-        cornerRadius: 5,
+        cornerRadius: 0,
         borderColor: .clear)
       
       cell.myBackgroundView.apply(gradient: g)
+      
+      cell.nameLabel.textColor = UIColor.gradient(.green, atFraction: cy / h)
+      cell.yieldLabel.textColor = UIColor.gradient(.green, atFraction: (cy + ch) / h)
+      cell.incButton.setTitleColor(cell.yieldLabel.textColor, for: .normal)
+      cell.decButton.setTitleColor(cell.yieldLabel.textColor, for: .normal)
     }
   }
 }
