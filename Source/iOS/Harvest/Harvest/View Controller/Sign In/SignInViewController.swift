@@ -201,11 +201,11 @@ class SignInViewController: UIViewController {
   }
 }
 
-extension SignInViewController : GIDSignInUIDelegate {
+extension SignInViewController: GIDSignInUIDelegate {
   
 }
 
-extension SignInViewController : GIDSignInDelegate {
+extension SignInViewController: GIDSignInDelegate {
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
     if let error = error {
       let alert = UIAlertController.alertController(
@@ -261,7 +261,7 @@ extension SignInViewController : GIDSignInDelegate {
   }
 }
 
-extension SignInViewController : UITextFieldDelegate {
+extension SignInViewController: UITextFieldDelegate {
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     signInTouchUp(signInButton)
     return true
@@ -291,7 +291,6 @@ extension SignInViewController {
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     
-    
     textGroupView.setWidth(min(view.frame.width - 32, 342))
     textGroupView.setOriginX(view.frame.width / 2 - textGroupView.frame.width / 2)
     
@@ -310,7 +309,6 @@ extension SignInViewController {
     titleLabelVisualEffectView.setOriginX(view.frame.width / 2 - titleLabelVisualEffectView.frame.width / 2)
     orLabel.setOriginX(view.frame.width / 2 - orLabel.frame.width / 2)
     activityIndicator.setOriginX(view.frame.width / 2 - activityIndicator.frame.width / 2)
-    
     
     signInButton.apply(gradient: .green)
     signUpButton.apply(gradient: .blue)

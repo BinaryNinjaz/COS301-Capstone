@@ -6,10 +6,11 @@
 //  Copyright © 2018 Letanyan Arumugam. All rights reserved.
 //
 
+// swiftlint:disable function_body_length
 import Eureka
 
 extension Worker {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Worker(json: json()[id] ?? [:], id: id)
     
@@ -147,7 +148,7 @@ extension Worker {
 }
 
 extension Farm {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Farm(json: json()[id] ?? [:], id: id)
     
@@ -214,7 +215,6 @@ extension Farm {
       cell.textField.clearButtonMode = .whileEditing
     }
     
-    
     let detailsRow = TextAreaRow { row in
       row.title = "Details"
       row.value = details
@@ -276,10 +276,10 @@ extension Farm {
   }
 }
 
-public class DeletableMultivaluedSection : MultivaluedSection {
-  var onRowsRemoved: ((IndexSet) -> ())? = nil
+public class DeletableMultivaluedSection: MultivaluedSection {
+  var onRowsRemoved: ((IndexSet) -> Void)?
   
-  required public init<S>(_ elements: S) where S : Sequence, S.Element == BaseRow {
+  required public init<S>(_ elements: S) where S: Sequence, S.Element == BaseRow {
     fatalError("init has not been implemented")
   }
   
@@ -315,7 +315,7 @@ public class DeletableMultivaluedSection : MultivaluedSection {
 }
 
 extension Orchard {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Orchard(json: json()[id] ?? [:], id: id)
     
@@ -510,7 +510,7 @@ extension Orchard {
 }
 
 extension Session {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Session(json: json(), id: id)
     
@@ -559,7 +559,7 @@ extension Session {
 }
 
 extension HarvestUser {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     temporary = HarvestUser(json: json())
     
@@ -585,7 +585,6 @@ extension HarvestUser {
       onChange()
     }
     
-    
     form
       +++ Section("Name")
       <<< firstnameRow
@@ -594,7 +593,7 @@ extension HarvestUser {
 }
 
 extension EntityItem {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     switch self {
     case let .worker(w): w.information(for: formVC, onChange: onChange)
     case let .orchard(o): o.information(for: formVC, onChange: onChange)

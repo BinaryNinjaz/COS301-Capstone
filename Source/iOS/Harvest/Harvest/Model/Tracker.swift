@@ -15,7 +15,7 @@ struct CollectionPoint {
   var date: Date
 }
 
-struct Tracker : Codable {
+struct Tracker: Codable {
   private(set) var wid: String
   private(set) var trackCount: Int
   private(set) var sessionStart: Date
@@ -107,7 +107,7 @@ struct Tracker : Codable {
     return formatter.string(from: end.timeIntervalSince(sessionStart)) ?? ""
   }
   
-  enum CodingKeys : String, CodingKey {
+  enum CodingKeys: String, CodingKey {
     case wid
     case trackCount
     case sessionStart

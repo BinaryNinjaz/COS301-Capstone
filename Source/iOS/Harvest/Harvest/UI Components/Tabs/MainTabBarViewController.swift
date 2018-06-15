@@ -30,12 +30,10 @@ class MainTabBarViewController: UITabBarController {
       viewControllers?.remove(at: infoIdx)
     }
     
-    
     if let sessionIdx = viewControllers?
       .index(where: { $0.restorationIdentifier == sessionsViewControllerKey }) {
         viewControllers?.remove(at: sessionIdx)
     }
-    
     
     if let statIdx = viewControllers?
       .index(where: { $0.restorationIdentifier == statViewControllerKey }) {

@@ -16,7 +16,7 @@ extension HarvestDB {
     withEmail email: String,
     andPassword password: String,
     on controller: UIViewController,
-    completion: @escaping (Bool) -> () = { _ in }
+    completion: @escaping (Bool) -> Void = { _ in }
     ) {
     Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
       if let err = error {
@@ -51,7 +51,7 @@ extension HarvestDB {
     andPassword password: String,
     name: (first: String, last: String),
     on controller: UIViewController,
-    completion: @escaping (Bool) -> () = { _ in }
+    completion: @escaping (Bool) -> Void = { _ in }
     ) {
     Auth.auth().createUser(
       withEmail: email,
@@ -93,7 +93,7 @@ extension HarvestDB {
   
   static func signOut(
     on controller: UIViewController,
-    completion: @escaping (Bool) -> () = { _ in }
+    completion: @escaping (Bool) -> Void = { _ in }
     ) {
     do {
       TrackerViewController.tracker?.storeSession()
@@ -118,7 +118,7 @@ extension HarvestDB {
   }
   
   static func getWorkingFor(
-    completion: @escaping ((uid: String, wid: String)?) -> ()
+    completion: @escaping ((uid: String, wid: String)?) -> Void
   ) {
     let wfref = ref.child(
       Path.workingFor

@@ -161,14 +161,13 @@ extension SortedDictionary where Key == String, Value == EntityItem {
   }
 }
 
-
 final class Entities {
   private(set) var farms = SortedEntity(<)
   private(set) var workers = SortedEntity(<)
   private(set) var orchards = SortedEntity(<)
   private(set) var sessions = SortedEntity(<)
   
-  private(set) var listners: [Int: () -> ()] = [:]
+  private(set) var listners: [Int: () -> Void] = [:]
   
   static var shared = Entities()
   
@@ -186,7 +185,7 @@ final class Entities {
     sessions.removeAll()
   }
   
-  func listen(with f: @escaping () -> ()) -> Int {
+  func listen(with f: @escaping () -> Void) -> Int {
     listners[listners.count] = f
     return listners.count - 1
   }
@@ -199,9 +198,9 @@ final class Entities {
     listners.forEach { $0.1() }
   }
   
-  func listenOnce(with f: @escaping () -> ()) {
+  func listenOnce(with f: @escaping () -> Void) {
     let id = listners.count
-    let g: () -> () = {
+    let g: () -> Void = {
       f()
       self.deregister(listner: id)
     }
@@ -209,7 +208,7 @@ final class Entities {
     listners[listners.count] = g
   }
   
-  func getOnce(_ kind: EntityItem.Kind, completion: @escaping (Entities) -> ()) {
+  func getOnce(_ kind: EntityItem.Kind, completion: @escaping (Entities) -> Void) {
     switch kind {
     case .worker:
       HarvestDB.getWorkers { (workers) in
@@ -251,7 +250,7 @@ final class Entities {
   
   func getMultiplesOnce(
     _ kinds: Set<EntityItem.Kind>,
-    completion: @escaping (Entities) -> ()
+    completion: @escaping (Entities) -> Void
     ) {
     guard let f = kinds.first else {
       completion(self)

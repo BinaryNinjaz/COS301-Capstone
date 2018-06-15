@@ -32,13 +32,13 @@ struct SortedArray<Element: Equatable> : Collection {
   }
 }
 
-extension SortedArray : BidirectionalCollection {
+extension SortedArray: BidirectionalCollection {
   func index(before: Int) -> Int {
     return before - 1
   }
 }
 
-extension SortedArray : RandomAccessCollection {
+extension SortedArray: RandomAccessCollection {
   func index(_ i: Int, offsetBy: Int) -> Int {
     return i + offsetBy
   }
@@ -51,7 +51,7 @@ extension SortedArray where Element: Comparable {
   }
 }
 
-extension SortedArray : SortedInsertableCollection, CustomStringConvertible {
+extension SortedArray: SortedInsertableCollection, CustomStringConvertible {
   @discardableResult
   mutating func insert(_ e: SortingElement) -> Index {
     guard _store.count > 0 else {
@@ -79,7 +79,7 @@ extension SortedArray : SortedInsertableCollection, CustomStringConvertible {
   }
 }
 
-extension SortedArray : RangeRemovableCollection {
+extension SortedArray: RangeRemovableCollection {
   mutating func removeSubrange(_ bounds: Range<Index>) {
     _store.removeSubrange(bounds)
   }

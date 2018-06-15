@@ -14,7 +14,7 @@ public final class HarvestUser {
   var firstname: String
   var lastname: String
   var uid: String
-  var temporary: HarvestUser? = nil
+  var temporary: HarvestUser?
   
   var displayName: String {
     return firstname + " " + lastname
@@ -46,7 +46,7 @@ public final class HarvestUser {
     ]
   }
   
-  func setUser(_ user: User, _ password: String?, _ completion: @escaping (Bool) -> ()) {
+  func setUser(_ user: User, _ password: String?, _ completion: @escaping (Bool) -> Void) {
     if password != nil { UserDefaults.standard.set(password: password!) }
     UserDefaults.standard.set(username: email)
     
@@ -79,7 +79,6 @@ public final class HarvestUser {
     HarvestUser.current.uid = ""
     HarvestUser.current.workingForID = nil
   }
-  
   
   static var current = HarvestUser()
 }

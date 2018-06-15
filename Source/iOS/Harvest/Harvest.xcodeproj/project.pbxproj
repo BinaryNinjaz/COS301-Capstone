@@ -30,7 +30,7 @@
 		167448B12089299B00FA605C /* Orchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B02089299B00FA605C /* Orchard.swift */; };
 		167448B320892AE900FA605C /* Farm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B220892AE900FA605C /* Farm.swift */; };
 		167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B520892BB500FA605C /* InfoRepresentation.swift */; };
-		167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */; };
+		167448B820892F6100FA605C /* InformationEntityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B720892F6100FA605C /* InformationEntityController.swift */; };
 		167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */; };
 		167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */; };
 		167448C220893B8200FA605C /* SortedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BE20893B8100FA605C /* SortedSet.swift */; };
@@ -70,7 +70,6 @@
 		16C82F5C20819B6E0074595C /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5720819B6E0074595C /* Helper.swift */; };
 		16C82F5D20819B6E0074595C /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5820819B6E0074595C /* Point.swift */; };
 		16C82F5E20819B6E0074595C /* Poly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5920819B6E0074595C /* Poly.swift */; };
-		16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */; };
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
 		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
@@ -125,7 +124,7 @@
 		167448B02089299B00FA605C /* Orchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orchard.swift; sourceTree = "<group>"; };
 		167448B220892AE900FA605C /* Farm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farm.swift; sourceTree = "<group>"; };
 		167448B520892BB500FA605C /* InfoRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoRepresentation.swift; sourceTree = "<group>"; };
-		167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityCollectionViewController.swift; sourceTree = "<group>"; };
+		167448B720892F6100FA605C /* InformationEntityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityController.swift; sourceTree = "<group>"; };
 		167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityCollectionViewCell.swift; sourceTree = "<group>"; };
 		167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityItemTableViewController.swift; sourceTree = "<group>"; };
 		167448BE20893B8100FA605C /* SortedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedSet.swift; sourceTree = "<group>"; };
@@ -165,7 +164,6 @@
 		16C82F5720819B6E0074595C /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		16C82F5820819B6E0074595C /* Point.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		16C82F5920819B6E0074595C /* Poly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly.swift; sourceTree = "<group>"; };
-		16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerClickerSearchCollectionReusableView.swift; sourceTree = "<group>"; };
 		16C82F66208407730074595C /* GeoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKitTests.swift; sourceTree = "<group>"; };
 		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -405,7 +403,7 @@
 		167448D7208A838D00FA605C /* Information */ = {
 			isa = PBXGroup;
 			children = (
-				167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */,
+				167448B720892F6100FA605C /* InformationEntityController.swift */,
 				167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */,
 				160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */,
 				167448C62089430C00FA605C /* EntityViewController.swift */,
@@ -483,7 +481,6 @@
 				16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */,
 				16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */,
 				16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */,
-				16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */,
 				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
 				167448DD208A9F4900FA605C /* SessionEurekaCell.swift */,
 				160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */,
@@ -829,7 +826,7 @@
 				1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */,
 				167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */,
 				167448CD208A5B8100FA605C /* DBWorker.swift in Sources */,
-				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
+				167448B820892F6100FA605C /* InformationEntityController.swift in Sources */,
 				1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
 				167448DA208A83E300FA605C /* Session.swift in Sources */,
@@ -840,7 +837,6 @@
 				167448C9208A49F700FA605C /* FarmEntity.swift in Sources */,
 				167448B12089299B00FA605C /* Orchard.swift in Sources */,
 				167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */,
-				16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */,
 				167448C72089430C00FA605C /* EntityViewController.swift in Sources */,
 				16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */,
 				16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */,

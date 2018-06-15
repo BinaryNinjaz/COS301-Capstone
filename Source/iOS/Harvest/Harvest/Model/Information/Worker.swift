@@ -19,7 +19,7 @@ extension Dictionary where Key == String, Value == Any {
 }
 
 final class Worker {
-  enum Kind : Int, Codable {
+  enum Kind: Int, Codable {
     case worker, foreman
   }
   
@@ -75,8 +75,8 @@ final class Worker {
   }
 }
 
-extension Worker : Hashable {
-  static func ==(lhs: Worker, rhs: Worker) -> Bool {
+extension Worker: Hashable {
+  static func == (lhs: Worker, rhs: Worker) -> Bool {
     return lhs.id == rhs.id
       && lhs.firstname == rhs.firstname
       && lhs.lastname == rhs.lastname
@@ -93,7 +93,7 @@ extension Worker : Hashable {
   }
 }
 
-extension Worker : CustomStringConvertible {
+extension Worker: CustomStringConvertible {
   var description: String {
     return firstname + " " + lastname
   }

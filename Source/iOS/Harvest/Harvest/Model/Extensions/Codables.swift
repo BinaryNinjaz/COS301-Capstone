@@ -9,8 +9,8 @@
 import Foundation
 import CoreLocation
 
-extension CLLocationCoordinate2D : Codable {
-  enum CodingKeys : String, CodingKey {
+extension CLLocationCoordinate2D: Codable {
+  enum CodingKeys: String, CodingKey {
     case latitude
     case longitude
   }
@@ -29,8 +29,8 @@ extension CLLocationCoordinate2D : Codable {
   }
 }
 
-extension CollectionPoint : Codable {
-  enum CodingKeys : String, CodingKey {
+extension CollectionPoint: Codable {
+  enum CodingKeys: String, CodingKey {
     case location
     case date
   }
@@ -48,8 +48,8 @@ extension CollectionPoint : Codable {
   }
 }
 
-extension Worker : Codable {
-  enum CodingKeys : String, CodingKey {
+extension Worker: Codable {
+  enum CodingKeys: String, CodingKey {
     case firstname
     case lastname
     case assignedOrchards

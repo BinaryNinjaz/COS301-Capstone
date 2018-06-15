@@ -10,7 +10,7 @@ import UIKit
 
 private let reuseIdentifier = "informationEntityCell"
 
-class InformationEntityCollectionViewController: UICollectionViewController {
+class InformationEntityController: UICollectionViewController {
   
   let entities = ["Farms", "Orchards", "Workers"]
   var entity = ""
@@ -55,7 +55,9 @@ class InformationEntityCollectionViewController: UICollectionViewController {
     let vc = segue.destination
     switch vc {
     case is InformationEntityItemTableViewController:
-      let tableViewController = vc as! InformationEntityItemTableViewController
+      guard let tableViewController = vc as? InformationEntityItemTableViewController else {
+        fatalError("We should never get here")
+      }
       tableViewController.navigationItem.title = entity
       tableViewController.kind = selectedKind
       
@@ -71,13 +73,11 @@ class InformationEntityCollectionViewController: UICollectionViewController {
     return true
   }
 
-
   // MARK: UICollectionViewDataSource
 
   override func numberOfSections(in collectionView: UICollectionView) -> Int {
     return 1
   }
-
 
   override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return entities.count
@@ -152,8 +152,7 @@ class InformationEntityCollectionViewController: UICollectionViewController {
   }
 }
 
-
-extension InformationEntityCollectionViewController : UICollectionViewDelegateFlowLayout {
+extension InformationEntityController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath

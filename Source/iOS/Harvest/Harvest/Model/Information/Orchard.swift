@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-enum IrrigationKind : String, CustomStringConvertible {
+enum IrrigationKind: String, CustomStringConvertible {
   case micro = "Micro"
   case drip = "Drip"
   case floppy = "Floppy"
@@ -46,7 +46,6 @@ public final class Orchard {
   
   var id: String
   var tempory: Orchard?
-  
   
   init(json: [String: Any], id: String) {
     self.id = id
@@ -99,8 +98,8 @@ public final class Orchard {
   }
 }
 
-extension Orchard : Equatable {
-  static public func ==(lhs: Orchard, rhs: Orchard) -> Bool {
+extension Orchard: Equatable {
+  static public func == (lhs: Orchard, rhs: Orchard) -> Bool {
     return lhs.id == rhs.id
       && lhs.bagMass == rhs.bagMass
       && lhs.crop == rhs.crop
@@ -116,7 +115,7 @@ extension Orchard : Equatable {
   }
 }
 
-extension Orchard : CustomStringConvertible {
+extension Orchard: CustomStringConvertible {
   public var description: String {
     guard let farm = Entities
       .shared
@@ -128,8 +127,8 @@ extension Orchard : CustomStringConvertible {
   }
 }
 
-extension CLLocationCoordinate2D : Equatable {
-  public static func ==(
+extension CLLocationCoordinate2D: Equatable {
+  public static func == (
     lhs: CLLocationCoordinate2D,
     rhs: CLLocationCoordinate2D
   ) -> Bool {

@@ -52,7 +52,7 @@ struct HarvestDB {
   
   // FIXME: -
   static func onLastSession(
-    _ completion: @escaping ([String: Any]) -> ()
+    _ completion: @escaping ([String: Any]) -> Void
   ) {
     let wref = ref.child(Path.yields).queryLimited(toLast: 1)
     wref.observe(.value) { (snapshot) in

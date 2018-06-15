@@ -1,17 +1,9 @@
 disabled_rules:
-  - colon
-  - force_cast
   - force_try
-  - function_body_length
   - identifier_name
   - nesting
-  - redundant_optional_initialization
   - trailing_whitespace
-  - type_name
-  - operator_whitespace
-  - vertical_whitespace
-  - void_return
-  - file_length
+  - file_length #todo?
   
 excluded:
   - Pods

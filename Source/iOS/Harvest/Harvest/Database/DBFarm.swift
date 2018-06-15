@@ -11,7 +11,7 @@ import CoreLocation
 import GoogleSignIn
 
 extension HarvestDB {
-  static func getFarms(_ completion: @escaping ([Farm]) -> ()) {
+  static func getFarms(_ completion: @escaping ([Farm]) -> Void) {
     let fref = ref.child(Path.farms)
     fref.observeSingleEvent(of: .value) { (snapshot) in
       var farms = [Farm]()
@@ -31,7 +31,7 @@ extension HarvestDB {
     }
   }
   
-  static func watchFarms(_ completion: @escaping ([Farm]) -> ()) {
+  static func watchFarms(_ completion: @escaping ([Farm]) -> Void) {
     let fref = ref.child(Path.farms)
     fref.observe(.value) { (snapshot) in
       var farms = [Farm]()
@@ -62,7 +62,7 @@ extension HarvestDB {
   
   static func delete(
     farm: Farm,
-    completion: @escaping (Error?, DatabaseReference) -> ()
+    completion: @escaping (Error?, DatabaseReference) -> Void
   ) {
     let farms = ref.child(Path.farms)
     guard farm.id != "" else {

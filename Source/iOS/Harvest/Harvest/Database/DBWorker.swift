@@ -11,7 +11,7 @@ import CoreLocation
 import GoogleSignIn
 
 extension HarvestDB {
-  static func getWorkers(_ completion: @escaping ([Worker]) -> ()) {
+  static func getWorkers(_ completion: @escaping ([Worker]) -> Void) {
     let wref = ref.child(Path.workers).queryOrdered(byChild: "surname")
     wref.observeSingleEvent(of: .value) { (snapshot) in
       var workers = [Worker]()
@@ -30,7 +30,7 @@ extension HarvestDB {
     }
   }
   
-  static func watchWorkers(_ completion: @escaping ([Worker]) -> ()) {
+  static func watchWorkers(_ completion: @escaping ([Worker]) -> Void) {
     let wref = ref.child(Path.workers).queryOrdered(byChild: "surname")
     wref.observe(.value) { (snapshot) in
       var workers = [Worker]()
@@ -85,7 +85,7 @@ extension HarvestDB {
   
   static func delete(
     worker: Worker,
-    completion: @escaping (Error?, DatabaseReference) -> ()
+    completion: @escaping (Error?, DatabaseReference) -> Void
   ) {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
@@ -107,7 +107,7 @@ extension HarvestDB {
     })
   }
   
-  static func resign(completion: @escaping (Error?, DatabaseReference) -> ()) {
+  static func resign(completion: @escaping (Error?, DatabaseReference) -> Void) {
     let workers = Entities.shared.workersList()
     guard let workerIdx = workers.index(where: { (w) -> Bool in
       w.email == HarvestUser.current.email
