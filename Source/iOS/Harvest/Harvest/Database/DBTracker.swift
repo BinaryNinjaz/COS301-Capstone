@@ -34,12 +34,16 @@ extension HarvestDB {
   static func yieldCollection(
     for user: String,
     on date: Date,
-    completion: @escaping (DataSnapshot) -> ()
+    completion: @escaping (DataSnapshot) -> Void
     ) {
     let yields = ref.child(Path.yields)
     yields.observeSingleEvent(of: .value) { (snapshot) in
       for _child in snapshot.children {
-        guard let child = (_child as? DataSnapshot)?.value as? [String: Any] else {
+        guard let childSnapshot = _child as? DataSnapshot else {
+          continue
+        }
+        
+        guard let child = childSnapshot.value as? [String: Any] else {
           continue
         }
         guard let email = child["email"] as? String else {
@@ -50,7 +54,7 @@ extension HarvestDB {
         }
         
         if email == user && cdate == date {
-          completion(_child as! DataSnapshot)
+          completion(childSnapshot)
           return
         }
       }

@@ -34,7 +34,6 @@ class TrackerViewController: UIViewController {
   @IBOutlet weak var searchBar: UISearchBar!
   @IBOutlet weak var yieldLabel: UILabel!
   
-  
   @IBAction func startSession(_ sender: Any) {
     if tracker == nil {
       if locationManager == nil {
@@ -82,9 +81,7 @@ class TrackerViewController: UIViewController {
         self.workerCollectionView.reloadData()
       }
       
-      let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-        
-      }
+      let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
       
       let discard = UIAlertAction(title: "Discard All Collections", style: .default) { _ in
         self.locationManager.stopUpdatingLocation()
@@ -125,7 +122,6 @@ class TrackerViewController: UIViewController {
     startSessionButton.layer.cornerRadius = 40
     hideKeyboardWhenTappedAround()
     
-    
     let sessionLayer = CAGradientLayer.gradient(colors: .green,
                                                 locations: [0, 1],
                                                 cornerRadius: 40,
@@ -155,7 +151,7 @@ class TrackerViewController: UIViewController {
 
 }
 
-extension TrackerViewController : CLLocationManagerDelegate {
+extension TrackerViewController: CLLocationManagerDelegate {
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     guard let loc = locations.first else {
       return
@@ -187,7 +183,7 @@ func attributedStringForYieldCollection(_ a: Int, _ p: Int) -> NSAttributedStrin
   return result
 }
 
-extension TrackerViewController : UICollectionViewDataSource {
+extension TrackerViewController: UICollectionViewDataSource {
   
   var shouldDisplayMessage: Bool {
     return tracker == nil
@@ -243,7 +239,6 @@ extension TrackerViewController : UICollectionViewDataSource {
       cell.textLabel.text = "No workers that contains '\(searchText)' in their name"
       return cell
     }
-    
     
     guard let cell = collectionView
       .dequeueReusableCell(withReuseIdentifier: "workerCollectionViewCell",
@@ -327,8 +322,6 @@ extension TrackerViewController : UICollectionViewDataSource {
         .tracker?
         .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
       
-      
-      
       self.yieldLabel.attributedText = attributedStringForYieldCollection(
         self.tracker?.totalCollected() ?? 0,
         Int(Double(self.tracker?.totalCollected() ?? 0) * 1.1))
@@ -373,13 +366,13 @@ extension TrackerViewController : UICollectionViewDataSource {
   }
 }
 
-extension TrackerViewController : UICollectionViewDelegate {
+extension TrackerViewController: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     
   }
 }
 
-extension TrackerViewController : UICollectionViewDelegateFlowLayout {
+extension TrackerViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -405,7 +398,7 @@ extension TrackerViewController : UICollectionViewDelegateFlowLayout {
   }
 }
 
-extension TrackerViewController : UISearchBarDelegate {
+extension TrackerViewController: UISearchBarDelegate {
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     filteredWorkers = workers.filter({ (worker) -> Bool in
       guard searchText != "" else {

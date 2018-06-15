@@ -11,7 +11,7 @@ import CoreLocation
 import GoogleSignIn
 
 extension HarvestDB {
-  static func getSessions(_ completion: @escaping ([Session]) -> ()) {
+  static func getSessions(_ completion: @escaping ([Session]) -> Void) {
     let sref = ref.child(Path.sessions)
     sref.observeSingleEvent(of: .value) { (snapshot) in
       var sessions = [Session]()
@@ -31,7 +31,7 @@ extension HarvestDB {
     }
   }
   
-  static func watchSessions(_ completion: @escaping ([Session]) -> ()) {
+  static func watchSessions(_ completion: @escaping ([Session]) -> Void) {
     let sref = ref.child(Path.sessions)
     sref.observe(.value) { (snapshot) in
       var sessions = [Session]()
@@ -62,7 +62,7 @@ extension HarvestDB {
   
   static func delete(
     session: Session,
-    completion: @escaping (Error?, DatabaseReference) -> ()
+    completion: @escaping (Error?, DatabaseReference) -> Void
   ) {
     let sessions = ref.child(Path.sessions)
     guard session.id != "" else {

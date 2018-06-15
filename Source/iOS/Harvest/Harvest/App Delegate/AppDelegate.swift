@@ -17,10 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-
   func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions:
-                                [UIApplicationLaunchOptionsKey: Any]?
+                   didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
   ) -> Bool {
     GMSServices.provideAPIKey("AIzaSyCqLn8RGeR84StTCIA1uvoO_iWGhXw8vAU")
     FirebaseApp.configure()
@@ -89,6 +87,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // FIXME: Restore in release build
 //    TrackerViewController.tracker?.storeSession()
   }
-
 
 }

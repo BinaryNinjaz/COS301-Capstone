@@ -15,8 +15,8 @@ class WorkerCollectionViewCell: UICollectionViewCell {
   @IBOutlet weak var incButton: UIButton!
   @IBOutlet weak var decButton: UIButton!
   
-  var inc: ((WorkerCollectionViewCell) -> ())?
-  var dec: ((WorkerCollectionViewCell) -> ())?
+  var inc: ((WorkerCollectionViewCell) -> Void)?
+  var dec: ((WorkerCollectionViewCell) -> Void)?
   
   @IBAction func incrementTouchUp(_ sender: Any) {
     inc?(self)

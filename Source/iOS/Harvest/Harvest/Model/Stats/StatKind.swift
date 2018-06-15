@@ -8,7 +8,7 @@
 
 import Swift
 
-enum StatKind : CustomStringConvertible {
+enum StatKind: CustomStringConvertible {
   case perSessionWorkers
   case workerHistory
   case orchardHistory

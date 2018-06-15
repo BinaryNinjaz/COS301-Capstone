@@ -9,8 +9,8 @@
 import UIKit
 
 class InformationEntityItemTableViewController: UITableViewController {
-  var listnerId: Int? = nil
-  var selectedEntity: EntityItem? = nil
+  var listnerId: Int?
+  var selectedEntity: EntityItem?
   var kind: EntityItem.Kind = .none {
     didSet {
       navigationItem.rightBarButtonItem?.isEnabled = kind != .session
@@ -92,7 +92,6 @@ class InformationEntityItemTableViewController: UITableViewController {
       break
     }
   }
-  
 
   override func numberOfSections(in tableView: UITableView) -> Int {
     return kind == .session ? Entities.shared.sessionDates().count : 1

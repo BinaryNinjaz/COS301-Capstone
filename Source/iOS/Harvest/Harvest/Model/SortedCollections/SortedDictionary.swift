@@ -3,16 +3,16 @@ import Swift
 struct SortedDictionary<Key: Hashable, Value> : Collection {
   typealias SortingElement = Key
   
-  struct Index : Comparable, Strideable {
+  struct Index: Comparable, Strideable {
     typealias Stride = Int
     
     var boxed: Int
     
-    static func ==(lhs: Index, rhs: Index) -> Bool {
+    static func == (lhs: Index, rhs: Index) -> Bool {
       return lhs.boxed == rhs.boxed
     }
     
-    static func <(lhs: Index, rhs: Index) -> Bool {
+    static func < (lhs: Index, rhs: Index) -> Bool {
       return lhs.boxed < rhs.boxed
     }
     
@@ -63,7 +63,7 @@ struct SortedDictionary<Key: Hashable, Value> : Collection {
   }
 }
 
-extension SortedDictionary : SortedUniqueInsertableCollection, CustomStringConvertible {
+extension SortedDictionary: SortedUniqueInsertableCollection, CustomStringConvertible {
   @discardableResult
   mutating func insert(unique element: Element) -> (Bool, Index) {
     let (contains, idx) = insertionPoint(for: element.key)
@@ -104,7 +104,7 @@ extension SortedDictionary where Key: Comparable {
   }
 }
 
-extension SortedDictionary : RangeRemovableCollection {
+extension SortedDictionary: RangeRemovableCollection {
   mutating func removeSubrange(_ bounds: Range<Index>) {
     for ref_offset in stride(from: bounds.lowerBound, to: bounds.upperBound, by: 1) {
       guard let idx = _dict.index(forKey: _ref[ref_offset.boxed]) else {
@@ -116,7 +116,7 @@ extension SortedDictionary : RangeRemovableCollection {
   }
 }
 
-extension SortedDictionary : RandomAccessCollection {
+extension SortedDictionary: RandomAccessCollection {
   subscript(key: Key) -> Value? {
     get {
       return _dict[key]

@@ -8,7 +8,7 @@
 
 import Eureka
 
-struct OrganizationInfo : CustomStringConvertible, Equatable {
+struct OrganizationInfo: CustomStringConvertible, Equatable {
   var uid: String?
   var name: String
   
@@ -21,12 +21,12 @@ struct OrganizationInfo : CustomStringConvertible, Equatable {
     return name
   }
   
-  static func ==(lhs: OrganizationInfo, rhs: OrganizationInfo) -> Bool {
+  static func == (lhs: OrganizationInfo, rhs: OrganizationInfo) -> Bool {
     return lhs.uid == rhs.uid
   }
 }
 
-class SettingsEurekaViewController : FormViewController {
+class SettingsEurekaViewController: FormViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -75,9 +75,6 @@ class SettingsEurekaViewController : FormViewController {
         +++ Section()
         <<< resignRow
     }
-    
-    
-    
     
   }
   

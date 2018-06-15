@@ -9,11 +9,11 @@
 import UIKit
 import Charts
 
-class StatsViewController : UIViewController {
-  var stat: Stat? = nil
-  var barChart: BarChartView? = nil
-  var pieChart: PieChartView? = nil
-  var lineChart: LineChartView? = nil
+class StatsViewController: UIViewController {
+  var stat: Stat?
+  var barChart: BarChartView?
+  var pieChart: PieChartView?
+  var lineChart: LineChartView?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -87,7 +87,6 @@ class StatsViewController : UIViewController {
       return
     }
     
-    
     let barDataSet = BarChartDataSet()
     for (i, amount) in zip(0..., amounts) {
       barDataSet.values.append(BarChartDataEntry(x: Double(i), y: amount))
@@ -134,8 +133,7 @@ class StatsViewController : UIViewController {
   }
 }
 
-
-extension DateFormatter : IAxisValueFormatter {
+extension DateFormatter: IAxisValueFormatter {
   public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
     return string(from: Date(timeIntervalSince1970: value))
   }
@@ -153,7 +151,7 @@ extension DateFormatter : IAxisValueFormatter {
   }
 }
 
-final class OrchardDateFormatter  : IAxisValueFormatter {
+final class OrchardDateFormatter: IAxisValueFormatter {
   var formatter: DateFormatter
   var range: [Double]
   

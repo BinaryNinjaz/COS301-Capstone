@@ -23,7 +23,7 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
   var orchards = [Orchard]()
   
   var orchardPolygons: [GMSPolygon] = []
-  var trackLine: GMSPolyline? = nil
+  var trackLine: GMSPolyline?
   var pickUpMarkers: [GMSMarker] = []
   
   @IBOutlet weak var mapView: GMSMapView!
@@ -62,7 +62,6 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
                                          bearing: .pi / 2,
                                          viewingAngle: .pi)
     }
-    
     
   }
   

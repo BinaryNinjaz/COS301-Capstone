@@ -21,14 +21,14 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   
   var zoomLevel: Float = 15.0
   
-  var orchardPolygon: GMSPolygon? = nil
+  var orchardPolygon: GMSPolygon?
   var collections = [CLLocationCoordinate2D]()
   
   @IBOutlet weak var mapView: GMSMapView!
   @IBOutlet weak var removeAllButton: UIButton!
   @IBOutlet weak var removeLastButton: UIButton!
   
-  var actuallyChanged: ((RowOf<Orchard>) -> ())? = nil
+  var actuallyChanged: ((RowOf<Orchard>) -> Void)?
   
   func updatePolygon() {
     orchardPolygon?.map = nil

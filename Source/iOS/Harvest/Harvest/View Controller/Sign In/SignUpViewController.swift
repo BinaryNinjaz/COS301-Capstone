@@ -53,6 +53,7 @@ class SignUpViewController: UIViewController {
     return result
   }
   
+  // swiftlint:disable function_body_length
   @IBAction func signUpTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text, username != "" else {
       let alert = UIAlertController.alertController(
@@ -145,8 +146,8 @@ class SignUpViewController: UIViewController {
       }
     }
     
-    
   }
+  // swiftlint:enable function_body_length
   
   @IBAction func cancelTouchUp(_ sender: Any) {
     dismiss(animated: true, completion: nil)
@@ -196,7 +197,7 @@ class SignUpViewController: UIViewController {
   }
 }
 
-extension SignUpViewController : UITextFieldDelegate {
+extension SignUpViewController: UITextFieldDelegate {
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     
     if textField === firstnameTextField {

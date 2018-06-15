@@ -13,6 +13,7 @@ public final class StatSetupViewController: FormViewController {
   var sessionsRow: PushRow<Session>! = nil
   var orchardsRow: PushRow<Orchard>! = nil
   
+  // swiftlint:disable function_body_length
   public override func viewDidLoad() {
     super.viewDidLoad()
     let statKind = PickerRow<StatKind>("Stat Kind") { row in

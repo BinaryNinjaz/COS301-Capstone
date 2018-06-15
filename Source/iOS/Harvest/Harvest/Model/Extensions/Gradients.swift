@@ -43,7 +43,7 @@ extension CAGradientLayer {
     return gradient(colors: .orange,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor:[UIColor].orange[1])
+                    borderColor: [UIColor].orange[1])
   }
   
   static var red: CAGradientLayer {
