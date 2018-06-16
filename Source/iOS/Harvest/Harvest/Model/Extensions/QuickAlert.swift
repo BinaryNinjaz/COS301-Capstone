@@ -24,4 +24,14 @@ extension UIAlertController {
     
     return alert
   }
+  
+  static func present(
+    title: String,
+    message: String,
+    on controller: UIViewController,
+    completion: (() -> Void)? = nil
+  ) {
+    let alert = UIAlertController.alertController(title: title, message: message)
+    controller.present(alert, animated: true, completion: completion)
+  }
 }

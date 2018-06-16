@@ -22,17 +22,17 @@
                                 <rect key="frame" x="132" y="324" width="111" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="39" id="Yas-L3-FZk"/>
-                                    <constraint firstAttribute="width" constant="111" id="goW-FS-HOu"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="111" id="goW-FS-HOu"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="32"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HarvestLogo" translatesAutoresizingMaskIntoConstraints="NO" id="0XE-fH-4Pp">
-                                <rect key="frame" x="160" y="261" width="55" height="55"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="HarvestGlyph" translatesAutoresizingMaskIntoConstraints="NO" id="0XE-fH-4Pp">
+                                <rect key="frame" x="117" y="176" width="140" height="140"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="55" id="hEv-EB-Lqu"/>
-                                    <constraint firstAttribute="height" constant="55" id="txW-R3-2zq"/>
+                                    <constraint firstAttribute="width" constant="140" id="hEv-EB-Lqu"/>
+                                    <constraint firstAttribute="height" constant="140" id="txW-R3-2zq"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -52,6 +52,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="HarvestLogo" width="123" height="123"/>
+        <image name="HarvestGlyph" width="360" height="360"/>
     </resources>
 </document>

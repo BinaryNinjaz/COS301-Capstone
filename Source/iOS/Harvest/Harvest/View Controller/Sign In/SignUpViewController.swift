@@ -40,14 +40,14 @@ class SignUpViewController: UIViewController {
   }
   
   func mainViewToPresent() -> UIViewController? {
-    let result: UIViewController?
+    let result = storyboard?
+      .instantiateViewController(withIdentifier: "mainTabBarViewController")
+      as? MainTabBarViewController
     
     if HarvestUser.current.workingForID != nil {
-      result = storyboard?.instantiateViewController(withIdentifier: "mainTabBarViewController")
-      (result as? MainTabBarViewController)?.setUpForForeman()
+      result?.setUpForForeman()
     } else {
-      result = storyboard?.instantiateViewController(withIdentifier: "mainTabBarViewController")
-      (result as? MainTabBarViewController)?.setUpForFarmer()
+      result?.setUpForFarmer()
     }
     
     return result
@@ -56,78 +56,54 @@ class SignUpViewController: UIViewController {
   // swiftlint:disable function_body_length
   @IBAction func signUpTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text, username != "" else {
-      let alert = UIAlertController.alertController(
-        title: "No email address provided",
-        message: "Please provide an email address to create an account")
-      
-      present(alert, animated: true, completion: nil)
-      
+      UIAlertController.present(title: "No email address provided",
+                                message: "Please provide an email address to create an account",
+                                on: self)
       return
     }
     
     guard let password = passwordTextField.text, password.count >= 6 else {
-      let alert = UIAlertController.alertController(
-        title: "Password too short",
-        message: "Password must be at least 6 characters long")
-      
-      present(alert, animated: true, completion: nil)
-      
+      UIAlertController.present(title: "Password too short",
+                                message: "Password must be at least 6 characters long",
+                                on: self)
       return
     }
     
-    let emailRegex = try! NSRegularExpression(
-      pattern: "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
-
-    let urange = NSRange(location: 0, length: username.count)
-    let match = emailRegex.rangeOfFirstMatch(in: username, range: urange)
-
-    guard match == urange else {
-      let alert = UIAlertController.alertController(
-        title: "Invalid Email Address",
-        message: "Please provide a valid email address")
-
-      present(alert, animated: true, completion: nil)
-
+    guard username.isEmail() else {
+      UIAlertController.present(title: "Invalid Email Address",
+                                message: "Please provide a valid email address",
+                                on: self)
       return
     }
     
     guard let fname = firstnameTextField.text, fname != "" else {
-      let alert = UIAlertController.alertController(
-        title: "No first name provided",
-        message: "Please provide a first name to create an account")
-      
-      present(alert, animated: true, completion: nil)
-      
+      UIAlertController.present(title: "No first name provided",
+                                message: "Please provide a first name to create an account",
+                                on: self)
       return
     }
     
     guard let lname = lastnameTextField.text, lname != "" else {
-      let alert = UIAlertController.alertController(
-        title: "No last name provided",
-        message: "Please provide a last name to create an account")
-      
-      present(alert, animated: true, completion: nil)
-      
+      UIAlertController.present(title: "No last name provided",
+                                        message: "Please provide a last name to create an account",
+                                        on: self)
       return
     }
     
     guard let confirmedPassword = confirmPasswordTextField.text, confirmedPassword != "" else {
-      let alert = UIAlertController.alertController(
-        title: "No confirm password provided",
-        message: "Please provide a confirm password to create an account")
-      
-      present(alert, animated: true, completion: nil)
-      
+      UIAlertController.present(title: "No confirm password provided",
+                                message: "Please provide a confirm password to create an account",
+                                on: self)
       return
     }
     
     guard confirmedPassword == password else {
-      let alert = UIAlertController.alertController(
-        title: "Mismatching passwords",
-        message: "Your passwords are not matching. Please provide the same password in both password prompts")
-      
-      present(alert, animated: true, completion: nil)
-      
+      UIAlertController.present(title: "Mismatching passwords",
+                                message: """
+                                Your passwords are not matching. Please provide the same password in both\
+                                password prompts
+                                """,
+                                on: self)
       return
     }
     

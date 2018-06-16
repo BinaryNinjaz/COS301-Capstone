@@ -47,17 +47,29 @@ class SignInViewController: UIViewController {
   }
   
   func mainViewToPresent() -> UIViewController? {
-    let result: UIViewController?
+    let result = storyboard?
+      .instantiateViewController(withIdentifier: "mainTabBarViewController")
+      as? MainTabBarViewController
     
     if HarvestUser.current.workingForID != nil {
-      result = storyboard?.instantiateViewController(withIdentifier: "mainTabBarViewController")
-      (result as? MainTabBarViewController)?.setUpForForeman()
+      result?.setUpForForeman()
     } else {
-      result = storyboard?.instantiateViewController(withIdentifier: "mainTabBarViewController")
-      (result as? MainTabBarViewController)?.setUpForFarmer()
+      result?.setUpForFarmer()
     }
     
     return result
+  }
+  
+  func attemptSignIn(with credential: AuthCredential) {
+    isLoading = true
+    HarvestDB.signIn(with: credential, on: self) { success in
+      self.isLoading = false
+      if success {
+        if let vc = self.mainViewToPresent() {
+          self.present(vc, animated: true, completion: nil)
+        }
+      }
+    }
   }
   
   func attempSignIn(username: String, password: String) {
@@ -70,62 +82,120 @@ class SignInViewController: UIViewController {
     }
   }
   
+  func attempSignIn(withVerificationID vid: String, verificationCode code: String) {
+    let credential = PhoneAuthProvider.provider().credential(withVerificationID: vid,
+                                                             verificationCode: code)
+    attemptSignIn(with: credential)
+  }
+  
   @IBAction func signInTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text, username != "" else {
-      let alert = UIAlertController.alertController(
-        title: "No Email",
-        message: "Please input an email address to log in")
-      
-      present(alert, animated: true, completion: nil)
-      
+      UIAlertController.present(title: "No Email or Phone Number Provided",
+                                message: """
+                                Please input an email address to log in as a farm owner.
+                                Or enter a phone number to log in as a foreman.
+                                """,
+                                on: self)
       return
     }
     
-    let password = passwordTextField.text ?? ""
+    switch username {
+    case let u where u.isEmail():
+      guard let password = passwordTextField.text, password != "" else {
+        UIAlertController.present(title: "Password Not Long Enough",
+                                  message: "Password length must be at least 6 characters long",
+                                  on: self)
+        return
+      }
+      attempSignIn(username: username, password: password)
+      
+    case let u where u.isPhoneNumber():
+      if let password = passwordTextField.text, password != "" {
+        if let verificationID = UserDefaults.standard.getVerificationID() {
+          attempSignIn(withVerificationID: verificationID, verificationCode: password)
+        } else {
+          UIAlertController.present(title: "Enter Only Phone Number",
+                                    message: """
+                                    Please enter only phone number in the username first and press \
+                                    'Send Verification Code'. Then enter the code into the password\
+                                    field once you have it then press 'Log in with Harvest'
+                                    """, on: self)
+        }
+        
+      } else {
+        isLoading = true
+        HarvestDB.verify(phoneNumber: u, on: self) { _ in
+          self.isLoading = false
+        }
+      }
+      
+    default:
+      UIAlertController.present(title: "Unknown Username",
+                                message: """
+                                Please input an email address to log in as a farm owner.
+                                Or enter a phone number to log in as a foreman.
+                                """,
+                                on: self)
+      
+    }
+  }
+  
+  @IBAction func usernameDidEdit(_ sender: UITextField) {
+    guard let un = usernameTextField.text, un != "" else {
+      return
+    }
     
-    attempSignIn(username: username, password: password)
+    switch un {
+    case let u where u.isEmail():
+      if !passwordTextField.isSecureTextEntry {
+        passwordTextField.isSecureTextEntry = true
+      }
+      signInButton.setTitle("Log in with Harvest", for: .normal)
+      
+    case let u where u.isPhoneNumber():
+      if passwordTextField.isSecureTextEntry {
+        passwordTextField.isSecureTextEntry = false
+      }
+      if let p = passwordTextField.text, p == "" {
+        signInButton.setTitle("Send Verification Code", for: .normal)
+      } else {
+        signInButton.setTitle("Log in with Harvest", for: .normal)
+      }
+      
+    default:
+      if !passwordTextField.isSecureTextEntry {
+        passwordTextField.isSecureTextEntry = true
+      }
+      signInButton.setTitle("Log in with Harvest", for: .normal)
+    }
   }
   
   @IBAction func forgotAccountTouchUp(_ sender: UIButton) {
     
     let emailRequest = UIAlertController(
       title: "Reset Password",
-      message: """
-        Please enter your email, you will receive an email to reset your\
-        password.
-      """,
+      message: "Please enter your email. You will then receive an email to reset your password.",
       preferredStyle: .alert)
     
     emailRequest.addTextField { (email) in email.keyboardType = .emailAddress }
     
     emailRequest.addAction(UIAlertAction(title: "Request Reset", style: .default, handler: { [weak emailRequest] _ in
-      guard let email = emailRequest?.textFields?[0].text else {
-        let alert = UIAlertController.alertController(
-          title: "No Email",
-          message: "Please eneter a valid email address")
+      guard let email = emailRequest?.textFields?[0].text, email != "" else {
+        UIAlertController.present(title: "No Email",
+                                  message: "Please enter an email address",
+                                  on: self)
         
-        self.present(alert, animated: true, completion: nil)
+        return
+      }
+      guard email.isEmail() else {
+        UIAlertController.present(title: "Not a Valid Email",
+                                  message: "Please enter a valid email address",
+                                  on: self)
         
         return
       }
       
-      Auth.auth().sendPasswordReset(withEmail: email) { (error) in
-        if let err = error {
-          let alert = UIAlertController.alertController(
-            title: "An Error Occured",
-            message: err.localizedDescription)
-          
-          self.present(alert, animated: true, completion: nil)
-          
-          return
-        }
-        
-        let alert = UIAlertController.alertController(
-          title: "Password Reset Sent",
-          message: "An email was sent to \(email) to reset your password")
-        
-        self.present(alert, animated: true, completion: nil)
-      }
+      HarvestDB.resetPassword(forEmail: email, on: self)
     }))
     
     emailRequest.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -208,11 +278,10 @@ extension SignInViewController: GIDSignInUIDelegate {
 extension SignInViewController: GIDSignInDelegate {
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
     if let error = error {
-      let alert = UIAlertController.alertController(
-        title: "An Error Occured",
-        message: error.localizedDescription)
+      UIAlertController.present(title: "An Error Occured",
+                                message: error.localizedDescription,
+                                on: self)
       
-      self.present(alert, animated: true, completion: nil)
       isLoading = false
       return
     }
@@ -229,35 +298,7 @@ extension SignInViewController: GIDSignInDelegate {
     HarvestUser.current.firstname = user.profile.givenName
     HarvestUser.current.lastname = user.profile.familyName
     
-    Auth.auth().signIn(with: credential) { (user, error) in
-      if let error = error {
-        let alert = UIAlertController.alertController(
-          title: "An Error Occured",
-          message: error.localizedDescription)
-        
-        self.present(alert, animated: true, completion: nil)
-        self.isLoading = false
-        return
-      }
-      
-      guard let user = user else {
-        let alert = UIAlertController.alertController(
-          title: "Sign In Failure",
-          message: "Unknown Error Occured")
-        self.present(alert, animated: true, completion: nil)
-        return
-      }
-      
-      HarvestUser.current.setUser(user, nil) { _ in
-        if let vc = self.mainViewToPresent() {
-          self.present(vc, animated: true, completion: nil)
-        }
-        self.isLoading = false
-      }
-      if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
-        oldSession.storeSession()
-      }
-    }
+    attemptSignIn(with: credential)
   }
 }
 
@@ -278,7 +319,6 @@ extension SignInViewController: UITextFieldDelegate {
           self.view.frame.origin.y -= group.origin.y - 48
         }
       }
-      
     }
   }
   
@@ -307,7 +347,7 @@ extension SignInViewController {
     signUpButton.setOriginY(forgotAccountVisualEffectView.frame.origin.y - signUpButton.frame.height - 8)
     
     titleLabelVisualEffectView.setOriginX(view.frame.width / 2 - titleLabelVisualEffectView.frame.width / 2)
-    orLabel.setOriginX(view.frame.width / 2 - orLabel.frame.width / 2)
+    orLabelVisualEffectView.setOriginX(view.frame.width / 2 - orLabel.frame.width / 2)
     activityIndicator.setOriginX(view.frame.width / 2 - activityIndicator.frame.width / 2)
     
     signInButton.apply(gradient: .green)

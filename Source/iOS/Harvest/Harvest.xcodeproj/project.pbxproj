@@ -21,6 +21,7 @@
 		16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FC820696B8F00E1A292 /* QuickAlert.swift */; };
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
+		164F30A720D4745900E7772A /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164F30A620D4745900E7772A /* Verification.swift */; };
 		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
 		1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */; };
 		1657B73E20A0E17300F5F478 /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73D20A0E17300F5F478 /* Stat.swift */; };
@@ -115,6 +116,8 @@
 		16420FC820696B8F00E1A292 /* QuickAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlert.swift; sourceTree = "<group>"; };
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		164F30A520D46DAA00E7772A /* Harvest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Harvest.entitlements; sourceTree = "<group>"; };
+		164F30A620D4745900E7772A /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
 		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
 		1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatSetupViewController.swift; sourceTree = "<group>"; };
 		1657B73D20A0E17300F5F478 /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
@@ -228,6 +231,7 @@
 		1604E4A1206958E900E9BA15 /* Harvest */ = {
 			isa = PBXGroup;
 			children = (
+				164F30A520D46DAA00E7772A /* Harvest.entitlements */,
 				169E5195206C62D6006B923E /* Model */,
 				16420FCA2069717200E1A292 /* Database */,
 				16420FC720696B6500E1A292 /* UI Components */,
@@ -451,6 +455,7 @@
 				16C82F5420819B4C0074595C /* GeoKit */,
 				1657B73C20A0E16300F5F478 /* Stats */,
 				169E5196206C62E6006B923E /* Tracker.swift */,
+				164F30A620D4745900E7772A /* Verification.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -589,6 +594,9 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -820,6 +828,7 @@
 				167448C420893B8200FA605C /* SortedDictionary.swift in Sources */,
 				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
+				164F30A720D4745900E7772A /* Verification.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
 				1657B73E20A0E17300F5F478 /* Stat.swift in Sources */,
 				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
@@ -1026,6 +1035,7 @@
 			baseConfigurationReference = 345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Harvest/Harvest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 86QZ48F54E;
 				INFOPLIST_FILE = "$(SRCROOT)/Harvest/App Delegate/Info.plist";
@@ -1043,6 +1053,7 @@
 			baseConfigurationReference = 7AEA05C55967C38BA2131585 /* Pods-Harvest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Harvest/Harvest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 86QZ48F54E;
 				INFOPLIST_FILE = "$(SRCROOT)/Harvest/App Delegate/Info.plist";
