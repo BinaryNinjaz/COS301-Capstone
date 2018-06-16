@@ -31,7 +31,7 @@ class SettingsEurekaViewController: FormViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let userRow = HarvestUser.current.email
+    let userRow = HarvestUser.current.accountIdentifier
     
     let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
       row.title = "Admin"
@@ -53,11 +53,28 @@ class SettingsEurekaViewController: FormViewController {
     let resignRow = ButtonRow { row in
       row.title = "Resign"
     }.onCellSelection { (_, _) in
-      HarvestDB.resign { _, _ in
-        if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInViewController") {
-          self.present(vc, animated: true, completion: nil)
+      
+      let confirmation = UIAlertController(title: "Are You Sure?",
+                                           message: """
+                                           Are you sure you want to remove yourself \
+                                           from association with you current farm?
+                                           """,
+                                           preferredStyle: .alert)
+      
+      let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+      let confirm = UIAlertAction(title: "Resign", style: .destructive, handler: { _ in
+        HarvestDB.resign { _, _ in
+          if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInViewController") {
+            self.present(vc, animated: true, completion: nil)
+          }
         }
-      }
+      })
+      
+      confirmation.addAction(cancel)
+      confirmation.addAction(confirm)
+      
+      self.present(confirmation, animated: true, completion: nil)
+      
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red

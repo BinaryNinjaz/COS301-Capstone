@@ -70,7 +70,7 @@ final class Worker {
   static var currentWorker: Worker {
     return Worker(json: [
       "name": HarvestUser.current.displayName,
-      "email": HarvestUser.current.email
+      "email": HarvestUser.current.accountIdentifier
     ], id: HarvestUser.current.uid)
   }
 }

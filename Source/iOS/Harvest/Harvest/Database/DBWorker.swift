@@ -110,7 +110,7 @@ extension HarvestDB {
   static func resign(completion: @escaping (Error?, DatabaseReference) -> Void) {
     let workers = Entities.shared.workersList()
     guard let workerIdx = workers.index(where: { (w) -> Bool in
-      w.email == HarvestUser.current.email
+      w.email == HarvestUser.current.accountIdentifier
     }) else {
       return
     }

@@ -23,7 +23,7 @@ extension Worker {
     for (_, orchardEntity) in orchards {
       let orchard = orchardEntity.orchard!
       orchardSection <<< ListCheckRow<Orchard>(orchard.description) { row in
-        row.title = orchard.description
+        row.title = orchard.assignedFarm + " " + orchard.name
         row.selectableValue = orchard
         row.value = assignedOrchards.contains(orchard.id) ? orchard : nil
       }.onChange { (row) in

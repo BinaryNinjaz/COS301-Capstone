@@ -57,6 +57,8 @@ class TrackerViewController: UIViewController {
         searchBar.isUserInteractionEnabled = true
         
         workerCollectionView.reloadData()
+      } else {
+        // FIXME: Error when can't access location
       }
     } else {
       let amount = tracker?.totalCollected() ?? 0
@@ -131,7 +133,6 @@ class TrackerViewController: UIViewController {
     Entities.shared.getOnce(.worker) { _ in }
     
     HarvestDB.watchWorkers { (workers) in
-      
       self.updateWorkerCells(with: workers)
     }
     
@@ -278,20 +279,16 @@ extension TrackerViewController: UICollectionViewDataSource {
     
     cell.inc = { this in
       guard self.tracker != nil else {
-        let alert = UIAlertController.alertController(
-          title: "Session Not Started",
-          message: "Please start the session before collecting yields")
-        
-        self.present(alert, animated: true, completion: nil)
+        UIAlertController.present(title: "Session Not Started",
+                                  message: "Please start the session before collecting yields",
+                                  on: self)
         return
       }
       
       guard let loc = self.currentLocation else {
-        let alert = UIAlertController.alertController(
-          title: "Location Unavailable",
-          message: "Please allow location service from the 'Settings' app")
-        
-        self.present(alert, animated: true, completion: nil)
+        UIAlertController.present(title: "Location Unavailable",
+                                  message: "Please allow location service from the 'Settings' app",
+                                  on: self)
         return
       }
       
@@ -308,11 +305,9 @@ extension TrackerViewController: UICollectionViewDataSource {
     
     cell.dec = { this in
       guard self.tracker != nil else {
-        let alert = UIAlertController.alertController(
-          title: "Session Not Started",
-          message: "Please start the session before collecting yields")
-        
-        self.present(alert, animated: true, completion: nil)
+        UIAlertController.present(title: "Session Not Started",
+                                  message: "Please start the session before collecting yields",
+                                  on: self)
         return
       }
       
