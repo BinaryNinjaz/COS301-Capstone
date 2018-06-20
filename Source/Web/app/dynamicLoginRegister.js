@@ -34,6 +34,8 @@ function showLogin(){
 													+"<br>"
 													+"<button onclick='showRegister()' class='btn btn-primary'>Don't have an account? Sign Up</button>"
 													+"<br>"
+													+"<button onclick='googleLogin()' class= 'btn btn-google'>Log in with Google</button>"
+													+"<br>"
 													+"<a  onclick='resetPassword()' href='javascript:;'>Forgot password</a>"
 
 
