@@ -41,6 +41,11 @@ public class InfoFarmFragment extends Fragment {
     private Farm farm;
 
     private TextView name;
+    private TextView company;
+    private TextView email;
+    private TextView phone;
+    private TextView province;
+    private TextView town;
     private TextView further;
 
 
@@ -61,12 +66,32 @@ public class InfoFarmFragment extends Fragment {
         if ((editable && newCreation)) throw new AssertionError();
 
         if (newCreation) {
+            //Farm
             getView().findViewById(R.id.info_farm_name_look).setVisibility(View.GONE);
-            getView().findViewById(R.id.info_farm_further_look).setVisibility(View.GONE);
             name = getView().findViewById(R.id.info_farm_name_edit);
             name.setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.info_farm_company_look).setVisibility(View.GONE);
+            company = getView().findViewById(R.id.info_farm_company_edit);
+            company.setVisibility(View.VISIBLE);
+            //Contact
+            getView().findViewById(R.id.info_farm_email_look).setVisibility(View.GONE);
+            email = getView().findViewById(R.id.info_farm_email_edit);
+            email.setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.info_farm_phone_look).setVisibility(View.GONE);
+            phone = getView().findViewById(R.id.info_farm_phone_edit);
+            phone.setVisibility(View.VISIBLE);
+            //Location
+            getView().findViewById(R.id.info_farm_province_look).setVisibility(View.GONE);
+            province = getView().findViewById(R.id.info_farm_province_edit);
+            province.setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.info_farm_town_look).setVisibility(View.GONE);
+            town = getView().findViewById(R.id.info_farm_town_edit);
+            town.setVisibility(View.VISIBLE);
+            //Further
+            getView().findViewById(R.id.info_farm_further_look).setVisibility(View.GONE);
             further = getView().findViewById(R.id.info_farm_further_edit);
             further.setVisibility(View.VISIBLE);
+
             getView().findViewById(R.id.info_farm_butt_edit).setVisibility(View.INVISIBLE);
             View temp = getView().findViewById(R.id.info_farm_butt_save);
             temp.setVisibility(View.VISIBLE);
@@ -80,14 +105,40 @@ public class InfoFarmFragment extends Fragment {
             farm = data.getActiveFarm();
 
             if (editable) {
+                //Farm
                 getView().findViewById(R.id.info_farm_name_look).setVisibility(View.GONE);
-                getView().findViewById(R.id.info_farm_further_look).setVisibility(View.GONE);
                 name = getView().findViewById(R.id.info_farm_name_edit);
                 name.setVisibility(View.VISIBLE);
                 name.setText(farm.getName());
+                getView().findViewById(R.id.info_farm_company_look).setVisibility(View.GONE);
+                company = getView().findViewById(R.id.info_farm_company_edit);
+                company.setVisibility(View.VISIBLE);
+                company.setText(farm.getCompany());
+                //Contact
+                getView().findViewById(R.id.info_farm_email_look).setVisibility(View.GONE);
+                email = getView().findViewById(R.id.info_farm_email_edit);
+                email.setVisibility(View.VISIBLE);
+                email.setText(farm.getEmail());
+                getView().findViewById(R.id.info_farm_phone_look).setVisibility(View.GONE);
+                phone = getView().findViewById(R.id.info_farm_phone_edit);
+                phone.setVisibility(View.VISIBLE);
+                phone.setText(farm.getPhone());
+                //Location
+                getView().findViewById(R.id.info_farm_province_look).setVisibility(View.GONE);
+                province = getView().findViewById(R.id.info_farm_province_edit);
+                province.setVisibility(View.VISIBLE);
+                province.setText(farm.getProvince());
+                getView().findViewById(R.id.info_farm_town_look).setVisibility(View.GONE);
+                town = getView().findViewById(R.id.info_farm_town_edit);
+                town.setVisibility(View.VISIBLE);
+                town.setText(farm.getTown());
+                //Further
+                getView().findViewById(R.id.info_farm_further_look).setVisibility(View.GONE);
                 further = getView().findViewById(R.id.info_farm_further_edit);
                 further.setText(farm.getFurther());
                 further.setVisibility(View.VISIBLE);
+
+
                 getView().findViewById(R.id.info_farm_butt_edit).setVisibility(View.INVISIBLE);
                 View temp = getView().findViewById(R.id.info_farm_butt_save);
                 temp.setVisibility(View.VISIBLE);
@@ -97,10 +148,23 @@ public class InfoFarmFragment extends Fragment {
                 //Maybe we want this, no harm in leaving it in, but it's something not editable.
                 getView().findViewById(R.id.info_farm_orchards_card).setVisibility(View.GONE);
             } else {
-                TextView temp = getView().findViewById(R.id.info_farm_name_look);
+                TextView temp;
+                temp = getView().findViewById(R.id.info_farm_name_look);
                 temp.setText(farm.getName());
+                temp = getView().findViewById(R.id.info_farm_company_look);
+                temp.setText(farm.getCompany());
+                temp = getView().findViewById(R.id.info_farm_email_look);
+                temp.setText(farm.getEmail());
+                temp = getView().findViewById(R.id.info_farm_phone_look);
+                temp.setText(farm.getPhone());
+                temp = getView().findViewById(R.id.info_farm_province_look);
+                temp.setText(farm.getProvince());
+                temp = getView().findViewById(R.id.info_farm_town_look);
+                temp.setText(farm.getTown());
                 temp = getView().findViewById(R.id.info_farm_further_look);
                 temp.setText(farm.getFurther());
+
+
                 getView().findViewById(R.id.info_farm_butt_edit).setTag(ID + " FARM");
                 getView().findViewById(R.id.info_farm_butt_save).setVisibility(View.INVISIBLE);
                 getView().findViewById(R.id.info_farm_butt_del).setTag("LOOK " + ID);
@@ -131,6 +195,11 @@ public class InfoFarmFragment extends Fragment {
 
     public void saveEvent(){
         farm.setName(name.getText().toString());
+        farm.setCompany(company.getText().toString());
+        farm.setEmail(email.getText().toString());
+        farm.setPhone(phone.getText().toString());
+        farm.setProvince(province.getText().toString());
+        farm.setTown(town.getText().toString());
         farm.setFurther(further.getText().toString());
         data.modifyActiveFarm(farm, false);
     }
@@ -140,7 +209,15 @@ public class InfoFarmFragment extends Fragment {
     }
 
     public void createEvent(){
-        Farm newFarm = new Farm(name.getText().toString(), further.getText().toString(), data.getNextIDForAddition());
+        Farm newFarm = new Farm();
+        newFarm.setName(name.getText().toString());
+        newFarm.setCompany(company.getText().toString());
+        newFarm.setEmail(email.getText().toString());
+        newFarm.setPhone(phone.getText().toString());
+        newFarm.setProvince(province.getText().toString());
+        newFarm.setTown(town.getText().toString());
+        newFarm.setFurther(further.getText().toString());
+        newFarm.setID(data.getNextIDForAddition());
         data.addFarm(newFarm);
     }
 }

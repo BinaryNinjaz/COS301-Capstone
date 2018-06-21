@@ -88,10 +88,15 @@ public class Data {
                         case "farms":
                             //Iterate through every data set
                             for (DataSnapshot dataSet : setOData.getChildren()) {
-                                String name = dataSet.child("name").getValue(String.class);
-                                String further = dataSet.child("further").getValue(String.class);
-                                String ID = dataSet.getKey();
-                                Farm temp = new Farm(name, further, ID);
+                                Farm temp = new Farm();
+                                temp.setName(dataSet.child("name").getValue(String.class));
+                                temp.setCompany(dataSet.child("companyName").getValue(String.class));
+                                temp.setEmail(dataSet.child("email").getValue(String.class));
+                                temp.setPhone(dataSet.child("contactNumber").getValue(String.class));
+                                temp.setProvince(dataSet.child("province").getValue(String.class));
+                                temp.setTown(dataSet.child("neartestTown").getValue(String.class)); //TODO: Verify this typo
+                                temp.setFurther(dataSet.child("info").getValue(String.class));
+                                temp.setID(dataSet.getKey());
                                 farms.add(temp);
                             }
                             break;
@@ -231,7 +236,12 @@ public class Data {
                             newFarm.setID(newKey);
                             objectRoot = objectRoot.child(newKey);
                             objectRoot.child("name").setValue(newFarm.name);
-                            objectRoot.child("further").setValue(newFarm.further);
+                            objectRoot.child("companyName").setValue(newFarm.company);
+                            objectRoot.child("email").setValue(newFarm.email);
+                            objectRoot.child("contactNumber").setValue(newFarm.phone);
+                            objectRoot.child("province").setValue(newFarm.province);
+                            objectRoot.child("neartestTown").setValue(newFarm.town);
+                            objectRoot.child("info").setValue(newFarm.further);
                             break;
                         case ORCHARD:
                             break;
@@ -246,7 +256,12 @@ public class Data {
                         case FARM:
                             objectRoot = objectRoot.child("farms").child(currentChange.ID);
                             objectRoot.child("name").setValue(activeFarm.name);
-                            objectRoot.child("further").setValue(activeFarm.further);
+                            objectRoot.child("companyName").setValue(activeFarm.company);
+                            objectRoot.child("email").setValue(activeFarm.email);
+                            objectRoot.child("contactNumber").setValue(activeFarm.phone);
+                            objectRoot.child("province").setValue(activeFarm.province);
+                            objectRoot.child("neartestTown").setValue(activeFarm.town);
+                            objectRoot.child("info").setValue(activeFarm.further);
                             break;
                         case ORCHARD:
                             objectRoot = database.getReference(userRoot.toString() + "/orchards/" + currentChange.ID);
