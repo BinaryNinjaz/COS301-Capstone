@@ -68,6 +68,7 @@
     <string name="info_farm_name">Farm Name:</string>
     <string name="info_farm_further">Further Information:</string>
     <string name="info_farm_assignedOrchards">Assigned Orchards:</string>
+    <string name="info_farm_company">Company Name:</string>
 
     <!-- Strings related to Settings -->
 
