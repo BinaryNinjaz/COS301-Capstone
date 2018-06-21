@@ -11,6 +11,7 @@ import UIKit
 extension UIView {
   func apply(gradient: CAGradientLayer) {
     layer.sublayers?.remove(at: 0)
+    backgroundColor = .clear
     gradient.frame = bounds
     layer.insertSublayer(gradient, at: 0)
   }
@@ -39,7 +40,7 @@ extension UIView {
     }
     set(value) {
       isUserInteractionEnabled = value
-      apply(gradient: .disabled)
+      apply(gradient: .disabledButton)
     }
   }
 }

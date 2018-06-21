@@ -212,18 +212,14 @@ class SignInViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    NotificationCenter
-      .default
-      .addObserver(self,
-                   selector: #selector(keyboardWillShow),
-                   name: NSNotification.Name.UIKeyboardWillShow,
-                   object: nil)
-    NotificationCenter
-      .default
-      .addObserver(self,
-                   selector: #selector(keyboardWillHide),
-                   name: NSNotification.Name.UIKeyboardWillHide,
-                   object: nil)
+    NotificationCenter.default.addObserver(self,
+                                           selector: #selector(keyboardWillShow),
+                                           name: NSNotification.Name.UIKeyboardWillShow,
+                                           object: nil)
+    NotificationCenter.default.addObserver(self,
+                                           selector: #selector(keyboardWillHide),
+                                           name: NSNotification.Name.UIKeyboardWillHide,
+                                           object: nil)
     
     hideKeyboardWhenTappedAround()
     
@@ -350,8 +346,8 @@ extension SignInViewController {
     orLabelVisualEffectView.setOriginX(view.frame.width / 2 - orLabel.frame.width / 2)
     activityIndicator.setOriginX(view.frame.width / 2 - activityIndicator.frame.width / 2)
     
-    signInButton.apply(gradient: .green)
-    signUpButton.apply(gradient: .blue)
-    googleSignInButton.apply(gradient: .google)
+    signInButton.apply(gradient: .signInButton)
+    signUpButton.apply(gradient: .signUpButton)
+    googleSignInButton.apply(gradient: .googleSignInButton)
   }
 }

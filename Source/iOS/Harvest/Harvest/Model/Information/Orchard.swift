@@ -87,7 +87,7 @@ public final class Orchard {
       "crop": crop,
       "date": date.timeIntervalSince1970,
       "farm": assignedFarm,
-      "info": details,
+      "further": details,
       "name": name,
       "treeSpacing": treeSpacing.isNaN ? "" : treeSpacing,
       "rowSpacing": rowSpacing.isNaN ? "" : rowSpacing,

@@ -41,6 +41,13 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
       return
     }
     
+    let errors = form.validate(includeHidden: false)
+    guard errors.count == 0 else {
+      let errorList = errors.lazy.map { $0.msg }.joined(separator: "\n")
+      UIAlertController.present(title: "Invalid Input", message: errorList, on: self)
+      return
+    }
+    
     switch entity {
     case let .farm(f) where f.tempory != nil:
       HarvestDB.save(farm: f.tempory!)
@@ -51,8 +58,8 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .worker(w) where w.tempory != nil:
-      HarvestDB.save(worker: w.tempory!, oldEmail: w.email)
-      w.email = w.tempory!.email
+      HarvestDB.save(worker: w.tempory!, oldNumber: w.phoneNumber)
+      w.phoneNumber = w.tempory!.phoneNumber
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .session(s) where s.tempory != nil:

@@ -70,7 +70,7 @@ class StatsViewController: UIViewController {
     guard let lineDataSet = stat?.workerHistoryData() else {
       return
     }
-    lineDataSet.colors = [[UIColor].green[0]]
+    lineDataSet.colors = [UIColor.lineGraph]
     lineDataSet.drawCirclesEnabled = false
     lineDataSet.mode = .linear
     lineDataSet.lineWidth = 4.0

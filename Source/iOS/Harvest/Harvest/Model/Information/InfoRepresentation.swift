@@ -46,6 +46,8 @@ extension Worker {
     }
     
     let firstnameRow = NameRow { row in
+      row.add(rule: RuleRequired(msg: "• First name must be filled in"))
+      row.validationOptions = .validatesAlways
       row.title = "Worker Name"
       row.value = firstname
       row.placeholder = "John"
@@ -54,8 +56,17 @@ extension Worker {
       onChange()
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
+    
     let lastnameRow = NameRow { row in
+      row.add(rule: RuleRequired(msg: "• Surname must be filled in"))
+      row.validationOptions = .validatesAlways
       row.title = "Worker Surname"
       row.value = lastname
       row.placeholder = "Appleseed"
@@ -64,6 +75,12 @@ extension Worker {
       onChange()
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
     
     let isForemanRow = SwitchRow("isForemanTag") { row in
@@ -73,27 +90,25 @@ extension Worker {
       self.tempory?.kind = row.value ?? true ? .foreman : .worker
       onChange()
     }
-    let emailRow = EmailRow { row in
+    
+    let phoneRow = PhoneRow { row in
       row.hidden = Condition.function(["isForemanTag"], { form in
         return !((form.rowBy(tag: "isForemanTag") as? SwitchRow)?.value ?? false)
       })
-      row.title = "Email"
-      row.value = email
-      row.placeholder = "johnapp@gmail.com"
-    }.onChange { row in
-      self.tempory?.email = row.value ?? ""
-      onChange()
-    }.cellUpdate { (cell, _) in
-      cell.textField.clearButtonMode = .whileEditing
-    }
-    
-    let phoneRow = PhoneRow { row in
+      row.add(rule: RuleRequired(msg: "• Phone numbers must exist for foreman"))
+      row.validationOptions = .validatesAlways
       row.title = "Phone Number"
       row.value = phoneNumber
       row.placeholder = "012 3456789"
     }.onChange { row in
       self.tempory?.phoneNumber = row.value ?? ""
       onChange()
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
     
     let idRow = TextRow { row in
@@ -132,10 +147,11 @@ extension Worker {
       
       +++ Section("Role")
       <<< isForemanRow
-      <<< emailRow
-      
-      +++ Section("Contact")
       <<< phoneRow
+//      <<< emailRow
+  
+//      +++ Section("Contact")
+//      <<< phoneRow
     
       +++ Section("Information")
       <<< infoRow
@@ -153,6 +169,12 @@ extension Farm {
     tempory = Farm(json: json()[id] ?? [:], id: id)
     
     let nameRow = NameRow { row in
+      let uniqueNameRule = RuleClosure<String> { (_) -> ValidationError? in
+        let notUnique = Entities.shared.farmsList().contains { $0.name == row.value }
+        return notUnique ? ValidationError(msg: "• Farm names must be unique") : nil
+      }
+      row.add(rule: RuleRequired(msg: "• Farm names must be filled in"))
+      row.add(rule: uniqueNameRule)
       row.title = "Farm Name"
       row.value = name
       row.placeholder = "Name of the farm"
@@ -161,7 +183,14 @@ extension Farm {
       onChange()
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
+    
     let companyRow = NameRow { row in
       row.title = "Company Name"
       row.value = companyName
@@ -227,7 +256,7 @@ extension Farm {
     let orchardRow = OrchardInFarmRow(tag: nil, orchard: o) { row in
       row.title = "Add Orchard to \(self.name)"
     }.cellUpdate { (cell, _) in
-      cell.textLabel?.textColor = [UIColor].blue[1]
+      cell.textLabel?.textColor = .addOrchard
       cell.textLabel?.textAlignment = .center
     }
     
@@ -295,9 +324,6 @@ public class DeletableMultivaluedSection: MultivaluedSection {
     super.init(header: header, footer: footer, {section in initializer(section) })
     self.multivaluedOptions = multivaluedOptions
     guard multivaluedOptions.contains(.Insert) else { return }
-//    initialize()
-    
-//    super.init(multivaluedOptions: multivaluedOptions, header: header, footer: footer, initializer)
   }
   
   func initialize() {
@@ -358,6 +384,7 @@ extension Orchard {
     }
     
     let nameRow = NameRow { row in
+      row.add(rule: RuleRequired(msg: "• Orchard names must be filled in"))
       row.title = "Orchard Name"
       row.value = name
       row.placeholder = "Name of the orchard"
@@ -366,6 +393,12 @@ extension Orchard {
       onChange()
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
     
     let cropRow = TextRow { row in

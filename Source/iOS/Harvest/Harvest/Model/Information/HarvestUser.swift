@@ -82,16 +82,7 @@ public final class HarvestUser {
     HarvestUser.current.workingForID = nil
   }
   
-  static var _current = HarvestUser()
-  static var current: HarvestUser {
-    get {
-      print(_current.json())
-      return _current
-    }
-    set {
-      _current = newValue
-    }
-  }
+  static var current = HarvestUser()
 }
 
 public extension UserDefaults {
@@ -104,7 +95,6 @@ public extension UserDefaults {
       removeObject(forKey: "username")
       return
     }
-    print(u)
     set(u, forKey: "username")
   }
   

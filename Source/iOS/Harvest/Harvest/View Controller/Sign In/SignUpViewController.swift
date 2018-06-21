@@ -229,7 +229,7 @@ extension SignUpViewController {
     titleLabelVisualEffectView.setWidth(inputTextFieldGroup.frame.width)
     titleLabelVisualEffectView.setOriginX(inputTextFieldGroup.frame.origin.x)
     
-    signUpButton.apply(gradient: .green)
-    cancelButton.apply(gradient: .blue)
+    signUpButton.apply(gradient: .signUpButton)
+    cancelButton.apply(gradient: .cancelRegistrationButton)
   }
 }

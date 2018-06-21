@@ -66,8 +66,8 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   public override func viewDidLoad() {
     super.viewDidLoad()
     
-    removeAllButton.apply(gradient: .red)
-    removeLastButton.apply(gradient: .orange)
+    removeAllButton.apply(gradient: .deleteAllButton)
+    removeLastButton.apply(gradient: .deleteButton)
     
     mapView.isHidden = false
     mapView.mapType = GMSMapViewType.normal

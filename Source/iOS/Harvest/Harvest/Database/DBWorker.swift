@@ -49,7 +49,7 @@ extension HarvestDB {
     }
   }
   
-  static func save(worker: Worker, oldEmail: String) {
+  static func save(worker: Worker, oldNumber: String) {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
     let workingFor = ref.child(Path.workingFor)
@@ -60,22 +60,22 @@ extension HarvestDB {
     let update = worker.json()
     workers.updateChildValues(update)
     
-    if worker.kind == .foreman && worker.email != "" {
-      foremen.updateChildValues([worker.email.removedFirebaseInvalids(): true])
-      saveWorkerReference(worker, oldEmail)
-      if oldEmail != "" && worker.email != oldEmail {
-        foremen.child(oldEmail.removedFirebaseInvalids()).removeValue()
+    if worker.kind == .foreman && worker.phoneNumber != "" {
+      foremen.updateChildValues([worker.phoneNumber.removedFirebaseInvalids(): true])
+      saveWorkerReference(worker, oldNumber)
+      if oldNumber != "" && worker.phoneNumber != oldNumber {
+        foremen.child(oldNumber.removedFirebaseInvalids()).removeValue()
       }
-    } else if worker.email != "" {
-      foremen.child(worker.email.removedFirebaseInvalids()).removeValue()
-      workingFor.child(worker.email.removedFirebaseInvalids()).removeValue()
+    } else if worker.phoneNumber != "" {
+      foremen.child(worker.phoneNumber.removedFirebaseInvalids()).removeValue()
+      workingFor.child(worker.phoneNumber.removedFirebaseInvalids()).removeValue()
     }
   }
   
-  static func saveWorkerReference(_ worker: Worker, _ oldEmail: String) {
+  static func saveWorkerReference(_ worker: Worker, _ oldNumber: String) {
     let workerRefs = ref.child(Path.workingFor
       + "/"
-      + worker.email.removedFirebaseInvalids())
+      + worker.phoneNumber.removedFirebaseInvalids())
     
     let update = [
       HarvestUser.current.uid: worker.id
@@ -95,22 +95,22 @@ extension HarvestDB {
       return
     }
     workers.child(worker.id).removeValue(completionBlock: { err, ref in
-      guard worker.email != "" else {
+      guard worker.phoneNumber != "" else {
         return
       }
       foremen.child(worker
-        .email
+        .phoneNumber
         .removedFirebaseInvalids()).removeValue { err, ref in
         completion(err, ref)
       }
-      workingFor.child(worker.email.removedFirebaseInvalids()).removeValue()
+      workingFor.child(worker.phoneNumber.removedFirebaseInvalids()).removeValue()
     })
   }
   
   static func resign(completion: @escaping (Error?, DatabaseReference) -> Void) {
     let workers = Entities.shared.workersList()
     guard let workerIdx = workers.index(where: { (w) -> Bool in
-      w.email == HarvestUser.current.accountIdentifier
+      w.phoneNumber == HarvestUser.current.accountIdentifier
     }) else {
       return
     }

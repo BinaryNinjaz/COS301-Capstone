@@ -39,7 +39,7 @@ final class Farm: Codable {
       "contactNumber": contactNumber,
       "province": province,
       "neartestTown": nearestTown,
-      "info": details
+      "further": details
     ]]
   }
 }

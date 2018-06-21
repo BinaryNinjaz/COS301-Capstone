@@ -28,7 +28,6 @@ final class Worker {
   var assignedOrchards: [String]
   var kind: Kind
   var details: String
-  var email: String
   var phoneNumber: String
   var idNumber: String
   var id: String
@@ -40,7 +39,6 @@ final class Worker {
     lastname = json["surname"] as? String ?? ""
     assignedOrchards = json.orchards()
     details = json["info"] as? String ?? ""
-    email = json["email"] as? String ?? ""
     phoneNumber = json["phoneNumber"] as? String ?? ""
     idNumber = json["idNumber"] as? String ?? ""
     
@@ -60,7 +58,6 @@ final class Worker {
       "surname": lastname,
       "orchards": assignedOrchards,
       "info": details,
-      "email": email,
       "type": kind == .foreman ? "Foreman" : "Worker",
       "phoneNumber": phoneNumber,
       "idNumber": idNumber
@@ -70,7 +67,7 @@ final class Worker {
   static var currentWorker: Worker {
     return Worker(json: [
       "name": HarvestUser.current.displayName,
-      "email": HarvestUser.current.accountIdentifier
+      "phoneNumber": HarvestUser.current.accountIdentifier
     ], id: HarvestUser.current.uid)
   }
 }
@@ -83,7 +80,6 @@ extension Worker: Hashable {
       && lhs.assignedOrchards == rhs.assignedOrchards
       && lhs.kind == rhs.kind
       && lhs.details == rhs.details
-      && lhs.email == rhs.email
       && lhs.phoneNumber == rhs.phoneNumber
       && lhs.idNumber == rhs.idNumber
   }
