@@ -4,6 +4,7 @@ package za.org.samac.harvest;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,12 +22,10 @@ import za.org.samac.harvest.util.Orchard;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * A 'simple' {@link Fragment} subclass.
  */
 public class InfoFarmFragment extends Fragment {
 
-//    private String name;
-//    private String further;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;

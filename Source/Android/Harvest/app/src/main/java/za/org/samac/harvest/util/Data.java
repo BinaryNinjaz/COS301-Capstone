@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.Stack;
 import java.util.Vector;
 
+import za.org.samac.harvest.InfoListFragment;
+
 /**
  * This monster class is used to store and manipulate almost, if not all, information in the database that belongs to the logged in farmer.
  */
@@ -55,19 +57,18 @@ public class Data {
         orchards = new Vector<>();
         workers = new Vector<>();
         changes = new Changes();
-        pull();
+//        pull();
     }
 
     /**
-     * Replace all local information from Firebase
+     * Replace all local information from Firebase, TODO: while preserving local changes.
      */
-    public void pull(){
-        /*
-         * This may, or may not be real time, for now it's not, because my data
-         * D:
-         * Swipe to refresh will be the way to go, methinks.
-         * TODO: Add Swipe to refresh in list
-         */
+    public void pull(final InfoListFragment list){
+
+        farms = new Vector<>();
+        orchards = new Vector<>();
+        workers = new Vector<>();
+        changes = new Changes();
 
         userRoot.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -209,6 +210,10 @@ public class Data {
                             break;
                     }
                 }
+
+                if (list != null) {
+                    list.endRefresh();
+                }
             }
 
             @Override
@@ -241,7 +246,7 @@ public class Data {
                             objectRoot.child("contactNumber").setValue(newFarm.phone);
                             objectRoot.child("province").setValue(newFarm.province);
                             objectRoot.child("neartestTown").setValue(newFarm.town);
-                            objectRoot.child("info").setValue(newFarm.further);
+                            objectRoot.child("further").setValue(newFarm.further);
                             break;
                         case ORCHARD:
                             break;
@@ -261,7 +266,7 @@ public class Data {
                             objectRoot.child("contactNumber").setValue(activeFarm.phone);
                             objectRoot.child("province").setValue(activeFarm.province);
                             objectRoot.child("neartestTown").setValue(activeFarm.town);
-                            objectRoot.child("info").setValue(activeFarm.further);
+                            objectRoot.child("further").setValue(activeFarm.further);
                             break;
                         case ORCHARD:
                             objectRoot = database.getReference(userRoot.toString() + "/orchards/" + currentChange.ID);
@@ -492,10 +497,12 @@ public class Data {
         workers.addElement(addMe);
         changes.Add(Category.WORKER, addMe.getID());
     }
+
+
 }
 
 /**
- * Below is a method of keeping track of all changes made, so that pushing the database can be quick and easy.
+ * Below is a method of keeping track of all changes made, so that pushing the database can be quick and 'easy'.
  */
 
 enum ChangeType{
