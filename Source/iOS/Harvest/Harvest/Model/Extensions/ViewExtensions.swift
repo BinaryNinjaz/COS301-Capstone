@@ -20,11 +20,12 @@ extension UIView {
 extension UITextField {
   func addLeftImage(_ image: UIImage) {
     leftViewMode = .always
-    let wrapper = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 22))
+    let h = bounds.height - 4
+    let wrapper = UIView(frame: CGRect(x: 0, y: 0, width: h + 8, height: h))
     let imageView = UIImageView(frame: CGRect(x: 8,
                                               y: 3,
-                                              width: 24,
-                                              height: 16))
+                                              width: h - 2,
+                                              height: h - 6))
     imageView.image = image.withRenderingMode(.alwaysTemplate)
     imageView.tintColor = UIColor(white: 0.5, alpha: 1)
     imageView.contentMode = .scaleAspectFit
@@ -34,23 +35,11 @@ extension UITextField {
 }
 
 extension UIView {
-  var isButtonEnabled: Bool {
-    get {
-      return isUserInteractionEnabled
-    }
-    set(value) {
-      isUserInteractionEnabled = value
-      apply(gradient: .disabledButton)
-    }
-  }
-}
-
-extension UIView {
   func parallaxEffect(
     x: (min: CGFloat, max: CGFloat),
     y: (min: CGFloat, max: CGFloat),
     enable: Bool = true
-    ) {
+  ) {
     guard enable else {
       motionEffects.removeAll()
       return
@@ -115,5 +104,21 @@ extension UIImage {
     UIGraphicsEndImageContext()
     
     return newImage
+  }
+}
+
+final class AnimationNode {
+  var finalFrame: () -> Void
+  var duration: TimeInterval
+  var next: AnimationNode?
+  
+  init(duration: TimeInterval, final: @escaping () -> Void) {
+    finalFrame = final
+    self.duration = duration
+    next = nil
+  }
+  
+  func animate() {
+    UIView.animate(withDuration: duration, animations: finalFrame) { _ in self.next?.animate() }
   }
 }

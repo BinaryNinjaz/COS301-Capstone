@@ -44,7 +44,7 @@ class SettingsEurekaViewController: FormViewController {
         if w,
           let vc = self
             .storyboard?
-            .instantiateViewController(withIdentifier: "signInViewController") {
+            .instantiateViewController(withIdentifier: "signInOptionViewController") {
           self.present(vc, animated: true, completion: nil)
         }
       }
@@ -64,7 +64,7 @@ class SettingsEurekaViewController: FormViewController {
       let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
       let confirm = UIAlertAction(title: "Resign", style: .destructive, handler: { _ in
         HarvestDB.resign { _, _ in
-          if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInViewController") {
+          if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInOptionViewController") {
             self.present(vc, animated: true, completion: nil)
           }
         }

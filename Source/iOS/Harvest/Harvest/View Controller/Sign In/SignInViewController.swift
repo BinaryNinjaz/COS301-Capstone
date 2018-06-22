@@ -15,14 +15,13 @@ class SignInViewController: UIViewController {
   @IBOutlet weak var usernameTextField: UITextField!
   @IBOutlet weak var passwordTextField: UITextField!
   @IBOutlet weak var signInButton: UIButton!
-  @IBOutlet weak var signUpButton: UIButton!
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
   @IBOutlet weak var googleSignInButton: UIButton!
   @IBOutlet weak var signInVisualEffect: UIVisualEffectView!
   @IBOutlet weak var forgotAccountButton: UIButton!
+  @IBOutlet weak var cancelButton: UIButton!
   @IBOutlet weak var textGroupView: TextFieldGroupView!
   @IBOutlet weak var orLabel: UILabel!
-  @IBOutlet weak var inputTextFieldGroup: TextFieldGroupView!
   @IBOutlet weak var forgotAccountVisualEffectView: UIVisualEffectView!
   @IBOutlet weak var orLabelVisualEffectView: UIVisualEffectView!
   @IBOutlet weak var titleLabelVisualEffectView: UIVisualEffectView!
@@ -33,9 +32,9 @@ class SignInViewController: UIViewController {
       UIView.animate(withDuration: 0.5) {
         self.signInButton.alpha = self.isLoading ? 0 : 1
         self.googleSignInButton.alpha = self.isLoading ? 0 : 1
-        self.signUpButton.alpha = self.isLoading ? 0 : 1
         self.forgotAccountButton.alpha = self.isLoading ? 0 : 1
         self.orLabel.alpha = self.isLoading ? 0 : 1
+        self.cancelButton.alpha = self.isLoading ? 0 : 1
       }
       
       if isLoading {
@@ -82,96 +81,27 @@ class SignInViewController: UIViewController {
     }
   }
   
-  func attempSignIn(withVerificationID vid: String, verificationCode code: String) {
-    let credential = PhoneAuthProvider.provider().credential(withVerificationID: vid,
-                                                             verificationCode: code)
-    attemptSignIn(with: credential)
-  }
-  
   @IBAction func signInTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text, username != "" else {
-      UIAlertController.present(title: "No Email or Phone Number Provided",
+      UIAlertController.present(title: "No Email Provided",
                                 message: """
                                 Please input an email address to log in as a farm owner.
-                                Or enter a phone number to log in as a foreman.
                                 """,
                                 on: self)
       return
     }
     
-    switch username {
-    case let u where u.isEmail():
-      guard let password = passwordTextField.text, password != "" else {
-        UIAlertController.present(title: "Password Not Long Enough",
-                                  message: "Password length must be at least 6 characters long",
-                                  on: self)
-        return
-      }
-      attempSignIn(username: username, password: password)
-      
-    case let u where u.isPhoneNumber():
-      if let password = passwordTextField.text, password != "" {
-        if let verificationID = UserDefaults.standard.getVerificationID() {
-          attempSignIn(withVerificationID: verificationID, verificationCode: password)
-        } else {
-          UIAlertController.present(title: "Enter Only Phone Number",
-                                    message: """
-                                    Please enter only phone number in the username first and press \
-                                    'Send Verification Code'. Then enter the code into the password\
-                                    field once you have it then press 'Log in with Harvest'
-                                    """, on: self)
-        }
-        
-      } else {
-        isLoading = true
-        HarvestDB.verify(phoneNumber: u, on: self) { _ in
-          self.isLoading = false
-        }
-      }
-      
-    default:
-      UIAlertController.present(title: "Unknown Username",
-                                message: """
-                                Please input an email address to log in as a farm owner.
-                                Or enter a phone number to log in as a foreman.
-                                """,
+    guard let password = passwordTextField.text, password != "" else {
+      UIAlertController.present(title: "Password Not Long Enough",
+                                message: "Password length must be at least 6 characters long",
                                 on: self)
-      
-    }
-  }
-  
-  @IBAction func usernameDidEdit(_ sender: UITextField) {
-    guard let un = usernameTextField.text, un != "" else {
       return
     }
     
-    switch un {
-    case let u where u.isEmail():
-      if !passwordTextField.isSecureTextEntry {
-        passwordTextField.isSecureTextEntry = true
-      }
-      signInButton.setTitle("Log in with Harvest", for: .normal)
-      
-    case let u where u.isPhoneNumber():
-      if passwordTextField.isSecureTextEntry {
-        passwordTextField.isSecureTextEntry = false
-      }
-      if let p = passwordTextField.text, p == "" {
-        signInButton.setTitle("Send Verification Code", for: .normal)
-      } else {
-        signInButton.setTitle("Log in with Harvest", for: .normal)
-      }
-      
-    default:
-      if !passwordTextField.isSecureTextEntry {
-        passwordTextField.isSecureTextEntry = true
-      }
-      signInButton.setTitle("Log in with Harvest", for: .normal)
-    }
+    attempSignIn(username: username, password: password)
   }
   
   @IBAction func forgotAccountTouchUp(_ sender: UIButton) {
-    
     let emailRequest = UIAlertController(
       title: "Reset Password",
       message: "Please enter your email. You will then receive an email to reset your password.",
@@ -230,32 +160,10 @@ class SignInViewController: UIViewController {
     passwordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
     
     textGroupView.layer.cornerRadius = 5
-    
-    if let user = Auth.auth().currentUser {
-      isLoading = true
-      HarvestUser.current.setUser(user, nil) { (_) in
-        if let vc = self.mainViewToPresent() {
-          self.present(vc, animated: true, completion: nil)
-        }
-        self.isLoading = false
-      }
-      
-      if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
-        oldSession.storeSession()
-      }
-    } else {
-      GIDSignIn.sharedInstance().delegate = self
-      GIDSignIn.sharedInstance().uiDelegate = self
-      
-      if let username = UserDefaults.standard.getUsername() {
-        if let password = UserDefaults.standard.getPassword() {
-          attempSignIn(username: username, password: password)
-        } else {
-          isLoading = true
-          GIDSignIn.sharedInstance().signIn()
-        }
-      }
-    }
+  }
+  
+  @IBAction func dismissViewControllerTouchUp(_ sender: Any) {
+    dismiss(animated: true, completion: nil)
   }
   
   override var prefersStatusBarHidden: Bool {
@@ -308,7 +216,7 @@ extension SignInViewController: UITextFieldDelegate {
     if let keyboardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
       if googleSignInButton.frame.origin.y + googleSignInButton.frame.height > view.frame.height - keyboardFrame.height
       && self.view.frame.origin.y == 0 {
-        let group = self.inputTextFieldGroup.frame
+        let group = self.textGroupView.frame
         if #available(iOS 11.0, *) {
           self.view.frame.origin.y -= group.origin.y - 48 - view.safeAreaInsets.top
         } else {
@@ -335,19 +243,15 @@ extension SignInViewController {
     googleSignInButton.setWidth(textGroupView.frame.width)
     googleSignInButton.setOriginX(textGroupView.frame.origin.x)
     
-    signUpButton.setWidth(textGroupView.frame.width)
-    signUpButton.setOriginX(textGroupView.frame.origin.x)
     forgotAccountButton.setWidth(textGroupView.frame.width)
     forgotAccountVisualEffectView.setOriginX(textGroupView.frame.origin.x)
-    forgotAccountVisualEffectView.setOriginY(view.frame.height - forgotAccountButton.frame.height - 16)
-    signUpButton.setOriginY(forgotAccountVisualEffectView.frame.origin.y - signUpButton.frame.height - 8)
+    forgotAccountVisualEffectView.setOriginY(view.frame.height - forgotAccountButton.frame.height - 32)
     
     titleLabelVisualEffectView.setOriginX(view.frame.width / 2 - titleLabelVisualEffectView.frame.width / 2)
     orLabelVisualEffectView.setOriginX(view.frame.width / 2 - orLabel.frame.width / 2)
     activityIndicator.setOriginX(view.frame.width / 2 - activityIndicator.frame.width / 2)
     
     signInButton.apply(gradient: .signInButton)
-    signUpButton.apply(gradient: .signUpButton)
     googleSignInButton.apply(gradient: .googleSignInButton)
   }
 }

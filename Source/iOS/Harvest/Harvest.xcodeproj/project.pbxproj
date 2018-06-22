@@ -52,6 +52,8 @@
 		167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */; };
 		167448E9208BD6F900FA605C /* Codables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E8208BD6F900FA605C /* Codables.swift */; };
 		167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448EA208C085900FA605C /* FirebaseConverter.swift */; };
+		1679DA4720DD5438007AB071 /* SignInOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */; };
+		1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */; };
 		16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */; };
 		16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906055208E7FFA00BE5ADE /* ColorScheme.swift */; };
 		16906058208E801800BE5ADE /* Gradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906057208E801800BE5ADE /* Gradients.swift */; };
@@ -148,6 +150,8 @@
 		167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEurekaViewController.swift; sourceTree = "<group>"; };
 		167448E8208BD6F900FA605C /* Codables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codables.swift; sourceTree = "<group>"; };
 		167448EA208C085900FA605C /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
+		1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOptionViewController.swift; sourceTree = "<group>"; };
+		1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForemanSignInViewController.swift; sourceTree = "<group>"; };
 		16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrchardInFarmEurekaCell.swift; sourceTree = "<group>"; };
 		16906055208E7FFA00BE5ADE /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
 		16906057208E801800BE5ADE /* Gradients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradients.swift; sourceTree = "<group>"; };
@@ -392,6 +396,8 @@
 			children = (
 				1604E4A4206958E900E9BA15 /* SignInViewController.swift */,
 				16420FCD2069738200E1A292 /* SignUpViewController.swift */,
+				1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */,
+				1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */,
 			);
 			path = "Sign In";
 			sourceTree = "<group>";
@@ -806,6 +812,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
+				1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */,
 				167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */,
 				16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */,
 				167448D1208A5B9800FA605C /* DBFarm.swift in Sources */,
@@ -819,6 +826,7 @@
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
 				167448CB208A5B5D00FA605C /* DBAuth.swift in Sources */,
 				1604E4A5206958E900E9BA15 /* SignInViewController.swift in Sources */,
+				1679DA4720DD5438007AB071 /* SignInOptionViewController.swift in Sources */,
 				1604E4A3206958E900E9BA15 /* AppDelegate.swift in Sources */,
 				16906058208E801800BE5ADE /* Gradients.swift in Sources */,
 				16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */,
