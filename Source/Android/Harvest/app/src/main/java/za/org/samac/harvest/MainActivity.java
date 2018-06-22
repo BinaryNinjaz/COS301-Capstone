@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         init();
 
         if (ActivityCompat.checkSelfPermission(this,
