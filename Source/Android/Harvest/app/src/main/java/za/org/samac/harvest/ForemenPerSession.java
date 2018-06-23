@@ -19,8 +19,11 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import za.org.samac.harvest.adapter.ForemanRecyclerViewAdapter;
 import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
+import za.org.samac.harvest.domain.Foreman;
 import za.org.samac.harvest.util.AppUtil;
 
 public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<ForemenPerSession.ForemenViewHolder>*/ {
@@ -28,10 +31,16 @@ public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<
     private ArrayList<PieEntry> entries = new ArrayList<>();
     private Button perSesWorkerComparison;
 
+    private List<Foreman> foremen;
+    private ForemanRecyclerViewAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_analytics);
+        setContentView(R.layout.activity_foremen_session);
+
+        this.foremen = new ArrayList<>();
+        this.adapter = new ForemanRecyclerViewAdapter(this, this.foremen);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionInformation);
@@ -68,33 +77,6 @@ public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<
                 });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-        //user selects to see pie chart
-        perSesWorkerComparison = findViewById(R.id.perSesWorkerComparison);
-        perSesWorkerComparison.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ForemenPerSession.this, za.org.samac.harvest.PieChart.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    public class ForemenViewHolder extends RecyclerView.ViewHolder {
-        Button foremanName;
-
-        ForemenViewHolder(View view) {
-            super(view);
-            foremanName = view.findViewById(R.id.foremanName);
-        }
-    }
-
-    @Override
-    public ForemenPerSession.ForemenViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_foremen_per_session, parent, false);
-
-        return new ForemenPerSession.ForemenViewHolder(itemView);
     }
 
     //Handle the menu
