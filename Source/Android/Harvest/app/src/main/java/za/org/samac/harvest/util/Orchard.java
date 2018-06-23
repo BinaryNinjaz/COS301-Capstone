@@ -22,6 +22,7 @@ public class Orchard{
 
     public Orchard(){
         coordinates = new Coordinates();
+        cultivars = new Vector<>();
     }
 
     public void setName(String name) {
@@ -110,6 +111,10 @@ public class Orchard{
 
     public void addCultivar(String addMe){
         cultivars.addElement(addMe);
+    }
+
+    public void deleteCultivar(int loc){
+        cultivars.remove(loc);
     }
 
     public void addCoordinates(Location loc){

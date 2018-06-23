@@ -296,7 +296,40 @@ public class Data {
                             objectRoot.child("further").setValue(activeFarm.further);
                             break;
                         case ORCHARD:
-                            objectRoot = database.getReference(userRoot.toString() + "/orchards/" + currentChange.ID);
+                            objectRoot = objectRoot.child("orchards").child(currentChange.ID);
+                            objectRoot.child("name").setValue(activeOrchard.name);
+                            objectRoot.child("crop").setValue(activeOrchard.crop);
+                            DatabaseReference coordsRoot = objectRoot.child("coords");
+                            coordsRoot.setValue(null);
+                            for(int i = 0; i < activeOrchard.coordinates.getSize(); i++){
+                                Location loc = activeOrchard.coordinates.getCoordinate(i);
+                                coordsRoot.child(Integer.toString(i)). child("lat").setValue(loc.getLatitude());
+                                coordsRoot.child(Integer.toString(i)).child("lng").setValue(loc.getLongitude());
+                            }
+                            if (activeOrchard.meanBagMass != null) {
+                                objectRoot.child("bagMass").setValue(activeOrchard.meanBagMass);
+                            }
+                            objectRoot.child("irrigation").setValue(activeOrchard.irrigation);
+                            if (activeOrchard.datePlanted != null) {
+                                objectRoot.child("date").setValue(activeOrchard.datePlanted.getTime().getTime());
+                            }
+                            coordsRoot = objectRoot.child("cultivars");
+                            coordsRoot.setValue(null);
+                            if (activeOrchard.getCultivars() != null){
+                                for (int i = 0; i < activeOrchard.cultivars.size(); i++){
+                                    coordsRoot.child(Integer.toString(i)).setValue(activeOrchard.cultivars.elementAt(i));
+                                }
+                            }
+                            if(activeOrchard.row != null) {
+                                objectRoot.child("rowSpacing").setValue(activeOrchard.row);
+                            }
+                            if (activeOrchard.tree != null) {
+                                objectRoot.child("treeSpacing").setValue(activeOrchard.tree.toString());
+                            }
+                            if (activeOrchard.assignedFarm != null) {
+                                objectRoot.child("farm").setValue(activeOrchard.assignedFarm.ID);
+                            }
+                            objectRoot.child("further").setValue(activeOrchard.further);
                             break;
                         case WORKER:
                             objectRoot = database.getReference(userRoot.toString() + "/workers/" + currentChange.ID);

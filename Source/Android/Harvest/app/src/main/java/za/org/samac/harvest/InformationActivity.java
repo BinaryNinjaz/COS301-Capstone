@@ -477,5 +477,21 @@ public class InformationActivity extends AppCompatActivity{
             frag.biteMe(day, month, year);
         }
     }
+
+    public void addCultivar(View v){
+        InfoOrchardFragment frag = (InfoOrchardFragment) getSupportFragmentManager().findFragmentByTag("CREATE");
+        if (frag == null){
+            frag = (InfoOrchardFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
+        }
+        frag.addCult();
+    }
+
+    public void onCultivarDelete(View v){
+        InfoOrchardFragment frag = (InfoOrchardFragment) getSupportFragmentManager().findFragmentByTag("CREATE");
+        if (frag == null){
+            frag = (InfoOrchardFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
+        }
+        frag.delCult(Integer.parseInt(v.getTag().toString()));
+    }
 }
 

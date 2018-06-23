@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -49,13 +52,15 @@ public class InfoOrchardFragment extends Fragment {
     private TextView irig;
     private TextView dateText;
     private Date date;
-    private RecyclerView cultivars;
+    private RecyclerView cRecyclerView;
     private RecyclerView.Adapter cAdapter;
     private RecyclerView.LayoutManager cLayoutManager;
     private TextView nCultavar;
     private TextView row;
     private TextView tree;
     private TextView further;
+
+    private Vector<String> cults;
 
     public InfoOrchardFragment() {
         // Required empty public constructor
@@ -74,6 +79,9 @@ public class InfoOrchardFragment extends Fragment {
         if ((editable && newCreation)) throw new AssertionError();
 
         if (newCreation) {
+
+            cults = new Vector<>();
+
             getView().findViewById(R.id.info_orch_name_look).setVisibility(View.GONE);
             name = getView().findViewById(R.id.info_orch_name_edit);
             name.setVisibility(View.VISIBLE);
@@ -94,7 +102,9 @@ public class InfoOrchardFragment extends Fragment {
             dateText = getView().findViewById(R.id.info_orch_date_edit);
             dateText.setKeyListener(null);
             dateText.setVisibility(View.VISIBLE);
-            
+
+            getView().findViewById(R.id.info_orch_cultivars_add_constraint).setVisibility(View.VISIBLE);
+
             getView().findViewById(R.id.info_orch_row_look).setVisibility(View.GONE);
             row = getView().findViewById(R.id.info_orch_row_edit);
             row.setVisibility(View.VISIBLE);
@@ -116,8 +126,10 @@ public class InfoOrchardFragment extends Fragment {
             getView().findViewById(R.id.info_orch_butt_del).setVisibility(View.GONE);
         }
         else {
+
             data.findObject(ID);
             orch = data.getActiveOrchard();
+            cults = orch.getCultivars();
 
             if (editable) {
 
@@ -147,9 +159,13 @@ public class InfoOrchardFragment extends Fragment {
                 dateText = getView().findViewById(R.id.info_orch_date_edit);
                 dateText.setVisibility(View.VISIBLE);
                 dateText.setKeyListener(null);
-                if (orch.getDatePlanted().isSet(Calendar.YEAR)) {
-                    dateText.setText(Integer.toString(orch.getDatePlanted().get(Calendar.DAY_OF_MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.YEAR)));
+                if (orch.getDatePlanted() != null) {
+                    if (orch.getDatePlanted().isSet(Calendar.YEAR)) {
+                        dateText.setText(Integer.toString(orch.getDatePlanted().get(Calendar.DAY_OF_MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.YEAR)));
+                    }
                 }
+
+                getView().findViewById(R.id.info_orch_cultivars_add_constraint).setVisibility(View.VISIBLE);
 
                 getView().findViewById(R.id.info_orch_row_look).setVisibility(View.GONE);
                 row = getView().findViewById(R.id.info_orch_row_edit);
@@ -205,6 +221,11 @@ public class InfoOrchardFragment extends Fragment {
                         temp.setText(Integer.toString(orch.getDatePlanted().get(Calendar.DAY_OF_MONTH)) + " " + Integer.toString(orch.getDatePlanted().get(Calendar.MONTH)) + " " + Integer.toString(orch.getDatePlanted().get(Calendar.YEAR)));
                     }
                 }
+                else{
+                    temp.setText("");
+                }
+
+                getView().findViewById(R.id.info_orch_cultivars_add_constraint).setVisibility(View.GONE);
 
                 temp = getView().findViewById(R.id.info_orch_row_look);
                 tem = orch.getRow();
@@ -239,6 +260,18 @@ public class InfoOrchardFragment extends Fragment {
             mAdapter = new OrchardAdapter(data);
             mRecyclerView.setAdapter(mAdapter);
         }
+
+        cRecyclerView = getView().findViewById(R.id.info_orch_cultivars_look);
+        cRecyclerView.setHasFixedSize(true);
+        cLayoutManager = new LinearLayoutManager(getActivity());
+        cRecyclerView.setLayoutManager(cLayoutManager);
+        if (editable || newCreation){
+            cAdapter = new CultivarAdapter(cults, true);
+        }
+        else {
+            cAdapter = new CultivarAdapter(cults, false);
+        }
+        cRecyclerView.setAdapter(cAdapter);
     }
 
     public void setDataAndID(Data data, String ID){
@@ -262,7 +295,7 @@ public class InfoOrchardFragment extends Fragment {
     public void saveEvent(){
         orch.setName(name.getText().toString());
         orch.setCrop(crop.getText().toString());
-        if (mass.getText() != "") {
+        if (!mass.getText().toString().equals("")) {
             orch.setMeanBagMass(Float.parseFloat(mass.getText().toString()));
         }
         orch.setIrrigation(irig.getText().toString());
@@ -270,14 +303,18 @@ public class InfoOrchardFragment extends Fragment {
         //Date Planted
         Calendar c = Calendar.getInstance();
         String[] tokens = dateText.getText().toString().split("/");
-        c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
-        orch.setDatePlanted(c);
+        if (tokens.length == 3) {
+            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+            orch.setDatePlanted(c);
+        }
+
+        orch.setCultivars(cults);
 
 //        orch.setAssignedFarm();
-        if (row.getText() != "") {
+        if (!row.getText().toString().equals("")) {
             orch.setRow(Float.parseFloat(row.getText().toString()));
         }
-        if (tree.getText() != "") {
+        if (!tree.getText().toString().equals("")) {
             orch.setTree(Float.parseFloat(tree.getText().toString()));
         }
         orch.setFurther(further.getText().toString());
@@ -298,8 +335,16 @@ public class InfoOrchardFragment extends Fragment {
         }
         newOrch.setIrrigation(irig.getText().toString());
 
-//        orch.setDatePlanted(dateText.getText().toString());
-//        orch.setAssignedFarm();
+        //Date Planted
+        Calendar c = Calendar.getInstance();
+        String[] tokens = dateText.getText().toString().split("/");
+        if (tokens.length == 3) {
+            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+            newOrch.setDatePlanted(c);
+        }
+
+        newOrch.setCultivars(cults);
+
         temp = row.getText().toString();
         if (!temp.equals("")){
             newOrch.setRow(Float.parseFloat(temp));
@@ -311,6 +356,21 @@ public class InfoOrchardFragment extends Fragment {
         newOrch.setFurther(further.getText().toString());
         newOrch.setID(data.getNextIDForAddition());
         data.addOrchard(newOrch);
+    }
+
+    public void addCult(){
+        TextView temp = getView().findViewById(R.id.info_orch_cultivars_add_text);
+        String sTemp = temp.getText().toString();
+        cults.addElement(sTemp);
+        cAdapter = new CultivarAdapter(cults, true);
+        cRecyclerView.setAdapter(cAdapter);
+        temp.setText("");
+    }
+
+    public void delCult(int id){
+        cults.removeElementAt(id);
+        cAdapter = new CultivarAdapter(cults, true);
+        cRecyclerView.setAdapter(cAdapter);
     }
 }
 
@@ -361,5 +421,55 @@ class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.ViewHolder>{
     @Override
     public int getItemCount(){
         return orchards.size();
+    }
+}
+
+class CultivarAdapter extends RecyclerView.Adapter<CultivarAdapter.ViewHolder>{
+    //    private String[] orchards;
+    private Vector<String> cultivars;
+    boolean show = true;
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        public ConstraintLayout mConstraint;
+        public TextView cultName;
+        public ImageButton delCultButt;
+
+        public ViewHolder(View view){
+            super(view);
+
+            mConstraint = view.findViewById(R.id.info_orch_cultivar_holder);
+            cultName = view.findViewById(R.id.info_orch_cultivar_cultivar);
+            delCultButt = view.findViewById(R.id.info_orch_cultivar_cultivar_delButt);
+
+        }
+    }
+
+    public CultivarAdapter(Vector<String> cults, boolean show){
+        cultivars = cults;
+        this.show = show;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_cultivar_item, parent, false);
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position){
+        holder.cultName.setText(cultivars.elementAt(position));
+        holder.delCultButt.setTag(position);
+        if (!show){
+            holder.delCultButt.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public int getItemCount(){
+        if (cultivars == null){
+            return 0;
+        }
+        return cultivars.size();
     }
 }
