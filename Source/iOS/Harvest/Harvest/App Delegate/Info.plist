@@ -34,11 +34,15 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We use your location in the background to track your path during a session</string>
+	<string>We will update your location periodically in the background to track your path travelled during a session</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We will use your location when you collect a yield to help predicate yield amounts based on location</string>
+	<string>We will use your location whenever you collect a bag to help predicate yield amounts based on location</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

@@ -119,11 +119,11 @@ extension Orchard: CustomStringConvertible {
   public var description: String {
     guard let farm = Entities
       .shared
-      .farmsList()
-      .first(where: { $0.id == assignedFarm }) else {
+      .farms
+      .first(where: { $0.value.id == assignedFarm }) else {
       return name + " – " + Date().description
     }
-    return farm.name + " – " + name
+    return farm.value.name + " – " + name
   }
 }
 

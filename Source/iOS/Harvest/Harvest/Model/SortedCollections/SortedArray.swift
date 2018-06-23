@@ -70,6 +70,11 @@ extension SortedArray: SortedInsertableCollection, CustomStringConvertible {
     return idx
   }
   
+  mutating func insert<S: Sequence>(elements: S) where S.Element == SortingElement {
+    _store.append(contentsOf: elements)
+    _store.sort(by: areInIncreasingOrder)
+  }
+  
   func contains(_ e: SortingElement) -> Bool {
     return _index(of: e) != nil
   }

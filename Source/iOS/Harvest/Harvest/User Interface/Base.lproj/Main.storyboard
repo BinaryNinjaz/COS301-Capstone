@@ -1313,7 +1313,7 @@ Expected Yield: 0</string>
         <image name="Stats" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="5Mu-K2-yP6"/>
+        <segue reference="kIr-es-bep"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.1629850102" green="0.73037697209999997" blue="0.36622702639999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

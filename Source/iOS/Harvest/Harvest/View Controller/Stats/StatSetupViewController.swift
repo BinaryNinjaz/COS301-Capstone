@@ -23,38 +23,38 @@ public final class StatSetupViewController: FormViewController {
     
     workersRow = PushRow<Worker> { row in
       row.title = "Worker Selection"
-      row.options = Entities.shared.workersList()
+      row.options = Entities.shared.workers.map { $0.value }
       row.value = row.options?.first
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .workerHistory
       }
     }.cellUpdate { _, row in
-      row.options = Entities.shared.workersList()
+      row.options = Entities.shared.workers.map { $0.value }
     }
     
     sessionsRow = PushRow<Session> { row in
       row.title = "Session Selection"
-      row.options = Entities.shared.sessionsList()
+      row.options = Entities.shared.sessions.map { $0.value }
       row.value = row.options?.last
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .perSessionWorkers
       }
     }.cellUpdate { _, row in
-      row.options = Entities.shared.sessionsList()
+      row.options = Entities.shared.sessions.map { $0.value }
     }
     
     orchardsRow = PushRow<Orchard> { row in
       row.title = "Orchard Selection"
-      row.options = Entities.shared.orchardsList()
+      row.options = Entities.shared.orchards.map { $0.value }
       row.value = row.options?.first
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .orchardHistory
       }
     }.cellUpdate { _, row in
-      row.options = Entities.shared.orchardsList()
+      row.options = Entities.shared.orchards.map { $0.value }
     }
     
     let showStats = ButtonRow { row in

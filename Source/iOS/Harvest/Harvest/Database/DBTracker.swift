@@ -14,7 +14,8 @@ extension HarvestDB {
   static func collect(from workers: [Worker: [CollectionPoint]],
                       byWorkerId wid: String,
                       on date: Date,
-                      track: [CLLocationCoordinate2D]) {
+                      track: [CLLocationCoordinate2D]
+  ) {
     let cref = ref.child(Path.sessions)
     let key = cref.childByAutoId().key
     
@@ -35,7 +36,7 @@ extension HarvestDB {
     for user: String,
     on date: Date,
     completion: @escaping (DataSnapshot) -> Void
-    ) {
+  ) {
     let yields = ref.child(Path.yields)
     yields.observeSingleEvent(of: .value) { (snapshot) in
       for _child in snapshot.children {

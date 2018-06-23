@@ -61,6 +61,13 @@ struct SortedDictionary<Key: Hashable, Value> : Collection {
     let value = _dict[key]
     return (key: key, value: value!)
   }
+  
+  func mapValues<T>(_ f: (Value) -> T) -> SortedDictionary<Key, T> {
+    var result = SortedDictionary<Key, T>(areInIncreasingOrder)
+    result._dict = _dict.mapValues(f)
+    result._ref.insert(elements: _dict.keys)
+    return result
+  }
 }
 
 extension SortedDictionary: SortedUniqueInsertableCollection, CustomStringConvertible {

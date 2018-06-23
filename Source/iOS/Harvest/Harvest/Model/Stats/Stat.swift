@@ -31,14 +31,14 @@ enum Stat {
       return nil
     }
     
-    let sessions = Entities.shared.sessionsList()
+    let sessions = Entities.shared.sessions
     
     let result = LineChartDataSet()
     result.label = worker.description
     var started = false
     var i = 0.0
     
-    for session in sessions {
+    for (_, session) in sessions {
       let collections = session.collections[worker]
       if !started && collections == nil {
         continue
@@ -59,12 +59,12 @@ enum Stat {
       return nil
     }
     var interResult = SortedDictionary<Date, Double>()
-    let sessions = Entities.shared.sessionsList()
+    let sessions = Entities.shared.sessions
     
     let poly = Poly(orchard.coords.map { Point($0.longitude, $0.latitude) })
     let calendar = Calendar.current
     
-    for session in sessions {
+    for (_, session) in sessions {
       session.collections.forEach { _, points in
         points.forEach { point in
           let p = Point<CLLocationDegrees>.init(point.location.longitude, point.location.latitude)

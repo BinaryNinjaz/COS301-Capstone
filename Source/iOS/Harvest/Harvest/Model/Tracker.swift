@@ -34,6 +34,10 @@ struct Tracker: Codable {
     try? Disk.save(self, to: .applicationSupport, as: "session")
   }
   
+  func discardState() {
+    try? Disk.remove("session", from: .applicationSupport)
+  }
+  
   mutating func collect(for worker: Worker, at loc: CLLocation) {
     guard var collection = collections[worker] else {
       let cp = CollectionPoint(location: loc.coordinate, date: Date())

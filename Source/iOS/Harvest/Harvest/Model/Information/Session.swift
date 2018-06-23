@@ -74,10 +74,9 @@ extension Dictionary where Key == String, Value == Any {
         colps.append(CollectionPoint(location: loc, date: date))
       }
       
-      if let workerEntity = Entities.shared.workers.first(where: { (_, value) -> Bool in
+      if let worker = Entities.shared.workers.first(where: { (_, value) -> Bool in
         value.id == key
-      })?.value,
-        case let .worker(worker) = workerEntity {
+      })?.value {
         result[worker, default: []] = colps
       }
     }

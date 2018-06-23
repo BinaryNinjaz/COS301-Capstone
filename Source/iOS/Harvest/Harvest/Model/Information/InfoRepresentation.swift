@@ -14,14 +14,13 @@ extension Worker {
     let form = formVC.form
     tempory = Worker(json: json()[id] ?? [:], id: id)
     
-    let orchards = Entities.shared.items(for: .orchard)!
+    let orchards = Entities.shared.orchards
     
     let orchardSection = SelectableSection<ListCheckRow<Orchard>>(
       "Assigned Orchard",
       selectionType: .multipleSelection)
     
-    for (_, orchardEntity) in orchards {
-      let orchard = orchardEntity.orchard!
+    for (_, orchard) in orchards {
       orchardSection <<< ListCheckRow<Orchard>(orchard.description) { row in
         row.title = orchard.assignedFarm + " " + orchard.name
         row.selectableValue = orchard
@@ -170,7 +169,7 @@ extension Farm {
     
     let nameRow = NameRow { row in
       let uniqueNameRule = RuleClosure<String> { (_) -> ValidationError? in
-        let notUnique = Entities.shared.farmsList().contains { $0.name == row.value }
+        let notUnique = Entities.shared.farms.contains { $0.value.name == row.value && $0.value.id != self.id }
         return notUnique ? ValidationError(msg: "• Farm names must be unique") : nil
       }
       row.add(rule: RuleRequired(msg: "• Farm names must be filled in"))
@@ -262,7 +261,7 @@ extension Farm {
     
     let orchardsSection = Section("Orchards in \(name)")
     
-    for orchard in Entities.shared.orchardsList() {
+    for (_, orchard) in Entities.shared.orchards {
       let oRow = OrchardInFarmRow(tag: nil, orchard: orchard) { row in
         row.title = orchard.name
       }
@@ -345,7 +344,7 @@ extension Orchard {
     let form = formVC.form
     tempory = Orchard(json: json()[id] ?? [:], id: id)
     
-    let farms = Entities.shared.items(for: .farm)!
+    let farms = Entities.shared.farms
     
     let cultivarsRow = DeletableMultivaluedSection(
       multivaluedOptions: [.Insert, .Delete],
@@ -474,8 +473,8 @@ extension Orchard {
       row.options = []
       var aFarm: Farm? = nil
       
-      for (_, farmEntity) in farms {
-        let farm = farmEntity.farm!
+      for (_, farm) in farms {
+        let farm = farm
         row.options.append(farm)
         if farm.id == assignedFarm {
           aFarm = farm

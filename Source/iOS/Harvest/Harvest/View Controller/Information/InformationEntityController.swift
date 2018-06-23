@@ -47,11 +47,7 @@ class InformationEntityController: UICollectionViewController {
   }
 
   // MARK: - Navigation
-
-  // In a storyboard-based application, you will often want to do a little preparation before navigation
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
     let vc = segue.destination
     switch vc {
     case is InformationEntityItemTableViewController:
@@ -159,9 +155,9 @@ extension InformationEntityController: UICollectionViewDelegateFlowLayout {
   ) -> CGSize {
     
     let w = collectionView.frame.width
-    let h = collectionView.frame.height / 3.0
+    let h = collectionView.frame.height / 3.33
     
-    let n = CGFloat(Int(w / min(400, collectionView.frame.width - 1)))
+    let n = CGFloat(Int(w / min(360, collectionView.frame.width - 1)))
     
     let cw = n == 1 ? w - 2 : w / n - ((n - 1) / n)
     

@@ -96,6 +96,7 @@ extension HarvestDB {
     }
     workers.child(worker.id).removeValue(completionBlock: { err, ref in
       guard worker.phoneNumber != "" else {
+        completion(err, ref)
         return
       }
       foremen.child(worker
@@ -108,14 +109,14 @@ extension HarvestDB {
   }
   
   static func resign(completion: @escaping (Error?, DatabaseReference) -> Void) {
-    let workers = Entities.shared.workersList()
-    guard let workerIdx = workers.index(where: { (w) -> Bool in
+    let workers = Entities.shared.workers
+    guard let workerIdx = workers.index(where: { (_, w) -> Bool in
       w.phoneNumber == HarvestUser.current.accountIdentifier
     }) else {
       return
     }
     
     let worker = workers[workerIdx]
-    delete(worker: worker, completion: completion)
+    delete(worker: worker.value, completion: completion)
   }
 }
