@@ -434,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      */
     long startTime = 0, stopTime = 0;
     Handler handler = new Handler();
-    int delay = 1000; //milliseconds
+    int delay = 120000; //milliseconds
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
@@ -449,24 +449,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
-        //track foreman every 2 minutes
-        handler.postDelayed(new Runnable(){
-            public void run(){
-                DatabaseReference myRef;
-                myRef = database.getReference(farmerKey + "/locations/" + sessionKey);//path to sessions increment in Firebase
+        if(location != null) {
+            //track foreman every 2 minutes
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    DatabaseReference myRef;
+                    myRef = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
 
-                Map<String, Object> coordinates = new HashMap<>();
-                coordinates.put("lat", location.getLatitude());
-                coordinates.put("lng", location.getLongitude());
+                    Map<String, Object> coordinates = new HashMap<>();
+                    coordinates.put("lat", location.getLatitude());
+                    coordinates.put("lng", location.getLongitude());
 
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("coord", coordinates);
-                childUpdates.put("display", foremanName);
+                    Map<String, Object> childUpdates = new HashMap<>();
+                    childUpdates.put("coord", coordinates);
+                    childUpdates.put("display", foremanName);
 
-                myRef.updateChildren(childUpdates);//store location
-                handler.postDelayed(this, delay);
-            }
-        }, delay);
+                    myRef.updateChildren(childUpdates);//store location
+                    handler.postDelayed(this, delay);
+                }
+            }, delay);
+        }
 
         Map<String, Object> sessionDate = new HashMap<>();
         sessionDate.put("start_date", startSessionTime);
