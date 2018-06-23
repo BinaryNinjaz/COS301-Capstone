@@ -128,7 +128,7 @@ class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
         holder.mButton.setText(names[position]);
-        holder.mButton.setTag(data.getIDFromPosInArray(position) + " " + "FARM");
+        holder.mButton.setTag(data.getIDFromPosInArray(position) + " " + data.getNamedCategory());
     }
 
     @Override

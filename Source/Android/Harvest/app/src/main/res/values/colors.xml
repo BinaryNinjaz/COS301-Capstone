@@ -10,4 +10,5 @@
     <color name="grey">#808080</color>
     <color name="androidGrey">#d3d3d3</color>
     <color name="colorGoogleRed">#e3674b</color>
+    <color name="Clickable_Card">#dcedc8</color>
 </resources>

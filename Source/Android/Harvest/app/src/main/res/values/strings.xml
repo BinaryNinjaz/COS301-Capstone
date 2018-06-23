@@ -73,6 +73,20 @@
     <string name="info_farm_phone">Contact Number:</string>
     <string name="info_farm_province">Province:</string>
     <string name="info_farm_town">Nearest Town:</string>
+    
+    <!--Strings related to Information on Orchards-->
+    <string name="info_orch_name">Orchard Name:</string>
+    <string name="info_orch_crop">Orchard Crop:</string>
+    <string name="info_orch_loc">Orchard Location</string>
+    <string name="info_orch_mass">Bag Mass:</string>
+    <string name="info_orch_irig">Irrigation Type:</string>
+    <string name="info_orch_date">Date Planted:</string>
+    <string name="info_orch_farm">Assigned Farm:</string>
+    <string name="info_orch_work">Assigned Workers:</string>
+    <string name="info_orch_row">Row Spacing:</string>
+    <string name="info_orch_tree">Tree Spacing:</string>
+    <string name="info_orch_cult">Cultivars:</string>
+    <string name="info_orch_further">Further Information:</string>
 
     <!-- Strings related to Settings -->
 

@@ -29,6 +29,10 @@ public class Worker{
     public String getID() {
         return ID;
     }
+
+    public Orchard getAssignedOrchard() {
+        return assignedOrchard;
+    }
 }
 
 enum WorkerType{

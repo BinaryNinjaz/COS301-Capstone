@@ -3,6 +3,7 @@ package za.org.samac.harvest.util;
 import android.location.Location;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 public class Orchard{
@@ -10,25 +11,113 @@ public class Orchard{
     protected String crop;
     protected Coordinates coordinates;
     protected Float meanBagMass;
-    protected Calendar datePlanted;
-    protected Float dimX, dimY;
-    protected String dimUnit;
-    protected String further;
+    protected String irrigation;
+    protected Date datePlanted;
     protected Farm assignedFarm;
+    protected Float row;
+    protected Float tree;
+    protected Vector<String> cultivars;
+    protected String further;
     protected String ID;
 
-    public Orchard(String name, String crop, Coordinates coordinates, Float meanBagMass, Calendar datePlanted, Float dimX, Float dimY, String dimUnit, String further, Farm assignedFarm, String ID){
+    public Orchard(){
+        coordinates = new Coordinates();
+    }
+
+    public void setName(String name) {
         this.name = name;
-        this.crop = crop;
-        this.meanBagMass = meanBagMass;
-        this.dimX = dimX;
-        this.dimY = dimY;
-        this.dimUnit = dimUnit;
-        this.further = further;
-        this.assignedFarm = assignedFarm;
-        this.coordinates = coordinates;
-        this.datePlanted = datePlanted;
+    }
+
+    public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public void setFurther(String further) {
+        this.further = further;
+    }
+
+    public void setAssignedFarm(Farm assignedFarm) {
+        this.assignedFarm = assignedFarm;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setCrop(String crop) {
+        this.crop = crop;
+    }
+
+    public void setCultivars(Vector<String> cultivars) {
+        this.cultivars = cultivars;
+    }
+
+    public void setDatePlanted(Date datePlanted) {
+        this.datePlanted = datePlanted;
+    }
+
+    public void setIrrigation(String irrigation) {
+        this.irrigation = irrigation;
+    }
+
+    public void setMeanBagMass(Float meanBagMass) {
+        this.meanBagMass = meanBagMass;
+    }
+
+    public void setRow(Float row) {
+        this.row = row;
+    }
+
+    public void setTree(Float tree) {
+        this.tree = tree;
+    }
+
+    public String getFurther() {
+        return further;
+    }
+
+    public Date getDatePlanted() {
+        return datePlanted;
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
+
+    public Float getRow() {
+        return row;
+    }
+
+    public Float getTree() {
+        return tree;
+    }
+
+    public Float getMeanBagMass() {
+        return meanBagMass;
+    }
+
+    public String getCrop() {
+        return crop;
+    }
+
+    public String getIrrigation() {
+        return irrigation;
+    }
+
+    public Vector<String> getCultivars() {
+        return cultivars;
+    }
+
+    public void addCultivar(String addMe){
+        cultivars.addElement(addMe);
+    }
+
+    public void addCoordinates(Location loc){
+        coordinates.pushLocation(loc);
+    }
+
+    public void addCoordinates(double lat, double lng){
+        coordinates.pushLocation(lat, lng);
     }
 
     public String getName() {

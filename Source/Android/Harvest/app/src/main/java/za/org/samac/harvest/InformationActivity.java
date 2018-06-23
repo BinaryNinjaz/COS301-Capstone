@@ -144,6 +144,16 @@ public class InformationActivity extends AppCompatActivity{
                 fragmentTransaction.commit();
                 return;
             case "ORCHARD":
+                android.support.v4.app.FragmentManager fragmentManager1 = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
+                InfoOrchardFragment newInfoOrchardFragment1 = new InfoOrchardFragment();
+                fragmentTransaction1.replace(R.id.infoMainPart, newInfoOrchardFragment1, "CREATE");
+                fragmentTransaction1.addToBackStack(null);
+                newInfoOrchardFragment1.beNew(true);
+                newInfoOrchardFragment1.setData(data);
+//                setTitle("Create Orchard");
+                selectedCat = ORCHARD;
+                fragmentTransaction1.commit();
                 return;
             case "WORKER":
 
@@ -207,11 +217,11 @@ public class InformationActivity extends AppCompatActivity{
         else if (category == ORCHARD){
             selectedCat = ORCHARD;
 //            setTitle("View Orchard");
-//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
-//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
-//                fragmentTransaction.addToBackStack(null);
-//                newInfoFarmFragment.setDataAndID(data, tags[0]);
-//                fragmentTransaction.commit();
+                InfoOrchardFragment newInfoOrchardFragment = new InfoOrchardFragment();
+                fragmentTransaction.replace(R.id.infoMainPart, newInfoOrchardFragment);
+                fragmentTransaction.addToBackStack(null);
+                newInfoOrchardFragment.setDataAndID(data, ID);
+                fragmentTransaction.commit();
         }
         else if (category == WORKER){
             selectedCat = WORKER;
@@ -242,6 +252,13 @@ public class InformationActivity extends AppCompatActivity{
                 editing = true;
                 return;
             case ORCHARD:
+                InfoOrchardFragment newInfoOrchardFragment = new InfoOrchardFragment();
+                fragmentTransaction.replace(R.id.infoMainPart, newInfoOrchardFragment, "EDIT");
+                fragmentTransaction.addToBackStack(null);
+                newInfoOrchardFragment.setDataAndID(data, tags[0]);
+                newInfoOrchardFragment.beEditable(true);
+                fragmentTransaction.commit();
+                editing = true;
                 return;
             case WORKER:
         }
@@ -260,6 +277,11 @@ public class InformationActivity extends AppCompatActivity{
                     showObject(tags[1], selectedCat);
                     break;
                 case ORCHARD:
+                    InfoOrchardFragment temp1 = (InfoOrchardFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
+                    temp1.saveEvent();
+                    getSupportFragmentManager().popBackStack();
+                    getSupportFragmentManager().popBackStack();
+                    showObject(tags[1], selectedCat);
                     break;
                 case WORKER:
                     break;
@@ -275,6 +297,11 @@ public class InformationActivity extends AppCompatActivity{
                     showNavFrag();
                     break;
                 case ORCHARD:
+                    InfoOrchardFragment temp1 = (InfoOrchardFragment) getSupportFragmentManager().findFragmentByTag("CREATE");
+                    temp1.createEvent();
+                    getSupportFragmentManager().popBackStack();
+//                    showObject(tags[1], selectedCat);
+                    showNavFrag();
                     break;
                 case WORKER:
                     break;
