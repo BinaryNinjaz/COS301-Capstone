@@ -328,9 +328,12 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="4dp"
+                        android:clickable="true"
+                        android:onClick="showDateSpinner"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/info_orch_irig_card">
+                        app:layout_constraintTop_toBottomOf="@id/info_orch_irig_card"
+                        android:focusable="true">
 
                         <android.support.constraint.ConstraintLayout
                             android:layout_width="match_parent"
@@ -343,8 +346,11 @@
                                 android:layout_marginStart="8dp"
                                 android:layout_marginTop="8dp"
                                 android:text="@string/info_orch_date"
+                                android:clickable="true"
+                                android:onClick="showDateSpinner"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent"
+                                android:focusable="true" />
 
                             <TextView
                                 android:id="@+id/info_orch_date_look"
@@ -368,13 +374,16 @@
                                 android:layout_marginTop="8dp"
                                 android:ems="10"
                                 android:inputType="date"
+                                android:clickable="true"
+                                android:onClick="showDateSpinner"
                                 android:selectAllOnFocus="true"
                                 android:singleLine="true"
                                 android:visibility="gone"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_orch_date_desc" />
+                                app:layout_constraintTop_toBottomOf="@+id/info_orch_date_desc"
+                                android:focusable="false" />
 
                         </android.support.constraint.ConstraintLayout>
 

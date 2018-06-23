@@ -1,8 +1,11 @@
 package za.org.samac.harvest;
 
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
 import za.org.samac.harvest.util.Data;
@@ -41,7 +47,8 @@ public class InfoOrchardFragment extends Fragment {
     private TextView crop;
     private TextView mass;
     private TextView irig;
-    private TextView date;
+    private TextView dateText;
+    private Date date;
     private RecyclerView cultivars;
     private RecyclerView.Adapter cAdapter;
     private RecyclerView.LayoutManager cLayoutManager;
@@ -84,8 +91,9 @@ public class InfoOrchardFragment extends Fragment {
             irig.setVisibility(View.VISIBLE);
 
             getView().findViewById(R.id.info_orch_date_look).setVisibility(View.GONE);
-            date = getView().findViewById(R.id.info_orch_date_edit);
-            date.setVisibility(View.VISIBLE);
+            dateText = getView().findViewById(R.id.info_orch_date_edit);
+            dateText.setKeyListener(null);
+            dateText.setVisibility(View.VISIBLE);
             
             getView().findViewById(R.id.info_orch_row_look).setVisibility(View.GONE);
             row = getView().findViewById(R.id.info_orch_row_edit);
@@ -136,9 +144,12 @@ public class InfoOrchardFragment extends Fragment {
                 irig.setText(orch.getIrrigation());
 
                 getView().findViewById(R.id.info_orch_date_look).setVisibility(View.GONE);
-                date = getView().findViewById(R.id.info_orch_date_edit);
-                date.setVisibility(View.VISIBLE);
-                date.setText(orch.getDatePlanted().toString());
+                dateText = getView().findViewById(R.id.info_orch_date_edit);
+                dateText.setVisibility(View.VISIBLE);
+                dateText.setKeyListener(null);
+                if (orch.getDatePlanted().isSet(Calendar.YEAR)) {
+                    dateText.setText(Integer.toString(orch.getDatePlanted().get(Calendar.DAY_OF_MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.YEAR)));
+                }
 
                 getView().findViewById(R.id.info_orch_row_look).setVisibility(View.GONE);
                 row = getView().findViewById(R.id.info_orch_row_edit);
@@ -190,7 +201,9 @@ public class InfoOrchardFragment extends Fragment {
 
                 temp = getView().findViewById(R.id.info_orch_date_look);
                 if (orch.getDatePlanted() != null) {
-                    temp.setText(orch.getDatePlanted().toString());
+                    if (orch.getDatePlanted().isSet(Calendar.YEAR)) {
+                        temp.setText(Integer.toString(orch.getDatePlanted().get(Calendar.DAY_OF_MONTH)) + " " + Integer.toString(orch.getDatePlanted().get(Calendar.MONTH)) + " " + Integer.toString(orch.getDatePlanted().get(Calendar.YEAR)));
+                    }
                 }
 
                 temp = getView().findViewById(R.id.info_orch_row_look);
@@ -234,6 +247,10 @@ public class InfoOrchardFragment extends Fragment {
         this.ID = ID;
     }
 
+    public void biteMe(int day, int month, int year){
+        dateText.setText(Integer.toString(day) + "/" + Integer.toString(month) + "/" + Integer.toString(year));
+    }
+
     public void setData(Data data){
         this.data = data;
     }
@@ -245,12 +262,24 @@ public class InfoOrchardFragment extends Fragment {
     public void saveEvent(){
         orch.setName(name.getText().toString());
         orch.setCrop(crop.getText().toString());
-        orch.setMeanBagMass(Float.parseFloat(mass.getText().toString()));
+        if (mass.getText() != "") {
+            orch.setMeanBagMass(Float.parseFloat(mass.getText().toString()));
+        }
         orch.setIrrigation(irig.getText().toString());
-//        orch.setDatePlanted(date.getText().toString());
+
+        //Date Planted
+        Calendar c = Calendar.getInstance();
+        String[] tokens = dateText.getText().toString().split("/");
+        c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+        orch.setDatePlanted(c);
+
 //        orch.setAssignedFarm();
-        orch.setRow(Float.parseFloat(row.getText().toString()));
-        orch.setTree(Float.parseFloat(tree.getText().toString()));
+        if (row.getText() != "") {
+            orch.setRow(Float.parseFloat(row.getText().toString()));
+        }
+        if (tree.getText() != "") {
+            orch.setTree(Float.parseFloat(tree.getText().toString()));
+        }
         orch.setFurther(further.getText().toString());
         data.modifyActiveOrchard(orch, false);
     }
@@ -269,7 +298,7 @@ public class InfoOrchardFragment extends Fragment {
         }
         newOrch.setIrrigation(irig.getText().toString());
 
-//        orch.setDatePlanted(date.getText().toString());
+//        orch.setDatePlanted(dateText.getText().toString());
 //        orch.setAssignedFarm();
         temp = row.getText().toString();
         if (!temp.equals("")){

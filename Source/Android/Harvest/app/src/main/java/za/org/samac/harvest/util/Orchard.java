@@ -12,7 +12,7 @@ public class Orchard{
     protected Coordinates coordinates;
     protected Float meanBagMass;
     protected String irrigation;
-    protected Date datePlanted;
+    protected Calendar datePlanted;
     protected Farm assignedFarm;
     protected Float row;
     protected Float tree;
@@ -52,7 +52,7 @@ public class Orchard{
         this.cultivars = cultivars;
     }
 
-    public void setDatePlanted(Date datePlanted) {
+    public void setDatePlanted(Calendar datePlanted) {
         this.datePlanted = datePlanted;
     }
 
@@ -76,7 +76,7 @@ public class Orchard{
         return further;
     }
 
-    public Date getDatePlanted() {
+    public Calendar getDatePlanted() {
         return datePlanted;
     }
 

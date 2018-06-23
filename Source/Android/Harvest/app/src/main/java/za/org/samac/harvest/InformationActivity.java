@@ -1,18 +1,24 @@
 package za.org.samac.harvest;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Calendar;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
@@ -36,17 +42,18 @@ public class InformationActivity extends AppCompatActivity{
 
     Category selectedCat = NOTHING;
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.actionInformation);
-    }
+//    @Override
+//    protected void onResume(){
+//        super.onResume();
+//        bottomNavigationView.setSelectedItemId(R.id.actionInformation);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
         data = new Data();
+        data.pull(null);
 
         //bottom navigation bar
         bottomNavigationView = findViewById(R.id.BottomNav);
@@ -120,6 +127,22 @@ public class InformationActivity extends AppCompatActivity{
                 setTitle("Information");
                 selectedCat = NAV;
             }
+            else if(getSupportFragmentManager().getBackStackEntryCount() == 3){
+                switch (selectedCat){
+                    case FARM:
+                        setTitle("Farms");
+                        break;
+                    case WORKER:
+                        setTitle("Workers");
+                        break;
+                    case ORCHARD:
+                        setTitle("Orchards");
+                        break;
+                    default:
+                        setTitle("Good Luck");
+                        break;
+                }
+            }
             else{
 //                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
@@ -139,9 +162,9 @@ public class InformationActivity extends AppCompatActivity{
                 fragmentTransaction.addToBackStack(null);
                 newInfoFarmFragment.beNew(true);
                 newInfoFarmFragment.setData(data);
-//                setTitle("Create Farm");
-                selectedCat = FARM;
+                setTitle("Create Farm");
                 fragmentTransaction.commit();
+                selectedCat = FARM;
                 return;
             case "ORCHARD":
                 android.support.v4.app.FragmentManager fragmentManager1 = getSupportFragmentManager();
@@ -151,9 +174,9 @@ public class InformationActivity extends AppCompatActivity{
                 fragmentTransaction1.addToBackStack(null);
                 newInfoOrchardFragment1.beNew(true);
                 newInfoOrchardFragment1.setData(data);
-//                setTitle("Create Orchard");
-                selectedCat = ORCHARD;
+                setTitle("Create Orchard");
                 fragmentTransaction1.commit();
+                selectedCat = ORCHARD;
                 return;
             case "WORKER":
 
@@ -170,13 +193,13 @@ public class InformationActivity extends AppCompatActivity{
             fragmentTransaction.addToBackStack(null);
             newInfoListFragment.setData(data);
             if (view.getTag().equals("farms")) {
-//                setTitle("Farms");
+                setTitle("Farms");
                 selectedCat = FARM;
             } else if (view.getTag().equals("orchards")) {
-//                setTitle("Orchards");
+                setTitle("Orchards");
                 selectedCat = ORCHARD;
             } else if (view.getTag().equals("workers")) {
-//                setTitle("Workers");
+                setTitle("Workers");
                 selectedCat = WORKER;
             }
             newInfoListFragment.setCat(selectedCat);
@@ -207,7 +230,7 @@ public class InformationActivity extends AppCompatActivity{
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (category == FARM){
             selectedCat = FARM;
-//            setTitle("View Farm");
+            setTitle("View Farm");
             InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
             fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
             fragmentTransaction.addToBackStack(null);
@@ -216,16 +239,16 @@ public class InformationActivity extends AppCompatActivity{
         }
         else if (category == ORCHARD){
             selectedCat = ORCHARD;
-//            setTitle("View Orchard");
-                InfoOrchardFragment newInfoOrchardFragment = new InfoOrchardFragment();
-                fragmentTransaction.replace(R.id.infoMainPart, newInfoOrchardFragment);
-                fragmentTransaction.addToBackStack(null);
-                newInfoOrchardFragment.setDataAndID(data, ID);
-                fragmentTransaction.commit();
+            setTitle("View Orchard");
+            InfoOrchardFragment newInfoOrchardFragment = new InfoOrchardFragment();
+            fragmentTransaction.replace(R.id.infoMainPart, newInfoOrchardFragment);
+            fragmentTransaction.addToBackStack(null);
+            newInfoOrchardFragment.setDataAndID(data, ID);
+            fragmentTransaction.commit();
         }
         else if (category == WORKER){
             selectedCat = WORKER;
-//            setTitle("View Worker");
+            setTitle("View Worker");
 //                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
 //                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
 //                fragmentTransaction.addToBackStack(null);
@@ -242,7 +265,7 @@ public class InformationActivity extends AppCompatActivity{
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (selectedCat) {
             case FARM:
-//                setTitle("Editing Farm");
+                setTitle("Edit Farm");
                 InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
                 fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment, "EDIT");
                 fragmentTransaction.addToBackStack(null);
@@ -252,6 +275,7 @@ public class InformationActivity extends AppCompatActivity{
                 editing = true;
                 return;
             case ORCHARD:
+                setTitle("Edit Orchard");
                 InfoOrchardFragment newInfoOrchardFragment = new InfoOrchardFragment();
                 fragmentTransaction.replace(R.id.infoMainPart, newInfoOrchardFragment, "EDIT");
                 fragmentTransaction.addToBackStack(null);
@@ -427,6 +451,31 @@ public class InformationActivity extends AppCompatActivity{
                 return true;
         }
 //        return false;
+    }
+
+    public void showDateSpinner(View v){
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState){
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day){
+            InfoOrchardFragment frag = (InfoOrchardFragment) getFragmentManager().findFragmentByTag("CREATE");
+            if (frag == null){
+                frag = (InfoOrchardFragment) getFragmentManager().findFragmentByTag("EDIT");
+            }
+            frag.biteMe(day, month, year);
+        }
     }
 }
 

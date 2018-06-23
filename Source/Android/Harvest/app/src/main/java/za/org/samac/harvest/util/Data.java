@@ -124,8 +124,10 @@ public class Data {
                                 temp.setCoordinates(coords);
                                 String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
                                 Float meanBagMass = null;
-                                if (!smeanBagMass.equals("")) {
-                                    meanBagMass = Float.parseFloat(smeanBagMass);
+                                if (smeanBagMass != null) {
+                                    if (!smeanBagMass.equals("")) {
+                                        meanBagMass = Float.parseFloat(smeanBagMass);
+                                    }
                                 }
 //                                else {
 //                                    meanBagMass = 0;
@@ -134,61 +136,15 @@ public class Data {
 
                                 temp.setIrrigation(dataSet.child("irrigation").getValue(String.class));
 
-                                Calendar cal = new Calendar() {
-                                    @Override
-                                    protected void computeTime() {
-
-                                    }
-
-                                    @Override
-                                    protected void computeFields() {
-
-                                    }
-
-                                    @Override
-                                    public void add(int field, int amount) {
-
-                                    }
-
-                                    @Override
-                                    public void roll(int field, boolean up) {
-
-                                    }
-
-                                    @Override
-                                    public int getMinimum(int field) {
-                                        return 0;
-                                    }
-
-                                    @Override
-                                    public int getMaximum(int field) {
-                                        return 0;
-                                    }
-
-                                    @Override
-                                    public int getGreatestMinimum(int field) {
-                                        return 0;
-                                    }
-
-                                    @Override
-                                    public int getLeastMaximum(int field) {
-                                        return 0;
-                                    }
-                                };
-                                //Get and manipulate the date.
-//                                String dateString[] = dataSet.child("date").getValue(Long.class).toString().split("-");
-//                                if (dateString.length == 3) {
-//                                    cal.set(Integer.valueOf(dateString[0]), Integer.valueOf(dateString[1]) - 1, Integer.valueOf(dateString[2]));
-//                                }
                                 Long tempL = dataSet.child("date").getValue(Long.class);
                                 Date date;
+                                Calendar c;
                                 if (tempL != null){
+                                    c = Calendar.getInstance();
                                     date = new Date(tempL);
+                                    c.setTime(date);
+                                    temp.setDatePlanted(c);
                                 }
-                                else{
-                                    date = new Date();
-                                }
-                                temp.setDatePlanted(date);
 
                                 Farm assignedFarm = new Farm();
                                 assignedFarm.setID(dataSet.child("further").getValue(String.class));
