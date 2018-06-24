@@ -6,40 +6,19 @@ function googleLogin(){
 	firebase.auth().useDeviceLanguage();
 	provider.setCustomParameters({
 	  'login_hint': 'user@example.com'
-	});
-	
+	});	
 	firebase.auth().signInWithPopup(provider).then(function(result) {
-	var token = result.credential.accessToken;
-        var user = result.user;
-	document.location.href = "HomePage.html";
+		var token = result.credential.accessToken;//access token
+		var user = result.user; //user object 
+		document.location.href = "HomePage.html";
 	}).catch(function(error) {
-	  // Handle Errors here.
-	  var errorCode = error.code;
-	  var errorMessage = error.message;
-	  var email = error.email;
-	 var credential = error.credential;
-	});
-	
-}
-function onSignIn(googleUser) {
-  var profile = googleUser.getBasicProfile();
-
-	
-	
-	const email = profile.getEmail();
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) { // user details correct
-        document.location.href = "HomePage.html";
-    }).catch(function (error) { // some error occured
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-        } else {
-            alert(errorMessage);
-        }
-        console.log(error);
-    });
+	  // error hanling
+		var errorCode = error.code;
+		var errorMessage = error.message;
+		var email = error.email;
+		var credential = error.credential;
+		window.alert("Error: " + errorMessage);
+	});	
 }
 
 
