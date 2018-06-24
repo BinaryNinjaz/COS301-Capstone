@@ -20,26 +20,6 @@ function googleLogin(){
 		window.alert("Error: " + errorMessage);
 	});	
 }
-function onSignIn(googleUser) {
-  var profile = googleUser.getBasicProfile();
-
-	
-	
-	const email = profile.getEmail();
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) { // user details correct
-        document.location.href = "HomePage.html";
-    }).catch(function (error) { // some error occured
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-        } else {
-            alert(errorMessage);
-        }
-        console.log(error);
-    });
-}
 
 
 /* This function is used to make the page dynamic, in that if user presses the login button, it should render a login form rather than registration*/
