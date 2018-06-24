@@ -3,10 +3,14 @@ import Swift
 struct SortedDictionary<Key: Hashable, Value> : Collection {
   typealias SortingElement = Key
   
-  struct Index: Comparable, Strideable {
+  struct DefaultIndex: Comparable, Strideable {
     typealias Stride = Int
     
     var boxed: Int
+    
+    init(_ b: Int) {
+      boxed = b
+    }
     
     static func == (lhs: Index, rhs: Index) -> Bool {
       return lhs.boxed == rhs.boxed
@@ -21,7 +25,7 @@ struct SortedDictionary<Key: Hashable, Value> : Collection {
     }
     
     func advanced(by n: Int) -> Index {
-      return Index(boxed: boxed + n)
+      return Index(boxed + n)
     }
   }
   
@@ -44,19 +48,19 @@ struct SortedDictionary<Key: Hashable, Value> : Collection {
     _ref = SortedArray.init(pairs.map { $0.0 }, areInIncreasingOrder: areInIncreasingOrder)
   }
   
-  var startIndex: Index {
-    return Index(boxed: _ref.startIndex)
+  var startIndex: DefaultIndex {
+    return Index(_ref.startIndex)
   }
   
-  var endIndex: Index {
-    return Index(boxed: _ref.endIndex)
+  var endIndex: DefaultIndex {
+    return Index(_ref.endIndex)
   }
   
-  func index(after: Index) -> Index {
-    return Index(boxed: _ref.index(after: after.boxed))
+  func index(after: DefaultIndex) -> DefaultIndex {
+    return Index(_ref.index(after: after.boxed))
   }
   
-  subscript(index: Index) -> Element {
+  subscript(index: DefaultIndex) -> Element {
     let key = _ref[index.boxed]
     let value = _dict[key]
     return (key: key, value: value!)
@@ -77,7 +81,7 @@ extension SortedDictionary: SortedUniqueInsertableCollection, CustomStringConver
     if !contains {
       let i = _ref.insert(element.key)
       _dict[element.key] = element.value
-      return (false, Index(boxed: i))
+      return (false, DefaultIndex(i))
     } else {
       return (true, idx)
     }

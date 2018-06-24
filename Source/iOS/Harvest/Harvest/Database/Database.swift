@@ -7,10 +7,8 @@
 //
 
 import Firebase
-import CoreLocation
-import GoogleSignIn
 
-struct HarvestDB {
+enum HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
   
   struct Path {
@@ -46,11 +44,7 @@ struct HarvestDB {
     }
   }
   
-  static func saveFarmName() {
-    
-  }
-  
-  // FIXME: -
+  // FIXME: Remove
   static func onLastSession(
     _ completion: @escaping ([String: Any]) -> Void
   ) {

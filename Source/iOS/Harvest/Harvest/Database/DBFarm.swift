@@ -7,8 +7,6 @@
 //
 
 import Firebase
-import CoreLocation
-import GoogleSignIn
 
 extension HarvestDB {
   static func getFarms(_ completion: @escaping ([Farm]) -> Void) {

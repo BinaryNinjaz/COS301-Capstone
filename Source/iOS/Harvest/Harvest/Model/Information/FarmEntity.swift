@@ -17,6 +17,7 @@ enum EntityItem {
   case orchard(Orchard)
   case worker(Worker)
   case session(Session)
+//  case shallowSession(ShallowSession)
   case user(HarvestUser)
   
   var name: String {
@@ -24,7 +25,8 @@ enum EntityItem {
     case let .farm(f): return f.name
     case let .orchard(o): return o.name
     case let .worker(w): return w.firstname + " " + w.lastname
-    case let .session(s): return s.description // FIXME
+    case let .session(s): return s.description
+//    case let .shallowSession(s): return s.description
     case let .user(u): return u.displayName
     }
   }

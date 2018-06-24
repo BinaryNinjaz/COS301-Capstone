@@ -29,9 +29,7 @@ class InformationEntityItemTableViewController: UITableViewController {
                              action: #selector(refreshList(_:)),
                              for: .valueChanged)
     
-    if refreshControl != nil {
-      tableView.addSubview(refreshControl!)
-    }
+    tableView.addSubview(refreshControl!)
     
     if listnerId == nil {
       listnerId = Entities.shared.listen { self.tableView.reloadData() }

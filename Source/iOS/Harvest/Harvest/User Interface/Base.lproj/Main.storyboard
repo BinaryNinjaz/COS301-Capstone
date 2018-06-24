@@ -1187,13 +1187,13 @@ Expected Yield: 0</string>
         <!--Sessions-->
         <scene sceneID="oew-Kb-uPf">
             <objects>
-                <tableViewController id="DKC-sq-a2f" customClass="SessionInformationViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="DKC-sq-a2f" customClass="SessionSelectionViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="psO-Br-AdQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="informationEntityItemCell" textLabel="7hO-Hw-Yv3" style="IBUITableViewCellStyleDefault" id="ziu-0J-w34">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="sessionSelectionCell" textLabel="7hO-Hw-Yv3" style="IBUITableViewCellStyleDefault" id="ziu-0J-w34">
                                 <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ziu-0J-w34" id="X67-YX-7Ai">
@@ -1210,8 +1210,27 @@ Expected Yield: 0</string>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="s2o-6U-1Nl" kind="show" identifier="EntitiesToDetail" id="kIr-es-bep"/>
+                                    <segue destination="s2o-6U-1Nl" kind="show" identifier="SessionToItem" id="kIr-es-bep"/>
                                 </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="sessionSelectionLoadingCell" id="IoZ-qC-jA1">
+                                <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="IoZ-qC-jA1" id="4SO-vK-yCD">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="VPR-DW-0FA">
+                                            <rect key="frame" x="169" y="3" width="37" height="37"/>
+                                            <color key="color" red="0.1629850102" green="0.73037697209999997" blue="0.36622702639999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="VPR-DW-0FA" firstAttribute="centerY" secondItem="4SO-vK-yCD" secondAttribute="centerY" id="kw7-FV-Ana"/>
+                                        <constraint firstItem="VPR-DW-0FA" firstAttribute="centerX" secondItem="4SO-vK-yCD" secondAttribute="centerX" id="s6Q-C3-CSN"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -1219,13 +1238,7 @@ Expected Yield: 0</string>
                             <outlet property="delegate" destination="DKC-sq-a2f" id="FPE-Ht-pw2"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Sessions" id="o2U-eo-7Ab">
-                        <barButtonItem key="rightBarButtonItem" title="New" id="OmU-ee-Xks">
-                            <connections>
-                                <action selector="newButtonTouchUp:" destination="DKC-sq-a2f" id="Le7-Rj-Hyd"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Sessions" id="o2U-eo-7Ab"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rTd-rb-xmG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

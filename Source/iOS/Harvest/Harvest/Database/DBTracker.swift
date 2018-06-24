@@ -8,7 +8,6 @@
 
 import Firebase
 import CoreLocation
-import GoogleSignIn
 
 extension HarvestDB {
   static func collect(from workers: [Worker: [CollectionPoint]],
