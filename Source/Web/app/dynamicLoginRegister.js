@@ -1,18 +1,38 @@
-/* This section of code was added by Vincent, to listen for the Enter shortcut on the keyboard*/
-var input = document.getElementById("password");
-input.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode === 13) {
-        document.getElementById("myInput").click();
-    }
-});
-/* What Vincent Added on 04/05/2018 ends here. */
-
-
-
 let page = 0; //0 being login, 1 being sign up
 
-/* This function is used to make the page dynamic, in that if user presses the login button, it should render a login form - Teboho Mokoena */
+function googleLogin(){
+	var provider = new firebase.auth.GoogleAuthProvider();
+	provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+	firebase.auth().useDeviceLanguage();
+	provider.setCustomParameters({
+	  'login_hint': 'user@example.com'
+	});
+	
+	firebase.auth().signInWithRedirect(provider);
+	firebase.auth().getRedirectResult().then(function(result) {
+  if (result.credential) {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    var token = result.credential.accessToken;
+    // ...
+  }
+  // The signed-in user info.
+  var user = result.user;
+}).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+	window.alert(errorMessage);
+  // The email of the user's account used.
+  var email = error.email;
+  // The firebase.auth.AuthCredential type that was used.
+  var credential = error.credential;
+  // ...
+});
+	window.alert("in here");
+}
+
+
+/* This function is used to make the page dynamic, in that if user presses the login button, it should render a login form rather than registration*/
 function showLogin(){
 	page = 0;
 	document.getElementById("pageCon").innerHTML = "<div class='container'>"
@@ -47,7 +67,7 @@ function showLogin(){
 
 }
 
-/* This function is used to make the page dynamic, in that if user presses the registration button, it should render a registration form - Teboho Mokoena */
+/* This function is used to make the page dynamic, in that if user presses the registration button, it should render a registration form rather than  login*/
 function showRegister(){
 	page = 1;
     document.getElementById("pageCon").innerHTML = '<div class="container">'
@@ -151,31 +171,15 @@ function resetPassword() {
 }
 
 
-function googleLogin(){
-	var provider = new firebase.auth.GoogleAuthProvider();
-	firebase.auth().signInWithPopup(provider).then(function(result) {
-	  // This gives you a Google Access Token. You can use it to access the Google API.
-	  var token = result.credential.accessToken;
-	  // The signed-in user info.
-	  var user = result.user;
-	  // ...
-	}).catch(function(error) {
-	  // Handle Errors here.
-	  var errorCode = error.code;
-	  var errorMessage = error.message;
-	  // The email of the user's account used.
-	  var email = error.email;
-	  // The firebase.auth.AuthCredential type that was used.
-	  var credential = error.credential;
-	  // ...
-	});
-		
-}
-
-
-
-
-
+/* This section of code was added by Vincent, to listen for the Enter shortcut on the keyboard*/
+var input = document.getElementById("password");
+input.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        document.getElementById("myInput").click();
+    }
+});
+/* What Vincent Added on 04/05/2018 ends here. */
 
 
 
