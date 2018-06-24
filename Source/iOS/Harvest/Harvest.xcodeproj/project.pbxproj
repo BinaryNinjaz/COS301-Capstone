@@ -15,7 +15,7 @@
 		1604E4B8206958E900E9BA15 /* HarvestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4B7206958E900E9BA15 /* HarvestTests.swift */; };
 		1604E4C3206958E900E9BA15 /* HarvestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4C2206958E900E9BA15 /* HarvestUITests.swift */; };
 		1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */; };
-		160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */; };
+		160A1E19209BCA6E000A1E0F /* SessionISelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */; };
 		160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */; };
 		160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */; };
 		16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FC820696B8F00E1A292 /* QuickAlert.swift */; };
@@ -76,6 +76,7 @@
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
 		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
+		16FF431E20DFF106001092CF /* DBCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431D20DFF106001092CF /* DBCloud.swift */; };
 		3ECB54CBF16E9C8D2770A5D3 /* Pods_Harvest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */; };
 		D7583D7CD8D538EE68CCF745 /* Pods_HarvestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */; };
 /* End PBXBuildFile section */
@@ -112,7 +113,7 @@
 		1604E4C2206958E900E9BA15 /* HarvestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUITests.swift; sourceTree = "<group>"; };
 		1604E4C4206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInformationViewController.swift; sourceTree = "<group>"; };
+		160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionISelectionViewController.swift; sourceTree = "<group>"; };
 		160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaViewController.swift; sourceTree = "<group>"; };
 		160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaEurekaCell.swift; sourceTree = "<group>"; };
 		16420FC820696B8F00E1A292 /* QuickAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlert.swift; sourceTree = "<group>"; };
@@ -176,6 +177,7 @@
 		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16FF431B20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/Main.strings; sourceTree = "<group>"; };
 		16FF431C20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		16FF431D20DFF106001092CF /* DBCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBCloud.swift; sourceTree = "<group>"; };
 		345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
 		443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HarvestTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Harvest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -338,6 +340,7 @@
 				167448D0208A5B9800FA605C /* DBFarm.swift */,
 				167448D2208A5C3C00FA605C /* DBTracker.swift */,
 				167448DB208A897C00FA605C /* DBSession.swift */,
+				16FF431D20DFF106001092CF /* DBCloud.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -417,7 +420,7 @@
 			children = (
 				167448B720892F6100FA605C /* InformationEntityController.swift */,
 				167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */,
-				160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */,
+				160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */,
 				167448C62089430C00FA605C /* EntityViewController.swift */,
 			);
 			path = Information;
@@ -848,8 +851,9 @@
 				167448B820892F6100FA605C /* InformationEntityController.swift in Sources */,
 				1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
+				16FF431E20DFF106001092CF /* DBCloud.swift in Sources */,
 				167448DA208A83E300FA605C /* Session.swift in Sources */,
-				160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */,
+				160A1E19209BCA6E000A1E0F /* SessionISelectionViewController.swift in Sources */,
 				16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */,
 				167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */,
 				167448AF2089271400FA605C /* Worker.swift in Sources */,
@@ -981,6 +985,8 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = NO;
+				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1035,6 +1041,8 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = NO;
+				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

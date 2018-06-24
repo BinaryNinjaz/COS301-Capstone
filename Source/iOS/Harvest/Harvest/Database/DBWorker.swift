@@ -7,8 +7,6 @@
 //
 
 import Firebase
-import CoreLocation
-import GoogleSignIn
 
 extension HarvestDB {
   static func getWorkers(_ completion: @escaping ([Worker]) -> Void) {

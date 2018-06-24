@@ -631,6 +631,7 @@ extension EntityItem {
     case let .orchard(o): o.information(for: formVC, onChange: onChange)
     case let .farm(f): f.information(for: formVC, onChange: onChange)
     case let .session(s): s.information(for: formVC, onChange: onChange)
+    case .shallowSession: break
     case let .user(u): u.information(for: formVC, onChange: onChange)
     }
   }

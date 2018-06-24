@@ -7,10 +7,8 @@
 //
 
 import Firebase
-import CoreLocation
-import GoogleSignIn
 
-struct HarvestDB {
+enum HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
   
   struct Path {
@@ -43,23 +41,6 @@ struct HarvestDB {
     }
     static var admin: String {
       return "\(Path.parent)/admin"
-    }
-  }
-  
-  static func saveFarmName() {
-    
-  }
-  
-  // FIXME: -
-  static func onLastSession(
-    _ completion: @escaping ([String: Any]) -> Void
-  ) {
-    let wref = ref.child(Path.yields).queryLimited(toLast: 1)
-    wref.observe(.value) { (snapshot) in
-      guard let session = snapshot.value as? [String: Any] else {
-        return
-      }
-      completion(session)
     }
   }
 }

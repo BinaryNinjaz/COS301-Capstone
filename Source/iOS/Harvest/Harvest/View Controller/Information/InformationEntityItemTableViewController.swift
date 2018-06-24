@@ -29,9 +29,7 @@ class InformationEntityItemTableViewController: UITableViewController {
                              action: #selector(refreshList(_:)),
                              for: .valueChanged)
     
-    if refreshControl != nil {
-      tableView.addSubview(refreshControl!)
-    }
+    tableView.addSubview(refreshControl!)
     
     if listnerId == nil {
       listnerId = Entities.shared.listen { self.tableView.reloadData() }
@@ -85,6 +83,9 @@ class InformationEntityItemTableViewController: UITableViewController {
     case .session:
       break
       
+    case .shallowSession:
+      break
+      
     case .user:
       break
       
@@ -125,6 +126,8 @@ class InformationEntityItemTableViewController: UITableViewController {
       cell.textLabel?.text = f.name
     case let .session(s):
       cell.textLabel?.text = s.foreman.description
+    case .shallowSession:
+      break
     case .user:
       cell.textLabel?.text = ""
     }

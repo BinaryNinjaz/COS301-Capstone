@@ -7,7 +7,6 @@
 //
 
 import Firebase
-import CoreLocation
 import GoogleSignIn
 import Disk
 

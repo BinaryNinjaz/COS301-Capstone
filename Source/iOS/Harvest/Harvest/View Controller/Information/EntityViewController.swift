@@ -72,8 +72,9 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     default:
-      // FIXME: Show some error message
-      break
+      UIAlertController.present(title: "Cannot Save",
+                                message: "The item you are trying to save cannot be saved",
+                                on: self)
     }
   }
   

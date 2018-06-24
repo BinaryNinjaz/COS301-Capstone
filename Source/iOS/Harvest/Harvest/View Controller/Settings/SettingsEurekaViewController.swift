@@ -27,7 +27,7 @@ struct OrganizationInfo: CustomStringConvertible, Equatable {
 }
 
 class SettingsEurekaViewController: FormViewController {
-  
+  // swiftlint:disable function_body_length
   override func viewDidLoad() {
     super.viewDidLoad()
     

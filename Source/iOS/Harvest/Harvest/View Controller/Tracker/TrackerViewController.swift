@@ -35,7 +35,7 @@ class TrackerViewController: UIViewController {
   @IBOutlet weak var yieldLabel: UILabel!
   
   fileprivate func finishCollecting() {
-    locationManager.stopUpdatingLocation()
+    locationManager.stopMonitoringSignificantLocationChanges()
     
     startSessionButton.setTitle("Start", for: .normal)
     let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
@@ -52,7 +52,7 @@ class TrackerViewController: UIViewController {
   }
   
   fileprivate func discardCollections() {
-    self.locationManager.stopUpdatingLocation()
+    self.locationManager.stopMonitoringSignificantLocationChanges()
     
     self.startSessionButton.setTitle("Start", for: .normal)
     let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
@@ -121,7 +121,7 @@ class TrackerViewController: UIViewController {
       
       locationManager.requestAlwaysAuthorization()
       if CLLocationManager.locationServicesEnabled() {
-        locationManager.startUpdatingLocation()
+        locationManager.startMonitoringSignificantLocationChanges()
         startSessionButton.setTitle("Stop", for: .normal)
         let sessionLayer = CAGradientLayer.gradient(colors: .stopSession,
                                                     locations: [0, 1],
@@ -134,7 +134,9 @@ class TrackerViewController: UIViewController {
         
         workerCollectionView.reloadData()
       } else {
-        // FIXME: Error when can't access location
+        UIAlertController.present(title: "Cannot Access Location",
+                                  message: "Please turn on location services for Harvest from within the Settings App",
+                                  on: self)
       }
     } else {
       if tracker?.collections.count ?? 0 > 0 {
@@ -196,15 +198,10 @@ extension TrackerViewController: CLLocationManagerDelegate {
     }
     currentLocation = loc
     tracker?.track(location: loc)
-    if lastLocationPoll == nil {
-      self.locationManager.stopUpdatingLocation()
-    }
+    
     if lastLocationPoll == nil || Date().timeIntervalSince(lastLocationPoll!) > 120 {
       HarvestDB.update(location: loc.coordinate)
       lastLocationPoll = Date()
-      DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
-        self.locationManager.requestLocation()
-      }
     }
   }
   
@@ -280,7 +277,7 @@ extension TrackerViewController: UICollectionViewDataSource {
     }
   }
   
-  // swiftline:disable function_body_length
+  // swiftlint:disable function_body_length
   func collectionView(
     _ collectionView: UICollectionView,
     cellForItemAt indexPath: IndexPath
