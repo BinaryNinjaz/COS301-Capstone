@@ -40,7 +40,7 @@ class SessionSelectionViewController: UITableViewController {
     
     isLoading = true
     tableView.reloadData()
-    HarvestDB.getFlatSessions(onPage: pageNo, ofSize: pageSize) { (psessions) in
+    HarvestDB.getShallowSessions(onPage: pageNo, ofSize: pageSize) { (psessions) in
       self.sessions.accumulateByDay(with: psessions)
       DispatchQueue.main.async {
         self.isLoading = false
@@ -56,7 +56,7 @@ class SessionSelectionViewController: UITableViewController {
     }
     
     isLoading = true
-    HarvestDB.getFlatSessions(onPage: 1, ofSize: pageSize) { (psessions) in
+    HarvestDB.getShallowSessions(onPage: 1, ofSize: pageSize) { (psessions) in
       self.sessions.removeAll()
       self.sessions.accumulateByDay(with: psessions)
       DispatchQueue.main.async {
@@ -99,7 +99,7 @@ class SessionSelectionViewController: UITableViewController {
     let session = sessions[sidx].value[indexPath.row]
     let date = session.startDate
     let name = session.foreman.description
-    cell.textLabel?.text =  name + " - " + formatter.string(from: date)
+    cell.textLabel?.text =  name + " ・ " + formatter.string(from: date)
     return cell
   }
   

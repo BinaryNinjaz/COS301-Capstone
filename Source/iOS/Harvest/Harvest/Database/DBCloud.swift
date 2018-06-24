@@ -30,16 +30,16 @@ extension HarvestDB {
   }
   
   enum CloudFunctions {
-    static let flattendedSessions = "flattendSessions"
+    static let shallowSessions = "flattendSessions"
     static let sessionsWithDates = "sessionsWithinDates"
   }
   
-  static func getFlatSessions(
+  static func getShallowSessions(
     onPage page: Int,
     ofSize size: Int,
     _ completion: @escaping ([ShallowSession]) -> Void
   ) {
-    let query = component(onBase: CloudFunctions.flattendedSessions, withArgs: [
+    let query = component(onBase: CloudFunctions.shallowSessions, withArgs: [
       ("pageNo", page.description),
       ("pageSize", size.description),
       ("uid", Path.parent)

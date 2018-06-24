@@ -84,8 +84,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Called when the application is about to terminate. Save data if
     // appropriate. See also applicationDidEnterBackground:.
     
-    // FIXME: Restore in release build
-//    TrackerViewController.tracker?.storeSession()
+#if DEBUG
+    
+#else
+    TrackerViewController.tracker?.storeSession()
+#endif
+    
   }
 
 }

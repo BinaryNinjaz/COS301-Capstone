@@ -10,7 +10,7 @@ import Eureka
 
 public final class StatSetupViewController: FormViewController {
   var workersRow: PushRow<Worker>! = nil
-  var sessionsRow: PushRow<Session>! = nil
+  var sessionsRow: PushRow<ShallowSession>! = nil
   var orchardsRow: PushRow<Orchard>! = nil
   
   // swiftlint:disable function_body_length
@@ -33,16 +33,16 @@ public final class StatSetupViewController: FormViewController {
       row.options = Entities.shared.workers.map { $0.value }
     }
     
-    sessionsRow = PushRow<Session> { row in
+    sessionsRow = PushRow<ShallowSession> { row in
       row.title = "Session Selection"
-      row.options = Entities.shared.sessions.map { $0.value }
-      row.value = row.options?.last
+      row.options = Entities.shared.shallowSessions.map { $0.value }
+      row.value = row.options?.first
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .perSessionWorkers
       }
     }.cellUpdate { _, row in
-      row.options = Entities.shared.sessions.map { $0.value }
+      row.options = Entities.shared.shallowSessions.map { $0.value }
     }
     
     orchardsRow = PushRow<Orchard> { row in

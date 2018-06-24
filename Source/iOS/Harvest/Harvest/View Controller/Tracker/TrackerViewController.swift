@@ -134,7 +134,9 @@ class TrackerViewController: UIViewController {
         
         workerCollectionView.reloadData()
       } else {
-        // FIXME: Error when can't access location
+        UIAlertController.present(title: "Cannot Access Location",
+                                  message: "Please turn on location services for Harvest from within the Settings App",
+                                  on: self)
       }
     } else {
       if tracker?.collections.count ?? 0 > 0 {
@@ -275,7 +277,7 @@ extension TrackerViewController: UICollectionViewDataSource {
     }
   }
   
-  // swiftline:disable function_body_length
+  // swiftlint:disable function_body_length
   func collectionView(
     _ collectionView: UICollectionView,
     cellForItemAt indexPath: IndexPath

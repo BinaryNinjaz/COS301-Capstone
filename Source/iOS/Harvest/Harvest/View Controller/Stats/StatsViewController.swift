@@ -46,7 +46,12 @@ class StatsViewController: UIViewController {
     barChart?.isHidden = true
     pieChart?.isHidden = true
     
-    switch stat! { // FIXME
+    guard let stat = stat else {
+      UIAlertController.present(title: "No Data", message: "There is no data available to show", on: self)
+      return
+    }
+    
+    switch stat {
     case .perSessionWorkers: drawPerSessionWorkers()
     case .workerHistory: drawWorkerHistory()
     case .orchardHistory: drawOrchardHistory()
@@ -54,16 +59,18 @@ class StatsViewController: UIViewController {
   }
   
   func drawPerSessionWorkers() {
-    guard let pieDataSet = stat?.perSessionWorkersData() else {
-      return
+    stat?.perSessionWorkersData { pieDataSet in
+      guard let pieDataSet = pieDataSet else {
+        return
+      }
+      pieDataSet.colors = ChartColorTemplates.material()
+      
+      let pieData = PieChartData(dataSet: pieDataSet)
+      self.pieChart?.data = pieData
+      self.pieChart?.notifyDataSetChanged()
+      self.pieChart?.isHidden = false
+      self.pieChart?.animate(xAxisDuration: 3.0, yAxisDuration: 1.0, easingOption: .easeOutCubic)
     }
-    pieDataSet.colors = ChartColorTemplates.material()
-    
-    let pieData = PieChartData(dataSet: pieDataSet)
-    pieChart?.data = pieData
-    pieChart?.notifyDataSetChanged()
-    pieChart?.isHidden = false
-    pieChart?.animate(xAxisDuration: 3.0, yAxisDuration: 1.0, easingOption: .easeOutCubic)
   }
   
   func drawWorkerHistory() {

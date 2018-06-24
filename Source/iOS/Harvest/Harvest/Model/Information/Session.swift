@@ -141,7 +141,7 @@ extension Session: CustomStringConvertible {
     formatter.dateStyle = .medium
     formatter.timeStyle = .medium
     
-    return formatter.string(from: startDate) + " " + foreman.description
+    return formatter.string(from: startDate) + " ・ " + foreman.description
   }
   
   var key: String {
@@ -185,11 +185,17 @@ extension ShallowSession: CustomStringConvertible {
     formatter.dateStyle = .medium
     formatter.timeStyle = .medium
     
-    return foreman.description + " " + formatter.string(from: startDate)
+    return foreman.description + " ・ " + formatter.string(from: startDate)
   }
   
   var key: String {
     return startDate.timeIntervalSince1970.description + id
+  }
+}
+
+extension ShallowSession: Equatable {
+  static func == (lhs: ShallowSession, rhs: ShallowSession) -> Bool {
+    return lhs.id == rhs.id
   }
 }
 

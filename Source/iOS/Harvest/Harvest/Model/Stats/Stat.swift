@@ -10,20 +10,23 @@ import Charts
 import CoreLocation
 
 enum Stat {
-  case perSessionWorkers(Session)
+  case perSessionWorkers(ShallowSession)
   case workerHistory(Worker)
   case orchardHistory(Orchard)
   
-  func perSessionWorkersData() -> PieChartDataSet? {
+  func perSessionWorkersData(_ completion: @escaping (PieChartDataSet?) -> Void) {
     guard case .perSessionWorkers(let session) = self else {
-      return nil
+      completion(nil)
+      return
     }
     
-    let result = PieChartDataSet()
-    for (worker, amount) in session.collections {
-      result.values.append(PieChartDataEntry(value: Double(amount.count), label: worker.description))
+    HarvestDB.getSession(id: session.id) { session in
+      let result = PieChartDataSet()
+      for (worker, amount) in session.collections {
+        result.values.append(PieChartDataEntry(value: Double(amount.count), label: worker.description))
+      }
+      completion(result)
     }
-    return result
   }
   
   func workerHistoryData() -> LineChartDataSet? {

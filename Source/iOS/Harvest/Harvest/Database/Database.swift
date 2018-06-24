@@ -43,19 +43,6 @@ enum HarvestDB {
       return "\(Path.parent)/admin"
     }
   }
-  
-  // FIXME: Remove
-  static func onLastSession(
-    _ completion: @escaping ([String: Any]) -> Void
-  ) {
-    let wref = ref.child(Path.yields).queryLimited(toLast: 1)
-    wref.observe(.value) { (snapshot) in
-      guard let session = snapshot.value as? [String: Any] else {
-        return
-      }
-      completion(session)
-    }
-  }
 }
 
 extension String {
