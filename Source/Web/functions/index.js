@@ -50,7 +50,7 @@ exports.flattendSessions = functions.https.onRequest((req, res) => {
       } else if (count >= total - pageNo * pageSize) {
         const key = childSnapshot.key;
         const val = childSnapshot.val();
-        result.unshift({key: key, startDate: val.start_date});
+        result.unshift({key: key, start_date: val.start_date, wid: val.wid});
       } 
       count++;
     });
