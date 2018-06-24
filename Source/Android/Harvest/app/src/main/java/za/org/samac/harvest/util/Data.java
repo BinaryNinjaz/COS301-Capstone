@@ -147,7 +147,7 @@ public class Data {
                                 }
 
                                 Farm assignedFarm = new Farm();
-                                assignedFarm.setID(dataSet.child("further").getValue(String.class));
+                                assignedFarm.setID(dataSet.child("farm").getValue(String.class));
                                 temp.setAssignedFarm(assignedFarm);
 
                                 String sRow = dataSet.child("rowSpacing").getValue(String.class);
@@ -258,7 +258,7 @@ public class Data {
                             }
                             objectRoot.child("irrigation").setValue(newOrchard.irrigation);
                             if (newOrchard.datePlanted != null) {
-                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime());
+                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime().getTime());
                             }
                             if (newOrchard.getAssignedFarm() != null) {
                                 objectRoot.child("farm").setValue(newOrchard.assignedFarm.ID);
@@ -476,7 +476,7 @@ public class Data {
     public void findObject(String ID){
         if(category == Category.FARM){
             for (Farm current : farms){
-                if(current.ID.equals(ID)){
+                if(current.getID().equals(ID)){
                     activeFarm = current;
                     return;
                 }

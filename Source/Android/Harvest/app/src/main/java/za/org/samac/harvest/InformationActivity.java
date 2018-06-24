@@ -3,6 +3,7 @@ package za.org.samac.harvest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -19,6 +20,8 @@ import android.widget.DatePicker;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
+import java.util.List;
+import java.util.Stack;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
@@ -30,15 +33,12 @@ import static za.org.samac.harvest.util.Category.NOTHING;
 import static za.org.samac.harvest.util.Category.ORCHARD;
 import static za.org.samac.harvest.util.Category.WORKER;
 
-//TODO: Returning overwrites progress here.
-//TODO: Leaving app/locking device resets.
-
 public class InformationActivity extends AppCompatActivity{
 
-    private boolean navFragVisible = true;
     private BottomNavigationView bottomNavigationView;
     private Data data;
     private boolean editing = false;
+    private Stack<Category> backViews = new Stack<>();
 
     Category selectedCat = NOTHING;
 
@@ -119,6 +119,20 @@ public class InformationActivity extends AppCompatActivity{
         else {
             if (editing){
                 editing = false;
+                switch (selectedCat) {
+                    case FARM:
+                        setTitle("View Farm");
+                        break;
+                    case WORKER:
+                        setTitle("View Worker");
+                        break;
+                    case ORCHARD:
+                        setTitle("View Orchard");
+                        break;
+                    default:
+                        setTitle("Good Luck");
+                        break;
+                }
             }
             getSupportFragmentManager().popBackStack();
             if(getSupportFragmentManager().getBackStackEntryCount() == 2){
@@ -143,12 +157,26 @@ public class InformationActivity extends AppCompatActivity{
                         break;
                 }
             }
-            else{
-//                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            else if(!backViews.empty()){
+                Category temp = backViews.pop();
+                selectedCat = temp;
+                switch (temp) {
+                    case FARM:
+                        setTitle("View Farm");
+                        break;
+                    case WORKER:
+                        setTitle("View Worker");
+                        break;
+                    case ORCHARD:
+                        setTitle("View Orchard");
+                        break;
+                    default:
+                        setTitle("Good Luck");
+                        break;
+                }
             }
         }
     }
-
 
     //Handle Buttons
     public void onCreateButtClick(View view){
@@ -208,6 +236,29 @@ public class InformationActivity extends AppCompatActivity{
         }
     }
 
+    public void showList(Category cat){
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        InfoListFragment newInfoListFragment = new InfoListFragment();
+        fragmentTransaction.replace(R.id.infoMainPart, newInfoListFragment);
+        fragmentTransaction.addToBackStack(null);
+        newInfoListFragment.setData(data);
+        if (cat.equals("farms")) {
+            setTitle("Farms");
+            selectedCat = FARM;
+        } else if (cat.equals("orchards")) {
+            setTitle("Orchards");
+            selectedCat = ORCHARD;
+        } else if (cat.equals("workers")) {
+            setTitle("Workers");
+            selectedCat = WORKER;
+        }
+        newInfoListFragment.setCat(selectedCat);
+        fragmentTransaction.commit();
+        backViews.clear();
+//        newInfoListFragment.showList(selectedCat);
+    }
 
     //If a farm, orchard, worker is selected
     public void onSelectItemButtClick(View view){
@@ -317,15 +368,13 @@ public class InformationActivity extends AppCompatActivity{
                     InfoFarmFragment temp = (InfoFarmFragment) getSupportFragmentManager().findFragmentByTag("CREATE");
                     temp.createEvent();
                     getSupportFragmentManager().popBackStack();
-//                    showObject(tags[1], selectedCat);
-                    showNavFrag();
+                    showList(FARM);
                     break;
                 case ORCHARD:
                     InfoOrchardFragment temp1 = (InfoOrchardFragment) getSupportFragmentManager().findFragmentByTag("CREATE");
                     temp1.createEvent();
                     getSupportFragmentManager().popBackStack();
-//                    showObject(tags[1], selectedCat);
-                    showNavFrag();
+                    showList(ORCHARD);
                     break;
                 case WORKER:
                     break;
@@ -345,32 +394,65 @@ public class InformationActivity extends AppCompatActivity{
             case WORKER:
                 cat = "worker";
                 name = data.getActiveWorker().getfName() + " " + data.getActiveWorker().getsName();
+
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showList(selectedCat);
+                        data.deleteObject(Category.WORKER, tags[1]);
+                        data.push();
+                    }
+                });
+
                 break;
             case ORCHARD:
                 cat = "orchard";
                 name = data.getActiveOrchard().getName();
+
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showList(selectedCat);
+                        data.deleteObject(Category.ORCHARD, tags[1]);
+                        data.push();
+                    }
+                });
+
                 break;
             case FARM:
                 cat = "farm";
                 name = data.getActiveFarm().getName();
+
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showList(selectedCat);
+                        data.deleteObject(FARM, tags[1]);
+                        data.push();
+                    }
+                });
+
         }
 
         builder.setMessage("Are you sure you wish to delete " + cat + " " + name).setTitle(R.string.sure);
 
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (tags[0].equals("LOOK")){
-                    getSupportFragmentManager().popBackStack();
-                }
-                else{
-                    getSupportFragmentManager().popBackStack();
-                    getSupportFragmentManager().popBackStack();
-                }
-                data.deleteObject(selectedCat, tags[1]);
-                data.push();
-            }
-        });
+//        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                if (tags[0].equals("LOOK")){
+////                    getSupportFragmentManager().popBackStack();
+//                    onBackPressed();
+//                }
+//                else{
+////                    getSupportFragmentManager().popBackStack();
+////                    getSupportFragmentManager().popBackStack();
+//                    onBackPressed();
+//                    onBackPressed();
+//                }
+//                data.deleteObject(selectedCat, tags[1]);
+//                data.push();
+//            }
+//        });
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -451,6 +533,28 @@ public class InformationActivity extends AppCompatActivity{
                 return true;
         }
 //        return false;
+    }
+
+    public void onGotoButtClick(View view){
+        Category cat;
+        String token[] = view.getTag().toString().split(" ");
+        switch (token[0]){
+            case "Farm":
+                cat = FARM;
+                break;
+            case "Orchard":
+                cat = ORCHARD;
+                break;
+            case "Worker":
+                cat = WORKER;
+                break;
+            default:
+                cat = NOTHING;
+                break;
+        }
+        backViews.push(selectedCat);
+        data.setCategory(cat);
+        showObject(token[1], cat);
     }
 
     public void showDateSpinner(View v){

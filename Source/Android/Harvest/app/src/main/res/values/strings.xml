@@ -59,6 +59,7 @@
     <string name="infoFarms">Farms</string>
     <string name="infoWorkers">Workers</string>
     <string name="infoOrchards">Orchards</string>
+    <string name="notFound">Not Found</string>
     <!--Strings related to delete dialog-->
     <string name="sure">Are you sure?</string>
     <string name="yes">Delete</string>

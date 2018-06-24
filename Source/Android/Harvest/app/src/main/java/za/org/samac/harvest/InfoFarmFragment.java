@@ -254,7 +254,7 @@ class OrchardAdapter extends RecyclerView.Adapter<OrchardAdapter.ViewHolder>{
 
     @Override
     public OrchardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_list_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_goto, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -262,7 +262,7 @@ class OrchardAdapter extends RecyclerView.Adapter<OrchardAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
         holder.mButton.setText(orchards.elementAt(position));
-        holder.mButton.setTag(data.getIDFromPosInArray(position) + " " + "ORCHARD");
+        holder.mButton.setTag("Orchard " + data.getIDFromPosInArray(position));
     }
 
     @Override

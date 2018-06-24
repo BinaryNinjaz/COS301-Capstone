@@ -4,6 +4,7 @@ package za.org.samac.harvest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,16 +15,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Vector;
 
+import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.Orchard;
 import za.org.samac.harvest.util.Worker;
 
@@ -117,6 +127,10 @@ public class InfoOrchardFragment extends Fragment {
             further = getView().findViewById(R.id.info_orch_further_edit);
             further.setVisibility(View.VISIBLE);
 
+            getView().findViewById(R.id.info_orch_farm_spinner).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.info_orch_farm_look).setVisibility(View.GONE);
+            getView().findViewById(R.id.info_orch_farm_none).setVisibility(View.GONE);
+
             getView().findViewById(R.id.info_orch_butt_edit).setVisibility(View.INVISIBLE);
             View temp = getView().findViewById(R.id.info_orch_butt_save);
             temp.setVisibility(View.VISIBLE);
@@ -186,6 +200,10 @@ public class InfoOrchardFragment extends Fragment {
                 further.setText(orch.getFurther());
                 further.setVisibility(View.VISIBLE);
 
+                getView().findViewById(R.id.info_orch_farm_spinner).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.info_orch_farm_look).setVisibility(View.GONE);
+                getView().findViewById(R.id.info_orch_farm_none).setVisibility(View.GONE);
+
                 getView().findViewById(R.id.info_orch_butt_edit).setVisibility(View.INVISIBLE);
                 View temp = getView().findViewById(R.id.info_orch_butt_save);
                 temp.setVisibility(View.VISIBLE);
@@ -248,6 +266,20 @@ public class InfoOrchardFragment extends Fragment {
                 temp = getView().findViewById(R.id.info_orch_further_look);
                 temp.setText(orch.getFurther());
 
+                Button button = getView().findViewById(R.id.info_orch_farm_look);
+                if (orch.getAssignedFarm() != null) {
+                    button.setVisibility(View.VISIBLE);
+                    getView().findViewById(R.id.info_orch_farm_none).setVisibility(View.GONE);
+                    String tempID = orch.getAssignedFarm().getID();
+                    button.setTag("Farm " + tempID);
+                    button.setText(orch.getAssignedFarm().getName());
+                }
+                else {
+                    button.setVisibility(View.GONE);
+                    getView().findViewById(R.id.info_orch_farm_none).setVisibility(View.VISIBLE);
+                }
+                getView().findViewById(R.id.info_orch_farm_spinner).setVisibility(View.GONE);
+
                 getView().findViewById(R.id.info_orch_butt_edit).setTag(ID + " FARM");
                 getView().findViewById(R.id.info_orch_butt_save).setVisibility(View.INVISIBLE);
                 getView().findViewById(R.id.info_orch_butt_del).setTag("LOOK " + ID);
@@ -257,7 +289,7 @@ public class InfoOrchardFragment extends Fragment {
             mRecyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(getActivity());
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mAdapter = new OrchardAdapter(data);
+            mAdapter = new WorkerAdapter(data);
             mRecyclerView.setAdapter(mAdapter);
         }
 
@@ -272,6 +304,17 @@ public class InfoOrchardFragment extends Fragment {
             cAdapter = new CultivarAdapter(cults, false);
         }
         cRecyclerView.setAdapter(cAdapter);
+
+        //Populate Spinner
+        List<Farm> tempFarms = new Vector<>(data.getFarms());
+        Farm emptyFarm = new Farm();
+        emptyFarm.setID("0");
+        emptyFarm.setName("");
+        tempFarms.add(0, emptyFarm);
+        ArrayAdapter sAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, tempFarms);
+        Spinner spinner = getView().findViewById(R.id.info_orch_farm_spinner);
+        spinner.setAdapter(sAdapter);
+
     }
 
     public void setDataAndID(Data data, String ID){
@@ -310,14 +353,20 @@ public class InfoOrchardFragment extends Fragment {
 
         orch.setCultivars(cults);
 
-//        orch.setAssignedFarm();
         if (!row.getText().toString().equals("")) {
             orch.setRow(Float.parseFloat(row.getText().toString()));
         }
         if (!tree.getText().toString().equals("")) {
             orch.setTree(Float.parseFloat(tree.getText().toString()));
         }
+
+        Farm tempFarm = (Farm) ((Spinner) getView().findViewById(R.id.info_orch_farm_spinner)).getSelectedItem();
+        if (!tempFarm.getID().equals("0")) {
+            orch.setAssignedFarm(tempFarm);
+        }
+
         orch.setFurther(further.getText().toString());
+
         data.modifyActiveOrchard(orch, false);
     }
 
@@ -353,6 +402,12 @@ public class InfoOrchardFragment extends Fragment {
         if (!temp.equals("")){
             newOrch.setTree(Float.parseFloat(temp));
         }
+
+        Farm tempFarm = (Farm) ((Spinner) getView().findViewById(R.id.info_orch_farm_spinner)).getSelectedItem();
+        if (!tempFarm.getID().equals("0")) {
+            newOrch.setAssignedFarm(tempFarm);
+        }
+
         newOrch.setFurther(further.getText().toString());
         newOrch.setID(data.getNextIDForAddition());
         data.addOrchard(newOrch);
@@ -407,7 +462,7 @@ class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.ViewHolder>{
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_list_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_goto, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
