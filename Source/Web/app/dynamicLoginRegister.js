@@ -149,3 +149,29 @@ function resetPassword() {
 
     $('#resetModal  ').modal('show');
 }
+
+
+function googleLogin(){
+	var provider = new firebase.auth.GoogleAuthProvider();
+
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
