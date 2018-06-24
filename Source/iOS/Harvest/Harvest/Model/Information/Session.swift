@@ -162,7 +162,7 @@ final class ShallowSession {
       return
     }
     
-    let d = Date(timeIntervalSince1970: json["startDate"] as? Double ?? 0.0)
+    let d = Date(timeIntervalSince1970: json["start_date"] as? Double ?? 0.0)
     startDate = d
     id = json["key"] as? String ?? d.description
     
@@ -173,7 +173,7 @@ final class ShallowSession {
   func json() -> Any {
     return [
       "key": id,
-      "startDate": startDate.timeIntervalSince1970,
+      "start_date": startDate.timeIntervalSince1970,
       "wid": foreman.id
     ]
   }
