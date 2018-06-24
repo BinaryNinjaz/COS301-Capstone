@@ -76,7 +76,6 @@ class SessionSelectionViewController: UITableViewController {
     if isLoading && section == sessions.count {
       return 1
     }
-    print(isLoading, section, sessions.count - 1)
     return sessions[SessionsIndex(section)].value.count
   }
   
