@@ -38,7 +38,7 @@ function polygonContainsPoint(polygon, point) {
   var j = polygon.length - 1;
   var c = false
   for (; i < polygon.length; j = i++) {
-    const yValid = (polygon[i].y > point.y) != (polygon[j].y > point.y)
+    const yValid = (polygon[i].y > point.y) !== (polygon[j].y > point.y)
     const xValidCond = (polygon[j].x - polygon[i].x) * (point.y - polygon[i].y) / (polygon[j].y - polygon[i].y) + polygon[i].x;
     
     if (yValid && point.x < xValidCond) {
@@ -61,7 +61,8 @@ function orchardPolygon(orchardId, uid, completion) {
       result.push({x: coords[k].lng, y: coords[k].lat});
     }
     completion(result);
-  });
+    return true;
+  }).catch((error) => {});
 }
 
 function roundToDaysSince1970(timeinterval) {
@@ -147,6 +148,7 @@ exports.expectedYield = functions.https.onRequest((req, res) => {
         summationOfCollections(summation, collections, polygon);
       });
       res.send(sinusoidalRegression(summation, timeinterval));
+      return true;
     }).catch((error) => {});
   });
 });
