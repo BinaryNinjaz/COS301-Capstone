@@ -64,10 +64,10 @@ function orchardPolygon(orchardId, uid, completion) {
   });
 }
 
-function roundToDay(timeinterval) {
+function roundToDaysSince1970(timeinterval) {
   timeinterval *= 1000;
   timeinterval -= timeinterval % (24 * 60 * 60 * 1000);
-  return timeinterval;
+  return timeinterval / 86400000.0;
 }
 
 // groups all collections by day into summation, from collections that are in polygon.
@@ -77,7 +77,7 @@ function summationOfCollections(summation, collections, polygon) {
       const collection = collections[wkey][ckey];
       const xyCoord = {x: collection.coord.lng, y: collection.coord.lat};
       if (polygonContainsPoint(polygon, xyCoord)) {
-        const day = roundToDay(collection.date);
+        const day = roundToDaysSince1970(collection.date);
         if (summation[day] === undefined) {
           summation[day] = 1;
         } else {
@@ -109,7 +109,7 @@ function lowest(summation) {
 }
 
 function sinusoidalRegression(data, x) {
-  const period = 31557600000; // 365.25 * 24 * 60 * 60 * 1000 // milliseconds in a year
+  const period = 365.25;
   const high = highest(data);
   const low = lowest(data);
   const d = (high + low) / 2;
@@ -147,6 +147,6 @@ exports.expectedYield = functions.https.onRequest((req, res) => {
         summationOfCollections(summation, collections, polygon);
       });
       res.send(sinusoidalRegression(summation, timeinterval));
-    });
+    }).catch((error) => {});
   });
 });
