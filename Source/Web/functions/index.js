@@ -116,7 +116,18 @@ function sinusoidalRegression(data, x) {
   const a = high - d;
   const b = 2.0 * Math.PI / period;
   const c = Math.asin((low - d) / a) - b;
-  return a * Math.sin(b * x + c) + d;
+  
+  const y = a * Math.sin(b * x + c) + d;
+  
+  return {
+    definition: {
+      a: a,
+      b: b,
+      c: c,
+      d: d,
+    },
+    expected: y
+  }
 }
 
 
@@ -135,7 +146,7 @@ exports.expectedYield = functions.https.onRequest((req, res) => {
         const collections = val.collections;
         summationOfCollections(summation, collections, polygon);
       });
-      res.send({expected: sinusoidalRegression(summation, timeinterval)});
+      res.send(sinusoidalRegression(summation, timeinterval));
     });
   });
 });
