@@ -1,6 +1,7 @@
 package za.org.samac.harvest;
 
 
+import android.os.SystemClock;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -25,6 +26,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -39,6 +41,8 @@ import android.support.test.espresso.action.ViewActions;
 //import android.support.test.espresso.assertion.ViewAssertions.matches;
 import android.support.test.espresso.matcher.ViewMatchers.*;
 
+import java.util.concurrent.TimeUnit;
+
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class LogInActivityTest {
@@ -49,11 +53,13 @@ public class LogInActivityTest {
 
     private String username_tobe_typed = "a@gmail.com";
     private String correct_password = "a";
-    private String wrong_password = "b";
+    private String startButton = "Start";
 
     @Test
     public void  login_success(){
         Log.e("@Test","Performing login success test");
+        SystemClock.sleep(3000);//wait for splash
+
         Espresso.onView((withId(R.id.edtEmail)))
                 .perform(ViewActions.typeText(username_tobe_typed));
 
@@ -63,8 +69,14 @@ public class LogInActivityTest {
         Espresso.onView(withId(R.id.btnLogin))
                 .perform(ViewActions.click());
 
-        Espresso.onView(withId(R.id.login_form))
-                .check(matches(withText(R.string.action_sign_in_succesful)));
+        SystemClock.sleep(5000);
+
+        Espresso.onView(withId(R.id.button_start))
+                .check(matches(withText(startButton)));
+
+        //Logout
+        Espresso.onView(withId(R.id.button_start))
+                .check(matches(withText(startButton)));
     }
 
     /*@Test
