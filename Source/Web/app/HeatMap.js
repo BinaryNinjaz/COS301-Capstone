@@ -28,6 +28,11 @@ function yieldsRef() {
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     initMap();
+    initOrchards();
+  } else {
+    orchardPolys = [];
+    orchards = [];
+    farms = [];
   }
 });
 
