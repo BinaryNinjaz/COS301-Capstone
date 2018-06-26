@@ -28,6 +28,7 @@ class TrackerViewController: UIViewController {
   }
   var lastLocationPoll: Date?
   var filteredWorkers: [Worker] = []
+  var expectedYield: Double = .nan
   
   @IBOutlet weak var startSessionButton: UIButton!
   @IBOutlet weak var workerCollectionView: UICollectionView!
@@ -46,6 +47,7 @@ class TrackerViewController: UIViewController {
     tracker?.storeSession()
     
     tracker = nil
+    expectedYield = .nan
     searchBar.isUserInteractionEnabled = false
     
     workerCollectionView.reloadData()
@@ -62,6 +64,7 @@ class TrackerViewController: UIViewController {
     self.startSessionButton.apply(gradient: sessionLayer)
     
     self.tracker = nil
+    expectedYield = .nan
     self.searchBar.isUserInteractionEnabled = false
     
     self.workerCollectionView.reloadData()
@@ -182,7 +185,7 @@ class TrackerViewController: UIViewController {
                                                      bottom: 106,
                                                      right: 0)
     
-    yieldLabel.attributedText = attributedStringForYieldCollection(0, 0)
+    yieldLabel.attributedText = attributedStringForYieldCollection(0, expectedYield)
   }
 
   override func didReceiveMemoryWarning() {
@@ -199,9 +202,12 @@ extension TrackerViewController: CLLocationManagerDelegate {
     currentLocation = loc
     if let oid = tracker?.track(location: loc) {
       tracker?.updateExpectedYield(orchardId: oid) { expected in
-        self.yieldLabel.attributedText = attributedStringForYieldCollection(
-          self.tracker?.totalCollected() ?? 0,
-          Int(expected))
+        self.expectedYield = expected
+        DispatchQueue.main.async {
+          self.yieldLabel.attributedText = attributedStringForYieldCollection(
+            self.tracker?.totalCollected() ?? 0,
+            self.expectedYield)
+        }
       }
     }
     
@@ -216,14 +222,15 @@ extension TrackerViewController: CLLocationManagerDelegate {
   }
 }
 
-func attributedStringForYieldCollection(_ a: Int, _ p: Int) -> NSAttributedString {
+func attributedStringForYieldCollection(_ a: Int, _ b: Double) -> NSAttributedString {
   let boldFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
   let regularFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .regular)]
   
   let current = NSAttributedString(string: "Current Yield: ", attributes: boldFont)
   let currentAmount = NSAttributedString(string: a.description, attributes: regularFont)
   let expected = NSAttributedString(string: "\nExpected Yield: ", attributes: boldFont)
-  let expectedAmount = NSAttributedString(string: p.description, attributes: regularFont)
+  let expectedText = b.isNaN ? " -- " : Int(b).description
+  let expectedAmount = NSAttributedString(string: expectedText, attributes: regularFont)
   
   let result = NSMutableAttributedString()
   result.append(current)
@@ -265,7 +272,7 @@ extension TrackerViewController: UICollectionViewDataSource {
       
       self.yieldLabel.attributedText = attributedStringForYieldCollection(
         self.tracker?.totalCollected() ?? 0,
-        Int(Double(self.tracker?.totalCollected() ?? 0) * 1.1))
+        self.expectedYield)
     }
   }
   
@@ -279,7 +286,7 @@ extension TrackerViewController: UICollectionViewDataSource {
       
       self.yieldLabel.attributedText = attributedStringForYieldCollection(
         self.tracker?.totalCollected() ?? 0,
-        Int(Double(self.tracker?.totalCollected() ?? 0) * 1.1))
+        self.expectedYield)
     }
   }
   

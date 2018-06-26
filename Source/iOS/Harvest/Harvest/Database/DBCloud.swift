@@ -100,6 +100,8 @@ enum HarvestCloud {
         return
       }
       
+      print(json["definition"])
+      
       guard let expected = json["expected"] as? Double else {
         completion(.nan)
         return
