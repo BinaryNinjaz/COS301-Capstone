@@ -77,6 +77,24 @@ function polygonContainsPoint(polygon, point) {
   return c;
 }
 
+function anyPolygonContainsPoint(polygons, point) {
+  for (var polygon in polygons) {
+    if (polygonContainsPoint(polygons[polygon], point)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function arrayContainsItem(array, item) {
+  for (var a in array) {
+    if (String(array[a]) === String(item)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // orchardId: String
 // uid: String
 // completion: ([Point]) -> ()
@@ -89,6 +107,29 @@ function orchardPolygon(orchardId, uid, completion) {
     for (const k in coords) {
       result.push({x: coords[k].lng, y: coords[k].lat});
     }
+    completion(result);
+    return true;
+  }).catch((error) => {});
+}
+
+// orchardIds: [String]
+// uid: String
+// completion: ([[Point]]) -> ()
+function orchardPolygons(orchardIds, uid, completion) {
+  const coords = admin.database().ref('/' + uid + '/orchards/');
+  var result = [];
+  coords.once('value').then((snapshot) => {
+    snapshot.forEach((childSnapshot) => {
+      if (arrayContainsItem(orchardIds, childSnapshot.key)) {
+        const value = childSnapshot.val();
+        const coords = value.coords;
+        var poly = [];
+        for (const k in coords) {
+          poly.push({x: coords[k].lng, y: coords[k].lat});
+        }
+        result.push(poly);
+      }
+    });
     completion(result);
     return true;
   }).catch((error) => {});
@@ -178,5 +219,57 @@ exports.expectedYield = functions.https.onRequest((req, res) => {
       res.send(sinusoidalRegression(summation, roundToDaysSince1970(timeinterval)));
       return true;
     }).catch((error) => {});
+  });
+});
+
+// POST body
+// orchardId0=[String]
+// orchardId1=[String]
+// ...
+// orchardIdN=[String]
+//
+// startDate=[Double]
+// endDate=[Double]
+// uid=[String]
+exports.orchardCollectionsWithinDate = functions.https.onRequest((req, res) => {
+  const startDate = req.body.startDate;
+  const endDate = req.body.endDate;
+  const uid = req.body.uid;
+  
+  var oids = [];
+  for (var i = 0; i < Object.keys(req.body).length; i++) {
+    const okey = "orchardId" + i;
+    if (req.body[okey] !== undefined) {
+      oids.push(req.body[okey]);
+    }
+  }
+  
+  var result = [];
+  
+  orchardPolygons(oids, uid, (polygons) => {
+    var sessions = admin.database().ref('/' + uid + '/sessions');
+    sessions.once('value').then((snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const key = childSnapshot.key;
+        const val = childSnapshot.val();
+        if (startDate <= val.start_date && val.start_date <= endDate) {
+          for (var ckey in val.collections) {
+            const collection = val.collections[ckey];
+            for (var pickup in collection) {
+              const geopoint = collection[pickup].coord
+              const point = {x: geopoint.lng, y: geopoint.lat}; 
+              if (anyPolygonContainsPoint(polygons, point)) {
+                result.push(geopoint);
+              }
+            }
+          }
+        }
+      });
+      
+      res.send(result);
+      return true;
+    }).catch((error) => {
+      
+    });
   });
 });
