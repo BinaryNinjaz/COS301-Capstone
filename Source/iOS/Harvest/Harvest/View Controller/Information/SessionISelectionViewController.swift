@@ -40,7 +40,7 @@ class SessionSelectionViewController: UITableViewController {
     
     isLoading = true
     tableView.reloadData()
-    HarvestDB.getShallowSessions(onPage: pageNo, ofSize: pageSize) { (psessions) in
+    HarvestCloud.getShallowSessions(onPage: pageNo, ofSize: pageSize) { (psessions) in
       self.sessions.accumulateByDay(with: psessions)
       DispatchQueue.main.async {
         self.isLoading = false
@@ -56,7 +56,7 @@ class SessionSelectionViewController: UITableViewController {
     }
     
     isLoading = true
-    HarvestDB.getShallowSessions(onPage: 1, ofSize: pageSize) { (psessions) in
+    HarvestCloud.getShallowSessions(onPage: 1, ofSize: pageSize) { (psessions) in
       self.sessions.removeAll()
       self.sessions.accumulateByDay(with: psessions)
       DispatchQueue.main.async {

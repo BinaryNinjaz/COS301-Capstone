@@ -8,7 +8,7 @@
 
 import Firebase
 
-extension HarvestDB {
+enum HarvestCloud {
   static let baseURL = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/"
   
   static func component(onBase base: String, withArgs args: [(String, String)]) -> String {
@@ -29,22 +29,13 @@ extension HarvestDB {
     return result
   }
   
-  enum CloudFunctions {
+  enum Identifiers {
     static let shallowSessions = "flattendSessions"
     static let sessionsWithDates = "sessionsWithinDates"
+    static let expectedYield = "expectedYield"
   }
   
-  static func getShallowSessions(
-    onPage page: Int,
-    ofSize size: Int,
-    _ completion: @escaping ([ShallowSession]) -> Void
-  ) {
-    let query = component(onBase: CloudFunctions.shallowSessions, withArgs: [
-      ("pageNo", page.description),
-      ("pageSize", size.description),
-      ("uid", Path.parent)
-    ])
-    
+  static func runTask(withQuery query: String, completion: @escaping (Any) -> Void) {
     let furl = URL(string: baseURL + query)!
     
     let task = URLSession.shared.dataTask(with: furl) { data, _, error in
@@ -54,16 +45,34 @@ extension HarvestDB {
       }
       
       guard let data = data else {
-        completion([])
+        completion(Void())
         return
       }
       
       guard let jsonSerilization = try? JSONSerialization.jsonObject(with: data, options: []) else {
-        completion([])
+        completion(Void())
         return
       }
       
-      guard let json = jsonSerilization as? [Any] else {
+      completion(jsonSerilization)
+    }
+    
+    task.resume()
+  }
+  
+  static func getShallowSessions(
+    onPage page: Int,
+    ofSize size: Int,
+    _ completion: @escaping ([ShallowSession]) -> Void
+  ) {
+    let query = component(onBase: Identifiers.shallowSessions, withArgs: [
+      ("pageNo", page.description),
+      ("pageSize", size.description),
+      ("uid", HarvestDB.Path.parent)
+    ])
+    
+    runTask(withQuery: query) { (serial) in
+      guard let json = serial as? [Any] else {
         completion([])
         return
       }
@@ -76,7 +85,27 @@ extension HarvestDB {
       
       completion(result)
     }
+  }
+  
+  static func getExpectedYield(orchardId: String, date: Date, completion: @escaping (Double) -> Void) {
+    let query = component(onBase: Identifiers.expectedYield, withArgs: [
+      ("orchardId", orchardId),
+      ("date", date.timeIntervalSince1970.description),
+      ("uid", HarvestDB.Path.parent)
+    ])
     
-    task.resume()
+    runTask(withQuery: query) { (serial) in
+      guard let json = serial as? [String: Any] else {
+        completion(.nan)
+        return
+      }
+      
+      guard let expected = json["expected"] as? Double else {
+        completion(.nan)
+        return
+      }
+      
+      completion(expected)
+    }
   }
 }

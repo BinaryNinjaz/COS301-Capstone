@@ -197,7 +197,13 @@ extension TrackerViewController: CLLocationManagerDelegate {
       return
     }
     currentLocation = loc
-    tracker?.track(location: loc)
+    if let oid = tracker?.track(location: loc) {
+      tracker?.updateExpectedYield(orchardId: oid) { expected in
+        self.yieldLabel.attributedText = attributedStringForYieldCollection(
+          self.tracker?.totalCollected() ?? 0,
+          Int(expected))
+      }
+    }
     
     if lastLocationPoll == nil || Date().timeIntervalSince(lastLocationPoll!) > 120 {
       HarvestDB.update(location: loc.coordinate)

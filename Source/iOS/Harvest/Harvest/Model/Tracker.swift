@@ -21,6 +21,7 @@ struct Tracker: Codable {
   private(set) var sessionStart: Date
   private(set) var lastCollection: Date
   private(set) var collections: [Worker: [CollectionPoint]]
+  private(set) var currentOrchard: String?
   
   init(wid: String) {
     self.wid = wid
@@ -28,6 +29,7 @@ struct Tracker: Codable {
     sessionStart = Date()
     lastCollection = sessionStart
     collections = [:]
+    currentOrchard = nil
   }
   
   func saveState() {
@@ -65,10 +67,24 @@ struct Tracker: Codable {
     saveState()
   }
   
-  mutating func track(location: CLLocation) {
+  mutating func track(location: CLLocation) -> String? {
+    var result: String? = nil
+    if let o = Entities.shared.orchards.first(where: { $0.value.contains(location.coordinate) }) {
+      if o.value.id != currentOrchard {
+        currentOrchard = o.value.id
+        result = o.value.id
+      }
+    }
     UserDefaults.standard.track(location: location, index: trackCount)
     trackCount += 1
     saveState()
+    return result
+  }
+  
+  func updateExpectedYield(orchardId: String, completion: @escaping (Double) -> Void) {
+    HarvestCloud.getExpectedYield(orchardId: orchardId, date: Date()) { (expected) in
+      completion(expected)
+    }
   }
   
   func pathTracked() -> [CLLocationCoordinate2D] {
@@ -117,6 +133,7 @@ struct Tracker: Codable {
     case sessionStart
     case lastCollection
     case collections
+    case currentOrchard
   }
   
   public init(from decoder: Decoder) throws {
@@ -127,6 +144,7 @@ struct Tracker: Codable {
     sessionStart = try values.decode(Date.self, forKey: .sessionStart)
     lastCollection = try values.decode(Date.self, forKey: .lastCollection)
     collections = try values.decode([Worker: [CollectionPoint]].self, forKey: .collections)
+    currentOrchard = try values.decode(String.self, forKey: .currentOrchard)
   }
   
   public func encode(to encoder: Encoder) throws {
@@ -137,6 +155,7 @@ struct Tracker: Codable {
     try container.encode(sessionStart, forKey: .sessionStart)
     try container.encode(lastCollection, forKey: .lastCollection)
     try container.encode(collections, forKey: .collections)
+    try container.encode(currentOrchard, forKey: .currentOrchard)
   }
 }
 

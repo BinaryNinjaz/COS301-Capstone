@@ -11,7 +11,7 @@ import Firebase
 enum HarvestDB {
   static var ref: DatabaseReference! = Database.database().reference()
   
-  struct Path {
+  enum Path {
     static var parent: String {
       return HarvestUser.current.workingForID?.uid ?? HarvestUser.current.uid
     }

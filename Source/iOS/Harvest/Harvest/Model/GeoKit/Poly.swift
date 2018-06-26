@@ -77,10 +77,7 @@ extension Poly {
     return result
   }
   
-  func number(
-    _ a: Number,
-    isBetweenUnorderedRange r: (Number, Number)
-  ) -> Bool {
+  func number(_ a: Number, isBetweenUnorderedRange r: (Number, Number)) -> Bool {
     return (r.0 < a && a <= r.1) || (r.1 < a && a <= r.0)
   }
   

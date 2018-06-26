@@ -70,7 +70,7 @@ enum Stat {
     for (_, session) in sessions {
       session.collections.forEach { _, points in
         points.forEach { point in
-          let p = Point<CLLocationDegrees>.init(point.location.longitude, point.location.latitude)
+          let p = Point(point.location.longitude, point.location.latitude)
           if poly.contains(p) {
             var comps = calendar.dateComponents([.era, .calendar, .year, .month, .day], from: point.date)
             comps.hour = 0

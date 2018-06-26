@@ -124,7 +124,7 @@ final class Entities {
       }
       
     case .shallowSession:
-      HarvestDB.getShallowSessions(onPage: 1, ofSize: 100) { (sessions) in
+      HarvestCloud.getShallowSessions(onPage: 1, ofSize: 100) { (sessions) in
         self.shallowSessions = SortedDictionary(
           uniqueKeysWithValues: sessions.map { session in
             return (session.startDate.description, session)
