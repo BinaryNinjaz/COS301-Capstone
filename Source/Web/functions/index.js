@@ -95,9 +95,8 @@ function orchardPolygon(orchardId, uid, completion) {
 }
 
 function roundToDaysSince1970(timeinterval) {
-  timeinterval *= 1000;
-  timeinterval -= timeinterval % (24 * 60 * 60 * 1000);
-  return timeinterval / 86400000.0;
+  timeinterval -= timeinterval % 86400;
+  return timeinterval / 86400.0;
 }
 
 // groups all collections by day into summation, from collections that are in polygon.
@@ -176,7 +175,7 @@ exports.expectedYield = functions.https.onRequest((req, res) => {
         const collections = val.collections;
         summationOfCollections(summation, collections, polygon);
       });
-      res.send(sinusoidalRegression(summation, timeinterval));
+      res.send(sinusoidalRegression(summation, roundToDaysSince1970(timeinterval)));
       return true;
     }).catch((error) => {});
   });
