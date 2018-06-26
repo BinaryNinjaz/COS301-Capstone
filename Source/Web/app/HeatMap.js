@@ -62,6 +62,17 @@ function farmForId(id) {
   return null;
 }
 
+var orchardPolys = [];
+function orchardCoords(orchardVal) {
+  var result = [];
+  for (var ckey in orchardVal.coords) {
+    var coord = orchardVal.coords[ckey];
+    const latlng = new google.maps.LatLng(coord.lat, coord.lng);
+    result.push(latlng);
+  }
+  return result;
+}
+
 function initOrchards() {
   getFarms((farmsSnap) => {
     farmsSnap.forEach((farm) => {
@@ -75,9 +86,20 @@ function initOrchards() {
         const o = orchard.val();
         const k = orchard.key;
         orchards.push({key: k, value: o, showing: true});
-        var fname = farmForId(o.farm).name;
-        if (fname === null) {
-          fname = "?";
+        var orchardPoly = new google.maps.Polygon({
+          paths: orchardCoords(o),
+          strokeColor: '#0000BB',
+          strokeOpacity: 0.5,
+          strokeWeight: 3,
+          fillColor: '#0000BB',
+          fillOpacity: 0.1,
+          map: map
+        });
+        orchardPolys.push(orchardPoly);
+        var fval = farmForId(o.farm);
+        var fname = "?";
+        if (fval !== null) {
+          fname = fval.name;
         }
         const name = fname + " - " + o.name;
         orchardsDiv.innerHTML += createOrchardSelectionButton(name, k);
