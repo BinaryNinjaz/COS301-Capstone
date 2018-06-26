@@ -1,62 +1,66 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-//const cors = require('cors')({origin: true});
+const cors = require('cors')({origin: true});
 admin.initializeApp();
 
 // ?startDate=[Double]&endDate=[Double]&uid=[String]
 exports.sessionsWithinDates = functions.https.onRequest((req, res) => {
-  const startDate = req.query.startDate;
-  const endDate = req.query.endDate;
-  const uid = req.query.uid;
-  
-  var result = {};
-  
-  var sessions = admin.database().ref('/' + uid + '/sessions');
-  sessions.once('value').then((snapshot) => {
-    snapshot.forEach((childSnapshot) => {
-      const key = childSnapshot.key;
-      const val = childSnapshot.val();
-      
-      if (startDate <= val.start_date && val.start_date <= endDate) {
-        result[key] = val;
-      }
-    });
-    res.send(result);
-    return true;
-  }).catch((error) => {
+  cors(req, res, () => {
+    const startDate = req.query.startDate;
+    const endDate = req.query.endDate;
+    const uid = req.query.uid;
     
+    var result = {};
+    
+    var sessions = admin.database().ref('/' + uid + '/sessions');
+    sessions.once('value').then((snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const key = childSnapshot.key;
+        const val = childSnapshot.val();
+        
+        if (startDate <= val.start_date && val.start_date <= endDate) {
+          result[key] = val;
+        }
+      });
+      res.send(result);
+      return true;
+    }).catch((error) => {
+      
+    });
   });
 });
 
 // ?pageNo=[Int]&pageSize=[Int? = 50]&uid=[String]
 exports.flattendSessions = functions.https.onRequest((req, res) => {
-  const pageNo = req.query.pageNo;
-  var pageSize = req.query.pageSize;
-  if (pageSize === undefined) {
-    pageSize = 50;
-  }
-  const uid = req.query.uid;
-  
-  var result = [];
-  var count = 0;
-  var sessions = admin.database().ref('/' + uid + '/sessions').orderByChild('start_date');
-  sessions.once('value').then((snapshot) => {
-    const total = snapshot.numChildren();
+  cors(req, res, () => {
+    const pageNo = req.query.pageNo;
+    var pageSize = req.query.pageSize;
+    if (pageSize === undefined) {
+      pageSize = 50;
+    }
+    const uid = req.query.uid;
     
-    snapshot.forEach((childSnapshot) => {
-      if (count >= total - (pageNo - 1) * pageSize) {
-        res.send(result);
-        return;
-      } else if (count >= total - pageNo * pageSize) {
-        const key = childSnapshot.key;
-        const val = childSnapshot.val();
-        result.unshift({key: key, start_date: val.start_date, wid: val.wid});
-      } 
-      count++;
-    });
-    res.send(result);
-    return true;
-  }).catch((error) => {});
+    var result = [];
+    var count = 0;
+    var sessions = admin.database().ref('/' + uid + '/sessions').orderByChild('start_date');
+    sessions.once('value').then((snapshot) => {
+      const total = snapshot.numChildren();
+      
+      snapshot.forEach((childSnapshot) => {
+        if (count >= total - (pageNo - 1) * pageSize) {
+          res.send(result);
+          return;
+        } else if (count >= total - pageNo * pageSize) {
+          const key = childSnapshot.key;
+          const val = childSnapshot.val();
+          result.unshift({key: key, start_date: val.start_date, wid: val.wid});
+        } 
+        count++;
+      });
+      res.send(result);
+      return true;
+    }).catch((error) => {});
+  });
 });
 
 // Point: [x: Float, y: Float]
@@ -203,22 +207,24 @@ function sinusoidalRegression(data, x) {
 
 // ?orchardId=[String]&date=[Double]&uid=[String]
 exports.expectedYield = functions.https.onRequest((req, res) => {
-  const orchardId = req.query.orchardId;
-  const timeinterval = req.query.date;
-  const uid = req.query.uid;
-  
-  orchardPolygon(orchardId, uid, (polygon) => {
-    const sessions = admin.database().ref('/' + uid + '/sessions');
-    sessions.once('value').then((snapshot) => {
-      var summation = {};
-      snapshot.forEach((childSnapshot) => {
-        const val = childSnapshot.val();
-        const collections = val.collections;
-        summationOfCollections(summation, collections, polygon);
-      });
-      res.send(sinusoidalRegression(summation, roundToDaysSince1970(timeinterval)));
-      return true;
-    }).catch((error) => {});
+  cors(req, res, () => {
+    const orchardId = req.query.orchardId;
+    const timeinterval = req.query.date;
+    const uid = req.query.uid;
+    
+    orchardPolygon(orchardId, uid, (polygon) => {
+      const sessions = admin.database().ref('/' + uid + '/sessions');
+      sessions.once('value').then((snapshot) => {
+        var summation = {};
+        snapshot.forEach((childSnapshot) => {
+          const val = childSnapshot.val();
+          const collections = val.collections;
+          summationOfCollections(summation, collections, polygon);
+        });
+        res.send(sinusoidalRegression(summation, roundToDaysSince1970(timeinterval)));
+        return true;
+      }).catch((error) => {});
+    });
   });
 });
 
@@ -232,44 +238,46 @@ exports.expectedYield = functions.https.onRequest((req, res) => {
 // endDate=[Double]
 // uid=[String]
 exports.orchardCollectionsWithinDate = functions.https.onRequest((req, res) => {
-  const startDate = req.body.startDate;
-  const endDate = req.body.endDate;
-  const uid = req.body.uid;
-  
-  var oids = [];
-  for (var i = 0; i < Object.keys(req.body).length; i++) {
-    const okey = "orchardId" + i;
-    if (req.body[okey] !== undefined) {
-      oids.push(req.body[okey]);
+  cors(req, res, () => {
+    const startDate = req.body.startDate;
+    const endDate = req.body.endDate;
+    const uid = req.body.uid;
+    
+    var oids = [];
+    for (var i = 0; i < Object.keys(req.body).length; i++) {
+      const okey = "orchardId" + i;
+      if (req.body[okey] !== undefined) {
+        oids.push(req.body[okey]);
+      }
     }
-  }
-  
-  var result = [];
-  
-  orchardPolygons(oids, uid, (polygons) => {
-    var sessions = admin.database().ref('/' + uid + '/sessions');
-    sessions.once('value').then((snapshot) => {
-      snapshot.forEach((childSnapshot) => {
-        const key = childSnapshot.key;
-        const val = childSnapshot.val();
-        if (startDate <= val.start_date && val.start_date <= endDate) {
-          for (var ckey in val.collections) {
-            const collection = val.collections[ckey];
-            for (var pickup in collection) {
-              const geopoint = collection[pickup].coord
-              const point = {x: geopoint.lng, y: geopoint.lat}; 
-              if (anyPolygonContainsPoint(polygons, point)) {
-                result.push(geopoint);
+    
+    var result = [];
+    
+    orchardPolygons(oids, uid, (polygons) => {
+      var sessions = admin.database().ref('/' + uid + '/sessions');
+      sessions.once('value').then((snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          const key = childSnapshot.key;
+          const val = childSnapshot.val();
+          if (startDate <= val.start_date && val.start_date <= endDate) {
+            for (var ckey in val.collections) {
+              const collection = val.collections[ckey];
+              for (var pickup in collection) {
+                const geopoint = collection[pickup].coord
+                const point = {x: geopoint.lng, y: geopoint.lat}; 
+                if (anyPolygonContainsPoint(polygons, point)) {
+                  result.push(geopoint);
+                }
               }
             }
           }
-        }
+        });
+        
+        res.send(result);
+        return true;
+      }).catch((error) => {
+        
       });
-      
-      res.send(result);
-      return true;
-    }).catch((error) => {
-      
     });
   });
 });
