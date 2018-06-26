@@ -45,6 +45,17 @@ function initForemen() {
       }
     });
   });
+  requestLocations();
+  setInterval(requestLocations, 2000);
+}
+
+function requestLocations() {
+  for (var i = 0; i < foremen.length; i++) {
+    if (foremen[i].beingTracked) {
+      const reqRef = firebase.database().ref('/' + userID() + '/requestedLocations/' + foremen[i].key);
+      reqRef.set({0: true});
+    }
+  }
 }
 
 var locations = [];
