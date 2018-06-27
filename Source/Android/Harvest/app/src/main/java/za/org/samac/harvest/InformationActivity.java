@@ -68,11 +68,14 @@ public class InformationActivity extends AppCompatActivity{
                                 showNavFrag();
                                 return true;
                             case R.id.actionSession:
-                                return true;
-                            case R.id.actionStats:
-                                Intent openSessions= new Intent(InformationActivity.this, Analytics.class);
+                                Intent openSessions= new Intent(InformationActivity.this, SessionsMap.class);
                                 openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openSessions, 0);
+                                return true;
+                            case R.id.actionStats:
+                                Intent openAnalytics= new Intent(InformationActivity.this, Analytics.class);
+                                openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openAnalytics, 0);
                                 return true;
 
                         }

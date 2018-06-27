@@ -2,6 +2,7 @@ package za.org.samac.harvest;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,8 +11,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +32,12 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private String emailInDB;
     private String uid;
     private String foremanID;
+    private String foremanName;
     private DatabaseReference currUserRef;
     private DatabaseReference farmRef;
     private DatabaseReference sessRef;
@@ -88,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static String sessionKey;
     public static String farmerKey;
     private boolean isFarmer = false;
-    //private Button actionSession;
+    Boolean rejectSess = false;
 
     private FirebaseDatabase database;
     //private Query q;
@@ -99,15 +107,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         track = new HashMap<>();
         this.workers = new ArrayList<>();//stores worker names
         workersSearch = new ArrayList<>();//stores worker names
+        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         init();
-
-        adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
 
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -118,9 +124,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);
-            location = locationManager
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
-            adapter.setLocation(location);
+
+            List<String> providers = locationManager.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                location = locationManager.getLastKnownLocation(provider);
+                //Log.d("last known location, provider: %s, location: %s", provider, location);
+
+                if (location == null) {
+                    continue;
+                }
+                if (bestLocation == null
+                        || location.getAccuracy() < bestLocation.getAccuracy()) {
+                    //Log.d("found best last known location: %s", location);
+                    bestLocation = location;
+                }
+            }
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+            //adapter.setLocation(location);
         }
 
         locationPermissions();
@@ -134,6 +155,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
+        statusCheck();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("CDA", "onBackPressed Called");
+        Intent setIntent = new Intent(Intent.ACTION_MAIN);
+        setIntent.addCategory(Intent.CATEGORY_HOME);
+        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(setIntent);
     }
 
     private void determineIfFarmer() {
@@ -301,7 +332,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      * and an array of buttons to be added to the view
      */
 
-
     protected void collectWorkers() {
         workersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -322,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     } else {
                         if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
                             foremanID = zoneSnapshot.getKey();
+                            foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
                         }
                     }
                 }
@@ -332,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 progressBar.setVisibility(View.GONE);//remove progress bar
                 relLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
                 //user pressed start and all went well with retrieving data
             }
 
@@ -369,23 +401,111 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
+    public void statusCheck() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     /*******************************
      Code below handles the stop/start button, runs a timer and displays how many
      bags were collected in the elapsed time. It then clears for another timer to start.
      Sessions for each worker still needs to be implemented *
      */
     long startTime = 0, stopTime = 0;
+    //Handler handler = new Handler();
+    //int delay = 120000; //milliseconds
+    Boolean locationWanted = false;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
+        if(location == null) {
+            progressBar.setVisibility(View.VISIBLE);
+            Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
         startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
 
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
+        if(location != null) {
+            DatabaseReference myRef;
+            myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
+            myRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (child.toString().equals(foremanID)) {
+                            locationWanted = true;
+                            break;
+                        }
+                    }
+
+                    if (locationWanted == true) {
+                        DatabaseReference myRef2;
+                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+
+                        Map<String, Object> coordinates = new HashMap<>();
+                        coordinates.put("lat", location.getLatitude());
+                        coordinates.put("lng", location.getLongitude());
+
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("coord", coordinates);
+                        childUpdates.put("display", foremanName);
+
+                        myRef2.updateChildren(childUpdates);//store location
+                    }
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
         Map<String, Object> sessionDate = new HashMap<>();
         sessionDate.put("start_date", startSessionTime);
+        sessionDate.put("wid", foremanID);//add foreman database ID to session;
 
-        recyclerView.setVisibility(View.VISIBLE);
         if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
             textView.setVisibility(View.GONE);
@@ -408,9 +528,36 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("orange");
         } else {
             //TODO: check if app closes or crashes
-            endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
-            sessionDate.put("end_date", endSessionTime);
-            sessRef.updateChildren(sessionDate);//save data to Firebase
+            if (adapter.totalBagsCollected == 0) {
+                String msg = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
+                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+                dlgAlert.setMessage(msg);
+                dlgAlert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        recyclerView.setVisibility(View.GONE);
+                        dialog.dismiss();
+                    }
+                });
+                dlgAlert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        DatabaseReference myRef;
+                        myRef = database.getReference(farmerKey + "/sessions/" + sessionKey);//path to sessions increment in Firebase
+                        myRef.removeValue();//remove latest increment
+                        adapter.setIncrement();
+                        recyclerView.setVisibility(View.GONE);
+                        dialog.dismiss();
+                        rejectSess = true;
+                    }
+                });
+                dlgAlert.setCancelable(false);
+                dlgAlert.create().show();
+            }
+
+            if (rejectSess == false) {
+                endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
+                sessionDate.put("end_date", endSessionTime);
+                sessRef.updateChildren(sessionDate);//save data to Firebase
+            }
 
             stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
@@ -434,17 +581,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             collections collectionObj = adapter.getCollectionObj();
             collectionObj.sessionEnd();
             //****writeToFirebase(collectionObj);
-            //pop up is used to show how many bags were collected in the elapsed time
-            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-            dlgAlert.setMessage(msg);
-            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    adapter.setIncrement();
-                    dialog.dismiss();
-                }
-            });
-            dlgAlert.setCancelable(false);
-            dlgAlert.create().show();
+            if (rejectSess == false) {
+                //pop up is used to show how many bags were collected in the elapsed time
+                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+                dlgAlert.setMessage(msg);
+                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.setIncrement();
+                        recyclerView.setVisibility(View.GONE);
+                        dialog.dismiss();
+                    }
+                });
+                dlgAlert.setCancelable(false);
+                dlgAlert.create().show();
+            }
 
             btnStart.setBackgroundColor(Color.parseColor("#FF0CCB29"));
 
@@ -517,6 +667,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             trackCount++;
             track.put(trackCount, location);
             adapter.setLocation(location);
+            //recyclerView.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.GONE);
         }
 
         @Override

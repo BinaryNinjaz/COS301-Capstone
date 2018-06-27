@@ -26,7 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import za.org.samac.harvest.util.AppUtil;
@@ -35,7 +37,15 @@ public class BarGraph extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private DatabaseReference timeRef;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private String userUid;
+    private String lastSession;
+    private Date latestDate;
+    private String workerKey;
+    private ArrayList<String> workerKeys;
+    private ArrayList<String> workerName;
+    private ArrayList<Integer> yield;
     private String sessionKey;
     private Query query;
     private static final String TAG = "Analytics";
@@ -84,10 +94,34 @@ public class BarGraph extends AppCompatActivity {
 
         //Start the first fragment
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        database = FirebaseDatabase.getInstance();
+        userUid = user.getUid();//ID or key of the current user
         displayGraph();
     }
 
     public void displayGraph() {
+        timeRef = database.getReference(userUid + "/sessions/");//path to sessions increment in Firebase
+        Query firstQuery = timeRef.limitToLast(1);
+        firstQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                    lastSession = zoneSnapshot.getKey();
+                    double startDate = zoneSnapshot.child("start_date").getValue(double.class);
+                    latestDate = new Date((long) startDate);
+                    //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // the format of date
+                    //latestDate = sdf.format(date);
+                }
+
+                //TODO: get last 5 dates
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+            }
+        });
+
         // To make vertical bar chart, initialize graph id this way
         BarChart barChart = (BarChart) findViewById(R.id.barChart);
 
