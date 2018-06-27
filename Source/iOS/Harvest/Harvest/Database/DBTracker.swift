@@ -84,4 +84,42 @@ extension HarvestDB {
     ]
     locations.updateChildValues(updates)
   }
+  
+  static func deleteLocationRequest(forWorkerId wid: String) {
+    let request = ref.child(Path.requestedLocations + "/" + wid)
+    request.removeValue()
+  }
+  
+  static var locationRequestsListner: UInt?
+  static func listenLocationRequested(completion: @escaping (Bool) -> Void) {
+    let requests = ref.child(Path.requestedLocations)
+    locationRequestsListner = requests.observe(.childAdded) { (snapshot) in
+      if snapshot.key == HarvestUser.current.workingForID?.wid {
+        deleteLocationRequest(forWorkerId: snapshot.key)
+        completion(true)
+      } else {
+        completion(false)
+      }
+    }
+  }
+  
+  static func checkLocationRequested(completion: @escaping (Bool) -> Void) {
+    let requests = ref.child(Path.requestedLocations)
+    requests.observeSingleEvent(of: .value) { (snapshot) in
+      guard let reqs = snapshot.value as? [String: Any] else {
+        return
+      }
+      for (k, _) in reqs where k == HarvestUser.current.workingForID?.wid {
+        deleteLocationRequest(forWorkerId: snapshot.key)
+        completion(true)
+      }
+    }
+  }
+  
+  static func removeListnerForLocationRequests() {
+    if let handle = locationRequestsListner {
+      let requests = ref.child(Path.requestedLocations)
+      requests.removeObserver(withHandle: handle)
+    }
+  }
 }

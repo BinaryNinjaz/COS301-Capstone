@@ -26,7 +26,6 @@ class TrackerViewController: UIViewController {
       filteredWorkers = workers
     }
   }
-  var lastLocationPoll: Date?
   var filteredWorkers: [Worker] = []
   var expectedYield: Double = .nan
   
@@ -209,11 +208,6 @@ extension TrackerViewController: CLLocationManagerDelegate {
             self.expectedYield)
         }
       }
-    }
-    
-    if lastLocationPoll == nil || Date().timeIntervalSince(lastLocationPoll!) > 120 {
-      HarvestDB.update(location: loc.coordinate)
-      lastLocationPoll = Date()
     }
   }
   

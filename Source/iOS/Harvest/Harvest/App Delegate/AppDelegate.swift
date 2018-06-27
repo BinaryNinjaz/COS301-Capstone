@@ -6,17 +6,17 @@
 //  Copyright © 2018 Letanyan Arumugam. All rights reserved.
 //
 
-import UIKit
+import Disk
 import Firebase
 import GoogleMaps
 import GoogleSignIn
-import Disk
+import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
-
+  
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
   ) -> Bool {
@@ -84,12 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Called when the application is about to terminate. Save data if
     // appropriate. See also applicationDidEnterBackground:.
     
-#if DEBUG
-    
-#else
-    TrackerViewController.tracker?.storeSession()
-#endif
-    
+//    FIXME: Uncomment in production
+//    TrackerViewController.tracker?.storeSession()
   }
-
 }

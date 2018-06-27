@@ -78,6 +78,7 @@
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
 		16FF431E20DFF106001092CF /* DBCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431D20DFF106001092CF /* DBCloud.swift */; };
 		16FF432020E19117001092CF /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431F20E19117001092CF /* LocationHelper.swift */; };
+		16FF432220E3B8B8001092CF /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF432120E3B8B8001092CF /* LocationTracker.swift */; };
 		3ECB54CBF16E9C8D2770A5D3 /* Pods_Harvest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */; };
 		D7583D7CD8D538EE68CCF745 /* Pods_HarvestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */; };
 /* End PBXBuildFile section */
@@ -180,6 +181,7 @@
 		16FF431C20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		16FF431D20DFF106001092CF /* DBCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBCloud.swift; sourceTree = "<group>"; };
 		16FF431F20E19117001092CF /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
+		16FF432120E3B8B8001092CF /* LocationTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
 		345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
 		443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HarvestTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Harvest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -278,6 +280,7 @@
 			children = (
 				1604E4AE206958E900E9BA15 /* Info.plist */,
 				1604E4A2206958E900E9BA15 /* AppDelegate.swift */,
+				16FF432120E3B8B8001092CF /* LocationTracker.swift */,
 			);
 			path = "App Delegate";
 			sourceTree = "<group>";
@@ -872,6 +875,7 @@
 				160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */,
 				167448E9208BD6F900FA605C /* Codables.swift in Sources */,
 				16C82F5E20819B6E0074595C /* Poly.swift in Sources */,
+				16FF432220E3B8B8001092CF /* LocationTracker.swift in Sources */,
 				16C82F5B20819B6E0074595C /* Ellipse.swift in Sources */,
 				16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */,
 				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,

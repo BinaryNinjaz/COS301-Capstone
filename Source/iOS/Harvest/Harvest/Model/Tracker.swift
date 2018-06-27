@@ -67,6 +67,7 @@ struct Tracker: Codable {
     saveState()
   }
   
+  /// returns the new orchard id only if it is different from the last known orchard id
   mutating func track(location: CLLocation) -> String? {
     var result: String? = nil
     if let o = Entities.shared.orchards.first(where: { $0.value.contains(location.coordinate) }) {

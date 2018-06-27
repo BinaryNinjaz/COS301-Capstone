@@ -21,6 +21,9 @@ enum HarvestDB {
     static var locations: String {
       return "\(Path.parent)/locations"
     }
+    static var requestedLocations: String {
+      return "\(Path.parent)/requestedLocations"
+    }
     static var farms: String {
       return "\(Path.parent)/farms"
     }
