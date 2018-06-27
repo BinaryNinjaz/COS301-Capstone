@@ -37,6 +37,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -433,8 +434,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      Sessions for each worker still needs to be implemented *
      */
     long startTime = 0, stopTime = 0;
-    Handler handler = new Handler();
-    int delay = 120000; //milliseconds
+    //Handler handler = new Handler();
+    //int delay = 120000; //milliseconds
+    Boolean locationWanted = false;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
@@ -450,24 +452,54 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
         if(location != null) {
-            //track foreman every 2 minutes
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    DatabaseReference myRef;
-                    myRef = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+            DatabaseReference myRef;
+            myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
+            myRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                    Map<String, Object> coordinates = new HashMap<>();
-                    coordinates.put("lat", location.getLatitude());
-                    coordinates.put("lng", location.getLongitude());
-
-                    Map<String, Object> childUpdates = new HashMap<>();
-                    childUpdates.put("coord", coordinates);
-                    childUpdates.put("display", foremanName);
-
-                    myRef.updateChildren(childUpdates);//store location
-                    handler.postDelayed(this, delay);
                 }
-            }, delay);
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (child.toString().equals(foremanID)) {
+                            locationWanted = true;
+                            break;
+                        }
+                    }
+
+                    if (locationWanted == true) {
+                        DatabaseReference myRef2;
+                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+
+                        Map<String, Object> coordinates = new HashMap<>();
+                        coordinates.put("lat", location.getLatitude());
+                        coordinates.put("lng", location.getLongitude());
+
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("coord", coordinates);
+                        childUpdates.put("display", foremanName);
+
+                        myRef2.updateChildren(childUpdates);//store location
+                    }
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
 
         Map<String, Object> sessionDate = new HashMap<>();
