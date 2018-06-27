@@ -10,15 +10,20 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
+import java.util.TreeMap;
 
 import za.org.samac.harvest.R;
+import za.org.samac.harvest.SessionItem;
 
 public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapter.SessionsViewHolder> {
 
     private final  ArrayList<String> dates;
-    private Map<String, ArrayList<String>> sessions;
+    private TreeMap<String, SessionItem> sessions;
     private Context context;
 
     public SessionsViewAdapter(Context applicationContext,  ArrayList<String> dates) {
@@ -36,23 +41,24 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
 
     @Override
     public void onBindViewHolder(SessionsViewHolder holder, int position) {
+        String date = dates.get(position);
+        SessionItem item = sessions.get(date);
+
         holder.dateOfSession.setText(dates.get(position));
-        ArrayList<String> workerNames = sessions.get(dates.get(position));
-        for(int i = 0; i < workerNames.size(); ++i){
-            Button btn = new Button(context);
-            btn.setTextColor(Color.BLACK);
-            btn.setBackgroundColor(Color.WHITE);
-            btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-            btn.setText(workerNames.get(i));
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // finish later
-                }
-            });
-            holder.linearLayout.addView(btn);
-        }
+        holder.sessionForeman.setText(item.foreman);
+
+//        Button btn = new Button(context);
+//        btn.setTextColor(Color.BLACK);
+//        btn.setBackgroundColor(Color.WHITE);
+//        btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT));
+//        btn.setText(item.foreman);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // finish later
+//            }
+//        });
     }
 
     @Override
@@ -60,18 +66,18 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
         return this.dates.size();
     }
 
-    public void setSessions(Map<String,ArrayList<String>> sessions) {
+    public void setSessions(TreeMap<String, SessionItem> sessions) {
         this.sessions = sessions;
     }
 
     public class SessionsViewHolder extends RecyclerView.ViewHolder {
         TextView dateOfSession;
-        LinearLayout linearLayout;
+        Button sessionForeman;
 
         SessionsViewHolder(View view) {
             super(view);
             dateOfSession = view.findViewById(R.id.dateOfSession);
-            linearLayout = view.findViewById(R.id.linearSessions);
+            sessionForeman = view.findViewById(R.id.sessionForeman);
         }
     }
 }

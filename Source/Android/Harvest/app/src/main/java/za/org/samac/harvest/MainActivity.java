@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private static final String TAG = "Clicker";
 
     private static ArrayList<Worker> workers;
+    private static ArrayList<Worker> foremen;
     private ArrayList<Worker> workersSearch;
     private Map<Integer, Location> track;
     int trackCount = 0;
@@ -107,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         track = new HashMap<>();
         this.workers = new ArrayList<>();//stores worker names
         workersSearch = new ArrayList<>();//stores worker names
+        this.foremen = new ArrayList<>();
         adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
     }
 
@@ -236,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                             startActivityIfNeeded(openMainActivity, 0);
                                             return true;
                                         case R.id.actionSession:
-                                            Intent openSessions= new Intent(MainActivity.this, SessionsMap.class);
+                                            Intent openSessions= new Intent(MainActivity.this, Sessions.class);
                                             openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                             startActivityIfNeeded(openSessions, 0);
                                             return true;
@@ -350,6 +352,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         workerObj.setID(zoneSnapshot.getKey());
                         workers.add(workerObj);
                     } else {
+                        Worker workerObj = new Worker();
+                        workerObj.setName(fullName);
+                        workerObj.setValue(0);
+                        workerObj.setID(zoneSnapshot.getKey());
+                        foremen.add(workerObj);
                         if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
                             foremanID = zoneSnapshot.getKey();
                             foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
@@ -728,4 +735,5 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public static ArrayList<Worker> getWorkers(){return workers;}
+    public static ArrayList<Worker> getForemen(){return foremen;}
 }

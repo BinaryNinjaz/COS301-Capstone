@@ -28,31 +28,33 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.SessionsViewAdapter;
 import za.org.samac.harvest.domain.Worker;
 
-import static za.org.samac.harvest.MainActivity.getWorkers;
+import static za.org.samac.harvest.MainActivity.getForemen;
 
 public class Sessions extends AppCompatActivity {
 
-    private Map<String, ArrayList<String>> sessions; //used to store session data
+    private TreeMap<String, SessionItem> sessions; //used to store session data
     private ArrayList<String> dates;
-    private Map<String, String> workerID; //used to look up name with worker id
+    private Map<String, String> foremenID; //used to look up name with foreman id
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid;
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private DatabaseReference sessionsRef;
     private DatabaseReference collectionsRef;
-    private ArrayList<Worker> workers;
+    private ArrayList<Worker> foremen;
     private RecyclerView recyclerView;
     private SessionsViewAdapter adapter;
 
@@ -61,16 +63,17 @@ public class Sessions extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessions);
 
-        workers = getWorkers(); // get worker info to loop through it
-        workerID = new HashMap<>();
-        for(int i = 0 ; i < workers.size() ; ++i) {
-            String id = workers.get(i).getID();
-            String name = workers.get(i).getName();
-            workerID.put(id,name);
+        foremen = getForemen(); // get worker info to loop through it
+        foremenID = new HashMap<>();
+        for(int i = 0 ; i < foremen.size() ; ++i) {
+            String id = foremen.get(i).getID();
+            String name = foremen.get(i).getName();
+            foremenID.put(id, name);
+            System.out.println(">>>>>>>> " + id + ":" + name);
         }
 
         dates = new ArrayList<>();
-        sessions = new HashMap<>();
+        sessions = new TreeMap<>();
         uid = user.getUid();
         //testing block
         //Toast toast = Toast.makeText(getApplicationContext(), uid, Toast.LENGTH_SHORT);
@@ -85,41 +88,40 @@ public class Sessions extends AppCompatActivity {
                 for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
                     //get date of specific session
                     @SuppressWarnings("ConstantConditions") long startTime = (long) (zoneSnapshot.child("start_date").getValue(Double.class)*1000);
+
+
+
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(startTime);
                     int year = calendar.get(Calendar.YEAR);
                     int month = calendar.get(Calendar.MONTH);
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    String sMonth = getMonth(month);
-                    final String date= day+" "+sMonth+" "+year;
-                    dates.add(date);
+                    int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                    int minute = calendar.get(Calendar.MINUTE);
+
+
                     //loop through collections next
                     String collection = zoneSnapshot.getKey();
                     collectionsRef = sessionsRef.child(collection).child("collections");
-                    collectionsRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot collectionSnap : dataSnapshot.getChildren()) {
-                                String id = collectionSnap.getKey();
-                                String name = workerID.get(id);
-                                if (sessions.containsKey(date)) {
-                                    ArrayList<String> temp = sessions.get(date);
-                                    temp.add(name);
-                                    sessions.put(date, temp);
-                                } else {
-                                    ArrayList<String> temp = new ArrayList<>();
-                                    temp.add(name);
-                                    sessions.put(date, temp);
-                                }
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    SessionItem item = new SessionItem();
+                    item.key = zoneSnapshot.getKey();
+                    item.startDate = new Date((long)(zoneSnapshot.child("start_date").getValue(Double.class) * 1000));
+                    item.endDate = new Date((long)(zoneSnapshot.child("end_date").getValue(Double.class) * 1000));
+                    item.foreman = foremenID.get(zoneSnapshot.child("wid").getValue(String.class));
 
-                        }
-                    });
+                    if (item.foreman == null) {
+                        item.foreman = "Farm Owner";
+                    }
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                    formatter.setCalendar(Calendar.getInstance());
+                    final String date = formatter.format(item.startDate);
+
+                    dates.add(date);
+                    sessions.put(date, item);
                 }
+                addButtons();
             }
 
             @Override
@@ -131,7 +133,7 @@ public class Sessions extends AppCompatActivity {
         //bottom nav bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
+        bottomNavigationView.setSelectedItemId(R.id.actionSession);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
