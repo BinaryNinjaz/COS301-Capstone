@@ -19,16 +19,18 @@ import java.util.TreeMap;
 
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.SessionItem;
+import za.org.samac.harvest.Sessions;
 
 public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapter.SessionsViewHolder> {
 
-    private final  ArrayList<String> dates;
-    private TreeMap<String, SessionItem> sessions;
+    private ArrayList<String> dates;
+    private TreeMap<String, SessionItem.Selection> sessions;
     private Context context;
+    private Sessions sessionsClass;
 
-    public SessionsViewAdapter(Context applicationContext,  ArrayList<String> dates) {
-        this.dates = dates;
+    public SessionsViewAdapter(Context applicationContext, Sessions sc) {
         this.context = applicationContext;
+        sessionsClass = sc;
     }
 
     @Override
@@ -42,23 +44,13 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
     @Override
     public void onBindViewHolder(SessionsViewHolder holder, int position) {
         String date = dates.get(position);
-        SessionItem item = sessions.get(date);
+        SessionItem.Selection item = sessions.get(date);
 
-        holder.dateOfSession.setText(dates.get(position));
-        holder.sessionForeman.setText(item.foreman);
+        holder.sessionForeman.setText(item.foreman + " - " + dates.get(position));
 
-//        Button btn = new Button(context);
-//        btn.setTextColor(Color.BLACK);
-//        btn.setBackgroundColor(Color.WHITE);
-//        btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT));
-//        btn.setText(item.foreman);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // finish later
-//            }
-//        });
+        if (position == dates.size() - 1) {
+            sessionsClass.getNewPage();
+        }
     }
 
     @Override
@@ -66,8 +58,14 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
         return this.dates.size();
     }
 
-    public void setSessions(TreeMap<String, SessionItem> sessions) {
+
+
+    public void setSessions(TreeMap<String, SessionItem.Selection> sessions) {
         this.sessions = sessions;
+    }
+
+    public void setDates(ArrayList<String> dates) {
+        this.dates = dates;
     }
 
     public class SessionsViewHolder extends RecyclerView.ViewHolder {
@@ -76,7 +74,6 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
 
         SessionsViewHolder(View view) {
             super(view);
-            dateOfSession = view.findViewById(R.id.dateOfSession);
             sessionForeman = view.findViewById(R.id.sessionForeman);
         }
     }
