@@ -1,8 +1,14 @@
 package za.org.samac.harvest.adapter;
 
+import android.content.Intent;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -11,14 +17,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import za.org.samac.harvest.Analytics;
+import za.org.samac.harvest.InformationActivity;
 import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.R;
+import za.org.samac.harvest.Sessions;
+import za.org.samac.harvest.SessionsMap;
 import za.org.samac.harvest.domain.Worker;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
@@ -30,7 +42,7 @@ public class SessionDetails extends AppCompatActivity {
     String wid;
     Date startDate;
     Date endDate;
-    collections collected;
+    public static collections collected = new collections("");
     private ArrayList<Worker> workers;
     private HashMap<String, String> workerID;
     private ArrayList<Worker> foremen;
@@ -40,6 +52,15 @@ public class SessionDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_details);
+
+        Button mapButton = findViewById(R.id.sessionDetailsMapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent map = new Intent(getApplicationContext(), SessionsMap.class);
+                getApplicationContext().startActivity(map);
+            }
+        });
 
         workers = getWorkers(); // get worker info to loop through it
         workerID = new HashMap<>();
@@ -55,10 +76,7 @@ public class SessionDetails extends AppCompatActivity {
             String id = foremen.get(i).getID();
             String name = foremen.get(i).getName();
             foremenID.put(id, name);
-            System.out.println(">>>>>> " + id + " : " + name);
         }
-
-        collected = new collections("");
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 

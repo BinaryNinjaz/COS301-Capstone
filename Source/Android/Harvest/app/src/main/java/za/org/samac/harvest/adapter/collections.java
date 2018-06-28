@@ -70,6 +70,10 @@ public class collections {
         return individualCollections;
     }
 
+    public ArrayList<Location> getTrack() {
+        return track;
+    }
+
     public String getForemanEmail() {
         return foremanEmail;
     }
