@@ -238,19 +238,20 @@ public class InformationActivity extends AppCompatActivity{
 
     public void showList(Category cat){
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        showNavFrag();
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         InfoListFragment newInfoListFragment = new InfoListFragment();
         fragmentTransaction.replace(R.id.infoMainPart, newInfoListFragment);
         fragmentTransaction.addToBackStack(null);
         newInfoListFragment.setData(data);
-        if (cat.equals("farms")) {
+        if (cat == FARM) {
             setTitle("Farms");
             selectedCat = FARM;
-        } else if (cat.equals("orchards")) {
+        } else if (cat == ORCHARD) {
             setTitle("Orchards");
             selectedCat = ORCHARD;
-        } else if (cat.equals("workers")) {
+        } else if (cat == WORKER) {
             setTitle("Workers");
             selectedCat = WORKER;
         }

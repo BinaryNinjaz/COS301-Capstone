@@ -74,7 +74,7 @@
     <string name="info_farm_phone">Contact Number:</string>
     <string name="info_farm_province">Province:</string>
     <string name="info_farm_town">Nearest Town:</string>
-    
+
     <!--Strings related to Information on Orchards-->
     <string name="info_orch_name">Orchard Name:</string>
     <string name="info_orch_crop">Orchard Crop:</string>
@@ -167,4 +167,5 @@
     <string name="PerSesWorkerComparison">Per Session Worker Performance</string>
     <string name="OrhHistPerformance">Orchard Historical Performance</string>
     <string name="title_stats">Stats</string>
+    <string name="title_activity_maps">Orchard Map</string>
 </resources>
