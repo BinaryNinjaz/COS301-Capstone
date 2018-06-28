@@ -1,6 +1,7 @@
 package za.org.samac.harvest.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,9 +45,20 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
     @Override
     public void onBindViewHolder(SessionsViewHolder holder, int position) {
         String date = dates.get(position);
-        SessionItem.Selection item = sessions.get(date);
+        final SessionItem.Selection item = sessions.get(date);
 
         holder.sessionForeman.setText(item.foreman + " - " + dates.get(position));
+        holder.sessionForeman.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent details = new Intent(context, SessionDetails.class);
+                Intent key = details.putExtra("key", item.key);
+                Intent sdate = details.putExtra("start_date", item.startDate);
+                Intent wkey = details.putExtra("wid", item.foreman);
+
+                context.startActivity(details);
+            }
+        });
 
         if (position == dates.size() - 1) {
             sessionsClass.getNewPage();

@@ -11,6 +11,7 @@ import za.org.samac.harvest.adapter.MyData;
 public class collections {
 
     private Map<String, MyData> individualCollections;//map of each individual
+    private ArrayList<Location> track;
     private String foremanEmail = "";
     private double start_date, end_date;
 
@@ -18,6 +19,7 @@ public class collections {
         individualCollections = new HashMap<>();
         foremanEmail = email;
         start_date = System.currentTimeMillis() / 1000.0;
+        track = new ArrayList<>();
     }
 
     public void addCollection(String workerName, Location location){
@@ -32,6 +34,18 @@ public class collections {
         }
     }
 
+    public void addCollection(String workerName, Location location, Double date){
+        if(individualCollections.containsKey(workerName)) {
+            MyData data = individualCollections.get(workerName);
+            data.addLocation(location, date);
+            individualCollections.put(workerName, data);
+        }else {
+            MyData data = new MyData();
+            data.addLocation(location, date);
+            individualCollections.put(workerName, data);
+        }
+    }
+
     public void removeCollection(String workerName){
         MyData data = individualCollections.get(workerName);
         if(data!=null) {
@@ -42,6 +56,10 @@ public class collections {
                 individualCollections.put(workerName, data);
             }
         }
+    }
+
+    public void addTrack(Location location) {
+        track.add(location);
     }
 
     public void sessionEnd() {
