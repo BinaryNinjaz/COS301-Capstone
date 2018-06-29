@@ -259,6 +259,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
+    private void getApproxiamteYield() {
+        final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
+    }
+
 //    @Override
 //    protected void onResume(){
 //        super.onResume();
