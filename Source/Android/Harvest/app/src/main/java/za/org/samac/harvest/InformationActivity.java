@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
@@ -37,7 +38,7 @@ public class InformationActivity extends AppCompatActivity{
 
     private BottomNavigationView bottomNavigationView;
     private Data data;
-    private boolean editing = false;
+    private boolean editing = false, map = false;
     private Stack<Category> backViews = new Stack<>();
 
     Category selectedCat = NOTHING;
@@ -117,7 +118,7 @@ public class InformationActivity extends AppCompatActivity{
             finish();
         }
         else {
-            if (editing){
+            if (editing && !map){
                 editing = false;
                 switch (selectedCat) {
                     case FARM:
@@ -133,6 +134,9 @@ public class InformationActivity extends AppCompatActivity{
                         setTitle("Good Luck");
                         break;
                 }
+            }
+            else if (map){
+                map = false;
             }
             getSupportFragmentManager().popBackStack();
             if(getSupportFragmentManager().getBackStackEntryCount() == 2){
@@ -181,6 +185,7 @@ public class InformationActivity extends AppCompatActivity{
     //Handle Buttons
     public void onCreateButtClick(View view){
         String choice = view.getTag().toString();
+        editing = true;
         switch (choice){
             case "FARM":
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -343,6 +348,7 @@ public class InformationActivity extends AppCompatActivity{
     //Handle a save event
     public void onSaveChosen(View view){
         String[] tags = view.getTag().toString().split(" ");
+        editing = false;
         if (tags[0].equals("SAVE")){
             switch (selectedCat) {
                 case FARM:
@@ -597,6 +603,25 @@ public class InformationActivity extends AppCompatActivity{
             frag = (InfoOrchardFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
         }
         frag.delCult(Integer.parseInt(v.getTag().toString()));
+    }
+
+    public void onLocMapShowClick(View v){
+        map = true;
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        InfoOrchardMapFragment infoOrchardMapFragment = new InfoOrchardMapFragment();
+        fragmentTransaction.replace(R.id.infoMainPart, infoOrchardMapFragment);
+        fragmentTransaction.addToBackStack(null);
+        infoOrchardMapFragment.setMapShowBottomBit(editing);
+        fragmentTransaction.commit();
+    }
+
+    public void onOrchMapRemAllClick(View view){
+
+    }
+
+    public void onOrchMapRemLastClick(View view){
+
     }
 }
 

@@ -88,6 +88,9 @@
     <string name="info_orch_tree">Tree Spacing:</string>
     <string name="info_orch_cult">Cultivars:</string>
     <string name="info_orch_further">Further Information:</string>
+    <string name="info_orch_map_hold">Hold each corner of the field</string>
+    <string name="info_orch_map_remAll">Remove All</string>
+    <string name="info_orch_map_remLast">Remove Last Point</string>
 
     <!-- Strings related to Settings -->
 
@@ -168,4 +171,7 @@
     <string name="OrhHistPerformance">Orchard Historical Performance</string>
     <string name="title_stats">Stats</string>
     <string name="title_activity_maps">Orchard Map</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
