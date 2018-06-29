@@ -42,7 +42,7 @@ public class SessionDetails extends AppCompatActivity {
     String wid;
     Date startDate;
     Date endDate;
-    public static collections collected = new collections("");
+    public static collections collected;
     private ArrayList<Worker> workers;
     private HashMap<String, String> workerID;
     private ArrayList<Worker> foremen;
@@ -52,6 +52,8 @@ public class SessionDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_details);
+
+        collected = new collections("");
 
         Button mapButton = findViewById(R.id.sessionDetailsMapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +88,12 @@ public class SessionDetails extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 startDate = new Date((long)(dataSnapshot.child("start_date").getValue(Double.class) * 1000));
-                endDate = new Date((long)(dataSnapshot.child("end_date").getValue(Double.class) * 1000));
+                Double ed = dataSnapshot.child("end_date").getValue(Double.class);
+                if (ed != null) {
+                    endDate = new Date((long)(ed * 1000));
+                } else {
+                    endDate = startDate;
+                }
                 key = dataSnapshot.getKey();
                 wid = dataSnapshot.child("wid").getValue(String.class);
                 for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
