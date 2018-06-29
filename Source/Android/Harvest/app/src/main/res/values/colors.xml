@@ -11,4 +11,6 @@
     <color name="androidGrey">#d3d3d3</color>
     <color name="colorGoogleRed">#e3674b</color>
     <color name="Clickable_Card">#dcedc8</color>
+    <color name="info_orchard_map_polygon_stroke">#800000BB</color>
+    <color name="info_orchard_map_polygon_fill">#1A0000BB</color>
 </resources>

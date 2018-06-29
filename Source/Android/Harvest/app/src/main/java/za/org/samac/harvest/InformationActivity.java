@@ -610,18 +610,21 @@ public class InformationActivity extends AppCompatActivity{
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         InfoOrchardMapFragment infoOrchardMapFragment = new InfoOrchardMapFragment();
-        fragmentTransaction.replace(R.id.infoMainPart, infoOrchardMapFragment);
+        fragmentTransaction.replace(R.id.infoMainPart, infoOrchardMapFragment, "MAP");
         fragmentTransaction.addToBackStack(null);
         infoOrchardMapFragment.setMapShowBottomBit(editing);
+        infoOrchardMapFragment.setDataAndOrchardID(data, v.getTag().toString());
         fragmentTransaction.commit();
     }
 
     public void onOrchMapRemAllClick(View view){
-
+        InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
+        temp.erase();
     }
 
     public void onOrchMapRemLastClick(View view){
-
+        InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
+        temp.removeLast();
     }
 }
 

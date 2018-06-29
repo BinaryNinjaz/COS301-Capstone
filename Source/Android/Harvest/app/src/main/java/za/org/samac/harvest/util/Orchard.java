@@ -2,14 +2,17 @@ package za.org.samac.harvest.util;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 public class Orchard{
     protected String name;
     protected String crop;
-    protected Coordinates coordinates;
+    protected List<LatLng> coordinates;
     protected Float meanBagMass;
     protected String irrigation;
     protected Calendar datePlanted;
@@ -21,7 +24,7 @@ public class Orchard{
     protected String ID;
 
     public Orchard(){
-        coordinates = new Coordinates();
+        coordinates = new Vector<LatLng>();
         cultivars = new Vector<>();
     }
 
@@ -41,7 +44,7 @@ public class Orchard{
         this.assignedFarm = assignedFarm;
     }
 
-    public void setCoordinates(Coordinates coordinates) {
+    public void setCoordinates(List<LatLng> coordinates) {
         this.coordinates = coordinates;
     }
 
@@ -81,7 +84,7 @@ public class Orchard{
         return datePlanted;
     }
 
-    public Coordinates getCoordinates() {
+    public List<LatLng> getCoordinates() {
         return coordinates;
     }
 
@@ -113,18 +116,6 @@ public class Orchard{
         cultivars.addElement(addMe);
     }
 
-    public void deleteCultivar(int loc){
-        cultivars.remove(loc);
-    }
-
-    public void addCoordinates(Location loc){
-        coordinates.pushLocation(loc);
-    }
-
-    public void addCoordinates(double lat, double lng){
-        coordinates.pushLocation(lat, lng);
-    }
-
     public String getName() {
         return name;
     }
@@ -138,30 +129,3 @@ public class Orchard{
     }
 }
 
-class Coordinates{
-    private Vector<Location> coordinates;
-
-    public Coordinates(){
-        coordinates = new Vector<Location>();
-    }
-
-    public void pushLocation(Location location){
-        coordinates.addElement(location);
-    }
-
-    public void pushLocation(double lat, double lng){
-        Location temp = new Location("");
-        temp.setLatitude(lat);
-        temp.setLongitude(lng);
-        temp.setAccuracy(0);
-        coordinates.addElement(temp);
-    }
-
-    public int getSize(){
-        return coordinates.size();
-    }
-
-    public Location getCoordinate(int at){
-        return coordinates.elementAt(at);
-    }
-}

@@ -293,6 +293,8 @@ public class InfoOrchardFragment extends Fragment {
             mRecyclerView.setAdapter(mAdapter);
         }
 
+        getView().findViewById(R.id.info_orch_loc_button).setTag(ID);
+
         cRecyclerView = getView().findViewById(R.id.info_orch_cultivars_look);
         cRecyclerView.setHasFixedSize(true);
         cLayoutManager = new LinearLayoutManager(getActivity());
