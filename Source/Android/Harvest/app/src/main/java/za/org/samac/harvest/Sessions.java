@@ -157,7 +157,9 @@ public class Sessions extends AppCompatActivity {
                             SessionItem.Selection item = new SessionItem.Selection();
                             item.key = obj.getString("key");
                             item.startDate = new Date((long) (obj.getDouble("start_date") * 1000));
-                            item.foreman = foremenID.get(obj.getString("wid"));
+                            if (obj.has("wid")) {
+                                item.foreman = foremenID.get(obj.getString("wid"));
+                            }
 
                             if (item.foreman == null) {
                                 item.foreman = "Farm Owner";
