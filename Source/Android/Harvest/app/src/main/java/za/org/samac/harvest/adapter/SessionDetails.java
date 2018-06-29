@@ -42,7 +42,7 @@ public class SessionDetails extends AppCompatActivity {
     String wid;
     Date startDate;
     Date endDate;
-    public static collections collected = new collections("");
+    public static collections collected;
     private ArrayList<Worker> workers;
     private HashMap<String, String> workerID;
     private ArrayList<Worker> foremen;
@@ -52,6 +52,8 @@ public class SessionDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_details);
+
+        collected = new collections("");
 
         Button mapButton = findViewById(R.id.sessionDetailsMapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
