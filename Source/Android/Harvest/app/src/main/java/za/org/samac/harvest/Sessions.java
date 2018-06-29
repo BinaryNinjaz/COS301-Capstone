@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.common.api.Response;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,6 +64,7 @@ public class Sessions extends AppCompatActivity {
     private ArrayList<Worker> foremen;
     private RecyclerView recyclerView;
     private SessionsViewAdapter adapter;
+    private ProgressBar progressBar;
 
     private Integer pageNo = 0;
     private Integer pageSize = 8;
@@ -79,6 +81,9 @@ public class Sessions extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessions);
+
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
         foremen = getForemen(); // get worker info to loop through it
         foremenID = new HashMap<>();
@@ -180,6 +185,7 @@ public class Sessions extends AppCompatActivity {
                                         //recyclerView.addItemDecoration(new DividerItemDecoration(Sessions.this, GridLayoutManager.VERTICAL));
                                         recyclerView.setHasFixedSize(false);
                                         recyclerView.setAdapter(adapter);
+                                        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
                                         recyclerView.setVisibility(View.VISIBLE);
                                     }
                                     adapter.notifyItemInserted(sessions.size() - 1);
