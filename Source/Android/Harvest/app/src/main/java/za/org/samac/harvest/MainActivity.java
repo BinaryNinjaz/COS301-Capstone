@@ -35,6 +35,9 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -43,7 +46,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.FirebaseFunctionsException;
+import com.google.firebase.functions.HttpsCallableResult;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -156,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
         statusCheck();
+
+        getApproxiamteYield();
     }
 
     @Override
@@ -260,7 +272,32 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void getApproxiamteYield() {
-        final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
+        //final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
+        URL url;
+        HttpURLConnection urlConnection = null;
+        try {
+            url = new URL("https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield");
+
+            urlConnection = (HttpURLConnection) url
+                    .openConnection();
+
+            InputStream in = urlConnection.getInputStream();
+
+            InputStreamReader isw = new InputStreamReader(in);
+
+            int data = isw.read();
+            while (data != -1) {
+                char current = (char) data;
+                data = isw.read();
+                System.out.print(current);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
     }
 
 //    @Override
