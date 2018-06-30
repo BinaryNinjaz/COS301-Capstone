@@ -95,6 +95,15 @@
     <string name="info_orch_map_permissionDialog_title">Location Permission</string>
     <string name="info_orch_map_permissionDialog_okay">Continue</string>
 
+    <!--Strings related to Information on Workers-->
+    <string name="info_work_fName">Worker Name:</string>
+    <string name="info_work_sName">Worker Surname:</string>
+    <string name="info_work_id">ID Number:</string>
+    <string name="info_work_role">Is a foreman?</string>
+    <string name="info_work_phone">Phone Number:</string>
+    <string name="info_work_further">Further Information:</string>
+    <string name="info_work_orchard">Assigned Orchards:</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
