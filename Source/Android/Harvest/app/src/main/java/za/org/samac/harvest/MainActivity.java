@@ -327,13 +327,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 public void run() {
                     try  {
                         String response = sendGet(urlSessionText());
-                        System.out.println(" ############################ " + response + " ############################ ");
                         JSONArray objs = new JSONArray(response);
+                        System.out.println(" %%%%%%%%%%%%%%%%% " + objs.length() + " %%%%%%%%%%%%%%%%%%% ");
                         for (int i = 0; i < objs.length(); i++) {
                             JSONObject obj = objs.getJSONObject(i);
-                            SessionItem.Selection item = new SessionItem.Selection();
-                            item.key = obj.getString("key");
-                            item.startDate = new Date((long) (obj.getDouble("start_date") * 1000));
+                            ExpectedYieldItem.Selection item = new ExpectedYieldItem.Selection();
+                            item.expected = obj.getString("expected");
+                            System.out.println(" ############################ " + item.expected + " ############################ ");
+                            /*item.startDate = new Date((long) (obj.getDouble("start_date") * 1000));
                             if (obj.has("wid")) {
                                 item.foreman = foremenID.get(obj.getString("wid"));
                             }
@@ -362,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     }
                                     adapter.notifyItemInserted(sessions.size() - 1);
                                 }
-                            });
+                            });*/
                         }
 
                     } catch (Exception e) {
