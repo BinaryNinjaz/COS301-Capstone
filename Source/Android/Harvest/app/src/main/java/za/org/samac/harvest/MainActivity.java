@@ -327,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 public void run() {
                     try  {
                         String response = sendGet(urlSessionText());
+                        System.out.println(response);
                         JSONArray objs = new JSONArray(response);
                         System.out.println(" %%%%%%%%%%%%%%%%% " + objs.length() + " %%%%%%%%%%%%%%%%%%% ");
                         for (int i = 0; i < objs.length(); i++) {
