@@ -21,9 +21,25 @@ class TrackerViewController: UIViewController {
   }
   var locationManager: CLLocationManager!
   var currentLocation: CLLocation?
+  var currentOrchardID: String = "" {
+    didSet {
+      if currentOrchardID != "" {
+        filteredWorkers = filteredWorkers.filter { $0.assignedOrchards.contains(currentOrchardID) }
+        DispatchQueue.main.async {
+          self.workerCollectionView.reloadData()
+        }
+      }
+    }
+  }
   var workers: [Worker] = [] {
     didSet {
       filteredWorkers = workers
+      if currentOrchardID != "" {
+        filteredWorkers = filteredWorkers.filter { $0.assignedOrchards.contains(currentOrchardID) }
+        DispatchQueue.main.async {
+          self.workerCollectionView.reloadData()
+        }
+      }
     }
   }
   var filteredWorkers: [Worker] = []
@@ -47,6 +63,7 @@ class TrackerViewController: UIViewController {
     
     tracker = nil
     expectedYield = .nan
+    yieldLabel.attributedText = attributedStringForYieldCollection(0, expectedYield)
     searchBar.isUserInteractionEnabled = false
     
     workerCollectionView.reloadData()
@@ -64,6 +81,7 @@ class TrackerViewController: UIViewController {
     
     self.tracker = nil
     expectedYield = .nan
+    yieldLabel.attributedText = attributedStringForYieldCollection(0, expectedYield)
     self.searchBar.isUserInteractionEnabled = false
     
     self.workerCollectionView.reloadData()
@@ -113,6 +131,10 @@ class TrackerViewController: UIViewController {
     present(alert, animated: true, completion: nil)
   }
   
+  func startLocationTracking() {
+    
+  }
+  
   @IBAction func startSession(_ sender: Any) {
     if tracker == nil {
       if locationManager == nil {
@@ -152,7 +174,7 @@ class TrackerViewController: UIViewController {
   
   func updateWorkerCells(with newWorkers: [Worker]) {
     workers.removeAll(keepingCapacity: true)
-    for worker in newWorkers {
+    for worker in newWorkers where worker.kind == .worker {
       workers.append(worker)
     }
     DispatchQueue.main.async {
@@ -162,7 +184,7 @@ class TrackerViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    startSessionButton.layer.cornerRadius = 40
+    startSessionButton.layer.cornerRadius = startSessionButton.frame.width / 2
     hideKeyboardWhenTappedAround()
     
     let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
@@ -200,6 +222,7 @@ extension TrackerViewController: CLLocationManagerDelegate {
     }
     currentLocation = loc
     if let oid = tracker?.track(location: loc) {
+      currentOrchardID = oid
       tracker?.updateExpectedYield(orchardId: oid) { expected in
         self.expectedYield = expected
         DispatchQueue.main.async {
@@ -252,15 +275,15 @@ extension TrackerViewController: UICollectionViewDataSource {
   }
   
   func incrementBagCollection(at indexPath: IndexPath) -> (WorkerCollectionViewCell) -> Void {
-    return { this in
+    return { cell in
       self.locationManager.requestLocation()
       guard let loc = self.currentLocation else {
-        this.inc?(this)
+        cell.inc?(cell)
         return
       }
       self.tracker?.collect(for: self.filteredWorkers[indexPath.row], at: loc)
       
-      this.yieldLabel.text = self
+      cell.yieldLabel.text = self
         .tracker?
         .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
       
@@ -271,10 +294,10 @@ extension TrackerViewController: UICollectionViewDataSource {
   }
   
   func decrementBagCollection(at indexPath: IndexPath) -> (WorkerCollectionViewCell) -> Void {
-    return { this in
+    return { cell in
       self.tracker?.pop(for: self.filteredWorkers[indexPath.row])
       
-      this.yieldLabel.text = self
+      cell.yieldLabel.text = self
         .tracker?
         .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
       

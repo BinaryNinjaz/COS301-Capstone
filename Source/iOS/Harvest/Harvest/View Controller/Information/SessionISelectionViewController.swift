@@ -99,7 +99,7 @@ class SessionSelectionViewController: UITableViewController {
     let session = sessions[sidx].value[indexPath.row]
     let date = session.startDate
     let name = session.foreman.description
-    cell.textLabel?.text =  name + " ・ " + formatter.string(from: date)
+    cell.textLabel?.text =  name + " - " + formatter.string(from: date)
     return cell
   }
   

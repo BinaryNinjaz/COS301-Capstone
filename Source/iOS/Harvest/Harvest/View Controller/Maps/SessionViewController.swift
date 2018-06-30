@@ -27,7 +27,6 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
   var pickUpMarkers: [GMSMarker] = []
   
   @IBOutlet weak var mapView: GMSMapView!
-  @IBOutlet weak var titleLabel: UILabel!
   
   public override func viewDidLoad() {
     super.viewDidLoad()

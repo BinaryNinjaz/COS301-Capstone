@@ -22,7 +22,12 @@ extension Worker {
     
     for (_, orchard) in orchards {
       orchardSection <<< ListCheckRow<Orchard>(orchard.description) { row in
-        row.title = orchard.assignedFarm + " " + orchard.name
+        let farmName = Entities
+          .shared.farms
+          .first { _, v in v.id == orchard.assignedFarm }
+          .map { $0.value.name }
+          ?? orchard.assignedFarm
+        row.title = farmName + " " + orchard.name
         row.selectableValue = orchard
         row.value = assignedOrchards.contains(orchard.id) ? orchard : nil
       }.onChange { (row) in
@@ -557,6 +562,7 @@ extension Session {
     let startDateRow = DateTimeRow { row in
       row.title = "Time Started"
       row.value = startDate
+      row.baseCell.isUserInteractionEnabled = false
     }.onChange { row in
       self.tempory?.startDate = row.value ?? Date()
       onChange()
@@ -565,6 +571,7 @@ extension Session {
     let endDateRow = DateTimeRow { row in
       row.title = "Time Ended"
       row.value = endDate
+      row.baseCell.isUserInteractionEnabled = false
     }.onChange { row in
       self.tempory?.endDate = row.value ?? Date()
       onChange()
