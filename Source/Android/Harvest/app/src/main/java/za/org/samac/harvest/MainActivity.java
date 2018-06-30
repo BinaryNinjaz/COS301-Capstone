@@ -51,6 +51,7 @@ import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -272,17 +273,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
-    private Integer pageNo = 0;
-    private Integer pageSize = 8;
-
-    private String urlSessionText() {
-        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
-        base = base + "pageNo=" + pageNo.toString();
-        base = base + "&pageSize=" + pageSize.toString();
-        base = base + "&uid=" + farmerKey;
-        return base;
-    }
-
     private void getApproxiamteYield() {
         //final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
         URL url;
@@ -312,6 +302,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
+    private Integer pageNo = 0;
+    private Integer pageSize = 8;
+
+    private String urlSessionText() {
+        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
+        base = base + "pageNo=" + pageNo.toString();
+        base = base + "&pageSize=" + pageSize.toString();
+        base = base + "&uid=" + farmerKey;
+        return base;
+    }
+
     public void getNewPage() {
         pageNo++;
         try {
@@ -321,8 +322,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 public void run() {
                     try  {
                         String response = sendGet(urlSessionText());
-                        System.out.println(response);
-                        JSONArray objs = new JSONArray(response);
+                        System.out.println(" ############################ " + response + " ############################ ");
+                        /*JSONArray objs = new JSONArray(response);
                         for (int i = 0; i < objs.length(); i++) {
                             JSONObject obj = objs.getJSONObject(i);
                             SessionItem.Selection item = new SessionItem.Selection();
@@ -357,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     adapter.notifyItemInserted(sessions.size() - 1);
                                 }
                             });
-                        }
+                        }*/
 
                     } catch (Exception e) {
                         e.printStackTrace();
