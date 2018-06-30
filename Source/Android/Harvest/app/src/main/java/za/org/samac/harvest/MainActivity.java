@@ -272,7 +272,29 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
-    private void getApproxiamteYield() {
+    private FirebaseFunctions mFunctions;
+
+    private double getApproxiamteYield() {
+        mFunctions = FirebaseFunctions.getInstance();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("text", text);
+        data.put("push", true);
+
+        return mFunctions
+                .getHttpsCallable("addMessage")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, String>() {
+                    @Override
+                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        // This continuation runs on either success or failure, but if the task
+                        // has failed then getResult() will throw an Exception which will be
+                        // propagated down.
+                        String result = (String) task.getResult().getData();
+                        return result;
+                    }
+                });
+
         //final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
         URL url;
         HttpURLConnection urlConnection = null;
