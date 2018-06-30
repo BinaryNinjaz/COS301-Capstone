@@ -103,6 +103,8 @@
     <string name="info_work_phone">Phone Number:</string>
     <string name="info_work_further">Further Information:</string>
     <string name="info_work_orchard">Assigned Orchards:</string>
+    <string name="info_work_fore_off">Worker</string>
+    <string name="info_work_fore_on">Foreman</string>
 
     <!-- Strings related to Settings -->
 

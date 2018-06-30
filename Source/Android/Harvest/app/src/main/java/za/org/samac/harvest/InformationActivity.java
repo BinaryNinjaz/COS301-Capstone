@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -625,6 +626,19 @@ public class InformationActivity extends AppCompatActivity{
     public void onOrchMapRemLastClick(View view){
         InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
         temp.removeLast();
+    }
+
+    public void onCheck(View view){
+        String[] tokens = view.getTag().toString().split(" ");
+        CheckBox box = (CheckBox) view;
+        if (tokens[0].equals("Orchard")){
+            if (box.isChecked()){
+                data.getActiveWorker().getAssignedOrchards().add(data.getOrchardFromIDString(tokens[1]));
+            }
+            else {
+                data.getActiveWorker().removeOrchard(tokens[1]);
+            }
+        }
     }
 }
 

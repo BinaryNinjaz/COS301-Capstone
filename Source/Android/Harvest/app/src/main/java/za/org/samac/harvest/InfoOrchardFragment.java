@@ -433,7 +433,7 @@ public class InfoOrchardFragment extends Fragment {
 
 class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.ViewHolder>{
 //    private String[] orchards;
-    private Vector<String> orchards;
+    private Vector<String> workers;
     private Data data;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -449,12 +449,17 @@ class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.ViewHolder>{
     public WorkerAdapter(Data data){
         if (data != null) {
             this.data = data;
-            orchards = new Vector<String>();
+            workers = new Vector<String>();
 
             for (Worker current : data.getWorkers()) {
-                if (current.getAssignedOrchard() != null) {
-                    if (current.getAssignedOrchard().getID().equals(data.getActiveOrchard().getID())) {
-                        orchards.addElement(current.getfName() + current.getsName());
+                if (current.getAssignedOrchards() != null) {
+//                    if (current.getAssignedOrchard().getID().equals(data.getActiveOrchard().getID())) {
+//                        orchards.addElement(current.getfName() + current.getsName());
+//                    }
+                    for (Orchard cOrchard : current.getAssignedOrchards()){
+                        if (cOrchard.getID().equals(data.getActiveOrchard().getID())){
+                            workers.addElement(current.getsName() + ", " + current.getfName());
+                        }
                     }
                 }
             }
@@ -471,13 +476,13 @@ class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        holder.mButton.setText(orchards.elementAt(position));
+        holder.mButton.setText(workers.elementAt(position));
         holder.mButton.setTag(data.getIDFromPosInArray(position) + " " + "ORCHARD");
     }
 
     @Override
     public int getItemCount(){
-        return orchards.size();
+        return workers.size();
     }
 }
 

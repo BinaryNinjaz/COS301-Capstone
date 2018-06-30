@@ -517,7 +517,7 @@ public class Data {
     }
 
     @Nullable
-    private Orchard getOrchardFromIDString(String findMe){
+    public Orchard getOrchardFromIDString(String findMe){
         for (Orchard current: orchards){
             if (current.ID.equals(findMe)){
                 return current;
@@ -527,7 +527,7 @@ public class Data {
     }
     
     @Nullable
-    private Worker getWorkerFromIDString(String findMe){
+    public Worker getWorkerFromIDString(String findMe){
         for (Worker current: workers){
             if (current.fID.equals(findMe)){
                 return current;

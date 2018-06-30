@@ -79,5 +79,16 @@ public class Worker{
     }
 
 
+    public void addOrchard (Orchard orchard){
+        assignedOrchards.add(orchard);
+    }
+
+    public void removeOrchard (String ID){
+        for (Orchard current : assignedOrchards){
+            if (current.getID().equals(ID)){
+                assignedOrchards.remove(current);
+            }
+        }
+    }
 }
 

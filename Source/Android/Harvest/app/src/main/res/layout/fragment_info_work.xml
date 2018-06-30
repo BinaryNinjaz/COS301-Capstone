@@ -233,7 +233,7 @@
                                 android:layout_marginStart="24dp"
                                 android:layout_marginTop="8dp"
                                 android:ems="10"
-                                android:inputType="text"
+                                android:inputType="number"
                                 android:selectAllOnFocus="true"
                                 android:singleLine="true"
                                 android:visibility="gone"
@@ -279,10 +279,12 @@
                                 android:layout_marginBottom="8dp"
                                 android:layout_marginStart="24dp"
                                 android:layout_marginTop="8dp"
-                                android:checked="false"
+                                android:textOff="@string/info_work_fore_off"
+                                android:textOn="@string/info_work_fore_on"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/info_work_fore_desc" />
+                                app:layout_constraintTop_toBottomOf="@id/info_work_fore_desc"
+                                tools:checked="false" />
 
                         </android.support.constraint.ConstraintLayout>
 
@@ -335,7 +337,7 @@
                                 android:layout_marginStart="24dp"
                                 android:layout_marginTop="8dp"
                                 android:ems="10"
-                                android:inputType="text"
+                                android:inputType="phone"
                                 android:selectAllOnFocus="true"
                                 android:singleLine="true"
                                 android:visibility="gone"
@@ -409,15 +411,45 @@
 
                     <!--Assigned Orchards-->
                     <android.support.v7.widget.CardView
-                        android:id="@+id/info_work_orch_card"
+                        android:id="@+id/info_work_orchards_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/info_work_further_card">
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/info_work_further_card">
 
+                        <android.support.constraint.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
+                            <TextView
+                                android:id="@+id/info_work_orchards_desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/info_work_orchard"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/info_work_orchards_look"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginStart="24dp"
+                                android:layout_marginTop="8dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/info_work_orchards_desc" />
+                        </android.support.constraint.ConstraintLayout>
                     </android.support.v7.widget.CardView>
 
                 </android.support.constraint.ConstraintLayout>
