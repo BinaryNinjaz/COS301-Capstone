@@ -112,19 +112,17 @@ public class Data {
                                 Orchard temp = new Orchard();
                                 temp.setName(dataSet.child("name").getValue(String.class));
                                 temp.setCrop(dataSet.child("crop").getValue(String.class));
+
                                 //Iterate through coordinate sets
                                 List<LatLng> coords = new Vector<>();
-                                for (DataSnapshot coord : setOData.child("coords").getChildren()){
+                                for (DataSnapshot coord : dataSet.child("coords").getChildren()){
                                     // Iterate through
-                                    Location tempLoc = new Location("");
-                                    String lats = coord.child("lat").getValue(String.class);
-                                    String lngs = coord.child("lng").getValue(String.class);
-                                    if (!lats.equals("") && !lngs.equals("")) {
-//                                        coords.pushLocation(Double.parseDouble(lats), Double.parseDouble(lngs));
-                                        coords.add(new LatLng(Double.parseDouble(lats), Double.parseDouble(lngs)));
-                                    }
+                                    Double lats = coord.child("lat").getValue(Double.class);
+                                    Double lngs = coord.child("lng").getValue(Double.class);
+                                    coords.add(new LatLng(lats, lngs));
                                 }
                                 temp.setCoordinates(coords);
+
                                 String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
                                 Float meanBagMass = null;
                                 if (smeanBagMass != null) {
@@ -303,6 +301,8 @@ public class Data {
                             objectRoot = objectRoot.child("orchards").child(currentChange.ID);
                             objectRoot.child("name").setValue(activeOrchard.name);
                             objectRoot.child("crop").setValue(activeOrchard.crop);
+
+                            //Location
                             DatabaseReference coordsRoot = objectRoot.child("coords");
                             coordsRoot.setValue(null);
                             for(int i = 0; i < activeOrchard.coordinates.size(); i++){
@@ -310,6 +310,7 @@ public class Data {
                                 coordsRoot.child(Integer.toString(i)). child("lat").setValue(loc.latitude);
                                 coordsRoot.child(Integer.toString(i)).child("lng").setValue(loc.longitude);
                             }
+
                             if (activeOrchard.meanBagMass != null) {
                                 objectRoot.child("bagMass").setValue(activeOrchard.meanBagMass);
                             }

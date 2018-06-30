@@ -1,17 +1,26 @@
 package za.org.samac.harvest;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.Manifest;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -25,9 +34,10 @@ import za.org.samac.harvest.util.Orchard;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener{
+public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener{
 
     boolean show = false;
+    boolean denyOnce = false;
     GoogleMap gMap;
     MapView mView;
     Data data;
@@ -36,6 +46,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     List<LatLng> coordinates;
     Polygon polygon;
     boolean pSet = false;
+    static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
 
     public InfoOrchardMapFragment() {
@@ -75,6 +86,69 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
 
         if (show) {
             gMap.setOnMapLongClickListener(this);
+            activateLocation();
+        }
+        else {
+            gMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+    }
+
+    private void activateLocation(){
+        //Check if location permission is granted
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            gMap.setMyLocationEnabled(true);
+            gMap.setOnMyLocationButtonClickListener(this);
+            gMap.setOnMyLocationClickListener(this);
+        }
+        else {
+            permissionAsk();
+        }
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        return false;
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+
+    }
+
+    private void permissionAsk(){
+        if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(R.string.info_orch_map_permissionDialog_message);
+            builder.setTitle(R.string.info_orch_map_permissionDialog_title);
+            builder.setPositiveButton(R.string.info_orch_map_permissionDialog_okay, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+                }
+            });
+            AlertDialog explain = builder.create();
+            explain.show();
+        }
+        else {
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case PERMISSION_REQUEST_COARSE_LOCATION:{
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    activateLocation();
+                }
+                else {
+                    if (!denyOnce){
+                        denyOnce = true;
+                        permissionAsk();
+                    }
+                }
+            }
         }
     }
 
@@ -121,10 +195,6 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     public void setDataAndOrchardID(Data data, String ID){
         this.data = data;
         this.ID = ID;
-    }
-
-    public void save(){
-        orchard.setCoordinates(coordinates);
     }
 
     public void redraw(){
