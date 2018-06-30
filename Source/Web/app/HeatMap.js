@@ -27,8 +27,10 @@ function yieldsRef() {
 
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
-    initMap();
-    initOrchards();
+    $(window).bind("load", function() {
+      initMap();
+      initOrchards();
+    });
   } else {
     orchardPolys = [];
     orchards = [];
@@ -79,6 +81,20 @@ function orchardCoords(orchardVal) {
 }
 
 function initOrchards() {
+  var today = new Date();
+  var dd = ("0" + today.getDate()).slice(-2);
+  var mm = ("0" + (today.getMonth() + 1)).slice(-2);
+  var yyyy = today.getFullYear();
+  
+  $("#endDate").val(yyyy + "-" + mm + "-" + dd);
+  
+  today.setDate(today.getDate() - 7);
+  dd = ("0" + today.getDate()).slice(-2);
+  mm = ("0" + (today.getMonth() + 1)).slice(-2);
+  yyyy = today.getFullYear();
+  
+  $("#startDate").val(yyyy + "-" + mm + "-" + dd);
+  
   getFarms((farmsSnap) => {
     farmsSnap.forEach((farm) => {
       farms.push({key: farm.key, value: farm.val()});
