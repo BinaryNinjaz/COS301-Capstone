@@ -51,6 +51,9 @@ import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -58,6 +61,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -272,31 +276,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
-    private FirebaseFunctions mFunctions;
-
-    private double getApproxiamteYield() {
-        mFunctions = FirebaseFunctions.getInstance();
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("text", text);
-        data.put("push", true);
-
-        return mFunctions
-                .getHttpsCallable("addMessage")
-                .call(data)
-                .continueWith(new Continuation<HttpsCallableResult, String>() {
-                    @Override
-                    public String then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                        // This continuation runs on either success or failure, but if the task
-                        // has failed then getResult() will throw an Exception which will be
-                        // propagated down.
-                        String result = (String) task.getResult().getData();
-                        return result;
-                    }
-                });
-
+    private void getApproxiamteYield() {
         //final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
-        URL url;
+        /*URL url;
         HttpURLConnection urlConnection = null;
         try {
             url = new URL("https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield");
@@ -320,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
-        }
+        }*/
 
         getNewPage();
     }
@@ -346,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     try  {
                         String response = sendGet(urlSessionText());
                         System.out.println(" ############################ " + response + " ############################ ");
-                        /*JSONArray objs = new JSONArray(response);
+                        JSONArray objs = new JSONArray(response);
                         for (int i = 0; i < objs.length(); i++) {
                             JSONObject obj = objs.getJSONObject(i);
                             SessionItem.Selection item = new SessionItem.Selection();
@@ -381,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     adapter.notifyItemInserted(sessions.size() - 1);
                                 }
                             });
-                        }*/
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
