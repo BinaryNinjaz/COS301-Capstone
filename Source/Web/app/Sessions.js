@@ -23,8 +23,10 @@ function yieldsRef() {
 
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
-    initPage();
-    initMap();
+    $(window).bind("load", function() {
+      initPage();
+      initMap();
+    });
   } else {
     sessions = [];
   }
@@ -32,6 +34,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 var map;
 function initMap() {
+  locationLookup((data, response) => {
+    var latLng = new google.maps.LatLng(data.lat, data.lon);
+    map.setCenter(latLng);
+    map.setZoom(11);
+  });
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -25, lng: 28 },
     zoom: 14,
@@ -137,6 +144,7 @@ function loadSession(sessionID) {
         track.push(loc);
         if (first) {
           map.setCenter(loc);
+          map.setZoom(15);
           first = false;
         }
       }
