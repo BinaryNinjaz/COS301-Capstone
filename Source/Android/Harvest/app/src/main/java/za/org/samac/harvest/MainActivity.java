@@ -272,6 +272,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
+    private Integer pageNo = 0;
+    private Integer pageSize = 8;
+
+    private String urlSessionText() {
+        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
+        base = base + "pageNo=" + pageNo.toString();
+        base = base + "&pageSize=" + pageSize.toString();
+        base = base + "&uid=" + farmerKey;
+        return base;
+    }
+
     private void getApproxiamteYield() {
         //final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
         URL url;
@@ -299,6 +310,91 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 urlConnection.disconnect();
             }
         }
+    }
+
+    public void getNewPage() {
+        pageNo++;
+        try {
+            Thread thread = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try  {
+                        String response = sendGet(urlSessionText());
+                        System.out.println(response);
+                        JSONArray objs = new JSONArray(response);
+                        for (int i = 0; i < objs.length(); i++) {
+                            JSONObject obj = objs.getJSONObject(i);
+                            SessionItem.Selection item = new SessionItem.Selection();
+                            item.key = obj.getString("key");
+                            item.startDate = new Date((long) (obj.getDouble("start_date") * 1000));
+                            if (obj.has("wid")) {
+                                item.foreman = foremenID.get(obj.getString("wid"));
+                            }
+
+                            if (item.foreman == null) {
+                                item.foreman = "Farm Owner";
+                            }
+
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                            formatter.setCalendar(Calendar.getInstance());
+                            final String date = formatter.format(item.startDate);
+
+                            dates.add(date);
+                            sessions.put(date, item);
+                            runOnUiThread(new Runnable() {
+                                public void run(){
+                                    if (pageNo == 1) {
+                                        recyclerView = findViewById(R.id.recView);
+                                        //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
+                                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                        //recyclerView.addItemDecoration(new DividerItemDecoration(Sessions.this, GridLayoutManager.VERTICAL));
+                                        recyclerView.setHasFixedSize(false);
+                                        recyclerView.setAdapter(adapter);
+                                        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+                                        recyclerView.setVisibility(View.VISIBLE);
+                                    }
+                                    adapter.notifyItemInserted(sessions.size() - 1);
+                                }
+                            });
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String sendGet(String url) throws Exception {
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        // optional default is GET
+        con.setRequestMethod("GET");
+
+        //add request header
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        return response.toString();
     }
 
 //    @Override
