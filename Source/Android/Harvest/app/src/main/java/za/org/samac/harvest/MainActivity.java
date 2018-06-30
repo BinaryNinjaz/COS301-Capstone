@@ -1,5 +1,6 @@
 package za.org.samac.harvest;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         init();
 
         if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
         } else {
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     bestLocation = location;
                 }
             }
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);//changed to network provider as GPS wasn't working
             //adapter.setLocation(location);
         }
 
