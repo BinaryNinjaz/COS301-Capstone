@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         locationPermissions();
         //new LocationHelper().getLocation(this);
+        getApproxiamteYield();
 
         uid = user.getUid();
         currentUserEmail = user.getEmail();
@@ -168,8 +169,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
         statusCheck();
-
-        getApproxiamteYield();
     }
 
     @Override
@@ -300,6 +299,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 urlConnection.disconnect();
             }
         }
+
+        getNewPage();
     }
 
     private Integer pageNo = 0;
