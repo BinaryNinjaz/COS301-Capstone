@@ -142,10 +142,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         } else {
             locationEnabled = true;
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
 
-            List<String> providers = locationManager.getProviders(true);
+            /*List<String> providers = locationManager.getProviders(true);
             Location bestLocation = null;
             for (String provider : providers) {
                 location = locationManager.getLastKnownLocation(provider);
@@ -159,8 +159,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     //Log.d("found best last known location: %s", location);
                     bestLocation = location;
                 }
-            }
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+            }*/
+            location = locationManager
+                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
             //adapter.setLocation(location);
         }
 
