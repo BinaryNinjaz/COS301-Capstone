@@ -25,7 +25,6 @@ firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     $(window).bind("load", function() {
       initPage();
-      initMap();
     });
   } else {
     sessions = [];
