@@ -320,8 +320,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         workerObj.setID(zoneSnapshot.getKey());
                         workers.add(workerObj);
                     } else {
-                        if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
-                            foremanID = zoneSnapshot.getKey();
+                        String email = zoneSnapshot.child("email").getValue(String.class);
+                        if (email != null) {
+                            if (email.equals(currentUserEmail)) {
+                                foremanID = zoneSnapshot.getKey();
+                            }
                         }
                     }
                 }
