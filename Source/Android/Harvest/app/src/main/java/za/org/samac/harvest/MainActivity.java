@@ -21,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -36,6 +37,8 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private ProgressBar progressBar;
     private RelativeLayout relLayout;
     private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
+    private TextView textView;
     private WorkerRecyclerViewAdapter adapter;
     private LocationManager locationManager;
     private Location location;
@@ -156,13 +160,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     bestLocation = location;
                 }
             }
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);//changed to network provider as GPS wasn't working
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
             //adapter.setLocation(location);
         }
 
         locationPermissions();
         //new LocationHelper().getLocation(this);
-        getApproxiamteYield();
+        getExpectedYield();//set expected yield
 
         uid = user.getUid();
         currentUserEmail = user.getEmail();
@@ -276,105 +280,38 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
-    private void getApproxiamteYield() {
-        //final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
-        /*URL url;
-        HttpURLConnection urlConnection = null;
-        try {
-            url = new URL("https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield");
-
-            urlConnection = (HttpURLConnection) url
-                    .openConnection();
-
-            InputStream in = urlConnection.getInputStream();
-
-            InputStreamReader isw = new InputStreamReader(in);
-
-            int data = isw.read();
-            while (data != -1) {
-                char current = (char) data;
-                data = isw.read();
-                System.out.print(current);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-        }*/
-
-        getNewPage();
-    }
-
-    private Integer pageNo = 0;
-    private Integer pageSize = 8;
-
-    private String urlSessionText() {
+    private String urlExpectYieldText() {
         String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
-        base = base + "pageNo=" + pageNo.toString();
-        base = base + "&pageSize=" + pageSize.toString();
+        base = base + "orchardId=" + "1";//TODO: get correct orchard ID
+        double currentTime;
+        double divideBy1000Var = 1000.0000000;
+        currentTime = (System.currentTimeMillis()/divideBy1000Var);
+        base = base + "&date=" + currentTime;
         base = base + "&uid=" + farmerKey;
         return base;
     }
 
-    public void getNewPage() {
-        pageNo++;
+    public void getExpectedYield() {
         try {
             Thread thread = new Thread(new Runnable() {
-
                 @Override
                 public void run() {
-                    try  {
-                        String response = sendGet(urlSessionText());
-                        System.out.println(response);
-                        JSONArray objs = new JSONArray(response);
-                        System.out.println(" %%%%%%%%%%%%%%%%% " + objs.length() + " %%%%%%%%%%%%%%%%%%% ");
-                        for (int i = 0; i < objs.length(); i++) {
-                            JSONObject obj = objs.getJSONObject(i);
-                            ExpectedYieldItem.Selection item = new ExpectedYieldItem.Selection();
-                            item.expected = obj.getString("expected");
-                            System.out.println(" ############################ " + item.expected + " ############################ ");
-                            /*item.startDate = new Date((long) (obj.getDouble("start_date") * 1000));
-                            if (obj.has("wid")) {
-                                item.foreman = foremenID.get(obj.getString("wid"));
+                    try {
+                        String response = sendGet(urlExpectYieldText());
+                        JSONObject obj = new JSONObject(response);
+                        final Double expectedYield = obj.getDouble("expected"); // This is the value
+                        System.out.println(" $$$$$$$$$$$$$$$$$$$ " + expectedYield + " $$$$$$$$$$$$$$$$$$$ ");
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                textView = findViewById(R.id.textView);
+                                textView.setText("Expected Yield: " + expectedYield);
                             }
-
-                            if (item.foreman == null) {
-                                item.foreman = "Farm Owner";
-                            }
-
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                            formatter.setCalendar(Calendar.getInstance());
-                            final String date = formatter.format(item.startDate);
-
-                            dates.add(date);
-                            sessions.put(date, item);
-                            runOnUiThread(new Runnable() {
-                                public void run(){
-                                    if (pageNo == 1) {
-                                        recyclerView = findViewById(R.id.recView);
-                                        //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
-                                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                                        //recyclerView.addItemDecoration(new DividerItemDecoration(Sessions.this, GridLayoutManager.VERTICAL));
-                                        recyclerView.setHasFixedSize(false);
-                                        recyclerView.setAdapter(adapter);
-                                        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                    }
-                                    adapter.notifyItemInserted(sessions.size() - 1);
-                                }
-                            });*/
-                        }
-
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             });
-
-            thread.start();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -64,7 +64,7 @@
                 android:layout_height="45dp"
                 android:background="@color/white"
                 android:gravity="center"
-                android:text="Expected Yield: 30"
+                android:text="Expected Yield: 0"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 tools:layout_editor_absoluteX="92dp"
                 tools:layout_editor_absoluteY="550dp"
