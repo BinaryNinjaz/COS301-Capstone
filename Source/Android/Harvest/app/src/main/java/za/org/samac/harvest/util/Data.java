@@ -205,6 +205,8 @@ public class Data {
                                 temp.setFurther(dataSet.child("info").getValue(String.class));
                                 temp.setPhone(dataSet.child("phoneNumber").getValue(String.class));
                                 temp.setfID(dataSet.getKey());
+
+                                workers.addElement(temp);
                             }
                             break;
                     }
@@ -299,7 +301,7 @@ public class Data {
                             objectRoot = objectRoot.child(newKey2);
                             
                             //Begin
-                            objectRoot.child("idNumber").setValue(newWorker.fID);
+                            objectRoot.child("idNumber").setValue(newWorker.nID);
                             objectRoot.child("info").setValue(newWorker.further);
                             objectRoot.child("name").setValue(newWorker.fName);
                             
@@ -318,7 +320,7 @@ public class Data {
                             if (newWorker.workerType == WorkerType.FOREMAN){
                                 objectRoot.child("type").setValue("Foreman");
                             }
-                            else if(newWorker.workerType == WorkerType.WORKER){
+                            else{
                                 objectRoot.child("type").setValue("Worker");
                             }
                             break;
@@ -381,7 +383,7 @@ public class Data {
                             objectRoot = objectRoot.child("workers").child(currentChange.ID);
 
                             //Begin
-                            objectRoot.child("idNumber").setValue(activeWorker.fID);
+                            objectRoot.child("idNumber").setValue(activeWorker.nID);
                             objectRoot.child("info").setValue(activeWorker.further);
                             objectRoot.child("name").setValue(activeWorker.fName);
 
@@ -499,7 +501,7 @@ public class Data {
         else if(category == Category.WORKER){
             result = new String[workers.size()];
             for (int i = 0; i < workers.size(); i++) {
-                result[i] = workers.elementAt(i).fName + " " + workers.elementAt(i).sName;
+                result[i] = workers.elementAt(i).sName + ", " + workers.elementAt(i).fName;
             }
             return result;
         }
@@ -551,6 +553,14 @@ public class Data {
         catch (ArrayIndexOutOfBoundsException e){
             return null;
         }
+    }
+
+    public String getIDFromPosInArray(int pos, Category cat){
+        Category temp = category;
+        category = cat;
+        String sTemp = getIDFromPosInArray(pos);
+        category = temp;
+        return sTemp;
     }
 
     public void findObject(String ID){

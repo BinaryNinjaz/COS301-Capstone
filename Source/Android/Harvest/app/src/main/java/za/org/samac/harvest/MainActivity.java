@@ -303,7 +303,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
     protected void collectWorkers() {
-        workersRef.addValueEventListener(new ValueEventListener() {
+//        workersRef.addValueEventListener(new ValueEventListener() {
+        workersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {

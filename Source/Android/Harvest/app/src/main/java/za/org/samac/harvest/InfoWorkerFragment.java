@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Vector;
 
+import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Worker;
 import za.org.samac.harvest.util.Orchard;
@@ -39,6 +40,8 @@ public class InfoWorkerFragment extends Fragment {
     private boolean editable = false;
     private boolean newCreation = false;
 
+    private List<Orchard> tempAssignedOrchards;
+
     private Worker worker;
 
     private TextView fName;
@@ -57,7 +60,7 @@ public class InfoWorkerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_info_farm, container, false);
+        return inflater.inflate(R.layout.fragment_info_work, container, false);
     }
 
     @Override
@@ -65,10 +68,8 @@ public class InfoWorkerFragment extends Fragment {
 
         if ((editable && newCreation)) throw new AssertionError();
 
-        data.findObject(ID);
-        worker = data.getActiveWorker();
-
         if (newCreation) {
+
             //Worker
             getView().findViewById(R.id.info_work_fName_look).setVisibility(View.GONE);
             fName = getView().findViewById(R.id.info_work_fName_edit);
@@ -102,9 +103,14 @@ public class InfoWorkerFragment extends Fragment {
             getView().findViewById(R.id.info_work_butt_del).setVisibility(View.GONE);
 
             //Orchards
-            mAdapter = new WorkerOrchardAdapter(data, true);
+            tempAssignedOrchards = new Vector<>();
+            mAdapter = new WorkerOrchardAdapter(data, true, true);
         }
         else {
+
+            data.findObject(ID);
+            worker = data.getActiveWorker();
+            tempAssignedOrchards = new Vector<>(worker.getAssignedOrchards());
 
             if (editable) {
                 //Worker
@@ -135,7 +141,7 @@ public class InfoWorkerFragment extends Fragment {
                 getView().findViewById(R.id.info_work_phone_look).setVisibility(View.GONE);
                 phone = getView().findViewById(R.id.info_work_phone_edit);
                 phone.setVisibility(View.VISIBLE);
-                phone.setText(worker.getnID());
+                phone.setText(worker.getPhone());
                 
                 //Further
                 getView().findViewById(R.id.info_work_further_look).setVisibility(View.GONE);
@@ -150,7 +156,7 @@ public class InfoWorkerFragment extends Fragment {
                 getView().findViewById(R.id.info_work_butt_del).setTag("EDIT " + ID);
 
                 //Orchards
-                mAdapter = new WorkerOrchardAdapter(data, true);
+                mAdapter = new WorkerOrchardAdapter(data, true, false);
                 
             } else {
                 TextView temp;
@@ -182,7 +188,7 @@ public class InfoWorkerFragment extends Fragment {
                 getView().findViewById(R.id.info_work_butt_del).setTag("LOOK " + ID);
 
                 //Orchards
-                mAdapter = new WorkerOrchardAdapter(data, false);
+                mAdapter = new WorkerOrchardAdapter(data, false, false);
             }
 
         }
@@ -226,6 +232,7 @@ public class InfoWorkerFragment extends Fragment {
         worker.setFurther(further.getText().toString());
 
         //Assigned Orchards
+        worker.copyAssignedOrchards(tempAssignedOrchards);
 
         //Save Changes
         data.modifyActiveWorker(worker, false);
@@ -253,10 +260,33 @@ public class InfoWorkerFragment extends Fragment {
         newWorker.setFurther(further.getText().toString());
 
         //Assigned Orchards
+        newWorker.copyAssignedOrchards(tempAssignedOrchards);
 
         //Save
         newWorker.setfID(data.getNextIDForAddition());
         data.addWorker(newWorker);
+    }
+
+    public void checkEvent(View view){
+        String[] tokens = view.getTag().toString().split(" ");
+        CheckBox box = (CheckBox) view;
+        if (tokens[0].equals("Orchard")){
+            if (box.isChecked()){
+//                List<Orchard> temp = data.getActiveWorker().getAssignedOrchards();
+//                temp.add(data.getOrchardFromIDString(tokens[1]));
+//                data.getActiveWorker().setAssignedOrchards(temp);
+//                data.getActiveWorker().getAssignedOrchards().add(data.getOrchardFromIDString(tokens[1]));
+                tempAssignedOrchards.add(data.getOrchardFromIDString(tokens[1]));
+            }
+            else {
+//                data.getActiveWorker().removeOrchard(tokens[1]);
+                for (Orchard current : tempAssignedOrchards){
+                    if (current.getID().equals(tokens[1])){
+                        tempAssignedOrchards.remove(current);
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -290,27 +320,22 @@ class WorkerOrchardAdapter extends RecyclerView.Adapter<WorkerOrchardAdapter.Vie
         }
     }
 
-    public WorkerOrchardAdapter(Data data, boolean select){
+    public WorkerOrchardAdapter(Data data, boolean select, boolean create){
         if (data != null) {
             this.select = select;
             this.data = data;
             orchards = new Vector<>();
-//            List<Orchard> temp;
-//            if(select) {
-//                temp = data.getOrchards();
-//            }
-//            else {
-//                temp = data.getActiveWorker().getAssignedOrchards();
-//            }
             if (select){
                 for (Orchard current : data.getOrchards()){
                     orchards.add(new OrchardSelect(current));
                 }
-                for (Orchard checked : data.getActiveWorker().getAssignedOrchards()){
-                    for (OrchardSelect orchard : orchards){
-                        if (checked == orchard.orchard){
-                            orchard.check(true);
-                            break;
+                if (!create) {
+                    for (Orchard checked : data.getActiveWorker().getAssignedOrchards()) {
+                        for (OrchardSelect orchard : orchards) {
+                            if (checked == orchard.orchard) {
+                                orchard.check(true);
+                                break;
+                            }
                         }
                     }
                 }
@@ -325,7 +350,7 @@ class WorkerOrchardAdapter extends RecyclerView.Adapter<WorkerOrchardAdapter.Vie
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_goto, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_orchard_selectable_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
@@ -334,14 +359,14 @@ class WorkerOrchardAdapter extends RecyclerView.Adapter<WorkerOrchardAdapter.Vie
     public void onBindViewHolder(ViewHolder holder, int position){
         if (select) {
             holder.mCheckBox.setText(orchards.get(position).orchard.getName());
-            holder.mCheckBox.setTag("Orchard " + data.getIDFromPosInArray(position));
+            holder.mCheckBox.setTag("Orchard " + orchards.get(position).orchard.getID());
             holder.mCheckBox.setChecked(orchards.get(position).selected);
-            holder.mButton.setVisibility(View.GONE);
+            holder.mCheckBox.setVisibility(View.VISIBLE);
         }
         else {
             holder.mButton.setText(orchards.get(position).orchard.getName());
-            holder.mButton.setTag("Orchard " + data.getIDFromPosInArray(position));
-            holder.mCheckBox.setVisibility(View.GONE);
+            holder.mButton.setTag("Orchard " + orchards.get(position).orchard.getName());
+            holder.mButton.setVisibility(View.VISIBLE);
         }
     }
 

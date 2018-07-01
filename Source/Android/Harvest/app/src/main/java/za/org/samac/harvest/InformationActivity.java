@@ -28,6 +28,7 @@ import java.util.Stack;
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Orchard;
 
 import static za.org.samac.harvest.util.Category.FARM;
 import static za.org.samac.harvest.util.Category.NAV;
@@ -213,7 +214,17 @@ public class InformationActivity extends AppCompatActivity{
                 selectedCat = ORCHARD;
                 return;
             case "WORKER":
-
+                android.support.v4.app.FragmentManager fragmentManager2 = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
+                InfoWorkerFragment newInfoWorkerFragment2 = new InfoWorkerFragment();
+                fragmentTransaction2.replace(R.id.infoMainPart, newInfoWorkerFragment2, "CREATE");
+                fragmentTransaction2.addToBackStack(null);
+                newInfoWorkerFragment2.beNew(true);
+                newInfoWorkerFragment2.setData(data);
+                setTitle("Create Worker");
+                fragmentTransaction2.commit();
+                selectedCat = WORKER;
+                return;
         }
     }
 
@@ -271,14 +282,16 @@ public class InformationActivity extends AppCompatActivity{
     public void onSelectItemButtClick(View view){
         String tags[] = view.getTag().toString().split(" ");
         if (tags.length == 2){
-            if (tags[1].equals("FARM")) {
-                showObject(tags[0], FARM);
-            }
-            else if (tags[1].equals("ORCHARD")) {
-                showObject(tags[0], ORCHARD);
-            }
-            else if (tags[1].equals("WORKER")) {
-                showObject(tags[0], WORKER);
+            switch (tags[1]) {
+                case "FARM":
+                    showObject(tags[0], FARM);
+                    break;
+                case "ORCHARD":
+                    showObject(tags[0], ORCHARD);
+                    break;
+                case "WORKER":
+                    showObject(tags[0], WORKER);
+                    break;
             }
         }
     }
@@ -307,11 +320,11 @@ public class InformationActivity extends AppCompatActivity{
         else if (category == WORKER){
             selectedCat = WORKER;
             setTitle("View Worker");
-//                InfoFarmFragment newInfoFarmFragment = new InfoFarmFragment();
-//                fragmentTransaction.replace(R.id.infoMainPart, newInfoFarmFragment);
-//                fragmentTransaction.addToBackStack(null);
-//                newInfoFarmFragment.setDataAndID(data, tags[0]);
-//                fragmentTransaction.commit();
+            InfoWorkerFragment newInfoWorkerFragment = new InfoWorkerFragment();
+            fragmentTransaction.replace(R.id.infoMainPart, newInfoWorkerFragment);
+            fragmentTransaction.addToBackStack(null);
+            newInfoWorkerFragment.setDataAndID(data, ID);
+            fragmentTransaction.commit();
         }
     }
 
@@ -343,6 +356,15 @@ public class InformationActivity extends AppCompatActivity{
                 editing = true;
                 return;
             case WORKER:
+                setTitle("Edit Worker");
+                InfoWorkerFragment newInfoWorkerFragment = new InfoWorkerFragment();
+                fragmentTransaction.replace(R.id.infoMainPart, newInfoWorkerFragment, "EDIT");
+                fragmentTransaction.addToBackStack(null);
+                newInfoWorkerFragment.setDataAndID(data, tags[0]);
+                newInfoWorkerFragment.beEditable(true);
+                fragmentTransaction.commit();
+                editing = true;
+                return;
         }
     }
 
@@ -367,6 +389,11 @@ public class InformationActivity extends AppCompatActivity{
                     showObject(tags[1], selectedCat);
                     break;
                 case WORKER:
+                    InfoWorkerFragment temp2 = (InfoWorkerFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
+                    temp2.saveEvent();
+                    getSupportFragmentManager().popBackStack();
+                    getSupportFragmentManager().popBackStack();
+                    showObject(tags[1], selectedCat);
                     break;
             }
         }
@@ -385,6 +412,10 @@ public class InformationActivity extends AppCompatActivity{
                     showList(ORCHARD);
                     break;
                 case WORKER:
+                    InfoWorkerFragment temp2 = (InfoWorkerFragment) getSupportFragmentManager().findFragmentByTag("CREATE");
+                    temp2.createEvent();
+                    getSupportFragmentManager().popBackStack();
+                    showList(WORKER);
                     break;
             }
         }
@@ -629,16 +660,11 @@ public class InformationActivity extends AppCompatActivity{
     }
 
     public void onCheck(View view){
-        String[] tokens = view.getTag().toString().split(" ");
-        CheckBox box = (CheckBox) view;
-        if (tokens[0].equals("Orchard")){
-            if (box.isChecked()){
-                data.getActiveWorker().getAssignedOrchards().add(data.getOrchardFromIDString(tokens[1]));
-            }
-            else {
-                data.getActiveWorker().removeOrchard(tokens[1]);
-            }
+        InfoWorkerFragment temp = (InfoWorkerFragment) getSupportFragmentManager().findFragmentByTag("CREATE");
+        if (temp == null){
+            temp = (InfoWorkerFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
         }
+        temp.checkEvent(view);
     }
 }
 

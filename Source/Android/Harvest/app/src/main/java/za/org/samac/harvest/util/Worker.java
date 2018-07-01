@@ -1,6 +1,7 @@
 package za.org.samac.harvest.util;
 
 import java.util.List;
+import java.util.Vector;
 
 public class Worker{
     protected String fName, sName;
@@ -24,6 +25,10 @@ public class Worker{
 
     public void setAssignedOrchards(List<Orchard> assignedOrchards) {
         this.assignedOrchards = assignedOrchards;
+    }
+
+    public void copyAssignedOrchards(List<Orchard> assignedOrchards){
+        this.assignedOrchards = new Vector<>(assignedOrchards);
     }
 
     public void setfID(String fID) {
@@ -78,6 +83,10 @@ public class Worker{
         return sName;
     }
 
+    @Override
+    public String toString() {
+        return sName + ", " + fName;
+    }
 
     public void addOrchard (Orchard orchard){
         assignedOrchards.add(orchard);
@@ -87,6 +96,7 @@ public class Worker{
         for (Orchard current : assignedOrchards){
             if (current.getID().equals(ID)){
                 assignedOrchards.remove(current);
+                return;
             }
         }
     }

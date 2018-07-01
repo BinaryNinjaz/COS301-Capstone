@@ -433,7 +433,8 @@ public class InfoOrchardFragment extends Fragment {
 
 class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.ViewHolder>{
 //    private String[] orchards;
-    private Vector<String> workers;
+//    private Vector<String> workers;
+    private List<Worker> workers;
     private Data data;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -449,7 +450,7 @@ class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.ViewHolder>{
     public WorkerAdapter(Data data){
         if (data != null) {
             this.data = data;
-            workers = new Vector<String>();
+            workers = new Vector<>();
 
             for (Worker current : data.getWorkers()) {
                 if (current.getAssignedOrchards() != null) {
@@ -458,7 +459,8 @@ class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.ViewHolder>{
 //                    }
                     for (Orchard cOrchard : current.getAssignedOrchards()){
                         if (cOrchard.getID().equals(data.getActiveOrchard().getID())){
-                            workers.addElement(current.getsName() + ", " + current.getfName());
+//                            workers.addElement(current.getsName() + ", " + current.getfName());
+                            workers.add(current);
                         }
                     }
                 }
@@ -476,8 +478,8 @@ class WorkerAdapter extends RecyclerView.Adapter<WorkerAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        holder.mButton.setText(workers.elementAt(position));
-        holder.mButton.setTag(data.getIDFromPosInArray(position) + " " + "ORCHARD");
+        holder.mButton.setText(workers.get(position).toString());
+        holder.mButton.setTag("Worker " + workers.get(position).getfID());
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.Vector;
 
 import za.org.samac.harvest.util.Category;
@@ -223,7 +224,9 @@ public class InfoFarmFragment extends Fragment {
 
 class OrchardAdapter extends RecyclerView.Adapter<OrchardAdapter.ViewHolder>{
 //    private String[] orchards;
-    private Vector<String> orchards;
+
+//    private Vector<String> orchards;
+    private List<Orchard> orchards;
     private Data data;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -239,12 +242,12 @@ class OrchardAdapter extends RecyclerView.Adapter<OrchardAdapter.ViewHolder>{
     public OrchardAdapter(Data data){
         if (data != null) {
             this.data = data;
-            orchards = new Vector<String>();
+            orchards = new Vector<>();
 
             for (Orchard current : data.getOrchards()) {
                 if (current.getAssignedFarm() != null) {
                     if (current.getAssignedFarm().getID().equals(data.getActiveFarm().getID())) {
-                        orchards.addElement(current.getName());
+                        orchards.add(current);
                     }
                 }
             }
@@ -261,8 +264,8 @@ class OrchardAdapter extends RecyclerView.Adapter<OrchardAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        holder.mButton.setText(orchards.elementAt(position));
-        holder.mButton.setTag("Orchard " + data.getIDFromPosInArray(position));
+        holder.mButton.setText(orchards.get(position).getName());
+        holder.mButton.setTag("Orchard " + orchards.get(position).getID());
     }
 
     @Override
