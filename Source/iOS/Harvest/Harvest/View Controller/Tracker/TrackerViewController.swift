@@ -462,6 +462,9 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
 extension TrackerViewController: UISearchBarDelegate {
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     filteredWorkers = workers.filter({ (worker) -> Bool in
+      guard worker.assignedOrchards.contains(currentOrchardID) else {
+        return false
+      }
       guard searchText != "" else {
         return true
       }
