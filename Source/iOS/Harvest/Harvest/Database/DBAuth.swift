@@ -14,9 +14,9 @@ extension HarvestDB {
   static func signIn(
     withEmail email: String,
     andPassword password: String,
-    on controller: UIViewController,
+    on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
-    ) {
+  ) {
     Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
       if let err = error {
         UIAlertController.present(title: "Sign In Failure",
@@ -46,7 +46,7 @@ extension HarvestDB {
   
   static func signIn(
     with credential: AuthCredential,
-    on controller: UIViewController,
+    on controller: UIViewController?,
     completion: ((Bool) -> Void)?
   ) {
     Auth.auth().signIn(with: credential) { (user, error) in
@@ -79,7 +79,7 @@ extension HarvestDB {
     withEmail email: String,
     andPassword password: String,
     name: (first: String, last: String),
-    on controller: UIViewController,
+    on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().createUser(
@@ -119,7 +119,7 @@ extension HarvestDB {
   }
   
   static func signOut(
-    on controller: UIViewController,
+    on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
     ) {
     do {
@@ -145,7 +145,7 @@ extension HarvestDB {
   
   static func resetPassword(
     forEmail email: String,
-    on controller: UIViewController
+    on controller: UIViewController?
   ) {
     Auth.auth().sendPasswordReset(withEmail: email) { (error) in
       if let error = error {
@@ -161,7 +161,11 @@ extension HarvestDB {
     }
   }
   
-  static func verify(phoneNumber: String, on controller: UIViewController, completion: ((Bool) -> Void)? = nil) {
+  static func verify(
+    phoneNumber: String,
+    on controller: UIViewController?,
+    completion: ((Bool) -> Void)? = nil
+  ) {
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { (verificationID, error) in
       if let error = error {
         UIAlertController.present(title: "An Error Occured",

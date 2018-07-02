@@ -120,7 +120,7 @@ class HarvestTests: XCTestCase {
     }
     
     for loc in locs {
-      tracker.track(location: loc)
+      _ = tracker.track(location: loc)
     }
     
     let locsTuple = locs.map { (loc: CLLocation) -> (Double, Double) in

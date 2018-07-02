@@ -27,6 +27,8 @@
 		1657B73E20A0E17300F5F478 /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73D20A0E17300F5F478 /* Stat.swift */; };
 		1657B74020A0E18600F5F478 /* StatKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73F20A0E18600F5F478 /* StatKind.swift */; };
 		1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B74120A0E53800F5F478 /* StatsViewController.swift */; };
+		165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */; };
+		165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */; };
 		167448AF2089271400FA605C /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448AE2089271400FA605C /* Worker.swift */; };
 		167448B12089299B00FA605C /* Orchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B02089299B00FA605C /* Orchard.swift */; };
 		167448B320892AE900FA605C /* Farm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B220892AE900FA605C /* Farm.swift */; };
@@ -128,6 +130,8 @@
 		1657B73D20A0E17300F5F478 /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
 		1657B73F20A0E18600F5F478 /* StatKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatKind.swift; sourceTree = "<group>"; };
 		1657B74120A0E53800F5F478 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityCreationUITests.swift; sourceTree = "<group>"; };
+		165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityDeletionUITests.swift; sourceTree = "<group>"; };
 		167448AE2089271400FA605C /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		167448B02089299B00FA605C /* Orchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orchard.swift; sourceTree = "<group>"; };
 		167448B220892AE900FA605C /* Farm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farm.swift; sourceTree = "<group>"; };
@@ -270,6 +274,8 @@
 			isa = PBXGroup;
 			children = (
 				1604E4C2206958E900E9BA15 /* HarvestUITests.swift */,
+				165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */,
+				165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */,
 				1604E4C4206958E900E9BA15 /* Info.plist */,
 			);
 			path = HarvestUITests;
@@ -903,6 +909,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1604E4C3206958E900E9BA15 /* HarvestUITests.swift in Sources */,
+				165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */,
+				165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

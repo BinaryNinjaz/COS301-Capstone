@@ -475,6 +475,7 @@ extension Orchard {
     }
     
     let farmSelection = PickerRow<Farm> { row in
+      row.add(rule: RuleRequired(msg: "• A farm must be selected for an orchard to be a part of"))
       row.options = []
       var aFarm: Farm? = nil
       
@@ -485,7 +486,10 @@ extension Orchard {
           aFarm = farm
         }
       }
-      row.value = aFarm
+      row.value = aFarm ?? farms.first?.value
+      if aFarm == nil {
+        self.tempory?.assignedFarm = row.value?.id ?? ""
+      }
     }.onChange { (row) in
       self.tempory?.assignedFarm = row.value?.id ?? ""
       onChange()

@@ -138,7 +138,7 @@ final class Entities {
   }
   
   func getMultiplesOnce(
-    _ kinds: Set<EntityItem.Kind>,
+    _ kinds: [EntityItem.Kind],
     completion: @escaping (Entities) -> Void
     ) {
     guard let f = kinds.first else {
@@ -146,7 +146,7 @@ final class Entities {
       return
     }
     getOnce(f) { entities in
-      let s = Set(kinds.dropFirst())
+      let s = Array(kinds.dropFirst())
       entities.getMultiplesOnce(s, completion: completion)
     }
   }

@@ -121,7 +121,7 @@ extension Orchard: CustomStringConvertible {
       .shared
       .farms
       .first(where: { $0.value.id == assignedFarm }) else {
-      return name + " – " + Date().description
+      return name + " – Unassigned (" + Date().timeIntervalSince1970.description + ")"
     }
     return farm.value.name + " – " + name
   }

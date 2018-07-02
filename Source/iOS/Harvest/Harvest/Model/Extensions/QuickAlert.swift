@@ -28,10 +28,12 @@ extension UIAlertController {
   static func present(
     title: String,
     message: String,
-    on controller: UIViewController,
+    on controller: UIViewController?,
     completion: (() -> Void)? = nil
   ) {
-    let alert = UIAlertController.alertController(title: title, message: message)
-    controller.present(alert, animated: true, completion: completion)
+    if let controller = controller {
+      let alert = UIAlertController.alertController(title: title, message: message)
+      controller.present(alert, animated: true, completion: completion)
+    }
   }
 }

@@ -115,28 +115,28 @@ class InformationEntityController: UICollectionViewController {
     
     switch entity {
     case "Workers":
-      Entities.shared.getMultiplesOnce([.worker, .orchard]) { _ in
+      Entities.shared.getMultiplesOnce([.orchard, .worker]) { _ in
         self.selectedKind = .worker
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
       }
       
     case "Orchards":
-      Entities.shared.getMultiplesOnce([.orchard, .farm]) { _ in
+      Entities.shared.getMultiplesOnce([.farm, .orchard]) { _ in
         self.selectedKind = .orchard
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
       }
       
     case "Farms":
-      Entities.shared.getMultiplesOnce([.farm, .orchard]) { _ in
+      Entities.shared.getMultiplesOnce([.orchard, .farm]) { _ in
         self.selectedKind = .farm
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
       }
       
     case "Sessions":
-      Entities.shared.getMultiplesOnce([.session, .orchard, .worker]) { _ in
+      Entities.shared.getMultiplesOnce([.orchard, .worker, .session]) { _ in
         self.selectedKind = .session
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
