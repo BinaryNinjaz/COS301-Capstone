@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -167,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         locationPermissions();
         //new LocationHelper().getLocation(this);
-        getExpectedYield();//set expected yield
 
         uid = user.getUid();
         currentUserEmail = user.getEmail();
@@ -210,6 +210,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     progressBar.setVisibility(View.GONE);//remove progress bar
                     setContentView(R.layout.activity_foreman);
                 }
+
+                getExpectedYield();//set expected yield
 
                 relLayout = findViewById(R.id.relLayout);
                 progressBar = findViewById(R.id.progressBar);
@@ -281,9 +283,77 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
+    ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
+    ArrayList<String> coords = new ArrayList<>();
+
+    private Boolean polygonContainsPoint() {
+        Double pointx = 0.0;
+        Double pointy = 0.0;
+        if (location != null) {
+            pointx = location.getLatitude();
+            pointy = location.getLongitude();
+        }
+
+        List<List<Double>> polygon = new ArrayList();
+
+        DatabaseReference myRef;
+        myRef = database.getReference(farmerKey + "/orchards");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    child.getValue();
+                    pathsToOrchardCoords.add(farmerKey + "/orchards/" + child.getValue() + "/coords");
+                }
+
+                for (int i = 0; i<pathsToOrchardCoords.size(); i++) {
+                    DatabaseReference myRef2;
+                    myRef2 = database.getReference(pathsToOrchardCoords.get(i));
+                    final int finalI = i;
+                    myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                child.getValue();
+                                coords.add(pathsToOrchardCoords.get(finalI) + "/" + child.getValue());
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        int i = 0;
+        int j = polygon.size() - 1;
+        Boolean c = false;
+        for (; i < polygon.size(); j = i++) {
+            Point pi = (Point) polygon.get(i);
+            Point pj = (Point) polygon.get(j);
+            final Boolean yValid = (pi.y > pointy) != (pj.y > pointy);
+            final Double xValidCond = (pj.x - pi.x) * (pointx - pi.y) / (pj.y - pi.y) + pi.x;
+
+            if (yValid && pointx < xValidCond) {
+                c = !c;
+            }
+        }
+        return c;
+    }
+
     private String urlExpectYieldText() {
         String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
-        base = base + "orchardId=" + "1";//TODO: get correct orchard ID
+        base = base + "orchardId=" + "LCEFgdMMO80LR98BzPCLCEFgdMMO80LR98BzPC";//TODO: get correct orchard ID
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
@@ -299,6 +369,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 public void run() {
                     try {
                         String response = sendGet(urlExpectYieldText());
+                        System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% ");
                         JSONObject obj = new JSONObject(response);
                         final Double expectedYield = obj.getDouble("expected"); // This is the value
                         System.out.println(" $$$$$$$$$$$$$$$$$$$ " + expectedYield + " $$$$$$$$$$$$$$$$$$$ ");
@@ -313,6 +384,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     }
                 }
             });
+
+            thread.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
