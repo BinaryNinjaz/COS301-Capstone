@@ -376,6 +376,8 @@ public class InfoOrchardFragment extends Fragment {
         newOrch.setIrrigation(irig.getText().toString());
 
         //Date Planted
+        //TODO: Months Start at 0, obviously
+        //TODO: Set Spinner to start at correct date.
         Calendar c = Calendar.getInstance();
         String[] tokens = dateText.getText().toString().split("/");
         if (tokens.length == 3) {
