@@ -1,14 +1,15 @@
 html {
   height: 99%;
   width: 100%;
+      background-image: url("backgrdSmaller.jpg");
+	  
 }
 body {
-    background-color: whitesmoke;
-    background-image: url("backgrdSmaller.jpg");
     font-family: Sans-Serif;
 	//width: 100%;
+	  background-image: url("backgrdSmaller.jpg");
     /* Center and scale the image nicely */
-    background-repeat: no-repeat;
+	    background-repeat: no-repeat;
     background-size: cover;
 }
 /* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
