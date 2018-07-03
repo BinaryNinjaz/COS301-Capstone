@@ -76,11 +76,10 @@ function showLogin(){
 /* This function is used to make the page dynamic, in that if user presses the registration button, it should render a registration form rather than  login*/
 function showRegister(){
 	page = 1;
-    document.getElementById("pageCon").innerHTML = '<div class="container">'
-							+'<div class="row">'
-								+'<div class="col-md-3 col-md-offset-1">'
-									+'<div align="center">'
-										+'<fieldset class="inputBlock">'
+	document.getElementById("pageCon").innerHTML = "<div class='container'>"
+		+'<div class="col-md-3 col-md-offset-1">'
+			+'<div >'
+                             +'<fieldset class="inputBlock">'
 											+'<h2>Sign up for Harvest</h2>'
 											+'<div class="form-group">'
 												+'<label style="text-align:left">First Name</label>'
@@ -108,12 +107,10 @@ function showRegister(){
 											+'<button onclick="register()" class="btn btn-success">Create Account</button>'
 											+'<br /> <button class="btn btn-primary" onclick="showLogin();">Have an account? Log In</button>'
 										+'</fieldset>'
-
-									+'</div>'
-								+'</div>'
-							+'</div>'
-						+'</div>'
-						}
+                            +'</div>'
+                    +'</div>'
+	+'</div>';
+}
 
 /* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
 function register() {
