@@ -211,8 +211,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     setContentView(R.layout.activity_foreman);
                 }
 
-                getPolygon();//set expected yield
-
                 relLayout = findViewById(R.id.relLayout);
                 progressBar = findViewById(R.id.progressBar);
                 btnStart = findViewById(R.id.button_start);
@@ -229,6 +227,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 else {
                     getFarmKey();
                 }
+
+                getPolygon();//set expected yield
 
                 btnStart.setTag("green");//it is best not to use the tag to identify button status
 
@@ -295,56 +295,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot child : dataSnapshot.getChildren()){
-                    currentOrchard = child.getValue().toString();
-                    pathsToOrchardCoords.add(farmerKey + "/orchards/" + child.getValue() + "/coords");
+                    currentOrchard = child.getKey().toString();
+                    pathsToOrchardCoords.add(farmerKey + "/orchards/" + currentOrchard + "/coords");
+                    System.out.println(" @@@@@@@@@@@@@@@@@@@@@ *** " + currentOrchard + " @@@@@@@@@@@@@@@@@@@@@ ");
                 }
-
-                for (int i = 0; i<pathsToOrchardCoords.size(); i++) {
-                    DatabaseReference myRef2;
-                    myRef2 = database.getReference(pathsToOrchardCoords.get(i));
-                    final int finalI = i;
-                    myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                child.getValue();
-                                coords.add(pathsToOrchardCoords.get(finalI) + "/" + child.getValue());
-                            }
-
-                            for (int j = 0; j<coords.size(); j++) {
-                                DatabaseReference myRef3;
-                                myRef3 = database.getReference(coords.get(j));
-                                myRef3.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        int k = 0;
-                                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                            String lat = child.child("lat").toString();
-                                            String lng = child.child("lng").toString();
-                                            polygonStore.get(k).set( 0, Double.parseDouble(lat));
-                                            polygonStore.get(k).set( 1, Double.parseDouble(lng));
-                                            k++;
-                                        }
-
-                                        if (polygonContainsPoint(polygonStore) == true) {
-                                            getExpectedYield();//set expected yield
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
+                pathAfterGotOrchard();
+                System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Got in function" + " @@@@@@@@@@@@@@@@@@@@@ ");
             }
 
             @Override
@@ -352,6 +308,65 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             }
         });
+    }
+
+    private void pathAfterGotOrchard() {
+        for (int i = 0; i<pathsToOrchardCoords.size(); i++) {
+            DatabaseReference myRef2;
+            myRef2 = database.getReference(pathsToOrchardCoords.get(i));
+            final int finalI = i;
+            final String path = pathsToOrchardCoords.get(i);
+            myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    int m = 0;
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        coords.add(path + "/" + child.getKey().toString());
+                        m++;
+                        if (dataSnapshot.getChildrenCount() == m) {
+                            pathAfterGotCoords();
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    private void pathAfterGotCoords() {
+        for (int j = 0; j<coords.size(); j++) {
+            DatabaseReference myRef3;
+            myRef3 = database.getReference(coords.get(j));
+            myRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    int k = 0;
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        String lat = child.child("lat").toString();
+                        String lng = child.child("lng").toString();
+                        polygonStore.get(k).set(0, Double.parseDouble(lat));
+                        polygonStore.get(k).set(1, Double.parseDouble(lng));
+                        k++;
+                        if (dataSnapshot.getChildrenCount() == k) {
+                            if (polygonContainsPoint(polygonStore) == true) {
+                                System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Contains Point" + " @@@@@@@@@@@@@@@@@@@@@ ");
+                                getExpectedYield();//set expected yield
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     private Boolean polygonContainsPoint(List<List<Double>> polygon) {
@@ -379,8 +394,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private String urlExpectYieldText() {
-        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
-        base = base + "orchardId=" + currentOrchard;//get correct orchard ID
+        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield?";
+        System.out.println(" ************************* " + currentOrchard + " ************************* ");
+        base = base + "orchardId=" + currentOrchard;//"-LCEFgdMMO80LR98BzPC";//currentOrchard;//get correct orchard ID
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
@@ -403,7 +419,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 textView = findViewById(R.id.textView);
-                                textView.setText("Expected Yield: " + expectedYield);
+                                textView.setText("Expected Yield: " + Math.round(expectedYield));
                             }
                         });
                     } catch (Exception e) {
@@ -575,7 +591,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     workersRef = farmLevelRef.child("workers");
                     collectWorkers();
                 }
-
             }
 
             @Override
