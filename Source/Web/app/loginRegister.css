@@ -1,36 +1,38 @@
+html {
+  height: 99%;
+  width: 100%;
+}
 body {
     background-color: whitesmoke;
     background-image: url("backgrdSmaller.jpg");
-    height: 100%;
     font-family: Sans-Serif;
-   
+	//width: 100%;
     /* Center and scale the image nicely */
-    background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 /* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
 .inputBlock {
-    margin: auto;
+	position: relative;
+
     border: 4px solid green;
     border-radius: 10px;
     padding: 7px;
     text-align: center;
     background-color: whitesmoke;
     width: 280px;
-
-    // margin-top: 10%;
-    margin-bottom: 10%;
 }
 /* The left class should be left aligned with a width of 40 , floated left */
 .left{
+	position: relative;
     text-align: left; 
-    width: 40%;      
+    width: 400px;      
     float: left;
 }
 /* The right class should not be aligned, left margin should be 40%, color should be black , front size should be set to 30pxs*/
 .right{
-    margin-left: 40%;    
+		position: relative;
+	margin-left: auto;    
     color: black;
     outline-color: #006633;
     outline-width: 2px;
@@ -40,34 +42,22 @@ body {
 .list-heading {
     font-weight: bolder;
     font-size: 35px;
-
+	position: relative;
 }
 .center {
-
-    position: fixed; 
-    /*this to solve "the content will not be cut when the window is smaller than the content": */
-    max-width: 100%;
-    overflow: scroll;
-
+    position: relative;  
     text-align: center;
-    margin-top: 50px;
     margin-right: auto;
-
 }
-
 .sec {
-    text-align: left;
-    width: 99%;
-    height: 80%;
-    margin: auto;
-    padding: 10px;
+    text-align: auto;
+    padding: 40px;
+	position:relative
 }
-
 ul {
     list-style-type: ico;
 }
 
 ul.ico {
     list-style-image: url('leaf2.png');// no-repeat left top;
-   
 }
