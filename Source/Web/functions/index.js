@@ -67,6 +67,9 @@ exports.flattendSessions = functions.https.onRequest((req, res) => {
 // polygon: [Point]
 // point: Point
 function polygonContainsPoint(polygon, point) {
+  if (polygon === undefined) {
+    return false;
+  }
   var i = 0;
   var j = polygon.length - 1;
   var c = false
@@ -132,6 +135,26 @@ function orchardPolygons(orchardIds, uid, completion) {
           poly.push({x: coords[k].lng, y: coords[k].lat});
         }
         result.push(poly);
+      }
+    });
+    completion(result);
+    return true;
+  }).catch((error) => {});
+}
+
+function orchardsCooked(orchardIds, uid, completion) {
+  const orchardsRef = admin.database().ref('/' + uid + '/orchards/');
+  var result = [];
+  orchardsRef.once('value').then((snapshot) => {
+    snapshot.forEach((childSnapshot) => {
+      if (arrayContainsItem(orchardIds, childSnapshot.key)) {
+        const value = childSnapshot.val();
+        const coords = value.coords;
+        var poly = [];
+        for (const k in coords) {
+          poly.push({x: coords[k].lng, y: coords[k].lat});
+        }
+        result.push({polygon: poly, val: value, id: childSnapshot.key});
       }
     });
     completion(result);
@@ -228,7 +251,8 @@ exports.expectedYield = functions.https.onRequest((req, res) => {
   });
 });
 
-// POST body
+// -------- POST Body --------
+//
 // orchardId0=[String]
 // orchardId1=[String]
 // ...
@@ -279,5 +303,192 @@ exports.orchardCollectionsWithinDate = functions.https.onRequest((req, res) => {
         
       });
     });
+  });
+});
+
+function roundDateToHour(timeinterval) {
+  const date = new Date(timeinterval * 1000);
+  return date.getUTCHours();
+}
+
+function roundDateToDay(timeinterval) {
+  const date = new Date(timeinterval * 1000);
+  const day = date.getUTCDay();
+  switch (day) {
+  case 0: return "Sunday";
+  case 1: return "Monday";
+  case 2: return "Tuesday";
+  case 3: return "Wednesday";
+  case 4: return "Thursday";
+  case 5: return "Friday";
+  case 6: return "Saturday";
+  default: return "";
+  }
+}
+
+function roundDateToWeek(timeinterval) {
+  const date = new Date(timeinterval * 1000);
+  var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+  return weekNo;
+}
+
+function roundDateToMonth(timeinterval) {
+  const date = new Date(timeinterval * 1000);
+  const month = date.getUTCMonth();
+  switch (month) {
+  case 0: return "January";
+  case 1: return "February";
+  case 2: return "March";
+  case 3: return "April";
+  case 4: return "May";
+  case 5: return "June";
+  case 6: return "July";
+  case 7: return "August";
+  case 8: return "September";
+  case 9: return "October";
+  case 10: return "November";
+  case 11: return "December";
+  default: return "";
+  }
+}
+
+function roundDateToYear(timeinterval) {
+  const date = new Date(timeinterval * 1000);
+  const year = date.getUTCFullYear();
+  return year
+}
+
+function roundDateToPeriod(timeinterval, period) {
+  if (period === "hourly") {
+    return roundDateToHour(timeinterval);
+  } else if (period === "daily") {
+    return roundDateToDay(timeinterval);
+  } else if (period === "weekly") {
+    return roundDateToWeek(timeinterval);
+  } else if (period === "monthly") {
+    return roundDateToMonth(timeinterval);
+  } else if (period === "yearly") {
+    return roundDateToYear(timeinterval);
+  } else {
+    return "";
+  }
+}
+
+// -------- POST Body --------
+//
+// id0=[String]
+// id1=[String]
+// ...
+// idN=[String]
+//
+// groupBy=[worker, orchard, foreman]
+// period=[hourly, daily, weekly, monthly, yearly]
+// startDate=[Double]
+// endDate=[Double]
+// uid=[String]
+exports.timedGraphSessions = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    const startDate = req.body.startDate;
+    const endDate = req.body.endDate;
+    const uid = req.body.uid;
+    const groupBy = req.body.groupBy;
+    const period = req.body.period;
+    
+    var result = {};
+    
+    var ids = [];
+    for (var i = 0; i < Object.keys(req.body).length; i++) {
+      const ikey = "id" + i;
+      if (req.body[ikey] !== undefined) {
+        ids.push(req.body[ikey]);
+        result[req.body[ikey]] = {};
+      }
+    }
+    
+    if (groupBy !== "orchard") {
+      var sessionsRef = admin.database().ref('/' + uid + '/sessions');
+      sessionsRef.once("value").then((snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          const key = childSnapshot.key;
+          const val = childSnapshot.val();
+          
+          if (startDate <= val.start_date && val.start_date <= endDate) {
+            const foremanKey = val.wid;
+            for (const workerKey in val.collections) {
+              if (!(groupBy === "foreman" && arrayContainsItem(ids, foremanKey)
+              || groupBy === "worker" && arrayContainsItem(ids, workerKey))) {
+                continue;
+              }
+              const collection = val.collections[workerKey];
+              for (const pickupKey in collection) {
+                const pickup = collection[pickupKey];
+                const accum = roundDateToPeriod(val.start_date, period);
+                const wkey = groupBy === "foreman" ? foremanKey : workerKey;
+                if (result[wkey] !== undefined) {
+                  if (result[wkey][accum] !== undefined) {
+                    result[wkey][accum] += 1;
+                  } else {
+                    result[wkey][accum] = 1;
+                  }
+                } else {
+                  result[wkey] = {};
+                  result[wkey][accum] = 1;
+                }
+              }
+            }
+          }
+        });
+        res.send(result);
+        return true;
+      }).catch((err) => {});
+    } else {
+      orchardsCooked(ids, uid, (cookedOrchards) => {
+        var sessionsRef = admin.database().ref('/' + uid + '/sessions');
+        sessionsRef.once("value").then((snapshot) => {
+          snapshot.forEach((childSnapshot) => {
+            const key = childSnapshot.key;
+            const val = childSnapshot.val();
+            if (startDate <= val.start_date && val.start_date <= endDate) {
+              for (const workerKey in val.collections) {
+                const collection = val.collections[workerKey];
+                
+                for (const pickupKey in collection) {
+                  const pickup = collection[pickupKey];
+                  const accum = roundDateToPeriod(val.start_date, period);
+                  const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
+                  
+                  var orckey = undefined;
+                  for (const okey in cookedOrchards) {
+                    if (polygonContainsPoint(cookedOrchards[okey].polygon, pnt)) {
+                      orckey = cookedOrchards[okey].id;
+                      break;
+                    }
+                  }
+                  if (orckey === undefined) {
+                    continue;
+                  }
+                  
+                  if (result[orckey] !== undefined) {
+                    if (result[orckey][accum] !== undefined) {
+                      result[orckey][accum] += 1;
+                    } else {
+                      result[orckey][accum] = 1;
+                    }
+                  } else {
+                    result[orckey] = {};
+                    result[orckey][accum] = 1;
+                  }
+                }
+              }
+            }
+          });
+          res.send(result);
+          return true;
+        }).catch((err) => {});
+      });
+    }
   });
 });
