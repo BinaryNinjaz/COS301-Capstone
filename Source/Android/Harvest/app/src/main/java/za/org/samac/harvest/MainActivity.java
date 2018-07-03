@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     setContentView(R.layout.activity_foreman);
                 }
 
-                getExpectedYield();//set expected yield
+                getPolygon();//set expected yield
 
                 relLayout = findViewById(R.id.relLayout);
                 progressBar = findViewById(R.id.progressBar);
@@ -285,24 +285,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
     ArrayList<String> coords = new ArrayList<>();
+    List<List<Double>> polygonStore = new ArrayList();
+    String currentOrchard;
 
-    private Boolean polygonContainsPoint() {
-        Double pointx = 0.0;
-        Double pointy = 0.0;
-        if (location != null) {
-            pointx = location.getLatitude();
-            pointy = location.getLongitude();
-        }
-
-        List<List<Double>> polygon = new ArrayList();
-
+    private void getPolygon() {
         DatabaseReference myRef;
         myRef = database.getReference(farmerKey + "/orchards");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot child : dataSnapshot.getChildren()){
-                    child.getValue();
+                    currentOrchard = child.getValue().toString();
                     pathsToOrchardCoords.add(farmerKey + "/orchards/" + child.getValue() + "/coords");
                 }
 
@@ -318,7 +311,32 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                 coords.add(pathsToOrchardCoords.get(finalI) + "/" + child.getValue());
                             }
 
+                            for (int j = 0; j<coords.size(); j++) {
+                                DatabaseReference myRef3;
+                                myRef3 = database.getReference(coords.get(j));
+                                myRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        int k = 0;
+                                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                            String lat = child.child("lat").toString();
+                                            String lng = child.child("lng").toString();
+                                            polygonStore.get(k).set( 0, Double.parseDouble(lat));
+                                            polygonStore.get(k).set( 1, Double.parseDouble(lng));
+                                            k++;
+                                        }
 
+                                        if (polygonContainsPoint(polygonStore) == true) {
+                                            getExpectedYield();//set expected yield
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
                         }
 
                         @Override
@@ -334,6 +352,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             }
         });
+    }
+
+    private Boolean polygonContainsPoint(List<List<Double>> polygon) {
+        Double pointx = 0.0;
+        Double pointy = 0.0;
+        if (location != null) {
+            pointx = location.getLatitude();
+            pointy = location.getLongitude();
+        }
 
         int i = 0;
         int j = polygon.size() - 1;
@@ -353,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private String urlExpectYieldText() {
         String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield";
-        base = base + "orchardId=" + "LCEFgdMMO80LR98BzPCLCEFgdMMO80LR98BzPC";//TODO: get correct orchard ID
+        base = base + "orchardId=" + currentOrchard;//get correct orchard ID
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
