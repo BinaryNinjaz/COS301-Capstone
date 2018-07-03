@@ -389,6 +389,7 @@ public class Data {
 
                             //Orchards
                             DatabaseReference thingRoot = objectRoot.child("orchards");
+                            thingRoot.setValue(null);
                             if (activeWorker.getAssignedOrchards() != null) {
                                 for (int i = 0; i < activeWorker.assignedOrchards.size(); i++) {
                                     thingRoot.child(Integer.toString(i)).setValue(activeWorker.assignedOrchards.get(i).ID);

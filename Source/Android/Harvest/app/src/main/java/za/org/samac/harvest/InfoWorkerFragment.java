@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -279,10 +280,21 @@ public class InfoWorkerFragment extends Fragment {
                 tempAssignedOrchards.add(data.getOrchardFromIDString(tokens[1]));
             }
             else {
+
+//                Iterator<Orchard> iter = tempAssignedOrchards.iterator();
+//
+//                while (iter.hasNext()) {
+//                    Orchard
+//                }
 //                data.getActiveWorker().removeOrchard(tokens[1]);
-                for (Orchard current : tempAssignedOrchards){
-                    if (current.getID().equals(tokens[1])){
-                        tempAssignedOrchards.remove(current);
+//                for (Orchard current : tempAssignedOrchards){
+//                    if (current.getID().equals(tokens[1])){
+//                        tempAssignedOrchards.remove(current);
+//                    }
+//                }
+                for (int i = 0; i < tempAssignedOrchards.size(); i++){
+                    if (tempAssignedOrchards.get(i).getID().equals(tokens[1])){
+                        tempAssignedOrchards.remove(i);
                     }
                 }
             }
