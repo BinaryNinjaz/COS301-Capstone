@@ -1,16 +1,17 @@
 <html>
     <head>
-        <title>Heat Map</title>
+        <title>Sessions</title>
         <meta charset="UTF-8">
 
         <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
-        <link rel="stylesheet" type="text/css" href="HeatMap.css">
+        <link rel="stylesheet" type="text/css" href="information.css">
       
         <!-- Firebase Dependencies -->
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-database.js"></script>
         <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
+        
         
         <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script><!-- javascript file -->
 
@@ -26,20 +27,20 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="navbar.js" type="text/javascript"></script>
         
+        <script src="Sessions.js" charset="utf-8"></script>
         
 <!--         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap"></script> -->
         <script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization&key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap"></script>
-        <script src="HeatMap.js" charset="utf-8"></script>
-        <link rel="stylesheet" type="text/css" href="spin.css">
-        <script src="spin.js" charset="utf-8"></script>
+
     </head>
     <body>
         <div class="topnav">
             <ul class="nav navbar-nav">
                 <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
                 <a href="Information.html">Information</a>
-                <a href="Sessions.html">Sessions</a>
-                <a class='active' href="HeatMap.html">Heatmap</a>
+                <a class="active" href="Sessions.html">Sessions</a>
+                <a href="HeatMap.html">Heatmap</a>
+                
             </ul>
 
             <ul class="pull-right nav navbar-nav">
@@ -55,22 +56,25 @@
         
         <div class="container">
             <div class="row">
-                <div class="col-sm-3">
-                    <div id="orchardFiltering">
-                        <h2>Orchard Filtering</h2>
-                        <label>Start From:</label>
-                        <input type='date' class='form-control' id='startDate' onchange="updateHeatmap()">
-                        </br>
-                        <label>Ending At:</label>
-                        <input type='date' class='form-control' id='endDate' onchange="updateHeatmap()">
-                        <div id="orchards">
-                        </div>
-                        <div id="spinner">
-                        </div>
+                <div class="col-sm-4">
+                    <h1>Sessions</h1>
+                </div>
+                <div class="col-sm-8">
+                    <h1>Session Details</h1>
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="col-sm-4">
+                    <div id="sessionsList">
+                    </div>
+                    <div id="sessionsListLoader">
                     </div>
                 </div>
-                <div class="col-sm-9" style="margin-top: 4px">
-                    <div class="map" id="map"></div>
+                <div class="col-sm-8">
+                    <div id="sessionDetails">
+                    </div>
+                    <div style="width: 90hh; height: 90vh;" id="map"></div>
                 </div>
             </div>
         </div>

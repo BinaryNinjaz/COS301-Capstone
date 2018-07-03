@@ -96,3 +96,9 @@ function sendPasswordResetEmail(emailAddress) {
         // An error happened.
     });
 }
+
+function locationLookup(callback) {
+  $.get('http://ip-api.com/json', (data, response) => {
+    callback(data, response);
+  });
+}

@@ -1,89 +1,70 @@
 let page = 0; //0 being login, 1 being sign up
 
-
 function googleLogin(){
 	var provider = new firebase.auth.GoogleAuthProvider();
 	provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 	firebase.auth().useDeviceLanguage();
 	provider.setCustomParameters({
 	  'login_hint': 'user@example.com'
-	});
-	
+	});	
 	firebase.auth().signInWithPopup(provider).then(function(result) {
-	var token = result.credential.accessToken;
-        var user = result.user;
-	document.location.href = "HomePage.html";
+		var token = result.credential.accessToken;//access token
+		var user = result.user; //user object 
+		document.location.href = "HomePage.html";
 	}).catch(function(error) {
-	  // Handle Errors here.
-	  var errorCode = error.code;
-	  var errorMessage = error.message;
-	  var email = error.email;
-	 var credential = error.credential;
-	});
-	
-}
-function onSignIn(googleUser) {
-  var profile = googleUser.getBasicProfile();
-
-	
-	
-	const email = profile.getEmail();
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) { // user details correct
-        document.location.href = "HomePage.html";
-    }).catch(function (error) { // some error occured
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-
-        if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-        } else {
-            alert(errorMessage);
-        }
-        console.log(error);
-    });
+	  // error hanling
+		var errorCode = error.code;
+		var errorMessage = error.message;
+		var email = error.email;
+		var credential = error.credential;
+		window.alert("Error: " + errorMessage);
+	});	
 }
 
 
 /* This function is used to make the page dynamic, in that if user presses the login button, it should render a login form rather than registration*/
 function showLogin(){
 	page = 0;
-	document.getElementById("pageCon").innerHTML = "";
 	document.getElementById("pageCon").innerHTML = "<div class='container'>"
+        +"<div class='row'>"
+								+"<div class='col-md-3 col-md-offset-1'>"
+									+"<div align='center'>"
+										+"<fieldset class='inputBlock'>"
+												+"<h2>Login to Harvest:</h2>"
+													+"<div class='form-group'>"
+														+"<label style='text-align:left'>Username/Email</label>"
+														+"<input type='text' class='form-control' id='username' required>"
+													+"</div>"
+													+"<div class='form-group'>"
+														+"<label style='text-align:left'>Password</label>"
+														+"<input type='password' class='form-control' id='password' required>"
+													+"</div>"
 
-		+'<div class="col-md-3 col-md-offset-1">'
-			+'<div >'
-                             +'<fieldset class="inputBlock">'
-                                +'<h2>Log in to Harvest:</h2>'
-                                    +'<div class="form-group">'
-                                        +'<label style="text-align:left">Email</label>'
-                                        +'<input type="text" class="form-control" id="username" required>'
-                                    +'</div>'
-                                    +'<div class="form-group">'
-                                        +'<label style="text-align:left">Password</label>'
-                                        +'<input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">'
-                                    +'</div>'
-				+'<button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button>'
-                                    +'<br>'
-				    +'<button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>'                                    
-                                    +'<br>'
-					+'<button onclick="showRegister()" class="btn btn-primary">Don\'t have an account? Sign Up</button>'
-				    +'<br>'
-                                    +'<a  onclick="resetPassword()" href="javascript:;">Forgot password</a>'
-                                +'</fieldset>'
-                            +'</div>'
-                    +'</div>'
-	+'</div>';
+													+"<button onclick='firebaseLogin()' class='btn btn-success'>Log In</button>"
+													+"<br>"
+													+"<button onclick='showRegister()' class='btn btn-primary'>Don't have an account? Sign Up</button>"
+													+"<br>"
+													+"<button onclick='googleLogin()' class= 'btn btn-google'>Log in with Google</button>"
+													+"<br>"
+													+"<a  onclick='resetPassword()' href='javascript:;'>Forgot password</a>"
 
-       }
+
+										+"</fieldset>"
+									+"</div>"
+								+"</div>"
+							+"</div>"
+						+"</div>";
+
+}
 
 /* This function is used to make the page dynamic, in that if user presses the registration button, it should render a registration form rather than  login*/
 function showRegister(){
 	page = 1;
-	document.getElementById("pageCon").innerHTML = "<div class='container'>"
-		+'<div class="col-md-3 col-md-offset-1">'
-			+'<div >'
-                             +'<fieldset class="inputBlock">'
+    document.getElementById("pageCon").innerHTML = '<div class="container">'
+							+'<div class="row">'
+								+'<div class="col-md-3 col-md-offset-1">'
+									+'<div align="center">'
+										+'<fieldset class="inputBlock">'
 											+'<h2>Sign up for Harvest</h2>'
 											+'<div class="form-group">'
 												+'<label style="text-align:left">First Name</label>'
@@ -111,9 +92,11 @@ function showRegister(){
 											+'<button onclick="register()" class="btn btn-success">Create Account</button>'
 											+'<br /> <button class="btn btn-primary" onclick="showLogin();">Have an account? Log In</button>'
 										+'</fieldset>'
-                            +'</div>'
-                    +'</div>'
-	+'</div>';
+
+									+'</div>'
+								+'</div>'
+							+'</div>'
+						+'</div>'
 }
 
 /* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
