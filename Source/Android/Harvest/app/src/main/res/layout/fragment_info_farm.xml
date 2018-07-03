@@ -53,7 +53,8 @@
             app:layout_constraintBottom_toTopOf="@+id/info_farm_butt_save"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <android.support.v4.widget.NestedScrollView
+        <!--<android.support.v4.widget.NestedScrollView-->
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
@@ -530,7 +531,8 @@
 
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+        </ScrollView>
+        <!--</android.support.v4.widget.NestedScrollView>-->
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

@@ -99,7 +99,7 @@ public class Data {
                                 temp.setPhone(dataSet.child("contactNumber").getValue(String.class));
                                 temp.setProvince(dataSet.child("province").getValue(String.class));
                                 temp.setTown(dataSet.child("neartestTown").getValue(String.class)); //TODO: Verify this typo
-                                temp.setFurther(dataSet.child("info").getValue(String.class));
+                                temp.setFurther(dataSet.child("further").getValue(String.class));
                                 temp.setID(dataSet.getKey());
                                 farms.add(temp);
                             }

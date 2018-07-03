@@ -1,38 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/info_orch_cultivar_holder">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/info_orch_cultivar_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <ImageButton
+        android:id="@+id/info_orch_cultivar_cultivar_delButt"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:onClick="onCultivarDelete"
+        android:layout_weight="1"
+        android:src="@android:drawable/ic_delete" />
 
-        <TextView
-            android:id="@+id/info_orch_cultivar_cultivar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginTop="6dp"
-            android:text="Edit Text"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/info_orch_cultivar_cultivar_delButt"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/info_orch_cultivar_cultivar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="8dp"
+        android:layout_weight="12"
+        android:text="Edit Text" />
 
-        <ImageButton
-            android:id="@+id/info_orch_cultivar_cultivar_delButt"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:onClick="onCultivarDelete"
-            android:src="@android:drawable/ic_delete"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/info_orch_cultivar_cultivar"
-            app:layout_constraintTop_toTopOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

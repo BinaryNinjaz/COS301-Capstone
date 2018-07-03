@@ -53,7 +53,8 @@
             app:layout_constraintBottom_toTopOf="@+id/info_orch_butt_save"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <android.support.v4.widget.NestedScrollView
+        <!--<android.support.v4.widget.NestedScrollView-->
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
@@ -424,43 +425,37 @@
                                 android:layout_marginTop="8dp"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_orch_cultivars_desc"
-                                app:layout_constraintBottom_toTopOf="@id/info_orch_cultivars_add_constraint">
+                                app:layout_constraintTop_toBottomOf="@+id/info_orch_cultivars_desc">
                             </android.support.v7.widget.RecyclerView>
 
-                            <android.support.constraint.ConstraintLayout
-                                android:id="@+id/info_orch_cultivars_add_constraint"
+                            <LinearLayout
+                                android:id="@+id/info_orch_cultivars_add_layout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginStart="24dp"
-                                app:layout_constraintBottom_toBottomOf="parent">
+                                app:layout_constraintTop_toBottomOf="@id/info_orch_cultivars_look">
+
+                                <ImageButton
+                                    android:id="@+id/info_orch_cultivars_add_butt"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="match_parent"
+                                    android:onClick="addCultivar"
+                                    android:src="@android:drawable/ic_input_add" />
 
                                 <EditText
                                     android:id="@+id/info_orch_cultivars_add_text"
                                     android:layout_width="0dp"
                                     android:layout_height="45dp"
                                     android:layout_marginEnd="3dp"
+                                    android:layout_weight="10"
                                     android:ems="10"
                                     android:inputType="text"
-                                    android:selectAllOnFocus="true"
-                                    app:layout_constraintEnd_toStartOf="@id/info_orch_cultivars_add_butt"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    tools:layout_editor_absoluteY="1dp" />
+                                    android:selectAllOnFocus="true" />
 
-                                <ImageButton
-                                    android:id="@+id/info_orch_cultivars_add_butt"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:onClick="addCultivar"
-                                    android:src="@android:drawable/ic_input_add"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="@id/info_orch_cultivars_add_constraint"
-                                    app:layout_constraintStart_toEndOf="@id/info_orch_cultivars_add_text"
-                                    app:layout_constraintTop_toTopOf="parent" />
-
-                            </android.support.constraint.ConstraintLayout>
+                            </LinearLayout>
 
                         </android.support.constraint.ConstraintLayout>
                     </android.support.v7.widget.CardView>
@@ -761,7 +756,8 @@
 
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+        <!--</android.support.v4.widget.NestedScrollView>-->
+        </ScrollView>
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

@@ -1,14 +1,8 @@
 package za.org.samac.harvest;
 
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,21 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Vector;
 
-import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.Orchard;
@@ -113,7 +102,7 @@ public class InfoOrchardFragment extends Fragment {
             dateText.setKeyListener(null);
             dateText.setVisibility(View.VISIBLE);
 
-            getView().findViewById(R.id.info_orch_cultivars_add_constraint).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.info_orch_cultivars_add_layout).setVisibility(View.VISIBLE);
 
             getView().findViewById(R.id.info_orch_row_look).setVisibility(View.GONE);
             row = getView().findViewById(R.id.info_orch_row_edit);
@@ -179,7 +168,7 @@ public class InfoOrchardFragment extends Fragment {
                     }
                 }
 
-                getView().findViewById(R.id.info_orch_cultivars_add_constraint).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.info_orch_cultivars_add_layout).setVisibility(View.VISIBLE);
 
                 getView().findViewById(R.id.info_orch_row_look).setVisibility(View.GONE);
                 row = getView().findViewById(R.id.info_orch_row_edit);
@@ -243,7 +232,7 @@ public class InfoOrchardFragment extends Fragment {
                     temp.setText("");
                 }
 
-                getView().findViewById(R.id.info_orch_cultivars_add_constraint).setVisibility(View.GONE);
+                getView().findViewById(R.id.info_orch_cultivars_add_layout).setVisibility(View.GONE);
 
                 temp = getView().findViewById(R.id.info_orch_row_look);
                 tem = orch.getRow();
@@ -494,14 +483,14 @@ class CultivarAdapter extends RecyclerView.Adapter<CultivarAdapter.ViewHolder>{
     boolean show = true;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public ConstraintLayout mConstraint;
+        public LinearLayout linearLayout;
         public TextView cultName;
         public ImageButton delCultButt;
 
         public ViewHolder(View view){
             super(view);
 
-            mConstraint = view.findViewById(R.id.info_orch_cultivar_holder);
+            linearLayout = view.findViewById(R.id.info_orch_cultivar_holder);
             cultName = view.findViewById(R.id.info_orch_cultivar_cultivar);
             delCultButt = view.findViewById(R.id.info_orch_cultivar_cultivar_delButt);
 
