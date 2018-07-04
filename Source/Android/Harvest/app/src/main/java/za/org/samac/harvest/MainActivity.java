@@ -286,7 +286,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
     ArrayList<String> coords = new ArrayList<>();
     List<List<Double>> polygonStore = new ArrayList();
-    String currentOrchard;
+    ArrayList<String> currentOrchard = new ArrayList<>();
+    int holdi;
 
     private void getPolygon() {
         DatabaseReference myRef;
@@ -295,11 +296,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot child : dataSnapshot.getChildren()){
-                    currentOrchard = child.getKey().toString();
-                    pathsToOrchardCoords.add(farmerKey + "/orchards/" + currentOrchard + "/coords");
-                    System.out.println(" @@@@@@@@@@@@@@@@@@@@@ *** " + currentOrchard + " @@@@@@@@@@@@@@@@@@@@@ ");
+                    currentOrchard.add(child.getKey().toString());
+                    pathsToOrchardCoords.add(farmerKey + "/orchards/" + currentOrchard.get(currentOrchard.size()-1) + "/coords");
+                    System.out.println(" @@@@@@@@@@@@@@@@@@@@@ *** " + currentOrchard.get(currentOrchard.size()-1) + " @@@@@@@@@@@@@@@@@@@@@ ");
                 }
-                pathAfterGotOrchard();
+
+                for (int i = 0; i<pathsToOrchardCoords.size(); i++) {
+                    DatabaseReference myRef2;
+                    myRef2 = database.getReference(pathsToOrchardCoords.get(i));
+                    holdi = i;
+                    pathAfterGotOrchard(pathsToOrchardCoords.get(i), myRef2);
+                }
                 System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Got in function" + " @@@@@@@@@@@@@@@@@@@@@ ");
             }
 
@@ -310,32 +317,27 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
-    private void pathAfterGotOrchard() {
-        for (int i = 0; i<pathsToOrchardCoords.size(); i++) {
-            DatabaseReference myRef2;
-            myRef2 = database.getReference(pathsToOrchardCoords.get(i));
-            final int finalI = i;
-            final String path = pathsToOrchardCoords.get(i);
-            myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    int m = 0;
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        coords.add(path + "/" + child.getKey().toString());
-                        m++;
-                        if (dataSnapshot.getChildrenCount() == m) {
-                            pathAfterGotCoords();
-                        }
-                    }
-
+    private void pathAfterGotOrchard(final String path, DatabaseReference myRef2) {
+        myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int m = 0;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    coords.add(path + "/" + child.getKey().toString());
+                    m++;
+                    /*if (dataSnapshot.getChildrenCount() == m) {
+                        pathAfterGotCoords();
+                    }*/
                 }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                pathAfterGotCoords();
+            }
 
-                }
-            });
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void pathAfterGotCoords() {
