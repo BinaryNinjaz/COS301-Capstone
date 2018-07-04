@@ -13,7 +13,6 @@
 		1604E4AA206958E900E9BA15 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4A9206958E900E9BA15 /* Assets.xcassets */; };
 		1604E4AD206958E900E9BA15 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4AB206958E900E9BA15 /* LaunchScreen.storyboard */; };
 		1604E4B8206958E900E9BA15 /* HarvestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4B7206958E900E9BA15 /* HarvestTests.swift */; };
-		1604E4C3206958E900E9BA15 /* HarvestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4C2206958E900E9BA15 /* HarvestUITests.swift */; };
 		1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */; };
 		160A1E19209BCA6E000A1E0F /* SessionISelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */; };
 		160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */; };
@@ -114,7 +113,6 @@
 		1604E4B7206958E900E9BA15 /* HarvestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestTests.swift; sourceTree = "<group>"; };
 		1604E4B9206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1604E4BE206958E900E9BA15 /* HarvestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HarvestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1604E4C2206958E900E9BA15 /* HarvestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUITests.swift; sourceTree = "<group>"; };
 		1604E4C4206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionISelectionViewController.swift; sourceTree = "<group>"; };
@@ -273,7 +271,6 @@
 		1604E4C1206958E900E9BA15 /* HarvestUITests */ = {
 			isa = PBXGroup;
 			children = (
-				1604E4C2206958E900E9BA15 /* HarvestUITests.swift */,
 				165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */,
 				165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */,
 				1604E4C4206958E900E9BA15 /* Info.plist */,
@@ -908,7 +905,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1604E4C3206958E900E9BA15 /* HarvestUITests.swift in Sources */,
 				165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */,
 				165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */,
 			);
