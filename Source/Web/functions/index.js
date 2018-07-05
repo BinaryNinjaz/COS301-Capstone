@@ -443,7 +443,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
         });
         res.send(result);
         return true;
-      }).catch((err) => {});
+      }).catch((err) => {
+        console.log(err);
+      });
     } else {
       orchardsCooked(ids, uid, (cookedOrchards) => {
         var sessionsRef = admin.database().ref('/' + uid + '/sessions');
@@ -487,7 +489,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
           });
           res.send(result);
           return true;
-        }).catch((err) => {});
+        }).catch((err) => {
+          console.log(err);
+        });
       });
     }
   });
