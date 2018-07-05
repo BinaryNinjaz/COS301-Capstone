@@ -39,6 +39,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -170,7 +171,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             //adapter.setLocation(location);
         }
 
+        locationEnabled = true;
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+        location = locationManager
+                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+
         locationPermissions();
+        statusCheck();
         //new LocationHelper().getLocation(this);
 
         uid = user.getUid();
@@ -181,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
-        statusCheck();
     }
 
     @Override
@@ -639,8 +647,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      Sessions for each worker still needs to be implemented *
      */
     long startTime = 0, stopTime = 0;
-    //Handler handler = new Handler();
-    //int delay = 1000; //milliseconds
+    Handler handler = new Handler();
+    int delay = 1000; //milliseconds
     Boolean locationWanted = false;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
@@ -653,19 +661,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             }
         };
-        handler.postDelayed(runnable, delay);*/
+        handler.postDelayed(runnable, delay);
 
-        /*if (location != null) {
+        if (location != null) {
             Future longRunningTaskFuture = threadPoolExecutor.submit(runnable);
             longRunningTaskFuture.cancel(true);
         }*/
+
         if(location == null) {
             progressBar.setVisibility(View.VISIBLE);
             Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
             recyclerView.setVisibility(View.GONE);
         } else {
+            progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
+
         startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
 
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
