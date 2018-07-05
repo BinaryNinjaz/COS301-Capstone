@@ -70,6 +70,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
@@ -637,11 +640,25 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      */
     long startTime = 0, stopTime = 0;
     //Handler handler = new Handler();
-    //int delay = 120000; //milliseconds
+    //int delay = 1000; //milliseconds
     Boolean locationWanted = false;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
+        /*ExecutorService threadPoolExecutor = Executors.newSingleThreadExecutor();
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+
+            }
+        };
+        handler.postDelayed(runnable, delay);*/
+
+        /*if (location != null) {
+            Future longRunningTaskFuture = threadPoolExecutor.submit(runnable);
+            longRunningTaskFuture.cancel(true);
+        }*/
         if(location == null) {
             progressBar.setVisibility(View.VISIBLE);
             Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
