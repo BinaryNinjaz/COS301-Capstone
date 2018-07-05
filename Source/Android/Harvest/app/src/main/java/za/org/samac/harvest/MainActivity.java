@@ -143,10 +143,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         } else {
             locationEnabled = true;
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
 
-            /*List<String> providers = locationManager.getProviders(true);
+            List<String> providers = locationManager.getProviders(true);
             Location bestLocation = null;
             for (String provider : providers) {
                 location = locationManager.getLastKnownLocation(provider);
@@ -160,7 +160,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     //Log.d("found best last known location: %s", location);
                     bestLocation = location;
                 }
-            }*/
+            }
+
             location = locationManager
                     .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
             //adapter.setLocation(location);
@@ -228,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     getFarmKey();
                 }
 
-                getPolygon();//set expected yield
+                getExpectedYield();//getPolygon();//set expected yield
 
                 btnStart.setTag("green");//it is best not to use the tag to identify button status
 
@@ -398,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private String urlExpectYieldText() {
         String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield?";
         System.out.println(" ************************* " + currentOrchard + " ************************* ");
-        base = base + "orchardId=" + currentOrchard;//"-LCEFgdMMO80LR98BzPC";//currentOrchard;//get correct orchard ID
+        base = base + "orchardId=" + "-LCEFgdMMO80LR98BzPC";//currentOrchard;//get correct orchard ID
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
@@ -605,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void statusCheck() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {//changed from GPS to NETWORK
             buildAlertMessageNoGps();
 
         }
@@ -721,7 +722,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             track = new HashMap<Integer, Location>(); //used in firebase function
             track.put(trackCount, location);
             if (locationEnabled) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
             }
             startTime = System.currentTimeMillis();
             btnStart.setBackgroundColor(Color.parseColor("#FFFF8800"));
