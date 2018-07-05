@@ -647,8 +647,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      Sessions for each worker still needs to be implemented *
      */
     long startTime = 0, stopTime = 0;
-    Handler handler = new Handler();
-    int delay = 1000; //milliseconds
+    //Handler handler = new Handler();
+    //int delay = 1000; //milliseconds
     Boolean locationWanted = false;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
