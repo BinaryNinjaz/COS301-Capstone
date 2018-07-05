@@ -14,6 +14,10 @@ public final class StatSetupViewController: FormViewController {
   var orchardsRow: MultipleSelectorRow<Orchard>! = nil
   var foremenRow: MultipleSelectorRow<Worker>! = nil
   
+  var startDateRow: DateRow! = nil
+  var endDateRow: DateRow! = nil
+  var periodRow: PushRow<HarvestCloud.TimePeriod>! = nil
+  
   // swiftlint:disable function_body_length
   public override func viewDidLoad() {
     super.viewDidLoad()
@@ -31,19 +35,21 @@ public final class StatSetupViewController: FormViewController {
         return row?.value != .workers
       }
     }.cellUpdate { _, row in
-      row.options = Entities.shared.workers.map { $0.value }
+      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .worker })
     }
     
     foremenRow = MultipleSelectorRow<Worker> { row in
       row.title = "Foreman Selection"
       row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
+      row.options?.append(Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid))
       row.value = row.options?.first != nil ? [row.options!.first!] : []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .foremen
       }
       }.cellUpdate { _, row in
-        row.options = Entities.shared.workers.map { $0.value }
+        row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
+        row.options?.append(Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid))
     }
     
 //    sessionsRow = PushRow<ShallowSession> { row in
@@ -70,6 +76,25 @@ public final class StatSetupViewController: FormViewController {
       row.options = Entities.shared.orchards.map { $0.value }
     }
     
+    startDateRow = DateRow { row in
+      row.title = "From Date"
+      
+      let cal = Calendar.current
+      let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())
+      row.value = wb
+    }
+    
+    endDateRow = DateRow { row in
+      row.title = "Upto Date"
+      row.value = Date()
+    }
+    
+    periodRow = PushRow<HarvestCloud.TimePeriod> { row in
+      row.title = "Time Period"
+      row.options = HarvestCloud.TimePeriod.allCases
+      row.value = .daily
+    }
+    
     let showStats = ButtonRow { row in
       row.title = "Display Stats"
     }.onCellSelection { _, _ in
@@ -80,6 +105,10 @@ public final class StatSetupViewController: FormViewController {
       guard let svc = vc as? StatsViewController else {
         return
       }
+      
+      svc.startDate = self.startDateRow.value
+      svc.endDate = self.endDateRow.value
+      svc.period = self.periodRow.value
       
       let kind = statKind.value ?? .workers
       switch kind {
@@ -109,6 +138,11 @@ public final class StatSetupViewController: FormViewController {
         <<< self.workersRow
         <<< self.orchardsRow
         <<< self.foremenRow
+        
+        +++ Section("Details")
+        <<< self.periodRow
+        <<< self.startDateRow
+        <<< self.endDateRow
         
         +++ Section()
         <<< showStats
