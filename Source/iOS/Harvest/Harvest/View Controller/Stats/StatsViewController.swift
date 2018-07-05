@@ -52,67 +52,66 @@ class StatsViewController: UIViewController {
     }
     
     switch stat {
-    case .perSessionWorkers: drawPerSessionWorkers()
-    case .workerHistory: drawWorkerHistory()
-    case .orchardHistory: drawOrchardHistory()
+//    case .workerComparison: drawWorkerComparison()
+    case .foremanComparison: drawForemanComparison()
+//    case .orchardComparison: drawOrchardComparison()
+    default: break
     }
   }
   
-  func drawPerSessionWorkers() {
-    stat?.perSessionWorkersData { pieDataSet in
-      guard let pieDataSet = pieDataSet else {
+//  func drawPerSessionWorkers() {
+//    stat?.perSessionWorkersData { pieDataSet in
+//      guard let pieDataSet = pieDataSet else {
+//        return
+//      }
+//      pieDataSet.colors = ChartColorTemplates.material()
+//
+//      let pieData = PieChartData(dataSet: pieDataSet)
+//      self.pieChart?.data = pieData
+//      self.pieChart?.notifyDataSetChanged()
+//      self.pieChart?.isHidden = false
+//      self.pieChart?.animate(xAxisDuration: 3.0, yAxisDuration: 1.0, easingOption: .easeOutCubic)
+//    }
+//  }
+  
+  func drawForemanComparison() {
+    let s = Date(timeIntervalSince1970: 0)
+    let e = Date()
+    
+    stat?.foremanComparison(startDate: s, endDate: e, period: .daily) { barData in
+      guard let barData = barData else {
+        // FIXME: Show no data
         return
       }
-      pieDataSet.colors = ChartColorTemplates.material()
       
-      let pieData = PieChartData(dataSet: pieDataSet)
-      self.pieChart?.data = pieData
-      self.pieChart?.notifyDataSetChanged()
-      self.pieChart?.isHidden = false
-      self.pieChart?.animate(xAxisDuration: 3.0, yAxisDuration: 1.0, easingOption: .easeOutCubic)
+      self.barChart?.data = barData
+      self.barChart?.notifyDataSetChanged()
+      self.barChart?.isHidden = false
+      self.barChart?.animate(xAxisDuration: 1.5, easingOption: .easeOutCubic)
     }
   }
   
-  func drawWorkerHistory() {
-    guard let lineDataSet = stat?.workerHistoryData() else {
-      return
-    }
-    lineDataSet.colors = [UIColor.lineGraph]
-    lineDataSet.drawCirclesEnabled = false
-    lineDataSet.mode = .linear
-    lineDataSet.lineWidth = 4.0
-    
-    let lineData = LineChartData(dataSet: lineDataSet)
-    lineChart?.data = lineData
-    lineChart?.notifyDataSetChanged()
-    lineChart?.isHidden = false
-    lineChart?.animate(xAxisDuration: 1.5, easingOption: .easeOutCubic)
-  }
-  
-  func drawOrchardHistory() {
-    guard let (dates, amounts) = stat?.orchardHistoryData() else {
-      return
-    }
-    
-    let barDataSet = BarChartDataSet()
-    for (i, amount) in zip(0..., amounts) {
-      barDataSet.values.append(BarChartDataEntry(x: Double(i), y: amount))
-    }
-    barDataSet.colors = ChartColorTemplates.material()
-    
-    let barData = BarChartData(dataSet: barDataSet)
-    barChart?.xAxis.valueFormatter = OrchardDateFormatter(dates, "dd MMM")
-    barChart?.data = barData
-    barChart?.notifyDataSetChanged()
-    barChart?.isHidden = false
-    barChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
-  }
+//  func drawOrchardHistory() {
+//    guard let (dates, amounts) = stat?.orchardHistoryData() else {
+//      return
+//    }
+//
+//    let barDataSet = BarChartDataSet()
+//    for (i, amount) in zip(0..., amounts) {
+//      barDataSet.values.append(BarChartDataEntry(x: Double(i), y: amount))
+//    }
+//    barDataSet.colors = ChartColorTemplates.material()
+//
+//    let barData = BarChartData(dataSet: barDataSet)
+//    barChart?.xAxis.valueFormatter = OrchardDateFormatter(dates, "dd MMM")
+//    barChart?.data = barData
+//    barChart?.notifyDataSetChanged()
+//    barChart?.isHidden = false
+//    barChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
+//  }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    switch stat! {
-    case .perSessionWorkers: return .all
-    case .workerHistory, .orchardHistory: return .allButUpsideDown
-    }
+    return .allButUpsideDown
   }
   
   func setUpLineChart() {

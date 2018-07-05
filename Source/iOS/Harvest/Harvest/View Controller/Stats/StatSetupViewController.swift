@@ -9,49 +9,62 @@
 import Eureka
 
 public final class StatSetupViewController: FormViewController {
-  var workersRow: PushRow<Worker>! = nil
+  var workersRow: MultipleSelectorRow<Worker>! = nil
   var sessionsRow: PushRow<ShallowSession>! = nil
-  var orchardsRow: PushRow<Orchard>! = nil
+  var orchardsRow: MultipleSelectorRow<Orchard>! = nil
+  var foremenRow: MultipleSelectorRow<Worker>! = nil
   
   // swiftlint:disable function_body_length
   public override func viewDidLoad() {
     super.viewDidLoad()
     let statKind = PickerRow<StatKind>("Stat Kind") { row in
       row.options = StatKind.allCases
-      row.value = .perSessionWorkers
+      row.value = .workers
     }
     
-    workersRow = PushRow<Worker> { row in
+    workersRow = MultipleSelectorRow<Worker> { row in
       row.title = "Worker Selection"
-      row.options = Entities.shared.workers.map { $0.value }
-      row.value = row.options?.first
+      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .worker })
+      row.value = row.options?.first != nil ? [row.options!.first!] : []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
-        return row?.value != .workerHistory
+        return row?.value != .workers
       }
     }.cellUpdate { _, row in
       row.options = Entities.shared.workers.map { $0.value }
     }
     
-    sessionsRow = PushRow<ShallowSession> { row in
-      row.title = "Session Selection"
-      row.options = Entities.shared.shallowSessions.map { $0.value }
-      row.value = row.options?.first
+    foremenRow = MultipleSelectorRow<Worker> { row in
+      row.title = "Foreman Selection"
+      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
+      row.value = row.options?.first != nil ? [row.options!.first!] : []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
-        return row?.value != .perSessionWorkers
+        return row?.value != .foremen
       }
-    }.cellUpdate { _, row in
-      row.options = Entities.shared.shallowSessions.map { $0.value }
+      }.cellUpdate { _, row in
+        row.options = Entities.shared.workers.map { $0.value }
     }
     
-    orchardsRow = PushRow<Orchard> { row in
+//    sessionsRow = PushRow<ShallowSession> { row in
+//      row.title = "Session Selection"
+//      row.options = Entities.shared.shallowSessions.map { $0.value }
+//      row.value = row.options?.first
+//      row.hidden = Condition.function(["Stat Kind"]) { form in
+//        let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
+//        return row?.value != .perSessionWorkers
+//      }
+//    }.cellUpdate { _, row in
+//      row.options = Entities.shared.shallowSessions.map { $0.value }
+//    }
+    
+    orchardsRow = MultipleSelectorRow<Orchard> { row in
       row.title = "Orchard Selection"
       row.options = Entities.shared.orchards.map { $0.value }
-      row.value = row.options?.first
+      row.value = row.options?.first != nil ? [row.options!.first!] : []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
-        return row?.value != .orchardHistory
+        return row?.value != .orchards
       }
     }.cellUpdate { _, row in
       row.options = Entities.shared.orchards.map { $0.value }
@@ -68,19 +81,19 @@ public final class StatSetupViewController: FormViewController {
         return
       }
       
-      let kind = statKind.value ?? .perSessionWorkers
+      let kind = statKind.value ?? .workers
       switch kind {
-      case .perSessionWorkers:
-        if let s = self.sessionsRow.value {
-          svc.stat = Stat.perSessionWorkers(s)
+      case .foremen:
+        if let fs = self.foremenRow.value {
+          svc.stat = .foremanComparison(Array(fs))
         }
-      case .workerHistory:
-        if let w = self.workersRow.value {
-          svc.stat = Stat.workerHistory(w)
+      case .workers:
+        if let ws = self.workersRow.value {
+          svc.stat = .workerComparison(Array(ws))
         }
-      case .orchardHistory:
-        if let o = self.orchardsRow.value {
-          svc.stat = Stat.orchardHistory(o)
+      case .orchards:
+        if let os = self.orchardsRow.value {
+          svc.stat = .orchardComparison(Array(os))
         }
       }
       
@@ -94,8 +107,8 @@ public final class StatSetupViewController: FormViewController {
         
         +++ Section()
         <<< self.workersRow
-        <<< self.sessionsRow
         <<< self.orchardsRow
+        <<< self.foremenRow
         
         +++ Section()
         <<< showStats

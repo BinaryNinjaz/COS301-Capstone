@@ -10,84 +10,56 @@ import Charts
 import CoreLocation
 
 enum Stat {
-  case perSessionWorkers(ShallowSession)
-  case workerHistory(Worker)
-  case orchardHistory(Orchard)
+  case foremanComparison([Worker])
+  case workerComparison([Worker])
+  case orchardComparison([Orchard])
   
-  func perSessionWorkersData(_ completion: @escaping (PieChartDataSet?) -> Void) {
-    guard case .perSessionWorkers(let session) = self else {
+  func foremanComparison(
+    startDate: Date,
+    endDate: Date,
+    period: HarvestCloud.TimePeriod,
+    completion: @escaping (BarChartData?) -> ()
+  ) {
+    guard case let .foremanComparison(foremen) = self else {
       completion(nil)
       return
     }
     
-    HarvestDB.getSession(id: session.id) { session in
-      let result = PieChartDataSet()
-      for (worker, amount) in session.collections {
-        result.values.append(PieChartDataEntry(value: Double(amount.count), label: worker.description))
-      }
-      completion(result)
-    }
-  }
-  
-  func workerHistoryData() -> LineChartDataSet? {
-    guard case .workerHistory(let worker) = self else {
-      return nil
+    var dataSets = [BarChartDataSet]()
+    
+    var ids = [String]()
+    for foreman in foremen {
+      ids.append(foreman.id)
     }
     
-    let sessions = Entities.shared.sessions
-    
-    let result = LineChartDataSet()
-    result.label = worker.description
-    var started = false
-    var i = 0.0
-    
-    for (_, session) in sessions {
-      let collections = session.collections[worker]
-      if !started && collections == nil {
-        continue
-      }
-      started = true
-      let amount = collections?.count ?? 0
-      let date = session.startDate
-      let entry = ChartDataEntry(x: date.timeIntervalSince1970, y: Double(amount))
-      i += 1
-      result.values.append(entry)
-    }
-    
-    return result
-  }
-  
-  func orchardHistoryData() -> (dates: [Double], amount: [Double])? {
-    guard case .orchardHistory(let orchard) = self else {
-      return nil
-    }
-    var interResult = SortedDictionary<Date, Double>()
-    let sessions = Entities.shared.sessions
-    
-    let poly = Poly(orchard.coords.map { Point($0.longitude, $0.latitude) })
-    let calendar = Calendar.current
-    
-    for (_, session) in sessions {
-      session.collections.forEach { _, points in
-        points.forEach { point in
-          let p = Point(point.location.longitude, point.location.latitude)
-          if poly.contains(p) {
-            var comps = calendar.dateComponents([.era, .calendar, .year, .month, .day], from: point.date)
-            comps.hour = 0
-            interResult[calendar.date(from: comps)!, default: 0] += 1
-          }
+    HarvestCloud.timeGraphSessions(
+      grouping: .foreman,
+      ids: ids,
+      period: period,
+      startDate: startDate,
+      endDate: endDate) { data in
+        guard let json = data as? [String: Any] else {
+          return
         }
+        
+        for (key, _dataSetObject) in json {
+          guard let dataSetObject = _dataSetObject as? [String: Any] else {
+            continue
+          }
+          
+          let foreman = Entities.shared.worker(withId: key)
+          
+          let dataSet = BarChartDataSet()
+          dataSet.label = foreman?.name ?? "Unknown Foreman"
+          
+          for (offset: i, element: (key: _, value: y)) in dataSetObject.enumerated() {
+            _ = dataSet.addEntry(BarChartDataEntry(x: Double(i), y: y as? Double ?? 0))
+          }
+          
+          dataSets.append(dataSet)
+        }
+        
+        completion(BarChartData(dataSets: dataSets))
       }
-    }
-    
-    var dates = [Double]()
-    var amounts = [Double]()
-    for (d, amount) in interResult {
-      dates.append(d.timeIntervalSince1970)
-      amounts.append(amount)
-    }
-    
-    return (dates, amounts)
-    
   }
 }
