@@ -64,6 +64,10 @@ final class Worker {
     ]]
   }
   
+  var name: String {
+    return firstname + " " + lastname
+  }
+  
   static var currentWorker: Worker {
     return Worker(json: [
       "name": HarvestUser.current.displayName,
@@ -91,6 +95,6 @@ extension Worker: Hashable {
 
 extension Worker: CustomStringConvertible {
   var description: String {
-    return firstname + " " + lastname
+    return name
   }
 }
