@@ -22,8 +22,7 @@
                 integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-       <!-- Please not that the declaration of the javascript file (dynamicLoginRegister.js) has been placed at the bottom, to mitigate the error rendered by the listen event -->
-	   <!-- These changes were made by Teboho Mokoena -->
+
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css">
@@ -31,23 +30,22 @@
 	
         <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
         <link href="loginRegister.css" rel="stylesheet" type="text/css"/>
-
     </head>
+    
     <body class="login">
         <div class="topnav">
             <ul class="nav navbar-nav" id="navHighlight">
-                <a class="active" href="#">Harvest</a>
-                
+                <a class="active" href="#">Harvest</a>                
             </ul>
         </div>
+	
         <br />
 	<br />
-        <section class="sec">
+	
+        <section class="col-md-12 col-md-offset-1">
             <div id="pageCon" class="left" >
-            <div class="container">            
-                <div class="row">
                     <div class="col-md-3 col-md-offset-1">
-                        <div align="center">
+                        <div >
     <!--                     We remove the form because it reloads the page -->
     <!--                     Which we don't want. -->
     <!--                     <form action="" method="POST" > -->
@@ -66,20 +64,18 @@
                                     <button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button><!-- Log In button -->
                                     
                                     <br>
-				    <button onclick='googleLogin()' class= 'btn btn-google'>Log in with Google</button>                                    
+				                           <button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>                                    
                                     <br>
-					<button onclick='showRegister()' class='btn btn-primary'>Don't have an account? Sign Up</button>
-				    <br>
+					                          <button onclick="showRegister()" class="btn btn-primary">Don't have an account? Sign Up</button>		
+				                            <br>
                                     <a  onclick="resetPassword()" href="javascript:;">Forgot password</a>
                                 </fieldset>
                             </div>
                     </div>
-                </div>
-            </div>
-            </div>
-			<!-- This was added by Sizo Duma,because Stacy wanted us to make it more nice -->
-            <div class="right" >
-                <h3 class="list-heading">Why Harvest?</h3>
+            </div>			
+	    <div class="right">
+            <div class="col-md-7 " >
+                <h3 class="list-heading">Features</h3>
                 <ul class="ico">
                     <li>Live foremen tracking</li>
                     <li>Worker efficiency reports</li>
@@ -88,7 +84,7 @@
                     <li>Efficient Farming </li>
                     <li>Farming like never before</li>
                 </ul>
-
+		</div>
             </div>
         </section>
         
