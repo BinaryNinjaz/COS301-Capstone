@@ -76,6 +76,8 @@
 		16C82F5E20819B6E0074595C /* Poly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5920819B6E0074595C /* Poly.swift */; };
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
 		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
+		16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */; };
+		16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */; };
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
 		16FF431E20DFF106001092CF /* DBCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431D20DFF106001092CF /* DBCloud.swift */; };
 		16FF432020E19117001092CF /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431F20E19117001092CF /* LocationHelper.swift */; };
@@ -178,6 +180,8 @@
 		16C82F5920819B6E0074595C /* Poly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly.swift; sourceTree = "<group>"; };
 		16C82F66208407730074595C /* GeoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKitTests.swift; sourceTree = "<group>"; };
 		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
+		16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutChartEurekaCell.swift; sourceTree = "<group>"; };
+		16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DonutChartEurekaCell.xib; sourceTree = "<group>"; };
 		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16FF431B20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/Main.strings; sourceTree = "<group>"; };
 		16FF431C20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -314,6 +318,7 @@
 			children = (
 				1604E4A6206958E900E9BA15 /* Main.storyboard */,
 				1604E4AB206958E900E9BA15 /* LaunchScreen.storyboard */,
+				16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -511,6 +516,7 @@
 				160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */,
 				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
 				16906061208F748600BE5ADE /* AdminEurekaCell.swift */,
+				16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -661,6 +667,7 @@
 				1604E4AD206958E900E9BA15 /* LaunchScreen.storyboard in Resources */,
 				1604E4AA206958E900E9BA15 /* Assets.xcassets in Resources */,
 				1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */,
+				16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */,
 				1604E4A8206958E900E9BA15 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -835,6 +842,7 @@
 				1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */,
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
+				16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */,
 				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,

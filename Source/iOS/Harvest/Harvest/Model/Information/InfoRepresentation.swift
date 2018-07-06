@@ -555,9 +555,6 @@ extension Session {
     let form = formVC.form
     tempory = Session(json: json(), id: id)
     
-    // FIXME Maybe allow changing these details or not? If change then
-    // allow foreman select else disallow artificial changes
-    
     let displayRow = LabelRow { row in
       row.title = "Foreman"
       row.value = foreman.description
@@ -567,18 +564,12 @@ extension Session {
       row.title = "Time Started"
       row.value = startDate
       row.baseCell.isUserInteractionEnabled = false
-    }.onChange { row in
-      self.tempory?.startDate = row.value ?? Date()
-      onChange()
     }
     
     let endDateRow = DateTimeRow { row in
       row.title = "Time Ended"
       row.value = endDate
       row.baseCell.isUserInteractionEnabled = false
-    }.onChange { row in
-      self.tempory?.endDate = row.value ?? Date()
-      onChange()
     }
     
     let sessionRow = SessionRow { row in
@@ -586,6 +577,13 @@ extension Session {
       row.value = self
     }.cellUpdate { (cell, _) in
       cell.detailTextLabel?.text = ""
+    }
+    
+    let chartRow = DonutChartRow("") { row in
+      row.value = self
+      if #available(iOS 11, *) {
+        row.baseCell.userInteractionEnabledWhileDragging = true
+      }
     }
     
     form
@@ -598,6 +596,9 @@ extension Session {
     
       +++ Section("Tracking")
       <<< sessionRow
+    
+      +++ Section("Worker Performance Summary")
+      <<< chartRow
   }
 }
 
