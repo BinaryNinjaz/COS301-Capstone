@@ -77,6 +77,7 @@ public class SessionDetails extends AppCompatActivity {
     ArrayList<PieEntry> entries = new ArrayList<>();
     com.github.mikephil.charting.charts.PieChart pieChart;
     private com.github.mikephil.charting.charts.PieChart pieChartView;
+    Map<String, Float> collections = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +138,7 @@ public class SessionDetails extends AppCompatActivity {
                 workerKeys = new ArrayList<>();
                 workerName = new ArrayList<>();
                 yield = new ArrayList<>();
-                displayGraph();
+
                 wid = dataSnapshot.child("wid").getValue(String.class);
                 for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
                     Double lat = childSnapshot.child("lat").getValue(Double.class);
@@ -150,6 +151,7 @@ public class SessionDetails extends AppCompatActivity {
                 }
                 for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
                     String workername = workerID.get(childSnapshot.getKey());
+                    int count = 0;
                     for (DataSnapshot collection : childSnapshot.getChildren()) {
                         System.out.println(collection);
                         Double lat = collection.child("coord").child("lat").getValue(Double.class);
@@ -160,8 +162,12 @@ public class SessionDetails extends AppCompatActivity {
                         Double time = childSnapshot.child("date").getValue(Double.class);
 
                         collected.addCollection(workername, loc, time);
+                        count++;
                     }
+                    collections.put(workername, (float) count);
                 }
+
+                displayGraph();
 
                 TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
                 TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
@@ -184,88 +190,25 @@ public class SessionDetails extends AppCompatActivity {
     }
 
     public void displayGraph() {
-        database = FirebaseDatabase.getInstance();
-        userUid = user.getUid();//ID or key of the current user
-        myRef = database.getReference(MainActivity.farmerKey + "/sessions/" + key);//path to sessions increment in Firebase
-
-        //query = myRef.limitToLast(1);
-
         pieChart = (com.github.mikephil.charting.charts.PieChart)findViewById(R.id.pieChart);
+        for(String key : collections.keySet()) {
+            String workerName = key;
+            Float yield = collections.get(workerName);
+            entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
+        }
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    //List<Object> collections = (List<Object>) zoneSnapshot.child("collections").getValue();
-                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$ "+zoneSnapshot.child("start_date").toString()+" $$$$$$$$$$$$$$$$$$$$$$$");
-                    Map<String, Object> collections = (Map<String, Object>) zoneSnapshot.child("collections").getValue();
+        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+        pieChartView.setVisibility(View.VISIBLE);
 
-                    if (collections == null) {
-                        //no graph to show
-                    }
+        PieDataSet dataset = new PieDataSet(entries, "Dataset");
+        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
 
-                    for(String key : collections.keySet()) {
-                        Object workerId = collections.get(key);
+        PieData data = new PieData(dataset);//labels was one of the parameters
+        pieChart.setData(data); // set the data and list of lables into chart
 
-                        if(workerId != null) {
-                            workerKeys.add(key);
-                            yield.add(((ArrayList)workerId).size());
-                        }
-                    }
-                }
-
-                getWorkerNames();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-            }
-        });
-    }
-
-    public void getWorkerNames() {
-        DatabaseReference ref = database.getReference(userUid + "/workers/");//path to workers increment in Firebase
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (int i = 0; i<workerKeys.size(); i++) {
-                    workerKey = workerKeys.get(i);
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if (workerKey.equals(child.getKey())) {
-                            workerName.add(child.child("name").getValue(String.class) + " " + child.child("surname").getValue(String.class));
-                            break;
-                        }
-                    }
-                }
-
-                if (workerName.size() == workerKeys.size()) {
-                    //put labels on chart
-                    for (int i = 0; i<workerName.size(); i++) {
-                        entries.add(new PieEntry((float)yield.get(i), workerName.get(i)));//exchange index with Worker Name
-                    }
-
-                    progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
-                    pieChartView.setVisibility(View.VISIBLE);
-
-                    PieDataSet dataset = new PieDataSet(entries, "Dataset");
-                    dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
-
-                    PieData data = new PieData(dataset);//labels was one of the parameters
-                    pieChart.setData(data); // set the data and list of lables into chart
-
-                    Description description = new Description();
-                    description.setText("Worker Performance");
-                    pieChart.setDescription(description); // set the description
-                    pieChart.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-            }
-        });
+        Description description = new Description();
+        description.setText("Worker Performance");
+        pieChart.setDescription(description); // set the description
+        pieChart.notifyDataSetChanged();
     }
 }
