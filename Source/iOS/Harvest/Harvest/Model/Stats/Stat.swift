@@ -221,20 +221,51 @@ enum Stat {
 }
 
 extension ChartColorTemplates {
-  static func harvest() -> [UIColor] {
+  static func harvestGreen() -> [UIColor] {
     return [
-      #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1),
-      #colorLiteral(red: 1, green: 0.5781051517, blue: 0, alpha: 1),
-      #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 1),
-      #colorLiteral(red: 0.5563425422, green: 0.9793455005, blue: 0, alpha: 1),
-      #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1),
-      #colorLiteral(red: 0, green: 0.9810667634, blue: 0.5736914277, alpha: 1),
-      #colorLiteral(red: 0, green: 0.9914394021, blue: 1, alpha: 1),
-      #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1),
-      #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1),
-      #colorLiteral(red: 0.5818830132, green: 0.2156915367, blue: 1, alpha: 1),
-      #colorLiteral(red: 1, green: 0.2527923882, blue: 1, alpha: 1),
-      #colorLiteral(red: 1, green: 0.1857388616, blue: 0.5733950138, alpha: 1),
+      #colorLiteral(red: 0.6039215686, green: 0.7176470588, blue: 0.4901960784, alpha: 1),
+      #colorLiteral(red: 0.4235294118, green: 0.6, blue: 0.3098039216, alpha: 1),
+      #colorLiteral(red: 0.2431372549, green: 0.3843137255, blue: 0.1960784314, alpha: 1),
+      #colorLiteral(red: 0.1019607843, green: 0.2588235294, blue: 0.1137254902, alpha: 1),
+      #colorLiteral(red: 0.09803921569, green: 0.1764705882, blue: 0.09411764706, alpha: 1),
+      #colorLiteral(red: 0.007843137255, green: 0.0431372549, blue: 0.01960784314, alpha: 1)
     ]
+  }
+  
+  static func harvestWood() -> [UIColor] {
+    return [
+      #colorLiteral(red: 0.3058823529, green: 0.3725490196, blue: 0.3843137255, alpha: 1),
+      #colorLiteral(red: 0.4235294118, green: 0.431372549, blue: 0.2509803922, alpha: 1),
+      #colorLiteral(red: 0.9058823529, green: 0.7019607843, blue: 0.3803921569, alpha: 1),
+      #colorLiteral(red: 0.6901960784, green: 0.3725490196, blue: 0.1411764706, alpha: 1),
+      #colorLiteral(red: 0.4941176471, green: 0.168627451, blue: 0.1254901961, alpha: 1),
+      #colorLiteral(red: 0.2823529412, green: 0.1529411765, blue: 0.03921568627, alpha: 1)
+    ]
+  }
+  
+  static func harvestBlue() -> [UIColor] {
+    return [
+      #colorLiteral(red: 0.4470588235, green: 0.7529411765, blue: 0.9764705882, alpha: 1),
+      #colorLiteral(red: 0.2745098039, green: 0.631372549, blue: 0.9725490196, alpha: 1),
+      #colorLiteral(red: 0.1921568627, green: 0.462745098, blue: 0.7098039216, alpha: 1),
+      #colorLiteral(red: 0.1137254902, green: 0.3019607843, blue: 0.4862745098, alpha: 1),
+      #colorLiteral(red: 0.06666666667, green: 0.2078431373, blue: 0.3725490196, alpha: 1),
+      #colorLiteral(red: 0.01960784314, green: 0.09411764706, blue: 0.2078431373, alpha: 1)
+    ]
+  }
+  
+  static func harvestColorful() -> [UIColor] {
+    return [
+      #colorLiteral(red: 0.2745098039, green: 0.631372549, blue: 0.9725490196, alpha: 1),
+      #colorLiteral(red: 0.5058823529, green: 0.831372549, blue: 0.3254901961, alpha: 1),
+      #colorLiteral(red: 0.937254902, green: 0.7333333333, blue: 0.2509803922, alpha: 1),
+      #colorLiteral(red: 0.9215686275, green: 0.2509803922, blue: 0.1450980392, alpha: 1),
+      #colorLiteral(red: 0.7058823529, green: 0.3176470588, blue: 0.5137254902, alpha: 1),
+      #colorLiteral(red: 0.3725490196, green: 0.3725490196, blue: 0.3725490196, alpha: 1)
+    ]
+  }
+  
+  static func harvest() -> [UIColor] {
+    return harvestWood()
   }
 }
