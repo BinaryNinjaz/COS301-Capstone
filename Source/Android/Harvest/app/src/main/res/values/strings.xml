@@ -148,4 +148,8 @@
     <string name="OrhHistPerformance">Orchard Historical Performance</string>
     <string name="title_stats">Stats</string>
     <string name="title_activity_foremen_session">ForemenSessionActivity</string>
+    <string name="sessionDetailStartDate">Time Started</string>
+    <string name="sessionDetailEndDate">Time Ended</string>
+    <string name="sessionDetailForemanName">Foreman</string>
+    <string name="sessionDetailsViewPickups">Tracked Path and Collection Points</string>
 </resources>
