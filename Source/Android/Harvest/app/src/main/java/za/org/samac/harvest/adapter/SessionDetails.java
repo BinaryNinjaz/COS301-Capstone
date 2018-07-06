@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -27,10 +28,12 @@ import java.util.HashMap;
 
 import za.org.samac.harvest.Analytics;
 import za.org.samac.harvest.InformationActivity;
+import za.org.samac.harvest.LoginActivity;
 import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.Sessions;
 import za.org.samac.harvest.SessionsMap;
+import za.org.samac.harvest.SignUpActivity;
 import za.org.samac.harvest.domain.Worker;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
@@ -47,11 +50,15 @@ public class SessionDetails extends AppCompatActivity {
     private HashMap<String, String> workerID;
     private ArrayList<Worker> foremen;
     private HashMap<String, String> foremenID;
+    //private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_details);
+
+        //progressBar = findViewById(R.id.progressBar);
+        //progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
         collected = new collections("");
 
@@ -59,8 +66,10 @@ public class SessionDetails extends AppCompatActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent map = new Intent(getApplicationContext(), SessionsMap.class);
-                getApplicationContext().startActivity(map);
+                //Intent map = new Intent(getApplicationContext(), SessionsMap.class);
+                //getApplicationContext().startActivity(map);
+                Intent intent = new Intent(SessionDetails.this, SessionsMap.class);
+                startActivity(intent);
             }
         });
 
@@ -87,6 +96,9 @@ public class SessionDetails extends AppCompatActivity {
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                    //startDate = new Date((long)(zoneSnapshot.child("start_date").getValue(Double.class)*1000));
+                }
                 startDate = new Date((long)(dataSnapshot.child("start_date").getValue(Double.class) * 1000));
                 Double ed = dataSnapshot.child("end_date").getValue(Double.class);
                 if (ed != null) {
@@ -126,7 +138,6 @@ public class SessionDetails extends AppCompatActivity {
 
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
                 formatter.setCalendar(Calendar.getInstance());
-
 
                 String fname = foremenID.get(wid) == null ? "Farm Owner" : foremenID.get(wid);
                 foremanTextView.setText("Foreman: " + fname);
