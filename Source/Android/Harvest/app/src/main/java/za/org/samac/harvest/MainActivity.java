@@ -647,31 +647,54 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      Sessions for each worker still needs to be implemented *
      */
     long startTime = 0, stopTime = 0;
-    //Handler handler = new Handler();
-    //int delay = 1000; //milliseconds
+    Handler handler = new Handler();
+    int delay = 5000; //milliseconds
     Boolean locationWanted = false;
+    int secondsLocationIsNull = 0;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
-        /*ExecutorService threadPoolExecutor = Executors.newSingleThreadExecutor();
-        Runnable runnable = new Runnable() {
+        ExecutorService threadPoolExecutor = Executors.newSingleThreadExecutor();
 
-            @Override
-            public void run() {
-
-            }
-        };
-        handler.postDelayed(runnable, delay);
-
-        if (location != null) {
+        /*if (location != null) {
             Future longRunningTaskFuture = threadPoolExecutor.submit(runnable);
             longRunningTaskFuture.cancel(true);
         }*/
 
-        if(location == null) {
+        if(location == null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.VISIBLE);
             Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
             recyclerView.setVisibility(View.GONE);
+
+            handler.postDelayed(new Runnable(){
+                public void run(){
+                    //do something
+                    if(location == null) {
+
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        return;
+                    }
+
+                    if (secondsLocationIsNull >= 30 && btnStart.getTag() != "green") {
+                        progressBar.setVisibility(View.GONE);
+                        Snackbar.make(recyclerView, "Could not obtaining GPS Information. Please restart session.", 5000)
+                            .setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                }
+                            })
+                            .show();
+                        return;
+                    }
+
+                    secondsLocationIsNull += 5;
+
+                    handler.postDelayed(this, delay);
+                }
+            }, delay);
         } else {
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
@@ -758,6 +781,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("orange");
         } else {
             //TODO: check if app closes or crashes
+            progressBar.setVisibility(View.GONE);
             if (adapter.totalBagsCollected == 0) {
                 String msg = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
                 AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
