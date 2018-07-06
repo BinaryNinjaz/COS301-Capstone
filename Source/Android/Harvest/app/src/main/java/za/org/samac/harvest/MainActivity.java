@@ -39,8 +39,6 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,9 +50,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.functions.FirebaseFunctions;
-import com.google.firebase.functions.FirebaseFunctionsException;
-import com.google.firebase.functions.HttpsCallableResult;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -705,16 +700,45 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
         if(location != null) {
-            DatabaseReference myRef;
+            final DatabaseReference myRef;
             myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
-            myRef.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (child.toString().equals(foremanID)) {
+                            myRef.removeValue();
+                            locationWanted = true;
+                            break;
+                        }
+                    }
+
+                    if (locationWanted == true) {
+                        DatabaseReference myRef2;
+                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+
+                        Map<String, Object> coordinates = new HashMap<>();
+                        coordinates.put("lat", location.getLatitude());
+                        coordinates.put("lng", location.getLongitude());
+
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("coord", coordinates);
+                        childUpdates.put("display", foremanName);
+
+                        myRef2.updateChildren(childUpdates);//store location
+                    }
                 }
 
                 @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            myRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         if (child.toString().equals(foremanID)) {
                             locationWanted = true;
@@ -736,6 +760,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                         myRef2.updateChildren(childUpdates);//store location
                     }
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
                 }
 
                 @Override
