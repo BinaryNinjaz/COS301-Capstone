@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 if (isFarmer){
                     farmerKey = uid;
-                    getExpectedYield();//getPolygon();//set expected yield
+                    getPolygon();//set expected yield
                     currUserRef = database.getReference(uid);//Firebase reference
                     workersRef = currUserRef.child("workers");
                     collectWorkers();
@@ -291,8 +291,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
     ArrayList<String> coords = new ArrayList<>();
-    List<List<Double>> polygonStore = new ArrayList();
+    List<Double> polygonStoreX = new ArrayList();
+    List<Double> polygonStoreY = new ArrayList();
+    List<Double> polygonX = new ArrayList();
+    List<Double> polygonY = new ArrayList();
     ArrayList<String> currentOrchard = new ArrayList<>();
+    String correctOrchard = "";
     int holdi;
 
     private void getPolygon() {
@@ -346,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
     }
 
+    int coordsCount = 0;
     private void pathAfterGotCoords() {
         for (int j = 0; j<coords.size(); j++) {
             DatabaseReference myRef3;
@@ -353,17 +358,41 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             myRef3.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    int k = 0;
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    String lat = dataSnapshot.child("lat").getValue().toString();
+                    String lng = dataSnapshot.child("lng").getValue().toString();
+                    polygonStoreX.add(Double.parseDouble(lat));
+                    polygonStoreY.add(Double.parseDouble(lng));
+                    coordsCount++;
+                    /*for (DataSnapshot child : dataSnapshot.getChildren()) {
                         String lat = child.child("lat").toString();
                         String lng = child.child("lng").toString();
-                        polygonStore.get(k).set(0, Double.parseDouble(lat));
-                        polygonStore.get(k).set(1, Double.parseDouble(lng));
+                        polygonStoreX.add(Double.parseDouble(lat));
+                        polygonStoreY.add(Double.parseDouble(lng));
                         k++;
                         if (dataSnapshot.getChildrenCount() == k) {
                             if (polygonContainsPoint(polygonStore) == true) {
                                 System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Contains Point" + " @@@@@@@@@@@@@@@@@@@@@ ");
                                 getExpectedYield();//set expected yield
+                            }
+                        }
+                    }*/
+
+                    if (coordsCount == coords.size()) {
+                        for (int m = 0; m < currentOrchard.size(); m++) {
+                            for (int i = 0; i < coords.size(); i++) {
+                                if (coords.get(i).contains(currentOrchard.get(m))) {
+                                    polygonX.add(polygonStoreX.get(i));
+                                    polygonY.add(polygonStoreY.get(i));
+                                    correctOrchard = currentOrchard.get(m);
+                                }
+                            }
+
+                            if (polygonContainsPoint(polygonX, polygonY) == true) {
+                                System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Contains Point" + " @@@@@@@@@@@@@@@@@@@@@ ");
+                                getExpectedYield();//set expected yield
+                            } else {
+                                polygonX.clear();
+                                polygonY.clear();
                             }
                         }
                     }
@@ -377,7 +406,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    private Boolean polygonContainsPoint(List<List<Double>> polygon) {
+    private Boolean polygonContainsPoint(List<Double> px, List<Double> py) {
         Double pointx = 0.0;
         Double pointy = 0.0;
         if (location != null) {
@@ -385,10 +414,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             pointy = location.getLongitude();
         }
 
-        int i = 0;
-        int j = polygon.size() - 1;
+        /*int i = 0;
+        int j = polygon.size() - 1;*/
         Boolean c = false;
-        for (; i < polygon.size(); j = i++) {
+
+        int k = 0;
+        int m = px.size()- 1;
+        for (; k<px.size(); m = k++) {
+            final Boolean yValid = (py.get(k) > pointy) != (py.get(m) > pointy);
+            final Double xValidCond = (px.get(m) - px.get(k)) * (pointx - py.get(k)) / (py.get(m) - py.get(k)) + px.get(k);
+
+            if (yValid && pointx < xValidCond) {
+                c = !c;
+            }
+        }
+
+        /*for (; i < polygon.size(); j = i++) {
             Point pi = (Point) polygon.get(i);
             Point pj = (Point) polygon.get(j);
             final Boolean yValid = (pi.y > pointy) != (pj.y > pointy);
@@ -397,14 +438,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             if (yValid && pointx < xValidCond) {
                 c = !c;
             }
-        }
+        }*/
         return c;
     }
 
     private String urlExpectYieldText() {
         String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield?";
-        System.out.println(" ************************* " + currentOrchard + " ************************* ");
-        base = base + "orchardId=" + "-LCEFgdMMO80LR98BzPC";//currentOrchard;//get correct orchard ID
+        System.out.println(" ************************* " + correctOrchard + " ************************* ");
+        base = base + "orchardId=" + correctOrchard;//"-LCEFgdMMO80LR98BzPC";//currentOrchard;//get correct orchard ID
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
@@ -595,7 +636,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     farmerKey = child.getKey();
 
                     farmerKey = child.getKey();
-                    getExpectedYield();//getPolygon();//set expected yield
+                    getPolygon();//set expected yield
                     farmLevelRef = database.getReference(farmerKey);//Firebase reference
                     workersRef = farmLevelRef.child("workers");
                     collectWorkers();
