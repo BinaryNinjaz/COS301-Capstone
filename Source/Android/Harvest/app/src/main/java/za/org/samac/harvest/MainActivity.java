@@ -179,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
 
         locationPermissions();
-        statusCheck();
         //new LocationHelper().getLocation(this);
 
         uid = user.getUid();
@@ -190,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
+        statusCheck();
     }
 
     @Override
@@ -232,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 if (isFarmer){
                     farmerKey = uid;
+                    getExpectedYield();//getPolygon();//set expected yield
                     currUserRef = database.getReference(uid);//Firebase reference
                     workersRef = currUserRef.child("workers");
                     collectWorkers();
@@ -239,8 +240,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 else {
                     getFarmKey();
                 }
-
-                getExpectedYield();//getPolygon();//set expected yield
 
                 btnStart.setTag("green");//it is best not to use the tag to identify button status
 
@@ -601,6 +600,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     farmerKey = child.getKey();
 
                     farmerKey = child.getKey();
+                    getExpectedYield();//getPolygon();//set expected yield
                     farmLevelRef = database.getReference(farmerKey);//Firebase reference
                     workersRef = farmLevelRef.child("workers");
                     collectWorkers();
