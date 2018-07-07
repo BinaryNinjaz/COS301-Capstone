@@ -10,7 +10,6 @@ import Eureka
 
 public final class StatSetupViewController: FormViewController {
   var workersRow: MultipleSelectorRow<Worker>! = nil
-  var sessionsRow: PushRow<ShallowSession>! = nil
   var orchardsRow: MultipleSelectorRow<Orchard>! = nil
   var foremenRow: MultipleSelectorRow<Worker>! = nil
   
@@ -47,22 +46,10 @@ public final class StatSetupViewController: FormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .foremen
       }
-      }.cellUpdate { _, row in
-        row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
-        row.options?.append(Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid))
+    }.cellUpdate { _, row in
+      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
+      row.options?.append(Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid))
     }
-    
-//    sessionsRow = PushRow<ShallowSession> { row in
-//      row.title = "Session Selection"
-//      row.options = Entities.shared.shallowSessions.map { $0.value }
-//      row.value = row.options?.first
-//      row.hidden = Condition.function(["Stat Kind"]) { form in
-//        let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
-//        return row?.value != .perSessionWorkers
-//      }
-//    }.cellUpdate { _, row in
-//      row.options = Entities.shared.shallowSessions.map { $0.value }
-//    }
     
     orchardsRow = MultipleSelectorRow<Orchard> { row in
       row.title = "Orchard Selection"
