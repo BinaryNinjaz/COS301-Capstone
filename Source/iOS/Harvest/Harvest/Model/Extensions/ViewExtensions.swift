@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 extension UIView {
   func apply(gradient: CAGradientLayer) {
@@ -91,6 +92,23 @@ extension UIView {
                    y: y,
                    width: frame.width,
                    height: frame.height)
+  }
+}
+
+enum Snap {
+  static func fillParent(on controller: UIViewController) -> (ConstraintMaker) -> Void {
+    return { make in
+      make.top.equalTo(controller.topLayoutGuide.snp.bottom)
+      make.bottom.equalTo(controller.bottomLayoutGuide.snp.top)
+      
+      if #available(iOS 11.0, *) {
+        make.left.equalTo(controller.view.safeAreaLayoutGuide.snp.left)
+        make.right.equalTo(controller.view.safeAreaLayoutGuide.snp.right)
+      } else {
+        make.left.equalTo(0)
+        make.width.equalToSuperview()
+      }
+    }
   }
 }
 

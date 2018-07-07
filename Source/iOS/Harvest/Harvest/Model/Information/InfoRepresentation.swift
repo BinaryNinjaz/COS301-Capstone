@@ -16,9 +16,12 @@ extension UIViewController {
     endDate: Date,
     period: HarvestCloud.TimePeriod,
     stat: Stat
-  ) -> LabelRow {
-    return LabelRow { row in
+  ) -> ButtonRow {
+    return ButtonRow { row in
       row.title = title
+    }.cellUpdate { cell, _ in
+      cell.textLabel?.textAlignment = .left
+      cell.textLabel?.textColor = .addOrchard
     }.onCellSelection { _, _ in
       guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
         return
@@ -39,7 +42,7 @@ extension UIViewController {
 }
 
 extension FormViewController {
-  func performanceRows(for stat: Stat) -> [LabelRow] {
+  func performanceRows(for stat: Stat) -> [ButtonRow] {
     let today = Date().today()
     let todaysPerformance = prebuiltGraph(
       title: "Todays Performance",
@@ -243,7 +246,6 @@ extension Worker {
         performanceSection <<< prow
       }
     }
-    
     
     form
       +++ Section()

@@ -8,6 +8,7 @@
 
 import UIKit
 import Charts
+import SnapKit
 
 class StatsViewController: UIViewController {
   var stat: Stat?
@@ -39,6 +40,10 @@ class StatsViewController: UIViewController {
     view.addSubview(barChart!)
     view.addSubview(pieChart!)
     view.addSubview(lineChart!)
+    
+    barChart?.snp.makeConstraints(Snap.fillParent(on: self))
+    lineChart?.snp.makeConstraints(Snap.fillParent(on: self))
+    pieChart?.snp.makeConstraints(Snap.fillParent(on: self))
     
     setUpLineChart()
     setUpBarChart()

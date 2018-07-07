@@ -12,6 +12,9 @@ public final class StatSelectionViewController: FormViewController {
   func customGraph() -> LabelRow {
     return LabelRow { row in
       row.title = "Make Your Own Graph"
+    }.cellUpdate { cell, _ in
+      cell.textLabel?.textAlignment = .left
+      cell.textLabel?.textColor = .addOrchard
     }.onCellSelection { _, _ in
       guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statSetupViewController") else {
         return

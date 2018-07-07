@@ -605,10 +605,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="workerClickerCollectionView" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="always" keyboardDismissMode="onDrag" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-iq-Vf2">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="workerClickerCollectionView" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="always" keyboardDismissMode="onDrag" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-iq-Vf2">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <viewLayoutGuide key="safeArea" id="WVh-cf-GbO"/>
                                 <inset key="scrollIndicatorInsets" minX="0.0" minY="56" maxX="0.0" maxY="106"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" sectionInsetReference="safeArea" id="ieY-Xz-2Oa">
                                     <size key="itemSize" width="156" height="109"/>
@@ -771,12 +771,16 @@ Expected Yield: 0</string>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="Hix-SN-Eq3" firstAttribute="leading" secondItem="Y8O-8S-VIT" secondAttribute="leadingMargin" constant="-16" id="8mN-sr-A6V"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Hix-SN-Eq3" secondAttribute="trailing" constant="-16" id="9dw-ZV-XfZ"/>
-                            <constraint firstAttribute="trailing" secondItem="NUJ-f3-gPy" secondAttribute="trailing" id="C40-gS-kjP"/>
+                            <constraint firstItem="NUJ-f3-gPy" firstAttribute="trailing" secondItem="5MG-iq-Vf2" secondAttribute="trailing" id="3ii-nA-gdr"/>
+                            <constraint firstItem="Hix-SN-Eq3" firstAttribute="leading" secondItem="gY2-33-92o" secondAttribute="leading" id="8mN-sr-A6V"/>
+                            <constraint firstItem="gY2-33-92o" firstAttribute="trailing" secondItem="Hix-SN-Eq3" secondAttribute="trailing" id="9dw-ZV-XfZ"/>
+                            <constraint firstItem="gY2-33-92o" firstAttribute="trailing" secondItem="NUJ-f3-gPy" secondAttribute="trailing" id="C40-gS-kjP"/>
+                            <constraint firstAttribute="top" secondItem="5MG-iq-Vf2" secondAttribute="top" id="CRv-MY-Ual"/>
                             <constraint firstItem="Hix-SN-Eq3" firstAttribute="top" secondItem="Y8O-8S-VIT" secondAttribute="top" id="EBh-UW-M06"/>
-                            <constraint firstItem="NUJ-f3-gPy" firstAttribute="leading" secondItem="Y8O-8S-VIT" secondAttribute="leading" id="GWc-Vf-rWd"/>
+                            <constraint firstItem="NUJ-f3-gPy" firstAttribute="leading" secondItem="gY2-33-92o" secondAttribute="leading" id="GWc-Vf-rWd"/>
+                            <constraint firstItem="5MG-iq-Vf2" firstAttribute="bottom" secondItem="Y8O-8S-VIT" secondAttribute="bottom" id="WmY-9G-iTy"/>
                             <constraint firstItem="NUJ-f3-gPy" firstAttribute="top" secondItem="gY2-33-92o" secondAttribute="bottom" constant="-96" id="YuS-dY-7Gm"/>
+                            <constraint firstItem="NUJ-f3-gPy" firstAttribute="leading" secondItem="5MG-iq-Vf2" secondAttribute="leading" id="a8Z-Na-k0W"/>
                             <constraint firstItem="gY2-33-92o" firstAttribute="bottom" secondItem="NUJ-f3-gPy" secondAttribute="bottom" id="cPP-79-d2b"/>
                             <constraint firstItem="gY2-33-92o" firstAttribute="top" secondItem="Hix-SN-Eq3" secondAttribute="bottom" constant="-56" id="kCh-Gx-nGO"/>
                         </constraints>
@@ -1305,7 +1309,7 @@ Expected Yield: 0</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OUu-Iz-cvC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4375" y="-1369"/>
+            <point key="canvasLocation" x="4373.6000000000004" y="-1369.5652173913045"/>
         </scene>
     </scenes>
     <resources>

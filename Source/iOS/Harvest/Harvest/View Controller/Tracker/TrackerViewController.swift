@@ -438,12 +438,20 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
     
+    let sbh = UIApplication.shared.statusBarFrame.height
+    let tbh = tabBarController?.tabBar.frame.height ?? 0
+    let nch = navigationController?.navigationBar.frame.height ?? 0
+    let coh = startSessionButton.frame.height + 8
+    let ofh = sbh + tbh + nch + coh
+    
     let w = collectionView.frame.width
-    let h = collectionView.frame.height - 300
+    let h = collectionView.frame.height - ofh
     
     let n = CGFloat(Int(w / 156))
     
     let cw = w / n - ((n - 1) / n)
+    
+    print(w, h, n, cw)
     
     return CGSize(width: shouldDisplayMessage ? w - 2 : cw,
                   height: shouldDisplayMessage ? h : 109)

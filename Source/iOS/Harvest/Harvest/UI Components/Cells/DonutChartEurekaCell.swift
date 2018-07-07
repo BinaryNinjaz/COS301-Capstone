@@ -19,7 +19,7 @@ public class DonutChartCell: Cell<Session>, CellType {
     chart.noDataText = "No Data Available to Show"
     chart.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
     height = {
-      self.frame.size.width
+      min(self.frame.size.width, 700)
     }
   }
   
