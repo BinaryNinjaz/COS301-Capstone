@@ -175,7 +175,6 @@ enum HarvestCloud {
     let body = makeBody(withArgs: args)
     
     runTask(Identifiers.timeGraphSessions, withBody: body) { (data) in
-      print("!*!*!", data)
       completion(data)
     }
   }

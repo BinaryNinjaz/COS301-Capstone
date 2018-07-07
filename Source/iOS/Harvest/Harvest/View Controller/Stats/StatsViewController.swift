@@ -62,24 +62,9 @@ class StatsViewController: UIViewController {
     }
   }
   
-//  func drawPerSessionWorkers() {
-//    stat?.perSessionWorkersData { pieDataSet in
-//      guard let pieDataSet = pieDataSet else {
-//        return
-//      }
-//      pieDataSet.colors = ChartColorTemplates.material()
-//
-//      let pieData = PieChartData(dataSet: pieDataSet)
-//      self.pieChart?.data = pieData
-//      self.pieChart?.notifyDataSetChanged()
-//      self.pieChart?.isHidden = false
-//      self.pieChart?.animate(xAxisDuration: 3.0, yAxisDuration: 1.0, easingOption: .easeOutCubic)
-//    }
-//  }
-  
   func updateBarChart(with data: BarChartData?) {
     guard let barData = data else {
-      // FIXME: Show no data
+      barChart?.data = nil
       return
     }
     if barData.dataSetCount > 1 {
@@ -151,6 +136,8 @@ class StatsViewController: UIViewController {
     barChart?.rightAxis.drawGridLinesEnabled = false
     barChart?.xAxis.axisMinimum = 0
     barChart?.rightAxis.enabled = false
+    barChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
+    barChart?.noDataText = "No Data Available to Show"
     
     if let l = barChart?.legend {
       l.enabled = true

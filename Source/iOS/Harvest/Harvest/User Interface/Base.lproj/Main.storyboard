@@ -1253,17 +1253,33 @@ Expected Yield: 0</string>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="gv5-CQ-k63" kind="relationship" relationship="rootViewController" id="DRo-Td-tnp"/>
+                        <segue destination="g3c-vh-HOq" kind="relationship" relationship="rootViewController" id="pB4-26-IAT"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ph-aO-2mI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2257" y="-1367"/>
         </scene>
+        <!--Stat Selection View Controller-->
+        <scene sceneID="DUN-5y-q3f">
+            <objects>
+                <viewController id="g3c-vh-HOq" customClass="StatSelectionViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Oql-k7-BNg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="kBx-hL-jzl"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ER5-dK-YN4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L30-Ny-Uef" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2990" y="-1368"/>
+        </scene>
         <!--Stats-->
         <scene sceneID="8a4-2M-KR5">
             <objects>
-                <viewController id="gv5-CQ-k63" customClass="StatSetupViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="statSetupViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gv5-CQ-k63" customClass="StatSetupViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Iht-kE-QOE">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1274,7 +1290,7 @@ Expected Yield: 0</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yN8-wO-GVs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3084" y="-1368"/>
+            <point key="canvasLocation" x="3687" y="-1369"/>
         </scene>
         <!--Stats View Controller-->
         <scene sceneID="bsf-4i-m0m">
@@ -1289,13 +1305,13 @@ Expected Yield: 0</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OUu-Iz-cvC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3854" y="-1369"/>
+            <point key="canvasLocation" x="4375" y="-1369"/>
         </scene>
     </scenes>
     <resources>
         <image name="Add" width="30" height="30"/>
         <image name="GeoFence" width="30" height="30"/>
-        <image name="Hand" width="3264" height="2448"/>
+        <image name="Hand" width="4032" height="3024"/>
         <image name="Infomation" width="30" height="30"/>
         <image name="Location" width="30" height="30"/>
         <image name="Sessions" width="5616" height="3744"/>
