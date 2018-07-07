@@ -1,6 +1,8 @@
 package za.org.samac.harvest.adapter;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -202,6 +204,7 @@ public class SessionDetails extends AppCompatActivity {
 
         PieDataSet dataset = new PieDataSet(entries, "Dataset");
         dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        dataset.setValueTextColor(Color.BLACK);
 
         PieData data = new PieData(dataset);//labels was one of the parameters
         pieChart.setData(data); // set the data and list of lables into chart

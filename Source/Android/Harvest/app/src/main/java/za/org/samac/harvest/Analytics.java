@@ -99,7 +99,7 @@ public class Analytics extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //user selects to see pie chart
-        perSesWorkerComparison = findViewById(R.id.perSesWorkerComparison);
+        perSesWorkerComparison = findViewById(R.id.workerHistPerformance);
         perSesWorkerComparison.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,11 +109,11 @@ public class Analytics extends AppCompatActivity {
         });
 
         //user selects to see bar graph
-        orhHistPerformance = findViewById(R.id.orhHistPerformance);
+        orhHistPerformance = findViewById(R.id.orchHistPerformance);
         orhHistPerformance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Analytics.this, BarGraph.class);
+                Intent intent = new Intent(Analytics.this, OrchardsForGraph.class);
                 startActivity(intent);
             }
         });
