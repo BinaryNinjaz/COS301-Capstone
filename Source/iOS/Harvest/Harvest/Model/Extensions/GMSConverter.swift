@@ -37,39 +37,6 @@ extension Array where Element == CLLocationCoordinate2D {
   }
 }
 
-extension CLLocationCoordinate2D {
-  func toRadians() -> (lat: Double, lng: Double) {
-    return (latitude.toRadians(), longitude.toRadians())
-  }
-}
-
-extension Double {
-  func toRadians() -> Double {
-    return self * .pi / 180.0
-  }
-  
-  func squared() -> Double {
-    return self * self
-  }
-}
-
-extension Array where Element == CLLocationCoordinate2D {
-  func euclideanDistance() -> Double {
-    return zip(dropFirst(), dropLast())
-      .lazy
-      .map { a, b in
-        let dLat = (b.latitude - a.latitude).toRadians()
-        let dLng = (b.longitude - a.longitude).toRadians()
-        let a = sin(dLat / 2).squared()
-          + sin(dLng / 2).squared() * cos(a.latitude.toRadians()) * cos(b.latitude.toRadians())
-        let c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        let d = c * 6371e3
-        return d
-      }
-      .reduce(0, +)
-  }
-}
-
 extension Dictionary where Key == Worker, Value == [CollectionPoint] {
   func gmsMarkers(mapView: GMSMapView) -> [GMSMarker] {
     var result: [GMSMarker] = []

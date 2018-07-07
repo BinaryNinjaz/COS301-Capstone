@@ -19,7 +19,7 @@ class TrackerViewController: UIViewController {
       TrackerViewController.tracker = newValue
     }
   }
-  var locationManager: CLLocationManager!
+  var locationManager: CLLocationManager?
   var currentLocation: CLLocation?
   var currentOrchardID: String = "" {
     didSet {
@@ -51,7 +51,7 @@ class TrackerViewController: UIViewController {
   @IBOutlet weak var yieldLabel: UILabel!
   
   fileprivate func finishCollecting() {
-    locationManager.stopUpdatingLocation()
+    locationManager?.stopUpdatingLocation()
     
     startSessionButton.setTitle("Start", for: .normal)
     let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
@@ -70,7 +70,7 @@ class TrackerViewController: UIViewController {
   }
   
   fileprivate func discardCollections() {
-    self.locationManager.stopUpdatingLocation()
+    self.locationManager?.stopUpdatingLocation()
     
     self.startSessionButton.setTitle("Start", for: .normal)
     let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
@@ -139,13 +139,13 @@ class TrackerViewController: UIViewController {
     if tracker == nil {
       if locationManager == nil {
         locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager?.delegate = self
+        locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
       }
       
-      locationManager.requestAlwaysAuthorization()
+      locationManager?.requestAlwaysAuthorization()
       if CLLocationManager.locationServicesEnabled() {
-        locationManager.startUpdatingLocation()
+        locationManager?.startUpdatingLocation()
         startSessionButton.setTitle("Stop", for: .normal)
         let sessionLayer = CAGradientLayer.gradient(colors: .stopSession,
                                                     locations: [0, 1],
@@ -217,9 +217,11 @@ class TrackerViewController: UIViewController {
 
 extension TrackerViewController: CLLocationManagerDelegate {
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    guard let loc = locations.first else {
+    guard let loc = locations.first, loc.horizontalAccuracy < 250 else {
+      currentLocation = locations.first
       return
     }
+    
     currentLocation = loc
     if let oid = tracker?.track(location: loc) {
       currentOrchardID = oid
@@ -276,7 +278,7 @@ extension TrackerViewController: UICollectionViewDataSource {
   
   func incrementBagCollection(at indexPath: IndexPath) -> (WorkerCollectionViewCell) -> Void {
     return { cell in
-      self.locationManager.requestLocation()
+      self.locationManager?.requestLocation()
       guard let loc = self.currentLocation else {
         cell.inc?(cell)
         return
