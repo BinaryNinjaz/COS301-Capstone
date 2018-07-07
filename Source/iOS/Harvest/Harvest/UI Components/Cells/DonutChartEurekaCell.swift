@@ -19,13 +19,18 @@ public class DonutChartCell: Cell<Session>, CellType {
     chart.noDataText = "No Data Available to Show"
     chart.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
     height = {
-      min(self.frame.size.width, 700)
+      min(self.superview?.frame.width ?? 360, self.superview?.frame.height ?? 360)
     }
   }
   
   public override func update() {
     super.update()
     chart.data = row?.value?.workerPerformanceSummary()
+    
+    let wname = row.value?.foreman.name ?? "Unknown Foreman"
+    let dist = row?.value?.track.euclideanDistance() ?? .nan
+    
+    chart.centerText = "\(wname) Traveled: \n\(dist == .nan ? "--" : Int(dist).description + "m")"
   }
 }
 

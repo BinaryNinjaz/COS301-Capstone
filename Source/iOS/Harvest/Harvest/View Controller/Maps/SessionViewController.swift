@@ -43,6 +43,8 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
     }
     
     trackLine = session.track.gmsPolyline(mapView: mapView)
+    trackLine?.title = "Total Distance Traveled by Foreman: \(session.track.euclideanDistance())"
+    
     pickUpMarkers = session.collections.gmsMarkers(mapView: mapView)
     
     orchardPolygons.removeAll(keepingCapacity: true)

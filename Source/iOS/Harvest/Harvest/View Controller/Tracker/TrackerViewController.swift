@@ -51,7 +51,7 @@ class TrackerViewController: UIViewController {
   @IBOutlet weak var yieldLabel: UILabel!
   
   fileprivate func finishCollecting() {
-    locationManager.stopMonitoringSignificantLocationChanges()
+    locationManager.stopUpdatingLocation()
     
     startSessionButton.setTitle("Start", for: .normal)
     let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
@@ -70,7 +70,7 @@ class TrackerViewController: UIViewController {
   }
   
   fileprivate func discardCollections() {
-    self.locationManager.stopMonitoringSignificantLocationChanges()
+    self.locationManager.stopUpdatingLocation()
     
     self.startSessionButton.setTitle("Start", for: .normal)
     let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
@@ -140,12 +140,12 @@ class TrackerViewController: UIViewController {
       if locationManager == nil {
         locationManager = CLLocationManager()
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
       }
       
       locationManager.requestAlwaysAuthorization()
       if CLLocationManager.locationServicesEnabled() {
-        locationManager.startMonitoringSignificantLocationChanges()
+        locationManager.startUpdatingLocation()
         startSessionButton.setTitle("Stop", for: .normal)
         let sessionLayer = CAGradientLayer.gradient(colors: .stopSession,
                                                     locations: [0, 1],
@@ -450,8 +450,6 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
     let n = CGFloat(Int(w / 156))
     
     let cw = w / n - ((n - 1) / n)
-    
-    print(w, h, n, cw)
     
     return CGSize(width: shouldDisplayMessage ? w - 2 : cw,
                   height: shouldDisplayMessage ? h : 109)
