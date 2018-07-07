@@ -9,6 +9,96 @@
 // swiftlint:disable function_body_length
 import Eureka
 
+extension UIViewController {
+  func prebuiltGraph(
+    title: String,
+    startDate: Date,
+    endDate: Date,
+    period: HarvestCloud.TimePeriod,
+    stat: Stat
+  ) -> LabelRow {
+    return LabelRow { row in
+      row.title = title
+    }.onCellSelection { _, _ in
+      guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
+        return
+      }
+      
+      guard let svc = vc as? StatsViewController else {
+        return
+      }
+      
+      svc.startDate = startDate
+      svc.endDate = endDate
+      svc.period = period
+      svc.stat = stat
+      
+      self.navigationController?.pushViewController(svc, animated: true)
+    }
+  }
+}
+
+extension FormViewController {
+  func performanceRows(for stat: Stat) -> [LabelRow] {
+    let today = Date().today()
+    let todaysPerformance = prebuiltGraph(
+      title: "Todays Performance",
+      startDate: today.0,
+      endDate: today.1,
+      period: .hourly,
+      stat: stat)
+    
+    let yesterday = Date().yesterday()
+    let yesterdaysPerformance = prebuiltGraph(
+      title: "Yesterdays Performance",
+      startDate: yesterday.0,
+      endDate: yesterday.1,
+      period: .hourly,
+      stat: stat)
+    
+    let thisWeek = Date().thisWeek()
+    let thisWeeksPerformance = prebuiltGraph(
+      title: "This Weeks Performance",
+      startDate: thisWeek.0,
+      endDate: thisWeek.1,
+      period: .daily,
+      stat: stat)
+    
+    let lastWeek = Date().lastWeek()
+    let lastWeeksPerformance = prebuiltGraph(
+      title: "Last Weeks Performance",
+      startDate: lastWeek.0,
+      endDate: lastWeek.1,
+      period: .daily,
+      stat: stat)
+    
+    let thisMonth = Date().thisMonth()
+    let thisMonthsPerformance = prebuiltGraph(
+      title: "This Months Performance",
+      startDate: thisMonth.0,
+      endDate: thisMonth.1,
+      period: .weekly,
+      stat: stat)
+    
+    let lastMonth = Date().lastMonth()
+    let lastMonthsPerformance = prebuiltGraph(
+      title: "Last Months Performance",
+      startDate: lastMonth.0,
+      endDate: lastMonth.1,
+      period: .weekly,
+      stat: stat)
+    
+    return [
+      todaysPerformance,
+      yesterdaysPerformance,
+      thisWeeksPerformance,
+      lastWeeksPerformance,
+      thisMonthsPerformance,
+      lastMonthsPerformance
+    ]
+  }
+}
+
 extension Worker {
   func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
@@ -143,6 +233,18 @@ extension Worker {
       cell.backgroundColor = .red
     }
     
+    let performanceSection = Section("Performance")
+    if kind == .worker {
+      for prow in formVC.performanceRows(for: .workerComparison([self])) {
+        performanceSection <<< prow
+      }
+    } else {
+      for prow in formVC.performanceRows(for: .foremanComparison([self])) {
+        performanceSection <<< prow
+      }
+    }
+    
+    
     form
       +++ Section()
       <<< firstnameRow
@@ -157,11 +259,13 @@ extension Worker {
 //      +++ Section("Contact")
 //      <<< phoneRow
     
+      +++ orchardSection
+      
+      +++ performanceSection
+    
       +++ Section("Information")
       <<< infoRow
-    
-      +++ orchardSection
-    
+      
       +++ Section()
       <<< deleteWorkerRow
   }
@@ -297,12 +401,12 @@ extension Farm {
       +++ Section("Location")
       <<< provinceRow
       <<< nearestTownRow
-      
-      +++ Section("Details")
-      <<< detailsRow
     
       +++ orchardsSection
       <<< orchardRow
+      
+      +++ Section("Information")
+      <<< detailsRow
     
       +++ Section()
       <<< deleteFarmRow
@@ -507,6 +611,11 @@ extension Orchard {
       onChange()
     }
     
+    let performanceSection = Section("Performance")
+    for prow in formVC.performanceRows(for: .orchardComparison([self])) {
+      performanceSection <<< prow
+    }
+    
     let deleteOrchardRow = ButtonRow { row in
       row.title = "Delete Orchard"
     }.onCellSelection { (_, _) in
@@ -539,12 +648,14 @@ extension Orchard {
       <<< widthRow
       <<< heightRow
     
-      +++ Section("Information")
-      <<< detailsRow
-    
       +++ Section("Part of Farm")
       <<< farmSelection
+      
+      +++ performanceSection
     
+      +++ Section("Information")
+      <<< detailsRow
+      
       +++ Section()
       <<< deleteOrchardRow
   }
@@ -555,9 +666,6 @@ extension Session {
     let form = formVC.form
     tempory = Session(json: json(), id: id)
     
-    // FIXME Maybe allow changing these details or not? If change then
-    // allow foreman select else disallow artificial changes
-    
     let displayRow = LabelRow { row in
       row.title = "Foreman"
       row.value = foreman.description
@@ -567,18 +675,12 @@ extension Session {
       row.title = "Time Started"
       row.value = startDate
       row.baseCell.isUserInteractionEnabled = false
-    }.onChange { row in
-      self.tempory?.startDate = row.value ?? Date()
-      onChange()
     }
     
     let endDateRow = DateTimeRow { row in
       row.title = "Time Ended"
       row.value = endDate
       row.baseCell.isUserInteractionEnabled = false
-    }.onChange { row in
-      self.tempory?.endDate = row.value ?? Date()
-      onChange()
     }
     
     let sessionRow = SessionRow { row in
@@ -586,6 +688,13 @@ extension Session {
       row.value = self
     }.cellUpdate { (cell, _) in
       cell.detailTextLabel?.text = ""
+    }
+    
+    let chartRow = DonutChartRow("") { row in
+      row.value = self
+      if #available(iOS 11, *) {
+        row.baseCell.userInteractionEnabledWhileDragging = true
+      }
     }
     
     form
@@ -598,6 +707,9 @@ extension Session {
     
       +++ Section("Tracking")
       <<< sessionRow
+    
+      +++ Section("Worker Performance Summary")
+      <<< chartRow
   }
 }
 

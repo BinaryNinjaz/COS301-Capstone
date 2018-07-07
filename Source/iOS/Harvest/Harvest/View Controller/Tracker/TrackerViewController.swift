@@ -131,8 +131,8 @@ class TrackerViewController: UIViewController {
     present(alert, animated: true, completion: nil)
   }
   
-  func startLocationTracking() {
-    
+  override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    return UIDevice.current.userInterfaceIdiom == .phone ? .portrait : .all
   }
   
   @IBAction func startSession(_ sender: Any) {

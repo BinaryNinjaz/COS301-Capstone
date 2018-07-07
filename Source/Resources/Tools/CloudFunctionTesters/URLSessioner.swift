@@ -1,14 +1,13 @@
-//
-//  DBCloud.swift
-//  Harvest
-//
-//  Created by Letanyan Arumugam on 2018/06/24.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
-//
+import Foundation
 
-import Firebase
+enum HarvestDB {
+  enum Path {
+    static let parent = "xFBNcNmiuON8ACbAHzH0diWcFQ43"
+  }
+}
 
 enum HarvestCloud {
+//  static let baseURL = "http://localhost:5000/harvest-ios-1522082524457/us-central1/"
   static let baseURL = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/"
   
   static func component(onBase base: String, withArgs args: [(String, String)]) -> String {
@@ -47,9 +46,17 @@ enum HarvestCloud {
     return result
   }
   
+  enum Identifiers {
+    static let shallowSessions = "flattendSessions"
+    static let sessionsWithDates = "sessionsWithinDates"
+    static let expectedYield = "expectedYield"
+    static let orchardCollections = "orchardCollectionsWithinDate"
+    static let timeGraphSessions = "timedGraphSessions"
+  }
+  
   static func runTask(withQuery query: String, completion: @escaping (Any) -> Void) {
     let furl = URL(string: baseURL + query)!
-    
+    print(furl)
     let task = URLSession.shared.dataTask(with: furl) { data, _, error in
       if let error = error {
         print(error)
@@ -76,9 +83,11 @@ enum HarvestCloud {
     let furl = URL(string: baseURL + task)!
     var request = URLRequest(url: furl)
     
-    //    request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+//    request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
     request.httpMethod = "POST"
     request.httpBody = body.data(using: .utf8)
+    
+    print(furl)
     
     let task = URLSession.shared.dataTask(with: request) { data, _, error in
       if let error = error {
@@ -102,39 +111,14 @@ enum HarvestCloud {
     task.resume()
   }
   
-  static func getShallowSessions(
-    onPage page: Int,
-    ofSize size: Int,
-    _ completion: @escaping ([ShallowSession]) -> Void
-  ) {
-    let query = component(onBase: Identifiers.shallowSessions, withArgs: [
-      ("pageNo", page.description),
-      ("pageSize", size.description),
-      ("uid", HarvestDB.Path.parent)
-    ])
-    
-    runTask(withQuery: query) { (serial) in
-      guard let json = serial as? [Any] else {
-        completion([])
-        return
-      }
-      
-      var result = [ShallowSession]()
-      
-      for object in json {
-        result.append(ShallowSession(json: object))
-      }
-      
-      completion(result)
-    }
-  }
-  
   static func getExpectedYield(orchardId: String, date: Date, completion: @escaping (Double) -> Void) {
     let query = component(onBase: Identifiers.expectedYield, withArgs: [
       ("orchardId", orchardId),
       ("date", date.timeIntervalSince1970.description),
       ("uid", HarvestDB.Path.parent)
     ])
+    
+    print(date.timeIntervalSince1970.description)
     
     runTask(withQuery: query) { (serial) in
       guard let json = serial as? [String: Any] else {
@@ -151,7 +135,65 @@ enum HarvestCloud {
     }
   }
   
-  // swiftlint:disable function_parameter_count
+  static func orchardCollections(
+    orchardIds: [String], 
+    startDate: Date, 
+    endDate: Date, 
+    completion: @escaping ([Any]) -> Void
+  ) {
+    var args = [
+      ("startDate", startDate.timeIntervalSince1970.description),
+      ("endDate", endDate.timeIntervalSince1970.description),
+      ("uid", HarvestDB.Path.parent)
+    ]
+    
+    for (i, o) in orchardIds.enumerated() {
+      args.append(("orchardId\(i)", o))
+    }
+    
+    let body = makeBody(withArgs: args)
+    
+    runTask(Identifiers.orchardCollections, withBody: body) { (serial) in
+      guard let json = serial as? [Any] else {
+        return
+      }
+      
+      completion(json)
+    }
+  }
+  
+  enum TimePeriod : CustomStringConvertible {
+    case hourly
+    case daily
+    case weekly
+    case monthly
+    case yearly
+    
+    var description: String {
+      switch self {
+      case .hourly: return "hourly"
+      case .daily: return "daily"
+      case .weekly: return "weekly"
+      case .monthly: return "monthly"
+      case .yearly: return "yearly"
+      }
+    }
+  }
+  
+  enum GroupBy : CustomStringConvertible {
+    case worker
+    case orchard
+    case foreman
+    
+    var description: String {
+      switch self {
+      case .worker: return "worker"
+      case .orchard: return "orchard"
+      case .foreman: return "foreman"
+      }
+    }
+  }
+  
   static func timeGraphSessions(
     grouping: GroupBy,
     ids: [String],
@@ -159,7 +201,7 @@ enum HarvestCloud {
     startDate: Date,
     endDate: Date,
     completion: @escaping (Any) -> Void
-    ) {
+  ) {
     var args = [
       ("groupBy", grouping.description),
       ("period", period.description),
@@ -174,110 +216,70 @@ enum HarvestCloud {
     
     let body = makeBody(withArgs: args)
     
-    runTask(Identifiers.timeGraphSessions, withBody: body) { (data) in
-      completion(data)
+    runTask(Identifiers.timeGraphSessions, withBody: body) { (serial) in
+      completion(serial)
     }
   }
 }
 
-extension HarvestCloud {
-  enum Identifiers {
-    static let shallowSessions = "flattendSessions"
-    static let sessionsWithDates = "sessionsWithinDates"
-    static let expectedYield = "expectedYield"
-    static let orchardCollections = "orchardCollectionsWithinDate"
-    static let timeGraphSessions = "timedGraphSessions"
-  }
-  
-  enum TimePeriod: CustomStringConvertible {
-    case hourly
-    case daily
-    case weekly
-    case monthly
-    case yearly
-    
-    static var allCases: [TimePeriod] {
-      return [.hourly, .daily, .weekly, .monthly, .yearly]
-    }
-    
-    var description: String {
-      switch self {
-      case .hourly: return "hourly"
-      case .daily: return "daily"
-      case .weekly: return "weekly"
-      case .monthly: return "monthly"
-      case .yearly: return "yearly"
-      }
-    }
-    
-    func fullDataSet() -> [String] {
-      switch self {
-      case .hourly:
-        return (0...23).map(String.init)
-      case .daily:
-        return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-      case .weekly:
-        return (1...54).map(String.init)
-      case .monthly:
-        return [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December"
-          ]
-      case .yearly:
-        return ["2018", "2019", "2020", "2021", "2022"]
-      }
-    }
-    
-    func fullPrintableDataSet() -> [String] {
-      switch self {
-      case .hourly:
-        return (0...23).map { ($0 < 10 ? "0\($0):00" : "\($0):00") + ($0 < 12 ? "am" : "pm") }
-      case .daily:
-        return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-      case .weekly:
-        return (1...52).map(String.init) // FIXME: Show proper week labels using real dates for the starting date
-      case .monthly:
-        return [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec"
-        ]
-      case .yearly:
-        return ["2018", "2019", "2020", "2021", "2022"]
-      }
-    }
-  }
-  
-  enum GroupBy: CustomStringConvertible {
-    case worker
-    case orchard
-    case foreman
-    
-    var description: String {
-      switch self {
-      case .worker: return "worker"
-      case .orchard: return "orchard"
-      case .foreman: return "foreman"
-      }
-    }
+func orchardCollection() {
+  let s = Date(timeIntervalSince1970: 1529853470 * 0)
+  let e = Date()
+
+  HarvestCloud.orchardCollections(orchardIds: ["-LCEFgdMMO80LR98BzPC"], startDate: s, endDate: e) { f in
+    print(f)
   }
 }
+
+func timeGraphSessionsWorker() {
+  let cal = Calendar.current
+  
+  let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())!.timeIntervalSince1970
+  
+  let s = Date(timeIntervalSince1970: wb * 0)
+  let e = Date()
+  let g = HarvestCloud.GroupBy.worker
+  let p = HarvestCloud.TimePeriod.daily
+  
+  let ids = [
+    "-LBykXujU0Igjzvq5giB", // Peter Parker 3
+//    "-LBykZoPlQ2xkIMylBr2", // Tony Stark 4
+    "-LBykabv5OJNBsdv0yl7", // Clark Kent 5
+//    "-LBykcR9o5_S_ndIYHj9", // Bruce Wayne 6
+  ]
+
+  HarvestCloud.timeGraphSessions(grouping: g, ids: ids, period: p, startDate: s, endDate: e) { o in
+    print(o)
+  }
+}
+
+func timeGraphSessionsOrchard() {
+  let cal = Calendar.current
+  
+  let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())!.timeIntervalSince1970
+  
+  let s = Date(timeIntervalSince1970: wb)
+  let e = Date()
+  let g = HarvestCloud.GroupBy.orchard
+  let p = HarvestCloud.TimePeriod.daily
+  
+  let ids = [
+    "-LCEFgdMMO80LR98BzPC", // Block H
+    "-LCEFoWPEw7ThnUaz07W", // Block U
+    "-LCnEEUlavG3eFLCC3MI", // Maths Building
+  ]
+
+  HarvestCloud.timeGraphSessions(grouping: g, ids: ids, period: p, startDate: s, endDate: e) { o in
+    print(o)
+  }
+}
+
+func expectedYield() {
+  HarvestCloud.getExpectedYield(orchardId: "-LCEFgdMMO80LR98BzPC", date: Date()) {
+    print($0)
+  }
+}
+
+timeGraphSessionsWorker()
+
+RunLoop.main.run()

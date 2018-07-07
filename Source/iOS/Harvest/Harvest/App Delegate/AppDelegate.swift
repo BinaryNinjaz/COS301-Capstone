@@ -87,4 +87,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    FIXME: Uncomment in production
 //    TrackerViewController.tracker?.storeSession()
   }
+  
+  func application(
+    _ application: UIApplication,
+    supportedInterfaceOrientationsFor window: UIWindow?
+  ) -> UIInterfaceOrientationMask {
+    return .allButUpsideDown
+  }
 }

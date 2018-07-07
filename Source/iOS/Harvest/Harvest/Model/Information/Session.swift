@@ -130,8 +130,6 @@ extension Session: Equatable {
       && lhs.endDate == rhs.endDate
       && lhs.foreman == rhs.foreman
       && lhs.track == rhs.track
-//      && lhs.collections == rhs.collections
-//      FIXME MAYBE WE MAKE EDIT COLLECTION POINT?
   }
 }
 

@@ -127,6 +127,12 @@ extension Orchard: CustomStringConvertible {
   }
 }
 
+extension Orchard: Hashable {
+  public var hashValue: Int {
+    return id.hashValue
+  }
+}
+
 extension CLLocationCoordinate2D: Equatable {
   public static func == (
     lhs: CLLocationCoordinate2D,
