@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -201,6 +202,8 @@ public class SessionDetails extends AppCompatActivity {
 
         progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
         pieChartView.setVisibility(View.VISIBLE);
+        pieChart.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutQuad));
+        pieChart.setEntryLabelColor(Color.BLACK);
 
         PieDataSet dataset = new PieDataSet(entries, "Dataset");
         dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
