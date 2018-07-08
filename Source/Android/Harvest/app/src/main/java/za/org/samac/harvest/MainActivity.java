@@ -1,5 +1,6 @@
 package za.org.samac.harvest;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +38,10 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -44,12 +51,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
@@ -63,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private static final String TAG = "Clicker";
 
     private static ArrayList<Worker> workers;
+    private static ArrayList<Worker> foremen;
     private ArrayList<Worker> workersSearch;
     private Map<Integer, Location> track;
     int trackCount = 0;
@@ -73,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private ProgressBar progressBar;
     private RelativeLayout relLayout;
     private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
+    private TextView textView;
     private WorkerRecyclerViewAdapter adapter;
     private LocationManager locationManager;
     private Location location;
@@ -107,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         track = new HashMap<>();
         this.workers = new ArrayList<>();//stores worker names
         workersSearch = new ArrayList<>();//stores worker names
+        this.foremen = new ArrayList<>();
         adapter = new WorkerRecyclerViewAdapter(getApplicationContext(), workersSearch);
     }
 
@@ -116,14 +138,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         init();
 
         if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
         } else {
             locationEnabled = true;
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);
+                    LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
 
             List<String> providers = locationManager.getProviders(true);
             Location bestLocation = null;
@@ -140,9 +162,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     bestLocation = location;
                 }
             }
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+
+            location = locationManager
+                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
             //adapter.setLocation(location);
         }
+
+        locationEnabled = true;
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+        location = locationManager
+                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
 
         locationPermissions();
         //new LocationHelper().getLocation(this);
@@ -198,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 if (isFarmer){
                     farmerKey = uid;
+                    getPolygon();//set expected yield
                     currUserRef = database.getReference(uid);//Firebase reference
                     workersRef = currUserRef.child("workers");
                     collectWorkers();
@@ -236,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                             startActivityIfNeeded(openMainActivity, 0);
                                             return true;
                                         case R.id.actionSession:
-                                            Intent openSessions= new Intent(MainActivity.this, SessionsMap.class);
+                                            Intent openSessions= new Intent(MainActivity.this, Sessions.class);
                                             openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                             startActivityIfNeeded(openSessions, 0);
                                             return true;
@@ -257,6 +289,225 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             }
         });
+    }
+
+    ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
+    ArrayList<String> coords = new ArrayList<>();
+    List<Double> polygonStoreX = new ArrayList();
+    List<Double> polygonStoreY = new ArrayList();
+    List<Double> polygonX = new ArrayList();
+    List<Double> polygonY = new ArrayList();
+    ArrayList<String> currentOrchard = new ArrayList<>();
+    String correctOrchard = "";
+    int holdi;
+
+    private void getPolygon() {
+        DatabaseReference myRef;
+        myRef = database.getReference(farmerKey + "/orchards");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    currentOrchard.add(child.getKey().toString());
+                    pathsToOrchardCoords.add(farmerKey + "/orchards/" + currentOrchard.get(currentOrchard.size()-1) + "/coords");
+                    System.out.println(" @@@@@@@@@@@@@@@@@@@@@ *** " + currentOrchard.get(currentOrchard.size()-1) + " @@@@@@@@@@@@@@@@@@@@@ ");
+                }
+
+                for (int i = 0; i<pathsToOrchardCoords.size(); i++) {
+                    DatabaseReference myRef2;
+                    myRef2 = database.getReference(pathsToOrchardCoords.get(i));
+                    holdi = i;
+                    pathAfterGotOrchard(pathsToOrchardCoords.get(i), myRef2);
+                }
+                System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Got in function" + " @@@@@@@@@@@@@@@@@@@@@ ");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void pathAfterGotOrchard(final String path, DatabaseReference myRef2) {
+        myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int m = 0;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    coords.add(path + "/" + child.getKey().toString());
+                    m++;
+                    /*if (dataSnapshot.getChildrenCount() == m) {
+                        pathAfterGotCoords();
+                    }*/
+                }
+
+                pathAfterGotCoords();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    int coordsCount = 0;
+    private void pathAfterGotCoords() {
+        for (int j = 0; j<coords.size(); j++) {
+            DatabaseReference myRef3;
+            myRef3 = database.getReference(coords.get(j));
+            myRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String lat = dataSnapshot.child("lat").getValue().toString();
+                    String lng = dataSnapshot.child("lng").getValue().toString();
+                    polygonStoreX.add(Double.parseDouble(lat));
+                    polygonStoreY.add(Double.parseDouble(lng));
+                    coordsCount++;
+                    /*for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        String lat = child.child("lat").toString();
+                        String lng = child.child("lng").toString();
+                        polygonStoreX.add(Double.parseDouble(lat));
+                        polygonStoreY.add(Double.parseDouble(lng));
+                        k++;
+                        if (dataSnapshot.getChildrenCount() == k) {
+                            if (polygonContainsPoint(polygonStore) == true) {
+                                System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Contains Point" + " @@@@@@@@@@@@@@@@@@@@@ ");
+                                getExpectedYield();//set expected yield
+                            }
+                        }
+                    }*/
+
+                    if (coordsCount == coords.size()) {
+                        for (int m = 0; m < currentOrchard.size(); m++) {
+                            for (int i = 0; i < coords.size(); i++) {
+                                if (coords.get(i).contains(currentOrchard.get(m))) {
+                                    polygonX.add(polygonStoreX.get(i));
+                                    polygonY.add(polygonStoreY.get(i));
+                                    correctOrchard = currentOrchard.get(m);
+                                }
+                            }
+
+                            if (polygonContainsPoint(polygonX, polygonY) == true) {
+                                System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Contains Point" + " @@@@@@@@@@@@@@@@@@@@@ ");
+                                getExpectedYield();//set expected yield
+                            } else {
+                                polygonX.clear();
+                                polygonY.clear();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    private Boolean polygonContainsPoint(List<Double> px, List<Double> py) {
+        Double pointx = 0.0;
+        Double pointy = 0.0;
+        if (location != null) {
+            pointx = location.getLatitude();
+            pointy = location.getLongitude();
+        }
+
+        /*int i = 0;
+        int j = polygon.size() - 1;*/
+        Boolean c = false;
+
+        int k = 0;
+        int m = px.size()- 1;
+        for (; k<px.size(); m = k++) {
+            final Boolean yValid = (py.get(k) > pointy) != (py.get(m) > pointy);
+            final Double xValidCond = (px.get(m) - px.get(k)) * (pointx - py.get(k)) / (py.get(m) - py.get(k)) + px.get(k);
+
+            if (yValid && pointx < xValidCond) {
+                c = !c;
+            }
+        }
+
+        /*for (; i < polygon.size(); j = i++) {
+            Point pi = (Point) polygon.get(i);
+            Point pj = (Point) polygon.get(j);
+            final Boolean yValid = (pi.y > pointy) != (pj.y > pointy);
+            final Double xValidCond = (pj.x - pi.x) * (pointx - pi.y) / (pj.y - pi.y) + pi.x;
+
+            if (yValid && pointx < xValidCond) {
+                c = !c;
+            }
+        }*/
+        return c;
+    }
+
+    private String urlExpectYieldText() {
+        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield?";
+        System.out.println(" ************************* " + correctOrchard + " ************************* ");
+        base = base + "orchardId=" + correctOrchard;//"-LCEFgdMMO80LR98BzPC";//currentOrchard;//get correct orchard ID
+        double currentTime;
+        double divideBy1000Var = 1000.0000000;
+        currentTime = (System.currentTimeMillis()/divideBy1000Var);
+        base = base + "&date=" + currentTime;
+        base = base + "&uid=" + farmerKey;
+        return base;
+    }
+
+    public void getExpectedYield() {
+        try {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String response = sendGet(urlExpectYieldText());
+                        System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% ");
+                        JSONObject obj = new JSONObject(response);
+                        final Double expectedYield = obj.getDouble("expected"); // This is the value
+                        System.out.println(" $$$$$$$$$$$$$$$$$$$ " + expectedYield + " $$$$$$$$$$$$$$$$$$$ ");
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                textView = findViewById(R.id.textView);
+                                textView.setText("Expected Yield: " + Math.round(expectedYield));
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String sendGet(String url) throws Exception {
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        // optional default is GET
+        con.setRequestMethod("GET");
+
+        //add request header
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        return response.toString();
     }
 
 //    @Override
@@ -350,9 +601,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         workerObj.setID(zoneSnapshot.getKey());
                         workers.add(workerObj);
                     } else {
-                        if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
-                            foremanID = zoneSnapshot.getKey();
-                            foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                        Worker workerObj = new Worker();
+                        workerObj.setName(fullName);
+                        workerObj.setValue(0);
+                        workerObj.setID(zoneSnapshot.getKey());
+                        foremen.add(workerObj);
+                        String email = zoneSnapshot.child("email").getValue(String.class);
+                        if (email != null) {
+                            if (email.equals(currentUserEmail)) {
+                                foremanID = zoneSnapshot.getKey();
+                                foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                            }
                         }
                     }
                 }
@@ -387,11 +646,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     farmerKey = child.getKey();
 
                     farmerKey = child.getKey();
+                    getPolygon();//set expected yield
                     farmLevelRef = database.getReference(farmerKey);//Firebase reference
                     workersRef = farmLevelRef.child("workers");
                     collectWorkers();
                 }
-
             }
 
             @Override
@@ -404,7 +663,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void statusCheck() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {//changed from GPS to NETWORK
             buildAlertMessageNoGps();
 
         }
@@ -434,34 +693,103 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      Sessions for each worker still needs to be implemented *
      */
     long startTime = 0, stopTime = 0;
-    //Handler handler = new Handler();
-    //int delay = 120000; //milliseconds
+    Handler handler = new Handler();
+    int delay = 5000; //milliseconds
     Boolean locationWanted = false;
+    int secondsLocationIsNull = 0;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
-        if(location == null) {
+        ExecutorService threadPoolExecutor = Executors.newSingleThreadExecutor();
+
+        /*if (location != null) {
+            Future longRunningTaskFuture = threadPoolExecutor.submit(runnable);
+            longRunningTaskFuture.cancel(true);
+        }*/
+
+        if(location == null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.VISIBLE);
             Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
             recyclerView.setVisibility(View.GONE);
+
+            handler.postDelayed(new Runnable(){
+                public void run(){
+                    //do something
+                    if(location == null) {
+
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        return;
+                    }
+
+                    if (secondsLocationIsNull >= 30 && btnStart.getTag() != "green") {
+                        progressBar.setVisibility(View.GONE);
+                        Snackbar.make(recyclerView, "Could not obtaining GPS Information. Please restart session.", 5000)
+                            .setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                }
+                            })
+                            .show();
+                        return;
+                    }
+
+                    secondsLocationIsNull += 5;
+
+                    handler.postDelayed(this, delay);
+                }
+            }, delay);
         } else {
+            progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
+
         startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
 
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
         if(location != null) {
-            DatabaseReference myRef;
+            final DatabaseReference myRef;
             myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
-            myRef.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (child.toString().equals(foremanID)) {
+                            myRef.removeValue();
+                            locationWanted = true;
+                            break;
+                        }
+                    }
+
+                    if (locationWanted == true) {
+                        DatabaseReference myRef2;
+                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+
+                        Map<String, Object> coordinates = new HashMap<>();
+                        coordinates.put("lat", location.getLatitude());
+                        coordinates.put("lng", location.getLongitude());
+
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("coord", coordinates);
+                        childUpdates.put("display", foremanName);
+
+                        myRef2.updateChildren(childUpdates);//store location
+                    }
                 }
 
                 @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            myRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         if (child.toString().equals(foremanID)) {
                             locationWanted = true;
@@ -486,6 +814,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
 
                 @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
 
                 }
@@ -504,7 +837,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         Map<String, Object> sessionDate = new HashMap<>();
         sessionDate.put("start_date", startSessionTime);
-        sessionDate.put("wid", foremanID);//add foreman database ID to session;
+
+        if (isFarmer) {
+            sessionDate.put("wid", uid);//add foreman database ID to session;
+        } else {
+            sessionDate.put("wid", foremanID);//add foreman database ID to session;
+        }
+
 
         if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
@@ -520,7 +859,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             track = new HashMap<Integer, Location>(); //used in firebase function
             track.put(trackCount, location);
             if (locationEnabled) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
             }
             startTime = System.currentTimeMillis();
             btnStart.setBackgroundColor(Color.parseColor("#FFFF8800"));
@@ -528,6 +867,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("orange");
         } else {
             //TODO: check if app closes or crashes
+            progressBar.setVisibility(View.GONE);
             if (adapter.totalBagsCollected == 0) {
                 String msg = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
                 AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
@@ -728,4 +1068,5 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public static ArrayList<Worker> getWorkers(){return workers;}
+    public static ArrayList<Worker> getForemen(){return foremen;}
 }

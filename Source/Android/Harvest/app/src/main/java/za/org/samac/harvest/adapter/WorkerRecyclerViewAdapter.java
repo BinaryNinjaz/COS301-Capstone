@@ -35,7 +35,7 @@ import java.util.Map;
 
 import za.org.samac.harvest.LocationHelper;
 import za.org.samac.harvest.MainActivity;
-import za.org.samac.harvest.Manifest;
+//import za.org.samac.harvest.Manifest;
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.WorkerComparator;

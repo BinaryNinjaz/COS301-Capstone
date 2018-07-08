@@ -85,6 +85,8 @@
         <activity
             android:name=".SessionsMap"
             android:label="@string/title_activity_sessions_map" />
+        <activity android:name=".adapter.SessionDetails"></activity>
+        <activity android:name=".OrchardsForGraph" />
     </application>
 
 </manifest>
