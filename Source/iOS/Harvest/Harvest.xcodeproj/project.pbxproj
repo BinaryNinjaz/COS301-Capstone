@@ -13,24 +13,26 @@
 		1604E4AA206958E900E9BA15 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4A9206958E900E9BA15 /* Assets.xcassets */; };
 		1604E4AD206958E900E9BA15 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4AB206958E900E9BA15 /* LaunchScreen.storyboard */; };
 		1604E4B8206958E900E9BA15 /* HarvestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4B7206958E900E9BA15 /* HarvestTests.swift */; };
-		1604E4C3206958E900E9BA15 /* HarvestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4C2206958E900E9BA15 /* HarvestUITests.swift */; };
 		1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */; };
-		160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */; };
+		160A1E19209BCA6E000A1E0F /* SessionISelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */; };
 		160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */; };
 		160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */; };
 		16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FC820696B8F00E1A292 /* QuickAlert.swift */; };
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
+		164F30A720D4745900E7772A /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164F30A620D4745900E7772A /* Verification.swift */; };
 		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
 		1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */; };
 		1657B73E20A0E17300F5F478 /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73D20A0E17300F5F478 /* Stat.swift */; };
 		1657B74020A0E18600F5F478 /* StatKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73F20A0E18600F5F478 /* StatKind.swift */; };
 		1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B74120A0E53800F5F478 /* StatsViewController.swift */; };
+		165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */; };
+		165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */; };
 		167448AF2089271400FA605C /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448AE2089271400FA605C /* Worker.swift */; };
 		167448B12089299B00FA605C /* Orchard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B02089299B00FA605C /* Orchard.swift */; };
 		167448B320892AE900FA605C /* Farm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B220892AE900FA605C /* Farm.swift */; };
 		167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B520892BB500FA605C /* InfoRepresentation.swift */; };
-		167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */; };
+		167448B820892F6100FA605C /* InformationEntityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B720892F6100FA605C /* InformationEntityController.swift */; };
 		167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */; };
 		167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */; };
 		167448C220893B8200FA605C /* SortedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448BE20893B8100FA605C /* SortedSet.swift */; };
@@ -51,6 +53,8 @@
 		167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */; };
 		167448E9208BD6F900FA605C /* Codables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448E8208BD6F900FA605C /* Codables.swift */; };
 		167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448EA208C085900FA605C /* FirebaseConverter.swift */; };
+		1679DA4720DD5438007AB071 /* SignInOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */; };
+		1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */; };
 		16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */; };
 		16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906055208E7FFA00BE5ADE /* ColorScheme.swift */; };
 		16906058208E801800BE5ADE /* Gradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906057208E801800BE5ADE /* Gradients.swift */; };
@@ -70,10 +74,16 @@
 		16C82F5C20819B6E0074595C /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5720819B6E0074595C /* Helper.swift */; };
 		16C82F5D20819B6E0074595C /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5820819B6E0074595C /* Point.swift */; };
 		16C82F5E20819B6E0074595C /* Poly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5920819B6E0074595C /* Poly.swift */; };
-		16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */; };
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
 		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
+		16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */; };
+		16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */; };
+		16E3750F20F0E4220023AD2C /* StatSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3750E20F0E4220023AD2C /* StatSelectionViewController.swift */; };
+		16E3751120F0F74E0023AD2C /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3751020F0F74E0023AD2C /* DateHelpers.swift */; };
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
+		16FF431E20DFF106001092CF /* DBCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431D20DFF106001092CF /* DBCloud.swift */; };
+		16FF432020E19117001092CF /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431F20E19117001092CF /* LocationHelper.swift */; };
+		16FF432220E3B8B8001092CF /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF432120E3B8B8001092CF /* LocationTracker.swift */; };
 		3ECB54CBF16E9C8D2770A5D3 /* Pods_Harvest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */; };
 		D7583D7CD8D538EE68CCF745 /* Pods_HarvestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */; };
 /* End PBXBuildFile section */
@@ -107,25 +117,28 @@
 		1604E4B7206958E900E9BA15 /* HarvestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestTests.swift; sourceTree = "<group>"; };
 		1604E4B9206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1604E4BE206958E900E9BA15 /* HarvestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HarvestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1604E4C2206958E900E9BA15 /* HarvestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUITests.swift; sourceTree = "<group>"; };
 		1604E4C4206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionInformationViewController.swift; sourceTree = "<group>"; };
+		160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionISelectionViewController.swift; sourceTree = "<group>"; };
 		160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaViewController.swift; sourceTree = "<group>"; };
 		160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaEurekaCell.swift; sourceTree = "<group>"; };
 		16420FC820696B8F00E1A292 /* QuickAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlert.swift; sourceTree = "<group>"; };
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		164F30A520D46DAA00E7772A /* Harvest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Harvest.entitlements; sourceTree = "<group>"; };
+		164F30A620D4745900E7772A /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
 		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
 		1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatSetupViewController.swift; sourceTree = "<group>"; };
 		1657B73D20A0E17300F5F478 /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
 		1657B73F20A0E18600F5F478 /* StatKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatKind.swift; sourceTree = "<group>"; };
 		1657B74120A0E53800F5F478 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityCreationUITests.swift; sourceTree = "<group>"; };
+		165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityDeletionUITests.swift; sourceTree = "<group>"; };
 		167448AE2089271400FA605C /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 		167448B02089299B00FA605C /* Orchard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orchard.swift; sourceTree = "<group>"; };
 		167448B220892AE900FA605C /* Farm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Farm.swift; sourceTree = "<group>"; };
 		167448B520892BB500FA605C /* InfoRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoRepresentation.swift; sourceTree = "<group>"; };
-		167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityCollectionViewController.swift; sourceTree = "<group>"; };
+		167448B720892F6100FA605C /* InformationEntityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityController.swift; sourceTree = "<group>"; };
 		167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityCollectionViewCell.swift; sourceTree = "<group>"; };
 		167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationEntityItemTableViewController.swift; sourceTree = "<group>"; };
 		167448BE20893B8100FA605C /* SortedSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedSet.swift; sourceTree = "<group>"; };
@@ -146,6 +159,8 @@
 		167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEurekaViewController.swift; sourceTree = "<group>"; };
 		167448E8208BD6F900FA605C /* Codables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codables.swift; sourceTree = "<group>"; };
 		167448EA208C085900FA605C /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
+		1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOptionViewController.swift; sourceTree = "<group>"; };
+		1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForemanSignInViewController.swift; sourceTree = "<group>"; };
 		16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrchardInFarmEurekaCell.swift; sourceTree = "<group>"; };
 		16906055208E7FFA00BE5ADE /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
 		16906057208E801800BE5ADE /* Gradients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradients.swift; sourceTree = "<group>"; };
@@ -165,10 +180,18 @@
 		16C82F5720819B6E0074595C /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		16C82F5820819B6E0074595C /* Point.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		16C82F5920819B6E0074595C /* Poly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly.swift; sourceTree = "<group>"; };
-		16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerClickerSearchCollectionReusableView.swift; sourceTree = "<group>"; };
 		16C82F66208407730074595C /* GeoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKitTests.swift; sourceTree = "<group>"; };
 		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
+		16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutChartEurekaCell.swift; sourceTree = "<group>"; };
+		16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DonutChartEurekaCell.xib; sourceTree = "<group>"; };
+		16E3750E20F0E4220023AD2C /* StatSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatSelectionViewController.swift; sourceTree = "<group>"; };
+		16E3751020F0F74E0023AD2C /* DateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelpers.swift; sourceTree = "<group>"; };
 		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
+		16FF431B20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/Main.strings; sourceTree = "<group>"; };
+		16FF431C20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		16FF431D20DFF106001092CF /* DBCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBCloud.swift; sourceTree = "<group>"; };
+		16FF431F20E19117001092CF /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
+		16FF432120E3B8B8001092CF /* LocationTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
 		345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
 		443DA69C24D2F93739FAF5A8 /* Pods_HarvestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HarvestTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6632EE29CF1ED8ED2661A19C /* Pods_Harvest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Harvest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -230,6 +253,7 @@
 		1604E4A1206958E900E9BA15 /* Harvest */ = {
 			isa = PBXGroup;
 			children = (
+				164F30A520D46DAA00E7772A /* Harvest.entitlements */,
 				169E5195206C62D6006B923E /* Model */,
 				16420FCA2069717200E1A292 /* Database */,
 				16420FC720696B6500E1A292 /* UI Components */,
@@ -255,7 +279,8 @@
 		1604E4C1206958E900E9BA15 /* HarvestUITests */ = {
 			isa = PBXGroup;
 			children = (
-				1604E4C2206958E900E9BA15 /* HarvestUITests.swift */,
+				165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */,
+				165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */,
 				1604E4C4206958E900E9BA15 /* Info.plist */,
 			);
 			path = HarvestUITests;
@@ -266,6 +291,7 @@
 			children = (
 				1604E4AE206958E900E9BA15 /* Info.plist */,
 				1604E4A2206958E900E9BA15 /* AppDelegate.swift */,
+				16FF432120E3B8B8001092CF /* LocationTracker.swift */,
 			);
 			path = "App Delegate";
 			sourceTree = "<group>";
@@ -296,6 +322,7 @@
 			children = (
 				1604E4A6206958E900E9BA15 /* Main.storyboard */,
 				1604E4AB206958E900E9BA15 /* LaunchScreen.storyboard */,
+				16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -330,6 +357,7 @@
 				167448D0208A5B9800FA605C /* DBFarm.swift */,
 				167448D2208A5C3C00FA605C /* DBTracker.swift */,
 				167448DB208A897C00FA605C /* DBSession.swift */,
+				16FF431D20DFF106001092CF /* DBCloud.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -345,6 +373,7 @@
 		1657B73820A0DB3400F5F478 /* Stats */ = {
 			isa = PBXGroup;
 			children = (
+				16E3750E20F0E4220023AD2C /* StatSelectionViewController.swift */,
 				1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */,
 				1657B74120A0E53800F5F478 /* StatsViewController.swift */,
 			);
@@ -390,6 +419,8 @@
 			children = (
 				1604E4A4206958E900E9BA15 /* SignInViewController.swift */,
 				16420FCD2069738200E1A292 /* SignUpViewController.swift */,
+				1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */,
+				1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */,
 			);
 			path = "Sign In";
 			sourceTree = "<group>";
@@ -405,9 +436,9 @@
 		167448D7208A838D00FA605C /* Information */ = {
 			isa = PBXGroup;
 			children = (
-				167448B720892F6100FA605C /* InformationEntityCollectionViewController.swift */,
+				167448B720892F6100FA605C /* InformationEntityController.swift */,
 				167448BB208937BE00FA605C /* InformationEntityItemTableViewController.swift */,
-				160A1E18209BCA6E000A1E0F /* SessionInformationViewController.swift */,
+				160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */,
 				167448C62089430C00FA605C /* EntityViewController.swift */,
 			);
 			path = Information;
@@ -432,6 +463,8 @@
 				16906057208E801800BE5ADE /* Gradients.swift */,
 				16906059208E803300BE5ADE /* ViewControllerExtensions.swift */,
 				1690605B208E805400BE5ADE /* ViewExtensions.swift */,
+				16FF431F20E19117001092CF /* LocationHelper.swift */,
+				16E3751020F0F74E0023AD2C /* DateHelpers.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -453,6 +486,7 @@
 				16C82F5420819B4C0074595C /* GeoKit */,
 				1657B73C20A0E16300F5F478 /* Stats */,
 				169E5196206C62E6006B923E /* Tracker.swift */,
+				164F30A620D4745900E7772A /* Verification.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -483,12 +517,12 @@
 				16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */,
 				16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */,
 				16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */,
-				16C82F642083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift */,
 				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
 				167448DD208A9F4900FA605C /* SessionEurekaCell.swift */,
 				160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */,
 				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
 				16906061208F748600BE5ADE /* AdminEurekaCell.swift */,
+				16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -527,6 +561,7 @@
 				1604E49D206958E800E9BA15 /* Resources */,
 				7D3778E2004C28709AFB2DEB /* [CP] Embed Pods Frameworks */,
 				F5D93F86FEE992B517739699 /* [CP] Copy Pods Resources */,
+				16399E1720C06E9D00D7DDA6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -593,6 +628,9 @@
 							com.apple.Maps.iOS = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 						};
 					};
 					1604E4B2206958E900E9BA15 = {
@@ -635,6 +673,7 @@
 				1604E4AD206958E900E9BA15 /* LaunchScreen.storyboard in Resources */,
 				1604E4AA206958E900E9BA15 /* Assets.xcassets in Resources */,
 				1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */,
+				16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */,
 				1604E4A8206958E900E9BA15 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -656,6 +695,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		16399E1720C06E9D00D7DDA6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+		};
 		2DC862B5B7395152CC3CBB4D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -684,6 +736,7 @@
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-f0850809/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
@@ -695,6 +748,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -787,6 +841,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
+				1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */,
 				167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */,
 				16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */,
 				167448D1208A5B9800FA605C /* DBFarm.swift in Sources */,
@@ -795,11 +850,13 @@
 				1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */,
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
+				16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */,
 				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
 				167448CB208A5B5D00FA605C /* DBAuth.swift in Sources */,
 				1604E4A5206958E900E9BA15 /* SignInViewController.swift in Sources */,
+				1679DA4720DD5438007AB071 /* SignInOptionViewController.swift in Sources */,
 				1604E4A3206958E900E9BA15 /* AppDelegate.swift in Sources */,
 				16906058208E801800BE5ADE /* Gradients.swift in Sources */,
 				16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */,
@@ -809,24 +866,28 @@
 				167448C420893B8200FA605C /* SortedDictionary.swift in Sources */,
 				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
+				164F30A720D4745900E7772A /* Verification.swift in Sources */,
+				16E3750F20F0E4220023AD2C /* StatSelectionViewController.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
 				1657B73E20A0E17300F5F478 /* Stat.swift in Sources */,
 				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
 				1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */,
 				167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */,
 				167448CD208A5B8100FA605C /* DBWorker.swift in Sources */,
-				167448B820892F6100FA605C /* InformationEntityCollectionViewController.swift in Sources */,
+				167448B820892F6100FA605C /* InformationEntityController.swift in Sources */,
+				16FF432020E19117001092CF /* LocationHelper.swift in Sources */,
 				1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */,
+				16E3751120F0F74E0023AD2C /* DateHelpers.swift in Sources */,
 				169E5194206C623F006B923E /* TrackerViewController.swift in Sources */,
+				16FF431E20DFF106001092CF /* DBCloud.swift in Sources */,
 				167448DA208A83E300FA605C /* Session.swift in Sources */,
-				160A1E19209BCA6E000A1E0F /* SessionInformationViewController.swift in Sources */,
+				160A1E19209BCA6E000A1E0F /* SessionISelectionViewController.swift in Sources */,
 				16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */,
 				167448CF208A5B8B00FA605C /* DBOrchard.swift in Sources */,
 				167448AF2089271400FA605C /* Worker.swift in Sources */,
 				167448C9208A49F700FA605C /* FarmEntity.swift in Sources */,
 				167448B12089299B00FA605C /* Orchard.swift in Sources */,
 				167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */,
-				16C82F652083CC6A0074595C /* WorkerClickerSearchCollectionReusableView.swift in Sources */,
 				167448C72089430C00FA605C /* EntityViewController.swift in Sources */,
 				16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */,
 				16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */,
@@ -835,6 +896,7 @@
 				160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */,
 				167448E9208BD6F900FA605C /* Codables.swift in Sources */,
 				16C82F5E20819B6E0074595C /* Poly.swift in Sources */,
+				16FF432220E3B8B8001092CF /* LocationTracker.swift in Sources */,
 				16C82F5B20819B6E0074595C /* Ellipse.swift in Sources */,
 				16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */,
 				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,
@@ -861,7 +923,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1604E4C3206958E900E9BA15 /* HarvestUITests.swift in Sources */,
+				165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */,
+				165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -885,6 +948,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				1604E4A7206958E900E9BA15 /* Base */,
+				16FF431B20DE628A001092CF /* af */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -893,6 +957,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				1604E4AC206958E900E9BA15 /* Base */,
+				16FF431C20DE628A001092CF /* af */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -904,6 +969,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -949,6 +1015,8 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = NO;
+				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -963,6 +1031,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1002,6 +1071,8 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = NO;
+				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1016,6 +1087,7 @@
 			baseConfigurationReference = 345D81E2BB236D849F4B1C23 /* Pods-Harvest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Harvest/Harvest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 86QZ48F54E;
 				INFOPLIST_FILE = "$(SRCROOT)/Harvest/App Delegate/Info.plist";
@@ -1033,6 +1105,7 @@
 			baseConfigurationReference = 7AEA05C55967C38BA2131585 /* Pods-Harvest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Harvest/Harvest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 86QZ48F54E;
 				INFOPLIST_FILE = "$(SRCROOT)/Harvest/App Delegate/Info.plist";

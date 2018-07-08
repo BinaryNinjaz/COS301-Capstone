@@ -8,12 +8,17 @@
 
 import UIKit
 import Charts
+import SnapKit
 
-class StatsViewController : UIViewController {
-  var stat: Stat? = nil
-  var barChart: BarChartView? = nil
-  var pieChart: PieChartView? = nil
-  var lineChart: LineChartView? = nil
+class StatsViewController: UIViewController {
+  var stat: Stat?
+  var period: HarvestCloud.TimePeriod?
+  var startDate: Date?
+  var endDate: Date?
+  
+  var barChart: BarChartView?
+  var pieChart: PieChartView?
+  var lineChart: LineChartView?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -36,6 +41,10 @@ class StatsViewController : UIViewController {
     view.addSubview(pieChart!)
     view.addSubview(lineChart!)
     
+    barChart?.snp.makeConstraints(Snap.fillParent(on: self))
+    lineChart?.snp.makeConstraints(Snap.fillParent(on: self))
+    pieChart?.snp.makeConstraints(Snap.fillParent(on: self))
+    
     setUpLineChart()
     setUpBarChart()
     pieChart?.chartDescription = nil
@@ -46,67 +55,66 @@ class StatsViewController : UIViewController {
     barChart?.isHidden = true
     pieChart?.isHidden = true
     
-    switch stat! { // FIXME
-    case .perSessionWorkers: drawPerSessionWorkers()
-    case .workerHistory: drawWorkerHistory()
-    case .orchardHistory: drawOrchardHistory()
-    }
-  }
-  
-  func drawPerSessionWorkers() {
-    guard let pieDataSet = stat?.perSessionWorkersData() else {
-      return
-    }
-    pieDataSet.colors = ChartColorTemplates.material()
-    
-    let pieData = PieChartData(dataSet: pieDataSet)
-    pieChart?.data = pieData
-    pieChart?.notifyDataSetChanged()
-    pieChart?.isHidden = false
-    pieChart?.animate(xAxisDuration: 3.0, yAxisDuration: 1.0, easingOption: .easeOutCubic)
-  }
-  
-  func drawWorkerHistory() {
-    guard let lineDataSet = stat?.workerHistoryData() else {
-      return
-    }
-    lineDataSet.colors = [NSUIColor.Bootstrap.green[0]]
-    lineDataSet.drawCirclesEnabled = false
-    lineDataSet.mode = .linear
-    lineDataSet.lineWidth = 4.0
-    
-    let lineData = LineChartData(dataSet: lineDataSet)
-    lineChart?.data = lineData
-    lineChart?.notifyDataSetChanged()
-    lineChart?.isHidden = false
-    lineChart?.animate(xAxisDuration: 1.5, easingOption: .easeOutCubic)
-  }
-  
-  func drawOrchardHistory() {
-    guard let (dates, amounts) = stat?.orchardHistoryData() else {
+    guard let stat = stat else {
+      UIAlertController.present(title: "No Data", message: "There is no data available to show", on: self)
       return
     }
     
-    
-    let barDataSet = BarChartDataSet()
-    for (i, amount) in zip(0..., amounts) {
-      barDataSet.values.append(BarChartDataEntry(x: Double(i), y: amount))
+    switch stat {
+    case .workerComparison: drawWorkerComparison()
+    case .foremanComparison: drawForemanComparison()
+    case .orchardComparison: drawOrchardComparison()
     }
-    barDataSet.colors = ChartColorTemplates.material()
+  }
+  
+  func updateBarChart(with data: BarChartData?) {
+    guard let barData = data else {
+      barChart?.data = nil
+      return
+    }
+    if barData.dataSetCount > 1 {
+      let groupSize = 0.2
+      let barSpace = 0.03
+      let gg = barData.groupWidth(groupSpace: groupSize, barSpace: barSpace)
+      barChart?.xAxis.axisMaximum = Double(barData.dataSets[0].entryCount) * gg + 0
+      
+      barData.groupBars(fromX: 0, groupSpace: groupSize, barSpace: barSpace)
+    }
+    DispatchQueue.main.async {
+      self.barChart?.notifyDataSetChanged()
+      self.barChart?.data = barData
+      
+      self.barChart?.isHidden = false
+      self.barChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
+    }
+  }
+  
+  func drawForemanComparison() {
+    let s = startDate ?? Date(timeIntervalSince1970: 0)
+    let e = endDate ?? Date()
+    let p = period ?? .daily
     
-    let barData = BarChartData(dataSet: barDataSet)
-    barChart?.xAxis.valueFormatter = OrchardDateFormatter(dates, "dd MMM")
-    barChart?.data = barData
-    barChart?.notifyDataSetChanged()
-    barChart?.isHidden = false
-    barChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
+    stat?.foremanComparison(startDate: s, endDate: e, period: p, completion: updateBarChart)
+  }
+  
+  func drawWorkerComparison() {
+    let s = startDate ?? Date(timeIntervalSince1970: 0)
+    let e = endDate ?? Date()
+    let p = period ?? .daily
+    
+    stat?.workerComparison(startDate: s, endDate: e, period: p, completion: updateBarChart)
+  }
+  
+  func drawOrchardComparison() {
+    let s = startDate ?? Date(timeIntervalSince1970: 0)
+    let e = endDate ?? Date()
+    let p = period ?? .daily
+    
+    stat?.orchardComparison(startDate: s, endDate: e, period: p, completion: updateBarChart)
   }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    switch stat! {
-    case .perSessionWorkers: return .all
-    case .workerHistory, .orchardHistory: return .allButUpsideDown
-    }
+    return .allButUpsideDown
   }
   
   func setUpLineChart() {
@@ -129,13 +137,29 @@ class StatsViewController : UIViewController {
     barChart?.pinchZoomEnabled = true
     barChart?.xAxis.drawGridLinesEnabled = false
     barChart?.xAxis.labelPosition = .bottom
+    barChart?.xAxis.valueFormatter = PeriodValueFormatter(period ?? .daily)
     barChart?.rightAxis.drawGridLinesEnabled = false
-    barChart?.legend.enabled = false
+    barChart?.xAxis.axisMinimum = 0
+    barChart?.rightAxis.enabled = false
+    barChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
+    barChart?.noDataText = "No Data Available to Show"
+    
+    if let l = barChart?.legend {
+      l.enabled = true
+      l.drawInside = true
+      l.horizontalAlignment = .right
+      l.verticalAlignment = .top
+      l.orientation = .vertical
+      l.drawInside = true
+      l.font = .systemFont(ofSize: 8, weight: .light)
+      l.yOffset = 10
+      l.xOffset = 10
+      l.yEntrySpace = 0
+    }
   }
 }
 
-
-extension DateFormatter : IAxisValueFormatter {
+extension DateFormatter: IAxisValueFormatter {
   public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
     return string(from: Date(timeIntervalSince1970: value))
   }
@@ -153,7 +177,7 @@ extension DateFormatter : IAxisValueFormatter {
   }
 }
 
-final class OrchardDateFormatter  : IAxisValueFormatter {
+final class OrchardDateFormatter: IAxisValueFormatter {
   var formatter: DateFormatter
   var range: [Double]
   
@@ -166,5 +190,25 @@ final class OrchardDateFormatter  : IAxisValueFormatter {
   public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
     let d = range[Int(truncating: NSNumber(value: value))]
     return formatter.string(from: Date(timeIntervalSince1970: d))
+  }
+}
+
+final class PeriodValueFormatter: IAxisValueFormatter {
+  let period: HarvestCloud.TimePeriod
+  
+  init(_ period: HarvestCloud.TimePeriod) {
+    self.period = period
+  }
+  
+  public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+    let possibles = period.fullPrintableDataSet()
+    let pc = Double(possibles.count)
+    let i = Int(value / (axis?.axisMaximum ?? pc) * pc)
+    
+    if i >= 0 && i < possibles.count {
+      return possibles[i]
+    } else {
+      return ""
+    }
   }
 }

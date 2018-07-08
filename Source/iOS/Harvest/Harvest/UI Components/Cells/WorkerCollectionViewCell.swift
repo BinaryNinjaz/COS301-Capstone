@@ -12,9 +12,11 @@ class WorkerCollectionViewCell: UICollectionViewCell {
   @IBOutlet weak var nameLabel: UILabel!
   @IBOutlet weak var yieldLabel: UILabel!
   @IBOutlet weak var myBackgroundView: UIView!
+  @IBOutlet weak var incButton: UIButton!
+  @IBOutlet weak var decButton: UIButton!
   
-  var inc: ((WorkerCollectionViewCell) -> ())?
-  var dec: ((WorkerCollectionViewCell) -> ())?
+  var inc: ((WorkerCollectionViewCell) -> Void)?
+  var dec: ((WorkerCollectionViewCell) -> Void)?
   
   @IBAction func incrementTouchUp(_ sender: Any) {
     inc?(self)

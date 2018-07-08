@@ -10,81 +10,262 @@ import Charts
 import CoreLocation
 
 enum Stat {
-  case perSessionWorkers(Session)
-  case workerHistory(Worker)
-  case orchardHistory(Orchard)
+  case foremanComparison([Worker])
+  case workerComparison([Worker])
+  case orchardComparison([Orchard])
   
-  func perSessionWorkersData() -> PieChartDataSet? {
-    guard case .perSessionWorkers(let session) = self else {
-      return nil
-    }
-    
-    let result = PieChartDataSet()
-    for (worker, amount) in session.collections {
-      result.values.append(PieChartDataEntry(value: Double(amount.count), label: worker.description))
-    }
-    return result
-  }
-  
-  func workerHistoryData() -> LineChartDataSet? {
-    guard case .workerHistory(let worker) = self else {
-      return nil
-    }
-    
-    let sessions = Entities.shared.sessionsList()
-    
-    let result = LineChartDataSet()
-    result.label = worker.description
-    var started = false
-    var i = 0.0
-    
-    for session in sessions {
-      let collections = session.collections[worker]
-      if !started && collections == nil {
-        continue
-      }
-      started = true
-      let amount = collections?.count ?? 0
-      let date = session.startDate
-      let entry = ChartDataEntry(x: date.timeIntervalSince1970, y: Double(amount))
-      i += 1
-      result.values.append(entry)
-    }
-    
-    return result
-  }
-  
-  func orchardHistoryData() -> (dates: [Double], amount: [Double])? {
-    guard case .orchardHistory(let orchard) = self else {
-      return nil
-    }
-    var interResult = SortedDictionary<Date, Double>()
-    let sessions = Entities.shared.sessionsList()
-    
-    let poly = Poly(orchard.coords.map { Point($0.longitude, $0.latitude) })
-    let calendar = Calendar.current
-    
-    for session in sessions {
-      session.collections.forEach { w, points in
-        points.forEach { point in
-          let p = Point<CLLocationDegrees>.init(point.location.longitude, point.location.latitude)
-          if poly.contains(p) {
-            var comps = calendar.dateComponents([.era, .calendar, .year, .month, .day], from: point.date)
-            comps.hour = 0
-            interResult[calendar.date(from: comps)!, default: 0] += 1
-          }
+  // swiftlint:disable function_parameter_count
+  func comparison(
+    ids: [String],
+    grouping: HarvestCloud.GroupBy,
+    startDate: Date,
+    endDate: Date,
+    period: HarvestCloud.TimePeriod,
+    completion: @escaping ([String: Any]?) -> Void
+  ) {
+    HarvestCloud.timeGraphSessions(
+      grouping: grouping,
+      ids: ids,
+      period: period,
+      startDate: startDate,
+      endDate: endDate) { data in
+        guard let json = data as? [String: Any] else {
+          completion(nil)
+          return
         }
+        
+        completion(json)
       }
+  }
+  
+  func foremanComparison(
+    startDate: Date,
+    endDate: Date,
+    period: HarvestCloud.TimePeriod,
+    completion: @escaping (BarChartData?) -> Void
+  ) {
+    guard case let .foremanComparison(foremen) = self else {
+      completion(nil)
+      return
     }
     
-    var dates = [Double]()
-    var amounts = [Double]()
-    for (d, amount) in interResult {
-      dates.append(d.timeIntervalSince1970)
-      amounts.append(amount)
+    var ids = [String]()
+    for foreman in foremen {
+      ids.append(foreman.id)
     }
     
-    return (dates, amounts)
+    var dataSets = [BarChartDataSet]()
     
+    comparison(
+      ids: ids,
+      grouping: .foreman,
+      startDate: startDate,
+      endDate: endDate,
+      period: period) { json in
+        guard let json = json else {
+          completion(nil)
+          return
+        }
+        var i = 0
+        let colors = ChartColorTemplates.harvest()
+        for (key, _dataSetObject) in json {
+          guard let dataSetObject = _dataSetObject as? [String: Double] else {
+            continue
+          }
+          
+          let worker = Entities.shared.worker(withId: key)
+          
+          let dataSet = BarChartDataSet()
+          dataSet.label = worker?.name ?? "Unknown Foreman"
+          
+          for (e, x) in period.fullDataSet().enumerated() {
+            if let y = dataSetObject[x] {
+              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
+            } else {
+              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: 0.0))
+            }
+          }
+          
+          dataSet.setColor(colors[i % colors.count])
+          dataSet.drawValuesEnabled = false
+          i += 1
+          dataSets.append(dataSet)
+        }
+        
+        let data = BarChartData(dataSets: dataSets)
+        
+        completion(data)
+    }
+  }
+  
+  func workerComparison(
+    startDate: Date,
+    endDate: Date,
+    period: HarvestCloud.TimePeriod,
+    completion: @escaping (BarChartData?) -> Void
+  ) {
+    guard case let .workerComparison(foremen) = self else {
+      completion(nil)
+      return
+    }
+    
+    var ids = [String]()
+    for foreman in foremen {
+      ids.append(foreman.id)
+    }
+    
+    var dataSets = [BarChartDataSet]()
+    
+    comparison(
+      ids: ids,
+      grouping: .worker,
+      startDate: startDate,
+      endDate: endDate,
+      period: period) { json in
+        guard let json = json else {
+          completion(nil)
+          return
+        }
+        var i = 0
+        let colors = ChartColorTemplates.harvest()
+        for (key, _dataSetObject) in json {
+          guard let dataSetObject = _dataSetObject as? [String: Double] else {
+            continue
+          }
+          
+          let worker = Entities.shared.worker(withId: key)
+          
+          let dataSet = BarChartDataSet()
+          dataSet.label = worker?.name ?? "Unknown Worker"
+          
+          for (e, x) in period.fullDataSet().enumerated() {
+            if let y = dataSetObject[x] {
+              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
+            } else {
+              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: 0.0))
+            }
+          }
+          
+          dataSet.setColor(colors[i % colors.count])
+          dataSet.drawValuesEnabled = false
+          i += 1
+          dataSets.append(dataSet)
+        }
+        
+        let data = BarChartData(dataSets: dataSets)
+        
+        completion(data)
+      }
+  }
+  
+  func orchardComparison(
+    startDate: Date,
+    endDate: Date,
+    period: HarvestCloud.TimePeriod,
+    completion: @escaping (BarChartData?) -> Void
+  ) {
+    guard case let .orchardComparison(orchards) = self else {
+      completion(nil)
+      return
+    }
+    
+    var ids = [String]()
+    for orchard in orchards {
+      ids.append(orchard.id)
+    }
+    
+    var dataSets = [BarChartDataSet]()
+    
+    comparison(
+      ids: ids,
+      grouping: .orchard,
+      startDate: startDate,
+      endDate: endDate,
+      period: period) { json in
+        guard let json = json else {
+          completion(nil)
+          return
+        }
+        var i = 0
+        let colors = ChartColorTemplates.harvest()
+        for (key, _dataSetObject) in json {
+          guard let dataSetObject = _dataSetObject as? [String: Double] else {
+            continue
+          }
+          
+          let orchard = Entities.shared.orchards.first { $0.value.id == key }.map { $0.value }
+          
+          let dataSet = BarChartDataSet()
+          dataSet.label = orchard?.name ?? "Unknown Orchard"
+          
+          for (e, x) in period.fullDataSet().enumerated() {
+            if let y = dataSetObject[x] {
+              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
+            } else {
+              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: 0.0))
+            }
+          }
+          
+          dataSet.setColor(colors[i % colors.count])
+          dataSet.drawValuesEnabled = false
+          i += 1
+          dataSets.append(dataSet)
+        }
+        
+        let data = BarChartData(dataSets: dataSets)
+        
+        completion(data)
+      }
+  }
+  
+}
+
+extension ChartColorTemplates {
+  static func harvestGreen() -> [UIColor] {
+    return [
+      #colorLiteral(red: 0.6039215686, green: 0.7176470588, blue: 0.4901960784, alpha: 1),
+      #colorLiteral(red: 0.4235294118, green: 0.6, blue: 0.3098039216, alpha: 1),
+      #colorLiteral(red: 0.2431372549, green: 0.3843137255, blue: 0.1960784314, alpha: 1),
+      #colorLiteral(red: 0.1019607843, green: 0.2588235294, blue: 0.1137254902, alpha: 1),
+      #colorLiteral(red: 0.09803921569, green: 0.1764705882, blue: 0.09411764706, alpha: 1),
+      #colorLiteral(red: 0.007843137255, green: 0.0431372549, blue: 0.01960784314, alpha: 1)
+    ]
+  }
+  
+  static func harvestWood() -> [UIColor] {
+    return [
+      #colorLiteral(red: 0.3058823529, green: 0.3725490196, blue: 0.3843137255, alpha: 1),
+      #colorLiteral(red: 0.4235294118, green: 0.431372549, blue: 0.2509803922, alpha: 1),
+      #colorLiteral(red: 0.9058823529, green: 0.7019607843, blue: 0.3803921569, alpha: 1),
+      #colorLiteral(red: 0.6901960784, green: 0.3725490196, blue: 0.1411764706, alpha: 1),
+      #colorLiteral(red: 0.4941176471, green: 0.168627451, blue: 0.1254901961, alpha: 1),
+      #colorLiteral(red: 0.2823529412, green: 0.1529411765, blue: 0.03921568627, alpha: 1)
+    ]
+  }
+  
+  static func harvestBlue() -> [UIColor] {
+    return [
+      #colorLiteral(red: 0.4470588235, green: 0.7529411765, blue: 0.9764705882, alpha: 1),
+      #colorLiteral(red: 0.2745098039, green: 0.631372549, blue: 0.9725490196, alpha: 1),
+      #colorLiteral(red: 0.1921568627, green: 0.462745098, blue: 0.7098039216, alpha: 1),
+      #colorLiteral(red: 0.1137254902, green: 0.3019607843, blue: 0.4862745098, alpha: 1),
+      #colorLiteral(red: 0.06666666667, green: 0.2078431373, blue: 0.3725490196, alpha: 1),
+      #colorLiteral(red: 0.01960784314, green: 0.09411764706, blue: 0.2078431373, alpha: 1)
+    ]
+  }
+  
+  static func harvestColorful() -> [UIColor] {
+    return [
+      #colorLiteral(red: 0.2745098039, green: 0.631372549, blue: 0.9725490196, alpha: 1),
+      #colorLiteral(red: 0.5058823529, green: 0.831372549, blue: 0.3254901961, alpha: 1),
+      #colorLiteral(red: 0.937254902, green: 0.7333333333, blue: 0.2509803922, alpha: 1),
+      #colorLiteral(red: 0.9215686275, green: 0.2509803922, blue: 0.1450980392, alpha: 1),
+      #colorLiteral(red: 0.7058823529, green: 0.3176470588, blue: 0.5137254902, alpha: 1),
+      #colorLiteral(red: 0.3725490196, green: 0.3725490196, blue: 0.3725490196, alpha: 1)
+    ]
+  }
+  
+  static func harvest() -> [UIColor] {
+    return harvestWood()
   }
 }
