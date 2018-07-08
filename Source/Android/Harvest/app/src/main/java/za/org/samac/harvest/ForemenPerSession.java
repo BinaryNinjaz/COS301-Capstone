@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,13 +19,25 @@ import android.widget.TextView;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import za.org.samac.harvest.adapter.ForemanRecyclerViewAdapter;
 import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
 import za.org.samac.harvest.domain.Foreman;
 import za.org.samac.harvest.util.AppUtil;
+
+import static za.org.samac.harvest.MainActivity.farmerKey;
 
 public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<ForemenPerSession.ForemenViewHolder>*/ {
     private BottomNavigationView bottomNavigationView;
@@ -40,7 +53,7 @@ public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<
         setContentView(R.layout.activity_foremen_session);
 
         this.foremen = new ArrayList<>();
-        this.adapter = new ForemanRecyclerViewAdapter(this, this.foremen);
+        this.adapter = new ForemanRecyclerViewAdapter(this, (Sessions) this.foremen);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionInformation);
@@ -78,7 +91,6 @@ public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
-
     //Handle the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

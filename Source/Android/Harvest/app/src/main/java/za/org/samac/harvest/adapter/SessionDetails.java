@@ -1,21 +1,33 @@
 package za.org.samac.harvest.adapter;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
@@ -25,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import za.org.samac.harvest.Analytics;
 import za.org.samac.harvest.InformationActivity;
@@ -50,15 +64,32 @@ public class SessionDetails extends AppCompatActivity {
     private HashMap<String, String> workerID;
     private ArrayList<Worker> foremen;
     private HashMap<String, String> foremenID;
-    //private ProgressBar progressBar;
+    private ProgressBar progressBar;
+
+    private BottomNavigationView bottomNavigationView;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private String userUid;
+    private String workerKey;
+    private ArrayList<String> workerKeys;
+    private ArrayList<String> workerName;
+    private ArrayList<Integer> yield;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private Query query;
+    private static final String TAG = "Analytics";
+    ArrayList<PieEntry> entries = new ArrayList<>();
+    com.github.mikephil.charting.charts.PieChart pieChart;
+    private com.github.mikephil.charting.charts.PieChart pieChartView;
+    Map<String, Float> collections = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_details);
 
-        //progressBar = findViewById(R.id.progressBar);
-        //progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+        pieChartView = findViewById(R.id.pieChart);
 
         collected = new collections("");
 
@@ -107,6 +138,10 @@ public class SessionDetails extends AppCompatActivity {
                     endDate = startDate;
                 }
                 key = dataSnapshot.getKey();
+                workerKeys = new ArrayList<>();
+                workerName = new ArrayList<>();
+                yield = new ArrayList<>();
+
                 wid = dataSnapshot.child("wid").getValue(String.class);
                 for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
                     Double lat = childSnapshot.child("lat").getValue(Double.class);
@@ -119,6 +154,7 @@ public class SessionDetails extends AppCompatActivity {
                 }
                 for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
                     String workername = workerID.get(childSnapshot.getKey());
+                    int count = 0;
                     for (DataSnapshot collection : childSnapshot.getChildren()) {
                         System.out.println(collection);
                         Double lat = collection.child("coord").child("lat").getValue(Double.class);
@@ -129,8 +165,12 @@ public class SessionDetails extends AppCompatActivity {
                         Double time = childSnapshot.child("date").getValue(Double.class);
 
                         collected.addCollection(workername, loc, time);
+                        count++;
                     }
+                    collections.put(workername, (float) count);
                 }
+
+                displayGraph();
 
                 TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
                 TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
@@ -150,6 +190,31 @@ public class SessionDetails extends AppCompatActivity {
 
             }
         });
+    }
 
+    public void displayGraph() {
+        pieChart = (com.github.mikephil.charting.charts.PieChart)findViewById(R.id.pieChart);
+        for(String key : collections.keySet()) {
+            String workerName = key;
+            Float yield = collections.get(workerName);
+            entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
+        }
+
+        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+        pieChartView.setVisibility(View.VISIBLE);
+        pieChart.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutQuad));
+        pieChart.setEntryLabelColor(Color.BLACK);
+
+        PieDataSet dataset = new PieDataSet(entries, "Dataset");
+        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        dataset.setValueTextColor(Color.BLACK);
+
+        PieData data = new PieData(dataset);//labels was one of the parameters
+        pieChart.setData(data); // set the data and list of lables into chart
+
+        Description description = new Description();
+        description.setText("Worker Performance");
+        pieChart.setDescription(description); // set the description
+        pieChart.notifyDataSetChanged();
     }
 }
