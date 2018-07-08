@@ -2,6 +2,7 @@ package za.org.samac.harvest.util;
 
 import android.location.Location;
 import android.support.annotation.Nullable;
+import android.view.ViewDebug;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -123,17 +124,26 @@ public class Data {
                                 }
                                 temp.setCoordinates(coords);
 
-                                String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
-                                Float meanBagMass = null;
-                                if (smeanBagMass != null) {
-                                    if (!smeanBagMass.equals("")) {
-                                        meanBagMass = Float.parseFloat(smeanBagMass);
+                                try {
+                                    String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
+                                    Float meanBagMass = null;
+                                    if (smeanBagMass != null) {
+                                        if (!smeanBagMass.equals("")) {
+                                            meanBagMass = Float.parseFloat(smeanBagMass);
+                                        }
                                     }
-                                }
 //                                else {
 //                                    meanBagMass = 0;
 //                                }
-                                temp.setMeanBagMass(meanBagMass);
+                                    temp.setMeanBagMass(meanBagMass);
+                                }
+                                catch (com.google.firebase.database.DatabaseException e){
+                                    Long meanBagBass = dataSet.child("bagMass").getValue(Long.class);
+                                    if (meanBagBass != null) {
+                                        Float beanBagBass = meanBagBass.floatValue();
+                                        temp.setMeanBagMass(beanBagBass);
+                                    }
+                                }
 
                                 temp.setIrrigation(dataSet.child("irrigation").getValue(String.class));
 
@@ -151,15 +161,36 @@ public class Data {
                                 assignedFarm.setID(dataSet.child("farm").getValue(String.class));
                                 temp.setAssignedFarm(assignedFarm);
 
-                                String sRow = dataSet.child("rowSpacing").getValue(String.class);
-                                String sTree = dataSet.child("treeSpacing").getValue(String.class);
                                 Float row = null, tree = null;
-                                if (sRow != null) {
-                                    row = Float.parseFloat(sRow);
+                                try {
+                                    String sRow = dataSet.child("rowSpacing").getValue(String.class);
+                                    if (sRow != null) {
+                                        if (!sRow.equals("")) {
+                                            row = Float.parseFloat(sRow);
+                                        }
+                                    }
                                 }
-                                if (sTree != null) {
-                                    tree = Float.parseFloat(sTree);
+                                catch (com.google.firebase.database.DatabaseException e){
+                                    Long t = dataSet.child("rowSpacing").getValue(Long.class);
+                                    if (t != null){
+                                        row = t.floatValue();
+                                    }
                                 }
+                                try{
+                                    String sTree = dataSet.child("treeSpacing").getValue(String.class);
+                                    if (sTree != null) {
+                                        if(!sTree.equals("")){
+                                            tree = Float.parseFloat(sTree);
+                                        }
+                                    }
+                                }
+                                catch (com.google.firebase.database.DatabaseException e){
+                                    Long t = dataSet.child("rowSpacing").getValue(Long.class);
+                                    if (t != null){
+                                        tree = t.floatValue();
+                                    }
+                                }
+
                                 temp.setRow(row);
                                 temp.setTree(tree);
 
@@ -270,7 +301,8 @@ public class Data {
                                 coordsRoot.child(Integer.toString(i)).child("lng").setValue(loc.longitude);
                             }
                             if (newOrchard.meanBagMass != null){
-                                objectRoot.child("bagMass").setValue(Float.toString(newOrchard.meanBagMass));
+//                                objectRoot.child("bagMass").setValue(Float.toString(newOrchard.meanBagMass));
+                                objectRoot.child("bagMass").setValue(newOrchard.meanBagMass.longValue());
                             }
                             objectRoot.child("irrigation").setValue(newOrchard.irrigation);
                             if (newOrchard.datePlanted != null) {
@@ -355,7 +387,8 @@ public class Data {
                             }
 
                             if (activeOrchard.meanBagMass != null) {
-                                objectRoot.child("bagMass").setValue(activeOrchard.meanBagMass);
+//                                objectRoot.child("bagMass").setValue(activeOrchard.meanBagMass);
+                                objectRoot.child("bagMass").setValue(activeOrchard.meanBagMass.longValue());
                             }
                             objectRoot.child("irrigation").setValue(activeOrchard.irrigation);
                             if (activeOrchard.datePlanted != null) {
