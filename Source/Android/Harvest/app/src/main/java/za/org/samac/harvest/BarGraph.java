@@ -26,6 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -33,6 +36,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -61,6 +65,7 @@ public class BarGraph extends AppCompatActivity {
     ArrayList<PieEntry> entries = new ArrayList<>();
     com.github.mikephil.charting.charts.PieChart pieChart;
     private ProgressBar progressBar;
+    private BarChart barChart;
     private com.github.mikephil.charting.charts.BarChart barGraphView;
 
     @Override
@@ -70,6 +75,7 @@ public class BarGraph extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         barGraphView = findViewById(R.id.barChart);
+        barChart = (BarChart) findViewById(R.id.barChart);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
@@ -106,18 +112,19 @@ public class BarGraph extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
         orchardKey = getIntent().getStringExtra("key");
-        getTotalBagsPerDay();
+        //getTotalBagsPerDay();
         displayGraph();
     }
 
     private static String urlTotalBagsPerDay() {
-        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions?";
+        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions";
         return base;
     }
 
     private static String urlParameters() {
         String base = "";
-        base = base + "groupBy=" + orchardKey;//get correct orchard ID
+        base = base + "id0=" + orchardKey;
+        base = base + "&groupBy=" + "orchard";//get correct orchard ID
         base = base + "&period=" + "daily";
         double currentTime;
         double divideBy1000Var = 1000.0000000;
@@ -163,23 +170,45 @@ public class BarGraph extends AppCompatActivity {
         return response.toString();
     }
 
-    public static void getTotalBagsPerDay() {
+    public void getTotalBagsPerDay() {
         try {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         String response = sendPost(urlTotalBagsPerDay(), urlParameters());
-                        System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% ");
-                        /*JSONObject obj = new JSONObject(response);
-                        final Double expectedYield = obj.getDouble("expected"); // This is the value
-                        System.out.println(" $$$$$$$$$$$$$$$$$$$ " + expectedYield + " $$$$$$$$$$$$$$$$$$$ ");
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                textView = findViewById(R.id.textView);
-                                textView.setText("Expected Yield: " + Math.round(expectedYield));
-                            }
-                        });*/
+                        JSONObject objs = new JSONObject(response);
+                        System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% " + objs.keys());
+
+                        //put entries in graph
+
+                        ArrayList<BarEntry> entries = new ArrayList<>();
+                        entries.add(new BarEntry(7, 7));
+                        entries.add(new BarEntry(8, 15));
+                        entries.add(new BarEntry(9, 11));
+                        entries.add(new BarEntry(10, 20));
+                        entries.add(new BarEntry(11, 34));
+
+                        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+                        barGraphView.setVisibility(View.VISIBLE);
+
+                        BarDataSet dataset = new BarDataSet(entries, "Dataset");
+                        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+
+                        BarData data = new BarData(dataset);//labels was one of the parameters
+                        barChart.setData(data); // set the data and list of lables into chart
+
+                        Description description = new Description();
+                        description.setText("Orchard Performance");
+                        barChart.setDescription(description);  // set the description
+
+                        for (int i = 0; i < objs.length(); i++) {
+                            objs.get(objs.keys().toString());
+                            System.out.println(" *************** " + objs.get(objs.keys().toString()) + " *************** ");
+
+                        }
+
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
