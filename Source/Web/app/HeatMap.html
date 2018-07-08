@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
 
         <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
+        <link rel="stylesheet" type="text/css" href="HeatMap.css">
       
         <!-- Firebase Dependencies -->
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
@@ -28,15 +29,17 @@
         
 <!--         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap"></script> -->
         <script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization&key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap"></script>
-<script src="HeatMap.js" charset="utf-8"></script>
-
+        <script src="HeatMap.js" charset="utf-8"></script>
+        <link rel="stylesheet" type="text/css" href="spin.css">
+        <script src="spin.js" charset="utf-8"></script>
     </head>
     <body>
         <div class="topnav">
             <ul class="nav navbar-nav">
-                <a href="HomePage.html">Harvest Home</a>
-                <a href="Information.html">View/Edit Information</a>
-                <a class="active" href="HeatMap.html">Heatmap</a>
+                <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+                <a href="Information.html">Information</a>
+                <a href="Sessions.html">Sessions</a>
+                <a class='active' href="HeatMap.html">Heatmap</a>
             </ul>
 
             <ul class="pull-right nav navbar-nav">
@@ -49,8 +52,28 @@
                 </button>
             </ul>
         </div>
-
-        <div style="width:100hh; height: 100vh;" id="map"></div>
-
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div id="orchardFiltering">
+                        <h2>Orchard Filtering</h2>
+                        <label>Start From:</label>
+                        <input type='date' class='form-control' id='startDate' onchange="updateHeatmap()">
+                        </br>
+                        <label>Ending At:</label>
+                        <input type='date' class='form-control' id='endDate' onchange="updateHeatmap()">
+                        <div id="orchards">
+                        </div>
+                        <div id="spinner">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-9" style="margin-top: 4px">
+                    <div class="map" id="map"></div>
+                </div>
+            </div>
+        </div>
+        
     </body>
 </html>

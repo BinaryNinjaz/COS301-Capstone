@@ -12,8 +12,8 @@ public struct Poly<Number: BinaryFloatingPoint> {
   }
 }
 
-extension Poly : Equatable {
-  public static func ==(lhs: Poly, rhs: Poly) -> Bool {
+extension Poly: Equatable {
+  public static func == (lhs: Poly, rhs: Poly) -> Bool {
     return lhs.edges == rhs.edges
   }
 }
@@ -52,7 +52,9 @@ extension Poly {
         guard let p = $0.intersection(onLineXEqual: x) else {
           return nil
         }
-        return number(p.x, isBetweenUnorderedRange: ($0.start.x, $0.end.x)) ? p : nil
+        return number(p.x, isBetweenUnorderedRange: ($0.start.x, $0.end.x))
+          ? p
+          : nil
       }
       .sorted { $0.y < $1.y }
   }
@@ -94,7 +96,7 @@ extension Poly {
   }
 }
 
-extension Poly : CustomStringConvertible {
+extension Poly: CustomStringConvertible {
   public var description: String {
     return edges.description
   }

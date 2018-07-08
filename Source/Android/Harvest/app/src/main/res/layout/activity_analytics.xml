@@ -11,16 +11,16 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/perSesWorkerComparison"
+            android:id="@+id/workerHistPerformance"
             style="@style/Button"
-            android:text="@string/PerSesWorkerComparison"
+            android:text="@string/WorkerHistPerformance"
             android:background="@color/androidGrey"
             android:textColor="@color/black"/>
 
         <Button
-            android:id="@+id/orhHistPerformance"
+            android:id="@+id/orchHistPerformance"
             style="@style/Button"
-            android:text="@string/OrhHistPerformance"
+            android:text="@string/OrchHistPerformance"
             android:background="@color/androidGrey"
             android:textColor="@color/black"/>
 
@@ -28,11 +28,9 @@
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/BottomNav"
+        android:background="@drawable/navbar_background"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:itemBackground="@color/colorPrimary"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

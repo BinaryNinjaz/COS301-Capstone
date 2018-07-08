@@ -28,6 +28,15 @@ public class MyData {
         }
     }
 
+    public void addLocation(Location location, Double adate) {
+        if(location!=null) {
+            ++size;
+            longitude.add(location.getLongitude());
+            latitude.add(location.getLatitude());
+            date.add(adate);
+        }
+    }
+
     public void removeLocation() {
         if(longitude.size()>0){
             --size;

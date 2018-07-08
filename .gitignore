@@ -15,3 +15,6 @@ Source/Web/functions/node_modules
 .DS_Store
 /build
 /captures
+Source/Resources/Tools/CloudFunctionTesters/Untitled.class
+Source/Resources/Tools/CloudFunctionTesters/Untitled$1.class
+*.log

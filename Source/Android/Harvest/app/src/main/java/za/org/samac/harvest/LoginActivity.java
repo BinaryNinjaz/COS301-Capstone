@@ -79,8 +79,8 @@ public class LoginActivity extends AppCompatActivity {
     private UserLoginTask mAuthTask = null;
 
     //used same names as IDs in xml
-    private EditText edtEmail;
-    private EditText edtPassword;
+    private static EditText edtEmail;
+    private static EditText edtPassword;
     private View login_progress;
     private View login_form;
     private Button btnSignup;
@@ -221,6 +221,14 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();//initialisation the FirebaseAuth instance
     }
 
+    public static void setEdtEmail(EditText e) {
+        edtEmail = e;
+    }
+
+    public static void setEdtPassword(EditText p) {
+        edtPassword = p;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -326,7 +334,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "signInToAccount:" + email);
         login_form.setVisibility(View.INVISIBLE);
         login_progress.setVisibility(View.VISIBLE);
-        if (!validateForm()) {
+        if (!validateForm(edtEmail.toString(), edtPassword.toString())) {
             return;
         }
 
@@ -388,23 +396,25 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private boolean validateForm() {
+    public static boolean validateForm(String email, String password) {
         boolean valid = true;
 
-        String email = edtEmail.getText().toString();
         if (TextUtils.isEmpty(email)) {
             edtEmail.setError("Required.");
             valid = false;
         } else {
-            edtEmail.setError(null);
+            if (edtEmail != null) {
+                edtEmail.setError(null);
+            }
         }
 
-        String password = edtPassword.getText().toString();
         if (TextUtils.isEmpty(password)) {
             edtPassword.setError("Required.");
             valid = false;
         } else {
-            edtPassword.setError(null);
+            if (edtPassword != null) {
+                edtPassword.setError(null);
+            }
         }
 
         return valid;

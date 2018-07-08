@@ -1,6 +1,7 @@
 package za.org.samac.harvest;
 
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
@@ -11,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -27,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import za.org.samac.harvest.adapter.MyData;
+import za.org.samac.harvest.adapter.SessionDetails;
 import za.org.samac.harvest.domain.Worker;
 
 import static za.org.samac.harvest.MainActivity.getWorkers;
@@ -76,104 +80,40 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         mMap = googleMap;
         isFirstCollection = true; // just used to find where to move map to
         uid = user.getUid();
-        database = FirebaseDatabase.getInstance();
-        sessionsRef = database.getReference(uid +"/sessions/");
 
-        q = sessionsRef.limitToLast(1);
-        checkPlayServices();
+        PolylineOptions polyline = new PolylineOptions();
+        polyline.color(Color.BLUE);
+        boolean first = true;
+        for (Location loc : SessionDetails.collected.getTrack()) {
+            LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
+            if (first) {
+                moveMapHere = ll;
+                first = false;
+            }
+            polyline.add(ll);
+        }
+        mMap.addPolyline(polyline);
 
+        HashMap<String, MyData> cols = (HashMap<String, MyData>) SessionDetails.collected.getIndividualCollections();
+        for (String key : cols.keySet()) {
+            MyData data = cols.get(key);
 
-        workers = getWorkers(); // get worker info to loop through it
-        workerID = new HashMap<>();
-        for(int i = 0 ; i < workers.size() ; ++i) {
-            String id = workers.get(i).getID();
-            String name = workers.get(i).getName();
-            workerID.put(id,name);
+            for (int i = 0; i < data.size; i++) {
+                LatLng ll = new LatLng(data.latitude.get(i), data.longitude.get(i));
+                if (first) {
+                    moveMapHere = ll;
+                    first = false;
+                }
+                mMap.addMarker(new MarkerOptions().position(ll).title(key));
+            }
         }
 
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //String errorTxt = "How many kids? -> "+dataSnapshot.getChildrenCount();
-                //Toast toast = Toast.makeText(getApplicationContext(), errorTxt, Toast.LENGTH_SHORT);
-                //toast.show();
-                DataSnapshot collections = dataSnapshot.child("collections");
-
-                //DatabaseReference tempRef = collections.child("2").getRef();
-                //String err = "Is der a kid doe? -> "+tempRef.getKey();
-                //Toast tst = Toast.makeText(getApplicationContext(), err, Toast.LENGTH_SHORT);
-                //tst.show();
-                for(DataSnapshot collectionSnap : collections.getChildren()) {
-                    //isHere = true;
-                    String wID = collectionSnap.getKey();
-                    final String name = workerID.get(wID);
-                    workerRef = collectionSnap.child(wID).getRef();
-                    workerRef.addValueEventListener(new ValueEventListener() {
-                        @SuppressWarnings("ConstantConditions")
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot2) {
-                            for (DataSnapshot workerSnap : dataSnapshot2.getChildren()) {
-                                double lat = workerSnap.child("coord").child("lat").getValue(double.class);
-                                double lng = workerSnap.child("coord").child("lng").getValue(double.class);
-                                //isThere = true;
-                                if (isFirstCollection) {
-                                    moveMapHere = new LatLng(lat, lng);
-                                    isFirstCollection = false;
-                                }
-                                mMap.addMarker(new MarkerOptions().position(
-                                        new LatLng(lat, lng)).title(name));
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        //String errorTxt = "Is here = "+isHere+" isThere = "+isThere;
-        //Toast toast = Toast.makeText(getApplicationContext(), errorTxt, Toast.LENGTH_SHORT);
-        //toast.show();
         callCameraMove();
     }
 
     private void callCameraMove() {
-        if(moveMapHere!=null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(moveMapHere));
-        }else{
-            //hard-coding sessions due to current firebase bug
-            mMap.addMarker(new MarkerOptions().position(
-                    new LatLng(-25.72866109, 28.49997623)).title("Rob Kingston"));
-            mMap.addMarker(new MarkerOptions().position(
-                    new LatLng(-25.72866123, 28.50094444)).title("Sally Benjamin"));
-            mMap.addMarker(new MarkerOptions().position(
-                    new LatLng(-25.72866321, 28.50095555)).title("Ryan Benjamin"));
-            mMap.addMarker(new MarkerOptions().position(
-                    new LatLng(-25.7282345, 28.50123401)).title("James Worker"));
-            mMap.addMarker(new MarkerOptions().position(
-                    new LatLng(-25.7281111, 28.50095678)).title("Rob Kingston"));
-            moveMapHere = new LatLng(-25.72866109, 28.49997623);
-            mMap.addPolyline(new PolylineOptions()
-                    .add(new LatLng(-25.7281, 28.49997), new LatLng(-25.7283, 28.50094))
-                    .width(5)
-                    .color(Color.BLUE));
-            mMap.addPolyline(new PolylineOptions()
-                    .add(new LatLng(-25.7283, 28.50094), new LatLng(-25.7285, 28.50095))
-                    .width(5)
-                    .color(Color.BLUE));
-            mMap.addPolyline(new PolylineOptions()
-                    .add(new LatLng(-25.7285, 28.50095), new LatLng(-25.7287, 28.50095555))
-                    .width(5)
-                    .color(Color.BLUE));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(moveMapHere,15));
+        if (moveMapHere!=null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(moveMapHere, 15));
         }
     }
 
