@@ -79,6 +79,7 @@ import za.org.samac.harvest.util.WorkerComparator;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
+    private final int GPS_SETTINGS_UPDATE = 989;
     private static final String TAG = "Clicker";
 
     private static ArrayList<Worker> workers;
@@ -153,28 +154,34 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 location = locationManager.getLastKnownLocation(provider);
                 //Log.d("last known location, provider: %s, location: %s", provider, location);
 
-                if (location == null) {
-                    continue;
+                if (location != null) {
+                    break;
                 }
-                if (bestLocation == null
+                /*if (bestLocation == null
                         || location.getAccuracy() < bestLocation.getAccuracy()) {
                     //Log.d("found best last known location: %s", location);
                     bestLocation = location;
-                }
+                }*/
             }
 
-            location = locationManager
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
-            //adapter.setLocation(location);
+            if (location == null) {
+                location = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+                //adapter.setLocation(location);
+            }
+            adapter.setLocation(location);
         }
 
         locationEnabled = true;
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
-        location = locationManager
-                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
-
+        if (locationManager == null) {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (locationManager != null) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+                location = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+            }
+        }
         locationPermissions();
         //new LocationHelper().getLocation(this);
 
@@ -187,6 +194,34 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
         statusCheck();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == GPS_SETTINGS_UPDATE) {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (locationManager != null) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+                    location = locationManager
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+                    return;
+                }
+
+            }
+            return;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -675,7 +710,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_SETTINGS_UPDATE);
+                        //startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -858,9 +894,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setMinusEnabled(true);
             track = new HashMap<Integer, Location>(); //used in firebase function
             track.put(trackCount, location);
-            if (locationEnabled) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
-            }
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
             startTime = System.currentTimeMillis();
             btnStart.setBackgroundColor(Color.parseColor("#FFFF8800"));
             btnStart.setText("Stop");
@@ -1038,8 +1072,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void locationPermissions() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(),
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(getApplicationContext(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
