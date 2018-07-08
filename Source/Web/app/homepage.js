@@ -6,7 +6,9 @@ function locationsRef() {
 
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
-    initMap();
+    $(window).bind("load", function() {
+      initForemen();
+    });
   }
 });
 
@@ -44,6 +46,7 @@ function initForemen() {
         foremenDiv.innerHTML += createForemenSelectionButton(name, k);
       }
     });
+    displayForemanLocation();
   });
   requestLocations();
   setInterval(requestLocations, 2000);
@@ -61,17 +64,16 @@ function requestLocations() {
 var locations = [];
 var map;
 function initMap() {
-  navigator.geolocation.getCurrentPosition(function(loc) {
-    var latLng = new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude);
-    map.setCenter(latLng);
-  });
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -25, lng: 28 },
     zoom: 14,
     mapTypeId: 'satellite'
   });
-  displayForemanLocation();
-  initForemen();
+  locationLookup((data) => {
+    var latLng = new google.maps.LatLng(data.lat, data.lon);
+    map.setCenter(latLng);
+    map.setZoom(11);
+  });
 }
 
 function initials(name) {
@@ -148,6 +150,7 @@ function shouldShowForeman(fID) {
   return true;
 }
 
+var first = true;
 function displayForemanLocation() {
   let locRef = firebase.database().ref('/' + userID() + '/locations');
   locRef.off();
@@ -159,6 +162,11 @@ function displayForemanLocation() {
       locations.push({value: loc, key: child.key});
       if (shouldShowForeman(child.key)) {
         let date = displayDate(loc.date);
+        if (first) {
+          first = false;
+          map.setCenter(loc.coord);
+          map.setZoom(15);
+        }
         var marker = new google.maps.Marker({
           position: loc.coord,
           map: map,
