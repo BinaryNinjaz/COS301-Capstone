@@ -26,12 +26,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import za.org.samac.harvest.util.AppUtil;
+
+import static za.org.samac.harvest.MainActivity.farmerKey;
 
 public class BarGraph extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
@@ -47,6 +55,7 @@ public class BarGraph extends AppCompatActivity {
     private ArrayList<String> workerName;
     private ArrayList<Integer> yield;
     private String sessionKey;
+    private static String orchardKey;
     private Query query;
     private static final String TAG = "Analytics";
     ArrayList<PieEntry> entries = new ArrayList<>();
@@ -96,7 +105,91 @@ public class BarGraph extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
+        orchardKey = getIntent().getStringExtra("key");
+        getTotalBagsPerDay();
         displayGraph();
+    }
+
+    private static String urlTotalBagsPerDay() {
+        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions?";
+        return base;
+    }
+
+    private static String urlParameters() {
+        String base = "";
+        base = base + "groupBy=" + orchardKey;//get correct orchard ID
+        base = base + "&period=" + "daily";
+        double currentTime;
+        double divideBy1000Var = 1000.0000000;
+        currentTime = (System.currentTimeMillis()/divideBy1000Var);
+        base = base + "&startDate=" + (currentTime - 7 * 24 * 60 * 60);
+        base = base + "&endDate=" + currentTime;
+        base = base + "&uid=" + farmerKey;
+
+        return base;
+    }
+
+    // HTTP POST request
+    private static String sendPost(String url, String urlParameters) throws Exception {
+        URL obj = new URL(url);
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+
+        //add reuqest header
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+        // Send post request
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'POST' request to URL : " + url);
+        System.out.println("Post parameters : " + urlParameters);
+        System.out.println("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        return response.toString();
+    }
+
+    public static void getTotalBagsPerDay() {
+        try {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String response = sendPost(urlTotalBagsPerDay(), urlParameters());
+                        System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% ");
+                        /*JSONObject obj = new JSONObject(response);
+                        final Double expectedYield = obj.getDouble("expected"); // This is the value
+                        System.out.println(" $$$$$$$$$$$$$$$$$$$ " + expectedYield + " $$$$$$$$$$$$$$$$$$$ ");
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                textView = findViewById(R.id.textView);
+                                textView.setText("Expected Yield: " + Math.round(expectedYield));
+                            }
+                        });*/
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void displayGraph() {
