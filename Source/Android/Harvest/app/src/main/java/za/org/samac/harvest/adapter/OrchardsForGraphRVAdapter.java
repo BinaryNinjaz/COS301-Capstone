@@ -18,10 +18,12 @@ public class OrchardsForGraphRVAdapter extends RecyclerView.Adapter<OrchardsForG
 
     public Context context;
     private ArrayList<String> orchards;
+    private ArrayList<String> orchardKeys;
 
-    public OrchardsForGraphRVAdapter(Context context, ArrayList<String> orchards) {
+    public OrchardsForGraphRVAdapter(Context context, ArrayList<String> orchards, ArrayList<String> orchardKeys) {
         this.context = context;
         this.orchards = orchards;
+        this.orchardKeys = orchardKeys;
     }
 
     @Override
@@ -35,12 +37,15 @@ public class OrchardsForGraphRVAdapter extends RecyclerView.Adapter<OrchardsForG
     @Override
     public void onBindViewHolder(OrchardsViewHolder holder, int position) {
         final String orchardName = this.orchards.get(position);
+        final String orchardKey = this.orchardKeys.get(position);
         holder.button.setText(orchardName);//set name of orchard
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent details = new Intent(context, BarGraph.class);
                 details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                Intent key = details.putExtra("key", orchardKey);
 
                 context.startActivity(details);
             }

@@ -103,7 +103,7 @@ public class Analytics extends AppCompatActivity {
         perSesWorkerComparison.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Analytics.this, ForemenPerSession.class);
+                Intent intent = new Intent(Analytics.this, BarGraph.class);
                 startActivity(intent);
             }
         });

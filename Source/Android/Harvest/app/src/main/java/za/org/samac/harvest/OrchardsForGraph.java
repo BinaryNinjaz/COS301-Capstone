@@ -28,6 +28,7 @@ import za.org.samac.harvest.adapter.OrchardsForGraphRVAdapter;
 public class OrchardsForGraph extends AppCompatActivity {
 
     private ArrayList<String> orchards;
+    private ArrayList<String> orchardKeys;
     private DatabaseReference orchardsRef;
     private FirebaseDatabase database;
     private OrchardsForGraphRVAdapter adapter;
@@ -77,6 +78,7 @@ public class OrchardsForGraph extends AppCompatActivity {
 
     public void init() {
         this.orchards = new ArrayList<>();
+        this.orchardKeys = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
     }
 
@@ -86,10 +88,11 @@ public class OrchardsForGraph extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    orchardKeys.add(child.getKey().toString());
                     orchards.add(child.child("name").getValue(String.class));
                 }
 
-                adapter = new OrchardsForGraphRVAdapter(getApplicationContext(), orchards);
+                adapter = new OrchardsForGraphRVAdapter(getApplicationContext(), orchards, orchardKeys);
                 recyclerView = findViewById(R.id.recView);//this encapsulates the worker buttons, it is better than gridview
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 recyclerView.setHasFixedSize(false);
