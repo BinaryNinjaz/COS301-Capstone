@@ -3,6 +3,7 @@ package za.org.samac.harvest.util;
 import android.location.Location;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -11,8 +12,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
+
+import za.org.samac.harvest.InfoListFragment;
 
 /**
  * This monster class is used to store and manipulate almost, if not all, information in the database that belongs to the logged in farmer.
@@ -55,19 +60,18 @@ public class Data {
         orchards = new Vector<>();
         workers = new Vector<>();
         changes = new Changes();
-        pull();
+//        pull();
     }
 
     /**
-     * Replace all local information from Firebase
+     * Replace all local information from Firebase, TODO: while preserving local changes.
      */
-    public void pull(){
-        /*
-         * This may, or may not be real time, for now it's not, because my data
-         * D:
-         * Swipe to refresh will be the way to go, methinks.
-         * TODO: Add Swipe to refresh in list
-         */
+    public void pull(final InfoListFragment list){
+
+        farms = new Vector<>();
+        orchards = new Vector<>();
+        workers = new Vector<>();
+        changes = new Changes();
 
         userRoot.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -88,10 +92,15 @@ public class Data {
                         case "farms":
                             //Iterate through every data set
                             for (DataSnapshot dataSet : setOData.getChildren()) {
-                                String name = dataSet.child("name").getValue(String.class);
-                                String further = dataSet.child("further").getValue(String.class);
-                                String ID = dataSet.getKey();
-                                Farm temp = new Farm(name, further, ID);
+                                Farm temp = new Farm();
+                                temp.setName(dataSet.child("name").getValue(String.class));
+                                temp.setCompany(dataSet.child("companyName").getValue(String.class));
+                                temp.setEmail(dataSet.child("email").getValue(String.class));
+                                temp.setPhone(dataSet.child("contactNumber").getValue(String.class));
+                                temp.setProvince(dataSet.child("province").getValue(String.class));
+                                temp.setTown(dataSet.child("neartestTown").getValue(String.class)); //TODO: Verify this typo
+                                temp.setFurther(dataSet.child("further").getValue(String.class));
+                                temp.setID(dataSet.getKey());
                                 farms.add(temp);
                             }
                             break;
@@ -100,87 +109,71 @@ public class Data {
                         case "orchards":
                             //Iterate through every data set
                             for (DataSnapshot dataSet : setOData.getChildren()) {
-                                String name = dataSet.child("name").getValue(String.class);
-                                String crop = dataSet.child("crop").getValue(String.class);
+                                Orchard temp = new Orchard();
+                                temp.setName(dataSet.child("name").getValue(String.class));
+                                temp.setCrop(dataSet.child("crop").getValue(String.class));
+
                                 //Iterate through coordinate sets
-                                Coordinates coords = new Coordinates();
-                                for (DataSnapshot coord : setOData.child("coords").getChildren()){
+                                List<LatLng> coords = new Vector<>();
+                                for (DataSnapshot coord : dataSet.child("coords").getChildren()){
                                     // Iterate through
-                                    Location tempLoc = new Location("");
-                                    String lats = coord.child("lat").getValue(String.class);
-                                    String lngs = coord.child("lng").getValue(String.class);
-                                    if (!lats.equals("") && !lngs.equals("")) {
-                                        coords.pushLocation(Double.parseDouble(lats), Double.parseDouble(lngs));
-                                    }
+                                    Double lats = coord.child("lat").getValue(Double.class);
+                                    Double lngs = coord.child("lng").getValue(Double.class);
+                                    coords.add(new LatLng(lats, lngs));
                                 }
+                                temp.setCoordinates(coords);
+
                                 String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
                                 Float meanBagMass = null;
-                                if (!smeanBagMass.equals("")) {
-                                    meanBagMass = Float.parseFloat(smeanBagMass);
+                                if (smeanBagMass != null) {
+                                    if (!smeanBagMass.equals("")) {
+                                        meanBagMass = Float.parseFloat(smeanBagMass);
+                                    }
                                 }
 //                                else {
 //                                    meanBagMass = 0;
 //                                }
-                                Calendar cal = new Calendar() {
-                                    @Override
-                                    protected void computeTime() {
+                                temp.setMeanBagMass(meanBagMass);
 
-                                    }
+                                temp.setIrrigation(dataSet.child("irrigation").getValue(String.class));
 
-                                    @Override
-                                    protected void computeFields() {
-
-                                    }
-
-                                    @Override
-                                    public void add(int field, int amount) {
-
-                                    }
-
-                                    @Override
-                                    public void roll(int field, boolean up) {
-
-                                    }
-
-                                    @Override
-                                    public int getMinimum(int field) {
-                                        return 0;
-                                    }
-
-                                    @Override
-                                    public int getMaximum(int field) {
-                                        return 0;
-                                    }
-
-                                    @Override
-                                    public int getGreatestMinimum(int field) {
-                                        return 0;
-                                    }
-
-                                    @Override
-                                    public int getLeastMaximum(int field) {
-                                        return 0;
-                                    }
-                                };
-                                //Get and manipulate the date.
-                                String dateString[] = dataSet.child("date").getValue(String.class).split("-");
-                                if (dateString.length == 3) {
-                                    cal.set(Integer.valueOf(dateString[0]), Integer.valueOf(dateString[1]) - 1, Integer.valueOf(dateString[2]));
+                                Long tempL = dataSet.child("date").getValue(Long.class);
+                                Date date;
+                                Calendar c;
+                                if (tempL != null){
+                                    c = Calendar.getInstance();
+                                    date = new Date(tempL);
+                                    c.setTime(date);
+                                    temp.setDatePlanted(c);
                                 }
-                                String sDimX = dataSet.child("xDim").getValue(String.class);
-                                String sDimY = dataSet.child("yDim").getValue(String.class);
-                                Float dimX = null, dimY = null;
-                                if (!sDimX.equals("")) {
-                                    dimX = Float.parseFloat(sDimX);
+
+                                Farm assignedFarm = new Farm();
+                                assignedFarm.setID(dataSet.child("farm").getValue(String.class));
+                                temp.setAssignedFarm(assignedFarm);
+
+                                String sRow = dataSet.child("rowSpacing").getValue(String.class);
+                                String sTree = dataSet.child("treeSpacing").getValue(String.class);
+                                Float row = null, tree = null;
+                                if (sRow != null) {
+                                    row = Float.parseFloat(sRow);
                                 }
-                                if (!sDimY.equals("")) {
-                                    dimY = Float.parseFloat(sDimX);
+                                if (sTree != null) {
+                                    tree = Float.parseFloat(sTree);
                                 }
-                                String dimUnit = dataSet.child("unit").getValue(String.class);
-                                String further = dataSet.child("further").getValue(String.class);
-                                String assignedFarmString = dataSet.child("farm").getValue(String.class);
-                                Farm assignedFarm = getFarmFromIDString(assignedFarmString);
-                                orchards.addElement(new Orchard(name, crop, coords, meanBagMass, cal, dimX, dimY, dimUnit, further, assignedFarm, dataSet.getKey()));
+                                temp.setRow(row);
+                                temp.setTree(tree);
+
+                                //Cultivars
+                                Vector<String> cultivars;
+                                for (DataSnapshot cultivar : dataSet.child("cultivars").getChildren()){
+                                    temp.addCultivar(cultivar.getValue(String.class));
+                                }
+
+                                temp.setFurther(dataSet.child("further").getValue(String.class));
+
+                                temp.setID(dataSet.getKey());
+
+                                orchards.addElement(temp);
                             }
                             break;
 
@@ -188,21 +181,44 @@ public class Data {
                         case "workers":
                             //Iterate through every data set
                             for (DataSnapshot dataSet : setOData.getChildren()) {
-                                String fName = dataSet.child("name").getValue(String.class);
-                                String sName = dataSet.child("surname").getValue(String.class);
-                                Orchard assignedOrchard = getOrchardFromIDString(dataSet.child("orchard").getValue(String.class));
+                                Worker temp = new Worker();
+                                temp.setfName(dataSet.child("name").getValue(String.class));
+                                temp.setsName(dataSet.child("surname").getValue(String.class));
+                                
+                                //Orchards
+                                List<Orchard> newOrhards = new Vector<>();
+                                for (DataSnapshot orchard : dataSet.child("orchards").getChildren()){
+                                    newOrhards.add(getOrchardFromIDString(orchard.getValue(String.class)));
+                                }
+                                temp.setAssignedOrchards(newOrhards);
+                                
+                                //Type
                                 String sType = dataSet.child("type").getValue(String.class);
                                 WorkerType type = WorkerType.WORKER;
+                                assert sType != null;
                                 if (sType.equals("Foreman")){
                                     type = WorkerType.FOREMAN;
                                 }
-                                String further = dataSet.child("info").getValue(String.class);
-                                String email = dataSet.child("email").getValue(String.class);
-                                String ID = dataSet.getKey();
-                                workers.addElement(new Worker(fName, sName, assignedOrchard, type, further, email, ID));
+                                temp.setWorkerType(type);
+                                
+                                temp.setnID(dataSet.child("idNumber").getValue(String.class));
+                                temp.setFurther(dataSet.child("info").getValue(String.class));
+                                temp.setPhone(dataSet.child("phoneNumber").getValue(String.class));
+                                temp.setfID(dataSet.getKey());
+
+                                workers.addElement(temp);
                             }
                             break;
                     }
+                }
+
+                //Fix orchard farms
+                for (Orchard orchard : orchards){
+                    orchard.setAssignedFarm(getFarmFromIDString(orchard.getAssignedFarm().getID()));
+                }
+
+                if (list != null) {
+                    list.endRefresh();
                 }
             }
 
@@ -231,11 +247,82 @@ public class Data {
                             newFarm.setID(newKey);
                             objectRoot = objectRoot.child(newKey);
                             objectRoot.child("name").setValue(newFarm.name);
+                            objectRoot.child("companyName").setValue(newFarm.company);
+                            objectRoot.child("email").setValue(newFarm.email);
+                            objectRoot.child("contactNumber").setValue(newFarm.phone);
+                            objectRoot.child("province").setValue(newFarm.province);
+                            objectRoot.child("neartestTown").setValue(newFarm.town);
                             objectRoot.child("further").setValue(newFarm.further);
                             break;
                         case ORCHARD:
+                            objectRoot = userRoot.child("orchards");
+                            String newKey1 = objectRoot.push().getKey();
+                            Orchard newOrchard = getOrchardFromIDString(currentChange.ID);
+                            newOrchard.setID(newKey1);
+                            objectRoot = objectRoot.child(newKey1);
+                            objectRoot.child("name").setValue(newOrchard.name);
+                            objectRoot.child("crop").setValue(newOrchard.crop);
+                            DatabaseReference coordsRoot = objectRoot.child("coords");
+                            for(int i = 0; i < newOrchard.coordinates.size(); i++){
+//                                Location loc = newOrchard.coordinates.getCoordinate(i);
+                                LatLng loc = newOrchard.coordinates.get(i);
+                                coordsRoot.child(Integer.toString(i)).child("lat").setValue(loc.latitude);
+                                coordsRoot.child(Integer.toString(i)).child("lng").setValue(loc.longitude);
+                            }
+                            if (newOrchard.meanBagMass != null){
+                                objectRoot.child("bagMass").setValue(Float.toString(newOrchard.meanBagMass));
+                            }
+                            objectRoot.child("irrigation").setValue(newOrchard.irrigation);
+                            if (newOrchard.datePlanted != null) {
+                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime().getTime());
+                            }
+                            if (newOrchard.getAssignedFarm() != null) {
+                                objectRoot.child("farm").setValue(newOrchard.assignedFarm.ID);
+                            }
+                            if (newOrchard.row != null) {
+                                objectRoot.child("rowSpacing").setValue(newOrchard.row);
+                            }
+                            if (newOrchard.tree != null) {
+                                objectRoot.child("treeSpacing").setValue(newOrchard.tree);
+                            }
+                            coordsRoot = objectRoot.child("cultivars");
+                            if (newOrchard.getCultivars() != null){
+                                for (int i = 0; i < newOrchard.cultivars.size(); i++){
+                                    coordsRoot.child(Integer.toString(i)).setValue(newOrchard.cultivars.elementAt(i));
+                                }
+                            }
+                            objectRoot.child("further").setValue(newOrchard.further);
                             break;
                         case WORKER:
+                            objectRoot = userRoot.child("workers");
+                            String newKey2 = objectRoot.push().getKey();
+                            Worker newWorker = getWorkerFromIDString(currentChange.ID);
+                            newWorker.setfID(newKey2);
+                            objectRoot = objectRoot.child(newKey2);
+                            
+                            //Begin
+                            objectRoot.child("idNumber").setValue(newWorker.nID);
+                            objectRoot.child("info").setValue(newWorker.further);
+                            objectRoot.child("name").setValue(newWorker.fName);
+                            
+                            //Orchards
+                            DatabaseReference thingRoot = objectRoot.child("orchards");
+                            if (newWorker.getAssignedOrchards() != null) {
+                                for (int i = 0; i < newWorker.assignedOrchards.size(); i++) {
+                                    thingRoot.child(Integer.toString(i)).setValue(newWorker.assignedOrchards.get(i).ID);
+                                }
+                            }
+                            
+                            objectRoot.child("phoneNumber").setValue(newWorker.phone);
+                            objectRoot.child("surname").setValue(newWorker.sName);
+                            
+                            //Type
+                            if (newWorker.workerType == WorkerType.FOREMAN){
+                                objectRoot.child("type").setValue("Foreman");
+                            }
+                            else{
+                                objectRoot.child("type").setValue("Worker");
+                            }
                             break;
                     }
                     break;
@@ -246,13 +333,79 @@ public class Data {
                         case FARM:
                             objectRoot = objectRoot.child("farms").child(currentChange.ID);
                             objectRoot.child("name").setValue(activeFarm.name);
+                            objectRoot.child("companyName").setValue(activeFarm.company);
+                            objectRoot.child("email").setValue(activeFarm.email);
+                            objectRoot.child("contactNumber").setValue(activeFarm.phone);
+                            objectRoot.child("province").setValue(activeFarm.province);
+                            objectRoot.child("neartestTown").setValue(activeFarm.town);
                             objectRoot.child("further").setValue(activeFarm.further);
                             break;
                         case ORCHARD:
-                            objectRoot = database.getReference(userRoot.toString() + "/orchards/" + currentChange.ID);
+                            objectRoot = objectRoot.child("orchards").child(currentChange.ID);
+                            objectRoot.child("name").setValue(activeOrchard.name);
+                            objectRoot.child("crop").setValue(activeOrchard.crop);
+
+                            //Location
+                            DatabaseReference coordsRoot = objectRoot.child("coords");
+                            coordsRoot.setValue(null);
+                            for(int i = 0; i < activeOrchard.coordinates.size(); i++){
+                                LatLng loc = activeOrchard.coordinates.get(i);
+                                coordsRoot.child(Integer.toString(i)). child("lat").setValue(loc.latitude);
+                                coordsRoot.child(Integer.toString(i)).child("lng").setValue(loc.longitude);
+                            }
+
+                            if (activeOrchard.meanBagMass != null) {
+                                objectRoot.child("bagMass").setValue(activeOrchard.meanBagMass);
+                            }
+                            objectRoot.child("irrigation").setValue(activeOrchard.irrigation);
+                            if (activeOrchard.datePlanted != null) {
+                                objectRoot.child("date").setValue(activeOrchard.datePlanted.getTime().getTime());
+                            }
+                            coordsRoot = objectRoot.child("cultivars");
+                            coordsRoot.setValue(null);
+                            if (activeOrchard.getCultivars() != null){
+                                for (int i = 0; i < activeOrchard.cultivars.size(); i++){
+                                    coordsRoot.child(Integer.toString(i)).setValue(activeOrchard.cultivars.elementAt(i));
+                                }
+                            }
+                            if(activeOrchard.row != null) {
+                                objectRoot.child("rowSpacing").setValue(activeOrchard.row);
+                            }
+                            if (activeOrchard.tree != null) {
+                                objectRoot.child("treeSpacing").setValue(activeOrchard.tree.toString());
+                            }
+                            if (activeOrchard.assignedFarm != null) {
+                                objectRoot.child("farm").setValue(activeOrchard.assignedFarm.ID);
+                            }
+                            objectRoot.child("further").setValue(activeOrchard.further);
                             break;
                         case WORKER:
-                            objectRoot = database.getReference(userRoot.toString() + "/workers/" + currentChange.ID);
+                            objectRoot = objectRoot.child("workers").child(currentChange.ID);
+
+                            //Begin
+                            objectRoot.child("idNumber").setValue(activeWorker.nID);
+                            objectRoot.child("info").setValue(activeWorker.further);
+                            objectRoot.child("name").setValue(activeWorker.fName);
+
+                            //Orchards
+                            DatabaseReference thingRoot = objectRoot.child("orchards");
+                            thingRoot.setValue(null);
+                            if (activeWorker.getAssignedOrchards() != null) {
+                                for (int i = 0; i < activeWorker.assignedOrchards.size(); i++) {
+                                    thingRoot.child(Integer.toString(i)).setValue(activeWorker.assignedOrchards.get(i).ID);
+                                }
+                            }
+
+                            objectRoot.child("phoneNumber").setValue(activeWorker.phone);
+                            objectRoot.child("surname").setValue(activeWorker.sName);
+
+                            //Type
+                            if (activeWorker.workerType == WorkerType.FOREMAN){
+                                objectRoot.child("type").setValue("Foreman");
+                            }
+                            else if(activeWorker.workerType == WorkerType.WORKER){
+                                objectRoot.child("type").setValue("Worker");
+                            }
                             break;
                     }
                     break;
@@ -293,7 +446,7 @@ public class Data {
                 }
             case WORKER:
                 for(Worker current: workers){
-                    if (current.getID().equals(ID)){
+                    if (current.getfID().equals(ID)){
                         workers.remove(current);
                         return;
                     }
@@ -307,6 +460,19 @@ public class Data {
 
     public Category getCategory() {
         return category;
+    }
+
+    public String getNamedCategory(){
+        switch (category){
+            case ORCHARD:
+                return "ORCHARD";
+            case WORKER:
+                return "WORKER";
+            case FARM:
+                return "FARM";
+            default:
+                return null;
+        }
     }
 
     public String[] toNamesAsStringArray(Category cat){
@@ -336,7 +502,7 @@ public class Data {
         else if(category == Category.WORKER){
             result = new String[workers.size()];
             for (int i = 0; i < workers.size(); i++) {
-                result[i] = workers.elementAt(i).fName + " " + workers.elementAt(i).sName;
+                result[i] = workers.elementAt(i).sName + ", " + workers.elementAt(i).fName;
             }
             return result;
         }
@@ -354,9 +520,19 @@ public class Data {
     }
 
     @Nullable
-    private Orchard getOrchardFromIDString(String findMe){
+    public Orchard getOrchardFromIDString(String findMe){
         for (Orchard current: orchards){
             if (current.ID.equals(findMe)){
+                return current;
+            }
+        }
+        return null;
+    }
+    
+    @Nullable
+    public Worker getWorkerFromIDString(String findMe){
+        for (Worker current: workers){
+            if (current.fID.equals(findMe)){
                 return current;
             }
         }
@@ -369,7 +545,7 @@ public class Data {
                 case ORCHARD:
                     return orchards.elementAt(pos).ID;
                 case WORKER:
-                    return workers.elementAt(pos).ID;
+                    return workers.elementAt(pos).fID;
                 case FARM:
                     return farms.elementAt(pos).ID;
             }
@@ -380,10 +556,18 @@ public class Data {
         }
     }
 
+    public String getIDFromPosInArray(int pos, Category cat){
+        Category temp = category;
+        category = cat;
+        String sTemp = getIDFromPosInArray(pos);
+        category = temp;
+        return sTemp;
+    }
+
     public void findObject(String ID){
         if(category == Category.FARM){
             for (Farm current : farms){
-                if(current.ID.equals(ID)){
+                if(current.getID().equals(ID)){
                     activeFarm = current;
                     return;
                 }
@@ -399,7 +583,7 @@ public class Data {
         }
         else if(category == Category.WORKER){
             for (Worker current : workers){
-                if(current.ID.equals(ID)){
+                if(current.fID.equals(ID)){
                     activeWorker = current;
                     return;
                 }
@@ -453,9 +637,9 @@ public class Data {
     }
 
     public void modifyActiveWorker(Worker activeWorker, boolean overwriteID) {
-        if ((!this.activeWorker.ID.equals(activeWorker.ID) && overwriteID) || this.activeWorker.ID.equals(activeWorker.ID)) {
+        if ((!this.activeWorker.fID.equals(activeWorker.fID) && overwriteID) || this.activeWorker.fID.equals(activeWorker.fID)) {
             this.activeWorker = activeWorker;
-            changes.Modify(category, activeWorker.ID);
+            changes.Modify(category, activeWorker.fID);
         }
     }
 
@@ -475,12 +659,14 @@ public class Data {
 
     public void addWorker(Worker addMe){
         workers.addElement(addMe);
-        changes.Add(Category.WORKER, addMe.getID());
+        changes.Add(Category.WORKER, addMe.getfID());
     }
+
+
 }
 
 /**
- * Below is a method of keeping track of all changes made, so that pushing the database can be quick and easy.
+ * Below is a method of keeping track of all changes made, so that pushing the database can be quick and 'easy'.
  */
 
 enum ChangeType{

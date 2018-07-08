@@ -357,9 +357,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         workerObj.setValue(0);
                         workerObj.setID(zoneSnapshot.getKey());
                         foremen.add(workerObj);
-                        if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
-                            foremanID = zoneSnapshot.getKey();
-                            foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                        String email = zoneSnapshot.child("email").getValue(String.class);
+                        if (email != null) {
+                            if (email.equals(currentUserEmail)) {
+                                foremanID = zoneSnapshot.getKey();
+                                foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                            }
                         }
                     }
                 }
