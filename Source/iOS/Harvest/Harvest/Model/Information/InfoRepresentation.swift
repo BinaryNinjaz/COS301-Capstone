@@ -6,23 +6,121 @@
 //  Copyright © 2018 Letanyan Arumugam. All rights reserved.
 //
 
+// swiftlint:disable function_body_length
 import Eureka
 
+extension UIViewController {
+  func prebuiltGraph(
+    title: String,
+    startDate: Date,
+    endDate: Date,
+    period: HarvestCloud.TimePeriod,
+    stat: Stat
+  ) -> ButtonRow {
+    return ButtonRow { row in
+      row.title = title
+    }.cellUpdate { cell, _ in
+      cell.textLabel?.textAlignment = .left
+      cell.textLabel?.textColor = .addOrchard
+    }.onCellSelection { _, _ in
+      guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
+        return
+      }
+      
+      guard let svc = vc as? StatsViewController else {
+        return
+      }
+      
+      svc.startDate = startDate
+      svc.endDate = endDate
+      svc.period = period
+      svc.stat = stat
+      
+      self.navigationController?.pushViewController(svc, animated: true)
+    }
+  }
+}
+
+extension FormViewController {
+  func performanceRows(for stat: Stat) -> [ButtonRow] {
+    let today = Date().today()
+    let todaysPerformance = prebuiltGraph(
+      title: "Todays Performance",
+      startDate: today.0,
+      endDate: today.1,
+      period: .hourly,
+      stat: stat)
+    
+    let yesterday = Date().yesterday()
+    let yesterdaysPerformance = prebuiltGraph(
+      title: "Yesterdays Performance",
+      startDate: yesterday.0,
+      endDate: yesterday.1,
+      period: .hourly,
+      stat: stat)
+    
+    let thisWeek = Date().thisWeek()
+    let thisWeeksPerformance = prebuiltGraph(
+      title: "This Weeks Performance",
+      startDate: thisWeek.0,
+      endDate: thisWeek.1,
+      period: .daily,
+      stat: stat)
+    
+    let lastWeek = Date().lastWeek()
+    let lastWeeksPerformance = prebuiltGraph(
+      title: "Last Weeks Performance",
+      startDate: lastWeek.0,
+      endDate: lastWeek.1,
+      period: .daily,
+      stat: stat)
+    
+    let thisMonth = Date().thisMonth()
+    let thisMonthsPerformance = prebuiltGraph(
+      title: "This Months Performance",
+      startDate: thisMonth.0,
+      endDate: thisMonth.1,
+      period: .weekly,
+      stat: stat)
+    
+    let lastMonth = Date().lastMonth()
+    let lastMonthsPerformance = prebuiltGraph(
+      title: "Last Months Performance",
+      startDate: lastMonth.0,
+      endDate: lastMonth.1,
+      period: .weekly,
+      stat: stat)
+    
+    return [
+      todaysPerformance,
+      yesterdaysPerformance,
+      thisWeeksPerformance,
+      lastWeeksPerformance,
+      thisMonthsPerformance,
+      lastMonthsPerformance
+    ]
+  }
+}
+
 extension Worker {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Worker(json: json()[id] ?? [:], id: id)
     
-    let orchards = Entities.shared.items(for: .orchard)!
+    let orchards = Entities.shared.orchards
     
     let orchardSection = SelectableSection<ListCheckRow<Orchard>>(
       "Assigned Orchard",
       selectionType: .multipleSelection)
     
-    for (_, orchardEntity) in orchards {
-      let orchard = orchardEntity.orchard!
-      orchardSection <<< ListCheckRow<Orchard>(orchard.name) { row in
-        row.title = orchard.name
+    for (_, orchard) in orchards {
+      orchardSection <<< ListCheckRow<Orchard>(orchard.description) { row in
+        let farmName = Entities
+          .shared.farms
+          .first { _, v in v.id == orchard.assignedFarm }
+          .map { $0.value.name }
+          ?? orchard.assignedFarm
+        row.title = farmName + " " + orchard.name
         row.selectableValue = orchard
         row.value = assignedOrchards.contains(orchard.id) ? orchard : nil
       }.onChange { (row) in
@@ -44,25 +142,42 @@ extension Worker {
       }
     }
     
-    let firstnameRow = NameRow() { row in
+    let firstnameRow = NameRow { row in
+      row.add(rule: RuleRequired(msg: "• First name must be filled in"))
+      row.validationOptions = .validatesAlways
       row.title = "Worker Name"
       row.value = firstname
       row.placeholder = "John"
     }.onChange { (row) in
       self.tempory?.firstname = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
-    let lastnameRow = NameRow() { row in
+    
+    let lastnameRow = NameRow { row in
+      row.add(rule: RuleRequired(msg: "• Surname must be filled in"))
+      row.validationOptions = .validatesAlways
       row.title = "Worker Surname"
       row.value = lastname
       row.placeholder = "Appleseed"
     }.onChange { (row) in
       self.tempory?.lastname = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
     
     let isForemanRow = SwitchRow("isForemanTag") { row in
@@ -72,30 +187,28 @@ extension Worker {
       self.tempory?.kind = row.value ?? true ? .foreman : .worker
       onChange()
     }
-    let emailRow = EmailRow() { row in
+    
+    let phoneRow = PhoneRow { row in
       row.hidden = Condition.function(["isForemanTag"], { form in
         return !((form.rowBy(tag: "isForemanTag") as? SwitchRow)?.value ?? false)
       })
-      row.title = "Email"
-      row.value = email
-      row.placeholder = "johnapp@gmail.com"
-    }.onChange { row in
-      self.tempory?.email = row.value ?? ""
-      onChange()
-    }.cellUpdate { (cell, row) in
-      cell.textField.clearButtonMode = .whileEditing
-    }
-    
-    let phoneRow = PhoneRow() { row in
+      row.add(rule: RuleRequired(msg: "• Phone numbers must exist for foreman"))
+      row.validationOptions = .validatesAlways
       row.title = "Phone Number"
       row.value = phoneNumber
       row.placeholder = "012 3456789"
     }.onChange { row in
       self.tempory?.phoneNumber = row.value ?? ""
       onChange()
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
     
-    let idRow = TextRow() { row in
+    let idRow = TextRow { row in
       row.title = "ID Number"
       row.value = idNumber
       row.placeholder = "8001011234567"
@@ -104,7 +217,7 @@ extension Worker {
       onChange()
     }
     
-    let infoRow = TextAreaRow() { row in
+    let infoRow = TextAreaRow { row in
       row.value = details
       row.placeholder = "Any extra information"
     }.onChange { row in
@@ -112,15 +225,26 @@ extension Worker {
       onChange()
     }
     
-    let deleteWorkerRow = ButtonRow() { row in
+    let deleteWorkerRow = ButtonRow { row in
       row.title = "Delete Worker"
-    }.onCellSelection { (cell, row) in
-      HarvestDB.delete(worker: self) { (err, ref) in
+    }.onCellSelection { (_, _) in
+      HarvestDB.delete(worker: self) { (_, _) in
         formVC.navigationController?.popViewController(animated: true)
       }
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
+    }
+    
+    let performanceSection = Section("Performance")
+    if kind == .worker {
+      for prow in formVC.performanceRows(for: .workerComparison([self])) {
+        performanceSection <<< prow
+      }
+    } else {
+      for prow in formVC.performanceRows(for: .foremanComparison([self])) {
+        performanceSection <<< prow
+      }
     }
     
     form
@@ -131,91 +255,106 @@ extension Worker {
       
       +++ Section("Role")
       <<< isForemanRow
-      <<< emailRow
-      
-      +++ Section("Contact")
       <<< phoneRow
+//      <<< emailRow
+  
+//      +++ Section("Contact")
+//      <<< phoneRow
+    
+      +++ orchardSection
+      
+      +++ performanceSection
     
       +++ Section("Information")
       <<< infoRow
-    
-      +++ orchardSection
-    
+      
       +++ Section()
       <<< deleteWorkerRow
   }
 }
 
 extension Farm {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Farm(json: json()[id] ?? [:], id: id)
     
-    let nameRow = NameRow() { row in
+    let nameRow = NameRow { row in
+      let uniqueNameRule = RuleClosure<String> { (_) -> ValidationError? in
+        let notUnique = Entities.shared.farms.contains { $0.value.name == row.value && $0.value.id != self.id }
+        return notUnique ? ValidationError(msg: "• Farm names must be unique") : nil
+      }
+      row.add(rule: RuleRequired(msg: "• Farm names must be filled in"))
+      row.add(rule: uniqueNameRule)
       row.title = "Farm Name"
       row.value = name
       row.placeholder = "Name of the farm"
     }.onChange { row in
       self.tempory?.name = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
-    let companyRow = NameRow() { row in
+    
+    let companyRow = NameRow { row in
       row.title = "Company Name"
       row.value = companyName
       row.placeholder = "Name of the company"
     }.onChange { row in
       self.tempory?.companyName = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
     }
     
-    let emailRow = EmailRow() { row in
+    let emailRow = EmailRow { row in
       row.title = "Farm Email"
       row.value = email
       row.placeholder = "Farms email address"
     }.onChange { row in
       self.tempory?.email = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
     }
-    let phoneRow = PhoneRow() { row in
+    let phoneRow = PhoneRow { row in
       row.title = "Contact Number"
       row.value = contactNumber
       row.placeholder = "Phone number of the farm"
     }.onChange { row in
       self.tempory?.contactNumber = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
     }
     
-    let provinceRow = NameRow() { row in
+    let provinceRow = NameRow { row in
       row.title = "Province"
       row.value = province
       row.placeholder = "Province location of the farm"
     }.onChange { row in
       self.tempory?.province = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
     }
-    let nearestTownRow = NameRow() { row in
+    let nearestTownRow = NameRow { row in
       row.title = "Nearest Town"
       row.value = nearestTown
       row.placeholder = "Town nearest to the farm"
     }.onChange { row in
       self.tempory?.nearestTown = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
     }
     
-    
-    let detailsRow = TextAreaRow() { row in
+    let detailsRow = TextAreaRow { row in
       row.title = "Details"
       row.value = details
       row.placeholder = "Any extra information"
@@ -226,14 +365,14 @@ extension Farm {
     let o = Orchard(json: ["farm": id], id: "")
     let orchardRow = OrchardInFarmRow(tag: nil, orchard: o) { row in
       row.title = "Add Orchard to \(self.name)"
-    }.cellUpdate { (cell, row) in
-      cell.textLabel?.textColor = UIColor.Bootstrap.blue[1]
+    }.cellUpdate { (cell, _) in
+      cell.textLabel?.textColor = .addOrchard
       cell.textLabel?.textAlignment = .center
     }
     
     let orchardsSection = Section("Orchards in \(name)")
     
-    for orchard in Entities.shared.orchardsList() {
+    for (_, orchard) in Entities.shared.orchards {
       let oRow = OrchardInFarmRow(tag: nil, orchard: orchard) { row in
         row.title = orchard.name
       }
@@ -242,13 +381,13 @@ extension Farm {
       }
     }
     
-    let deleteFarmRow = ButtonRow() { row in
+    let deleteFarmRow = ButtonRow { row in
       row.title = "Delete Farm"
-    }.onCellSelection { (cell, row) in
-      HarvestDB.delete(farm: self) { (err, ref) in
+    }.onCellSelection { (_, _) in
+      HarvestDB.delete(farm: self) { (_, _) in
         formVC.navigationController?.popViewController(animated: true)
       }
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
     }
@@ -264,22 +403,22 @@ extension Farm {
       +++ Section("Location")
       <<< provinceRow
       <<< nearestTownRow
-      
-      +++ Section("Details")
-      <<< detailsRow
     
       +++ orchardsSection
       <<< orchardRow
+      
+      +++ Section("Information")
+      <<< detailsRow
     
       +++ Section()
       <<< deleteFarmRow
   }
 }
 
-public class DeletableMultivaluedSection : MultivaluedSection {
-  var onRowsRemoved: ((IndexSet) -> ())? = nil
+public class DeletableMultivaluedSection: MultivaluedSection {
+  var onRowsRemoved: ((IndexSet) -> Void)?
   
-  required public init<S>(_ elements: S) where S : Sequence, S.Element == BaseRow {
+  required public init<S>(_ elements: S) where S: Sequence, S.Element == BaseRow {
     fatalError("init has not been implemented")
   }
   
@@ -295,9 +434,6 @@ public class DeletableMultivaluedSection : MultivaluedSection {
     super.init(header: header, footer: footer, {section in initializer(section) })
     self.multivaluedOptions = multivaluedOptions
     guard multivaluedOptions.contains(.Insert) else { return }
-//    initialize()
-    
-//    super.init(multivaluedOptions: multivaluedOptions, header: header, footer: footer, initializer)
   }
   
   func initialize() {
@@ -315,23 +451,23 @@ public class DeletableMultivaluedSection : MultivaluedSection {
 }
 
 extension Orchard {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Orchard(json: json()[id] ?? [:], id: id)
     
-    let farms = Entities.shared.items(for: .farm)!
+    let farms = Entities.shared.farms
     
     let cultivarsRow = DeletableMultivaluedSection(
       multivaluedOptions: [.Insert, .Delete],
       header: "Cultivars",
       footer: "") { (section) in
         section.addButtonProvider = { sectionB in
-          return ButtonRow() {
+          return ButtonRow {
             $0.title = "Add Another Cultivar"
           }
         }
         for (idx, cultivar) in cultivars.enumerated() {
-          section <<< TextRow() {
+          section <<< TextRow {
             $0.placeholder = "Cultivar"
             $0.value = cultivar
           }.onChange { row in
@@ -342,7 +478,7 @@ extension Orchard {
         
         section.multivaluedRowToInsertAt = { index in
           self.tempory?.cultivars.append("")
-          return TextRow() {
+          return TextRow {
             $0.placeholder = "Cultivar"
           }.onChange { row in
             self.tempory?.cultivars[index] = row.value ?? ""
@@ -357,53 +493,47 @@ extension Orchard {
       onChange()
     }
     
-    let nameRow = NameRow() { row in
+    let nameRow = NameRow { row in
+      row.add(rule: RuleRequired(msg: "• Orchard names must be filled in"))
       row.title = "Orchard Name"
       row.value = name
       row.placeholder = "Name of the orchard"
     }.onChange { row in
       self.tempory?.name = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
     
-    let cropRow = TextRow() { row in
+    let cropRow = TextRow { row in
       row.title = "Orchard Crop"
       row.value = crop
       row.placeholder = "Crop farmed on the orchard"
     }.onChange { row in
       self.tempory?.crop = row.value ?? ""
       onChange()
-    }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
     }
     
-    let bagMassRow = DecimalRow() { row in
+    let bagMassRow = DecimalRow { row in
       row.title = "Bag Mass (kilogram)"
-      row.value = bagMass
+      row.value = bagMass.isNaN ? nil : bagMass
       row.placeholder = "Average mass of a bag"
     }.onChange { row in
-      self.tempory?.bagMass = row.value ?? 0.0
+      self.tempory?.bagMass = row.value ?? .nan
       onChange()
-    }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
-    }.onCellSelection { (cell, row) in
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
     }
     
-    let dateRow = DateRow() { row in
+    let dateRow = DateRow { row in
       row.title = "Date Planted"
       row.value = date
     }.onChange { row in
@@ -411,7 +541,7 @@ extension Orchard {
       onChange()
     }
     
-    let irrigationRow = PushRow<IrrigationKind>() { row in
+    let irrigationRow = PushRow<IrrigationKind> { row in
       row.title = "Irrigation Kind"
       row.options = IrrigationKind.allCases
       row.value = irrigationKind
@@ -420,44 +550,26 @@ extension Orchard {
       onChange()
     }
     
-    let widthRow = DecimalRow() { row in
+    let widthRow = DecimalRow { row in
       row.title = "Tree Spacing (meter)"
-      row.value = treeSpacing
+      row.value = treeSpacing.isNaN ? nil : treeSpacing
       row.placeholder = "Horizontal Spacing"
     }.onChange { row in
-      self.tempory?.treeSpacing = row.value ?? 0.0
+      self.tempory?.treeSpacing = row.value ?? .nan
       onChange()
-    }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
-    }.onCellSelection { (cell, row) in
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
     }
     
-    let heightRow = DecimalRow() { row in
+    let heightRow = DecimalRow { row in
       row.title = "Row Spacing (meter)"
-      row.value = rowSpacing
+      row.value = rowSpacing.isNaN ? nil : rowSpacing
       row.placeholder = "Vertical Spacing"
     }.onChange { row in
-      self.tempory?.rowSpacing = row.value ?? 0.0
+      self.tempory?.rowSpacing = row.value ?? .nan
       onChange()
-    }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
-    }.onCellSelection { (cell, row) in
-      if let dt = cell.textField.text {
-        cell.textField.text = Double(dt) == 0.0 ? "" : dt
-      }
     }
     
     let detailsRow = TextAreaRow { row in
@@ -468,27 +580,31 @@ extension Orchard {
       onChange()
     }
     
-    let farmSelection = PickerRow<Farm>() { row in
+    let farmSelection = PickerRow<Farm> { row in
+      row.add(rule: RuleRequired(msg: "• A farm must be selected for an orchard to be a part of"))
       row.options = []
       var aFarm: Farm? = nil
       
-      for (_, farmEntity) in farms {
-        let farm = farmEntity.farm!
+      for (_, farm) in farms {
+        let farm = farm
         row.options.append(farm)
         if farm.id == assignedFarm {
           aFarm = farm
         }
       }
-      row.value = aFarm
+      row.value = aFarm ?? farms.first?.value
+      if aFarm == nil {
+        self.tempory?.assignedFarm = row.value?.id ?? ""
+      }
     }.onChange { (row) in
       self.tempory?.assignedFarm = row.value?.id ?? ""
       onChange()
     }
     
-    let orchardAreaRow = OrchardAreaRow() { row in
+    let orchardAreaRow = OrchardAreaRow { row in
       row.title = "Orchard Location"
       row.value = self
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.detailTextLabel?.text = ""
     }
       
@@ -497,13 +613,18 @@ extension Orchard {
       onChange()
     }
     
-    let deleteOrchardRow = ButtonRow() { row in
+    let performanceSection = Section("Performance")
+    for prow in formVC.performanceRows(for: .orchardComparison([self])) {
+      performanceSection <<< prow
+    }
+    
+    let deleteOrchardRow = ButtonRow { row in
       row.title = "Delete Orchard"
-    }.onCellSelection { (cell, row) in
-      HarvestDB.delete(orchard: self) { (err, ref) in
+    }.onCellSelection { (_, _) in
+      HarvestDB.delete(orchard: self) { (_, _) in
         formVC.navigationController?.popViewController(animated: true)
       }
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
     }
@@ -529,51 +650,53 @@ extension Orchard {
       <<< widthRow
       <<< heightRow
     
-      +++ Section("Information")
-      <<< detailsRow
-    
       +++ Section("Part of Farm")
       <<< farmSelection
+      
+      +++ performanceSection
     
+      +++ Section("Information")
+      <<< detailsRow
+      
       +++ Section()
       <<< deleteOrchardRow
   }
 }
 
 extension Session {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Session(json: json(), id: id)
     
-    // FIXME Maybe allow changing these details or not? If change then
-    // allow foreman select else disallow artificial changes
-    
-    let displayRow = LabelRow() { row in
+    let displayRow = LabelRow { row in
       row.title = "Foreman"
       row.value = foreman.description
     }
     
-    let startDateRow = DateTimeRow() { row in
+    let startDateRow = DateTimeRow { row in
       row.title = "Time Started"
       row.value = startDate
-    }.onChange { row in
-      self.tempory?.startDate = row.value ?? Date()
-      onChange()
+      row.baseCell.isUserInteractionEnabled = false
     }
     
-    let endDateRow = DateTimeRow() { row in
+    let endDateRow = DateTimeRow { row in
       row.title = "Time Ended"
       row.value = endDate
-    }.onChange { row in
-      self.tempory?.endDate = row.value ?? Date()
-      onChange()
+      row.baseCell.isUserInteractionEnabled = false
     }
     
-    let sessionRow = SessionRow() { row in
+    let sessionRow = SessionRow { row in
       row.title = "Tracked Path and Collection Points"
       row.value = self
-    }.cellUpdate { (cell, row) in
+    }.cellUpdate { (cell, _) in
       cell.detailTextLabel?.text = ""
+    }
+    
+    let chartRow = DonutChartRow("") { row in
+      row.value = self
+      if #available(iOS 11, *) {
+        row.baseCell.userInteractionEnabledWhileDragging = true
+      }
     }
     
     form
@@ -586,40 +709,38 @@ extension Session {
     
       +++ Section("Tracking")
       <<< sessionRow
+    
+      +++ Section("Worker Performance Summary")
+      <<< chartRow
   }
 }
 
 extension HarvestUser {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     temporary = HarvestUser(json: json())
     
-    let firstnameRow = TextRow() { row in
+    let firstnameRow = TextRow { row in
       row.title = "First Name"
       row.value = HarvestUser.current.firstname
       row.placeholder = ""
-    }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
     }.onChange { row in
       self.temporary?.firstname = row.value ?? ""
       onChange()
     }
     
-    let lastnameRow = TextRow() { row in
+    let lastnameRow = TextRow { row in
       row.title = "Last Name"
       row.value = HarvestUser.current.lastname
       row.placeholder = ""
-    }.cellUpdate { (cell, row) in
-      cell.textField.textAlignment = .left
-      cell.titleLabel?.textColor = .titleLabel
+    }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
     }.onChange { row in
       self.temporary?.lastname = row.value ?? ""
       onChange()
     }
-    
     
     form
       +++ Section("Name")
@@ -629,12 +750,13 @@ extension HarvestUser {
 }
 
 extension EntityItem {
-  func information(for formVC: FormViewController, onChange: @escaping () -> ()) {
+  func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     switch self {
     case let .worker(w): w.information(for: formVC, onChange: onChange)
     case let .orchard(o): o.information(for: formVC, onChange: onChange)
     case let .farm(f): f.information(for: formVC, onChange: onChange)
     case let .session(s): s.information(for: formVC, onChange: onChange)
+    case .shallowSession: break
     case let .user(u): u.information(for: formVC, onChange: onChange)
     }
   }

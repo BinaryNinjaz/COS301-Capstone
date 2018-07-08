@@ -42,7 +42,7 @@ extension SortedSet where SortingElement: Comparable {
   }
 }
 
-extension SortedSet : SortedUniqueInsertableCollection, CustomStringConvertible {
+extension SortedSet: SortedUniqueInsertableCollection, CustomStringConvertible {
   @discardableResult
   mutating func insert(unique e: SortingElement) -> (Bool, Index) {
     let (inserted, e) = _set.insert(e)

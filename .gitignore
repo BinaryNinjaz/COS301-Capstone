@@ -17,3 +17,4 @@ Source/Web/functions/node_modules
 /captures
 Source/Resources/Tools/CloudFunctionTesters/Untitled.class
 Source/Resources/Tools/CloudFunctionTesters/Untitled$1.class
+*.log

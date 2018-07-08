@@ -2,7 +2,7 @@ import Swift
 
 // --------------------------------------------------------------------------- Protocols
 
-protocol RangeRemovableCollection : Collection {
+protocol RangeRemovableCollection: Collection {
   mutating func removeSubrange(_ bounds: Range<Index>)
 }
 
@@ -40,7 +40,7 @@ extension RangeRemovableCollection where Self: BidirectionalCollection {
   }
 }
 
-protocol SortedCollection : Collection {
+protocol SortedCollection: Collection {
   associatedtype SortingElement
   typealias Comparator = (SortingElement, SortingElement) -> Bool
   typealias InsertionPoint = (containsExistingElement: Bool, index: Index)
@@ -50,11 +50,11 @@ protocol SortedCollection : Collection {
   func insertionPoint(for element: SortingElement) -> InsertionPoint
 }
 
-protocol SortedUniqueInsertableCollection : SortedCollection where SortingElement: Equatable {
+protocol SortedUniqueInsertableCollection: SortedCollection where SortingElement: Equatable {
   mutating func insert(unique element: Element) -> (Bool, Index)
 }
 
-protocol SortedInsertableCollection : SortedUniqueInsertableCollection {
+protocol SortedInsertableCollection: SortedUniqueInsertableCollection {
   mutating func insert(_ element: Element) -> Index
 }
 
@@ -159,11 +159,9 @@ extension SortedCollection {
 
 // --------------------------------------------------------------------------- Sorted Array
 
-
 // --------------------------------------------------------------------------- Sorted Set
 
 // --------------------------------------------------------------------------- Sorted Dictionary
-
 
 // --------------------------------------------------------------------------- Lib Conformers
 
@@ -219,11 +217,11 @@ struct DictionaryPair<Word: Comparable, Definition> : Comparable, CustomStringCo
   var word: Word
   var definition: Definition
   
-  static func ==(lhs: DictionaryPair, rhs: DictionaryPair) -> Bool {
+  static func == (lhs: DictionaryPair, rhs: DictionaryPair) -> Bool {
     return lhs.word == rhs.word
   }
   
-  static func <(lhs: DictionaryPair, rhs: DictionaryPair) -> Bool {
+  static func < (lhs: DictionaryPair, rhs: DictionaryPair) -> Bool {
     return lhs.word < rhs.word
   }
   
@@ -232,7 +230,7 @@ struct DictionaryPair<Word: Comparable, Definition> : Comparable, CustomStringCo
   }
 }
 
-extension DictionaryPair : Hashable where Word: Hashable {
+extension DictionaryPair: Hashable where Word: Hashable {
   var hashValue: Int {
     return word.hashValue
   }
@@ -297,7 +295,6 @@ func count<C: SortedCollection>(_ c: C) -> Int {
 //xs.removeLast(5)
 //print(count(xs))
 //print(xs)
-
 
 // Dictionary
 
