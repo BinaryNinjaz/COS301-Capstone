@@ -405,7 +405,7 @@ public class Data {
                                 objectRoot.child("rowSpacing").setValue(activeOrchard.row);
                             }
                             if (activeOrchard.tree != null) {
-                                objectRoot.child("treeSpacing").setValue(activeOrchard.tree.toString());
+                                objectRoot.child("treeSpacing").setValue(activeOrchard.tree);
                             }
                             if (activeOrchard.assignedFarm != null) {
                                 objectRoot.child("farm").setValue(activeOrchard.assignedFarm.ID);
