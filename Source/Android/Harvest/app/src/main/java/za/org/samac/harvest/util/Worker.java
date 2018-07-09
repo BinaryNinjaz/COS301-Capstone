@@ -8,11 +8,12 @@ public class Worker{
     protected List<Orchard> assignedOrchards;
     protected WorkerType workerType;
     protected String further;
-    protected String phone;
+    protected String phone, oldPhone;
     protected String fID;
     protected String nID;
 
     public Worker(){
+        oldPhone = null;
     }
 
     public void setFurther(String further) {
@@ -20,7 +21,13 @@ public class Worker{
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        if(this.phone == null){
+            this.oldPhone = phone;
+            this.phone = phone;
+        }
+        else {
+            this.phone = phone;
+        }
     }
 
     public void setAssignedOrchards(List<Orchard> assignedOrchards) {
@@ -49,6 +56,10 @@ public class Worker{
 
     public void setWorkerType(WorkerType workerType) {
         this.workerType = workerType;
+    }
+
+    public void setOldPhone(String oldPhone) {
+        this.oldPhone = oldPhone;
     }
 
     public String getFurther() {
@@ -81,6 +92,10 @@ public class Worker{
 
     public String getsName() {
         return sName;
+    }
+
+    public String getOldPhone() {
+        return oldPhone;
     }
 
     @Override

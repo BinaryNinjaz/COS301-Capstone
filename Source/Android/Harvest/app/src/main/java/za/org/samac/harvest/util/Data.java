@@ -355,6 +355,12 @@ public class Data {
                             else{
                                 objectRoot.child("type").setValue("Worker");
                             }
+
+                            //Add to WorkingFor
+
+                            DatabaseReference workingFor = database.getReference("WorkingFor/");
+                            DatabaseReference workerWorking = workingFor.child(newWorker.phone);
+                            workerWorking.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(newWorker.fID);
                             break;
                     }
                     break;
@@ -439,6 +445,15 @@ public class Data {
                             else if(activeWorker.workerType == WorkerType.WORKER){
                                 objectRoot.child("type").setValue("Worker");
                             }
+
+                            //Modify WorkingFor
+                            if(!activeWorker.oldPhone.equals(activeWorker.phone)) {
+                                DatabaseReference workingFor1 = database.getReference("WorkingFor/");
+                                workingFor1.child(activeWorker.oldPhone).setValue(null);
+                                DatabaseReference workerWorking = workingFor1.child(activeWorker.phone);
+                                workerWorking.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(activeWorker.fID);
+                            }
+
                             break;
                     }
                     break;
@@ -453,6 +468,8 @@ public class Data {
                             break;
                         case WORKER:
                             userRoot.child("workers").child(currentChange.ID).setValue(null);
+                            findObject(currentChange.ID);
+                            database.getReference("WorkingFor/").child(activeWorker.oldPhone).setValue(null);
                             break;
                     }
                     break;

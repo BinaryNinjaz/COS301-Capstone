@@ -32,7 +32,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Intent intent = new Intent(SplashScreenActivity.this, SignIn_Farmer.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, SignIn_Choose.class);
                     startActivity(intent);
                     finish();
                 }

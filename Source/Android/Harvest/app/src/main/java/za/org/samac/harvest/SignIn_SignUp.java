@@ -83,7 +83,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_signin_signup);
         // Set up the sign up form.
         edtFirstName = findViewById(R.id.edtFirstName);
         //populateAutoComplete();

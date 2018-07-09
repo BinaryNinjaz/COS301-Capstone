@@ -36,6 +36,10 @@
             -->
         </activity>
         <activity
+            android:name=".SignIn_Foreman"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".SignIn_Choose" />
+        <activity
             android:name=".SignIn_SignUp"
             android:label="@string/title_activity_sign_up"
             android:parentActivityName=".SignIn_Choose"/>

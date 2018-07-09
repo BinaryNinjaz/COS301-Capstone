@@ -27,6 +27,12 @@
     <string name="signIn_choose_or">or a</string>
     <string name="signIn_choose_alternatively">or alternatively</string>
 
+    <string name="signIn_foreman_phone">Phone Number</string>
+    <string name="signIn_foreman_phoneWarning">We might need to send you an SMS to verify the number, wherein standard rates may apply.</string>
+    <string name="signIn_foreman_fail">Failure signing in or registering, please try again.</string>
+    <string name="signIn_foreman_reqfail">Invalid phone number.</string>
+    <string name="signIn_foreman_invalfail">SMS quota exceeded, in which case, please try again later.</string>
+
     <string name="prompt_enter_email">Email</string>
 
     <string name="prompt_enter_password">Password</string>

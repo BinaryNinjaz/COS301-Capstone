@@ -9,13 +9,15 @@ import android.view.View;
 
 public class SignIn_Choose extends AppCompatActivity {
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_choose);
     }
 
     public void choseFarmer(View v){
-
+        Intent openFarmer = new Intent(SignIn_Choose.this, SignIn_Farmer.class);
+        openFarmer.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivityIfNeeded(openFarmer, 0);
     }
 
     public void choseForeman(View v){
@@ -26,6 +28,5 @@ public class SignIn_Choose extends AppCompatActivity {
         Intent openRegistration = new Intent(SignIn_Choose.this, SignIn_SignUp.class);
         openRegistration.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivityIfNeeded(openRegistration, 0);
-        return;
     }
 }

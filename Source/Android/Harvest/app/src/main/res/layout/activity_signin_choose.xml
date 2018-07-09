@@ -54,8 +54,8 @@
         android:layout_height="wrap_content"
         android:text="@string/signIn_choose_alternatively"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/signIn_choose_foreman"
-        app:layout_constraintBottom_toTopOf="@id/signIn_choose_create"/>
+        app:layout_constraintBottom_toTopOf="@id/signIn_choose_create"
+        app:layout_constraintTop_toBottomOf="@id/signIn_choose_foreman" />
 
     <Button
         android:id="@+id/signIn_choose_create"

@@ -85,7 +85,7 @@ public class SignIn_Farmer extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_signin_farmer);
         // Set up the login form.
         edtEmail = findViewById(R.id.edtEmail);
 

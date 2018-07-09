@@ -600,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if (!AppUtil.isUserSignedIn()) {
-                    startActivity(new Intent(MainActivity.this, SignIn_Farmer.class));
+                    startActivity(new Intent(MainActivity.this, SignIn_Choose.class));
                 } else {
 //                    FirebaseAuth.getInstance().signOut();
                 }

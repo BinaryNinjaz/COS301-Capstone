@@ -556,7 +556,7 @@ public class InformationActivity extends AppCompatActivity{
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(InformationActivity.this, SignIn_Farmer.class));
+                    startActivity(new Intent(InformationActivity.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
