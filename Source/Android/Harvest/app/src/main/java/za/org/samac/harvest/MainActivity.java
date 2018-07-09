@@ -33,6 +33,8 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -274,8 +276,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //
 //            }
 //        });
+        boolean isFarmer = true;
+        if (user != null){
+            for(UserInfo profile : user.getProviderData()){
+                if (profile.getProviderId().equals(PhoneAuthProvider.PROVIDER_ID)){
+                    isFarmer = false;
+                    break;
+                }
+            }
+        }
 
-        if (getIntent().getExtras().getBoolean("isFarmer", false)) {
+        if (isFarmer) {
 
             //bottom navigation bar
             bottomNavigationView = findViewById(R.id.bottom_navigation);

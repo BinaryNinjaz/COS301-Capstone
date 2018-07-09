@@ -288,7 +288,6 @@ public class SignIn_Farmer extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
-                                    intent.putExtra("isFarmer",true);
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }
@@ -355,7 +354,6 @@ public class SignIn_Farmer extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
-                                    intent.putExtra("isFarmer",true);
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }

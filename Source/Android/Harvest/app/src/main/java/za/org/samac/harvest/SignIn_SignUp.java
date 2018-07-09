@@ -199,7 +199,6 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                                 @Override
                                 public void run() {
                                     Intent intent = new Intent(SignIn_SignUp.this, MainActivity.class);
-                                    intent.putExtra("isFarmer", true);
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }
