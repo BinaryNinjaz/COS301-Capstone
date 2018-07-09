@@ -81,7 +81,7 @@ function loadSessions() {
   yieldsRef().once('value').then(function (snapshot) {
       snapshot.forEach(function (child) {
           sessionKey = child.key;
-          collectionsRef = yieldsRef()+'/'+sessionKey+'/collections';
+          const collectionsRef = yieldsRef()+'/'+sessionKey+'/collections';
           sessions[sessionCount].start = child.val().start_date;
           sessions[sessionCount].end = child.val().end_date;
           collections[sessionCount] = populateCollection(collectionsRef);
@@ -91,7 +91,24 @@ function loadSessions() {
 }
 
 function populateCollection(ref) {
-  ref().once('value').then(function (snapshot) {
-      
-  });  
+  var obj = [];
+  ref.once('value').then(function (snapshot) {
+      snapshot.forEach(function (child) {
+        const worker = workerForKey(child.key);
+        if (worker !== undefined) {
+            const name = worker.value.name + " " + worker.value.surname;
+            var collectionDates = [];
+            const workerCollRef = ref+'/'+child.key;
+            var count = 0;
+            workerCollRef.once('value').then(function (snapshot2) {
+                snapshot2.forEach(function (child2) {
+                    collectionDates[count] = new Date(child2.date * 1000);
+                    ++count;
+                });
+            });
+            obj.push({key: name, collections: collectionDates});
+        }
+      });
+  }); 
+  return obj;
 }
