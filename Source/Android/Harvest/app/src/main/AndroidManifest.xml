@@ -22,8 +22,9 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login">
+            android:name=".SignIn_Farmer"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".SignIn_Choose">
 
             <!-- Makes this the first screen the user sees once app is opened -->
             <!--
@@ -35,8 +36,9 @@
             -->
         </activity>
         <activity
-            android:name=".SignUpActivity"
-            android:label="@string/title_activity_sign_up" />
+            android:name=".SignIn_SignUp"
+            android:label="@string/title_activity_sign_up"
+            android:parentActivityName=".SignIn_Choose"/>
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
@@ -85,8 +87,9 @@
         <activity
             android:name=".SessionsMap"
             android:label="@string/title_activity_sessions_map" />
-        <activity android:name=".adapter.SessionDetails"></activity>
+        <activity android:name=".adapter.SessionDetails" />
         <activity android:name=".OrchardsForGraph" />
+        <activity android:name=".SignIn_Choose" />
     </application>
 
 </manifest>

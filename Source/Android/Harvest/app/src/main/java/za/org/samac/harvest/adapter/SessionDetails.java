@@ -2,14 +2,10 @@ package za.org.samac.harvest.adapter;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -30,24 +26,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import za.org.samac.harvest.Analytics;
-import za.org.samac.harvest.InformationActivity;
-import za.org.samac.harvest.LoginActivity;
 import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.R;
-import za.org.samac.harvest.Sessions;
 import za.org.samac.harvest.SessionsMap;
-import za.org.samac.harvest.SignUpActivity;
 import za.org.samac.harvest.domain.Worker;
 
 import static za.org.samac.harvest.MainActivity.getForemen;

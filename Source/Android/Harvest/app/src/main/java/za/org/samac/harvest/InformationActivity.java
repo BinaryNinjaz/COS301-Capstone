@@ -15,20 +15,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Stack;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
-import za.org.samac.harvest.util.Orchard;
 
 import static za.org.samac.harvest.util.Category.FARM;
 import static za.org.samac.harvest.util.Category.NAV;
@@ -560,7 +556,7 @@ public class InformationActivity extends AppCompatActivity{
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(InformationActivity.this, LoginActivity.class));
+                    startActivity(new Intent(InformationActivity.this, SignIn_Farmer.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
