@@ -3,6 +3,7 @@
 <!-- Shaun added firebase dependencies -->
   <head>
   <meta charset="utf-8" />
+  <title>Analytics</title>
   
     <!--Firebase-->
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
@@ -15,6 +16,7 @@
     
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- This file needs to be included when youre working with charts -->
     <script type="text/javascript">
+      initPage(); //////
       google.charts.load('current', {'packages':['corechart']}); //This takes google API package to using charts
       google.charts.setOnLoadCallback(drawChart1); //This is googles event handler to load the chart we are gonna draw
 
