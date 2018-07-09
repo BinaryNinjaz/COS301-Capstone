@@ -29,11 +29,27 @@ firebase.auth().onAuthStateChanged(function (user) {
   }
 });
 
+function foremanForKey(key) {
+  for (var k in foremen) {
+    if (foremen[k].key === key) {
+      return foremen[k];
+    }
+  }
+  return {value: {name: "Farm", surname: "Owner"}};
+}
+
+function workerForKey(key) {
+  for (var k in workers) {
+    if (workers[k].key === key) {
+      return workers[k];
+    }
+  }
+  return undefined;
+}
+
 var foremen = [];
 var workers = []
 function initPage() {
-  var sessionsList = document.getElementById("sessionsList");
-  sessionsListLoader(true);
   getWorkers((workersSnap) => {
     foremen = [];
     workers = [];
@@ -46,6 +62,5 @@ function initPage() {
         workers.push({key: k, value: w});
       }
     });
-    newPage();
   });
 }
