@@ -13,7 +13,7 @@ enum HarvestDB {
   
   enum Path {
     static var parent: String {
-      return HarvestUser.current.workingForID?.uid ?? HarvestUser.current.uid
+      return HarvestUser.current.selectedWorkingForID?.uid ?? HarvestUser.current.uid
     }
     static var yields: String {
       return "\(Path.parent)/yields"

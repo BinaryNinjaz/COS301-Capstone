@@ -36,4 +36,23 @@ extension UIAlertController {
       controller.present(alert, animated: true, completion: completion)
     }
   }
+  
+  static func present(
+    title: String,
+    message: String,
+    options: [(display: String, uid: String)],
+    on controller: UIViewController?,
+    completion: @escaping (String) -> Void
+  ) {
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    
+    for option in options {
+      let button = UIAlertAction(title: option.display, style: .default) { _ in
+        completion(option.uid)
+      }
+      alert.addAction(button)
+    }
+    
+    controller?.present(alert, animated: true, completion: nil)
+  }
 }

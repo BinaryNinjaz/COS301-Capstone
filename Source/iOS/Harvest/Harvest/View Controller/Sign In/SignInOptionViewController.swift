@@ -21,13 +21,13 @@ class SignInOptionViewController: UIViewController {
     let result = storyboard?
       .instantiateViewController(withIdentifier: "mainTabBarViewController")
       as? MainTabBarViewController
-    
-    if HarvestUser.current.workingForID != nil {
+
+    if !HarvestUser.current.workingForID.isEmpty {
       result?.setUpForForeman()
     } else {
       result?.setUpForFarmer()
     }
-    
+
     return result
   }
   
@@ -36,11 +36,11 @@ class SignInOptionViewController: UIViewController {
     signUpButton.apply(gradient: .signUpButton)
     
     if let user = Auth.auth().currentUser {
-      HarvestUser.current.setUser(user, nil) { (_) in
-        if let vc = self.mainViewToPresent() {
+      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor(self, { succ in
+        if succ, let vc = self.mainViewToPresent() {
           self.present(vc, animated: true, completion: nil)
         }
-      }
+      }))
       
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()

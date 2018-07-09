@@ -50,7 +50,7 @@ class SignInViewController: UIViewController {
       .instantiateViewController(withIdentifier: "mainTabBarViewController")
       as? MainTabBarViewController
     
-    if HarvestUser.current.workingForID != nil {
+    if !HarvestUser.current.workingForID.isEmpty {
       result?.setUpForForeman()
     } else {
       result?.setUpForFarmer()
@@ -62,12 +62,10 @@ class SignInViewController: UIViewController {
   func attemptSignIn(with credential: AuthCredential) {
     isLoading = true
     HarvestDB.signIn(with: credential, on: self) { success in
-      self.isLoading = false
-      if success {
-        if let vc = self.mainViewToPresent() {
-          self.present(vc, animated: true, completion: nil)
-        }
+      if success, let vc = self.mainViewToPresent() {
+        self.present(vc, animated: true, completion: nil)
       }
+      self.isLoading = false
     }
   }
   
@@ -136,6 +134,8 @@ class SignInViewController: UIViewController {
   
   @IBAction func googleSignInTouchUp(_ sender: UIButton) {
     isLoading = true
+    GIDSignIn.sharedInstance().delegate = self
+    GIDSignIn.sharedInstance().uiDelegate = self
     GIDSignIn.sharedInstance().signIn()
   }
   

@@ -720,6 +720,17 @@ extension HarvestUser {
     let form = formVC.form
     temporary = HarvestUser(json: json())
     
+    let farmNameRow = TextRow { row in
+      row.title = "Farm Name"
+      row.value = HarvestUser.current.farmName
+      row.placeholder = "Name of the farm"
+    }.cellUpdate { (cell, _) in
+      cell.textField.clearButtonMode = .whileEditing
+    }.onChange { row in
+      self.temporary?.farmName = row.value ?? ""
+      onChange()
+    }
+    
     let firstnameRow = TextRow { row in
       row.title = "First Name"
       row.value = HarvestUser.current.firstname
@@ -743,7 +754,10 @@ extension HarvestUser {
     }
     
     form
-      +++ Section("Name")
+      +++ Section("Farm Name")
+      <<< farmNameRow
+      
+      +++ Section("Farmer Name")
       <<< firstnameRow
       <<< lastnameRow
   }

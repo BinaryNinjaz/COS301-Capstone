@@ -80,12 +80,12 @@ class SettingsEurekaViewController: FormViewController {
       cell.backgroundColor = .red
     }
     
-    if HarvestUser.current.workingForID == nil {
+    if HarvestUser.current.workingForID.isEmpty { // is farmer
       form
         +++ Section(userRow)
         <<< adminRow
         <<< logoutRow
-    } else {
+    } else { // is foreman
       form
         +++ Section(userRow)
         <<< logoutRow

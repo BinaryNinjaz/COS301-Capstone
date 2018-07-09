@@ -11,6 +11,42 @@ import GoogleSignIn
 import Disk
 
 extension HarvestDB {
+  static func requestWorkingFor(
+    _ controller: UIViewController?,
+    _ completion: @escaping (Bool) -> Void
+  ) -> ([(uid: String, wid: String)], Bool) -> Void {
+    return { ids, succ in
+      if let (uid, wid) = UserDefaults.standard.getUWID() {
+        HarvestUser.current.selectedWorkingForID = (uid, wid)
+        completion(true)
+      } else if ids.count == 1 {
+        HarvestUser.current.selectedWorkingForID = ids.first!
+        completion(true)
+      } else if ids.count == 0 {
+        // Farmer shouldn't be working for anyone
+        completion(true)
+      } else {
+        HarvestDB.getWorkingForFarmNames(uids: ids.map { $0.uid }, result: [], completion: { (names) in
+          UIAlertController.present(
+            title: "Select A Farm",
+            message: "Please select the farm that you want to log into",
+            options: zip(names, ids).map { ($0.0, $0.1.uid) },
+            on: controller) { option in
+              guard let fullOption = ids.first(where: { $0.uid == option }) else {
+                completion(false)
+                return
+              }
+              
+              HarvestUser.current.selectedWorkingForID = fullOption
+              UserDefaults.standard.set(uid: fullOption.uid, wid: fullOption.wid)
+              completion(true)
+            }
+        })
+        
+      }
+    }
+  }
+  
   static func signIn(
     withEmail email: String,
     andPassword password: String,
@@ -35,7 +71,7 @@ extension HarvestDB {
         return
       }
       
-      HarvestUser.current.setUser(user, password, completion)
+      HarvestUser.current.setUser(user, password, HarvestDB.requestWorkingFor(controller, completion))
       
       if let oldSession = try? Disk
         .retrieve("session", from: .applicationSupport, as: Tracker.self) {
@@ -47,14 +83,14 @@ extension HarvestDB {
   static func signIn(
     with credential: AuthCredential,
     on controller: UIViewController?,
-    completion: ((Bool) -> Void)?
+    completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().signIn(with: credential) { (user, error) in
       if let error = error {
         UIAlertController.present(title: "Sign In Failure",
                                   message: error.localizedDescription,
                                   on: controller)
-        completion?(false)
+        completion(false)
         return
       }
       
@@ -62,13 +98,12 @@ extension HarvestDB {
         UIAlertController.present(title: "Sign In Failure",
                                   message: "An unknown error occured",
                                   on: controller)
-        completion?(false)
+        completion(false)
         return
       }
       
-      HarvestUser.current.setUser(user, nil) { _ in
-        completion?(true)
-      }
+      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor(controller, completion))
+      
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
       }
@@ -111,7 +146,7 @@ extension HarvestDB {
       
       HarvestUser.current.firstname = name.first
       HarvestUser.current.lastname = name.last
-      HarvestUser.current.setUser(user, password, completion)
+      HarvestUser.current.setUser(user, password, HarvestDB.requestWorkingFor(controller, completion))
       HarvestDB.save(harvestUser: HarvestUser.current)
       
       completion(true)
@@ -121,7 +156,7 @@ extension HarvestDB {
   static func signOut(
     on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
-    ) {
+  ) {
     do {
       TrackerViewController.tracker?.storeSession()
       TrackerViewController.tracker = nil
@@ -185,7 +220,7 @@ extension HarvestDB {
   }
   
   static func getWorkingFor(
-    completion: @escaping ((uid: String, wid: String)?) -> Void
+    completion: @escaping ([(uid: String, wid: String)]) -> Void
   ) {
     let wfref = ref.child(
       Path.workingFor
@@ -193,21 +228,56 @@ extension HarvestDB {
         + HarvestUser.current.accountIdentifier.removedFirebaseInvalids())
     wfref.observeSingleEvent(of: .value) { (snapshot) in
       guard let _uids = snapshot.value as? [String: Any] else {
-        completion(nil)
+        completion([])
         return
       }
-      var result: (String, String)? = nil
+      var result: [(String, String)] = []
       
       for (uid, _wid) in _uids {
         guard let wid = _wid as? String else {
-          result = (uid, "")
+          result += [(uid, "")]
           continue
         }
         
-        result = (uid, wid)
+        result += [(uid, wid)]
       }
       
       completion(result)
     }
+  }
+  
+  static func getWorkingForFarmName(uid: String, completion: @escaping (String?) -> Void) {
+    let fnref = ref.child(uid + "/admin/farmName")
+    fnref.observeSingleEvent(of: .value) { (snapshot) in
+      print(snapshot.value as Any)
+      guard let name = snapshot.value as? String else {
+        completion(nil)
+        return
+      }
+      completion(name)
+    }
+  }
+  
+  static func getWorkingForFarmNames(
+    uids: [String],
+    result: [String],
+    completion: @escaping ([String]) -> Void
+  ) {
+    guard let uid = uids.first else {
+      print(">>>", result)
+      completion(result)
+      return
+    }
+    HarvestDB.getWorkingForFarmName(uid: uid) { (name) in
+      let rest = Array(uids.dropFirst())
+      
+      guard let name = name else {
+        HarvestDB.getWorkingForFarmNames(uids: rest, result: result + [uid], completion: completion)
+        return
+      }
+      
+      HarvestDB.getWorkingForFarmNames(uids: rest, result: result + [name], completion: completion)
+    }
+    
   }
 }

@@ -75,7 +75,7 @@ class ForemanSignInViewController: UIViewController {
       .instantiateViewController(withIdentifier: "mainTabBarViewController")
       as? MainTabBarViewController
     
-    if HarvestUser.current.workingForID != nil {
+    if !HarvestUser.current.workingForID.isEmpty {
       result?.setUpForForeman()
     } else {
       result?.setUpForFarmer()
