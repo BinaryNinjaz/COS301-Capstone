@@ -87,7 +87,7 @@ public class SignIn_Foreman extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if(verificationInProgress && validatPhoneNumber()){
+        if(verificationInProgress){
             startPhoneNumberVerification(phoneNumberField.getText().toString());
         }
 

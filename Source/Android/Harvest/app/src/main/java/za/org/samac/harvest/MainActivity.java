@@ -19,6 +19,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference farmLevelRef;
     public static String sessionKey;
     public static String farmerKey;
-    private boolean isFarmer = false;
+    private boolean isFarmer = true;
     Boolean rejectSess = false;
 
     private FirebaseDatabase database;
@@ -186,97 +188,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void determineIfFarmer() {
-//        DatabaseReference outerRef = database.getReference();
-//        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                for(DataSnapshot child : dataSnapshot.getChildren()){
-//                    if (child.getKey().equals(uid)){
-//                        isFarmer = true;
-//                        break;
-//                    }
-//                }
-//
-//                if (isFarmer){
-//                    progressBar.setVisibility(View.GONE);//remove progress bar
-//                    setContentView(R.layout.activity_farmer);
-//                }
-//                else {
-//                    progressBar.setVisibility(View.GONE);//remove progress bar
-//                    setContentView(R.layout.activity_foreman);
-//                }
-//
-//                relLayout = findViewById(R.id.relLayout);
-//                progressBar = findViewById(R.id.progressBar);
-//                btnStart = findViewById(R.id.button_start);
-//
-//                progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
-//                relLayout.setVisibility(View.GONE);
-//
-//                if (isFarmer){
-//                    farmerKey = uid;
-//                    getPolygon();//set expected yield
-//                    currUserRef = database.getReference(uid);//Firebase reference
-//                    workersRef = currUserRef.child("workers");
-//                    collectWorkers();
-//                }
-//                else {
-//                    getFarmKey();
-//                }
-//
-//                btnStart.setTag("green");//it is best not to use the tag to identify button status
-//
-//                recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
-//                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
-//                recyclerView.setLayoutManager(mLayoutManager);
-//                recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
-//                recyclerView.setAdapter(adapter);
-//                recyclerView.setVisibility(View.GONE);
-//
-//                //Handle the bottom nav here
-//                if (isFarmer){
-//
-//                    //bottom navigation bar
-//                    bottomNavigationView = findViewById(R.id.bottom_navigation);
-//
-//                    bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
-//                    bottomNavigationView.setOnNavigationItemSelectedListener(
-//                            new BottomNavigationView.OnNavigationItemSelectedListener() {
-//                                @Override
-//                                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                                    switch (item.getItemId()) {
-//                                        case R.id.actionYieldTracker:
-//                                            return true;
-//                                        case R.id.actionInformation:
-////                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
-//                                            Intent openMainActivity= new Intent(MainActivity.this, InformationActivity.class);
-//                                            openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//                                            startActivityIfNeeded(openMainActivity, 0);
-//                                            return true;
-//                                        case R.id.actionSession:
-//                                            Intent openSessions= new Intent(MainActivity.this, Sessions.class);
-//                                            openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//                                            startActivityIfNeeded(openSessions, 0);
-//                                            return true;
-//                                        case R.id.actionStats:
-//                                            Intent openAnalytics= new Intent(MainActivity.this, Analytics.class);
-//                                            openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//                                            startActivityIfNeeded(openAnalytics, 0);
-//                                            return true;
-//                                    }
-//                                    return true;
-//                                }
-//                            });
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-        boolean isFarmer = true;
+
         if (user != null){
             for(UserInfo profile : user.getProviderData()){
                 if (profile.getProviderId().equals(PhoneAuthProvider.PROVIDER_ID)){
@@ -285,42 +197,78 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
             }
         }
+        if (isFarmer){
+            progressBar.setVisibility(View.GONE);//remove progress bar
+            setContentView(R.layout.activity_farmer);
+        }
+        else {
+            progressBar.setVisibility(View.GONE);//remove progress bar
+            setContentView(R.layout.activity_foreman);
+        }
 
-        if (isFarmer) {
+        relLayout = findViewById(R.id.relLayout);
+        progressBar = findViewById(R.id.progressBar);
+        btnStart = findViewById(R.id.button_start);
+
+        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+        relLayout.setVisibility(View.GONE);
+
+        if (isFarmer){
+            farmerKey = uid;
+            getPolygon();//set expected yield
+            currUserRef = database.getReference(uid);//Firebase reference
+            workersRef = currUserRef.child("workers");
+            collectWorkers();
+        }
+        else {
+            getFarmKey();
+        }
+
+        btnStart.setTag("green");//it is best not to use the tag to identify button status
+
+        recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setVisibility(View.GONE);
+
+        //Handle the bottom nav here
+        if (isFarmer){
 
             //bottom navigation bar
             bottomNavigationView = findViewById(R.id.bottom_navigation);
 
             bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
             bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.actionYieldTracker:
-                                return true;
-                            case R.id.actionInformation:
-                                //                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
-                                Intent openMainActivity = new Intent(MainActivity.this, InformationActivity.class);
-                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);
-                                return true;
-                            case R.id.actionSession:
-                                Intent openSessions = new Intent(MainActivity.this, Sessions.class);
-                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openSessions, 0);
-                                return true;
-                            case R.id.actionStats:
-                                Intent openAnalytics = new Intent(MainActivity.this, Analytics.class);
-                                openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openAnalytics, 0);
-                                return true;
+                    new BottomNavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.actionYieldTracker:
+                                    return true;
+                                case R.id.actionInformation:
+//                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
+                                    Intent openMainActivity= new Intent(MainActivity.this, InformationActivity.class);
+                                    openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                    startActivityIfNeeded(openMainActivity, 0);
+                                    return true;
+                                case R.id.actionSession:
+                                    Intent openSessions= new Intent(MainActivity.this, Sessions.class);
+                                    openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                    startActivityIfNeeded(openSessions, 0);
+                                    return true;
+                                case R.id.actionStats:
+                                    Intent openAnalytics= new Intent(MainActivity.this, Analytics.class);
+                                    openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                    startActivityIfNeeded(openAnalytics, 0);
+                                    return true;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                }
-            );
+                    });
         }
+
     }
 
     ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
@@ -616,7 +564,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      */
 
     protected void collectWorkers() {
-        workersRef.addValueEventListener(new ValueEventListener() {
+
+        /* TODO: The constant Listener causes a crash when a new woker is added, seemingly:
+            To reproduce
+            > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
+//        workersRef.addValueEventListener(new ValueEventListener() {
+        workersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {

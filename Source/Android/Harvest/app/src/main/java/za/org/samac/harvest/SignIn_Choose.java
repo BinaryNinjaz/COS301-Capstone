@@ -21,6 +21,9 @@ public class SignIn_Choose extends AppCompatActivity {
     }
 
     public void choseForeman(View v){
+        Intent openForeman = new Intent (SignIn_Choose.this, SignIn_Foreman.class);
+        openForeman.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivityIfNeeded(openForeman, 0);
 
     }
 
