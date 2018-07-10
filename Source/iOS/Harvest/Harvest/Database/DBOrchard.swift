@@ -13,6 +13,7 @@ extension HarvestDB {
     let oref = ref.child(Path.orchards)
     oref.observeSingleEvent(of: .value) { (snapshot) in
       var orchards = [Orchard]()
+      
       for _child in snapshot.children {
         guard let child = _child as? DataSnapshot else {
           continue

@@ -13,6 +13,9 @@ enum HarvestDB {
   
   enum Path {
     static var parent: String {
+      if ref is DatabaseReferenceMock {
+        return "foo"
+      }
       return HarvestUser.current.selectedWorkingForID?.uid ?? HarvestUser.current.uid
     }
     static var yields: String {

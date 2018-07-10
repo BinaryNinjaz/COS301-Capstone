@@ -58,6 +58,25 @@ extension Date {
     
     return aMonthAgo.thisMonth(using: calendar)
   }
+  
+  func weekNumber(using calendar: Calendar = .current) -> Int {
+    let calendar = Calendar.current
+    return calendar.component(.weekOfYear, from: self)
+  }
+  
+  static func startOfWeek(from weekNumber: Int, using calendar: Calendar = .current) -> String {
+    let currentYear = calendar.component(.yearForWeekOfYear, from: Date())
+    var comps = DateComponents()
+    comps.calendar = calendar
+    comps.weekOfYear = weekNumber
+    comps.yearForWeekOfYear = currentYear
+    let date = calendar.date(from: comps)!
+    
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd MMM"
+    
+    return formatter.string(from: date)
+  }
 }
 
 extension Date {

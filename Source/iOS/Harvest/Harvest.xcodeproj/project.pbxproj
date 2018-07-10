@@ -55,6 +55,7 @@
 		167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448EA208C085900FA605C /* FirebaseConverter.swift */; };
 		1679DA4720DD5438007AB071 /* SignInOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */; };
 		1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */; };
+		1684F7A020F45B8700BC59EB /* DBMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1684F79F20F45B8700BC59EB /* DBMock.swift */; };
 		16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */; };
 		16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906055208E7FFA00BE5ADE /* ColorScheme.swift */; };
 		16906058208E801800BE5ADE /* Gradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906057208E801800BE5ADE /* Gradients.swift */; };
@@ -161,6 +162,7 @@
 		167448EA208C085900FA605C /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
 		1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOptionViewController.swift; sourceTree = "<group>"; };
 		1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForemanSignInViewController.swift; sourceTree = "<group>"; };
+		1684F79F20F45B8700BC59EB /* DBMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBMock.swift; sourceTree = "<group>"; };
 		16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrchardInFarmEurekaCell.swift; sourceTree = "<group>"; };
 		16906055208E7FFA00BE5ADE /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
 		16906057208E801800BE5ADE /* Gradients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradients.swift; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 			isa = PBXGroup;
 			children = (
 				16420FCB2069718400E1A292 /* Database.swift */,
+				1684F79F20F45B8700BC59EB /* DBMock.swift */,
 				167448CA208A5B5D00FA605C /* DBAuth.swift */,
 				1690605D208F61DF00BE5ADE /* DBUser.swift */,
 				167448CC208A5B8100FA605C /* DBWorker.swift */,
@@ -863,6 +866,7 @@
 				167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */,
 				16420FCC2069718400E1A292 /* Database.swift in Sources */,
 				167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */,
+				1684F7A020F45B8700BC59EB /* DBMock.swift in Sources */,
 				167448C420893B8200FA605C /* SortedDictionary.swift in Sources */,
 				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,

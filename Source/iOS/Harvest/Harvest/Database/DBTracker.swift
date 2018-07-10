@@ -27,7 +27,6 @@ extension HarvestDB {
     ]
     
     let updates = [key: data]
-    
     cref.updateChildValues(updates)
   }
   
