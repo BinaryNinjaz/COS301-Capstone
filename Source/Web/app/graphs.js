@@ -15,6 +15,16 @@ function yieldsRef() {
   return database.ref('/' + userID() + '/sessions');
 }
 
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    $(window).bind("load", function() {
+      initPage();
+    });
+  } else {
+    sessions = [];
+  }
+});
+
 function workersRef() {
   return database.ref('/' + userID()  + '/workers');
 }
@@ -24,7 +34,6 @@ var workers = [];
 function getWorkers() {
   workersRef().once('value').then(function (snapshot) {
       snapshot.forEach(function (worker) {
-        console.log("Worker being added.");
         const w = worker.val();
         const k = worker.key;
         if (w.type === "Foreman") {
@@ -108,7 +117,6 @@ function populateCollection(sessionKey) {
         const worker = workerForKey(workerKey);
         if (worker !== undefined) {
             const name = worker.value.name + " " + worker.value.surname;
-            console.log(name);
             var collectionDates = [];
             const workerCollRef = workerCollections(sessionKey,workerKey);
             var count = 0;
@@ -138,7 +146,6 @@ function test(){
     var count = 0;
     collections.forEach(function (x){
         var string = "Collection number: "+count+"\n";
-        console.log(string);
         x.forEach(function (k){
             var temp = "Worker: "+k.key+"Dates are below: \\n";
             console.log(temp);
