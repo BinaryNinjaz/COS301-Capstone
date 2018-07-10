@@ -6,7 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,11 +28,32 @@ public class SignIn_Foreman extends AppCompatActivity {
 
     private  static  final  String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
 
-    private TextView invalid;
-    private TextView failure;
-    private EditText phoneNumberField;
+    private static final int STATE_START = 0;
+    private static final int STATE_CODE_SENT = 1;
+    private static final int STATE_VERIFY_FAIL = 2;
+    private static final int STATE_INVALID_NUMBER = 3;
+    private static final int STATE_QUOTA_EXCEED = 4;
+    private static final int STATE_FARM_NONE = 5;
+    private static final int STATE_FARM_ONE = 6;
+    private static final int STATE_FARM_MULTI = 7;
+    private int state;
 
-    private String phone;
+    private EditText phoneNumberField;
+    private TextView SMSWarning;
+    private Button logInButt;
+    private TextView failure;
+    private TextView verificationTip;
+    private EditText verificationField;
+    private LinearLayout verificationButts;
+    private Button verificationOkay;
+    private Button verificationResend;
+    private TextView phoneConfTip;
+    private TextView phoneConfLook;
+    private TextView farmTip;
+    private Spinner farmChoose;
+    private TextView farmOneLook;
+    private Button farmOkay;
+
 
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
@@ -50,8 +74,21 @@ public class SignIn_Foreman extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        failure = findViewById(R.id.signIn_foreman_failure);
         phoneNumberField = findViewById(R.id.signIn_foreman_phone_edit);
+        SMSWarning = findViewById(R.id.signIn_foreman_warning);
+        logInButt = findViewById(R.id.signIn_foreman_logIn_butt);
+        failure = findViewById(R.id.signIn_foreman_failure);
+        verificationTip = findViewById(R.id.signIn_foreman_verificationTip);
+        verificationField = findViewById(R.id.signIn_foreman_verifyCode_edit);
+        verificationButts = findViewById(R.id.signIn_foreman_verification_butts);
+        verificationOkay = findViewById(R.id.signIn_foreman_verification_okayButt);
+        verificationResend = findViewById(R.id.signIn_foreman_verification_resendButt);
+        phoneConfTip = findViewById(R.id.signIn_foreman_phoneConf_tip);
+        phoneConfLook = findViewById(R.id.signIn_foreman_phoneConf_Look);
+        farmTip = findViewById(R.id.signIn_foreman_farm_tip);
+        farmChoose = findViewById(R.id.signIn_foreman_farmChoose_Spinner);
+        farmOneLook = findViewById(R.id.signIn_foreman_farmOne_look);
+        farmOkay = findViewById(R.id.signIn_foreman_farm_okay);
 
         phoneCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
@@ -147,7 +184,77 @@ public class SignIn_Foreman extends AppCompatActivity {
         });
     }
 
+    public void signInForemanButtClick(View v){
+
+    }
+
     public void findFarm(){
 
+    }
+
+    private void updateUI(){
+        switch (this.state){
+            case STATE_START:
+                phoneNumberField.setVisibility(View.VISIBLE);
+                SMSWarning.setVisibility(View.VISIBLE);
+                logInButt.setVisibility(View.VISIBLE);
+                failure.setVisibility(View.GONE);
+                verificationTip.setVisibility(View.GONE);
+                verificationField.setVisibility(View.GONE);
+                verificationButts.setVisibility(View.GONE);
+                phoneConfTip.setVisibility(View.GONE);
+                phoneConfLook.setVisibility(View.GONE);
+                farmTip.setVisibility(View.GONE);
+                farmChoose.setVisibility(View.GONE);
+                farmOneLook.setVisibility(View.GONE);
+                farmOkay.setVisibility(View.GONE);
+                break;
+            case STATE_CODE_SENT:
+                failure.setVisibility(View.GONE);
+                verificationTip.setVisibility(View.VISIBLE);
+                verificationField.setVisibility(View.VISIBLE);
+                verificationButts.setVisibility(View.VISIBLE);
+                logInButt.setVisibility(View.GONE);
+                SMSWarning.setVisibility(View.GONE);
+                phoneNumberField.setFocusable(false);
+                break;
+            case STATE_VERIFY_FAIL:
+                failure.setVisibility(View.VISIBLE);
+                failure.setText(R.string.signIn_foreman_fail);
+                break;
+            case STATE_INVALID_NUMBER:
+                failure.setVisibility(View.VISIBLE);
+                failure.setText(R.string.signIn_foreman_invalfail);
+                break;
+            case STATE_QUOTA_EXCEED:
+                failure.setVisibility(View.VISIBLE);
+                failure.setText(R.string.signIn_foreman_reqfail);
+            case STATE_FARM_NONE:
+                showConfirmationBasics();
+                farmTip.setText(R.string.signIn_foreman_farmNone);
+                farmTip.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                farmOkay.setVisibility(View.GONE);
+            case STATE_FARM_ONE:
+                showConfirmationBasics();
+                farmTip.setText(R.string.signIn_foreman_farmOne);
+                farmOneLook.setVisibility(View.VISIBLE);
+                farmOneLook.setText();
+
+        }
+    }
+
+    private void showConfirmationBasics() {
+        phoneNumberField.setVisibility(View.GONE);
+        SMSWarning.setVisibility(View.GONE);
+        logInButt.setVisibility(View.GONE);
+        failure.setVisibility(View.GONE);
+        verificationTip.setVisibility(View.GONE);
+        verificationField.setVisibility(View.GONE);
+        verificationButts.setVisibility(View.GONE);
+        phoneConfTip.setVisibility(View.VISIBLE);
+        phoneConfLook.setVisibility(View.VISIBLE);
+        phoneConfLook.setText(mAuth.getCurrentUser().getPhoneNumber());
+        farmTip.setVisibility(View.VISIBLE);
+        farmOkay.setVisibility(View.VISIBLE);
     }
 }

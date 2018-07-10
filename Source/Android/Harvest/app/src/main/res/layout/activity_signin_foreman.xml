@@ -8,7 +8,10 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/signIn_foreman_title"
@@ -23,6 +26,9 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             app:layout_constraintTop_toBottomOf="@id/signIn_foreman_title">
 
                 <LinearLayout
@@ -45,33 +51,114 @@
                         android:text="@string/signIn_foreman_phoneWarning"
                         android:layout_marginTop="8dp" />
 
+                    <Button
+                        android:id="@+id/signIn_foreman_logIn_butt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="signInForemanButtClick"
+                        android:text="@string/login"
+                        android:background="@color/colorPrimary"
+                        android:layout_marginTop="16dp"/>
+
                     <TextView
                         android:id="@+id/signIn_foreman_failure"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/signIn_foreman_fail"
+                        android:text="Failure"
                         android:textColor="@android:color/holo_red_dark"
-                        android:visibility="gone"
                         android:layout_marginTop="16dp" />
+
+                    <TextView
+                        android:id="@+id/signIn_foreman_verificationTip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/signIn_foreman_verificationTip"
+                        android:layout_marginTop="16dp"/>
+
+                    <EditText
+                        android:id="@+id/signIn_foreman_verifyCode_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/signIn_foreman_verificationCOde"
+                        android:inputType="text" />
+
+                    <LinearLayout
+                        android:id="@+id/signIn_foreman_verification_butts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp">
+
+                        <Button
+                            android:id="@+id/signIn_foreman_verification_okayButt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:layout_marginEnd="8dp"
+                            android:background="@color/colorPrimary"
+                            android:text="@string/signIn_foreman_verificationOkay"
+                            android:onClick="signInForemanButtClick"/>
+
+                        <Button
+                            android:id="@+id/signIn_foreman_verification_resendButt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@android:color/darker_gray"
+                            android:text="@string/signIn_foreman_verificationResend"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/signIn_foreman_phoneConf_tip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/signIn_foreman_numberTip"
+                        android:layout_marginTop="16dp"/>
+
+                    <TextView
+                        android:id="@+id/signIn_foreman_phoneConf_Look"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone Number"
+                        android:layout_marginTop="16dp"
+                        style="@style/Base.TextAppearance.AppCompat.Body2"/>
+
+                    <TextView
+                        android:id="@+id/signIn_foreman_farm_tip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Farm Tip"
+                        android:layout_marginTop="16dp"/>
+
+                    <Spinner
+                        android:id="@+id/signIn_foreman_farmChoose_Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp" />
+
+                    <TextView
+                        android:id="@+id/signIn_foreman_farmOne_look"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Farm One"
+                        style="@style/Base.TextAppearance.AppCompat.Body2"/>
+
+                    <Button
+                        android:id="@+id/signIn_foreman_farm_okay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/colorPrimary"
+                        android:text="@string/signIn_foreman_verificationOkay"/>
+
+
                 </LinearLayout>
 
 
         </ScrollView>
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/signIn_foreman_butt_conf"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:background="@color/colorPrimary"
-        android:onClick="loginClickForeman"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
 
 </android.support.constraint.ConstraintLayout>
