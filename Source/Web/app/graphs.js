@@ -22,16 +22,6 @@ function yieldsRef() {
   return firebase.database().ref('/' + userID() + '/sessions');
 }
 
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    $(window).bind("load", function() {
-      initPage();
-    });
-  } else {
-    sessions = [];
-  }
-});
-
 function foremanForKey(key) {
   for (var k in foremen) {
     if (foremen[k].key === key) {
@@ -80,17 +70,24 @@ var sessionCount = 0;
 function loadSessions() {
   yieldsRef().once('value').then(function (snapshot) {
       snapshot.forEach(function (child) {
-          sessionKey = child.key;
-          const collectionsRef = yieldsRef()+'/'+sessionKey+'/collections';
-          sessions[sessionCount].start = child.val().start_date;
-          sessions[sessionCount].end = child.val().end_date;
+          var childData = child.val();
+          //console.log(childData.wid);
+          sessions[sessionCount].start = null;
+          sessions[sessionCount].end = null;
+          sessionKey = childData.key;
+          sessions[sessionCount].start = new Date(childData.start_date * 1000);
+          sessions[sessionCount].end = new Date(childData.end_date * 1000);
+          const collectionsRef =  firebase.database().ref('/' + userID() + '/sessions/'+
+                sessionKey+'/collections/');  
           collections[sessionCount] = populateCollection(collectionsRef);
           ++sessionCount;
       });
+      test();
   });
 }
 
 function populateCollection(ref) {
+  window.alert("Collection");
   var obj = [];
   ref.once('value').then(function (snapshot) {
       snapshot.forEach(function (child) {
@@ -111,4 +108,8 @@ function populateCollection(ref) {
       });
   }); 
   return obj;
+}
+
+function test(wait){
+    window.alert("Sessions: "+sessionCount);
 }
