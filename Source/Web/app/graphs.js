@@ -80,12 +80,15 @@ function loadSessions() {
           collections.push(populateCollection(collectionsRef));
           ++sessionCount;
       });
-      test();
+      calculateBagsPerHour();
   });
 }
 
+/*
+Object returned from the function below will contain all of the workers' names of
+a specific session and all the dates of the collectons that the workers made 
+*/
 function populateCollection(ref) {
-  window.alert("Collection");
   var obj = [];
   ref.once('value').then(function (snapshot) {
       snapshot.forEach(function (child) {
@@ -108,6 +111,6 @@ function populateCollection(ref) {
   return obj;
 }
 
-function test(wait){
-    window.alert("Sessions: "+sessionCount);
+function calculateBagsPerHour(){
+   //yet to be implemented 
 }
