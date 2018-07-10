@@ -18,7 +18,7 @@ function yieldsRef() {
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     $(window).bind("load", function() {
-      initPage();
+      getWorkers();
     });
   } else {
     sessions = [];
@@ -77,6 +77,8 @@ function workerForKey(key) {
 function initPage(){
     getWorkers();
     loadSessions();
+    setTimeout(function(){ test(); },3000);
+    //calculateBagsPerHour();
 }
 
 /*
@@ -96,10 +98,9 @@ function loadSessions() {
           var endDate = new Date(childData.end_date * 1000);
           sessions.push({start: startDate, end: endDate});  
           collections.push(populateCollection(sessionKey));
+          console.log(collections[sessionCount]);
           ++sessionCount;
       });
-      test();
-      calculateBagsPerHour();
   });
 }
 
@@ -122,12 +123,15 @@ function populateCollection(sessionKey) {
             var count = 0;
             workerCollRef.once('value').then(function (snapshot2) {
                 snapshot2.forEach(function (child2) {
+                    var childData2 = child2.val();
                     collectionDates[count] = {};
-                    collectionDates[count] = new Date(child2.date * 1000);
+                    collectionDates[count] = new Date(childData2.date * 1000);
                     ++count;
                 });
             });
-            obj.push({key: name, collections: collectionDates});
+            //console.log(obj);
+            obj.push({worker: name, coll: collectionDates});
+            //console.log(obj);
         }else{
             console.log("Worker is undefined..");
         }
@@ -144,17 +148,21 @@ function calculateBagsPerHour(){
 
 function test(){
     var count = 0;
-    collections.forEach(function (x){
+    console.log("test..");
+    for(var x in collections){
         var string = "Collection number: "+count+"\n";
-        x.forEach(function (k){
-            var temp = "Worker: "+k.key+"Dates are below: \\n";
-            console.log(temp);
-            k.collections.forEach(function (d){
+        console.log(collections[x]);
+        console.log(x);
+        console.log(x[count]);
+        for(var i = 0; i < x.length; i++){
+            var temp = "Worker: "+x[i].worker+" Dates are below: \n";
+            //console.log(temp);
+            for(var d in x[i].coll){
                  temp+=d+" ";   
-            });
+            }
             string+=temp;
-        });
-        window.alert(string);
+        }
+        //window.alert(string);
         ++count;
-    });
+    }
 }
