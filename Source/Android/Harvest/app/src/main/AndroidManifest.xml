@@ -61,7 +61,7 @@
             android:name=".PieChart"
             android:label="@string/title_stats" />
         <activity
-            android:name=".BarGraph"
+            android:name=".SpiralGraph"
             android:label="@string/title_stats" />
         <activity
             android:name=".ForemenPerSession"

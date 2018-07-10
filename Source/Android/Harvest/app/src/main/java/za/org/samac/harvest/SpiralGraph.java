@@ -1,6 +1,7 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,12 +11,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.RadarChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.data.RadarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,18 +35,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -45,7 +50,7 @@ import za.org.samac.harvest.util.AppUtil;
 
 import static za.org.samac.harvest.MainActivity.farmerKey;
 
-public class BarGraph extends AppCompatActivity {
+public class SpiralGraph extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -62,20 +67,20 @@ public class BarGraph extends AppCompatActivity {
     private static String orchardKey;
     private Query query;
     private static final String TAG = "Analytics";
-    ArrayList<PieEntry> entries = new ArrayList<>();
+    ArrayList<RadarEntry> entries = new ArrayList<>();
     com.github.mikephil.charting.charts.PieChart pieChart;
     private ProgressBar progressBar;
-    private BarChart barChart;
-    private com.github.mikephil.charting.charts.BarChart barGraphView;
+    private RadarChart spiralGraph;
+    private com.github.mikephil.charting.charts.RadarChart spiralGraphView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bar_graph);
+        setContentView(R.layout.activity_spiral_graph);
 
         progressBar = findViewById(R.id.progressBar);
-        barGraphView = findViewById(R.id.barChart);
-        barChart = (BarChart) findViewById(R.id.barChart);
+        spiralGraphView = findViewById(R.id.spiralChart);
+        spiralGraph = (RadarChart) findViewById(R.id.spiralChart);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
@@ -86,19 +91,19 @@ public class BarGraph extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(BarGraph.this, MainActivity.class);
+                                Intent openMainActivity= new Intent(SpiralGraph.this, MainActivity.class);
                                 openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(BarGraph.this, InformationActivity.class);
+                                Intent openInformation= new Intent(SpiralGraph.this, InformationActivity.class);
                                 openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                Intent openAnalytics= new Intent(BarGraph.this, Analytics.class);
+                                Intent openAnalytics= new Intent(SpiralGraph.this, Analytics.class);
                                 openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openAnalytics, 0);
                                 return true;
@@ -112,8 +117,8 @@ public class BarGraph extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
         orchardKey = getIntent().getStringExtra("key");
-        //getTotalBagsPerDay();
-        displayGraph();
+        getTotalBagsPerDay();
+        //displayGraph();
     }
 
     private static String urlTotalBagsPerDay() {
@@ -179,36 +184,87 @@ public class BarGraph extends AppCompatActivity {
                         String response = sendPost(urlTotalBagsPerDay(), urlParameters());
                         JSONObject objs = new JSONObject(response);
                         System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% " + objs.keys());
-
                         //put entries in graph
+                        final String Sunday = "Sunday";
+                        final String Monday = "Monday";
+                        final String Tuesday = "Tuesday";
+                        final String Wednesday = "Wednesday";
+                        final String Thursday = "Thursday";
+                        final String Friday = "Friday";
+                        final String Saturday = "Saturday";
+                        int totalSunday = 0;
+                        int totalMonday = 0;
+                        int totalTuesday = 0;
+                        int totalWednesday = 0;
+                        int totalThursday = 0;
+                        int totalFriday = 0;
+                        int totalSaturday = 0;
+                        JSONObject objOrchard = objs.getJSONObject(orchardKey);
 
-                        ArrayList<BarEntry> entries = new ArrayList<>();
-                        entries.add(new BarEntry(7, 7));
-                        entries.add(new BarEntry(8, 15));
-                        entries.add(new BarEntry(9, 11));
-                        entries.add(new BarEntry(10, 20));
-                        entries.add(new BarEntry(11, 34));
-
-                        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
-                        barGraphView.setVisibility(View.VISIBLE);
-
-                        BarDataSet dataset = new BarDataSet(entries, "Dataset");
-                        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
-
-                        BarData data = new BarData(dataset);//labels was one of the parameters
-                        barChart.setData(data); // set the data and list of lables into chart
-
-                        Description description = new Description();
-                        description.setText("Orchard Performance");
-                        barChart.setDescription(description);  // set the description
-
-                        for (int i = 0; i < objs.length(); i++) {
-                            objs.get(objs.keys().toString());
-                            System.out.println(" *************** " + objs.get(objs.keys().toString()) + " *************** ");
-
+                        if (objOrchard.has(Sunday) == true) {
+                            totalSunday = objOrchard.getInt(Sunday);
+                        }
+                        if (objOrchard.has(Monday) == true) {
+                            totalMonday = objOrchard.getInt(Monday);
+                        }
+                        if (objOrchard.has(Tuesday) == true) {
+                            totalTuesday = objOrchard.getInt(Tuesday);
+                        }
+                        if (objOrchard.has(Wednesday) == true) {
+                            totalWednesday = objOrchard.getInt(Wednesday);
+                        }
+                        if (objOrchard.has(Thursday) == true) {
+                            totalThursday = objOrchard.getInt(Thursday);
+                        }
+                        if (objOrchard.has(Friday) == true) {
+                            totalFriday = objOrchard.getInt(Friday);
+                        }
+                        if (objOrchard.has(Saturday) == true) {
+                            totalSaturday = objOrchard.getInt(Saturday);
                         }
 
+                        entries.add(new RadarEntry(totalSunday, Sunday));
+                        entries.add(new RadarEntry(totalMonday, Monday));
+                        entries.add(new RadarEntry(totalTuesday, Tuesday));
+                        entries.add(new RadarEntry(totalWednesday, Wednesday));
+                        entries.add(new RadarEntry(totalThursday, Thursday));
+                        entries.add(new RadarEntry(totalFriday, Friday));
+                        entries.add(new RadarEntry(totalSaturday, Saturday));
 
+                        XAxis xAxis = spiralGraph.getXAxis();
+                        xAxis.setXOffset(0f);
+                        xAxis.setYOffset(0f);
+                        xAxis.setTextSize(8f);
+                        xAxis.setValueFormatter(new IAxisValueFormatter() {
+
+                            private String[] mFactors = new String[]{Sunday, Monday,
+                                    Tuesday, Wednesday,
+                                    Thursday, Friday, Saturday};
+
+                            @Override
+                            public String getFormattedValue(float value, AxisBase axis) {
+                                return mFactors[(int) value % mFactors.length];
+                            }
+                        });
+
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                            progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+                            spiralGraphView.setVisibility(View.VISIBLE);
+                            //spiralGraph.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutQuad));
+
+                            RadarDataSet dataset = new RadarDataSet(entries, "Dataset");
+                            //dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+
+                            RadarData data = new RadarData(dataset);//labels was one of the parameters
+                            spiralGraph.setData(data); // set the data and list of lables into chart
+
+                            Description description = new Description();
+                            description.setText("Orchard Performance");
+                            spiralGraph.setDescription(description);  // set the description
+                            spiralGraph.notifyDataSetChanged();
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -221,94 +277,18 @@ public class BarGraph extends AppCompatActivity {
         }
     }
 
-    public void displayGraph() {
-        timeRef = database.getReference(userUid + "/sessions/");//path to sessions increment in Firebase
-        Query firstQuery = timeRef.limitToLast(1);
-        firstQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    lastSession = zoneSnapshot.getKey();
-                    double startDate = zoneSnapshot.child("start_date").getValue(double.class);
-                    latestDate = new Date((long) startDate);
-                    //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // the format of date
-                    //latestDate = sdf.format(date);
-                }
-
-                //TODO: get last 5 dates
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-            }
-        });
-
-        // To make vertical bar chart, initialize graph id this way
-        BarChart barChart = (BarChart) findViewById(R.id.barChart);
-
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(7, 7));
-        entries.add(new BarEntry(8, 15));
-        entries.add(new BarEntry(9, 11));
-        entries.add(new BarEntry(10, 20));
-        entries.add(new BarEntry(11, 34));
-
-        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
-        barGraphView.setVisibility(View.VISIBLE);
-
-        BarDataSet dataset = new BarDataSet(entries, "Dataset");
-        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
-
-        BarData data = new BarData(dataset);//labels was one of the parameters
-        barChart.setData(data); // set the data and list of lables into chart
-
-        Description description = new Description();
-        description.setText("Orchard Performance");
-        barChart.setDescription(description);  // set the description
-
-        /*LineChart lineChart = (LineChart) findViewById(R.id.chart);
-        // creating list of entry
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(0, 4f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-        entries.add(new Entry(1, 8f));
-
-        LineDataSet dataset = new LineDataSet(entries, "# of Calls");
-
-        // creating labels
-        ArrayList<String> labels = new ArrayList<>();
-        labels.add("January");
-        labels.add("February");
-        labels.add("March");
-        labels.add("April");
-        labels.add("May");
-        labels.add("June");
-
-        LineData data = new LineData(dataset);
-        lineChart.setData(data); // set the data and list of lables into chart
-
-        Description description = new Description();
-        description.setText("Description");
-        lineChart.setDescription(description); */ // set the description
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.search:
                 return true;
             case R.id.settings:
-                startActivity(new Intent(BarGraph.this, SettingsActivity.class));
+                startActivity(new Intent(SpiralGraph.this, SettingsActivity.class));
                 return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(BarGraph.this, LoginActivity.class));
+                    startActivity(new Intent(SpiralGraph.this, LoginActivity.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
