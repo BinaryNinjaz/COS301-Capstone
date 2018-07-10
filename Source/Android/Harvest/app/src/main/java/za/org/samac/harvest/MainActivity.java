@@ -303,14 +303,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                             startActivityIfNeeded(openMainActivity, 0);
                                             return true;
                                         case R.id.actionSession:
-                                            Intent openSessions= new Intent(MainActivity.this, Sessions.class);
+                                            /*Intent openSessions= new Intent(MainActivity.this, Sessions.class);
                                             openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openSessions, 0);
+                                            startActivityIfNeeded(openSessions, 0);*/
+                                            startActivity(new Intent(MainActivity.this, Sessions.class));
                                             return true;
                                         case R.id.actionStats:
-                                            Intent openAnalytics= new Intent(MainActivity.this, Analytics.class);
+                                            /*Intent openAnalytics= new Intent(MainActivity.this, Analytics.class);
                                             openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openAnalytics, 0);
+                                            startActivityIfNeeded(openAnalytics, 0);*/
+                                            startActivity(new Intent(MainActivity.this, Analytics.class));
                                             return true;
                                     }
                                     return true;
