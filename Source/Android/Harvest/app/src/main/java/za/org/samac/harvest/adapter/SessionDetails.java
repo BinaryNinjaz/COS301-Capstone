@@ -88,7 +88,7 @@ public class SessionDetails extends AppCompatActivity {
         setContentView(R.layout.activity_session_details);
 
         progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+        //progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         pieChartView = findViewById(R.id.pieChart);
 
         collected = new collections("");
@@ -200,7 +200,7 @@ public class SessionDetails extends AppCompatActivity {
             entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
         }
 
-        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+        //progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
         pieChartView.setVisibility(View.VISIBLE);
         pieChart.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutQuad));
         pieChart.setEntryLabelColor(Color.BLACK);

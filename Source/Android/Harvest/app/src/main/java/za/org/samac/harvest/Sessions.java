@@ -119,9 +119,10 @@ public class Sessions extends AppCompatActivity {
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                Intent openAnalytics= new Intent(Sessions.this, Analytics.class);
+                                /*Intent openAnalytics= new Intent(Sessions.this, Analytics.class);
                                 openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openAnalytics, 0);
+                                startActivityIfNeeded(openAnalytics, 0);*/
+                                startActivity(new Intent(Sessions.this, Analytics.class));
                                 return true;
                         }
                         return true;

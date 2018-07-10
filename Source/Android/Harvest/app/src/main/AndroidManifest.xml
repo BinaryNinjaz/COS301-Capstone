@@ -87,6 +87,10 @@
             android:label="@string/title_activity_sessions_map" />
         <activity android:name=".adapter.SessionDetails"></activity>
         <activity android:name=".OrchardsForGraph" />
+        <activity android:name=".WorkerOrForeman" />
+        <activity android:name=".ForemenForBarGraph" />
+        <activity android:name=".WorkersForBarGraph" />
+        <activity android:name=".BarGraph" />
     </application>
 
 </manifest>
