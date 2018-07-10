@@ -71,15 +71,13 @@ function loadSessions() {
   yieldsRef().once('value').then(function (snapshot) {
       snapshot.forEach(function (child) {
           var childData = child.val();
-          //console.log(childData.wid);
-          sessions[sessionCount].start = null;
-          sessions[sessionCount].end = null;
           sessionKey = childData.key;
-          sessions[sessionCount].start = new Date(childData.start_date * 1000);
-          sessions[sessionCount].end = new Date(childData.end_date * 1000);
+          var startDate = new Date(childData.start_date * 1000);
+          var endDate = new Date(childData.end_date * 1000);
+          sessions.push({start: startDate, end: endDate});
           const collectionsRef =  firebase.database().ref('/' + userID() + '/sessions/'+
                 sessionKey+'/collections/');  
-          collections[sessionCount] = populateCollection(collectionsRef);
+          collections.push(populateCollection(collectionsRef));
           ++sessionCount;
       });
       test();
