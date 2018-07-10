@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -22,6 +26,13 @@ import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -52,12 +63,7 @@ public class BarGraph extends AppCompatActivity {
     private String userUid;
     private String lastSession;
     private Date latestDate;
-    private String workerKey;
-    private ArrayList<String> workerKeys;
-    private ArrayList<String> workerName;
-    private ArrayList<Integer> yield;
-    private String sessionKey;
-    private Query query;
+    private static String workerKey;
     private static final String TAG = "Analytics";
     private ArrayList<BarEntry> entries = new ArrayList<>();
     private com.github.mikephil.charting.charts.PieChart pieChart;
@@ -108,6 +114,7 @@ public class BarGraph extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
+        workerKey = getIntent().getStringExtra("key");
         getTotalBagsPerDay();
         //displayGraph();
     }
@@ -119,13 +126,13 @@ public class BarGraph extends AppCompatActivity {
 
     private static String urlParameters() {
         String base = "";
-        base = base + "id0=" + "-LCEFgdMMO80LR98BzPC";//orchardKey;//get correct orchard ID
-        base = base + "&groupBy=" + "orchard";
-        base = base + "&period=" + "daily";
+        base = base + "id0=" + workerKey;
+        base = base + "&groupBy=" + "worker";
+        base = base + "&period=" + "hourly";
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
-        base = base + "&startDate=" + (currentTime - 7 * 24 * 60 * 60);
+        base = base + "&startDate=" + (currentTime - 7 * 24 * 60 * 10);
         base = base + "&endDate=" + currentTime;
         base = base + "&uid=" + farmerKey;
 
@@ -190,7 +197,7 @@ public class BarGraph extends AppCompatActivity {
                         int totalThursday = 0;
                         int totalFriday = 0;
                         int totalSaturday = 0;
-                        JSONObject objOrchard = objs.getJSONObject("-LCEFgdMMO80LR98BzPC");
+                        JSONObject objOrchard = objs.getJSONObject(workerKey);
 
                         if (objOrchard.has(Sunday) == true) {
                             totalSunday = objOrchard.getInt(Sunday);
@@ -219,6 +226,11 @@ public class BarGraph extends AppCompatActivity {
                         entries.add(new BarEntry(3, 30));
                         entries.add(new BarEntry(4, 40));
                         entries.add(new BarEntry(5, 50));
+                        entries.add(new BarEntry(1, 10));
+                        entries.add(new BarEntry(2, 20));
+                        entries.add(new BarEntry(3, 30));
+                        entries.add(new BarEntry(4, 40));
+                        entries.add(new BarEntry(5, 50));
 
                         /*XAxis xAxis = barChart.getXAxis();
                         xAxis.setXOffset(0f);
@@ -240,16 +252,16 @@ public class BarGraph extends AppCompatActivity {
                             public void run() {
                                 progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
                                 barGraphView.setVisibility(View.VISIBLE);
-                                //spiralGraph.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutQuad));
+                                barChart.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInBack));
 
-                                BarDataSet dataset = new BarDataSet(entries, "Dataset");
+                                BarDataSet dataset = new BarDataSet(entries, "Hours");
                                 dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
 
                                 BarData data = new BarData(dataset);//labels was one of the parameters
                                 barChart.setData(data); // set the data and list of lables into chart
 
                                 Description description = new Description();
-                                description.setText("Orchard Performance");
+                                description.setText("Per Hour Worker Performance");
                                 barChart.setDescription(description);  // set the description
                                 barChart.notifyDataSetChanged();
                             }
@@ -264,6 +276,14 @@ public class BarGraph extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //Handle the menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
     }
 
     @Override
@@ -282,6 +302,20 @@ public class BarGraph extends AppCompatActivity {
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
+
+                // Google sign out
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+
+                Auth.GoogleSignInApi.signOut(LoginActivity.mGoogleSignInClient).setResultCallback(
+                        new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(@NonNull Status status) {
+                                startActivity(new Intent(BarGraph.this, LoginActivity.class));
+                            }
+                        });
                 finish();
                 return true;
 //            case R.id.homeAsUp:
@@ -293,4 +327,5 @@ public class BarGraph extends AppCompatActivity {
         }
 //        return false;
     }
+
 }
