@@ -52,9 +52,29 @@ class StatEntitySelectionViewController: FormViewController, TypedRowControllerT
       }
     }
     
+    let b = Date(timeIntervalSince1970: 0)
+    let n = Date()
+    let drange = HarvestCloud.TimePeriod.cases(forRange: (startDate ?? b, endDate ?? n))
+    
+    let periodSelection = PushRow<HarvestCloud.TimePeriod> { row in
+      row.title = "Time Period"
+      row.options = drange
+      row.value = period
+    }.onChange { (row) in
+      self.period = row.value
+    }
+    
     let showStats = ButtonRow { row in
       row.title = "Display Stats"
     }.onCellSelection { _, _ in
+      guard !self.selected.isEmpty else {
+        UIAlertController.present(
+          title: "Nothing Selected",
+          message: "Please select some things to view by tapping on them",
+          on: self)
+        return
+      }
+      
       guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
         return
       }
@@ -100,6 +120,11 @@ class StatEntitySelectionViewController: FormViewController, TypedRowControllerT
     form
       +++ selectionSection
       
+    if drange.count > 1 {
+      form +++ Section("Time Period") <<< periodSelection
+    }
+    
+    form
       +++ Section()
       <<< showStats
   }

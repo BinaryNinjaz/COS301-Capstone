@@ -27,7 +27,7 @@ final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[EntityItem]>>, 
   
   required init(tag: String?) {
     super.init(tag: tag)
-    cell.detailTextLabel?.text = nil
+    cell.detailTextLabel?.textColor = .white
     presentationMode = .show(
       controllerProvider: ControllerProvider.callback {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)

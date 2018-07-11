@@ -8,6 +8,7 @@
 
 import Eureka
 
+// swiftlint:disable type_body_length
 public final class StatSelectionViewController: FormViewController {  
   func customGraph() -> LabelRow {
     return LabelRow { row in
@@ -25,6 +26,7 @@ public final class StatSelectionViewController: FormViewController {
   }
   
   // swiftlint:disable function_body_length
+  // swiftlint:disable cyclomatic_complexity
   public override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -188,6 +190,86 @@ public final class StatSelectionViewController: FormViewController {
       }
     }
     
+    let lastYearsOrchardPerformance = StatEntitySelectionRow { row in
+      row.title = "Last Years Orchard Performance"
+      let lastYear = Date().lastYear()
+      row.startDate = lastYear.0
+      row.endDate = lastYear.1
+      row.period = .monthly
+      row.grouping = .orchard
+      row.value = Entities.shared.orchards.map { EntityItem.orchard($0.value) }
+    }
+    
+    let thisYearsOrchardPerformance = StatEntitySelectionRow { row in
+      row.title = "This Years Orchard Performance"
+      let thisYear = Date().thisYear()
+      row.startDate = thisYear.0
+      row.endDate = thisYear.1
+      row.period = .monthly
+      row.grouping = .orchard
+      row.value = Entities.shared.orchards.map { EntityItem.orchard($0.value) }
+    }
+    
+    let lastYearsWorkerPerformance = StatEntitySelectionRow { row in
+      row.title = "Last Years Worker Performance"
+      let lastYear = Date().lastYear()
+      row.startDate = lastYear.0
+      row.endDate = lastYear.1
+      row.period = .monthly
+      row.grouping = .worker
+      row.value = Entities.shared.workers.compactMap {
+        if $0.value.kind == .worker {
+          return EntityItem.worker($0.value)
+        }
+        return nil
+      }
+    }
+    
+    let thisYearsWorkerPerformance = StatEntitySelectionRow { row in
+      row.title = "This Years Worker Performance"
+      let thisYear = Date().thisYear()
+      row.startDate = thisYear.0
+      row.endDate = thisYear.1
+      row.period = .monthly
+      row.grouping = .worker
+      row.value = Entities.shared.workers.compactMap {
+        if $0.value.kind == .worker {
+          return EntityItem.worker($0.value)
+        }
+        return nil
+      }
+    }
+    
+    let lastYearsForemanPerformance = StatEntitySelectionRow { row in
+      row.title = "Last Years Foreman Performance"
+      let lastYear = Date().lastYear()
+      row.startDate = lastYear.0
+      row.endDate = lastYear.1
+      row.period = .monthly
+      row.grouping = .worker
+      row.value = Entities.shared.workers.compactMap {
+        if $0.value.kind == .foreman {
+          return EntityItem.worker($0.value)
+        }
+        return nil
+      }
+    }
+    
+    let thisYearsForemanPerformance = StatEntitySelectionRow { row in
+      row.title = "This Years Foreman Performance"
+      let thisYear = Date().thisYear()
+      row.startDate = thisYear.0
+      row.endDate = thisYear.1
+      row.period = .monthly
+      row.grouping = .worker
+      row.value = Entities.shared.workers.compactMap {
+        if $0.value.kind == .foreman {
+          return EntityItem.worker($0.value)
+        }
+        return nil
+      }
+    }
+    
     form
       +++ Section("Custom")
       <<< customGraph()
@@ -197,18 +279,24 @@ public final class StatSelectionViewController: FormViewController {
       <<< thisWeeksOrchardPerformance
       <<< lastMonthsOrchardPerformance
       <<< thisMonthsOrchardPerformance
+      <<< lastYearsOrchardPerformance
+      <<< thisYearsOrchardPerformance
     
       +++ Section("Worker Comparison")
       <<< lastWeeksWorkerPerformance
       <<< thisWeeksWorkerPerformance
       <<< lastMonthsWorkerPerformance
       <<< thisMonthsWorkerPerformance
+      <<< lastYearsWorkerPerformance
+      <<< thisYearsWorkerPerformance
     
       +++ Section("Foreman Comparison")
       <<< lastWeeksForemanPerformance
       <<< thisWeeksForemanPerformance
       <<< lastMonthsForemanPerformance
       <<< thisMonthsForemanPerformance
+      <<< lastYearsForemanPerformance
+      <<< thisYearsForemanPerformance
   }
   
   public override func viewWillDisappear(_ animated: Bool) {

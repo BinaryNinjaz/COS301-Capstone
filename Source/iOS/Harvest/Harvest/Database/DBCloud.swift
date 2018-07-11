@@ -200,6 +200,23 @@ extension HarvestCloud {
       return [.hourly, .daily, .weekly, .monthly, .yearly]
     }
     
+    static func cases(forRange r: (Date, Date)) -> [TimePeriod] {
+      let days = Calendar.current.dateComponents([.day], from: r.0, to: r.1).day!
+      let weeks = Calendar.current.dateComponents([.weekOfYear], from: r.0, to: r.1).weekOfYear!
+      
+      print(days, weeks)
+      
+      if days <= 1 {
+        return [.hourly]
+      } else if weeks <= 1 {
+        return [.daily]
+      } else if weeks <= 4 {
+        return [.weekly]
+      } else {
+        return [.weekly, .monthly]
+      }
+    }
+    
     var description: String {
       switch self {
       case .hourly: return "hourly"
