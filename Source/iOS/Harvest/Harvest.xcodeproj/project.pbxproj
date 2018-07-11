@@ -67,7 +67,9 @@
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
+		16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */; };
 		16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */; };
+		16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */; };
 		16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */; };
 		16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */; };
 		16C82F5A20819B6E0074595C /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5520819B6E0074595C /* Edge.swift */; };
@@ -174,7 +176,9 @@
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatEntitySelectionRow.swift; sourceTree = "<group>"; };
 		16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
+		16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatEntitySelectionViewController.swift; sourceTree = "<group>"; };
 		16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingWorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWorkingCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F5520819B6E0074595C /* Edge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Edge.swift; sourceTree = "<group>"; };
@@ -378,6 +382,7 @@
 			children = (
 				16E3750E20F0E4220023AD2C /* StatSelectionViewController.swift */,
 				1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */,
+				16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */,
 				1657B74120A0E53800F5F478 /* StatsViewController.swift */,
 			);
 			path = Stats;
@@ -523,6 +528,7 @@
 				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
 				167448DD208A9F4900FA605C /* SessionEurekaCell.swift */,
 				160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */,
+				16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */,
 				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
 				16906061208F748600BE5ADE /* AdminEurekaCell.swift */,
 				16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */,
@@ -852,8 +858,10 @@
 				167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */,
 				1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */,
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
+				16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
 				16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */,
+				16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */,
 				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,

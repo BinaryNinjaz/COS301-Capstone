@@ -111,17 +111,12 @@ enum Stat {
           
           let missingMessage = grouping == .orchard
             ? "Orchard"
-            : grouping == .worker
-              ? "Worker"
-              : "Foreman"
+            : grouping == .worker ? "Worker" : "Foreman"
           dataSet.label = (grouping == .orchard
             ? orchard?.name
-            : worker?.name
-          ) ?? "Unknown \(missingMessage)"
+            : worker?.name) ?? "Unknown \(missingMessage)"
           
-          for (e, x) in period.fullDataSet(
-            between: startDate,
-            and: endDate,
+          for (e, x) in period.fullDataSet(between: startDate, and: endDate,
             limitToDate: period == .weekly).enumerated() {
             if let y = dataSetObject[x] {
               _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))

@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum EntityItem {
+enum EntityItem: Equatable, CustomStringConvertible {
   enum Kind {
     case farm, orchard, worker, session
     case shallowSession
@@ -32,6 +32,32 @@ enum EntityItem {
     case let .shallowSession(s): return s.description
     case let .user(u): return u.displayName
     }
+  }
+  
+  var id: String {
+    switch self {
+    case let .farm(f): return f.id
+    case let .orchard(o): return o.id
+    case let .worker(w): return w.id
+    case let .session(s): return s.id
+    case let .shallowSession(s): return s.id
+    case let .user(u): return u.uid
+    }
+  }
+  
+  var description: String {
+    switch self {
+    case let .farm(f): return f.description
+    case let .orchard(o): return o.description
+    case let .worker(w): return w.description
+    case let .session(s): return s.description
+    case let .shallowSession(s): return s.description
+    case let .user(u): return u.displayName
+    }
+  }
+  
+  static func == (lhs: EntityItem, rhs: EntityItem) -> Bool {
+    return lhs.id == rhs.id
   }
 }
 

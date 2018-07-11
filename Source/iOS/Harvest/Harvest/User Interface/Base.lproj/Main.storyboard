@@ -597,6 +597,21 @@
             </objects>
             <point key="canvasLocation" x="3084" y="-663"/>
         </scene>
+        <!--Stat Entity Selection View Controller-->
+        <scene sceneID="vwx-1A-lRy">
+            <objects>
+                <viewController storyboardIdentifier="statEntitySelectionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vi1-R3-nOw" customClass="StatEntitySelectionViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eJe-FM-4AW">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="qRK-pX-z0z"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WUr-yq-z0K" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3799" y="-663"/>
+        </scene>
         <!--Yield Tracker-->
         <scene sceneID="H2b-6H-xwA">
             <objects>
