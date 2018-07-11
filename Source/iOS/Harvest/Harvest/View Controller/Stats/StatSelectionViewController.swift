@@ -275,28 +275,28 @@ public final class StatSelectionViewController: FormViewController {
       <<< customGraph()
     
       +++ Section("Orchard Comparison")
-      <<< lastWeeksOrchardPerformance
       <<< thisWeeksOrchardPerformance
-      <<< lastMonthsOrchardPerformance
+      <<< lastWeeksOrchardPerformance
       <<< thisMonthsOrchardPerformance
-      <<< lastYearsOrchardPerformance
+      <<< lastMonthsOrchardPerformance
       <<< thisYearsOrchardPerformance
+      <<< lastYearsOrchardPerformance
     
       +++ Section("Worker Comparison")
-      <<< lastWeeksWorkerPerformance
       <<< thisWeeksWorkerPerformance
-      <<< lastMonthsWorkerPerformance
+      <<< lastWeeksWorkerPerformance
       <<< thisMonthsWorkerPerformance
-      <<< lastYearsWorkerPerformance
+      <<< lastMonthsWorkerPerformance
       <<< thisYearsWorkerPerformance
-    
+      <<< lastYearsWorkerPerformance
+      
       +++ Section("Foreman Comparison")
-      <<< lastWeeksForemanPerformance
       <<< thisWeeksForemanPerformance
-      <<< lastMonthsForemanPerformance
+      <<< lastWeeksForemanPerformance
       <<< thisMonthsForemanPerformance
-      <<< lastYearsForemanPerformance
+      <<< lastMonthsForemanPerformance
       <<< thisYearsForemanPerformance
+      <<< lastYearsForemanPerformance
   }
   
   public override func viewWillDisappear(_ animated: Bool) {

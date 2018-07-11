@@ -91,13 +91,31 @@ extension FormViewController {
       period: .weekly,
       stat: stat)
     
+    let thisYear = Date().thisMonth()
+    let thisYearsPerformance = prebuiltGraph(
+      title: "This Years Performance",
+      startDate: thisYear.0,
+      endDate: thisYear.1,
+      period: .monthly,
+      stat: stat)
+    
+    let lastYear = Date().lastMonth()
+    let lastYearsPerformance = prebuiltGraph(
+      title: "Last Years Performance",
+      startDate: lastYear.0,
+      endDate: lastYear.1,
+      period: .monthly,
+      stat: stat)
+    
     return [
       todaysPerformance,
       yesterdaysPerformance,
       thisWeeksPerformance,
       lastWeeksPerformance,
       thisMonthsPerformance,
-      lastMonthsPerformance
+      lastMonthsPerformance,
+      thisYearsPerformance,
+      lastYearsPerformance
     ]
   }
 }
@@ -263,8 +281,11 @@ extension Worker {
     
       +++ orchardSection
       
-      +++ performanceSection
+    if id != "" {
+      form +++ performanceSection
+    }
     
+    form
       +++ Section("Information")
       <<< infoRow
       
@@ -653,8 +674,11 @@ extension Orchard {
       +++ Section("Part of Farm")
       <<< farmSelection
       
-      +++ performanceSection
+    if id != "" {
+      form +++ performanceSection
+    }
     
+    form
       +++ Section("Information")
       <<< detailsRow
       
