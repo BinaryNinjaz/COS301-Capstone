@@ -23,6 +23,7 @@ function workersRef() {
 
 var foremen = [];
 var workers = [];
+
 function getWorkers() {
   workersRef().once('value').then(function (snapshot) {
       snapshot.forEach(function (worker) {
@@ -81,11 +82,22 @@ var startDate;
 var endDate;
 var uid;
 
+//converts a date to seconds since epoch
+function dateToSeconds(date){ return Math.floor( date.getTime() / 1000 ) }
+
+function filterOrchard(){
+    //
+}
+
+function filterWorker(){
+    //
+}
+
 function orchardPerformance(start, end, id){
    groupBy = 'orchard';
    period = 'daily';
-   startDate = start;
-   endDate = end;
+   startDate = dateToSeconds(start);
+   endDate = dateToSeconds(end);
    uid = id;
    var params = constructParams(groupBy,period,startDate,endDate,uid);
    var response = sendPostRequest(params);
@@ -95,12 +107,13 @@ function orchardPerformance(start, end, id){
 function workerTotalBags(start, end, id){
    groupBy = 'worker';
    period = 'hourly';
-   startDate = start;
-   endDate = end;
+   startDate = dateToSeconds(start);
+   endDate = dateToSeconds(end);
    uid = id;
    var params = constructParams(groupBy,period,startDate,endDate,uid);
    var response = sendPostRequest(params);
    //still needs implementation
+   //console.log(response);
 }
 
 function constructParams(groupBy,period,startDate,endDate,uid){
