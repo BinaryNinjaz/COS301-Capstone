@@ -115,7 +115,7 @@ class InformationEntityController: UICollectionViewController {
     
     switch entity {
     case "Workers":
-      Entities.shared.getMultiplesOnce([.orchard, .worker]) { _ in
+      Entities.shared.getMultiplesOnce([.farm, .orchard, .worker]) { _ in
         self.selectedKind = .worker
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil

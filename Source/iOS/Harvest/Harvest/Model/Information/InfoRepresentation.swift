@@ -280,10 +280,8 @@ extension Worker {
 //      <<< phoneRow
     
       +++ orchardSection
-      
-    if id != "" {
-      form +++ performanceSection
-    }
+    
+    _ = id != "" ? (form +++ performanceSection) : form
     
     form
       +++ Section("Information")

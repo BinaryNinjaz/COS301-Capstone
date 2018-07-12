@@ -235,5 +235,17 @@ class HarvestTests: XCTestCase {
       }
     }
   }
+  
+  func testModifyOrchard() {
+    HarvestDB.getOrchards { (orchards) in
+      let o = orchards.first(where: { $0.id == "2II" })!
+      o.crop = "42"
+      HarvestDB.save(orchard: o)
+      HarvestDB.getOrchards({ (orchards) in
+        let oo = orchards.first(where: { $0.id == "2II" })!
+        XCTAssertEqual(oo.crop, "42")
+      })
+    }
+  }
     
 }

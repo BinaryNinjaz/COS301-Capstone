@@ -8,6 +8,24 @@
 
 import Firebase
 
+func merge(path: String, withKey k: String) -> String {
+  var k = k
+  if k.hasPrefix(path) {
+    return k
+  }
+  let p: String
+  if path.hasSuffix("/") {
+    p = String(path[path.startIndex..<path.index(before: path.endIndex)])
+    // p = String(path[offset: ..<-1]) imagine?
+  } else {
+    p = path
+  }
+  if k.hasPrefix("/") {
+    k.remove(at: k.startIndex)
+  }
+  return p + "/" + k
+}
+
 indirect enum JSON: Equatable {
   case number(Double)
   case text(String)
@@ -339,11 +357,12 @@ final class DatabaseReferenceMock: DatabaseReference {
     guard let key = json.keys.first else {
       fatalError()
     }
-    π.mockDB = π.mockDB.setValue(atPath: key, with: json[key]!)
+    
+    π.mockDB = π.mockDB.setValue(atPath: merge(path: path, withKey: key), with: json[key]!)
   }
   
   override func child(_ pathString: String) -> DatabaseReferenceMock {
-    return DatabaseReferenceMock(path: path + "/" + pathString, info: info)
+    return DatabaseReferenceMock(path: merge(path: path, withKey: pathString), info: info)
   }
   
   override func childByAutoId() -> DatabaseReferenceMock {
