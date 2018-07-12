@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.text.method.KeyListener;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -49,10 +50,12 @@ public class SignIn_Foreman extends AppCompatActivity {
     private int state;
 
     private EditText phoneNumberField;
+    private KeyListener phoneNumberFieldListener;
     private TextView SMSWarning;
     private Button logInButt;
     private TextView verificationTip;
     private EditText verificationField;
+    private KeyListener verificationFieldListener;
     private LinearLayout verificationButts;
     private Button verificationOkay;
     private TextView phoneConfTip;
@@ -85,10 +88,12 @@ public class SignIn_Foreman extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         phoneNumberField = findViewById(R.id.signIn_foreman_phone_edit);
+        phoneNumberFieldListener = phoneNumberField.getKeyListener();
         SMSWarning = findViewById(R.id.signIn_foreman_warning);
         logInButt = findViewById(R.id.signIn_foreman_logIn_butt);
         verificationTip = findViewById(R.id.signIn_foreman_verificationTip);
         verificationField = findViewById(R.id.signIn_foreman_verifyCode_edit);
+        verificationFieldListener = verificationField.getKeyListener();
         verificationButts = findViewById(R.id.signIn_foreman_verification_butts);
         verificationOkay = findViewById(R.id.signIn_foreman_verification_okayButt);
         phoneConfTip = findViewById(R.id.signIn_foreman_phoneConf_tip);
@@ -113,15 +118,20 @@ public class SignIn_Foreman extends AppCompatActivity {
             public void onVerificationFailed(FirebaseException e) {
                 verificationInProgress = false;
                 if (e instanceof FirebaseAuthInvalidCredentialsException){
-                    state = STATE_QUOTA_EXCEED;
-                    updateUI();
-                }
-                else if (e instanceof FirebaseTooManyRequestsException){
                     state = STATE_INVALID_NUMBER;
                     updateUI();
                 }
+                else if (e instanceof FirebaseTooManyRequestsException){
+                    state = STATE_QUOTA_EXCEED;
+                    updateUI();
+                }
+                else {
+                    phoneNumberField.setError(e.getMessage());
+                }
                 logInButt.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 logInButt.setEnabled(true);
+//                phoneNumberField.setFocusable(true);
+                phoneNumberField.setKeyListener(phoneNumberFieldListener);
             }
 
             @Override
@@ -213,6 +223,9 @@ public class SignIn_Foreman extends AppCompatActivity {
                     phoneNumberField.setError("Cannot be Empty");
                     return;
                 }
+//                phoneNumberField.setFocusable(false);
+                phoneNumberField.setKeyListener(null);
+//                phoneNumberField.setBackgroundColor(getResources().getColor(R.color.androidGrey));
                 startPhoneNumberVerification(phoneNumberField.getText().toString());
                 v.setEnabled(false);
                 v.setBackgroundColor(getResources().getColor(R.color.androidGrey));
@@ -312,7 +325,6 @@ public class SignIn_Foreman extends AppCompatActivity {
                 verificationButts.setVisibility(View.VISIBLE);
                 logInButt.setVisibility(View.GONE);
                 SMSWarning.setVisibility(View.GONE);
-                phoneNumberField.setFocusable(false);
                 break;
             case STATE_VERIFY_FAIL:
                 verificationField.setError(getString(R.string.signIn_foreman_fail));
@@ -321,7 +333,7 @@ public class SignIn_Foreman extends AppCompatActivity {
                 phoneNumberField.setError(getString(R.string.signIn_foreman_fail_invalidNumber));
                 break;
             case STATE_QUOTA_EXCEED:
-                verificationField.setError(getString(R.string.signIn_foreman_fail_SMS));
+                phoneNumberField.setError(getString(R.string.signIn_foreman_fail_SMS));
                 break;
             case STATE_FARM_NONE:
                 showConfirmationBasics();
