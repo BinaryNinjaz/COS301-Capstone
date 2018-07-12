@@ -88,7 +88,7 @@ function orchardPerformance(start, end, id){
    endDate = end;
    uid = id;
    var params = constructParams(groupBy,period,startDate,endDate,uid);
-   sendPostRequest(params);
+   var response = sendPostRequest(params);
    //still needs implementation
 }
 
@@ -99,7 +99,7 @@ function workerTotalBags(start, end, id){
    endDate = end;
    uid = id;
    var params = constructParams(groupBy,period,startDate,endDate,uid);
-   sendPostRequest(params);
+   var response = sendPostRequest(params);
    //still needs implementation
 }
 
@@ -119,9 +119,9 @@ function sendPostRequest(params){
     
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-    http.onreadystatechange = function() {//Call a function when the state change
+    http.onreadystatechange = function() {//Call a function when the state changes
         if(http.readyState == 4 && http.status == 200) {
-            //do something with http.responseText here
+            return http.responseText;
         }
     }
     http.send(params);
