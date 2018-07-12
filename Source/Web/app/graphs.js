@@ -61,6 +61,7 @@ function workerForKey(key) {
   return undefined;
 }
 
+//calls functions that populate the drop down lists and worker/orchard arrays
 function initPage(){
     initOrchards();
     initWorkers();
@@ -102,6 +103,7 @@ function initWorkers(){
     });
 }
 
+//takes information chosen by user for orchard filter to pass to orchard performance function
 function filterOrchard(){
     var name = document.getElementById('orchardSelect').value;
     var start = document.getElementById('startDateSelect').value;
@@ -125,6 +127,7 @@ function getOrchardId(name){
     return id;
 }
 
+//takes information chosen by user for worker filter to pass to worker performance function
 function filterWorker(){
     var name = document.getElementById('workerSelect').value;
     var date = document.getElementById('workerDateSelect').value;
@@ -160,6 +163,8 @@ var uid;
 //converts a date to seconds since epoch
 function dateToSeconds(date){ return Math.floor( date.getTime() / 1000 ) }
 
+//updates orchard graph based on user input
+//still needs further implemention
 function orchardPerformance(start, end, id){
    groupBy = 'orchard';
    period = 'daily';
@@ -168,9 +173,11 @@ function orchardPerformance(start, end, id){
    uid = id;
    var params = constructParams(groupBy,period,startDate,endDate,uid);
    var response = sendPostRequest(params);
-   //still needs implementation
+   //implementation will go here
 }
 
+//updates worker graph based on user input
+//still needs further implemention
 function workerPerformance(start, end, id){
    groupBy = 'worker';
    period = 'hourly';
@@ -179,9 +186,10 @@ function workerPerformance(start, end, id){
    uid = id;
    var params = constructParams(groupBy,period,startDate,endDate,uid);
    var response = sendPostRequest(params);
-   //still needs implementation
+   //implementation will go here
 }
 
+//creates the parameter string for the http post request
 function constructParams(groupBy,period,startDate,endDate,uid){
     var params = '';
     params = params +'groupBy='+groupBy;
