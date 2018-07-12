@@ -28,6 +28,8 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -144,6 +146,15 @@ public class Analytics extends AppCompatActivity {
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
+                }
+                if (LoginActivity.mGoogleSignInClient != null) {
+                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(Analytics.this, LoginActivity.class));
+                                }
+                            });
                 }
                 finish();
                 return true;
