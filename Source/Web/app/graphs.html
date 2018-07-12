@@ -28,8 +28,10 @@
     
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- This file needs to be included when youre working with charts -->
     <script type="text/javascript">
-      initPage(); // this is used to initiate reading from firebase (can be commented out
-                //only needed when we combine our work
+      /*
+       calls to graphs.js will go here to retrieve the required information
+      */
+      
       google.charts.load('current', {'packages':['corechart']}); //This takes google API package to using charts
       google.charts.setOnLoadCallback(drawChart1); //This is googles event handler to load the chart we are gonna draw
 
