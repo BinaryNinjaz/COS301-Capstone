@@ -28,58 +28,60 @@
     
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- This file needs to be included when youre working with charts -->
     <script type="text/javascript">
-      initPage();
-       /*
-       calls to graphs.js will go here to retrieve the required information
-      */
-      
-      google.charts.load('current', {'packages':['corechart']}); //This takes google API package to using charts
-      google.charts.setOnLoadCallback(drawChart1); //This is googles event handler to load the chart we are gonna draw
+      $(document).ready(function() {
+          initPage();
+        /*
+        calls to graphs.js will go here to retrieve the required information
+       */
 
-      function drawChart1() { /* I am temporarily drawing a function for multiple orchards, this will be tweaked tomorrow */
-        var data1 = google.visualization.arrayToDataTable([
-          ['Weeks Of The Month', 'Orchard A', 'Orchard B', 'Orchard C', 'Orchard D'],
-          ['1',  1000,      400,	500,      600],
-          ['2',  1170,      460,	560,      400],
-          ['3',  800,       520,	700,      820],
-		  ['4',  1000,       500,	600,      700],
-		  ['5',  1200,       540,	1000,      600]
-        ]);
+       google.charts.load('current', {'packages':['corechart']}); //This takes google API package to using charts
+       google.charts.setOnLoadCallback(drawChart1); //This is googles event handler to load the chart we are gonna draw
 
-        var options1 = {
-          title: 'Graph Showing Orchard Performance', /* This is the title of the graph */
-          curveType: 'function', /* The curve type is a function */
-          legend: { position: 'bottom' }
-        };
-		
-		//Store the google visualization of a line chart into a variable
-        var chart1 = new google.visualization.LineChart(document.getElementById('curve_chart'));
+       function drawChart1() { /* I am temporarily drawing a function for multiple orchards, this will be tweaked tomorrow */
+         var data1 = google.visualization.arrayToDataTable([
+           ['Weeks Of The Month', 'Orchard A', 'Orchard B', 'Orchard C', 'Orchard D'],
+           ['1',  1000,      400,	500,      600],
+           ['2',  1170,      460,	560,      400],
+           ['3',  800,       520,	700,      820],
+                   ['4',  1000,       500,	600,      700],
+                   ['5',  1200,       540,	1000,      600]
+         ]);
 
-        chart1.draw(data1, options1);
-      }
-	  
-/*      						This is the beggining of the pie						*/
-	google.charts.load('current', {'packages':['corechart']});
-	google.charts.setOnLoadCallback(drawChart);
+         var options1 = {
+           title: 'Graph Showing Orchard Performance', /* This is the title of the graph */
+           curveType: 'function', /* The curve type is a function */
+           legend: { position: 'bottom' }
+         };
 
-	function drawChart() {
+                 //Store the google visualization of a line chart into a variable
+         var chart1 = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
-	var data = google.visualization.arrayToDataTable([
-	  ['Orchard', 'Number of Bags for Month'],
-	  ['Orchard A',     11],
-	  ['Orchard B',      2],
-	  ['Orchard C',  2],
-	  ['Orchard D',    7]
-	]);
+         chart1.draw(data1, options1);
+       }
 
-	var options = {
-	  title: 'Overall Orchard performance Per Month'
-	};
+ /*      						This is the beggining of the pie						*/
+         google.charts.load('current', {'packages':['corechart']});
+         google.charts.setOnLoadCallback(drawChart);
 
-	var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+         function drawChart() {
 
-	chart.draw(data, options);
-	}
+         var data = google.visualization.arrayToDataTable([
+           ['Orchard', 'Number of Bags for Month'],
+           ['Orchard A',     11],
+           ['Orchard B',      2],
+           ['Orchard C',  2],
+           ['Orchard D',    7]
+         ]);
+
+         var options = {
+           title: 'Overall Orchard performance Per Month'
+         };
+
+         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+         chart.draw(data, options);
+         }
+     });
     </script>
   </head>
   <body>
