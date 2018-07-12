@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserEmail;
+    private String currentUserNumber;
     private String emailInDB;
     private String uid;
     private String foremanID;
@@ -190,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         uid = user.getUid();
         currentUserEmail = user.getEmail();
+        currentUserNumber = user.getPhoneNumber();
         database = FirebaseDatabase.getInstance();
 
         setContentView(R.layout.activity_main);
@@ -614,7 +616,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
 
                 // Google sign out
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))
                         .requestEmail()
                         .build();
@@ -625,7 +627,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             public void onResult(@NonNull Status status) {
                                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                             }
-                        });
+                        });*/
                 finish();
                 return true;
         }
@@ -660,9 +662,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         workerObj.setValue(0);
                         workerObj.setID(zoneSnapshot.getKey());
                         foremen.add(workerObj);
-                        String email = zoneSnapshot.child("email").getValue(String.class);
-                        if (email != null) {
-                            if (email.equals(currentUserEmail)) {
+                        
+                        if (zoneSnapshot.child("phoneNumber").getValue(String.class) != null) {
+                            if (zoneSnapshot.child("phoneNumber").getValue(String.class).equals(currentUserNumber)) {
+                                foremanID = zoneSnapshot.getKey();
+                                foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                            }
+                        }
+
+                        if (zoneSnapshot.child("email").getValue(String.class) != null) {
+                            if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
                                 foremanID = zoneSnapshot.getKey();
                                 foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
                             }

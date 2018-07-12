@@ -38,6 +38,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         tvAppName = findViewById(R.id.tvAppName);
         tvAppName.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
 
+        showLoading();
+
         if(statusCheck()) {
             locationPermissions();
         }
