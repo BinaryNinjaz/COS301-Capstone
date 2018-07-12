@@ -185,9 +185,6 @@ input.addEventListener("keyup", function(event) {
         document.getElementById("myInput").click();
     }
 });
-/* What Vincent Added on 04/05/2018 ends here. */
-
-
 
 
 
