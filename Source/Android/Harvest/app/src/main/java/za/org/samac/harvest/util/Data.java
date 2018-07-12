@@ -469,7 +469,7 @@ public class Data {
                         case WORKER:
                             userRoot.child("workers").child(currentChange.ID).setValue(null);
                             findObject(currentChange.ID);
-                            database.getReference("WorkingFor/").child(activeWorker.oldPhone).setValue(null);
+                            database.getReference("WorkingFor/").child(activeWorker.oldPhone).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(null);
                             break;
                     }
                     break;
