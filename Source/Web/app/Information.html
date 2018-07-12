@@ -5,7 +5,6 @@
     <title>Information</title>
 
     <!--Here import stuff-->
-
     <!--Firebase-->
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
@@ -42,9 +41,11 @@
 <!--NavBar-->
 <div class="topnav">
     <ul class="nav navbar-nav">
-        <a href="HomePage.html">Harvest Home</a>
-        <a class='active' href="Information.html">View/Edit Information</a>
+        <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+        <a class='active' href="Information.html">Information</a>
+        <a href="Sessions.html">Sessions</a>
         <a href="HeatMap.html">Heatmap</a>
+	<a href="graphs.html">Analytics</a>
     </ul>
 
     <ul class="pull-right nav navbar-nav">
@@ -58,15 +59,13 @@
     </ul>
 </div>
 
-<!--Page Body-->
+<!--Body of the page-->
 <div class="row">
     <div class="col-sm-2" id="col1">
         <!--Column One-->
         <button type="button" class="btn btn-primary" id="farm" onclick="popFarm()">Farms</button>
         <button type="button" class="btn btn-primary" id="orchInfo" onclick="popOrch()">Orchards</button>
-        <button type="button" class="btn btn-primary" id="workers" onclick="popWork()">Workers</button>
-        <!--<button type="button" class="btn btn-primary" id="yield" onclick="popYield()">TODO: Yield Information</button>-->
-        <!--<a onclick="fbSignIn('u15008739@tuks.co.za','fbPass')" href="#">Sign In</a>-->
+        <button type="button" class="btn btn-primary" id="workers" onclick="popWork()">Workers</button>       
     </div>
     <div class="col-sm-2" id="col2">
         <!--Column Two-->
