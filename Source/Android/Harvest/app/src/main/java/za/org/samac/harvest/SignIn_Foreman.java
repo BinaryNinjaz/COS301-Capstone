@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
+import za.org.samac.harvest.util.AppUtil;
+
 public class SignIn_Foreman extends AppCompatActivity {
 
     private  static  final  String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
@@ -80,6 +82,7 @@ public class SignIn_Foreman extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_foreman);
 
+
         //Restore Instance State
         if (savedInstanceState != null){
             onRestoreInstanceState(savedInstanceState);
@@ -102,6 +105,9 @@ public class SignIn_Foreman extends AppCompatActivity {
         farmChoose = findViewById(R.id.signIn_foreman_farmChoose_Spinner);
         farmOneLook = findViewById(R.id.signIn_foreman_farmOne_look);
         farmOkay = findViewById(R.id.signIn_foreman_farm_okay);
+
+        state = STATE_START;
+        updateUI();
 
         farms = new Vector<>();
 
@@ -148,9 +154,6 @@ public class SignIn_Foreman extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        state = STATE_START;
-        updateUI();
 
         if(verificationInProgress){
             startPhoneNumberVerification(phoneNumberField.getText().toString());
@@ -204,6 +207,7 @@ public class SignIn_Foreman extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     systemPhone = mAuth.getCurrentUser().getPhoneNumber();
+                    verificationInProgress = false;
                     findFarms();
                 }
                 else {
@@ -246,19 +250,16 @@ public class SignIn_Foreman extends AppCompatActivity {
                 resendVerificationCode(phoneNumberField.getText().toString(), mResendToken);
                 break;
             case R.id.signIn_foreman_farm_okay:
-                SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
-                SharedPreferences.Editor editor= sharedPreferences.edit();
                 switch (state){
+                    //TODO: More than just ids
                     case STATE_FARM_ONE:
-                        editor.putString(getString(R.string.sharedPref_signIn_farmerid), farms.get(0));
-                        editor.apply();
+                        AppUtil.writeStringToSharedPrefs(this, getString(R.string.farmerID_Pref), farms.get(0));
                         Intent openMain = new Intent(this, MainActivity.class);
                         startActivityIfNeeded(openMain, 0);
                         break;
                     case STATE_FARM_MULTI:
                         String id = (String) farmChoose.getSelectedItem();
-                        editor.putString(getString(R.string.sharedPref_signIn_farmerid), id);
-                        editor.apply();
+                        AppUtil.writeStringToSharedPrefs(this, getString(R.string.farmerID_Pref), id);
                         Intent openMain1 = new Intent(this, MainActivity.class);
                         startActivityIfNeeded(openMain1, 0);
                         break;

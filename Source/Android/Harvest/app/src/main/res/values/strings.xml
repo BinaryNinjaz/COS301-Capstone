@@ -41,9 +41,8 @@
     <string name="signIn_foreman_farmNone">You do not work for any farm, and will be unable to continue.</string>
     <string name="signIn_foreman_farmOne">You are assigned to the farm seen below.</string>
     <string name="signIn_foreman_goBack">Go Back</string>
-    
-    <string name="sharedPref_signIn">za.org.samac.harvest.sharedPrefSignIn</string>
-    <string name="sharedPref_signIn_farmerid">farmerIDKey</string>
+
+    <string name="farmerID_Pref">farmerID_Pref_8701297856420847507893465</string>
 
     <string name="prompt_enter_email">Email</string>
 

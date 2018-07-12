@@ -645,8 +645,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //                Log.w(TAG, "onCancelled", databaseError.toException());
 //            }
 //        });
-        SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
-        farmerKey = sharedPreferences.getString(getString(R.string.sharedPref_signIn_farmerid), "0");
+//        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
+//        farmerKey = sharedPreferences.getString(getString(R.string.sharedPref_signIn_farmerid), "0");
+        farmerKey = AppUtil.readStringFromSharedPrefs(this, getString(R.string.farmerID_Pref));
+        if (farmerKey == null){
+            FirebaseAuth.getInstance().signOut();
+            startActivityIfNeeded(new Intent(this, SignIn_Choose.class), 0);
+            finish();
+            return;
+        }
         getPolygon();
         farmLevelRef = database.getReference(farmerKey);
         workersRef = farmLevelRef.child("workers");
