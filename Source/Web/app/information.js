@@ -175,9 +175,6 @@ function popFarm() {
     ;
 
     snapshot.forEach(function (child) {
-      // col2.innerHTML += "" +
-      //   "<button type='button' class='btn btn-info' onclick='dispFarm(" + child.key + ")'>" + child.val().name + "</button>"
-      // ;
       let temp = {
         Name : child.val().name,
         Button : "<button type='button' class='btn btn-info' onclick='dispFarm(\"" + child.key + "\")'>" + child.val().name + "</button>"
@@ -203,7 +200,6 @@ function dispFarm(id) {
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmName'></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-      // "<div class='col-sm-9'><input type='text' class='form-control' id='oi'></div> </div>" +
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'></textarea></div></div>" +
       "" +
       "</form>"
