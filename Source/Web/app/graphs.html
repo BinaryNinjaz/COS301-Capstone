@@ -102,11 +102,11 @@
                     <label>Select ending date:
                         <input type="date" id="endDateSelect" />
                     </label>
-                    <button type = "button" id='orchardFilter'>
+                    <button type = "button" id='orchardFilter' onclick='filterOrchard()'>
                         Filter Orchard Graph</button>
                 </div>
             </div>
-            <!-- bottom graph can be the worker worker performance graph-->
+            <!-- bottom graph can be the worker performance graph-->
             <div class="right" >
                 <div id="curve_chart" style="width: 900px; height: 500px"></div>
                 <!-- below are objects the user can use to filter information-->
@@ -117,7 +117,7 @@
                     <label>Select date:
                         <input type="date" id="workerDateSelect" />
                     </label>
-                    <button type = "button" id='workerFilter'>
+                    <button type = "button" id='workerFilter' onclick='filterWorker()'>
                         Filter Worker Performance Graph </button>
                 </div>
             </div>
