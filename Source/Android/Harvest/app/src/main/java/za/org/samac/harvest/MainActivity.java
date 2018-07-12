@@ -616,18 +616,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
 
                 // Google sign out
-                /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-
-                Auth.GoogleSignInApi.signOut(LoginActivity.mGoogleSignInClient).setResultCallback(
-                        new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(@NonNull Status status) {
-                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                            }
-                        });*/
+                if (LoginActivity.mGoogleSignInClient != null) {
+                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                }
+                            });
+                }
                 finish();
                 return true;
         }
