@@ -103,9 +103,9 @@ function workerTotalBags(start, end, id){
 function constructURL(groupBy,period,startDate,endDate,uid){
     var urlString = base;
     urlString = urlString +'groupBy='+groupBy;
-    urlString = urlString +'&period'+period;
-    urlString = urlString +'&startDate'+startDate;
-    urlString = urlString +'&endDate'+endDate;
-    urlString = urlString +'&uid'+uid;
+    urlString = urlString +'&period='+period;
+    urlString = urlString +'&startDate='+startDate;
+    urlString = urlString +'&endDate='+endDate;
+    urlString = urlString +'&uid='+uid;
     return urlString;
 }
