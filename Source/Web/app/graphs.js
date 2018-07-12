@@ -18,9 +18,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     $(window).bind("load", function() {
       getWorkers();
     });
-  } else {
-    sessions = [];
-  }
+  } 
 });
 
 function workersRef() {
@@ -82,14 +80,32 @@ var startDate;
 var endDate;
 var uid;
 
-function orchardPerformance(){
+function orchardPerformance(start, end, id){
    groupBy = 'orchard';
    period = 'daily';
+   startDate = start;
+   endDate = end;
+   uid = id;
+   var url = constructURL(groupBy,period,startDate,endDate,uid);
    //still needs implementation
 }
 
-function workerTotalBags(){
+function workerTotalBags(start, end, id){
    groupBy = 'worker';
    period = 'hourly';
+   startDate = start;
+   endDate = end;
+   uid = id;
+   var url = constructURL(groupBy,period,startDate,endDate,uid);
    //still needs implementation
+}
+
+function constructURL(groupBy,period,startDate,endDate,uid){
+    var urlString = base;
+    urlString = urlString +'groupBy='+groupBy;
+    urlString = urlString +'&period'+period;
+    urlString = urlString +'&startDate'+startDate;
+    urlString = urlString +'&endDate'+endDate;
+    urlString = urlString +'&uid'+uid;
+    return urlString;
 }
