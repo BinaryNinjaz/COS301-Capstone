@@ -9,10 +9,6 @@ const userID = function() {
   }
 }
 
-function yieldsRef() {
-  return database.ref('/' + userID() + '/sessions');
-}
-
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     $(window).bind("load", function() {
@@ -41,7 +37,7 @@ function getWorkers() {
   });
 }
 
-function getCollectionsRef(sessionKey) {
+/*function getCollectionsRef(sessionKey) {
   return database.ref('/' + userID() + '/sessions/'+
                 sessionKey+'/collections');
 }
@@ -50,6 +46,11 @@ function workerCollections(sessionKey,workerKey) {
   return database.ref('/' + userID() + '/sessions/'+
                 sessionKey+'/collections/'+workerKey);
 }
+
+function yieldsRef() {
+  return database.ref('/' + userID() + '/sessions');
+}
+*/
 
 
 function foremanForKey(key) {
@@ -86,7 +87,8 @@ function orchardPerformance(start, end, id){
    startDate = start;
    endDate = end;
    uid = id;
-   var url = constructURL(groupBy,period,startDate,endDate,uid);
+   var params = constructParams(groupBy,period,startDate,endDate,uid);
+   sendPostRequest(params);
    //still needs implementation
 }
 
@@ -96,16 +98,31 @@ function workerTotalBags(start, end, id){
    startDate = start;
    endDate = end;
    uid = id;
-   var url = constructURL(groupBy,period,startDate,endDate,uid);
+   var params = constructParams(groupBy,period,startDate,endDate,uid);
+   sendPostRequest(params);
    //still needs implementation
 }
 
-function constructURL(groupBy,period,startDate,endDate,uid){
-    var urlString = base;
-    urlString = urlString +'groupBy='+groupBy;
-    urlString = urlString +'&period='+period;
-    urlString = urlString +'&startDate='+startDate;
-    urlString = urlString +'&endDate='+endDate;
-    urlString = urlString +'&uid='+uid;
-    return urlString;
+function constructParams(groupBy,period,startDate,endDate,uid){
+    var params = '';
+    params = params +'groupBy='+groupBy;
+    params = params +'&period='+period;
+    params = params +'&startDate='+startDate;
+    params = params +'&endDate='+endDate;
+    params = params +'&uid='+uid;
+    return params;
+}
+
+function sendPostRequest(params){
+    var http = new XMLHttpRequest();
+    http.open('POST', baseUrl, true);
+    
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    http.onreadystatechange = function() {//Call a function when the state change
+        if(http.readyState == 4 && http.status == 200) {
+            //do something with http.responseText here
+        }
+    }
+    http.send(params);
 }
