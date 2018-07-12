@@ -40,6 +40,7 @@
     <string name="signIn_foreman_farmChooseTip">You are assigned to multiple farmers, please select the one you wish to work for for this session, and press okay to continue.</string>
     <string name="signIn_foreman_farmNone">You do not work for any farm, and will be unable to continue.</string>
     <string name="signIn_foreman_farmOne">You are assigned to the farm seen below.</string>
+    <string name="signIn_foreman_goBack">Go Back</string>
     
     <string name="sharedPref_signIn">za.org.samac.harvest.sharedPrefSignIn</string>
     <string name="sharedPref_signIn_farmerid">farmerIDKey</string>

@@ -1,6 +1,6 @@
 package za.org.samac.harvest;
 
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -208,12 +208,17 @@ public class SignIn_Foreman extends AppCompatActivity {
     public void signInForemanButtClick(View v){
         switch (v.getId()){
             case R.id.signIn_foreman_logIn_butt:
+                if (TextUtils.isEmpty(phoneNumberField.getText().toString())){
+                    phoneNumberField.setError("Cannot be Empty");
+                    v.setEnabled(false);
+                }
                 startPhoneNumberVerification(phoneNumberField.getText().toString());
                 break;
             case R.id.signIn_foreman_verification_okayButt:
                 String code = verificationField.getText().toString();
                 if (TextUtils.isEmpty(code)){
                     verificationField.setError("Cannot be Empty");
+                    v.setEnabled(false);
                     return;
                 }
 
@@ -222,19 +227,26 @@ public class SignIn_Foreman extends AppCompatActivity {
             case R.id.signIn_foreman_verification_resendButt:
                 resendVerificationCode(phoneNumberField.getText().toString(), mResendToken);
                 break;
-            case R.id.signIn_foreman_butt_conf:
+            case R.id.signIn_foreman_farm_okay:
+                v.setEnabled(false);
                 SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
                 SharedPreferences.Editor editor= sharedPreferences.edit();
                 switch (state){
                     case STATE_FARM_ONE:
                         editor.putString(getString(R.string.sharedPref_signIn_farmerid), farms.get(0));
+                        editor.apply();
+                        Intent openMain = new Intent(this, MainActivity.class);
+                        startActivityIfNeeded(openMain, 0);
                         break;
                     case STATE_FARM_MULTI:
                         String id = (String) farmChoose.getSelectedItem();
                         editor.putString(getString(R.string.sharedPref_signIn_farmerid), id);
+                        editor.apply();
+                        Intent openMain1 = new Intent(this, MainActivity.class);
+                        startActivityIfNeeded(openMain1, 0);
                         break;
                 }
-                editor.apply();
+                finish();
                 break;
         }
     }
@@ -316,7 +328,8 @@ public class SignIn_Foreman extends AppCompatActivity {
                 showConfirmationBasics();
                 farmTip.setText(R.string.signIn_foreman_farmNone);
                 farmTip.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                farmOkay.setVisibility(View.GONE);
+                farmOkay.setText(R.string.signIn_foreman_goBack);
+                mAuth.signOut();
                 break;
             case STATE_FARM_ONE:
                 showConfirmationBasics();
@@ -348,5 +361,4 @@ public class SignIn_Foreman extends AppCompatActivity {
         farmTip.setVisibility(View.VISIBLE);
         farmOkay.setVisibility(View.VISIBLE);
     }
-
 }
