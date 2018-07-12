@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
     private static final String TAG = "EmailPassword";
-    public static GoogleApiClient mGoogleSignInClient;
+    public static GoogleSignInClient  mGoogleSignInClient;
     private static int RC_SIGN_IN = 100;
     private static GoogleSignInAccount account;
 
@@ -144,12 +144,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .requestEmail()
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this  /*OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        mGoogleSignInClient.connect();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         //user presses Log in with Google button, validates and if all is well goes to actual app screen
         btnLoginWithGoogle = findViewById(R.id.btnLoginWithGoogle);
@@ -261,7 +256,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void signInWithGoogle() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleSignInClient);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 

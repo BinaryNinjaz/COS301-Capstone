@@ -132,7 +132,7 @@ public class BarGraph extends AppCompatActivity {
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
-        base = base + "&startDate=" + (currentTime - 7 * 24 * 60 * 10);
+        base = base + "&startDate=" + (currentTime - 7 * 24 * 60 * 13);
         base = base + "&endDate=" + currentTime;
         base = base + "&uid=" + farmerKey;
 
@@ -183,70 +183,48 @@ public class BarGraph extends AppCompatActivity {
                         JSONObject objs = new JSONObject(response);
                         System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% " + objs.keys());
                         //put entries in graph
-                        final String Sunday = "Sunday";
-                        final String Monday = "Monday";
-                        final String Tuesday = "Tuesday";
-                        final String Wednesday = "Wednesday";
-                        final String Thursday = "Thursday";
-                        final String Friday = "Friday";
-                        final String Saturday = "Saturday";
-                        int totalSunday = 0;
-                        int totalMonday = 0;
-                        int totalTuesday = 0;
-                        int totalWednesday = 0;
-                        int totalThursday = 0;
-                        int totalFriday = 0;
-                        int totalSaturday = 0;
-                        JSONObject objOrchard = objs.getJSONObject(workerKey);
+                        final ArrayList<String> time = new ArrayList<>();
+                        //time received is 2 hour behind so ahd to compensate
+                        time.add("4");
+                        time.add("5");
+                        time.add("6");
+                        time.add("7");
+                        time.add("8");
+                        time.add("9");
+                        time.add("10");
+                        time.add("11");
+                        time.add("12");
+                        time.add("13");
+                        time.add("14");
+                        time.add("15");
+                        time.add("16");
+                        JSONObject objWorker = objs.getJSONObject(workerKey);
 
-                        if (objOrchard.has(Sunday) == true) {
-                            totalSunday = objOrchard.getInt(Sunday);
-                        }
-                        if (objOrchard.has(Monday) == true) {
-                            totalMonday = objOrchard.getInt(Monday);
-                        }
-                        if (objOrchard.has(Tuesday) == true) {
-                            totalTuesday = objOrchard.getInt(Tuesday);
-                        }
-                        if (objOrchard.has(Wednesday) == true) {
-                            totalWednesday = objOrchard.getInt(Wednesday);
-                        }
-                        if (objOrchard.has(Thursday) == true) {
-                            totalThursday = objOrchard.getInt(Thursday);
-                        }
-                        if (objOrchard.has(Friday) == true) {
-                            totalFriday = objOrchard.getInt(Friday);
-                        }
-                        if (objOrchard.has(Saturday) == true) {
-                            totalSaturday = objOrchard.getInt(Saturday);
+                        final ArrayList<Integer> total = new ArrayList<>();
+
+                        for (int i = 0; i < time.size(); i++) {
+                            if (objWorker.has(time.get(i)) == true) {
+                                total.add(objWorker.getInt(time.get(i)));
+                            } else {
+                                total.add(0);
+                            }
+
+                            entries.add(new BarEntry(i, total.get(i)));
                         }
 
-                        entries.add(new BarEntry(1, 10));
-                        entries.add(new BarEntry(2, 20));
-                        entries.add(new BarEntry(3, 30));
-                        entries.add(new BarEntry(4, 40));
-                        entries.add(new BarEntry(5, 50));
-                        entries.add(new BarEntry(1, 10));
-                        entries.add(new BarEntry(2, 20));
-                        entries.add(new BarEntry(3, 30));
-                        entries.add(new BarEntry(4, 40));
-                        entries.add(new BarEntry(5, 50));
-
-                        /*XAxis xAxis = barChart.getXAxis();
+                        XAxis xAxis = barChart.getXAxis();
                         xAxis.setXOffset(0f);
                         xAxis.setYOffset(0f);
                         xAxis.setTextSize(8f);
                         xAxis.setValueFormatter(new IAxisValueFormatter() {
 
-                            private String[] mFactors = new String[]{Sunday, Monday,
-                                    Tuesday, Wednesday,
-                                    Thursday, Friday, Saturday};
+                            private String[] mFactors = new String[]{"6am", "7am", "8am", "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm"};
 
                             @Override
                             public String getFormattedValue(float value, AxisBase axis) {
                                 return mFactors[(int) value % mFactors.length];
                             }
-                        });*/
+                        });
 
                         runOnUiThread(new Runnable() {
                             public void run() {
@@ -302,20 +280,6 @@ public class BarGraph extends AppCompatActivity {
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
-
-                // Google sign out
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-
-                Auth.GoogleSignInApi.signOut(LoginActivity.mGoogleSignInClient).setResultCallback(
-                        new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(@NonNull Status status) {
-                                startActivity(new Intent(BarGraph.this, LoginActivity.class));
-                            }
-                        });
                 finish();
                 return true;
 //            case R.id.homeAsUp:
