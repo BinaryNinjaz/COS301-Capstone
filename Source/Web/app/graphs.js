@@ -61,23 +61,6 @@ function workerForKey(key) {
   return undefined;
 }
 
-//below adds worker and orchard names to the drop down lists
-/*function populateLists(){
-    var workerSelect = document.getElementById('workerSelect');
-    for (var k in workers) {
-       var wName = workers[k].value.name + ' ' + workers[k].value.surname;
-       var option = document.createElement("option");
-       option.text = wName;
-       workerSelect.options.add(option);
-    }
-    var orchardSelect = document.getElementById('orchardSelect');
-    for (var k in orchards) {
-       var option = document.createElement("option");
-       option.text = orchards[k].value.name;
-       orchardSelect.options.add(option);
-    }
-}*/
-
 function initPage(){
     initOrchards();
     initWorkers();
@@ -116,12 +99,11 @@ function initWorkers(){
             workerSelect.options.add(option);
           }
         });
-        //populateLists(); 
     });
 }
 
 function filterOrchard(){
-    var orchardName = document.getElementById('orchardSelect').value;
+    var name = document.getElementById('orchardSelect').value;
     var start = document.getElementById('startDateSelect').value;
     var end = document.getElementById('endDateSelect').value;
     if(name!== '' && start!== '' && end !== ''){
@@ -129,20 +111,44 @@ function filterOrchard(){
         orchardPerformance(start, end, id);
     }else{
         window.alert("Some fields in the orchard filter appear to be blank. \n"
-        +"Please enter them to continue");
+        +"Please enter them to continue.");
     }
 }
 
 function getOrchardId(name){
-    
+    var id='';
+    for (var k in orchards) {
+        if(name===orchards[k].value.name){
+            return orchards[k].value.name;
+        }
+    }
+    return id;
 }
 
 function filterWorker(){
-    
+    var name = document.getElementById('workerSelect').value;
+    var date = document.getElementById('workerDateSelect').value;
+    //doing something here to get start and end variables from date
+    var start='';
+    var end ='';
+    if(name!== '' && date!== ''){
+        var id = getWorkerId(orchardName);
+        workerPerformance(start, end, id);
+    }else{
+        window.alert("Some fields in the worker filter appear to be blank. \n"
+        +"Please enter them to continue.");
+    }
 }
 
 function getWorkerId(name){
-    
+    var id='';
+    for (var k in workers) {
+        var fullname = workers[k].value.name+' '+workers[k].value.surname;
+        if(name===fullname){
+            return workers[k].key;
+        }
+    }
+    return id;
 }
 
 var groupBy;
