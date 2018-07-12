@@ -51,12 +51,10 @@ public class SignIn_Foreman extends AppCompatActivity {
     private EditText phoneNumberField;
     private TextView SMSWarning;
     private Button logInButt;
-    private TextView failure;
     private TextView verificationTip;
     private EditText verificationField;
     private LinearLayout verificationButts;
     private Button verificationOkay;
-    private Button verificationResend;
     private TextView phoneConfTip;
     private TextView phoneConfLook;
     private TextView farmTip;
@@ -89,12 +87,10 @@ public class SignIn_Foreman extends AppCompatActivity {
         phoneNumberField = findViewById(R.id.signIn_foreman_phone_edit);
         SMSWarning = findViewById(R.id.signIn_foreman_warning);
         logInButt = findViewById(R.id.signIn_foreman_logIn_butt);
-        failure = findViewById(R.id.signIn_foreman_failure);
         verificationTip = findViewById(R.id.signIn_foreman_verificationTip);
         verificationField = findViewById(R.id.signIn_foreman_verifyCode_edit);
         verificationButts = findViewById(R.id.signIn_foreman_verification_butts);
         verificationOkay = findViewById(R.id.signIn_foreman_verification_okayButt);
-        verificationResend = findViewById(R.id.signIn_foreman_verification_resendButt);
         phoneConfTip = findViewById(R.id.signIn_foreman_phoneConf_tip);
         phoneConfLook = findViewById(R.id.signIn_foreman_phoneConf_Look);
         farmTip = findViewById(R.id.signIn_foreman_farm_tip);
@@ -124,6 +120,8 @@ public class SignIn_Foreman extends AppCompatActivity {
                     state = STATE_INVALID_NUMBER;
                     updateUI();
                 }
+                logInButt.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                logInButt.setEnabled(true);
             }
 
             @Override
@@ -199,7 +197,10 @@ public class SignIn_Foreman extends AppCompatActivity {
                     findFarms();
                 }
                 else {
-                    findViewById(R.id.signIn_foreman_failure).setVisibility(View.VISIBLE);
+                    verificationField.setError("Incorrect");
+
+                    verificationOkay.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    verificationOkay.setEnabled(true);
                 }
             }
         });
@@ -210,17 +211,21 @@ public class SignIn_Foreman extends AppCompatActivity {
             case R.id.signIn_foreman_logIn_butt:
                 if (TextUtils.isEmpty(phoneNumberField.getText().toString())){
                     phoneNumberField.setError("Cannot be Empty");
-                    v.setEnabled(false);
+                    return;
                 }
                 startPhoneNumberVerification(phoneNumberField.getText().toString());
+                v.setEnabled(false);
+                v.setBackgroundColor(getResources().getColor(R.color.androidGrey));
                 break;
             case R.id.signIn_foreman_verification_okayButt:
                 String code = verificationField.getText().toString();
                 if (TextUtils.isEmpty(code)){
                     verificationField.setError("Cannot be Empty");
-                    v.setEnabled(false);
                     return;
                 }
+
+                v.setEnabled(false);
+                v.setBackgroundColor(getResources().getColor(R.color.androidGrey));
 
                 verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
@@ -228,7 +233,6 @@ public class SignIn_Foreman extends AppCompatActivity {
                 resendVerificationCode(phoneNumberField.getText().toString(), mResendToken);
                 break;
             case R.id.signIn_foreman_farm_okay:
-                v.setEnabled(false);
                 SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
                 SharedPreferences.Editor editor= sharedPreferences.edit();
                 switch (state){
@@ -292,7 +296,6 @@ public class SignIn_Foreman extends AppCompatActivity {
                 phoneNumberField.setVisibility(View.VISIBLE);
                 SMSWarning.setVisibility(View.VISIBLE);
                 logInButt.setVisibility(View.VISIBLE);
-                failure.setVisibility(View.GONE);
                 verificationTip.setVisibility(View.GONE);
                 verificationField.setVisibility(View.GONE);
                 verificationButts.setVisibility(View.GONE);
@@ -304,7 +307,6 @@ public class SignIn_Foreman extends AppCompatActivity {
                 farmOkay.setVisibility(View.GONE);
                 break;
             case STATE_CODE_SENT:
-                failure.setVisibility(View.GONE);
                 verificationTip.setVisibility(View.VISIBLE);
                 verificationField.setVisibility(View.VISIBLE);
                 verificationButts.setVisibility(View.VISIBLE);
@@ -313,16 +315,13 @@ public class SignIn_Foreman extends AppCompatActivity {
                 phoneNumberField.setFocusable(false);
                 break;
             case STATE_VERIFY_FAIL:
-                failure.setVisibility(View.VISIBLE);
-                failure.setText(R.string.signIn_foreman_fail);
+                verificationField.setError(getString(R.string.signIn_foreman_fail));
                 break;
             case STATE_INVALID_NUMBER:
-                failure.setVisibility(View.VISIBLE);
-                failure.setText(R.string.signIn_foreman_invalfail);
+                phoneNumberField.setError(getString(R.string.signIn_foreman_fail_invalidNumber));
                 break;
             case STATE_QUOTA_EXCEED:
-                failure.setVisibility(View.VISIBLE);
-                failure.setText(R.string.signIn_foreman_reqfail);
+                verificationField.setError(getString(R.string.signIn_foreman_fail_SMS));
                 break;
             case STATE_FARM_NONE:
                 showConfirmationBasics();
@@ -351,7 +350,6 @@ public class SignIn_Foreman extends AppCompatActivity {
         phoneNumberField.setVisibility(View.GONE);
         SMSWarning.setVisibility(View.GONE);
         logInButt.setVisibility(View.GONE);
-        failure.setVisibility(View.GONE);
         verificationTip.setVisibility(View.GONE);
         verificationField.setVisibility(View.GONE);
         verificationButts.setVisibility(View.GONE);
