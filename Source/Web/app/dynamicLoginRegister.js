@@ -125,10 +125,6 @@ function register() {
 }
 
 function checkPass(pass1, pass2) {
-    // if (pass1 === "" || pass2 === "") {
-    //     document.getElementById("errorSpace").innerHTML = "<p class='errmsg'>Passwords cannot be empty</p>";
-    //     return false;
-    // }
 	if(page === 0){
 		return false;
 	}
