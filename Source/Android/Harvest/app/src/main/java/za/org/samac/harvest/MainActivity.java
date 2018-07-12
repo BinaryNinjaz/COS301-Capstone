@@ -1002,59 +1002,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    private void writeToFirebase(collections collectionObj) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String key = database.getReference("yields").push().getKey();
-        DatabaseReference mRef = database.getReference().child("yields").child(key);
-        mRef.setValue("collections");
-        Map<String, MyData> map = collectionObj.getIndividualCollections();
-        Map<String, String> collectionData = new HashMap<String, String>();
-        collectionData.put("email", collectionObj.getForemanEmail());
-        collectionData.put("end_date", Double.toString(collectionObj.getEnd_date()));
-        collectionData.put("start_date", Double.toString(collectionObj.getStart_date()));
-        mRef.child("collections").setValue(collectionData);
-        Iterator it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            mRef.child("collections").setValue(pair.getKey());
-            MyData data = map.get(pair.getKey());
-            DatabaseReference dRef = mRef.child("collections").child((String) pair.getKey());
-            for (int i = 0; i < data.size; i++) {
-                dRef.setValue(Integer.toString(i));
-                dRef.child(Integer.toString(i)).setValue("coord");
-                dRef.child(Integer.toString(i)).setValue("date");
-                dRef.child("date").setValue(data.date.get(i));
-                dRef.child("coord").setValue("lat");
-                dRef.child("coord").setValue("lng");
-                dRef.child("coord").child("lat").setValue(data.latitude.get(i));
-                dRef.child("coord").child("lng").setValue(data.longitude.get(i));
-            }
-        }
-        /*mRef.child("collections").setValue("email");
-        mRef.child("collections").setValue("start_date");
-        mRef.child("collections").setValue("end_date");
-        mRef.child("collections").child("email").setValue(collectionObj.getForemanEmail());
-        mRef.child("collections").child("start_date").setValue(collectionObj.getStart_date());
-        mRef.child("collections").child("end_date").setValue(collectionObj.getEnd_date());*/
-        mRef.setValue("track");
-        Iterator it1 = track.entrySet().iterator();
-        int count = 0;
-        while (it1.hasNext()) {
-            Map.Entry pair = (Map.Entry) it1.next();
-            Location loc = (Location) pair.getValue();
-            if (loc != null) {
-                double lat = loc.getLatitude();
-                double lng = loc.getLongitude();
-                mRef.child("track").setValue(Integer.toString(count));
-                mRef.child("track").child(Integer.toString(count)).setValue("lat");
-                mRef.child("track").child(Integer.toString(count)).setValue("lng");
-                mRef.child("track").child(Integer.toString(count)).child("lat").setValue(lat);
-                mRef.child("track").child(Integer.toString(count)).child("lng").setValue(lng);
-            }
-            ++count;
-        }
-    }
-
     public Location getLocation() {
         return location;
     }
