@@ -13,6 +13,7 @@ firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     $(window).bind("load", function() {
       getWorkers();
+      getOrchards();
     });
   } 
 });
@@ -21,38 +22,27 @@ function workersRef() {
   return database.ref('/' + userID()  + '/workers');
 }
 
+function orchardsRef() {
+  return database.ref('/' + userID()  + '/orchards');
+}
+
 var foremen = [];
 var workers = [];
+var orchards = [];
 
-function getWorkers() {
-  workersRef().once('value').then(function (snapshot) {
-      snapshot.forEach(function (worker) {
-        const w = worker.val();
-        const k = worker.key;
-        if (w.type === "Foreman") {
-          foremen.push({key: k, value: w});
-        } else {
-          workers.push({key: k, value: w});
-        }
-      });
+function getWorkers(callback) {
+  const ref = firebase.database().ref('/' + userID() + '/workers');
+  ref.once('value').then((snapshot) => {
+    callback(snapshot);
   });
 }
 
-/*function getCollectionsRef(sessionKey) {
-  return database.ref('/' + userID() + '/sessions/'+
-                sessionKey+'/collections');
+function getOrchards(_callback) {
+  const ref = firebase.database().ref('/' + userID() + '/orchards');
+  ref.once('value').then((snapshot) => {
+    _callback(snapshot);
+  });
 }
-
-function workerCollections(sessionKey,workerKey) {
-  return database.ref('/' + userID() + '/sessions/'+
-                sessionKey+'/collections/'+workerKey);
-}
-
-function yieldsRef() {
-  return database.ref('/' + userID() + '/sessions');
-}
-*/
-
 
 function foremanForKey(key) {
   for (var k in foremen) {
@@ -72,8 +62,77 @@ function workerForKey(key) {
   return undefined;
 }
 
+//below adds worker and orchard names to the drop down lists
+function populateLists(){
+    var workerSelect = document.getElementById('workerSelect');
+    for (var k in workers) {
+       var wName = workers[k].value.name + ' ' + workers[k].value.surname;
+       var option = document.createElement("option");
+       option.text = wName;
+       console.log(wName);
+       workerSelect.options.add(option);
+    }
+    var orchardSelect = document.getElementById('orchardSelect');
+    for (var k in orchards) {
+       var option = document.createElement("option");
+       option.text = orchards[k].value.name;
+       console.log(orchards[k].value.name);
+       orchardSelect.options.add(option);
+    }
+}
+
 function initPage(){
-    getWorkers();
+    getOrchards((orchardsSnap) => {
+        orchards=[];
+        orchardsSnap.forEach((orchard) => {
+          const val = orchard.val();
+          const k = orchard.key;
+          orchards.push({key: k, value: val})
+        });
+        initWorkers();
+    }); 
+}
+
+function initWorkers(){
+   getWorkers((workersSnap) => {
+        foremen = [];
+        workers = [];
+        workersSnap.forEach((worker) => {
+          const w = worker.val();
+          const k = worker.key;
+          if (w.type === "Foreman") {
+            foremen.push({key: k, value: w});
+          } else {
+            workers.push({key: k, value: w});
+          }
+        });
+        populateLists();
+    });
+}
+
+function filterOrchard(){
+    var orchardName = document.getElementById('orchardSelect').value;
+    var start = document.getElementById('startDateSelect').value;
+    var end = document.getElementById('endDateSelect').value;
+    if(name!== '' && start!== '' && end !== ''){
+        var id = getOrchardId(orchardName);
+        orchardPerformance(start, end, id);
+    }else{
+        window.alert("Some fields in the orchard filter appear to be blank. \n"
+        +"Please enter them to continue");
+    }
+}
+
+function getOrchardId(name){
+    
+}
+
+function filterWorker(){
+    
+}
+
+function getWorkerId(name){
+    
 }
 
 var groupBy;
@@ -84,14 +143,6 @@ var uid;
 
 //converts a date to seconds since epoch
 function dateToSeconds(date){ return Math.floor( date.getTime() / 1000 ) }
-
-function filterOrchard(){
-    //
-}
-
-function filterWorker(){
-    //
-}
 
 function orchardPerformance(start, end, id){
    groupBy = 'orchard';
@@ -104,7 +155,7 @@ function orchardPerformance(start, end, id){
    //still needs implementation
 }
 
-function workerTotalBags(start, end, id){
+function workerPerformance(start, end, id){
    groupBy = 'worker';
    period = 'hourly';
    startDate = dateToSeconds(start);
