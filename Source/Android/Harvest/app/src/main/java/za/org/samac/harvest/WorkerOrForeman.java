@@ -5,58 +5,20 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
 
-import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
-import za.org.samac.harvest.util.Category;
-import za.org.samac.harvest.util.WorkerComparator;
 
-import static za.org.samac.harvest.util.Category.NAV;
-import static za.org.samac.harvest.util.Category.NOTHING;
-
-public class Analytics extends AppCompatActivity {
+public class WorkerOrForeman extends AppCompatActivity{
     private BottomNavigationView bottomNavigationView;
     private ArrayList<PieEntry> entries = new ArrayList<>();
     private Button perSesWorkerComparison;
@@ -65,7 +27,7 @@ public class Analytics extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_analytics);
+        setContentView(R.layout.activity_worker_or_foreman);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
@@ -76,21 +38,19 @@ public class Analytics extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                /*Intent openMainActivity= new Intent(Analytics.this, MainActivity.class);
+                                Intent openMainActivity= new Intent(WorkerOrForeman.this, MainActivity.class);
                                 openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);*/
-                                startActivity(new Intent(Analytics.this, MainActivity.class));
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(Analytics.this, InformationActivity.class);
+                                Intent openInformation= new Intent(WorkerOrForeman.this, InformationActivity.class);
                                 openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
-                                /*Intent openSessions= new Intent(Analytics.this, Sessions.class);
+                                Intent openSessions= new Intent(WorkerOrForeman.this, SessionsMap.class);
                                 openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openSessions, 0);*/
-                                startActivity(new Intent(Analytics.this, Sessions.class));
+                                startActivityIfNeeded(openSessions, 0);
                                 return true;
                             case R.id.actionStats:
                                 return true;
@@ -103,21 +63,21 @@ public class Analytics extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //user selects to see pie chart
-        perSesWorkerComparison = findViewById(R.id.workerHistPerformance);
+        perSesWorkerComparison = findViewById(R.id.btnWorkers);
         perSesWorkerComparison.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Analytics.this, WorkerOrForeman.class);
+                Intent intent = new Intent(WorkerOrForeman.this, WorkersForBarGraph.class);
                 startActivity(intent);
             }
         });
 
         //user selects to see bar graph
-        orhHistPerformance = findViewById(R.id.orchHistPerformance);
+        orhHistPerformance = findViewById(R.id.btnForemen);
         orhHistPerformance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Analytics.this, OrchardsForGraph.class);
+                Intent intent = new Intent(WorkerOrForeman.this, ForemenForBarGraph.class);
                 startActivity(intent);
             }
         });
@@ -137,24 +97,15 @@ public class Analytics extends AppCompatActivity {
             case R.id.search:
                 return true;
             case R.id.settings:
-                startActivity(new Intent(Analytics.this, SettingsActivity.class));
+                startActivity(new Intent(WorkerOrForeman.this, SettingsActivity.class));
                 return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(Analytics.this, LoginActivity.class));
+                    startActivity(new Intent(WorkerOrForeman.this, LoginActivity.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
-                }
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                            new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(Analytics.this, LoginActivity.class));
-                                }
-                            });
                 }
                 finish();
                 return true;
@@ -167,4 +118,5 @@ public class Analytics extends AppCompatActivity {
         }
 //        return false;
     }
+
 }
