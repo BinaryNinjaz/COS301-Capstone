@@ -9,14 +9,17 @@ const userID = function() {
   }
 }
 
-firebase.auth().onAuthStateChanged(function (user) {
+var foremen = [];
+var workers = [];
+var orchards = [];
+
+/*firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     $(window).bind("load", function() {
-      getWorkers();
-      getOrchards();
+      initPage();
     });
-  } 
-});
+  }
+});*/
 
 function workersRef() {
   return database.ref('/' + userID()  + '/workers');
@@ -25,10 +28,6 @@ function workersRef() {
 function orchardsRef() {
   return database.ref('/' + userID()  + '/orchards');
 }
-
-var foremen = [];
-var workers = [];
-var orchards = [];
 
 function getWorkers(callback) {
   const ref = firebase.database().ref('/' + userID() + '/workers');
@@ -63,37 +62,44 @@ function workerForKey(key) {
 }
 
 //below adds worker and orchard names to the drop down lists
-function populateLists(){
+/*function populateLists(){
     var workerSelect = document.getElementById('workerSelect');
     for (var k in workers) {
        var wName = workers[k].value.name + ' ' + workers[k].value.surname;
        var option = document.createElement("option");
        option.text = wName;
-       console.log(wName);
        workerSelect.options.add(option);
     }
     var orchardSelect = document.getElementById('orchardSelect');
     for (var k in orchards) {
        var option = document.createElement("option");
        option.text = orchards[k].value.name;
-       console.log(orchards[k].value.name);
        orchardSelect.options.add(option);
     }
-}
+}*/
 
 function initPage(){
+    initOrchards();
+    initWorkers();
+}
+
+function initOrchards(){
+    var orchardSelect = document.getElementById('orchardSelect');
     getOrchards((orchardsSnap) => {
         orchards=[];
         orchardsSnap.forEach((orchard) => {
           const val = orchard.val();
           const k = orchard.key;
-          orchards.push({key: k, value: val})
+          orchards.push({key: k, value: val});
+          var option = document.createElement("option");
+          option.text = val.name;
+          orchardSelect.options.add(option);
         });
-        initWorkers();
     }); 
 }
 
 function initWorkers(){
+   var workerSelect = document.getElementById('workerSelect');
    getWorkers((workersSnap) => {
         foremen = [];
         workers = [];
@@ -104,9 +110,13 @@ function initWorkers(){
             foremen.push({key: k, value: w});
           } else {
             workers.push({key: k, value: w});
+            var wName = w.name + ' ' + w.surname;
+            var option = document.createElement("option");
+            option.text = wName;
+            workerSelect.options.add(option);
           }
         });
-        populateLists();
+        //populateLists(); 
     });
 }
 
@@ -164,7 +174,6 @@ function workerPerformance(start, end, id){
    var params = constructParams(groupBy,period,startDate,endDate,uid);
    var response = sendPostRequest(params);
    //still needs implementation
-   //console.log(response);
 }
 
 function constructParams(groupBy,period,startDate,endDate,uid){
