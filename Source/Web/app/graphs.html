@@ -83,17 +83,44 @@
   </head>
   <body>
 	<div class="topnav">
-        <ul class="nav navbar-nav">
-        <a class="active" href="HomePage.html">Back to Home</a>
-        </ul>
+            <ul class="nav navbar-nav">
+                <a class="active" href="HomePage.html">Back to Home</a>
+            </ul>
 	</div>
 	<div class="container">
-	<div class="left">
-	<div id="piechart" style="width: 900px; height: 500px;"></div>
-	</div>
-	<div class="right" >
-	<div id="curve_chart" style="width: 900px; height: 500px"></div>
-	</div>
+            <!-- top chart can be orchard historical performance-->
+            <div class="left">
+                <div id="piechart" style="width: 900px; height: 500px;"></div>
+                <!-- below are objects the user can use to filter information-->
+                <div id="topChartFilter">
+                    <label>Select an orchard:
+                        <select id="orchardSelect"></select>
+                    </label> 
+                    <label>Select starting date:
+                        <input type="date" id="startDateSelect" />
+                    </label>
+                    <label>Select ending date:
+                        <input type="date" id="endDateSelect" />
+                    </label>
+                    <button type = "button" id='orchardFilter'>
+                        Filter Orchard Graph</button>
+                </div>
+            </div>
+            <!-- bottom graph can be the worker worker performance graph-->
+            <div class="right" >
+                <div id="curve_chart" style="width: 900px; height: 500px"></div>
+                <!-- below are objects the user can use to filter information-->
+                <div id="bottomChartFilter">
+                    <label>Select a worker:
+                        <select id="workerSelect"></select>
+                    </label> 
+                    <label>Select date:
+                        <input type="date" id="workerDateSelect" />
+                    </label>
+                    <button type = "button" id='workerFilter'>
+                        Filter Worker Performance Graph </button>
+                </div>
+            </div>
 	</div>
   </body>
 </html>
