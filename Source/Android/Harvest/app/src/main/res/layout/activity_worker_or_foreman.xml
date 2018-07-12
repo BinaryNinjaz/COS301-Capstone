@@ -13,16 +13,16 @@
         <Button
             android:id="@+id/btnWorkers"
             style="@style/Button"
-            android:text="@string/workers"
-            android:background="@color/androidGrey"
-            android:textColor="@color/black"/>
+            android:background="@color/white"
+            android:textColor="@color/black"
+            android:text="@string/workers"/>
 
         <Button
             android:id="@+id/btnForemen"
             style="@style/Button"
-            android:text="@string/foremen"
-            android:background="@color/androidGrey"
-            android:textColor="@color/black"/>
+            android:background="@color/white"
+            android:textColor="@color/black"
+            android:text="@string/foremen"/>
 
     </LinearLayout>
 

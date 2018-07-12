@@ -13,16 +13,16 @@
         <Button
             android:id="@+id/workerHistPerformance"
             style="@style/Button"
-            android:text="@string/WorkerHistPerformance"
-            android:background="@color/androidGrey"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:background="@color/white"
+            android:text="@string/WorkerHistPerformance"/>
 
         <Button
             android:id="@+id/orchHistPerformance"
             style="@style/Button"
-            android:text="@string/OrchHistPerformance"
-            android:background="@color/androidGrey"
-            android:textColor="@color/black"/>
+            android:background="@color/white"
+            android:textColor="@color/black"
+            android:text="@string/OrchHistPerformance"/>
 
     </LinearLayout>
 
