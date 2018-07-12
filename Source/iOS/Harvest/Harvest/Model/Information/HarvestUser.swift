@@ -92,6 +92,7 @@ public final class HarvestUser {
     HarvestUser.current.accountIdentifier = ""
     HarvestUser.current.uid = ""
     HarvestUser.current.workingForID = []
+    HarvestUser.current.selectedWorkingForID = nil
   }
   
   static var current = HarvestUser()

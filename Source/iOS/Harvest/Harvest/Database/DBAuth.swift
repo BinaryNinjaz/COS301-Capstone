@@ -249,7 +249,6 @@ extension HarvestDB {
   static func getWorkingForFarmName(uid: String, completion: @escaping (String?) -> Void) {
     let fnref = ref.child(uid + "/admin/farmName")
     fnref.observeSingleEvent(of: .value) { (snapshot) in
-      print(snapshot.value as Any)
       guard let name = snapshot.value as? String else {
         completion(nil)
         return
@@ -264,7 +263,6 @@ extension HarvestDB {
     completion: @escaping ([String]) -> Void
   ) {
     guard let uid = uids.first else {
-      print(">>>", result)
       completion(result)
       return
     }
