@@ -9,6 +9,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +23,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,8 +51,10 @@ import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.Sessions;
 import za.org.samac.harvest.SessionsMap;
+import za.org.samac.harvest.SettingsActivity;
 import za.org.samac.harvest.SignUpActivity;
 import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.AppUtil;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
 import static za.org.samac.harvest.MainActivity.getWorkers;
@@ -216,5 +222,49 @@ public class SessionDetails extends AppCompatActivity {
         description.setText("Worker Performance");
         pieChart.setDescription(description); // set the description
         pieChart.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.search:
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(SessionDetails.this, SettingsActivity.class));
+                return true;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                if(!AppUtil.isUserSignedIn()){
+                    startActivity(new Intent(SessionDetails.this, LoginActivity.class));
+                }
+                else {
+//                    FirebaseAuth.getInstance().signOut();
+                }
+                if (LoginActivity.mGoogleSignInClient != null) {
+                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(SessionDetails.this, LoginActivity.class));
+                                }
+                            });
+                }
+                finish();
+                return true;
+//            case R.id.homeAsUp:
+//                onBackPressed();
+//                return true;
+            default:
+                super.onOptionsItemSelected(item);
+                return true;
+        }
+//        return false;
     }
 }

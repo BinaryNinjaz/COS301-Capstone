@@ -7,10 +7,15 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import za.org.samac.harvest.adapter.ForemanRecyclerViewAdapter;
+import za.org.samac.harvest.util.AppUtil;
 
 public class ForemenForBarGraph extends AppCompatActivity {
     private ArrayList<String> foremen;
@@ -104,5 +110,49 @@ public class ForemenForBarGraph extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.search:
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(ForemenForBarGraph.this, SettingsActivity.class));
+                return true;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                if(!AppUtil.isUserSignedIn()){
+                    startActivity(new Intent(ForemenForBarGraph.this, LoginActivity.class));
+                }
+                else {
+//                    FirebaseAuth.getInstance().signOut();
+                }
+                if (LoginActivity.mGoogleSignInClient != null) {
+                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(ForemenForBarGraph.this, LoginActivity.class));
+                                }
+                            });
+                }
+                finish();
+                return true;
+//            case R.id.homeAsUp:
+//                onBackPressed();
+//                return true;
+            default:
+                super.onOptionsItemSelected(item);
+                return true;
+        }
+//        return false;
     }
 }
