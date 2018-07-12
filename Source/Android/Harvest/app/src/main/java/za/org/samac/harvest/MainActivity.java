@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -622,28 +623,34 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void getFarmKey() {
-        String convertEmail = currentUserEmail;
-        emailInDB = convertEmail.replace(".", ",");
-        DatabaseReference outerRef = database.getReference("WorkingFor/"+emailInDB);
-        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    farmerKey = child.getKey();
-
-                    farmerKey = child.getKey();
-                    getPolygon();//set expected yield
-                    farmLevelRef = database.getReference(farmerKey);//Firebase reference
-                    workersRef = farmLevelRef.child("workers");
-                    collectWorkers();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-            }
-        });
+//        String convertEmail = currentUserEmail;
+//        emailInDB = convertEmail.replace(".", ",");
+//        DatabaseReference outerRef = database.getReference("WorkingFor/"+emailInDB);
+//        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                    farmerKey = child.getKey();
+//
+//                    farmerKey = child.getKey();
+//                    getPolygon();//set expected yield
+//                    farmLevelRef = database.getReference(farmerKey);//Firebase reference
+//                    workersRef = farmLevelRef.child("workers");
+//                    collectWorkers();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.w(TAG, "onCancelled", databaseError.toException());
+//            }
+//        });
+        SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
+        farmerKey = sharedPreferences.getString(getString(R.string.sharedPref_signIn_farmerid), "0");
+        getPolygon();
+        farmLevelRef = database.getReference(farmerKey);
+        workersRef = farmLevelRef.child("workers");
+        collectWorkers();
     }
 
     public void statusCheck() {

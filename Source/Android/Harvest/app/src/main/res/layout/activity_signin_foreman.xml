@@ -64,7 +64,6 @@
                         android:id="@+id/signIn_foreman_failure"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Failure"
                         android:textColor="@android:color/holo_red_dark"
                         android:layout_marginTop="16dp" />
 
@@ -120,7 +119,7 @@
                         android:id="@+id/signIn_foreman_phoneConf_Look"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Phone Number"
+                        android:textAlignment="center"
                         android:layout_marginTop="16dp"
                         style="@style/Base.TextAppearance.AppCompat.Body2"/>
 
@@ -128,7 +127,6 @@
                         android:id="@+id/signIn_foreman_farm_tip"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Farm Tip"
                         android:layout_marginTop="16dp"/>
 
                     <Spinner
@@ -142,7 +140,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="Farm One"
+                        android:textAlignment="center"
                         style="@style/Base.TextAppearance.AppCompat.Body2"/>
 
                     <Button

@@ -1,11 +1,14 @@
 package za.org.samac.harvest;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -21,7 +24,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 public class SignIn_Foreman extends AppCompatActivity {
@@ -54,13 +64,15 @@ public class SignIn_Foreman extends AppCompatActivity {
     private TextView farmOneLook;
     private Button farmOkay;
 
-
     private String mVerificationId;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks phoneCallback;
     private boolean verificationInProgress = false;
     private FirebaseAuth mAuth;
+
+    private String systemPhone;
+    private List<String> farms;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,24 +102,27 @@ public class SignIn_Foreman extends AppCompatActivity {
         farmOneLook = findViewById(R.id.signIn_foreman_farmOne_look);
         farmOkay = findViewById(R.id.signIn_foreman_farm_okay);
 
+        farms = new Vector<>();
+
         phoneCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 //Already verified, or device says so.
                 verificationInProgress = false;
                 signInWithPhoneAuthCredential(phoneAuthCredential);
+                findFarms();
             }
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
                 verificationInProgress = false;
                 if (e instanceof FirebaseAuthInvalidCredentialsException){
-                    failure.setVisibility(View.VISIBLE);
-                    failure.setText(R.string.signIn_foreman_invalfail);
+                    state = STATE_QUOTA_EXCEED;
+                    updateUI();
                 }
                 else if (e instanceof FirebaseTooManyRequestsException){
-                    failure.setVisibility(View.VISIBLE);
-                    failure.setText(R.string.signIn_foreman_reqfail);
+                    state = STATE_INVALID_NUMBER;
+                    updateUI();
                 }
             }
 
@@ -116,6 +131,8 @@ public class SignIn_Foreman extends AppCompatActivity {
 //                super.onCodeSent(s, forceResendingToken);
                 mVerificationId = s;
                 mResendToken = forceResendingToken;
+                state = STATE_CODE_SENT;
+                updateUI();
             }
         };
     }
@@ -123,6 +140,9 @@ public class SignIn_Foreman extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        state = STATE_START;
+        updateUI();
 
         if(verificationInProgress){
             startPhoneNumberVerification(phoneNumberField.getText().toString());
@@ -175,7 +195,8 @@ public class SignIn_Foreman extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    findFarm();
+                    systemPhone = mAuth.getCurrentUser().getPhoneNumber();
+                    findFarms();
                 }
                 else {
                     findViewById(R.id.signIn_foreman_failure).setVisibility(View.VISIBLE);
@@ -185,11 +206,72 @@ public class SignIn_Foreman extends AppCompatActivity {
     }
 
     public void signInForemanButtClick(View v){
+        switch (v.getId()){
+            case R.id.signIn_foreman_logIn_butt:
+                startPhoneNumberVerification(phoneNumberField.getText().toString());
+                break;
+            case R.id.signIn_foreman_verification_okayButt:
+                String code = verificationField.getText().toString();
+                if (TextUtils.isEmpty(code)){
+                    verificationField.setError("Cannot be Empty");
+                    return;
+                }
 
+                verifyPhoneNumberWithCode(mVerificationId, code);
+                break;
+            case R.id.signIn_foreman_verification_resendButt:
+                resendVerificationCode(phoneNumberField.getText().toString(), mResendToken);
+                break;
+            case R.id.signIn_foreman_butt_conf:
+                SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
+                SharedPreferences.Editor editor= sharedPreferences.edit();
+                switch (state){
+                    case STATE_FARM_ONE:
+                        editor.putString(getString(R.string.sharedPref_signIn_farmerid), farms.get(0));
+                        break;
+                    case STATE_FARM_MULTI:
+                        String id = (String) farmChoose.getSelectedItem();
+                        editor.putString(getString(R.string.sharedPref_signIn_farmerid), id);
+                        break;
+                }
+                editor.apply();
+                break;
+        }
     }
 
-    public void findFarm(){
+    public void findFarms(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference workingFor = database.getReference("/WorkingFor/");
+        workingFor.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot worker : dataSnapshot.getChildren()){
+                    if (worker.getKey().equals(systemPhone)){
+                            //TODO: More than just ids
+                            for (DataSnapshot child : worker.getChildren()){
+                                farms.add(child.getKey());
+                            }
+                    }
+                }
+                if (farms.size() == 1){
+                    state = STATE_FARM_ONE;
+                    updateUI();
+                }
+                else if(farms.size() == 0){
+                    state = STATE_FARM_NONE;
+                    updateUI();
+                }
+                else {
+                    state = STATE_FARM_MULTI;
+                    updateUI();
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void updateUI(){
@@ -229,17 +311,26 @@ public class SignIn_Foreman extends AppCompatActivity {
             case STATE_QUOTA_EXCEED:
                 failure.setVisibility(View.VISIBLE);
                 failure.setText(R.string.signIn_foreman_reqfail);
+                break;
             case STATE_FARM_NONE:
                 showConfirmationBasics();
                 farmTip.setText(R.string.signIn_foreman_farmNone);
                 farmTip.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
                 farmOkay.setVisibility(View.GONE);
+                break;
             case STATE_FARM_ONE:
                 showConfirmationBasics();
                 farmTip.setText(R.string.signIn_foreman_farmOne);
                 farmOneLook.setVisibility(View.VISIBLE);
-                farmOneLook.setText();
-
+                farmOneLook.setText(farms.get(0));
+                break;
+            case STATE_FARM_MULTI:
+                showConfirmationBasics();
+                farmTip.setText(R.string.signIn_foreman_farmChooseTip);
+                farmChoose.setVisibility(View.VISIBLE);
+                ArrayAdapter sAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, farms);
+                farmChoose.setAdapter(sAdapter);
+                break;
         }
     }
 
@@ -253,8 +344,9 @@ public class SignIn_Foreman extends AppCompatActivity {
         verificationButts.setVisibility(View.GONE);
         phoneConfTip.setVisibility(View.VISIBLE);
         phoneConfLook.setVisibility(View.VISIBLE);
-        phoneConfLook.setText(mAuth.getCurrentUser().getPhoneNumber());
+        phoneConfLook.setText(systemPhone);
         farmTip.setVisibility(View.VISIBLE);
         farmOkay.setVisibility(View.VISIBLE);
     }
+
 }
