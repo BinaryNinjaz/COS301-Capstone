@@ -11,18 +11,18 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/workerHistPerformance"
+            android:id="@+id/btnWorkers"
             style="@style/Button"
-            android:textColor="@color/black"
             android:background="@color/white"
-            android:text="@string/WorkerHistPerformance"/>
+            android:textColor="@color/black"
+            android:text="@string/workers"/>
 
         <Button
-            android:id="@+id/orchHistPerformance"
+            android:id="@+id/btnForemen"
             style="@style/Button"
             android:background="@color/white"
             android:textColor="@color/black"
-            android:text="@string/OrchHistPerformance"/>
+            android:text="@string/foremen"/>
 
     </LinearLayout>
 
@@ -35,6 +35,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation_main" />
-
 
 </android.support.constraint.ConstraintLayout>

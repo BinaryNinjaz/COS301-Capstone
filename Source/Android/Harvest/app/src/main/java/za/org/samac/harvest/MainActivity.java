@@ -38,7 +38,10 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -79,6 +82,7 @@ import za.org.samac.harvest.util.WorkerComparator;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
+    private final int GPS_SETTINGS_UPDATE = 989;
     private static final String TAG = "Clicker";
 
     private static ArrayList<Worker> workers;
@@ -106,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserEmail;
+    private String currentUserNumber;
     private String emailInDB;
     private String uid;
     private String foremanID;
@@ -153,33 +158,40 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 location = locationManager.getLastKnownLocation(provider);
                 //Log.d("last known location, provider: %s, location: %s", provider, location);
 
-                if (location == null) {
-                    continue;
+                if (location != null) {
+                    break;
                 }
-                if (bestLocation == null
+                /*if (bestLocation == null
                         || location.getAccuracy() < bestLocation.getAccuracy()) {
                     //Log.d("found best last known location: %s", location);
                     bestLocation = location;
-                }
+                }*/
             }
 
-            location = locationManager
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
-            //adapter.setLocation(location);
+            if (location == null) {
+                location = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+                //adapter.setLocation(location);
+            }
+            adapter.setLocation(location);
         }
 
         locationEnabled = true;
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
-        location = locationManager
-                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
-
+        if (locationManager == null) {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (locationManager != null) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+                location = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+            }
+        }
         locationPermissions();
         //new LocationHelper().getLocation(this);
 
         uid = user.getUid();
         currentUserEmail = user.getEmail();
+        currentUserNumber = user.getPhoneNumber();
         database = FirebaseDatabase.getInstance();
 
         setContentView(R.layout.activity_main);
@@ -187,6 +199,34 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
         statusCheck();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == GPS_SETTINGS_UPDATE) {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (locationManager != null) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+                    location = locationManager
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+                    return;
+                }
+
+            }
+            return;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -268,14 +308,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                             startActivityIfNeeded(openMainActivity, 0);
                                             return true;
                                         case R.id.actionSession:
-                                            Intent openSessions= new Intent(MainActivity.this, Sessions.class);
+                                            /*Intent openSessions= new Intent(MainActivity.this, Sessions.class);
                                             openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openSessions, 0);
+                                            startActivityIfNeeded(openSessions, 0);*/
+                                            startActivity(new Intent(MainActivity.this, Sessions.class));
                                             return true;
                                         case R.id.actionStats:
-                                            Intent openAnalytics= new Intent(MainActivity.this, Analytics.class);
+                                            /*Intent openAnalytics= new Intent(MainActivity.this, Analytics.class);
                                             openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openAnalytics, 0);
+                                            startActivityIfNeeded(openAnalytics, 0);*/
+                                            startActivity(new Intent(MainActivity.this, Analytics.class));
                                             return true;
                                     }
                                     return true;
@@ -572,6 +614,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 } else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
+
+                // Google sign out
+                if (LoginActivity.mGoogleSignInClient != null) {
+                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                }
+                            });
+                }
                 finish();
                 return true;
         }
@@ -606,9 +659,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         workerObj.setValue(0);
                         workerObj.setID(zoneSnapshot.getKey());
                         foremen.add(workerObj);
-                        String email = zoneSnapshot.child("email").getValue(String.class);
-                        if (email != null) {
-                            if (email.equals(currentUserEmail)) {
+<<<<<<< HEAD
+
+=======
+                        
+>>>>>>> a1c992d54bbe75b30f4031fe0803b36cbaf76a8f
+                        if (zoneSnapshot.child("phoneNumber").getValue(String.class) != null) {
+                            if (zoneSnapshot.child("phoneNumber").getValue(String.class).equals(currentUserNumber)) {
+                                foremanID = zoneSnapshot.getKey();
+                                foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                            }
+                        }
+
+                        if (zoneSnapshot.child("email").getValue(String.class) != null) {
+                            if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
                                 foremanID = zoneSnapshot.getKey();
                                 foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
                             }
@@ -675,7 +739,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_SETTINGS_UPDATE);
+                        //startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -777,6 +842,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         childUpdates.put("coord", coordinates);
                         childUpdates.put("display", foremanName);
 
+                        myRef2.removeValue();
                         myRef2.updateChildren(childUpdates);//store location
                     }
                 }
@@ -858,9 +924,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setMinusEnabled(true);
             track = new HashMap<Integer, Location>(); //used in firebase function
             track.put(trackCount, location);
-            if (locationEnabled) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
-            }
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
             startTime = System.currentTimeMillis();
             btnStart.setBackgroundColor(Color.parseColor("#FFFF8800"));
             btnStart.setText("Stop");
@@ -943,59 +1007,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    private void writeToFirebase(collections collectionObj) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String key = database.getReference("yields").push().getKey();
-        DatabaseReference mRef = database.getReference().child("yields").child(key);
-        mRef.setValue("collections");
-        Map<String, MyData> map = collectionObj.getIndividualCollections();
-        Map<String, String> collectionData = new HashMap<String, String>();
-        collectionData.put("email", collectionObj.getForemanEmail());
-        collectionData.put("end_date", Double.toString(collectionObj.getEnd_date()));
-        collectionData.put("start_date", Double.toString(collectionObj.getStart_date()));
-        mRef.child("collections").setValue(collectionData);
-        Iterator it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            mRef.child("collections").setValue(pair.getKey());
-            MyData data = map.get(pair.getKey());
-            DatabaseReference dRef = mRef.child("collections").child((String) pair.getKey());
-            for (int i = 0; i < data.size; i++) {
-                dRef.setValue(Integer.toString(i));
-                dRef.child(Integer.toString(i)).setValue("coord");
-                dRef.child(Integer.toString(i)).setValue("date");
-                dRef.child("date").setValue(data.date.get(i));
-                dRef.child("coord").setValue("lat");
-                dRef.child("coord").setValue("lng");
-                dRef.child("coord").child("lat").setValue(data.latitude.get(i));
-                dRef.child("coord").child("lng").setValue(data.longitude.get(i));
-            }
-        }
-        /*mRef.child("collections").setValue("email");
-        mRef.child("collections").setValue("start_date");
-        mRef.child("collections").setValue("end_date");
-        mRef.child("collections").child("email").setValue(collectionObj.getForemanEmail());
-        mRef.child("collections").child("start_date").setValue(collectionObj.getStart_date());
-        mRef.child("collections").child("end_date").setValue(collectionObj.getEnd_date());*/
-        mRef.setValue("track");
-        Iterator it1 = track.entrySet().iterator();
-        int count = 0;
-        while (it1.hasNext()) {
-            Map.Entry pair = (Map.Entry) it1.next();
-            Location loc = (Location) pair.getValue();
-            if (loc != null) {
-                double lat = loc.getLatitude();
-                double lng = loc.getLongitude();
-                mRef.child("track").setValue(Integer.toString(count));
-                mRef.child("track").child(Integer.toString(count)).setValue("lat");
-                mRef.child("track").child(Integer.toString(count)).setValue("lng");
-                mRef.child("track").child(Integer.toString(count)).child("lat").setValue(lat);
-                mRef.child("track").child(Integer.toString(count)).child("lng").setValue(lng);
-            }
-            ++count;
-        }
-    }
-
     public Location getLocation() {
         return location;
     }
@@ -1038,8 +1049,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void locationPermissions() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(),
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(getApplicationContext(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);

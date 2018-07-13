@@ -1,16 +1,12 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
-import android.media.MediaCas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,29 +24,29 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import za.org.samac.harvest.adapter.OrchardsForGraphRVAdapter;
+import za.org.samac.harvest.adapter.ForemanRecyclerViewAdapter;
 import za.org.samac.harvest.util.AppUtil;
 
-public class OrchardsForGraph extends AppCompatActivity {
-
-    private ArrayList<String> orchards;
-    private ArrayList<String> orchardKeys;
-    private DatabaseReference orchardsRef;
+public class ForemenForBarGraph extends AppCompatActivity {
+    private ArrayList<String> foremen;
+    private ArrayList<String> foremenKeys;
+    private DatabaseReference foremenRef;
     private FirebaseDatabase database;
-    private OrchardsForGraphRVAdapter adapter;
+    private ForemanRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_orchards_for_graph);
+        setContentView(R.layout.activity_foremen_for_bar_graph);
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
         //bottom nav bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);
 
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -59,15 +55,15 @@ public class OrchardsForGraph extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(OrchardsForGraph.this, MainActivity.class));
+                                startActivity(new Intent(ForemenForBarGraph.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(OrchardsForGraph.this, InformationActivity.class);
+                                Intent openInformation= new Intent(ForemenForBarGraph.this, InformationActivity.class);
                                 openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
-                                Intent openSessions= new Intent(OrchardsForGraph.this, Sessions.class);
+                                Intent openSessions= new Intent(ForemenForBarGraph.this, Sessions.class);
                                 openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openSessions, 0);
                                 return true;
@@ -83,22 +79,24 @@ public class OrchardsForGraph extends AppCompatActivity {
     }
 
     public void init() {
-        this.orchards = new ArrayList<>();
-        this.orchardKeys = new ArrayList<>();
+        this.foremen = new ArrayList<>();
+        this.foremenKeys = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
     }
 
     public void collectOrchards() {
-        orchardsRef = database.getReference(MainActivity.farmerKey + "/orchards");
-        orchardsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        foremenRef = database.getReference(MainActivity.farmerKey + "/workers");
+        foremenRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    orchardKeys.add(child.getKey().toString());
-                    orchards.add(child.child("name").getValue(String.class));
+                    if (child.child("type").getValue(String.class).equals("Foreman")) {
+                        foremenKeys.add(child.getKey().toString());
+                        foremen.add(child.child("name").getValue(String.class)+" "+child.child("surname").getValue(String.class));
+                    }
                 }
 
-                adapter = new OrchardsForGraphRVAdapter(getApplicationContext(), orchards, orchardKeys);
+                adapter = new ForemanRecyclerViewAdapter(getApplicationContext(), foremen, foremenKeys);
                 recyclerView = findViewById(R.id.recView);//this encapsulates the worker buttons, it is better than gridview
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 recyclerView.setHasFixedSize(false);
@@ -127,12 +125,12 @@ public class OrchardsForGraph extends AppCompatActivity {
             case R.id.search:
                 return true;
             case R.id.settings:
-                startActivity(new Intent(OrchardsForGraph.this, SettingsActivity.class));
+                startActivity(new Intent(ForemenForBarGraph.this, SettingsActivity.class));
                 return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(OrchardsForGraph.this, LoginActivity.class));
+                    startActivity(new Intent(ForemenForBarGraph.this, LoginActivity.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
@@ -142,7 +140,7 @@ public class OrchardsForGraph extends AppCompatActivity {
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(OrchardsForGraph.this, LoginActivity.class));
+                                    startActivity(new Intent(ForemenForBarGraph.this, LoginActivity.class));
                                 }
                             });
                 }
