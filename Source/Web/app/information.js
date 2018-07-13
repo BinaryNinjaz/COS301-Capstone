@@ -611,7 +611,7 @@ function dispWork(id) {
         "<div class='col-sm-9'><input type='text' class='form-control' id='workSName'></div> </div>" +
         "" +
 	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity Number:</label>" +
-        "<div class='col-sm-9'><select class='form-control' id='workID'></select></div></div>" +
+	"<div class='col-sm-9'><input type='text' class='form-control' id='workID'></div> </div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchard:</label>" +
         "<div class='col-sm-9'><select class='form-control' id='workOrch'></select></div></div>" +
@@ -743,7 +743,7 @@ function workSave(type, id) {
       firebase.database().ref('/' + userID() +"/workers/" + id).update({
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
-      identityNo: document.getElementById("workID").value,
+
       orchard: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
