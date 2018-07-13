@@ -1,21 +1,78 @@
 package za.org.samac.harvest.util;
 
+import java.util.List;
+import java.util.Vector;
+
 public class Worker{
     protected String fName, sName;
-    protected Orchard assignedOrchard;
+    protected List<Orchard> assignedOrchards;
     protected WorkerType workerType;
     protected String further;
-    protected String email;
-    protected String ID;
+    protected String phone;
+    protected String fID;
+    protected String nID;
 
-    public Worker(String fName, String sName, Orchard assignedOrchard, WorkerType workerType, String further, String email, String ID){
-        this.fName = fName;
-        this.sName = sName;
-        this.assignedOrchard = assignedOrchard;
-        this.workerType = workerType;
+    public Worker(){
+    }
+
+    public void setFurther(String further) {
         this.further = further;
-        this.email = email;
-        this.ID = ID;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setAssignedOrchards(List<Orchard> assignedOrchards) {
+        this.assignedOrchards = assignedOrchards;
+    }
+
+    public void copyAssignedOrchards(List<Orchard> assignedOrchards){
+        this.assignedOrchards = new Vector<>(assignedOrchards);
+    }
+
+    public void setfID(String fID) {
+        this.fID = fID;
+    }
+
+    public void setfName(String fName) {
+        this.fName = fName;
+    }
+
+    public void setnID(String nID) {
+        this.nID = nID;
+    }
+
+    public void setsName(String sName) {
+        this.sName = sName;
+    }
+
+    public void setWorkerType(WorkerType workerType) {
+        this.workerType = workerType;
+    }
+
+    public String getFurther() {
+        return further;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public List<Orchard> getAssignedOrchards() {
+        return assignedOrchards;
+    }
+
+    public String getfID() {
+        return fID;
+    }
+
+    public String getnID() {
+        return nID;
+    }
+
+    public WorkerType getWorkerType() {
+        return workerType;
     }
 
     public String getfName() {
@@ -26,14 +83,22 @@ public class Worker{
         return sName;
     }
 
-    public String getID() {
-        return ID;
+    @Override
+    public String toString() {
+        return sName + ", " + fName;
+    }
+
+    public void addOrchard (Orchard orchard){
+        assignedOrchards.add(orchard);
+    }
+
+    public void removeOrchard (String ID){
+        for (Orchard current : assignedOrchards){
+            if (current.getID().equals(ID)){
+                assignedOrchards.remove(current);
+                return;
+            }
+        }
     }
 }
 
-enum WorkerType{
-    NOTHING,
-    WORKER,
-    FOREMAN,
-    FARMER
-}

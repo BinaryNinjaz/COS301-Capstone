@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-enum IrrigationKind : String {
+enum IrrigationKind: String, CustomStringConvertible {
   case micro = "Micro"
   case drip = "Drip"
   case floppy = "Floppy"
@@ -25,9 +25,13 @@ enum IrrigationKind : String {
     .other,
     .none
   ]
+  
+  var description: String {
+    return self.rawValue
+  }
 }
 
-final public class Orchard {
+public final class Orchard {
   var bagMass: Double
   var coords: [CLLocationCoordinate2D]
   var crop: String
@@ -43,19 +47,20 @@ final public class Orchard {
   var id: String
   var tempory: Orchard?
   
-  
   init(json: [String: Any], id: String) {
     self.id = id
-    bagMass = json["bagMass"] as? Double ?? 0.0
+    bagMass = json["bagMass"] as? Double ?? .nan
     crop = json["crop"] as? String ?? ""
     cultivars = json["cultivars"] as? [String] ?? []
     date = Date(timeIntervalSince1970: json["date"] as? Double ?? 0.0)
     assignedFarm = json["farm"] as? String ?? ""
     details = json["further"] as? String ?? ""
     name = json["name"] as? String ?? ""
-    treeSpacing = json["treeSpacing"] as? Double ?? 0.0
-    rowSpacing = json["rowSpacing"] as? Double ?? 0.0
-    irrigationKind = IrrigationKind(rawValue: json["irrigation"] as? String ?? "") ?? .none
+    treeSpacing = json["treeSpacing"] as? Double ?? .nan
+    rowSpacing = json["rowSpacing"] as? Double ?? .nan
+    irrigationKind = IrrigationKind(rawValue:
+      json["irrigation"] as? String ?? ""
+    ) ?? .none
     
     coords = [CLLocationCoordinate2D]()
     let cs = json["coords"] as? [Any] ?? []
@@ -78,14 +83,14 @@ final public class Orchard {
   
   func json() -> [String: [String: Any]] {
     return [id: [
-      "bagMass": bagMass,
+      "bagMass": bagMass.isNaN ? "" : bagMass,
       "crop": crop,
       "date": date.timeIntervalSince1970,
       "farm": assignedFarm,
-      "info": details,
+      "further": details,
       "name": name,
-      "treeSpacing": treeSpacing,
-      "rowSpacing": rowSpacing,
+      "treeSpacing": treeSpacing.isNaN ? "" : treeSpacing,
+      "rowSpacing": rowSpacing.isNaN ? "" : rowSpacing,
       "coords": coords.firbaseCoordRepresentation(),
       "cultivars": cultivars,
       "irrigation": irrigationKind.rawValue
@@ -93,8 +98,8 @@ final public class Orchard {
   }
 }
 
-extension Orchard : Equatable {
-  static public func ==(lhs: Orchard, rhs: Orchard) -> Bool {
+extension Orchard: Equatable {
+  static public func == (lhs: Orchard, rhs: Orchard) -> Bool {
     return lhs.id == rhs.id
       && lhs.bagMass == rhs.bagMass
       && lhs.crop == rhs.crop
@@ -110,14 +115,29 @@ extension Orchard : Equatable {
   }
 }
 
-extension Orchard : CustomStringConvertible {
+extension Orchard: CustomStringConvertible {
   public var description: String {
-    return name
+    guard let farm = Entities
+      .shared
+      .farms
+      .first(where: { $0.value.id == assignedFarm }) else {
+      return name + " – Unassigned (" + Date().timeIntervalSince1970.description + ")"
+    }
+    return farm.value.name + " – " + name
   }
 }
 
-extension CLLocationCoordinate2D : Equatable {
-  public static func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+extension Orchard: Hashable {
+  public var hashValue: Int {
+    return id.hashValue
+  }
+}
+
+extension CLLocationCoordinate2D: Equatable {
+  public static func == (
+    lhs: CLLocationCoordinate2D,
+    rhs: CLLocationCoordinate2D
+  ) -> Bool {
     return lhs.latitude == rhs.latitude
       && lhs.longitude == rhs.longitude
   }

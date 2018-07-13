@@ -9,15 +9,15 @@
 import UIKit
 
 class InformationEntityItemTableViewController: UITableViewController {
-  var listnerId: Int? = nil
-  var selectedEntity: EntityItem? = nil
+  var listnerId: Int?
+  var selectedEntity: EntityItem?
   var kind: EntityItem.Kind = .none {
     didSet {
       navigationItem.rightBarButtonItem?.isEnabled = kind != .session
     }
   }
   
-  var items: SortedEntity? {
+  var items: SortedDictionary<String, EntityItem>? {
     return Entities.shared.items(for: kind)
   }
   
@@ -29,9 +29,7 @@ class InformationEntityItemTableViewController: UITableViewController {
                              action: #selector(refreshList(_:)),
                              for: .valueChanged)
     
-    if refreshControl != nil {
-      tableView.addSubview(refreshControl!)
-    }
+    tableView.addSubview(refreshControl!)
     
     if listnerId == nil {
       listnerId = Entities.shared.listen { self.tableView.reloadData() }
@@ -39,9 +37,9 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
-    Entities.shared.getOnce(kind) { (es) in
+    Entities.shared.getOnce(kind) { (_) in
       self.refreshControl?.endRefreshing()
-      self.tableView.reloadData();
+      self.tableView.reloadData()
     }
   }
   
@@ -85,6 +83,9 @@ class InformationEntityItemTableViewController: UITableViewController {
     case .session:
       break
       
+    case .shallowSession:
+      break
+      
     case .user:
       break
       
@@ -92,7 +93,6 @@ class InformationEntityItemTableViewController: UITableViewController {
       break
     }
   }
-  
 
   override func numberOfSections(in tableView: UITableView) -> Int {
     return kind == .session ? Entities.shared.sessionDates().count : 1
@@ -121,11 +121,13 @@ class InformationEntityItemTableViewController: UITableViewController {
     case let .worker(w):
       cell.textLabel?.text = w.firstname + " " + w.lastname
     case let .orchard(o):
-      cell.textLabel?.text = o.name
+      cell.textLabel?.text = o.description
     case let .farm(f):
       cell.textLabel?.text = f.name
     case let .session(s):
       cell.textLabel?.text = s.foreman.description
+    case .shallowSession:
+      break
     case .user:
       cell.textLabel?.text = ""
     }
@@ -157,50 +159,14 @@ class InformationEntityItemTableViewController: UITableViewController {
     return kind == .session ? formatter.string(from: date)  : nil
   }
   
-  override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+  override func tableView(
+    _ tableView: UITableView,
+    editingStyleForRowAt indexPath: IndexPath
+  ) -> UITableViewCellEditingStyle {
     return UITableViewCellEditingStyle.none
   }
-  
-  /*
-  override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-    if editingStyle == .delete {
-      guard kind != .session else {
-        let items = Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[indexPath.section])
-        let item = items[indexPath.row]
-        
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-        HarvestDB.delete(session: item) { err, ref in
-          tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
-        
-        return
-      }
-      
-      guard let item = items?[indexPath.row] else {
-        return
-      }
-      
-      if let w = item.worker {
-        HarvestDB.delete(worker: w) { err, ref in
-          tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
-      } else if let f = item.farm {
-        HarvestDB.delete(farm: f) { err, ref in
-          tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
-        
-      } else if let o = item.orchard {
-        HarvestDB.delete(orchard: o) { err, ref in
-          tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
-      }
-    }
-  }
-  */
 
   // MARK: - Navigation
-
-  // In a storyboard-based application, you will often want to do a little preparation before navigation
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     let vc = segue.destination
     
