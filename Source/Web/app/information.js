@@ -720,6 +720,7 @@ function workSave(type, id) {
     newRef = firebase.database().ref('/' + userID() +"/workers/").push({
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
+      identityNo: document.getElementById("workID").value,
       orchard: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
@@ -742,6 +743,7 @@ function workSave(type, id) {
       firebase.database().ref('/' + userID() +"/workers/" + id).update({
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
+      identityNo: document.getElementById("workID").value,
       orchard: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
