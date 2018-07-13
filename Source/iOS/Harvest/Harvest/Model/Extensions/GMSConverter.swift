@@ -19,11 +19,7 @@ extension Array where Element == CLLocationCoordinate2D {
     return path
   }
   
-  func gmsPolyline(
-    mapView: GMSMapView,
-    color: UIColor = .blue,
-    width: CGFloat = 1.0
-  ) -> GMSPolyline {
+  func gmsPolyline(mapView: GMSMapView, color: UIColor = .blue, width: CGFloat = 1.0) -> GMSPolyline {
     let result = GMSPolyline(path: gmsPath())
     result.strokeColor = color
     result.strokeWidth = width
@@ -31,14 +27,10 @@ extension Array where Element == CLLocationCoordinate2D {
     return result
   }
   
-  func gmsPolygon(
-    mapView: GMSMapView,
-    color: UIColor = .red,
-    width: CGFloat = 2.0
-  ) -> GMSPolygon {
+  func gmsPolygon(mapView: GMSMapView, color: UIColor = .blue, width: CGFloat = 3.0) -> GMSPolygon {
     let result = GMSPolygon(path: gmsPath())
-    result.fillColor = color.withAlphaComponent(0.5)
-    result.strokeColor = color
+    result.fillColor = color.withAlphaComponent(0.1)
+    result.strokeColor = color.withAlphaComponent(0.5)
     result.strokeWidth = width
     result.map = mapView
     return result
@@ -52,9 +44,12 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
     formatter.dateStyle = .none
     formatter.timeStyle = .short
     for (key, value) in self {
-      for point in value {
+      for (i, point) in value.enumerated() {
         let marker = GMSMarker(position: point.location)
-        marker.title = key.description + " - " + formatter.string(from: point.date)
+        marker.title = key.description
+          + " - "
+          + formatter.string(from: point.date)
+          + " (\(i + 1) / \(value.count))"
         marker.map = mapView
         result.append(marker)
       }

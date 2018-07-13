@@ -28,7 +28,6 @@ function yieldsRef() {
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     $(window).bind("load", function() {
-      initMap();
       initOrchards();
     });
   } else {
@@ -132,14 +131,15 @@ function initOrchards() {
 
 var map;
 function initMap() {
-  navigator.geolocation.getCurrentPosition(function(loc) {
-    var latLng = new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude);
-    map.setCenter(latLng);
-  });
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -25, lng: 28 },
     zoom: 14,
     mapTypeId: 'satellite'
+  });
+  locationLookup((data) => {
+    var latLng = new google.maps.LatLng(data.lat, data.lon);
+    map.setCenter(latLng);
+    map.setZoom(11);
   });
 }
 
@@ -153,6 +153,7 @@ function requestedOrchardIds() {
   return result;
 }
 
+var first = true;
 var heatmap;
 function updateHeatmap() {
   var keys = requestedOrchardIds();
@@ -173,6 +174,10 @@ function updateHeatmap() {
     for (var d in data) {
       const latLng = new google.maps.LatLng(data[d].lat, data[d].lng);
       formattedData.push(latLng);
+      if (first) {
+        map.setCenter(latLng);
+        map.setZoom(14);
+      }
     }
     if (heatmap !== undefined) {
       heatmap.setMap(null);

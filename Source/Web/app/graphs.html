@@ -1,77 +1,129 @@
 <html>
 <!-- Vincent worked on this on 9/05/2018 -->
+<!-- Shaun made some changes 11/07/2018  -->
   <head>
   <meta charset="utf-8" />
+  <title>Analytics</title>
+  
+    <!--Firebase-->
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-database.js"></script>
+    <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script>
+    
+    <!--jQuery-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    
+    <!--Graph file-->
+    <script src="graphs.js" type="text/javascript"></script>
+    
+    
+    <!-- Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+     <link href="graphCSS.css" rel="stylesheet" type="text/css"/>
+    
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- This file needs to be included when youre working with charts -->
     <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']}); //This takes google API package to using charts
-      google.charts.setOnLoadCallback(drawChart1); //This is googles event handler to load the chart we are gonna draw
+      $(document).ready(function() {
+          initPage();
+        /*
+        calls to graphs.js will go here to retrieve the required information
+       */
 
-      function drawChart1() { /* I am temporarily drawing a function for multiple orchards, this will be tweaked tomorrow */
-        var data1 = google.visualization.arrayToDataTable([
-          ['Weeks Of The Month', 'Orchard A', 'Orchard B', 'Orchard C', 'Orchard D'],
-          ['1',  1000,      400,	500,      600],
-          ['2',  1170,      460,	560,      400],
-          ['3',  800,       520,	700,      820],
-		  ['4',  1000,       500,	600,      700],
-		  ['5',  1200,       540,	1000,      600]
-        ]);
+       google.charts.load('current', {'packages':['corechart']}); //This takes google API package to using charts
+       google.charts.setOnLoadCallback(drawChart1); //This is googles event handler to load the chart we are gonna draw
 
-        var options1 = {
-          title: 'Graph Showing Orchard Performance', /* This is the title of the graph */
-          curveType: 'function', /* The curve type is a function */
-          legend: { position: 'bottom' }
-        };
-		
-		//Store the google visualization of a line chart into a variable
-        var chart1 = new google.visualization.LineChart(document.getElementById('curve_chart'));
+       function drawChart1() { /* I am temporarily drawing a function for multiple orchards, this will be tweaked tomorrow */
+         var data1 = google.visualization.arrayToDataTable([
+           ['Weeks Of The Month', 'Orchard A', 'Orchard B', 'Orchard C', 'Orchard D'],
+           ['1',  1000,      400,	500,      600],
+           ['2',  1170,      460,	560,      400],
+           ['3',  800,       520,	700,      820],
+                   ['4',  1000,       500,	600,      700],
+                   ['5',  1200,       540,	1000,      600]
+         ]);
 
-        chart1.draw(data1, options1);
-      }
-	  
-/*      						This is the beggining of the pie						*/
-	google.charts.load('current', {'packages':['corechart']});
-	google.charts.setOnLoadCallback(drawChart);
+         var options1 = {
+           title: 'Graph Showing Orchard Performance', /* This is the title of the graph */
+           curveType: 'function', /* The curve type is a function */
+           legend: { position: 'bottom' }
+         };
 
-	function drawChart() {
+                 //Store the google visualization of a line chart into a variable
+         var chart1 = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
-	var data = google.visualization.arrayToDataTable([
-	  ['Orchard', 'Number of Bags for Month'],
-	  ['Orchard A',     11],
-	  ['Orchard B',      2],
-	  ['Orchard C',  2],
-	  ['Orchard D',    7]
-	]);
+         chart1.draw(data1, options1);
+       }
 
-	var options = {
-	  title: 'Overall Orchard performance Per Month'
-	};
+ /*      						This is the beggining of the pie						*/
+         google.charts.load('current', {'packages':['corechart']});
+         google.charts.setOnLoadCallback(drawChart);
 
-	var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+         function drawChart() {
 
-	chart.draw(data, options);
-	}
+         var data = google.visualization.arrayToDataTable([
+           ['Orchard', 'Number of Bags for Month'],
+           ['Orchard A',     11],
+           ['Orchard B',      2],
+           ['Orchard C',  2],
+           ['Orchard D',    7]
+         ]);
+
+         var options = {
+           title: 'Overall Orchard performance Per Month'
+         };
+
+         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+         chart.draw(data, options);
+         }
+     });
     </script>
-	 <!-- Bootstrap-->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-	 <link href="graphCSS.css" rel="stylesheet" type="text/css"/>
   </head>
   <body>
 	<div class="topnav">
-        <ul class="nav navbar-nav">
-        <a class="active" href="HomePage.html">Back to Home</a>
-        </ul>
+            <ul class="nav navbar-nav">
+                <a class="active" href="HomePage.html">Back to Home</a>
+            </ul>
 	</div>
 	<div class="container">
-	<div class="left">
-	<div id="piechart" style="width: 900px; height: 500px;"></div>
-	</div>
-	<div class="right" >
-	<div id="curve_chart" style="width: 900px; height: 500px"></div>
-	</div>
+            <!-- top chart can be orchard historical performance-->
+            <div class="left">
+                <div id="piechart" style="width: 900px; height: 500px;"></div>
+                <!-- below are objects the user can use to filter information-->
+                <div id="topChartFilter">
+                    <label>Select an orchard:
+                        <select id="orchardSelect"></select>
+                    </label> 
+                    <label>Select starting date:
+                        <input type="date" id="startDateSelect" />
+                    </label>
+                    <label>Select ending date:
+                        <input type="date" id="endDateSelect" />
+                    </label>
+                    <button type = "button" id='orchardFilter' onclick='filterOrchard()'>
+                        Filter Orchard Graph</button>
+                </div>
+            </div>
+            <!-- bottom graph can be the worker performance graph-->
+            <div class="right" >
+                <div id="curve_chart" style="width: 900px; height: 500px"></div>
+                <!-- below are objects the user can use to filter information-->
+                <div id="bottomChartFilter">
+                    <label>Select a worker:
+                        <select id="workerSelect"></select>
+                    </label> 
+                    <label>Select date:
+                        <input type="date" id="workerDateSelect" />
+                    </label>
+                    <button type = "button" id='workerFilter' onclick='filterWorker()'>
+                        Filter Worker Performance Graph </button>
+                </div>
+            </div>
 	</div>
   </body>
 </html>

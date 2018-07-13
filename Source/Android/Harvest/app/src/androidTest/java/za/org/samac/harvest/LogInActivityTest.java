@@ -1,6 +1,7 @@
 package za.org.samac.harvest;
 
 
+import android.os.SystemClock;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -25,6 +26,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -39,6 +41,8 @@ import android.support.test.espresso.action.ViewActions;
 //import android.support.test.espresso.assertion.ViewAssertions.matches;
 import android.support.test.espresso.matcher.ViewMatchers.*;
 
+import java.util.concurrent.TimeUnit;
+
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class LogInActivityTest {
@@ -49,11 +53,24 @@ public class LogInActivityTest {
 
     private String username_tobe_typed = "a@gmail.com";
     private String correct_password = "a";
-    private String wrong_password = "b";
+    private String startButton = "Start";
+
+    private String name = "Test";
+    private String surname = "Test";
+    private String email = "test@gmail.com";
+    private String password = "test";
+    private String confirmPassword = "test";
 
     @Test
     public void  login_success(){
         Log.e("@Test","Performing login success test");
+        //splash screen ****************************************************************************
+        Espresso.onView(withId(R.id.tvAppName))
+                .check(matches(withText(R.string.app_name)));
+
+        SystemClock.sleep(3000);//wait for splash
+
+        //log in ****************************************************************************
         Espresso.onView((withId(R.id.edtEmail)))
                 .perform(ViewActions.typeText(username_tobe_typed));
 
@@ -63,8 +80,63 @@ public class LogInActivityTest {
         Espresso.onView(withId(R.id.btnLogin))
                 .perform(ViewActions.click());
 
-        Espresso.onView(withId(R.id.login_form))
-                .check(matches(withText(R.string.action_sign_in_succesful)));
+        SystemClock.sleep(5000);//wait for Firebase verification
+
+        Espresso.onView(withId(R.id.button_start))
+                .check(matches(withText(startButton)));
+
+        //logout ****************************************************************************
+        /*Espresso.onView(withId(R.id.menu))
+                .perform(ViewActions.click());//click on menu first
+
+        Espresso.onView(withId(R.id.logout))
+                .perform(ViewActions.click());
+
+        ViewActions.closeSoftKeyboard();
+
+        Espresso.onView(withId(R.id.btnLogin))
+                .check(matches(withText(R.string.login)));
+
+        //go to sign up ****************************************************************************
+        Espresso.onView(withId(R.id.btnSignUp))
+                .perform(ViewActions.click());
+
+        ViewActions.closeSoftKeyboard();
+
+        //go back to log in ****************************************************************************
+        Espresso.onView(withId(R.id.btnLogin))
+                .perform(ViewActions.click());
+
+        ViewActions.closeSoftKeyboard();
+
+        //sign up ****************************************************************************
+        Espresso.onView(withId(R.id.btnSignUp))
+                .perform(ViewActions.click());
+
+        ViewActions.closeSoftKeyboard();
+
+        Espresso.onView((withId(R.id.edtFirstName)))
+                .perform(ViewActions.typeText(name));
+
+        Espresso.onView((withId(R.id.edtSurname)))
+                .perform(ViewActions.typeText(surname));
+
+        Espresso.onView((withId(R.id.edtEmail)))
+                .perform(ViewActions.typeText(email));
+
+        Espresso.onView((withId(R.id.edtPassword)))
+                .perform(ViewActions.typeText(password));
+
+        Espresso.onView((withId(R.id.edtConfirmPassword)))
+                .perform(ViewActions.typeText(confirmPassword));
+
+        Espresso.onView(withId(R.id.btnSignUp))
+                .perform(ViewActions.click());
+
+        SystemClock.sleep(5000);//wait for Firebase verification
+
+        Espresso.onView(withId(R.id.button_start))
+                .check(matches(withText(startButton)));*/
     }
 
     /*@Test
