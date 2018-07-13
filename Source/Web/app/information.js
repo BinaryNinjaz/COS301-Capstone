@@ -608,6 +608,9 @@ function dispWork(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Surname:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='workSName'></div> </div>" +
         "" +
+	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity number:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='workID'></div> </div>" +
+	""+
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchard:</label>" +
         "<div class='col-sm-9'><select class='form-control' id='workOrch'></select></div></div>" +
         "" +
@@ -646,6 +649,9 @@ function dispWork(id) {
                     "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Surname:</label>" +
                     "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().surname + "</p> </div> </div>" +
                     "" +
+		    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity number:</label>" +
+		    "<div class='col-sm-9'><input type='text' class='form-control' id='workID'></div> </div>" +
+		    "" +
                     "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchard:</label>" +
                     "<div class='col-sm-9'><span id='workOrchDisp'></span></div></div>" +
                     "" +
@@ -773,6 +779,9 @@ function workMod(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Surname:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='workSName' value='" + snapshot.val().surname + "'></div> </div>" +
         "" +
+	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity number:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='workID'></div> </div>" +
+	"" +    
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchard:</label>" +
         "<div class='col-sm-9'><select class='form-control' id='workOrch'></select></div></div>" +
         "" +
