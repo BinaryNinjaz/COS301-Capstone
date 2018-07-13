@@ -659,11 +659,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         workerObj.setValue(0);
                         workerObj.setID(zoneSnapshot.getKey());
                         foremen.add(workerObj);
-<<<<<<< HEAD
 
-=======
-                        
->>>>>>> a1c992d54bbe75b30f4031fe0803b36cbaf76a8f
                         if (zoneSnapshot.child("phoneNumber").getValue(String.class) != null) {
                             if (zoneSnapshot.child("phoneNumber").getValue(String.class).equals(currentUserNumber)) {
                                 foremanID = zoneSnapshot.getKey();
