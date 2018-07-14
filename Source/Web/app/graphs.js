@@ -169,8 +169,8 @@ function getWorkerId(name){
 
 var groupBy; /* grouping variable */
 var period;	/* period time space variable */
-var startDate;	/* grouping variable */
-var endDate;	/* grouping variable */
+var startDate;	/* Begin date variable */
+var endDate;	/* End date variable */
 var uid;	/* grouping variable */
 
 //converts a date to seconds since epoch
