@@ -50,6 +50,7 @@ function getOrchards(_callback) {
   });
 }
 
+/* Function returns a foremen, given a particular key */
 function foremanForKey(key) {
   for (var k in foremen) {
     if (foremen[k].key === key) {
