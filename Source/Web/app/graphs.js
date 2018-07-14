@@ -128,6 +128,7 @@ function filterOrchard(){
     }
 }
 
+/* This function returns the Orchard ID when given the name of the orchard */
 function getOrchardId(name){
     var id='';
     for (var k in orchards) {
