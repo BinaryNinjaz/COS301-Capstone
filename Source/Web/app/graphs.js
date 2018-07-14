@@ -155,6 +155,7 @@ function filterWorker(){
     }
 }
 
+/* This function returns the worker ID, given the name of a particular worker */
 function getWorkerId(name){
     var id='';
     for (var k in workers) {
