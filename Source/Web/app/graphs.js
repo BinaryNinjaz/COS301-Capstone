@@ -167,7 +167,7 @@ function getWorkerId(name){
     return id;
 }
 
-var groupBy;
+var groupBy; /* grouping variable */
 var period;
 var startDate;
 var endDate;
