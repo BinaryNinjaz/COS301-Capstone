@@ -76,6 +76,7 @@ function initPage(){
     initWorkers();	//This function initiates the workers immediately when the analytics page is accessed (for selection)
 }
 
+/* This function loads all available orchards in the database, for graph filtering */
 function initOrchards(){
     var orchardSelect = document.getElementById('orchardSelect');
     getOrchards((orchardsSnap) => {
