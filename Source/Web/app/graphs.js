@@ -168,10 +168,10 @@ function getWorkerId(name){
 }
 
 var groupBy; /* grouping variable */
-var period;
-var startDate;
-var endDate;
-var uid;
+var period;	/* period time space variable */
+var startDate;	/* grouping variable */
+var endDate;	/* grouping variable */
+var uid;	/* grouping variable */
 
 //converts a date to seconds since epoch
 function dateToSeconds(date){ return Math.floor( date.getTime() / 1000 ) }
