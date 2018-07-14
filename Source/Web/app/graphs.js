@@ -12,7 +12,7 @@ const userID = function() {
   }
 }
 
-var foremen = [];
+var foremen = []; /* Array containing a list of Foremen names */
 var workers = [];
 var orchards = [];
 
