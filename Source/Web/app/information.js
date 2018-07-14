@@ -230,10 +230,10 @@ function dispFarm(id) {
         "<div class='col-sm-9' id='orchardButtons'></div></div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince'></div> </div> " +     
+        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().province + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown'></div> </div> " +     
+        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().town + "</p> </div> </div> " +
         ""+
         "</form>"
       ;
