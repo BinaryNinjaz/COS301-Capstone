@@ -29,6 +29,7 @@ function workersRef() {
   return database.ref('/' + userID()  + '/workers');
 }
 
+/* Function returns a pointer to the list of orchards of the particular user ID */
 function orchardsRef() {
   return database.ref('/' + userID()  + '/orchards');
 }
