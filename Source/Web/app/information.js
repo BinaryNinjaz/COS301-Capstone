@@ -202,6 +202,12 @@ function dispFarm(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'></textarea></div></div>" +
       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince'></div> </div> " +     
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown'></div> </div> " +     
+      ""+
       "</form>"
     ;
   }
@@ -223,6 +229,12 @@ function dispFarm(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Orchards:</label>" +
         "<div class='col-sm-9' id='orchardButtons'></div></div>" +
         "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince'></div> </div> " +     
+        "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown'></div> </div> " +     
+        ""+
         "</form>"
       ;
 
@@ -247,7 +259,9 @@ function farmSave(type, id) {
   if (type === 0) {
     let newRef = firebase.database().ref('/' + userID() + "/farms/").push({
       name: document.getElementById("farmName").value,
-      further: document.getElementById("farmFurther").value
+      further: document.getElementById("farmFurther").value,
+      province: document.getElementById("farmProvince").value,
+      town: document.getElementsById("farmTown").value
     });
     id = newRef.getKey();
     popFarm();
@@ -255,7 +269,9 @@ function farmSave(type, id) {
   else if (type === 1) {
     firebase.database().ref('/' + userID() + "/farms/" + id).update({
       name: document.getElementById("farmName").value,
-      further: document.getElementById("farmFurther").value
+      further: document.getElementById("farmFurther").value,
+      province: document.getElementById("farmProvince").value,
+      town: document.getElementsById("farmTown").value
     });
   }
   popFarm();
@@ -282,6 +298,12 @@ function farmMod(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
       // "<div class='col-sm-9'><input type='text' class='form-control' id='oi' value='"+snapshot.val().further+"'></div> </div>" +
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'>" + snapshot.val().further + "</textarea></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince' value='" + snapshot.val().province + "'></div> </div> " +
+       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown' value='" + snapshot.val().town + "'></div> </div> " +
       "" +
       "</form>"
     ;
