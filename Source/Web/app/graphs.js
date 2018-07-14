@@ -60,6 +60,7 @@ function foremanForKey(key) {
   return {value: {name: "Farm", surname: "Owner"}}; //The return value is a JSON object
 }
 
+/* Function returns a worker, given a particular key */
 function workerForKey(key) {
   for (var k in workers) {
     if (workers[k].key === key) {
