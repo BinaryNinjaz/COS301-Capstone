@@ -57,7 +57,7 @@ function foremanForKey(key) {
       return foremen[k];
     }
   }
-  return {value: {name: "Farm", surname: "Owner"}};
+  return {value: {name: "Farm", surname: "Owner"}}; //The return value is a JSON object
 }
 
 function workerForKey(key) {
