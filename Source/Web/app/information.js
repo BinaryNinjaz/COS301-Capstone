@@ -199,6 +199,9 @@ function dispFarm(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmName'></div> </div> " +
       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact'></div> </div> " +
+      "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'></textarea></div></div>" +
       "" +
@@ -222,6 +225,9 @@ function dispFarm(id) {
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().name + "</p> </div> </div> " +
+        "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
+        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().contactNo + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().further + "</p></div> </div>" +
@@ -260,6 +266,7 @@ function farmSave(type, id) {
     let newRef = firebase.database().ref('/' + userID() + "/farms/").push({
       name: document.getElementById("farmName").value,
       further: document.getElementById("farmFurther").value,
+      contactNo: document.getElementById("farmContact").value,
       province: document.getElementById("farmProvince").value,
       town: (document.getElementById("farmTown").value+"")
     });
@@ -270,8 +277,9 @@ function farmSave(type, id) {
     firebase.database().ref('/' + userID() + "/farms/" + id).update({
       name: document.getElementById("farmName").value,
       further: document.getElementById("farmFurther").value,
+      contactNo: document.getElementById("farmContact").value,
       province: document.getElementById("farmProvince").value,
-      town: (document.getElementById("farmTown").value+"")
+      town: document.getElementById("farmTown").value
     });
   }
   popFarm();
@@ -296,8 +304,10 @@ function farmMod(id) {
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' value='" + snapshot.val().name + "'></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-      // "<div class='col-sm-9'><input type='text' class='form-control' id='oi' value='"+snapshot.val().further+"'></div> </div>" +
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'>" + snapshot.val().further + "</textarea></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().contactNo + "'></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince' value='" + snapshot.val().province + "'></div> </div> " +
