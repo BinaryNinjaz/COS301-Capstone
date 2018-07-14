@@ -34,6 +34,7 @@ function orchardsRef() {
   return database.ref('/' + userID()  + '/orchards');
 }
 
+/* Function returns a worker pointed to by the callback parameter */
 function getWorkers(callback) {
   const ref = firebase.database().ref('/' + userID() + '/workers');
   ref.once('value').then((snapshot) => {
