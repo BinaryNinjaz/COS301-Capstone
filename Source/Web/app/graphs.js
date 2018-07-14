@@ -1,7 +1,7 @@
 /* Vincent Added comments to the following code below */
 const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions';
 const database = firebase.database();	/* Pointing to database on firebase cloud */
-const user = function() { return firebase.auth().currentUser };
+const user = function() { return firebase.auth().currentUser }; /* Function which authenticates user */
 const userID = function() {
   if (user() !== null) {
     return user().uid ;
