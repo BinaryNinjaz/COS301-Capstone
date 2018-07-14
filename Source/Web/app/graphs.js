@@ -14,7 +14,7 @@ const userID = function() {
 
 var foremen = []; /* Array containing a list of Foremen names */
 var workers = []; /* Array containing a list of workers names */
-var orchards = [];
+var orchards = []; /* Array containing a list of Orchard names */
 
 /*firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
