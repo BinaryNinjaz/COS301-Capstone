@@ -42,6 +42,7 @@ function getWorkers(callback) {
   });
 }
 
+/* Function returns an orchard pointed to by the callback parameter */
 function getOrchards(_callback) {
   const ref = firebase.database().ref('/' + userID() + '/orchards');
   ref.once('value').then((snapshot) => {
