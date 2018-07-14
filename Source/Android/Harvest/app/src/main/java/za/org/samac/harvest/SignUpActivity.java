@@ -73,11 +73,11 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private UserLoginTask mAuthTask = null;
 
     // UI references (used the ID names).
-    private EditText edtFirstName;
-    private EditText edtSurname;
-    private EditText edtEmail;
-    private EditText edtPassword;
-    private EditText edtConfirmPassword;
+    private static EditText edtFirstName;
+    private static EditText edtSurname;
+    private static EditText edtEmail;
+    private static EditText edtPassword;
+    private static EditText edtConfirmPassword;
     private View signUp_progress;
     private View signUp_form;
     private Button btnSignUp;
@@ -117,7 +117,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    if(validateForm()) {
+                    if(validateForm(edtConfirmPassword.getText().toString(), edtPassword.getText().toString(),
+                            edtEmail.getText().toString(), edtSurname.getText().toString(), edtFirstName.getText().toString())) {
                         createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
                     }
 
@@ -135,7 +136,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         btnSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validateForm()) {
+                if(validateForm(edtConfirmPassword.getText().toString(), edtPassword.getText().toString(),
+                        edtEmail.getText().toString(), edtSurname.getText().toString(), edtFirstName.getText().toString())) {
                     createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
                 }
             }
@@ -169,7 +171,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     private void createAccount(String email, String password) {
         Log.d(TAG, "createAccount:" + email);
-        if (!validateForm()) {
+        if (!validateForm(edtConfirmPassword.getText().toString(), edtPassword.getText().toString(),
+                edtEmail.getText().toString(), edtSurname.getText().toString(), edtFirstName.getText().toString())) {
             return;
         }
 
@@ -204,7 +207,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(SignUpActivity.this, InformationActivity.class);
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }
@@ -237,26 +240,28 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     }
 
     //firebase suggested validate
-    private boolean validateForm() {
+    public static boolean validateForm(String confirmPassword, String password, String email, String surname, String firstName) {
         boolean valid = true;
         View focusView = null;
 
-        String confirmPassword = edtConfirmPassword.getText().toString();
         if (TextUtils.isEmpty(confirmPassword)) {
             edtConfirmPassword.setError("Required.");
             focusView = edtConfirmPassword;
             valid = false;
         } else {
-            edtConfirmPassword.setError(null);
+            if (edtConfirmPassword != null) {
+                edtConfirmPassword.setError(null);
+            }
         }
 
-        String password = edtPassword.getText().toString();
         if (TextUtils.isEmpty(password)) {
             edtPassword.setError("Required.");
             focusView = edtPassword;
             valid = false;
         } else {
-            edtPassword.setError(null);
+            if (edtPassword != null) {
+                edtPassword.setError(null);
+            }
         }
 
         //check if two passwords entered match
@@ -264,33 +269,36 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             valid = false;
         }
 
-        String email = edtEmail.getText().toString();
         if (isEmailValid(email) == false) {
             //edtEmail.setError("Invalid email.");//this isn't working
-            edtEmail.setError(getString(R.string.error_invalid_email));
+            edtEmail.setError("This email address is invalid");
             focusView = edtEmail;
             focusView.requestFocus();
             valid = false;
         } else {
-            edtEmail.setError(null);
+            if (edtEmail != null) {
+                edtEmail.setError(null);
+            }
         }
 
-        String surname = edtSurname.getText().toString();
         if (TextUtils.isEmpty(surname)) {
             edtSurname.setError("Required.");
             focusView = edtSurname;
             valid = false;
         } else {
-            edtSurname.setError(null);
+            if (edtSurname != null) {
+                edtSurname.setError(null);
+            }
         }
 
-        String firstName = edtFirstName.getText().toString();
         if (TextUtils.isEmpty(firstName)) {
             edtFirstName.setError("Required.");
             focusView = edtFirstName;
             valid = false;
         } else {
-            edtFirstName.setError(null);
+            if (edtFirstName != null) {
+                edtFirstName.setError(null);
+            }
         }
 
         if (valid == false) {
@@ -404,14 +412,14 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         }
     }*/
 
-    private boolean isEmailValid(String email) {
+    private static boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: we are still debating on what value to use
-        return password.length() > 0;
+        return password.length() > 5;
     }
 
     /**
