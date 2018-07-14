@@ -92,6 +92,7 @@ function initOrchards(){
     }); 
 }
 
+/* This function loads all available workers in the database, for graph filtering */
 function initWorkers(){
    var workerSelect = document.getElementById('workerSelect');
    getWorkers((workersSnap) => {
