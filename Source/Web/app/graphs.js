@@ -24,6 +24,7 @@ var orchards = []; /* Array containing a list of Orchard names */
   }
 });*/
 
+/* Function returns a pointer to the list of workers of the particular user ID */
 function workersRef() {
   return database.ref('/' + userID()  + '/workers');
 }
