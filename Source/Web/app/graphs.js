@@ -124,7 +124,7 @@ function filterOrchard(){
         orchardPerformance(start, end, id);
     }else{
         window.alert("Some fields in the orchard filter appear to be blank. \n"
-        +"Please enter them to continue.");
+        +"Please enter them to continue."); //Appropriate error message when loading fails
     }
 }
 
