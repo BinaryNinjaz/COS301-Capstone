@@ -59,6 +59,46 @@
          }
      });
     </script>
+	<script>
+		window.onload = function () {
+			
+		var chart = new CanvasJS.Chart("curve_chart", {
+			animationEnabled: true,
+			
+			title:{
+				text:"Number of bags collected per hour by Teboho Mokoena"
+			},
+			axisX:{
+				interval: 1
+			},
+			axisY2:{
+				interlacedColor: "rgba(0,255,0,.2)",
+				gridColor: "rgba(0,10,0,.1)",
+				title: "Number of Bags"
+			},
+			data: [{
+				type: "bar",
+				name: "Bags",
+				axisYType: "secondary",
+				color: "#00a33f",
+				dataPoints: [
+					{ y: 3, label: "08:00 - 09:00" },
+					{ y: 7, label: "09:00 - 10:00" },
+					{ y: 5, label: "10:00 - 11:00" },
+					{ y: 9, label: "11:00 - 12:00" },
+					{ y: 7, label: "12:00 - 13:00" },
+					{ y: 7, label: "13:00 - 14:00" },
+					{ y: 9, label: "14:00 - 15:00" },
+					{ y: 8, label: "15:00 - 16:00" },
+					{ y: 11, label: "16:00 - 17:00" },
+					{ y: 15, label: "17:00 - 18:00" }
+				]
+			}]
+		});
+		chart.render();
+
+		}
+	</script>
   </head>
   <body>
 	<div class="topnav">
