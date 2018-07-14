@@ -73,7 +73,7 @@ public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
-                                Intent openSessions= new Intent(ForemenPerSession.this, SessionsMap.class);
+                                Intent openSessions= new Intent(ForemenPerSession.this, Sessions.class);
                                 openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openSessions, 0);
                                 return true;
