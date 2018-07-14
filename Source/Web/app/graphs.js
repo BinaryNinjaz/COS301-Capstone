@@ -171,7 +171,7 @@ var groupBy; /* grouping variable */
 var period;	/* period time space variable */
 var startDate;	/* Begin date variable */
 var endDate;	/* End date variable */
-var uid;	/* grouping variable */
+var uid;	/* user ID variable */
 
 //converts a date to seconds since epoch
 function dateToSeconds(date){ return Math.floor( date.getTime() / 1000 ) }
