@@ -13,7 +13,7 @@ const userID = function() {
 }
 
 var foremen = []; /* Array containing a list of Foremen names */
-var workers = [];
+var workers = []; /* Array containing a list of workers names */
 var orchards = [];
 
 /*firebase.auth().onAuthStateChanged(function (user) {
