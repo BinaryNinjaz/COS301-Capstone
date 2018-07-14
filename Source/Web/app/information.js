@@ -270,8 +270,8 @@ function farmSave(type, id) {
     firebase.database().ref('/' + userID() + "/farms/" + id).update({
       name: document.getElementById("farmName").value,
       further: document.getElementById("farmFurther").value,
-      province: document.getElementById("farmProvince").value,
-      town: document.getElementsById("farmTown").value
+      province: document.getElementById("farmProvince").value
+      //town: document.getElementsById("farmTown").value
     });
   }
   popFarm();
