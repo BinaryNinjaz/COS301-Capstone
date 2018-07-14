@@ -72,7 +72,7 @@ function workerForKey(key) {
 
 //calls functions that populate the drop down lists and worker/orchard arrays
 function initPage(){
-    initOrchards();
+    initOrchards(); //This function initiates the orchards immediately when the analytics page is accessed
     initWorkers();
 }
 
