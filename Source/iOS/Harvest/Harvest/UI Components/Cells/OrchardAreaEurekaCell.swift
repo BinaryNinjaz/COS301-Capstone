@@ -19,7 +19,7 @@ public final class OrchardAreaRow: OptionsRow<PushSelectorCell<Orchard>>, Presen
   /// Will be called before the presentation occurs.
   open var onPresentCallback: ((FormViewController, PresenterRow) -> Void)?
   
-  var actuallyChanged: ((RowOf<Orchard>) -> ())? = nil
+  var actuallyChanged: ((RowOf<Orchard>) -> Void)?
   
   public required init(tag: String?) {
     super.init(tag: tag)
@@ -27,7 +27,9 @@ public final class OrchardAreaRow: OptionsRow<PushSelectorCell<Orchard>>, Presen
       controllerProvider: ControllerProvider.callback {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let vc = storyboard.instantiateViewController(withIdentifier: "orchardAreaViewController")
-        let rowVC = vc as! OrchardAreaViewController
+        guard let rowVC = vc as? OrchardAreaViewController else {
+          fatalError("We should never get here. We instantiated from orchardAreaViewController")
+        }
         rowVC.actuallyChanged = self.actuallyChanged
         return rowVC
       },
