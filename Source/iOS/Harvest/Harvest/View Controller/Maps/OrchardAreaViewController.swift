@@ -21,14 +21,14 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   
   var zoomLevel: Float = 15.0
   
-  var orchardPolygon: GMSPolygon? = nil
+  var orchardPolygon: GMSPolygon?
   var collections = [CLLocationCoordinate2D]()
   
   @IBOutlet weak var mapView: GMSMapView!
   @IBOutlet weak var removeAllButton: UIButton!
   @IBOutlet weak var removeLastButton: UIButton!
   
-  var actuallyChanged: ((RowOf<Orchard>) -> ())? = nil
+  var actuallyChanged: ((RowOf<Orchard>) -> Void)?
   
   func updatePolygon() {
     orchardPolygon?.map = nil
@@ -44,9 +44,9 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       collections.removeAll()
       updatePolygon()
     } else {
-      let alert = UIAlertController.alertController(title: "No Points", message: "There are no more points in the orchard to delete")
-      
-      present(alert, animated: true, completion: nil)
+      UIAlertController.present(title: "No More Points",
+                                message: "There are no more points in the orchard to delete",
+                                on: self)
     }
     
   }
@@ -56,9 +56,9 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       collections.removeLast()
       updatePolygon()
     } else {
-      let alert = UIAlertController.alertController(title: "No Points", message: "There are no more points in the orchard to delete")
-      
-      present(alert, animated: true, completion: nil)
+      UIAlertController.present(title: "No More Points",
+                                message: "There are no more points in the orchard to delete",
+                                on: self)
     }
     
   }
@@ -66,8 +66,8 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   public override func viewDidLoad() {
     super.viewDidLoad()
     
-    removeAllButton.apply(gradient: .red)
-    removeLastButton.apply(gradient: .orange)
+    removeAllButton.apply(gradient: .deleteAllButton)
+    removeLastButton.apply(gradient: .deleteButton)
     
     mapView.isHidden = false
     mapView.mapType = GMSMapViewType.normal

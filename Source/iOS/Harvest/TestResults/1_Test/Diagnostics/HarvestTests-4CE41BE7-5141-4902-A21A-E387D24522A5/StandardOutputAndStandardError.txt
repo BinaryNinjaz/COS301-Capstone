@@ -1,0 +1,46 @@
+2018-07-04 02:33:31.631962+0200 Harvest[65985:137818344] 4.11.0 - [Firebase/Analytics][I-ACS023007] Firebase Analytics v.40100000 started
+2018-07-04 02:33:31.632563+0200 Harvest[65985:137818344] 4.11.0 - [Firebase/Analytics][I-ACS023008] To enable debug logging set the following application argument: -FIRAnalyticsDebugEnabled (see http://goo.gl/RfcP7r)
+Test Suite 'All tests' started at 2018-07-04 02:33:32.648
+Test Suite 'HarvestTests.xctest' started at 2018-07-04 02:33:32.649
+Test Suite 'GeoKitTests' started at 2018-07-04 02:33:32.650
+Test Case '-[HarvestTests.GeoKitTests testCreateEdgesFromPoints]' started.
+Test Case '-[HarvestTests.GeoKitTests testCreateEdgesFromPoints]' passed (0.001 seconds).
+Test Case '-[HarvestTests.GeoKitTests testEdgeGradient]' started.
+Test Case '-[HarvestTests.GeoKitTests testEdgeGradient]' passed (0.000 seconds).
+Test Case '-[HarvestTests.GeoKitTests testEdgeIntersection]' started.
+Test Case '-[HarvestTests.GeoKitTests testEdgeIntersection]' passed (0.001 seconds).
+Test Case '-[HarvestTests.GeoKitTests testEdgeLength]' started.
+Test Case '-[HarvestTests.GeoKitTests testEdgeLength]' passed (0.000 seconds).
+Test Case '-[HarvestTests.GeoKitTests testEdgeMax]' started.
+Test Case '-[HarvestTests.GeoKitTests testEdgeMax]' passed (0.000 seconds).
+Test Case '-[HarvestTests.GeoKitTests testEdgeMin]' started.
+Test Case '-[HarvestTests.GeoKitTests testEdgeMin]' passed (0.000 seconds).
+Test Case '-[HarvestTests.GeoKitTests testEdgeOffset]' started.
+Test Case '-[HarvestTests.GeoKitTests testEdgeOffset]' passed (0.000 seconds).
+Test Case '-[HarvestTests.GeoKitTests testEllipseContains]' started.
+Test Case '-[HarvestTests.GeoKitTests testEllipseContains]' passed (0.000 seconds).
+Test Case '-[HarvestTests.GeoKitTests testPolyContains]' started.
+Test Case '-[HarvestTests.GeoKitTests testPolyContains]' passed (0.001 seconds).
+Test Case '-[HarvestTests.GeoKitTests testPolyIntersectionPoints]' started.
+Test Case '-[HarvestTests.GeoKitTests testPolyIntersectionPoints]' passed (0.000 seconds).
+Test Case '-[HarvestTests.GeoKitTests testPolyIntersectionSegments]' started.
+Test Case '-[HarvestTests.GeoKitTests testPolyIntersectionSegments]' passed (0.000 seconds).
+Test Suite 'GeoKitTests' passed at 2018-07-04 02:33:32.658.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.006 (0.008) seconds
+Test Suite 'HarvestTests' started at 2018-07-04 02:33:32.658
+Test Case '-[HarvestTests.HarvestTests testLocationTracking]' started.
+Test Case '-[HarvestTests.HarvestTests testLocationTracking]' passed (0.013 seconds).
+Test Case '-[HarvestTests.HarvestTests testYieldCollectionAmount]' started.
+Test Case '-[HarvestTests.HarvestTests testYieldCollectionAmount]' passed (0.004 seconds).
+Test Case '-[HarvestTests.HarvestTests testYieldCollectionClocking]' started.
+Test Case '-[HarvestTests.HarvestTests testYieldCollectionClocking]' passed (0.003 seconds).
+Test Case '-[HarvestTests.HarvestTests testYieldCollectionCoords]' started.
+Test Case '-[HarvestTests.HarvestTests testYieldCollectionCoords]' passed (0.003 seconds).
+Test Suite 'HarvestTests' passed at 2018-07-04 02:33:32.682.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.022 (0.024) seconds
+Test Suite 'HarvestTests.xctest' passed at 2018-07-04 02:33:32.683.
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.028 (0.033) seconds
+Test Suite 'All tests' passed at 2018-07-04 02:33:32.683.
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.028 (0.035) seconds
+2018-07-04 02:33:32.687131+0200 Harvest[65985:137818369] TIC Read Status [1:0x0]: 1:57
+2018-07-04 02:33:32.694519+0200 Harvest[65985:137818369] TIC Read Status [1:0x0]: 1:57

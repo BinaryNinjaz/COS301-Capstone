@@ -36,6 +36,11 @@ public class PieChart extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private String userUid;
+    private String workerKey;
+    private ArrayList<String> workerKeys;
+    private ArrayList<String> workerName;
+    private ArrayList<Integer> yield;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Query query;
     private static final String TAG = "Analytics";
@@ -86,12 +91,15 @@ public class PieChart extends AppCompatActivity {
         //Start the first fragment
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         //super.onOptionsItemSelected(item);
+        workerKeys = new ArrayList<>();
+        workerName = new ArrayList<>();
+        yield = new ArrayList<>();
         displayGraph();
     }
 
     public void displayGraph() {
         database = FirebaseDatabase.getInstance();
-        String userUid = user.getUid();//ID or key of the current user
+        userUid = user.getUid();//ID or key of the current user
         myRef = database.getReference(userUid + "/sessions/");//path to sessions increment in Firebase
 
         query = myRef.limitToLast(1);
@@ -102,31 +110,69 @@ public class PieChart extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    List<Object> collections = (List<Object>) zoneSnapshot.child("collections").getValue();
-                   // Map<String, Object> collection = (Map<String, Object>) collections;
+                    //List<Object> collections = (List<Object>) zoneSnapshot.child("collections").getValue();
+                    Map<String, Object> collections = (Map<String, Object>) zoneSnapshot.child("collections").getValue();
 
-                    for(int index = 0; index < collections.size(); index++) {
-                        Object workerId = collections.get(index);
+                    if (collections.equals(null)) {
+
+                    }
+
+                    for(String key : collections.keySet()) {
+                        Object workerId = collections.get(key);
+
                         if(workerId != null) {
-                            Integer yield = ((ArrayList<Object>) workerId).size();
-                            entries.add(new PieEntry((float)yield, workerId));
+                            workerKeys.add(key);
+                            yield.add(((ArrayList)workerId).size());
                         }
                     }
                 }
 
-                progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
-                pieChartView.setVisibility(View.VISIBLE);
+                getWorkerNames();
+            }
 
-                PieDataSet dataset = new PieDataSet(entries, "Dataset");
-                dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+            }
+        });
+    }
 
-                PieData data = new PieData(dataset);//labels was one of the parameters
-                pieChart.setData(data); // set the data and list of lables into chart
+    public void getWorkerNames() {
+        DatabaseReference ref = database.getReference(userUid + "/workers/");//path to workers increment in Firebase
 
-                Description description = new Description();
-                description.setText("Worker Performance");
-                pieChart.setDescription(description); // set the description
-                pieChart.notifyDataSetChanged();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (int i = 0; i<workerKeys.size(); i++) {
+                    workerKey = workerKeys.get(i);
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (workerKey.equals(child.getKey())) {
+                            workerName.add(child.child("name").getValue(String.class) + " " + child.child("surname").getValue(String.class));
+                            break;
+                        }
+                    }
+                }
+
+                if (workerName.size() == workerKeys.size()) {
+                    //put labels on chart
+                    for (int i = 0; i<workerName.size(); i++) {
+                        entries.add(new PieEntry((float)yield.get(i), workerName.get(i)));//exchange index with Worker Name
+                    }
+
+                    progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+                    pieChartView.setVisibility(View.VISIBLE);
+
+                    PieDataSet dataset = new PieDataSet(entries, "Dataset");
+                    dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+
+                    PieData data = new PieData(dataset);//labels was one of the parameters
+                    pieChart.setData(data); // set the data and list of lables into chart
+
+                    Description description = new Description();
+                    description.setText("Worker Performance");
+                    pieChart.setDescription(description); // set the description
+                    pieChart.notifyDataSetChanged();
+                }
             }
 
             @Override
