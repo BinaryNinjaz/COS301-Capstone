@@ -176,11 +176,11 @@ function getDateOfISOWeek(w, y) {
     var simple = new Date(y, 0, 1 + (w - 1) * 7);
     var dow = simple.getDay();
     var ISOweekStart = simple;
-    if (dow <= 4)
+    if (dow <= 4){
         ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-    else
+    }else{
         ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
-    return ISOweekStart;
+    }return ISOweekStart;
 }
 
 //takes information chosen by user for orchard filter to pass to orchard performance function
@@ -188,10 +188,10 @@ function filterOrchard(){
     var name = document.getElementById('orchardSelect').value;
     var week = document.getElementById('weekSelect').value; //format e.g: 2018-W17
     if(name!== '' && week!==''){
-        var y = week.substring(0,3);
-        var w = week.substring(6,7);
+        var y = week.substring(0,4);
+        var w = week.substring(6,8);
         var start = new Date(getDateOfISOWeek(w, y));
-        var end = new Date(start.getFullYear(),start.getMonth(),start.getDay()+6);
+        var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
         var id = getOrchardId(name);
         orchardPerformance(start, end, id);
     }else{
@@ -247,7 +247,7 @@ var groupBy; /* grouping variable */
 var period;	/* period time space variable */
 var startDate;	/* Begin date variable */
 var endDate;	/* End date variable */
-var uid;	/* user ID variable */
+var id0;	/* user ID variable */
 
 //converts a date to seconds since epoch
 function dateToSeconds(date){ return Math.floor( date.getTime() / 1000 ) }
@@ -258,8 +258,8 @@ function orchardPerformance(start, end, id){
    period = 'daily';
    startDate = dateToSeconds(start);
    endDate = dateToSeconds(end);
-   uid = id;
-   var params = constructParams(groupBy,period,startDate,endDate,uid);
+   id0 = id;
+   var params = constructParams(groupBy,period,startDate,endDate,id0);
    sendPostRequest(params);
 }
 
@@ -269,25 +269,25 @@ function workerPerformance(start, end, id){
    period = 'hourly';
    startDate = dateToSeconds(start);
    endDate = dateToSeconds(end);
-   uid = id;
-   var params = constructParams(groupBy,period,startDate,endDate,uid);
+   id0 = id;
+   var params = constructParams(groupBy,period,startDate,endDate,id0);
    sendPostRequest(params);
 }
 
 //creates the parameter string for the http post request
-function constructParams(groupBy,period,startDate,endDate,uid){
+function constructParams(groupBy,period,startDate,endDate,id0){
     var params = '';
-    params = params +'groupBy='+groupBy;
+    params = params +'id0='+id0;
+    params = params +'&groupBy='+groupBy;
     params = params +'&period='+period;
     params = params +'&startDate='+startDate;
     params = params +'&endDate='+endDate;
-    params = params +'&uid='+uid;
+    params = params +'&uid='+userID;
     return params;
 }
 
 function sendPostRequest(params){
-    var http = new XMLHttpRequest();
-    http.open('POST', baseUrl, true);
+    var http = new createCORSRequest();
     
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); //HTTP Header
 
@@ -298,6 +298,23 @@ function sendPostRequest(params){
     }
     http.send(params); //Specifies the type of data you want to send
 }
+
+function createCORSRequest() {
+  var xhr = new XMLHttpRequest();
+  if ("withCredentials" in xhr) {
+    // XHR for Chrome/Firefox/Opera/Safari.
+    xhr.open('POST', baseUrl, true);
+  } else if (typeof XDomainRequest != "undefined") {
+    // XDomainRequest for IE.
+    xhr = new XDomainRequest();
+    xhr.open('POST', baseUrl);
+  } else {
+    // CORS not supported.
+    xhr = null;
+  }
+  return xhr;
+}
+
 
 //updates specific graph based on user input
 function alterGraph(response){
