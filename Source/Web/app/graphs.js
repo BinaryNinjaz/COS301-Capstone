@@ -198,11 +198,14 @@ function orchardPerformance(start, end, id){
 		type: 'radar',
 		data: {
 			//The size of the labels array will depend on the start date and the end date.
+			//The labels will be the dates, from the specified start till the specified end.
 			labels: ['Sunday','Monday','Tuesday','Wednesday','Thursady','Friday','Saturday'], //This will contain the dates plotted on each point. (give me the dates)
 			datasets: [{
 			label: "Number of Bags p/day", //These are the number of bags per day since the start date and the end date
+			
+			//The following values in the data array are the number of bags collected each day. from start date to end date
 			data: [4, 0, 5, 0, 0, 0, 4], //The size of this will also depend on the start and the end date
-			backgroundColor: '#4CAF50'
+			backgroundColor: '#4CAF50' //Color of the area 
 		}]
 		}
 	});
