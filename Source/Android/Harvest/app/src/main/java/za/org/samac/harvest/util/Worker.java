@@ -7,6 +7,7 @@ public class Worker{
     protected String fName, sName;
     protected List<Orchard> assignedOrchards;
     protected WorkerType workerType;
+    protected boolean wasForeman = false;
     protected String further;
     protected String phone, oldPhone;
     protected String fID;
@@ -55,6 +56,9 @@ public class Worker{
     }
 
     public void setWorkerType(WorkerType workerType) {
+        if (workerType == WorkerType.WORKER && this.workerType == WorkerType.FOREMAN){
+            wasForeman = true;
+        }
         this.workerType = workerType;
     }
 
@@ -96,6 +100,10 @@ public class Worker{
 
     public String getOldPhone() {
         return oldPhone;
+    }
+
+    public boolean isWasForeman() {
+        return wasForeman;
     }
 
     @Override
