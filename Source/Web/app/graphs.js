@@ -250,7 +250,7 @@ function getWorkerId(name){
 //converts a date to seconds since epoch
 function dateToSeconds(date){ return date.getTime() / 1000 ; }
 
-//starts post request for orchard
+//post request for orchard
 function orchardPerformance(start, end, id){
    const groupBy = 'orchard';
    const period = 'daily';
@@ -269,7 +269,7 @@ function orchardPerformance(start, end, id){
     });
 }
 
-//starts post request for worker
+//post request for worker
 function workerPerformance(start, end, id){
    const groupBy = 'worker';
    const period = 'hourly';
@@ -290,22 +290,22 @@ function workerPerformance(start, end, id){
 
 //updates orchard graph based on user input
 function changeOrchardGraph(data){
-    
+    console.log(data); // can be removed, just used to view json object
 }
 
 //updates worker graph based on user input
 function changeWorkerGraph(data){
-    
+    console.log(data); // can be removed, just used to view json object
 }
 
-//used to show end of week that user selected for the orchard
+//edits value of end date label when a starting date is picked
 function changeLabel(){
     var start = new Date(document.getElementById('weekSelect').value);
     var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
     document.getElementById('endDate').value = formatDate(end);
 }
 
-//formats a date to yyyy-mm-dd
+//formats a date to yyyy-mm-dd, used in changeLabel() function
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
