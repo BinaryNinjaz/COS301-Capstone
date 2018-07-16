@@ -58,6 +58,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="signInForemanButtClick"
                         android:text="@string/login"
+                        style="@style/Widget.AppCompat.Button.Colored"
                         android:background="@color/colorPrimary"
                         android:layout_marginTop="16dp"/>
 
@@ -161,7 +162,8 @@
                         android:layout_marginTop="16dp"
                         android:onClick="signInForemanButtClick"
                         android:background="@color/colorPrimary"
-                        android:text="@string/signIn_foreman_verificationOkay"/>
+                        android:text="@string/signIn_foreman_verificationOkay"
+                        style="@style/Widget.AppCompat.Button.Colored"/>
 
 
                 </LinearLayout>
