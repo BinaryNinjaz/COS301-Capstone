@@ -200,6 +200,12 @@ function workerPerformance(start, end, id){
    var params = constructParams(groupBy,period,startDate,endDate,uid);
    var response = sendPostRequest(params);
    //implementation will go here
+   
+   
+   
+   
+   
+   //Vincent started working on this function from here
 }
 
 //creates the parameter string for the http post request
@@ -217,12 +223,12 @@ function sendPostRequest(params){
     var http = new XMLHttpRequest();
     http.open('POST', baseUrl, true);
     
-    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); //HTTP Header
 
     http.onreadystatechange = function() {//Call a function when the state changes
         if(http.readyState == 4 && http.status == 200) {
             return http.responseText;
         }
     }
-    http.send(params);
+    http.send(params); //Specifies the type of data you want to send
 }

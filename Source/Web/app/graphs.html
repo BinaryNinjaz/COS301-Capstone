@@ -102,43 +102,6 @@
 		}
 	</script>
 	<script type="text/javascript">
-    google.charts.load("current", {packages:["corechart"]});
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-        ["Period", "Number of Bags", { role: "style" } ],
-        ["06:00 - 07:00", 8, "#00a33f"],
-        ["07:00 - 08:00", 6, "#00a33f"],
-        ["08:00 - 09:00", 3, "#00a33f"],
-		["09:00 - 10:00", 7, "#00a33f"],
-        ["10:00 - 11:00", 5, "#00a33f"],
-        ["11:00 - 12:00", 9, "#00a33f"],
-		["12:00 - 13:00", 7, "#00a33f"],
-        ["13:00 - 14:00", 7, "#00a33f"],
-        ["14:00 - 15:00", 9, "#00a33f"],
-        ["15:00 - 16:00", 8, "#00a33f"],
-		["16:00 - 17:00", 11, "#00a33f"],
-        ["17:00 - 18:00", 15, "#00a33f"]
-      ]);
-
-      var view = new google.visualization.DataView(data);
-      view.setColumns([0, 1,
-                       { calc: "stringify",
-                         sourceColumn: 1,
-                         type: "string",
-                         role: "annotation" },
-                       2]);
-
-      var options = {
-        title: "Number of bags collected per hour by Teboho Mokoena", //This is a temporary title for the Graph
-        width: 1200, //Setting the width 
-        height: 700, //Setting the height
-        bar: {groupWidth: "95%"},
-        legend: { position: "none" },
-      };
-      var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
-      chart.draw(view, options);
-  }
   </script>
   </head>
   <body>
