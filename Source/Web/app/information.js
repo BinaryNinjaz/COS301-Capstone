@@ -409,7 +409,7 @@ function dispOrch(id) {
         "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
         "" +       
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
+        "<div class='col-sm-9'><select class='form-control' id='irregation'></select></div></div>" +
         "" +        
         "</form>"
       ;
@@ -576,7 +576,6 @@ function orchMod(id) {
         "</div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-        // "<div class='col-sm-9'><input type='text' class='form-control' id='oi' value='"+snapshot.val().further+"'></div> </div>" +
         "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'>" + snapshot.val().further + "</textarea></div> </div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
