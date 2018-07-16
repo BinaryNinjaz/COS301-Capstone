@@ -57,5 +57,4 @@ public class AppUtil {
         return sharedPreferences.getString(key, null);
     }
 
-
 }

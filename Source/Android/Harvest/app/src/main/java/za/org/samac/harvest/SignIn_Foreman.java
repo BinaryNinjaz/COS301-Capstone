@@ -1,11 +1,13 @@
 package za.org.samac.harvest;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.method.KeyListener;
 import android.view.View;
@@ -230,7 +232,15 @@ public class SignIn_Foreman extends AppCompatActivity {
 //                phoneNumberField.setFocusable(false);
                 phoneNumberField.setKeyListener(null);
 //                phoneNumberField.setBackgroundColor(getResources().getColor(R.color.androidGrey));
-                startPhoneNumberVerification(phoneNumberField.getText().toString());
+                String number = phoneNumberField.getText().toString();
+
+                number = number.replaceAll("-", "");
+                number = number.replaceAll(" ", "");
+                if (!number.startsWith("+")){
+                    number = number.replaceFirst("0", "+" + GetCountryZipCode());
+                }
+                
+                startPhoneNumberVerification(number);
                 v.setEnabled(false);
                 v.setBackgroundColor(getResources().getColor(R.color.androidGrey));
                 break;
@@ -275,13 +285,20 @@ public class SignIn_Foreman extends AppCompatActivity {
     }
 
     public void findFarms(){
+        farms.clear();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference workingFor = database.getReference("/WorkingFor/");
         workingFor.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot worker : dataSnapshot.getChildren()){
-                    if (worker.getKey().equals(systemPhone)){
+                    String workerPhone = worker.getKey();
+                    workerPhone = workerPhone.replaceAll("-", "");
+                    workerPhone = workerPhone.replaceAll(" ", "");
+                    if (!workerPhone.startsWith("+")){
+                        workerPhone = workerPhone.replaceFirst("0", "+" + GetCountryZipCode());
+                    }
+                    if (workerPhone.equals(systemPhone)){
                             //TODO: More than just ids
                             for (DataSnapshot child : worker.getChildren()){
                                 farms.add(child.getKey());
@@ -379,5 +396,25 @@ public class SignIn_Foreman extends AppCompatActivity {
         phoneConfLook.setText(systemPhone);
         farmTip.setVisibility(View.VISIBLE);
         farmOkay.setVisibility(View.VISIBLE);
+    }
+
+    //Thank you Wais
+    //https://stackoverflow.com/questions/5402253/getting-telephone-country-code-with-android
+    public String GetCountryZipCode(){
+        String CountryID="";
+        String CountryZipCode="";
+
+        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        //getNetworkCountryIso
+        CountryID= manager.getSimCountryIso().toUpperCase();
+        String[] rl=this.getResources().getStringArray(R.array.CountryCodes);
+        for(int i=0;i<rl.length;i++){
+            String[] g=rl[i].split(",");
+            if(g[1].trim().equals(CountryID.trim())){
+                CountryZipCode=g[0];
+                break;
+            }
+        }
+        return CountryZipCode;
     }
 }
