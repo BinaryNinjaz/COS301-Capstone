@@ -74,7 +74,7 @@ function workerForKey(key) {
 //also draws initial graphs on start up
 function initPage(){
     initOrchards(); //This function initiates the orchards immediately when the analytics page is accessed (for selction)
-    initWorkers();	//This function initiates the workers immediately when the analytics page is accessed (for selection)
+    initWorkers();//This function initiates the workers immediately when the analytics page is accessed (for selection)
 
     //Vincent started working on this function from here
     var ctx = document.getElementById("myChart").getContext('2d');
@@ -171,13 +171,28 @@ function initWorkers(){
     });
 }
 
+//this function returns the date of the monday of a given week
+function getDateOfISOWeek(w, y) {
+    var simple = new Date(y, 0, 1 + (w - 1) * 7);
+    var dow = simple.getDay();
+    var ISOweekStart = simple;
+    if (dow <= 4)
+        ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+    else
+        ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+    return ISOweekStart;
+}
+
 //takes information chosen by user for orchard filter to pass to orchard performance function
 function filterOrchard(){
     var name = document.getElementById('orchardSelect').value;
-    var start = document.getElementById('startDateSelect').value;
-    var end = document.getElementById('endDateSelect').value;
-    if(name!== '' && start!== '' && end !== ''){
-        var id = getOrchardId(orchardName);
+    var week = document.getElementById('weekSelect').value; //format e.g: 2018-W17
+    if(name!== '' && week!==''){
+        var y = week.substring(0,3);
+        var w = week.substring(6,7);
+        var start = new Date(getDateOfISOWeek(w, y));
+        var end = new Date(start.getFullYear(),start.getMonth(),start.getDay()+6);
+        var id = getOrchardId(name);
         orchardPerformance(start, end, id);
     }else{
         window.alert("Some fields in the orchard filter appear to be blank. \n"
@@ -199,12 +214,15 @@ function getOrchardId(name){
 //takes information chosen by user for worker filter to pass to worker performance function
 function filterWorker(){
     var name = document.getElementById('workerSelect').value;
-    var date = document.getElementById('workerDateSelect').value;
-    //doing something here to get start and end variables from date
-    var start='';
-    var end ='';
+    var date = new Date(document.getElementById('workerDateSelect').value);
     if(name!== '' && date!== ''){
-        var id = getWorkerId(orchardName);
+        var start=date;
+        start.setHours(6);
+        start.setMinutes(0);
+        var end =date;
+        end.setHours(18);
+        end.setMinutes(0);
+        var id = getWorkerId(name);
         workerPerformance(start, end, id);
     }else{
         window.alert("Some fields in the worker filter appear to be blank. \n"
