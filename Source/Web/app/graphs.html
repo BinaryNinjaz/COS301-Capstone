@@ -35,29 +35,6 @@
         /*
         calls to graphs.js will go here to retrieve the required information
        */
-
-		/*This is the beggining of the pie						*/
-         google.charts.load('current', {'packages':['corechart']});
-         google.charts.setOnLoadCallback(drawChart);
-
-         function drawChart() {
-
-         var data = google.visualization.arrayToDataTable([
-           ['Orchard', 'Number of Bags for Month'],
-           ['Orchard A',     11],
-           ['Orchard B',      2],
-           ['Orchard C',  2],
-           ['Orchard D',    7]
-         ]);
-
-         var options = {
-           title: 'Overall Orchard performance Per Month'
-         };
-
-         var chart = new google.visualization.PieChart(document.getElementById('curve_chart'));
-
-         chart.draw(data, options);
-         }
      });
     </script>
 	
@@ -71,7 +48,7 @@
 	<div class="container">
             <!-- top chart can be orchard historical performance-->
             <div class="left">
-                <div id="piechart" style="width: 900px; height: 500px;"></div>
+                <canvas id="myChart" width="900px" height="500px"></canvas>
                 <!-- below are objects the user can use to filter information-->
                 <div id="topChartFilter">
                     <label>Select an orchard:
@@ -103,38 +80,5 @@
                 </div>
             </div>
 	</div>
-	
-<canvas id="myChart" width="400" height="400"></canvas>
-<script type="text/javascript">
-	var ctx = document.getElementById("myChart").getContext('2d');
-	var myChart = new Chart(ctx, {
-		type: 'radar',
-		data: {
-			//The size of the labels array will depend on the start date and the end date.
-			labels: ['Sunday','Monday','Tuesday','Wednesday','Thursady','Friday','Saturday'], //This will contain the dates plotted on each point.
-			datasets: [{
-			label: "Number of Bags p/day",
-			data: [4, 0, 5, 0, 0, 0, 4], //The size of this will also depend on the start and the end date
-			backgroundColor: '#4CAF50'
-		}]
-		}
-	});
-
-	/*var myRadarChart = new Chart(ctx, {
-    type: 'radar',
-    data: {
-		labels: ['Running', 'Swimming', 'Eating', 'Cycling'],
-		datasets: [{
-			data: [20, 10, 4, 2]
-		}]
-	},
-		options:{
-		scale: {
-			// Hides the scale
-			display: false
-		}
-	}
-);*/
-  </script>
   </body>
 </html>

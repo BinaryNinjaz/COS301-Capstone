@@ -187,6 +187,25 @@ function orchardPerformance(start, end, id){
    var params = constructParams(groupBy,period,startDate,endDate,uid);
    var response = sendPostRequest(params);
    //implementation will go here
+   
+   
+   
+   
+   
+   //Vincent started working on this function from here
+   var ctx = document.getElementById("myChart").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'radar',
+		data: {
+			//The size of the labels array will depend on the start date and the end date.
+			labels: ['Sunday','Monday','Tuesday','Wednesday','Thursady','Friday','Saturday'], //This will contain the dates plotted on each point. (give me the dates)
+			datasets: [{
+			label: "Number of Bags p/day",
+			data: [4, 0, 5, 0, 0, 0, 4], //The size of this will also depend on the start and the end date
+			backgroundColor: '#4CAF50'
+		}]
+		}
+	});
 }
 
 //updates worker graph based on user input
@@ -206,23 +225,23 @@ function workerPerformance(start, end, id){
    
    
    //Vincent started working on this function from here
-   google.charts.load("current", {packages:["corechart"]});
+       google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ["Period", "Number of Bags", { role: "style" } ], //This line explains the format of the array object
-        ["06:00 - 07:00", 8, "#00a33f"], //[label: which is the period of 1 hour, Number of bags, color of bar]
-        ["07:00 - 08:00", 6, "#00a33f"],
-        ["08:00 - 09:00", 3, "#00a33f"],
-		["09:00 - 10:00", 7, "#00a33f"],
-        ["10:00 - 11:00", 5, "#00a33f"],
-        ["11:00 - 12:00", 9, "#00a33f"],
-		["12:00 - 13:00", 7, "#00a33f"],
-        ["13:00 - 14:00", 7, "#00a33f"],
-        ["14:00 - 15:00", 9, "#00a33f"],
-        ["15:00 - 16:00", 8, "#00a33f"],
-		["16:00 - 17:00", 11, "#00a33f"],
-        ["17:00 - 18:00", 15, "#00a33f"]
+        ["06:00 - 07:00", 8, "#4CAF50"], //[label: which is the period of 1 hour, Number of bags, color of bar]
+        ["07:00 - 08:00", 6, "#4CAF50"],
+        ["08:00 - 09:00", 3, "#4CAF50"],
+		["09:00 - 10:00", 7, "#4CAF50"],
+        ["10:00 - 11:00", 5, "#4CAF50"],
+        ["11:00 - 12:00", 9, "#4CAF50"],
+		["12:00 - 13:00", 7, "#4CAF50"],
+        ["13:00 - 14:00", 7, "#4CAF50"],
+        ["14:00 - 15:00", 9, "#4CAF50"],
+        ["15:00 - 16:00", 8, "#4CAF50"],
+		["16:00 - 17:00", 11, "#4CAF50"],
+        ["17:00 - 18:00", 15, "#4CAF50"]
       ]);
 
       var view = new google.visualization.DataView(data);
@@ -236,7 +255,7 @@ function workerPerformance(start, end, id){
       var options = {
         title: "Number of bags collected per hour by Teboho Mokoena", //Teboho Mokoena will be replaced with 'nameOfWorker' variable
         width: 1200, //Setting the width 
-        height: 700, //Setting the height
+        height: 500, //Setting the height
         bar: {groupWidth: "95%"}, //This is the grouping width of the bar graph
         legend: { position: "none" }, //This will be determined by the UX designer
       };
