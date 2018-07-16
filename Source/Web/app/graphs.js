@@ -194,9 +194,7 @@ function filterOrchard(){
     var name = document.getElementById('orchardSelect').value;
     var week = document.getElementById('weekSelect').value; //format e.g: 2018-W17
     if(name!== '' && week!==''){
-        var y = week.substring(0,4);
-        var w = week.substring(6,8);
-        var start = new Date(getDateOfISOWeek(w, y));
+        var start = new Date(week);
         var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
         var id = getOrchardId(name);
         orchardPerformance(start, end, id);
@@ -299,4 +297,24 @@ function alterGraph(response,str){
     }else{ // can use this to make graphs blank (implemented later)
         
     }
+}
+
+//used to show end of week that user selected for the orchard
+function changeLabel(){
+    var start = new Date(document.getElementById('weekSelect').value);
+    var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
+    document.getElementById('endDate').value = formatDate(end);
+}
+
+//formats a date to yyyy-mm-dd
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
 }
