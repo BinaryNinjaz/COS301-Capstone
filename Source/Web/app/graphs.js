@@ -209,7 +209,7 @@ function getOrchardId(name){
     var id='';
     for (var k in orchards) {
         if(name===orchards[k].value.name){
-            return orchards[k].value.name;
+            return orchards[k].key;
         }
     }
     return id;
@@ -291,11 +291,13 @@ function workerPerformance(start, end, id){
 //updates specific graph based on user input
 function alterGraph(response,str){
     if(str==='orchard'){ //alter orchard graph
-        console.log(response);
+        console.log(response); // just here to show the object in question
+        //updating of orchard graph will go here
     }else if(str==='worker'){ //alter worker graph
-        console.log(response);
+        console.log(response); // just here to show the object in question
+        //updating of worker graph will go here
     }else{ // can use this to make graphs blank (implemented later)
-        
+        //used when str does not equal worker or orchard
     }
 }
 
