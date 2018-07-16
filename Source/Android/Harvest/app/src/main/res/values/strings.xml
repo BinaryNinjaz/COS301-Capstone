@@ -36,6 +36,7 @@
     <string name="signIn_foreman_verificationCOde">Verification Code</string>
     <string name="signIn_foreman_verificationOkay">Okay</string>
     <string name="signIn_foreman_verificationResend">Resend</string>
+    <string name="signIn_foreman_verificationCancel">Cancel</string>
     <string name="signIn_foreman_numberTip">Your number, as saved in the system, is shown below, please ensure that your employer has you saved with the same number as seen below, and that you are flagged as a foreman.</string>
     <string name="signIn_foreman_farmChooseTip">You are assigned to multiple farmers, please select the one you wish to work for for this session, and press okay to continue.</string>
     <string name="signIn_foreman_farmNone">You do not work for any farm, and will be unable to continue.</string>

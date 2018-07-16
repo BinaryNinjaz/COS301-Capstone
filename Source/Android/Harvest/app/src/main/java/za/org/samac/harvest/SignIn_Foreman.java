@@ -176,7 +176,7 @@ public class SignIn_Foreman extends AppCompatActivity {
     private  void startPhoneNumberVerification(String phoneNumber){
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,
-                100,
+                60,
                 TimeUnit.SECONDS,
                 this,
                 phoneCallback
@@ -248,6 +248,7 @@ public class SignIn_Foreman extends AppCompatActivity {
                 break;
             case R.id.signIn_foreman_verification_resendButt:
                 resendVerificationCode(phoneNumberField.getText().toString(), mResendToken);
+                //TODO: Some visual feedback
                 break;
             case R.id.signIn_foreman_farm_okay:
                 switch (state){
@@ -265,6 +266,10 @@ public class SignIn_Foreman extends AppCompatActivity {
                         break;
                 }
                 finish();
+                break;
+            case R.id.signIn_foreman_verification_cancel:
+                state = STATE_START;
+                updateUI();
                 break;
         }
     }
@@ -308,8 +313,11 @@ public class SignIn_Foreman extends AppCompatActivity {
         switch (this.state){
             case STATE_START:
                 phoneNumberField.setVisibility(View.VISIBLE);
+                phoneNumberField.setKeyListener(phoneNumberFieldListener);
                 SMSWarning.setVisibility(View.VISIBLE);
                 logInButt.setVisibility(View.VISIBLE);
+                logInButt.setEnabled(true);
+                logInButt.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 verificationTip.setVisibility(View.GONE);
                 verificationField.setVisibility(View.GONE);
                 verificationButts.setVisibility(View.GONE);

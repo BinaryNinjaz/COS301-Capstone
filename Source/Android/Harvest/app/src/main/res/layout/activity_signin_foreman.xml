@@ -49,6 +49,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/signIn_foreman_phoneWarning"
+                        style="colored"
                         android:layout_marginTop="8dp" />
 
                     <Button
@@ -79,16 +80,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        style="@style/Base.Widget.AppCompat.ButtonBar"
                         android:layout_marginTop="16dp">
 
                         <Button
                             android:id="@+id/signIn_foreman_verification_okayButt"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:layout_marginEnd="8dp"
+                            android:layout_weight="3"
+                            android:textAllCaps="true"
+                            android:textStyle="bold"
+                            style="@style/Widget.AppCompat.ButtonBar"
                             android:background="@color/colorPrimary"
                             android:text="@string/signIn_foreman_verificationOkay"
+                            android:textColor="@color/white"
                             android:onClick="signInForemanButtClick"/>
 
                         <Button
@@ -96,8 +101,21 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@android:color/darker_gray"
-                            android:text="@string/signIn_foreman_verificationResend"/>
+                            style="@style/Widget.AppCompat.ButtonBar"
+                            android:textAllCaps="true"
+                            android:text="@string/signIn_foreman_verificationResend"
+                            android:textColor="@color/signIn_verification_resend"/>
+
+                        <Button
+                            android:id="@+id/signIn_foreman_verification_cancel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="signInForemanButtClick"
+                            style="@style/Widget.AppCompat.ButtonBar"
+                            android:textAllCaps="true"
+                            android:text="@string/signIn_foreman_verificationCancel"
+                            android:textColor="@color/signIn_verification_cancel"/>
 
                     </LinearLayout>
 
