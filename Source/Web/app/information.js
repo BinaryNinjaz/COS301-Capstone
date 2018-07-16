@@ -273,6 +273,7 @@ function farmSave(type, id) {
       name: document.getElementById("farmName").value,
       further: document.getElementById("farmFurther").value,
       contactNo: document.getElementById("farmContact").value,
+      email: document.getElementById("farmEmail").value,
       province: document.getElementById("farmProvince").value,
       town: (document.getElementById("farmTown").value+"")
     });
@@ -284,6 +285,7 @@ function farmSave(type, id) {
       name: document.getElementById("farmName").value,
       further: document.getElementById("farmFurther").value,
       contactNo: document.getElementById("farmContact").value,
+      email: document.getElementById("farmEmail").value,
       province: document.getElementById("farmProvince").value,
       town: document.getElementById("farmTown").value
     });
