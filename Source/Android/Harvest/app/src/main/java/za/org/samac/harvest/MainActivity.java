@@ -432,8 +432,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             }
 
                             if (polygonContainsPoint(polygonX, polygonY) == true) {
-                                System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Contains Point" + " @@@@@@@@@@@@@@@@@@@@@ ");
                                 getExpectedYield();//set expected yield
+                                break;
                             } else {
                                 polygonX.clear();
                                 polygonY.clear();
