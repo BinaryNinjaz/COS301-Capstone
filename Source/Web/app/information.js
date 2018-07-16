@@ -353,9 +353,6 @@ function popOrch() {
     ;
 
     snapshot.forEach(function (child) {
-      // col2.innerHTML += "" +
-      //   "<button type='button' class='btn btn-info' onclick='dispOrch(" + child.key + ")'>" + child.val().name + "</button>"
-      // ;
       let temp = {
         Name : child.val().name,
         Button : "<button type='button' class='btn btn-info' onclick='dispOrch(\"" + child.key + "\")'>" + child.val().name + "</button>"
@@ -371,7 +368,6 @@ function dispOrch(id) {
 
   if (id === "-1") {
     /*Create New Orchard*/
-
     firebase.database().ref('/' + userID() + '/farms').once('value').then(function (snapshot) {
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
