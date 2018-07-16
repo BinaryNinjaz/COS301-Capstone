@@ -202,6 +202,9 @@ function dispFarm(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact'></div> </div> " +
       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email Address:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmEmail'></div> </div> " +
+      "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'></textarea></div></div>" +
       "" +
@@ -228,6 +231,9 @@ function dispFarm(id) {
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().contactNo + "</p> </div> </div> " +
+        "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
+        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().email + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().further + "</p></div> </div>" +
