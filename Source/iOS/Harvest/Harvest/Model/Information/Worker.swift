@@ -19,7 +19,7 @@ extension Dictionary where Key == String, Value == Any {
 }
 
 final class Worker {
-  enum Kind : Int, Codable {
+  enum Kind: Int, Codable {
     case worker, foreman
   }
   
@@ -28,7 +28,6 @@ final class Worker {
   var assignedOrchards: [String]
   var kind: Kind
   var details: String
-  var email: String
   var phoneNumber: String
   var idNumber: String
   var id: String
@@ -40,7 +39,6 @@ final class Worker {
     lastname = json["surname"] as? String ?? ""
     assignedOrchards = json.orchards()
     details = json["info"] as? String ?? ""
-    email = json["email"] as? String ?? ""
     phoneNumber = json["phoneNumber"] as? String ?? ""
     idNumber = json["idNumber"] as? String ?? ""
     
@@ -60,30 +58,32 @@ final class Worker {
       "surname": lastname,
       "orchards": assignedOrchards,
       "info": details,
-      "email": email,
       "type": kind == .foreman ? "Foreman" : "Worker",
       "phoneNumber": phoneNumber,
       "idNumber": idNumber
     ]]
   }
   
+  var name: String {
+    return firstname + " " + lastname
+  }
+  
   static var currentWorker: Worker {
     return Worker(json: [
       "name": HarvestUser.current.displayName,
-      "email": HarvestUser.current.email
+      "phoneNumber": HarvestUser.current.accountIdentifier
     ], id: HarvestUser.current.uid)
   }
 }
 
-extension Worker : Hashable {
-  static func ==(lhs: Worker, rhs: Worker) -> Bool {
+extension Worker: Hashable {
+  static func == (lhs: Worker, rhs: Worker) -> Bool {
     return lhs.id == rhs.id
       && lhs.firstname == rhs.firstname
       && lhs.lastname == rhs.lastname
       && lhs.assignedOrchards == rhs.assignedOrchards
       && lhs.kind == rhs.kind
       && lhs.details == rhs.details
-      && lhs.email == rhs.email
       && lhs.phoneNumber == rhs.phoneNumber
       && lhs.idNumber == rhs.idNumber
   }
@@ -93,8 +93,8 @@ extension Worker : Hashable {
   }
 }
 
-extension Worker : CustomStringConvertible {
+extension Worker: CustomStringConvertible {
   var description: String {
-    return firstname + " " + lastname
+    return name
   }
 }

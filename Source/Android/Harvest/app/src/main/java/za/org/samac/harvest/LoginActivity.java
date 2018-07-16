@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -38,11 +39,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -59,7 +63,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -79,8 +83,8 @@ public class LoginActivity extends AppCompatActivity {
     private UserLoginTask mAuthTask = null;
 
     //used same names as IDs in xml
-    private EditText edtEmail;
-    private EditText edtPassword;
+    private static EditText edtEmail;
+    private static EditText edtPassword;
     private View login_progress;
     private View login_form;
     private Button btnSignup;
@@ -90,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
     private static final String TAG = "EmailPassword";
-    private GoogleSignInClient mGoogleSignInClient;
+    public static GoogleSignInClient  mGoogleSignInClient;
     private static int RC_SIGN_IN = 100;
     private static GoogleSignInAccount account;
 
@@ -221,6 +225,14 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();//initialisation the FirebaseAuth instance
     }
 
+    public static void setEdtEmail(EditText e) {
+        edtEmail = e;
+    }
+
+    public static void setEdtPassword(EditText p) {
+        edtPassword = p;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -241,6 +253,15 @@ public class LoginActivity extends AppCompatActivity {
             finish();//kill current Activity
         }*/
         //updateUI(account);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("CDA", "onBackPressed Called");
+        Intent setIntent = new Intent(Intent.ACTION_MAIN);
+        setIntent.addCategory(Intent.CATEGORY_HOME);
+        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(setIntent);
     }
 
     private void signInWithGoogle() {
@@ -326,7 +347,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "signInToAccount:" + email);
         login_form.setVisibility(View.INVISIBLE);
         login_progress.setVisibility(View.VISIBLE);
-        if (!validateForm()) {
+        if (!validateForm(edtEmail.toString(), edtPassword.toString())) {
             return;
         }
 
@@ -388,23 +409,25 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private boolean validateForm() {
+    public static boolean validateForm(String email, String password) {
         boolean valid = true;
 
-        String email = edtEmail.getText().toString();
         if (TextUtils.isEmpty(email)) {
             edtEmail.setError("Required.");
             valid = false;
         } else {
-            edtEmail.setError(null);
+            if (edtEmail != null) {
+                edtEmail.setError(null);
+            }
         }
 
-        String password = edtPassword.getText().toString();
         if (TextUtils.isEmpty(password)) {
             edtPassword.setError("Required.");
             valid = false;
         } else {
-            edtPassword.setError(null);
+            if (edtPassword != null) {
+                edtPassword.setError(null);
+            }
         }
 
         return valid;
@@ -489,6 +512,11 @@ public class LoginActivity extends AppCompatActivity {
             login_progress.setVisibility(show ? View.VISIBLE : View.GONE);
             login_form.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
 

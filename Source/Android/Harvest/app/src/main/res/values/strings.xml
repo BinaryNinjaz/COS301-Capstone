@@ -59,6 +59,7 @@
     <string name="infoFarms">Farms</string>
     <string name="infoWorkers">Workers</string>
     <string name="infoOrchards">Orchards</string>
+    <string name="notFound">Not Found</string>
     <!--Strings related to delete dialog-->
     <string name="sure">Are you sure?</string>
     <string name="yes">Delete</string>
@@ -68,6 +69,42 @@
     <string name="info_farm_name">Farm Name:</string>
     <string name="info_farm_further">Further Information:</string>
     <string name="info_farm_assignedOrchards">Assigned Orchards:</string>
+    <string name="info_farm_company">Company Name:</string>
+    <string name="info_farm_email">Farm Email:</string>
+    <string name="info_farm_phone">Contact Number:</string>
+    <string name="info_farm_province">Province:</string>
+    <string name="info_farm_town">Nearest Town:</string>
+
+    <!--Strings related to Information on Orchards-->
+    <string name="info_orch_name">Orchard Name:</string>
+    <string name="info_orch_crop">Orchard Crop:</string>
+    <string name="info_orch_loc">Orchard Location</string>
+    <string name="info_orch_mass">Bag Mass:</string>
+    <string name="info_orch_irig">Irrigation Type:</string>
+    <string name="info_orch_date">Date Planted:</string>
+    <string name="info_orch_farm">Assigned Farm:</string>
+    <string name="info_orch_work">Assigned Workers:</string>
+    <string name="info_orch_row">Row Spacing:</string>
+    <string name="info_orch_tree">Tree Spacing:</string>
+    <string name="info_orch_cult">Cultivars:</string>
+    <string name="info_orch_further">Further Information:</string>
+    <string name="info_orch_map_hold">Hold each corner of the field</string>
+    <string name="info_orch_map_remAll">Remove All</string>
+    <string name="info_orch_map_remLast">Remove Last Point</string>
+    <string name="info_orch_map_permissionDialog_message">We would like access to your location so that you can find yourself on the map, making the orchard easier to find. It\'s alright if you don\'t want to give it to us, you\'ll just need to find the orchard from scratch!</string>
+    <string name="info_orch_map_permissionDialog_title">Location Permission</string>
+    <string name="info_orch_map_permissionDialog_okay">Continue</string>
+
+    <!--Strings related to Information on Workers-->
+    <string name="info_work_fName">Worker Name:</string>
+    <string name="info_work_sName">Worker Surname:</string>
+    <string name="info_work_id">ID Number:</string>
+    <string name="info_work_role">Is a foreman?</string>
+    <string name="info_work_phone">Phone Number:</string>
+    <string name="info_work_further">Further Information:</string>
+    <string name="info_work_orchard">Assigned Orchards:</string>
+    <string name="info_work_fore_off">Worker</string>
+    <string name="info_work_fore_on">Foreman</string>
 
     <!-- Strings related to Settings -->
 
@@ -144,7 +181,15 @@
     <string name="title_activity_sessions_map">Map</string>
 
     <string name="title_analytics">Analytics</string>
-    <string name="PerSesWorkerComparison">Per Session Worker Performance</string>
-    <string name="OrhHistPerformance">Orchard Historical Performance</string>
+    <string name="WorkerHistPerformance">Worker Historical Performance</string>
+    <string name="OrchHistPerformance">Orchard Historical Performance</string>
     <string name="title_stats">Stats</string>
+    <string name="title_activity_maps">Orchard Map</string>
+    <string name="title_activity_foremen_session">ForemenSessionActivity</string>
+    <string name="sessionDetailStartDate">Time Started</string>
+    <string name="sessionDetailEndDate">Time Ended</string>
+    <string name="sessionDetailForemanName">Foreman</string>
+    <string name="sessionDetailsViewPickups">Tracked Path and Collection Points</string>
+    <string name="foremen">Foremen</string>
+    <string name="workers">Workers</string>
 </resources>

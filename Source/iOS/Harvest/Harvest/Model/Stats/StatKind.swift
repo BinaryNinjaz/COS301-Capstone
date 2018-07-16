@@ -8,20 +8,21 @@
 
 import Swift
 
-enum StatKind : CustomStringConvertible {
-  case perSessionWorkers
-  case workerHistory
-  case orchardHistory
+enum StatKind: CustomStringConvertible {
+//  case sessions
+  case workers
+  case orchards
+  case foremen
   
   var description: String {
     switch self {
-    case .perSessionWorkers: return "Per Session Worker Comparison"
-    case .workerHistory: return "Worker Historical Performance"
-    case .orchardHistory: return "Orchard Historical Performance"
+    case .workers: return "Worker Comparisons"
+    case .orchards: return "Orchard Comparisons"
+    case .foremen: return "Foremen Comparisons"
     }
   }
   
   static var allCases: [StatKind] {
-    return [.perSessionWorkers, .workerHistory, .orchardHistory]
+    return [.workers, orchards, .foremen]
   }
 }

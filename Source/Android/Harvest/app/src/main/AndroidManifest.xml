@@ -51,9 +51,9 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".InformationActivity"
-            android:label="@string/titleInformation"
-            ></activity>
+        <activity
+            android:name=".InformationActivity"
+            android:label="@string/titleInformation" />
         <activity
             android:name=".Analytics"
             android:label="@string/title_stats" />
@@ -61,9 +61,11 @@
             android:name=".PieChart"
             android:label="@string/title_stats" />
         <activity
-            android:name=".BarGraph"
+            android:name=".SpiralGraph"
             android:label="@string/title_stats" />
-            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ForemenPerSession"
+            android:label="@string/title_activity_sessions" />
         <activity
             android:name=".Sessions"
             android:label="@string/title_activity_sessions"
@@ -83,6 +85,18 @@
         <activity
             android:name=".SessionsMap"
             android:label="@string/title_activity_sessions_map" />
+        <activity android:name=".adapter.SessionDetails"
+            android:label="@string/title_activity_sessions"></activity>
+        <activity android:name=".OrchardsForGraph"
+            android:label="@string/title_stats" />
+        <activity android:name=".WorkerOrForeman"
+            android:label="@string/title_stats" />
+        <activity android:name=".ForemenForBarGraph"
+            android:label="@string/title_stats" />
+        <activity android:name=".WorkersForBarGraph"
+            android:label="@string/title_stats" />
+        <activity android:name=".BarGraph"
+            android:label="@string/title_stats" />
     </application>
 
 </manifest>
