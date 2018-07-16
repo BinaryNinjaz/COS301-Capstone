@@ -52,6 +52,9 @@ public class AppUtil {
         editor.commit();//commit writes synchronously
     }
 
-
+    public static String readStringFromSharedPrefs(Context context, String key){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_shared_prefrences), Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, null);
+    }
 
 }

@@ -21,9 +21,12 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".SignIn_Choose" />
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login">
+            android:name=".SignIn_Farmer"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".SignIn_Choose">
 
             <!-- Makes this the first screen the user sees once app is opened -->
             <!--
@@ -35,8 +38,14 @@
             -->
         </activity>
         <activity
-            android:name=".SignUpActivity"
-            android:label="@string/title_activity_sign_up" />
+            android:name=".SignIn_Foreman"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".SignIn_Choose" />
+        <activity
+            android:name=".SignIn_SignUp"
+            android:label="@string/title_activity_sign_up"
+            android:parentActivityName=".SignIn_Choose"/>
+
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"

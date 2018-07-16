@@ -15,8 +15,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
@@ -105,7 +103,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, SignIn_Choose.class);
                     startActivity(intent);
                     finish();
                 }

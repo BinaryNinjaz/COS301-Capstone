@@ -6,9 +6,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,7 +22,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -47,6 +46,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,24 +55,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
@@ -121,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference farmLevelRef;
     public static String sessionKey;
     public static String farmerKey;
-    private boolean isFarmer = false;
+    private boolean isFarmer = true;
     Boolean rejectSess = false;
 
     private FirebaseDatabase database;
@@ -239,69 +236,66 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void determineIfFarmer() {
-        DatabaseReference outerRef = database.getReference();
-        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                    if (child.getKey().equals(uid)){
-                        isFarmer = true;
-                        break;
-                    }
+        if (user != null){
+            for(UserInfo profile : user.getProviderData()){
+                if (profile.getProviderId().equals(PhoneAuthProvider.PROVIDER_ID)){
+                    isFarmer = false;
+                    break;
                 }
+            }
+        }
+        if (isFarmer){
+            progressBar.setVisibility(View.GONE);//remove progress bar
+            setContentView(R.layout.activity_farmer);
+        }
+        else {
+            progressBar.setVisibility(View.GONE);//remove progress bar
+            setContentView(R.layout.activity_foreman);
+        }
 
-                if (isFarmer){
-                    progressBar.setVisibility(View.GONE);//remove progress bar
-                    setContentView(R.layout.activity_farmer);
-                }
-                else {
-                    progressBar.setVisibility(View.GONE);//remove progress bar
-                    setContentView(R.layout.activity_foreman);
-                }
+        relLayout = findViewById(R.id.relLayout);
+        progressBar = findViewById(R.id.progressBar);
+        btnStart = findViewById(R.id.button_start);
 
-                relLayout = findViewById(R.id.relLayout);
-                progressBar = findViewById(R.id.progressBar);
-                btnStart = findViewById(R.id.button_start);
+        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+        relLayout.setVisibility(View.GONE);
 
-                progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
-                relLayout.setVisibility(View.GONE);
+        if (isFarmer){
+            farmerKey = uid;
+            getPolygon();//set expected yield
+            currUserRef = database.getReference(uid);//Firebase reference
+            workersRef = currUserRef.child("workers");
+            collectWorkers();
+        }
+        else {
+            getFarmKey();
+        }
 
-                if (isFarmer){
-                    farmerKey = uid;
-                    getPolygon();//set expected yield
-                    currUserRef = database.getReference(uid);//Firebase reference
-                    workersRef = currUserRef.child("workers");
-                    collectWorkers();
-                }
-                else {
-                    getFarmKey();
-                }
+        btnStart.setTag("green");//it is best not to use the tag to identify button status
 
-                btnStart.setTag("green");//it is best not to use the tag to identify button status
+        recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setVisibility(View.GONE);
 
-                recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
-                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
-                recyclerView.setAdapter(adapter);
-                recyclerView.setVisibility(View.GONE);
+        //Handle the bottom nav here
+        if (isFarmer){
 
-                //Handle the bottom nav here
-                if (isFarmer){
+            //bottom navigation bar
+            bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-                    //bottom navigation bar
-                    bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-                    bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
-                    bottomNavigationView.setOnNavigationItemSelectedListener(
-                            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                                @Override
-                                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                    switch (item.getItemId()) {
-                                        case R.id.actionYieldTracker:
-                                            return true;
-                                        case R.id.actionInformation:
+            bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
+            bottomNavigationView.setOnNavigationItemSelectedListener(
+                    new BottomNavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.actionYieldTracker:
+                                    return true;
+                                case R.id.actionInformation:
 //                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
                                             Intent openMainActivity= new Intent(MainActivity.this, InformationActivity.class);
                                             openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -326,11 +320,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
@@ -610,21 +599,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if (!AppUtil.isUserSignedIn()) {
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    startActivity(new Intent(MainActivity.this, SignIn_Choose.class));
                 } else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
 
                 // Google sign out
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                            new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                                }
-                            });
-                }
+                //TODO: Get back to this
+
+//                if (LoginActivity.mGoogleSignInClient != null) {
+//                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+//                            new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                                }
+//                            });
+//                }
+
                 finish();
                 return true;
         }
@@ -637,7 +629,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      */
 
     protected void collectWorkers() {
-        workersRef.addValueEventListener(new ValueEventListener() {
+
+        /* TODO: The constant Listener causes a crash when a new worker is added, seemingly:
+            To reproduce
+            > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
+//        workersRef.addValueEventListener(new ValueEventListener() {
+        workersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
@@ -696,28 +694,41 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void getFarmKey() {
-        String convertEmail = currentUserEmail;
-        emailInDB = convertEmail.replace(".", ",");
-        DatabaseReference outerRef = database.getReference("WorkingFor/"+emailInDB);
-        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    farmerKey = child.getKey();
-
-                    farmerKey = child.getKey();
-                    getPolygon();//set expected yield
-                    farmLevelRef = database.getReference(farmerKey);//Firebase reference
-                    workersRef = farmLevelRef.child("workers");
-                    collectWorkers();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-            }
-        });
+//        String convertEmail = currentUserEmail;
+//        emailInDB = convertEmail.replace(".", ",");
+//        DatabaseReference outerRef = database.getReference("WorkingFor/"+emailInDB);
+//        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                    farmerKey = child.getKey();
+//
+//                    farmerKey = child.getKey();
+//                    getPolygon();//set expected yield
+//                    farmLevelRef = database.getReference(farmerKey);//Firebase reference
+//                    workersRef = farmLevelRef.child("workers");
+//                    collectWorkers();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.w(TAG, "onCancelled", databaseError.toException());
+//            }
+//        });
+//        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
+//        farmerKey = sharedPreferences.getString(getString(R.string.sharedPref_signIn_farmerid), "0");
+        farmerKey = AppUtil.readStringFromSharedPrefs(this, getString(R.string.farmerID_Pref));
+        if (farmerKey == null){
+            FirebaseAuth.getInstance().signOut();
+            startActivityIfNeeded(new Intent(this, SignIn_Choose.class), 0);
+            finish();
+            return;
+        }
+        getPolygon();
+        farmLevelRef = database.getReference(farmerKey);
+        workersRef = farmLevelRef.child("workers");
+        collectWorkers();
     }
 
     public void statusCheck() {

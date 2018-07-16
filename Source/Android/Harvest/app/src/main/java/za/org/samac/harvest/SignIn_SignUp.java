@@ -27,24 +27,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import za.org.samac.harvest.util.AppUtil;
 
@@ -53,7 +47,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -89,7 +83,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_signin_signup);
         // Set up the sign up form.
         edtFirstName = findViewById(R.id.edtFirstName);
         //populateAutoComplete();
@@ -146,7 +140,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                Intent intent = new Intent(SignIn_SignUp.this, SignIn_Farmer.class);
                 startActivity(intent);
                 finish();//kill current Activity
             }
@@ -204,7 +198,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(SignIn_SignUp.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }
@@ -214,7 +208,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            /*Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                            /*Toast.makeText(SignIn_SignUp.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);*/
 
@@ -487,7 +481,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(SignUpActivity.this,
+                new ArrayAdapter<>(SignIn_SignUp.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         //edtEmail.setAdapter(adapter);

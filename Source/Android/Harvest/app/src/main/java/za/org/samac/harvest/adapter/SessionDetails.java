@@ -2,7 +2,6 @@ package za.org.samac.harvest.adapter;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -34,25 +33,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import za.org.samac.harvest.Analytics;
-import za.org.samac.harvest.InformationActivity;
-import za.org.samac.harvest.LoginActivity;
+import za.org.samac.harvest.SignIn_Choose;
 import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.R;
-import za.org.samac.harvest.Sessions;
 import za.org.samac.harvest.SessionsMap;
 import za.org.samac.harvest.SettingsActivity;
-import za.org.samac.harvest.SignUpActivity;
+import za.org.samac.harvest.SignIn_Farmer;
+import za.org.samac.harvest.SignIn_SignUp;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
 
@@ -242,17 +236,17 @@ public class SessionDetails extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(SessionDetails.this, LoginActivity.class));
+                    startActivity(new Intent(SessionDetails.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(SessionDetails.this, LoginActivity.class));
+                                    startActivity(new Intent(SessionDetails.this, SignIn_Farmer.class));
                                 }
                             });
                 }

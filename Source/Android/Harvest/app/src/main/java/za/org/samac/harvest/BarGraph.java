@@ -277,7 +277,7 @@ public class BarGraph extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(BarGraph.this, LoginActivity.class));
+                    startActivity(new Intent(BarGraph.this, SignIn_Farmer.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();

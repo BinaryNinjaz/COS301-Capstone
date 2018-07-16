@@ -6,23 +6,16 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -32,12 +25,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -58,12 +48,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import za.org.samac.harvest.util.AppUtil;
 
-import static android.Manifest.permission.READ_CONTACTS;
-
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -101,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_signin_farmer);
         // Set up the login form.
         edtEmail = findViewById(R.id.edtEmail);
 
@@ -159,16 +147,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-        //user presses Sign up button (goes to sign up screen)
-        btnSignup = findViewById(R.id.btnSignup);
-        btnSignup.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
-                finish();//kill current Activity
-            }
-        });
+//        //user presses Sign up button (goes to sign up screen)
+//        btnSignup = findViewById(R.id.btnSignup);
+//        btnSignup.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(SignIn_Farmer.this, SignIn_SignUp.class);
+//                startActivity(intent);
+//                finish();//kill current Activity
+//            }
+//        });
 
         //user presses Forgot account details link
         linkForgotAccountDetails = findViewById(R.id.linkForgotAccountDetails);
@@ -177,12 +165,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(SignIn_Farmer.this);
 
                 //TODO: center "Reset Password"
                 alert.setMessage(Html.fromHtml("<b>"+"Reset Password"+"</b>"+"<br>"+"Please enter your email, you will receive an email to recover your password."));
 
-                final EditText email = new EditText(LoginActivity.this);
+                final EditText email = new EditText(SignIn_Farmer.this);
                 email.setInputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 email.setHint("Email");
@@ -216,7 +204,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                 alert.show();
 
-                /*Intent intent = new Intent(LoginActivity.this, LoginActivity.class);//refresh log in screen
+                /*Intent intent = new Intent(SignIn_Farmer.this, SignIn_Farmer.class);//refresh log in screen
                 startActivity(intent);
                 finish();//kill current Activity*/
             }
@@ -244,11 +232,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         // the GoogleSignInAccount will be non-null.
         /*GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account == null) {
-            Intent intent = new Intent(LoginActivity.this, LoginActivity.class);//go to log in screen
+            Intent intent = new Intent(SignIn_Farmer.this, SignIn_Farmer.class);//go to log in screen
             startActivity(intent);
             finish();//kill current Activity
         } else {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);
             startActivity(intent);
             finish();//kill current Activity
         }*/
@@ -312,7 +300,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);//go to actual app
+                                    Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }
@@ -378,7 +366,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);//go to actual app
+                                    Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }
@@ -386,7 +374,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            /*Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            /*Toast.makeText(SignIn_Farmer.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);*/
 
