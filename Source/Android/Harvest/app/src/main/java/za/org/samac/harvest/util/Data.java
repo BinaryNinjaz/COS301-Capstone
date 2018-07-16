@@ -99,7 +99,7 @@ public class Data {
                                 temp.setEmail(dataSet.child("email").getValue(String.class));
                                 temp.setPhone(dataSet.child("contactNumber").getValue(String.class));
                                 temp.setProvince(dataSet.child("province").getValue(String.class));
-                                temp.setTown(dataSet.child("neartestTown").getValue(String.class)); //TODO: Verify this typo
+                                temp.setTown(dataSet.child("Town").getValue(String.class)); //TODO: Verify this typo
                                 temp.setFurther(dataSet.child("further").getValue(String.class));
                                 temp.setID(dataSet.getKey());
                                 farms.add(temp);
@@ -282,7 +282,7 @@ public class Data {
                             objectRoot.child("email").setValue(newFarm.email);
                             objectRoot.child("contactNumber").setValue(newFarm.phone);
                             objectRoot.child("province").setValue(newFarm.province);
-                            objectRoot.child("neartestTown").setValue(newFarm.town);
+                            objectRoot.child("Town").setValue(newFarm.town);
                             objectRoot.child("further").setValue(newFarm.further);
                             break;
                         case ORCHARD:
@@ -375,7 +375,7 @@ public class Data {
                             objectRoot.child("email").setValue(activeFarm.email);
                             objectRoot.child("contactNumber").setValue(activeFarm.phone);
                             objectRoot.child("province").setValue(activeFarm.province);
-                            objectRoot.child("neartestTown").setValue(activeFarm.town);
+                            objectRoot.child("Town").setValue(activeFarm.town);
                             objectRoot.child("further").setValue(activeFarm.further);
                             break;
                         case ORCHARD:
