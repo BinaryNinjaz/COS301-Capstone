@@ -232,7 +232,7 @@ function dispFarm(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().contactNo + "</p> </div> </div> " +
         "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().email + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
