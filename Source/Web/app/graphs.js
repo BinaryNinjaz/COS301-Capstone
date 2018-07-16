@@ -210,8 +210,8 @@ function workerPerformance(start, end, id){
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
-        ["Period", "Number of Bags", { role: "style" } ],
-        ["06:00 - 07:00", 8, "#00a33f"],
+        ["Period", "Number of Bags", { role: "style" } ], //This line explains the format of the array object
+        ["06:00 - 07:00", 8, "#00a33f"], //[label: which is the period of 1 hour, Number of bags, color of bar]
         ["07:00 - 08:00", 6, "#00a33f"],
         ["08:00 - 09:00", 3, "#00a33f"],
 		["09:00 - 10:00", 7, "#00a33f"],
@@ -232,13 +232,13 @@ function workerPerformance(start, end, id){
                          type: "string",
                          role: "annotation" },
                        2]);
-
+      var nameOfWorker; //This has to be assigned the name of the worker/the id ow the worker
       var options = {
-        title: "Number of bags collected per hour by Teboho Mokoena", //This is a temporary title for the Graph
+        title: "Number of bags collected per hour by Teboho Mokoena", //Teboho Mokoena will be replaced with 'nameOfWorker' variable
         width: 1200, //Setting the width 
         height: 700, //Setting the height
-        bar: {groupWidth: "95%"},
-        legend: { position: "none" },
+        bar: {groupWidth: "95%"}, //This is the grouping width of the bar graph
+        legend: { position: "none" }, //This will be determined by the UX designer
       };
       var chart = new google.visualization.BarChart(document.getElementById("curve_chart"));
       chart.draw(view, options);
