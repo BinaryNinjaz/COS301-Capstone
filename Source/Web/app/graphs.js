@@ -200,7 +200,7 @@ function orchardPerformance(start, end, id){
 			//The size of the labels array will depend on the start date and the end date.
 			labels: ['Sunday','Monday','Tuesday','Wednesday','Thursady','Friday','Saturday'], //This will contain the dates plotted on each point. (give me the dates)
 			datasets: [{
-			label: "Number of Bags p/day",
+			label: "Number of Bags p/day", //These are the number of bags per day since the start date and the end date
 			data: [4, 0, 5, 0, 0, 0, 4], //The size of this will also depend on the start and the end date
 			backgroundColor: '#4CAF50'
 		}]
