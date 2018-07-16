@@ -317,6 +317,9 @@ function farmMod(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().contactNo + "'></div> </div> " +
       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().email + "'></div> </div> " +
+      "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince' value='" + snapshot.val().province + "'></div> </div> " +
        "" +
