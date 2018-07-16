@@ -409,14 +409,7 @@ function dispOrch(id) {
         "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
         "" +       
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'>"+
-        "<select class='form-control' id='orchFarm'>Micro</select>"+
-        "<select class='form-control' id='orchFarm'>Drip</select>"+
-        "<select class='form-control' id='orchFarm'>Floopy</select>"+
-        "<select class='form-control' id='orchFarm'>Drag Lines</select>"+
-        "<select class='form-control' id='orchFarm'>Other</select>"+
-        "<select class='form-control' id='orchFarm'>None(dry land)</select>"+
-        "</div></div>" +
+        "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
         "" +        
         "</form>"
       ;
@@ -466,6 +459,9 @@ function dispOrch(id) {
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Workers:</label>" +
           "<div class='col-sm-9' id='workerButtons'></div></div>" +
           "" +
+          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irregation:</label>" +
+          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().irregation + "</p></div> </div>" +
+          "" +
           "</form>"
         ;
 
@@ -512,7 +508,8 @@ function orchSave(type, id) {
       unit: document.getElementById("orchDimUnit").value,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
-      farm: farmID
+      farm: farmID,
+      irregation: document.getElementById("irregation").value
     });
     popOrch();
   }
@@ -527,7 +524,8 @@ function orchSave(type, id) {
       unit: document.getElementById("orchDimUnit").value,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
-      farm: farmID
+      farm: farmID,
+      irregation: document.getElementById("irregation").value
     });
   }
   popOrch();
