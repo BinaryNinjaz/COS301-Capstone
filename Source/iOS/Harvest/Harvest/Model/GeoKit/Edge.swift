@@ -47,13 +47,13 @@ extension Edge {
   }
 }
 
-extension Edge: Equatable {
-  public static func == (lhs: Edge, rhs: Edge) -> Bool {
+extension Edge : Equatable {
+  public static func ==(lhs: Edge, rhs: Edge) -> Bool {
     return lhs.start == rhs.start && lhs.end == rhs.end
   }
 }
 
-extension Edge: CustomStringConvertible {
+extension Edge : CustomStringConvertible {
   public var description: String {
     return "[\(start) \(end)]"
   }

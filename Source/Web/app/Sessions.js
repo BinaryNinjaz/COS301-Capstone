@@ -26,7 +26,6 @@ firebase.auth().onAuthStateChanged(function (user) {
     $(window).bind("load", function() {
       initPage();
       initMap();
-      google.charts.load('current', {'packages':['corechart']});
     });
   } else {
     sessions = [];
@@ -119,11 +118,6 @@ var markers = [];
 var polypath;
 function loadSession(sessionID) {
   const ref = firebase.database().ref('/' + userID() + '/sessions/' + sessionID);
-  
-  var graphData = [
-    ["Worker", "Total Bags Collected"],
-  ];
-  
   ref.once('value').then((snapshot) => {
     const val = snapshot.val();
     const start = new Date(val.start_date * 1000);
@@ -181,8 +175,6 @@ function loadSession(sessionID) {
           wname = worker.value.name + " " + worker.value.surname;
         }
         
-        graphData.push([wname, collection.length]);
-        
         for (const pkey in collection) {
           const pickup = collection[pkey];
           const coord = new google.maps.LatLng(pickup.coord.lat, pickup.coord.lng);
@@ -199,19 +191,6 @@ function loadSession(sessionID) {
         }
       }
     }
-    initGraph(graphData);
+    
   });
-}
-
-function initGraph(collections) {
-  var options = {
-    title: 'Worker Performance Summary',
-    pieHole: 0.5
-  };
-  
-  var data = google.visualization.arrayToDataTable(collections);
-  
-  var doc = document.getElementById('doughnut');
-  var chart = new google.visualization.PieChart(doc);
-  chart.draw(data, options);
 }

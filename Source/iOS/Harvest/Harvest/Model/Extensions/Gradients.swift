@@ -14,9 +14,8 @@ extension CAGradientLayer {
     locations: [NSNumber],
     cornerRadius: CGFloat,
     borderColor: UIColor
-  ) -> CAGradientLayer {
+    ) -> CAGradientLayer {
     let gradientLayer = CAGradientLayer()
-    gradientLayer.masksToBounds = true
     gradientLayer.colors = colors.map { $0.cgColor }
     gradientLayer.locations = locations
     gradientLayer.cornerRadius = cornerRadius
@@ -26,87 +25,45 @@ extension CAGradientLayer {
     return gradientLayer
   }
   
-  static var startSession: CAGradientLayer {
-    return gradient(colors: .startSession,
+  static var green: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.green,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: [UIColor].startSession[1])
+                    borderColor: UIColor.Bootstrap.green[1])
   }
   
-  static var registerWithHarvest: CAGradientLayer {
-    return gradient(colors: .registerWithHarvest,
+  static var blue: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.blue,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: [UIColor].registerWithHarvest[1])
+                    borderColor: UIColor.Bootstrap.blue[1])
   }
   
-  static var stopSession: CAGradientLayer {
-    return gradient(colors: .stopSession,
+  static var orange: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.orange,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: [UIColor].stopSession[1])
+                    borderColor: UIColor.Bootstrap.orange[1])
   }
   
-  static var deleteAllButton: CAGradientLayer {
-    return gradient(colors: .deleteAllButton,
+  static var red: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.red,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: [UIColor].deleteAllButton[1])
+                    borderColor: UIColor.Bootstrap.red[1])
   }
   
-  static var deleteButton: CAGradientLayer {
-    return gradient(colors: .deleteButton,
+  static var google: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.google,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: [UIColor].deleteButton[1])
+                    borderColor: UIColor.Bootstrap.google[1])
   }
   
-  static var disabledButton: CAGradientLayer {
-    return gradient(colors: .disabledButton,
+  static var disabled: CAGradientLayer {
+    return gradient(colors: UIColor.Bootstrap.disabled,
                     locations: [0.0, 1.0],
                     cornerRadius: 5,
-                    borderColor: [UIColor].disabledButton[1])
-  }
-  
-  static var sessionTiles: CAGradientLayer {
-    return gradient(colors: .sessionTiles,
-                    locations: [0.0, 1.0],
-                    cornerRadius: 5,
-                    borderColor: [UIColor].sessionTiles[1])
-  }
-  
-  static var sessionTilesText: CAGradientLayer {
-    return gradient(colors: .signUpButton,
-                    locations: [0.0, 1.0],
-                    cornerRadius: 5,
-                    borderColor: [UIColor].sessionTilesText[1])
-  }
-  
-  static var signInButton: CAGradientLayer {
-    return gradient(colors: .signInButton,
-                    locations: [0.0, 1.0],
-                    cornerRadius: 5,
-                    borderColor: [UIColor].signInButton[1])
-  }
-  
-  static var signUpButton: CAGradientLayer {
-    return gradient(colors: .signUpButton,
-                    locations: [0.0, 1.0],
-                    cornerRadius: 5,
-                    borderColor: [UIColor].signUpButton[1])
-  }
-  
-  static var googleSignInButton: CAGradientLayer {
-    return gradient(colors: .googleSignInButton,
-                    locations: [0.0, 1.0],
-                    cornerRadius: 5,
-                    borderColor: [UIColor].googleSignInButton[1])
-  }
-  
-  static var cancelRegistrationButton: CAGradientLayer {
-    return gradient(colors: .cancelRegistrationButton,
-                    locations: [0.0, 1.0],
-                    cornerRadius: 5,
-                    borderColor: [UIColor].cancelRegistrationButton[1])
+                    borderColor: UIColor.Bootstrap.disabled[1])
   }
 }

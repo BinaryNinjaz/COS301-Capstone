@@ -15,9 +15,6 @@ PODS:
   - Firebase/Database (4.11.0):
     - Firebase/Core
     - FirebaseDatabase (= 4.1.5)
-  - Firebase/Functions (4.11.0):
-    - Firebase/Core
-    - FirebaseFunctions (= 1.0.0)
   - FirebaseAnalytics (4.1.0):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
@@ -33,10 +30,6 @@ PODS:
     - FirebaseAnalytics (~> 4.1)
     - FirebaseCore (~> 4.0)
     - leveldb-library (~> 1.18)
-  - FirebaseFunctions (1.0.0):
-    - FirebaseAnalytics (~> 4.1)
-    - FirebaseCore (~> 4.0)
-    - GTMSessionFetcher/Core (~> 1.1)
   - FirebaseInstanceID (2.0.10):
     - FirebaseCore (~> 4.0)
   - GoogleMaps (2.6.0):
@@ -72,7 +65,6 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
-  - SnapKit (4.0.0)
 
 DEPENDENCIES:
   - Charts
@@ -82,10 +74,8 @@ DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
-  - Firebase/Functions
   - GoogleMaps
   - GoogleSignIn
-  - SnapKit (~> 4.0.0)
 
 SPEC CHECKSUMS:
   Charts: 0b0c96f6118b6ce63f11adbcaa3b31045ee4d772
@@ -96,7 +86,6 @@ SPEC CHECKSUMS:
   FirebaseAuth: 147bf340a0706b44ca1753d6b41ebafd9687cfe6
   FirebaseCore: b981f47e5254cbcfdeb483355300d743f6fcab2c
   FirebaseDatabase: 5f0bc6134c5c237cf55f9e1249d406770a75eafd
-  FirebaseFunctions: 3745fada03bd706a9b5c0b9ae7b2d490fa594d21
   FirebaseInstanceID: 8d20d890d65c917f9f7d9950b6e10a760ad34321
   GoogleMaps: 42f91c68b7fa2f84d5c86597b18ceb99f5414c7f
   GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
@@ -105,8 +94,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 390ea358e5a0d0133153806f744662dad933d06b
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
-PODFILE CHECKSUM: ee45cf64a23aaaf844851d35fb2e19163f438f0a
+PODFILE CHECKSUM: b499525656f2e4f3f057d6e91eaea86ee59c1633
 
 COCOAPODS: 1.4.0

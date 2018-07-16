@@ -84,9 +84,6 @@ public class Analytics extends AppCompatActivity {
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
-                                Intent openSessions= new Intent(Analytics.this, SessionsMap.class);
-                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openSessions, 0);
                                 return true;
                             case R.id.actionStats:
                                 return true;
@@ -99,21 +96,21 @@ public class Analytics extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //user selects to see pie chart
-        perSesWorkerComparison = findViewById(R.id.workerHistPerformance);
+        perSesWorkerComparison = findViewById(R.id.perSesWorkerComparison);
         perSesWorkerComparison.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Analytics.this, BarGraph.class);
+                Intent intent = new Intent(Analytics.this, za.org.samac.harvest.PieChart.class);
                 startActivity(intent);
             }
         });
 
         //user selects to see bar graph
-        orhHistPerformance = findViewById(R.id.orchHistPerformance);
+        orhHistPerformance = findViewById(R.id.orhHistPerformance);
         orhHistPerformance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Analytics.this, OrchardsForGraph.class);
+                Intent intent = new Intent(Analytics.this, BarGraph.class);
                 startActivity(intent);
             }
         });

@@ -79,8 +79,8 @@ public class LoginActivity extends AppCompatActivity {
     private UserLoginTask mAuthTask = null;
 
     //used same names as IDs in xml
-    private static EditText edtEmail;
-    private static EditText edtPassword;
+    private EditText edtEmail;
+    private EditText edtPassword;
     private View login_progress;
     private View login_form;
     private Button btnSignup;
@@ -221,14 +221,6 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();//initialisation the FirebaseAuth instance
     }
 
-    public static void setEdtEmail(EditText e) {
-        edtEmail = e;
-    }
-
-    public static void setEdtPassword(EditText p) {
-        edtPassword = p;
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -334,7 +326,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "signInToAccount:" + email);
         login_form.setVisibility(View.INVISIBLE);
         login_progress.setVisibility(View.VISIBLE);
-        if (!validateForm(edtEmail.toString(), edtPassword.toString())) {
+        if (!validateForm()) {
             return;
         }
 
@@ -396,25 +388,23 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public static boolean validateForm(String email, String password) {
+    private boolean validateForm() {
         boolean valid = true;
 
+        String email = edtEmail.getText().toString();
         if (TextUtils.isEmpty(email)) {
             edtEmail.setError("Required.");
             valid = false;
         } else {
-            if (edtEmail != null) {
-                edtEmail.setError(null);
-            }
+            edtEmail.setError(null);
         }
 
+        String password = edtPassword.getText().toString();
         if (TextUtils.isEmpty(password)) {
             edtPassword.setError("Required.");
             valid = false;
         } else {
-            if (edtPassword != null) {
-                edtPassword.setError(null);
-            }
+            edtPassword.setError(null);
         }
 
         return valid;

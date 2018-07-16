@@ -16,8 +16,8 @@ public struct Ellip<Number: BinaryFloatingPoint> {
   }
 }
 
-extension Ellip: Equatable {
-  public static func == (lhs: Ellip, rhs: Ellip) -> Bool {
+extension Ellip : Equatable {
+  public static func ==(lhs: Ellip, rhs: Ellip) -> Bool {
     return lhs.minorAxis == rhs.minorAxis
       && lhs.majorAxis == rhs.majorAxis
       && lhs.center == rhs.center

@@ -14,24 +14,6 @@ class MainTabBarViewController: UITabBarController {
 
     // Do any additional setup after loading the view.
   }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    
-    HarvestDB.checkLocationRequested { locRequested in
-      LocationTracker.shared.requestLocation(wantsLocation: locRequested)
-    }
-    
-    HarvestDB.listenLocationRequested { locRequested in
-      LocationTracker.shared.requestLocation(wantsLocation: locRequested)
-    }
-  }
-  
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    
-    HarvestDB.removeListnerForLocationRequests()
-  }
 
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
@@ -48,10 +30,12 @@ class MainTabBarViewController: UITabBarController {
       viewControllers?.remove(at: infoIdx)
     }
     
+    
     if let sessionIdx = viewControllers?
       .index(where: { $0.restorationIdentifier == sessionsViewControllerKey }) {
         viewControllers?.remove(at: sessionIdx)
     }
+    
     
     if let statIdx = viewControllers?
       .index(where: { $0.restorationIdentifier == statViewControllerKey }) {

@@ -4,7 +4,6 @@ package za.org.samac.harvest;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,8 +26,6 @@ public class InfoListFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private Category cat = Category.NOTHING;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private Data data;
 
     public InfoListFragment() {
@@ -36,24 +33,14 @@ public class InfoListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_info_list, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-
-        mSwipeRefreshLayout = getView().findViewById(R.id.swipeRefresh);
-        mSwipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        refresh();
-                    }
-                }
-        );
-
         String catString = "";
         switch (cat){
             case FARM:
@@ -88,16 +75,6 @@ public class InfoListFragment extends Fragment {
         this.cat = cat;
     }
 
-    private void refresh() {
-        data.pull(this);
-    }
-
-    public void endRefresh(){
-        mAdapter = new infoAdapter(data);
-        mRecyclerView.setAdapter(mAdapter);
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
 }
 
 class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
@@ -128,7 +105,7 @@ class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
         holder.mButton.setText(names[position]);
-        holder.mButton.setTag(data.getIDFromPosInArray(position) + " " + data.getNamedCategory());
+        holder.mButton.setTag(data.getIDFromPosInArray(position) + " " + "FARM");
     }
 
     @Override

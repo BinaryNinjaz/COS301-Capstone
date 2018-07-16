@@ -9,13 +9,13 @@ public struct Point<Number: BinaryFloatingPoint> {
   }
 }
 
-extension Point: Equatable {
-  public static func == (lhs: Point, rhs: Point) -> Bool {
+extension Point : Equatable {
+  public static func ==(lhs: Point, rhs: Point) -> Bool {
     return lhs.x == rhs.x && lhs.y == rhs.y
   }
 }
 
-extension Point: CustomStringConvertible {
+extension Point : CustomStringConvertible {
   public var description: String {
     return "(\(x) \(y))"
   }

@@ -13,10 +13,10 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:visibility="visible" />
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/relLayout"
@@ -27,7 +27,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="80dp"
             android:layout_marginBottom="100dp"
             android:scrollbars="vertical"
             android:visibility="gone" />
@@ -38,7 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/navbar_background"
+            app:itemBackground="@color/colorPrimary"
+            app:itemIconTint="@color/white"
+            app:itemTextColor="@color/white"
             app:menu="@menu/bottom_navigation_main" />
     </RelativeLayout>
 

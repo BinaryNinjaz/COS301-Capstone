@@ -7,9 +7,11 @@
 //
 
 import Firebase
+import CoreLocation
+import GoogleSignIn
 
 extension HarvestDB {
-  static func getHarvestUser(_ completion: @escaping (HarvestUser?) -> Void) {
+  static func getHarvestUser(_ completion: @escaping (HarvestUser?) -> ()) {
     let aref = ref.child(Path.admin)
     aref.observeSingleEvent(of: .value) { snapshot in
       guard let user = snapshot.value as? [String: Any] else {
@@ -22,7 +24,7 @@ extension HarvestDB {
     }
   }
   
-  static func watchHarvestUser(_ completion: @escaping (HarvestUser) -> Void) {
+  static func watchHarvestUser(_ completion: @escaping (HarvestUser) -> ()) {
     let aref = ref.child(Path.admin)
     aref.observe(.value) { (snapshot) in
       guard let user = snapshot.value as? [String: Any] else {

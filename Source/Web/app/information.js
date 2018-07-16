@@ -68,10 +68,10 @@ function pushOrchardCoord(e) {
   updatePolyListener();
 }
 function updateLocationMap(editing) {
-  locationLookup((data) => {
+  navigator.geolocation.getCurrentPosition(function(loca) {
     loc = {
-      lat: data.lat,
-      lng: data.lon
+      lat: loca.coords.latitude,
+      lng: loca.coords.longitude
     }
     initMap();
     if (editing) {
@@ -115,12 +115,10 @@ function updatePolygon(snapshot) {
   while (orchardCoords.length > 0) {
     orchardCoords.pop();
   }
-  if (snapshot !== null && snapshot !== undefined && snapshot.val() !== undefined && snapshot.val().coords !== undefined) {
+  if (snapshot !== null) {
     snapshot.val().coords.forEach(function(coord) {
       orchardCoords.push(coord);
     });
-  } else {
-    orchardCoords.push(loc);
   }
   if (orchardPoly !== undefined && orchardPoly !== null) {
     orchardPoly.setMap(null);
@@ -136,9 +134,7 @@ function updatePolygon(snapshot) {
   });
   updatePolyListener();
   map.setCenter({lat: cenLat(orchardCoords), lng: cenLng(orchardCoords)});
-  if (orchardCoords.length > 1) {
-    map.fitBounds(bounds(orchardCoords));
-  }
+  map.fitBounds(bounds(orchardCoords));
 }
 function updatePolyListener() {
   if (orchardPoly !== undefined) {
@@ -474,7 +470,7 @@ function orchSave(type, id) {
       coords: orchardCoords,
       farm: farmID
     });
-//    popOrch();
+    popOrch();
   }
   else if (type === 1) {
     firebase.database().ref('/' + userID() +"/orchards/" + id).update({

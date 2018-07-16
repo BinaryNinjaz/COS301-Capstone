@@ -10,17 +10,13 @@ import Foundation
 
 enum EntityItem {
   enum Kind {
-    case farm, orchard, worker, session
-    case shallowSession
-    case user
-    case none
+    case farm, orchard, worker, session, user, none
   }
   
   case farm(Farm)
   case orchard(Orchard)
   case worker(Worker)
   case session(Session)
-  case shallowSession(ShallowSession)
   case user(HarvestUser)
   
   var name: String {
@@ -28,21 +24,151 @@ enum EntityItem {
     case let .farm(f): return f.name
     case let .orchard(o): return o.name
     case let .worker(w): return w.firstname + " " + w.lastname
-    case let .session(s): return s.description
-    case let .shallowSession(s): return s.description
+    case let .session(s): return s.description // FIXME
     case let .user(u): return u.displayName
+    }
+  }
+  
+  var id: String {
+    switch self {
+    case let .farm(f): return f.id
+    case let .orchard(o): return o.id
+    case let .worker(w): return w.id
+    case let .session(s): return s.id
+    case .user: return HarvestDB.Path.admin
+    }
+  }
+  
+  var farm: Farm? {
+    switch self {
+    case let .farm(f): return f
+    default: return nil
+    }
+  }
+  
+  var orchard: Orchard? {
+    switch self {
+    case let .orchard(o): return o
+    default: return nil
+    }
+  }
+  
+  var worker: Worker? {
+    switch self {
+    case let .worker(w): return w
+    default: return nil
+    }
+  }
+  
+  var session: Session? {
+    switch self {
+    case let .session(s): return s
+    default: return nil
+    }
+  }
+  
+  var user: HarvestUser? {
+    switch self {
+    case let .user(u): return u
+    default: return nil
     }
   }
 }
 
-final class Entities {
-  private(set) var farms = SortedDictionary<String, Farm>(<)
-  private(set) var workers = SortedDictionary<String, Worker>(<)
-  private(set) var orchards = SortedDictionary<String, Orchard>(<)
-  private(set) var sessions = SortedDictionary<String, Session>(>)
-  private(set) var shallowSessions = SortedDictionary<String, ShallowSession>(>)
+extension Array where Element == EntityItem {
+  func orchards() -> [Orchard] {
+    return compactMap {
+      if case let .orchard(o) = $0 {
+        return o
+      } else {
+        return nil
+      }
+    }
+  }
   
-  private(set) var listners: [Int: () -> Void] = [:]
+  func workers() -> [Worker] {
+    return compactMap {
+      if case let .worker(w) = $0 {
+        return w
+      } else {
+        return nil
+      }
+    }
+  }
+  
+  func farms() -> [Farm] {
+    return compactMap {
+      if case let .farm(f) = $0 {
+        return f
+      } else {
+        return nil
+      }
+    }
+  }
+  
+  func sessions() -> [Session] {
+    return compactMap {
+      if case let .session(s) = $0 {
+        return s
+      } else {
+        return nil
+      }
+    }
+  }
+}
+
+typealias SortedEntity = SortedDictionary<String, EntityItem>
+
+extension SortedDictionary where Key == String, Value == EntityItem {
+  func orchards() -> [Orchard] {
+    return compactMap {
+      if case let .orchard(o) = $0.value {
+        return o
+      } else {
+        return nil
+      }
+    }
+  }
+  
+  func workers() -> [Worker] {
+    return compactMap {
+      if case let .worker(w) = $0.value {
+        return w
+      } else {
+        return nil
+      }
+    }
+  }
+  
+  func farms() -> [Farm] {
+    return compactMap {
+      if case let .farm(f) = $0.value {
+        return f
+      } else {
+        return nil
+      }
+    }
+  }
+  
+  func sessions() -> [Session] {
+    return compactMap {
+      if case let .session(s) = $0.value {
+        return s
+      } else {
+        return nil
+      }
+    }
+  }
+}
+
+
+final class Entities {
+  private(set) var farms = SortedEntity(<)
+  private(set) var workers = SortedEntity(<)
+  private(set) var orchards = SortedEntity(<)
+  private(set) var sessions = SortedEntity(<)
+  
+  private(set) var listners: [Int: () -> ()] = [:]
   
   static var shared = Entities()
   
@@ -51,7 +177,6 @@ final class Entities {
     watch(.orchard)
     watch(.worker)
     watch(.session)
-    getOnce(.shallowSession) { _ in }
   }
   
   func reset() {
@@ -59,10 +184,9 @@ final class Entities {
     workers.removeAll()
     orchards.removeAll()
     sessions.removeAll()
-    shallowSessions.removeAll()
   }
   
-  func listen(with f: @escaping () -> Void) -> Int {
+  func listen(with f: @escaping () -> ()) -> Int {
     listners[listners.count] = f
     return listners.count - 1
   }
@@ -75,9 +199,9 @@ final class Entities {
     listners.forEach { $0.1() }
   }
   
-  func listenOnce(with f: @escaping () -> Void) {
+  func listenOnce(with f: @escaping () -> ()) {
     let id = listners.count
-    let g: () -> Void = {
+    let g: () -> () = {
       f()
       self.deregister(listner: id)
     }
@@ -85,50 +209,38 @@ final class Entities {
     listners[listners.count] = g
   }
   
-  func getOnce(_ kind: EntityItem.Kind, completion: @escaping (Entities) -> Void) {
+  func getOnce(_ kind: EntityItem.Kind, completion: @escaping (Entities) -> ()) {
     switch kind {
     case .worker:
       HarvestDB.getWorkers { (workers) in
         self.workers = SortedDictionary(
           uniqueKeysWithValues: workers.map { worker in
-            return (worker.lastname + worker.firstname + worker.id, worker)
+            return (worker.lastname + worker.firstname + worker.id, .worker(worker))
         }, <)
         completion(self)
       }
-      
     case .orchard:
       HarvestDB.getOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.assignedFarm + orchard.name + orchard.id, orchard)
+            return (orchard.name + orchard.id, .orchard(orchard))
         }, <)
         completion(self)
       }
-      
     case .farm:
       HarvestDB.getFarms { (farms) in
         self.farms = SortedDictionary(
           uniqueKeysWithValues: farms.map { farm in
-            return (farm.name + farm.id, farm)
+            return (farm.name + farm.id, .farm(farm))
         }, <)
         completion(self)
       }
-      
     case .session:
       HarvestDB.getSessions { (sessions) in
         self.sessions = SortedDictionary(
           uniqueKeysWithValues: sessions.map { session in
-            return (session.key, session)
-        }, >)
-        completion(self)
-      }
-      
-    case .shallowSession:
-      HarvestCloud.getShallowSessions(onPage: 1, ofSize: 100) { (sessions) in
-        self.shallowSessions = SortedDictionary(
-          uniqueKeysWithValues: sessions.map { session in
-            return (session.startDate.description, session)
-        }, >)
+            return (session.key, .session(session))
+        }, <)
         completion(self)
       }
       
@@ -138,15 +250,15 @@ final class Entities {
   }
   
   func getMultiplesOnce(
-    _ kinds: [EntityItem.Kind],
-    completion: @escaping (Entities) -> Void
+    _ kinds: Set<EntityItem.Kind>,
+    completion: @escaping (Entities) -> ()
     ) {
     guard let f = kinds.first else {
       completion(self)
       return
     }
     getOnce(f) { entities in
-      let s = Array(kinds.dropFirst())
+      let s = Set(kinds.dropFirst())
       entities.getMultiplesOnce(s, completion: completion)
     }
   }
@@ -157,7 +269,7 @@ final class Entities {
       HarvestDB.watchWorkers { (workers) in
         self.workers = SortedDictionary(
           uniqueKeysWithValues: workers.map { worker in
-            return (worker.lastname + " " + worker.firstname + worker.id, worker)
+            return (worker.firstname + " " + worker.lastname + worker.id, .worker(worker))
         }, <)
         self.runListners()
       }
@@ -165,7 +277,7 @@ final class Entities {
       HarvestDB.watchOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.name + orchard.id, orchard)
+            return (orchard.name + orchard.id, .orchard(orchard))
         }, <)
         self.runListners()
       }
@@ -173,7 +285,7 @@ final class Entities {
       HarvestDB.watchFarms { (farms) in
         self.farms = SortedDictionary(
           uniqueKeysWithValues: farms.map { farm in
-            return (farm.name + farm.id, farm)
+            return (farm.name + farm.id, .farm(farm))
         }, <)
         self.runListners()
       }
@@ -181,34 +293,47 @@ final class Entities {
       HarvestDB.watchSessions { (sessions) in
         self.sessions = SortedDictionary(
           uniqueKeysWithValues: sessions.map { session in
-            return (session.key + session.id, session)
-        }, >)
+            return (session.key + session.id, .session(session))
+        }, <)
         self.runListners()
-        self.getOnce(.shallowSession) { _ in }
       }
       
-    case .shallowSession: fatalError("Watching shallow session is not supported")
-    case .user: fatalError("Watching user is not supported")
-    case .none: fatalError("Watching nothing is not supported")
+    case .user: break
+    case .none: break
     }
   }
   
-  func items(for kind: EntityItem.Kind) -> SortedDictionary<String, EntityItem>? {
+  func items(for kind: EntityItem.Kind) -> SortedEntity? {
     switch kind {
-    case .farm: return farms.mapValues { .farm($0) }
-    case .orchard: return orchards.mapValues { .orchard($0) }
-    case .worker: return workers.mapValues { .worker($0) }
-    case .session: return sessions.mapValues { .session($0) }
-    case .shallowSession: return shallowSessions.mapValues { .shallowSession($0) }
+    case .farm: return farms
+    case .orchard: return orchards
+    case .worker: return workers
+    case .session: return sessions
     case .user: return nil
     case .none: return nil
     }
   }
   
+  func workersList() -> [Worker] {
+    return workers.workers()
+  }
+  
+  func farmsList() -> [Farm] {
+    return farms.farms()
+  }
+  
+  func orchardsList() -> [Orchard] {
+    return orchards.orchards()
+  }
+  
+  func sessionsList() -> [Session] {
+    return sessions.sessions()
+  }
+  
   func sessionDates() -> [Date] {
     var result = [Date]()
     
-    for (_, session) in sessions {
+    for session in sessionsList() {
       var comps = Calendar.current.dateComponents([.day], from: session.startDate)
       
       if !result.contains(where: {
@@ -226,7 +351,7 @@ final class Entities {
     
     let dayComp = Calendar.current.dateComponents([.day], from: day)
     
-    for (_, session) in sessions {
+    for session in sessionsList() {
       let sComps = Calendar.current.dateComponents([.day], from: session.startDate)
       
       if sComps.day == dayComp.day {
@@ -243,12 +368,15 @@ final class Entities {
       return Worker.currentWorker
     }
     
-    guard let worker = workers
+    guard let entity = workers
       .first(where: { $0.1.id == id })?
     .value else {
       return nil
     }
     
-    return worker
+    if case let .worker(w) = entity {
+      return w
+    }
+    return nil
   }
 }

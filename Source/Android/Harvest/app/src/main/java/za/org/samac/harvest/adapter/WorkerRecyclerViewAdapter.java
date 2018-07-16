@@ -35,7 +35,7 @@ import java.util.Map;
 
 import za.org.samac.harvest.LocationHelper;
 import za.org.samac.harvest.MainActivity;
-//import za.org.samac.harvest.Manifest;
+import za.org.samac.harvest.Manifest;
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.WorkerComparator;
@@ -97,6 +97,56 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         return this.workers.size();
     }
 
+    public void getFarmKey() {
+        gotCorrectFarmerKey = false;
+        DatabaseReference outerRef = database.getReference();
+        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    farmerKey = child.getKey();
+                    myRef = database.getReference(farmerKey);//Firebase reference
+                    workersRef = myRef.child("workers");
+
+                    workersRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                                Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                                //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.child("name").getKey());
+                                //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.getKey());
+
+                                String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                                //only add if person is a worker (not a foreman)
+                                if(zoneSnapshot.child("type").getValue(String.class).equals("Foreman")) {
+                                    if (zoneSnapshot.child("email").getValue(String.class).equals(user.getEmail())) {
+                                        gotCorrectFarmerKey = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "onCancelled", databaseError.toException());
+                        }
+                    });
+
+                    if (gotCorrectFarmerKey) {
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     @Override
     public void onBindViewHolder(final WorkerViewHolder holder, int position) {
         final Worker worker = this.workers.get(position);//set worker object that is being clicked on
@@ -120,8 +170,12 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
                 //get time
                 currentTime = (System.currentTimeMillis()/divideBy1000Var);//seconds since January 1, 1970 00:00:00 UTC
+                //currentTime = Calendar.getInstance().getTime();
+
                 //make changes on Firebase or make changes on client side file (encrypt using SQLite)
                 database = FirebaseDatabase.getInstance();
+                //userUid = user.getUid();//ID or key of the current user
+                //myRef = database.getReference(userUid + "/sessions/");//path to sessions collection in Firebase
 
                 sessionKey = MainActivity.sessionKey;//get key/ID for a session
                 workerID = worker.getID();//get worker ID
@@ -212,12 +266,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         for(int i = 0 ; i < incrementViews.size() ; i++) {
             TextView text = incrementViews.get(i);
             text.setText("0");
-            //workers.get(i).setValue(0);
-            incrementViews.set(i, text);
-        }
-
-        for(int i = 0 ; i < workers.size() ; i++) {
             workers.get(i).setValue(0);
+            incrementViews.set(i, text);
         }
     }
 

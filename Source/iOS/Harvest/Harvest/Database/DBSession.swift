@@ -7,9 +7,11 @@
 //
 
 import Firebase
+import CoreLocation
+import GoogleSignIn
 
 extension HarvestDB {
-  static func getSessions(_ completion: @escaping ([Session]) -> Void) {
+  static func getSessions(_ completion: @escaping ([Session]) -> ()) {
     let sref = ref.child(Path.sessions)
     sref.observeSingleEvent(of: .value) { (snapshot) in
       var sessions = [Session]()
@@ -29,19 +31,7 @@ extension HarvestDB {
     }
   }
   
-  static func getSession(id: String, _ completion: @escaping (Session) -> Void) {
-    let sref = ref.child(Path.sessions + "/" + id)
-    sref.observeSingleEvent(of: .value) { (snapshot) in
-      guard let session = snapshot.value as? [String: Any] else {
-        return
-      }
-      
-      let s = Session(json: session, id: snapshot.key)
-      completion(s)
-    }
-  }
-  
-  static func watchSessions(_ completion: @escaping ([Session]) -> Void) {
+  static func watchSessions(_ completion: @escaping ([Session]) -> ()) {
     let sref = ref.child(Path.sessions)
     sref.observe(.value) { (snapshot) in
       var sessions = [Session]()
@@ -70,10 +60,7 @@ extension HarvestDB {
     sessions.updateChildValues(update)
   }
   
-  static func delete(
-    session: Session,
-    completion: @escaping (Error?, DatabaseReference) -> Void
-  ) {
+  static func delete(session: Session, completion: @escaping (Error?, DatabaseReference) -> ()) {
     let sessions = ref.child(Path.sessions)
     guard session.id != "" else {
       return

@@ -8,7 +8,7 @@
 
 import Eureka
 
-struct OrganizationInfo: CustomStringConvertible, Equatable {
+struct OrganizationInfo : CustomStringConvertible, Equatable {
   var uid: String?
   var name: String
   
@@ -21,61 +21,44 @@ struct OrganizationInfo: CustomStringConvertible, Equatable {
     return name
   }
   
-  static func == (lhs: OrganizationInfo, rhs: OrganizationInfo) -> Bool {
+  static func ==(lhs: OrganizationInfo, rhs: OrganizationInfo) -> Bool {
     return lhs.uid == rhs.uid
   }
 }
 
-class SettingsEurekaViewController: FormViewController {
-  // swiftlint:disable function_body_length
+class SettingsEurekaViewController : FormViewController {
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let userRow = HarvestUser.current.accountIdentifier
+    let userRow = HarvestUser.current.email
     
     let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
       row.title = "Admin"
     }
     
-    let logoutRow = ButtonRow { row in
+    let logoutRow = ButtonRow() { row in
       row.title = "Logout"
-    }.onCellSelection { (_, _) in
+    }.onCellSelection { (cell, row) in
       HarvestDB.signOut(on: self) { w in
         if w,
           let vc = self
             .storyboard?
-            .instantiateViewController(withIdentifier: "signInOptionViewController") {
+            .instantiateViewController(withIdentifier: "signInViewController") {
           self.present(vc, animated: true, completion: nil)
         }
       }
     }
     
-    let resignRow = ButtonRow { row in
+    let resignRow = ButtonRow() { row in
       row.title = "Resign"
-    }.onCellSelection { (_, _) in
-      
-      let confirmation = UIAlertController(title: "Are You Sure?",
-                                           message: """
-                                           Are you sure you want to remove yourself \
-                                           from association with you current farm?
-                                           """,
-                                           preferredStyle: .alert)
-      
-      let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-      let confirm = UIAlertAction(title: "Resign", style: .destructive, handler: { _ in
-        HarvestDB.resign { _, _ in
-          if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInOptionViewController") {
-            self.present(vc, animated: true, completion: nil)
-          }
+    }.onCellSelection { (cell, row) in
+      HarvestDB.resign { _, _ in
+        if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInViewController") {
+          self.present(vc, animated: true, completion: nil)
         }
-      })
-      
-      confirmation.addAction(cancel)
-      confirmation.addAction(confirm)
-      
-      self.present(confirmation, animated: true, completion: nil)
-      
-    }.cellUpdate { (cell, _) in
+      }
+    }.cellUpdate { (cell, row) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
     }
@@ -92,6 +75,9 @@ class SettingsEurekaViewController: FormViewController {
         +++ Section()
         <<< resignRow
     }
+    
+    
+    
     
   }
   

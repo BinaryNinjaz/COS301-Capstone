@@ -53,8 +53,7 @@
             app:layout_constraintBottom_toTopOf="@+id/info_farm_butt_save"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!--<android.support.v4.widget.NestedScrollView-->
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
@@ -63,11 +62,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <!--Name-->
                     <android.support.v7.widget.CardView
                         android:id="@+id/info_farm_name_card"
                         android:layout_width="match_parent"
@@ -127,318 +126,16 @@
 
                     </android.support.v7.widget.CardView>
 
-                    <!--Company-->
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/info_farm_company_card"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/info_farm_name_card">
-
-                        <android.support.constraint.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <TextView
-                                android:id="@+id/info_farm_company_desc"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/info_farm_company"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/info_farm_company_look"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:text="TextView"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_company_desc" />
-
-                            <EditText
-                                android:id="@+id/info_farm_company_edit"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:ems="10"
-                                android:inputType="text"
-                                android:selectAllOnFocus="true"
-                                android:singleLine="true"
-                                android:visibility="gone"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_company_desc" />
-
-                        </android.support.constraint.ConstraintLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                    <!--Email-->
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/info_farm_email_card"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/info_farm_company_card">
-
-                        <android.support.constraint.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <TextView
-                                android:id="@+id/info_farm_email_desc"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/info_farm_email"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/info_farm_email_look"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:text="TextView"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_email_desc" />
-
-                            <EditText
-                                android:id="@+id/info_farm_email_edit"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:ems="10"
-                                android:inputType="textEmailAddress"
-                                android:selectAllOnFocus="true"
-                                android:singleLine="true"
-                                android:visibility="gone"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_email_desc" />
-
-                        </android.support.constraint.ConstraintLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                    <!--Phone-->
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/info_farm_phone_card"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/info_farm_email_card">
-
-                        <android.support.constraint.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <TextView
-                                android:id="@+id/info_farm_phone_desc"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/info_farm_phone"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/info_farm_phone_look"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:text="TextView"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_phone_desc" />
-
-                            <EditText
-                                android:id="@+id/info_farm_phone_edit"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:ems="10"
-                                android:inputType="phone"
-                                android:selectAllOnFocus="true"
-                                android:singleLine="true"
-                                android:visibility="gone"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_phone_desc" />
-
-                        </android.support.constraint.ConstraintLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                    <!--Province-->
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/info_farm_province_card"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/info_farm_phone_card">
-
-                        <android.support.constraint.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <TextView
-                                android:id="@+id/info_farm_province_desc"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/info_farm_province"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/info_farm_province_look"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:text="TextView"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_province_desc" />
-
-                            <EditText
-                                android:id="@+id/info_farm_province_edit"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:ems="10"
-                                android:inputType="textEmailAddress"
-                                android:selectAllOnFocus="true"
-                                android:singleLine="true"
-                                android:visibility="gone"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_province_desc" />
-
-                        </android.support.constraint.ConstraintLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                    <!--Nearest Town-->
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/info_farm_town_card"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/info_farm_province_card">
-
-                        <android.support.constraint.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <TextView
-                                android:id="@+id/info_farm_town_desc"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/info_farm_town"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/info_farm_town_look"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:text="TextView"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_town_desc" />
-
-                            <EditText
-                                android:id="@+id/info_farm_town_edit"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="8dp"
-                                android:ems="10"
-                                android:inputType="text"
-                                android:selectAllOnFocus="true"
-                                android:singleLine="true"
-                                android:visibility="gone"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/info_farm_town_desc" />
-
-                        </android.support.constraint.ConstraintLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                    <!--Further-->
                     <android.support.v7.widget.CardView
                         android:id="@+id/info_farm_further_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/info_farm_town_card">
+                        app:layout_constraintTop_toBottomOf="@+id/info_farm_name_card">
 
                         <android.support.constraint.ConstraintLayout
                             android:layout_width="match_parent"
@@ -486,16 +183,13 @@
                         </android.support.constraint.ConstraintLayout>
                     </android.support.v7.widget.CardView>
 
-                    <!--Orchards-->
                     <android.support.v7.widget.CardView
                         android:id="@+id/info_farm_orchards_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/info_farm_further_card">
@@ -531,8 +225,7 @@
 
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>
-        </ScrollView>
-        <!--</android.support.v4.widget.NestedScrollView>-->
+        </android.support.v4.widget.NestedScrollView>
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

@@ -66,8 +66,6 @@ class HarvestTests: XCTestCase {
     
     XCTAssertEqual(collectionPointsA?.count, 2)
     XCTAssertEqual(collectionPointsB?.count, 3)
-    
-    tracker.discardState()
   }
   
   func testYieldCollectionCoords() {
@@ -83,8 +81,6 @@ class HarvestTests: XCTestCase {
     
     XCTAssertEqual(collectionPointsA, [locs[0], locs[1]])
     XCTAssertEqual(collectionPointsB, [locs[2], locs[2], locs[1]])
-    
-    tracker.discardState()
   }
   
   func testYieldCollectionClocking() {
@@ -92,8 +88,6 @@ class HarvestTests: XCTestCase {
     let d = Date()
     
     XCTAssertLessThan(tracker.sessionStart, d)
-    
-    tracker.discardState()
   }
   
   func testLocationTracking() {
@@ -120,7 +114,7 @@ class HarvestTests: XCTestCase {
     }
     
     for loc in locs {
-      _ = tracker.track(location: loc)
+      tracker.track(location: loc)
     }
     
     let locsTuple = locs.map { (loc: CLLocation) -> (Double, Double) in
@@ -133,8 +127,6 @@ class HarvestTests: XCTestCase {
       XCTAssertEqual(x.latitude, y.0)
       XCTAssertEqual(x.longitude, y.1)
     }
-    
-    tracker.discardState()
   }
     
 }

@@ -74,9 +74,10 @@ extension Dictionary where Key == String, Value == Any {
         colps.append(CollectionPoint(location: loc, date: date))
       }
       
-      if let worker = Entities.shared.workers.first(where: { (_, value) -> Bool in
+      if let workerEntity = Entities.shared.workers.first(where: { (_, value) -> Bool in
         value.id == key
-      })?.value {
+      })?.value,
+        case let .worker(worker) = workerEntity {
         result[worker, default: []] = colps
       }
     }
@@ -84,7 +85,8 @@ extension Dictionary where Key == String, Value == Any {
   }
 }
 
-public final class Session {
+
+public class Session {
   
   var endDate: Date
   var startDate: Date
@@ -123,23 +125,24 @@ public final class Session {
   }
 }
 
-extension Session: Equatable {
-  public static func == (lhs: Session, rhs: Session) -> Bool {
+extension Session : Equatable {
+  public static func ==(lhs: Session, rhs: Session) -> Bool {
     return lhs.id == rhs.id
       && lhs.startDate == rhs.startDate
       && lhs.endDate == rhs.endDate
       && lhs.foreman == rhs.foreman
       && lhs.track == rhs.track
+//      && lhs.collections == rhs.collections // FIXME MAYBE WE MAKE EDIT COLLECTION POINT?
   }
 }
 
-extension Session: CustomStringConvertible {
+extension Session : CustomStringConvertible {
   public var description: String {
     let formatter = DateFormatter()
     formatter.dateStyle = .medium
     formatter.timeStyle = .medium
     
-    return formatter.string(from: startDate) + " ・ " + foreman.description
+    return formatter.string(from: startDate) + " " + foreman.description
   }
   
   var key: String {
@@ -147,79 +150,4 @@ extension Session: CustomStringConvertible {
   }
 }
 
-final class ShallowSession {
-  var startDate: Date
-  var foreman: Worker
-  var id: String
-  
-  init(json: Any) {
-    guard let json = json as? [String: Any] else {
-      startDate = Date()
-      id = startDate.description
-      foreman = Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid)
-      return
-    }
-    
-    let d = Date(timeIntervalSince1970: json["start_date"] as? Double ?? 0.0)
-    startDate = d
-    id = json["key"] as? String ?? d.description
-    
-    let wid = json["wid"] as? String ?? ""
-    foreman = Entities.shared.worker(withId: wid) ?? Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid)
-  }
-  
-  func json() -> Any {
-    return [
-      "key": id,
-      "start_date": startDate.timeIntervalSince1970,
-      "wid": foreman.id
-    ]
-  }
-}
 
-extension ShallowSession: CustomStringConvertible {
-  public var description: String {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    formatter.timeStyle = .medium
-    
-    return foreman.description + " ・ " + formatter.string(from: startDate)
-  }
-  
-  var key: String {
-    return startDate.timeIntervalSince1970.description + id
-  }
-}
-
-extension ShallowSession: Equatable {
-  static func == (lhs: ShallowSession, rhs: ShallowSession) -> Bool {
-    return lhs.id == rhs.id
-  }
-}
-
-extension Date {
-  func sameDay(as date: Date) -> Bool {
-    var aday = Calendar.current.dateComponents([.day], from: self)
-    var bday = Calendar.current.dateComponents([.day], from: date)
-    
-    return aday.day == bday.day
-  }
-}
-
-extension SortedDictionary where Key == Date, Value == [ShallowSession] {
-  mutating func accumulateByDay(with sessions: [ShallowSession]) {
-    for session in sessions {
-      var inserted = false
-      for (key, _) in self {
-        if key.sameDay(as: session.startDate) {
-          self[key] = self[key]! + [session]
-          inserted = true
-          break
-        }
-      }
-      if !inserted {
-        self[session.startDate] = [session]
-      }
-    }
-  }
-}

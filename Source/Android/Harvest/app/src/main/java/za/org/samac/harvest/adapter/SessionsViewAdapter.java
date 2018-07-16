@@ -1,7 +1,6 @@
 package za.org.samac.harvest.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,27 +10,20 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
-import java.util.TreeMap;
 
 import za.org.samac.harvest.R;
-import za.org.samac.harvest.SessionItem;
-import za.org.samac.harvest.Sessions;
 
 public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapter.SessionsViewHolder> {
 
-    private ArrayList<String> dates;
-    private TreeMap<String, SessionItem.Selection> sessions;
+    private final  ArrayList<String> dates;
+    private Map<String, ArrayList<String>> sessions;
     private Context context;
-    private Sessions sessionsClass;
 
-    public SessionsViewAdapter(Context applicationContext, Sessions sc) {
+    public SessionsViewAdapter(Context applicationContext,  ArrayList<String> dates) {
+        this.dates = dates;
         this.context = applicationContext;
-        sessionsClass = sc;
     }
 
     @Override
@@ -44,25 +36,22 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
 
     @Override
     public void onBindViewHolder(SessionsViewHolder holder, int position) {
-        String date = dates.get(position);
-        final SessionItem.Selection item = sessions.get(date);
-
-        holder.sessionForeman.setText(item.foreman + " - " + dates.get(position));
-        holder.sessionForeman.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent details = new Intent(context, SessionDetails.class);
-                details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Intent key = details.putExtra("key", item.key);
-                Intent sdate = details.putExtra("start_date", item.startDate);
-                Intent wkey = details.putExtra("wid", item.foreman);
-
-                context.startActivity(details);
-            }
-        });
-
-        if (position == dates.size() - 1) {
-            sessionsClass.getNewPage();
+        holder.dateOfSession.setText(dates.get(position));
+        ArrayList<String> workerNames = sessions.get(dates.get(position));
+        for(int i = 0; i < workerNames.size(); ++i){
+            Button btn = new Button(context);
+            btn.setTextColor(Color.BLACK);
+            btn.setBackgroundColor(Color.WHITE);
+            btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            btn.setText(workerNames.get(i));
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // finish later
+                }
+            });
+            holder.linearLayout.addView(btn);
         }
     }
 
@@ -71,23 +60,18 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
         return this.dates.size();
     }
 
-
-
-    public void setSessions(TreeMap<String, SessionItem.Selection> sessions) {
+    public void setSessions(Map<String,ArrayList<String>> sessions) {
         this.sessions = sessions;
-    }
-
-    public void setDates(ArrayList<String> dates) {
-        this.dates = dates;
     }
 
     public class SessionsViewHolder extends RecyclerView.ViewHolder {
         TextView dateOfSession;
-        Button sessionForeman;
+        LinearLayout linearLayout;
 
         SessionsViewHolder(View view) {
             super(view);
-            sessionForeman = view.findViewById(R.id.sessionForeman);
+            dateOfSession = view.findViewById(R.id.dateOfSession);
+            linearLayout = view.findViewById(R.id.linearSessions);
         }
     }
 }

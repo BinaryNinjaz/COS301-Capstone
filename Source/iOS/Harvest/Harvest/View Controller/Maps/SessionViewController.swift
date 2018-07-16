@@ -23,10 +23,11 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
   var orchards = [Orchard]()
   
   var orchardPolygons: [GMSPolygon] = []
-  var trackLine: GMSPolyline?
+  var trackLine: GMSPolyline? = nil
   var pickUpMarkers: [GMSMarker] = []
   
   @IBOutlet weak var mapView: GMSMapView!
+  @IBOutlet weak var titleLabel: UILabel!
   
   public override func viewDidLoad() {
     super.viewDidLoad()
@@ -43,13 +44,15 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
     }
     
     trackLine = session.track.gmsPolyline(mapView: mapView)
-    trackLine?.title = "Total Distance Traveled by Foreman: \(session.track.euclideanDistance())"
-    
     pickUpMarkers = session.collections.gmsMarkers(mapView: mapView)
     
     orchardPolygons.removeAll(keepingCapacity: true)
     for (_, orchard) in Entities.shared.orchards {
-      let poly = orchard.coords.gmsPolygon(mapView: mapView)
+      guard case let .orchard(o) = orchard else {
+        continue
+      }
+      
+      let poly = o.coords.gmsPolygon(mapView: mapView)
       orchardPolygons.append(poly)
     }
     
@@ -59,6 +62,7 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
                                          bearing: .pi / 2,
                                          viewingAngle: .pi)
     }
+    
     
   }
   

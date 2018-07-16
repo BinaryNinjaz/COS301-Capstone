@@ -24,23 +24,19 @@ public final class AdminRow: OptionsRow<PushSelectorCell<Box>>, PresenterRowType
       controllerProvider: ControllerProvider.callback {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let vc = storyboard.instantiateViewController(withIdentifier: "entityViewController")
-        guard let evc = vc as? EntityViewController else {
-          fatalError("We should never get here. We instatiated from entityViewController")
-        }
+        let evc = vc as! EntityViewController
         return evc
       },
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })
   }
   
-  public required init(tag: String?, admin: HarvestUser, callback: @escaping (AdminRow) -> Void) {
+  public required init(tag: String?, admin: HarvestUser, callback: @escaping (AdminRow) -> ()) {
     super.init(tag: tag)
     presentationMode = .show(
       controllerProvider: ControllerProvider.callback {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let vc = storyboard.instantiateViewController(withIdentifier: "entityViewController")
-        guard let evc = vc as? EntityViewController else {
-          fatalError("We should never get here. We instatiated from entityViewController")
-        }
+        let evc = vc as! EntityViewController
         evc.entity = EntityItem.user(admin)
         return evc
       },

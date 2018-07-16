@@ -5,41 +5,14 @@ package za.org.samac.harvest.util;
  */
 
 public class Farm{
-    protected String name;
-    protected String company;
-    protected String email;
-    protected String phone;
-    protected String province;
-    protected String town;
     protected String further;
+    protected String name;
     protected String ID;
 
-    public Farm(){
-
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public String getTown() {
-        return town;
+    public Farm(String name, String further, String  ID){
+        this.further = further;
+        this.name = name;
+        this.ID = ID;
     }
 
     public String getFurther() {
@@ -50,34 +23,8 @@ public class Farm{
         return ID;
     }
 
-    @Override
-    public String toString(){
+    public String getName() {
         return name;
-    }
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public void setTown(String town) {
-        this.town = town;
     }
 
     public void setFurther(String further) {
@@ -86,5 +33,9 @@ public class Farm{
 
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

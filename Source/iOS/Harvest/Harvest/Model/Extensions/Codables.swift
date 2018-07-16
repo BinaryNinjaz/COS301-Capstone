@@ -9,8 +9,8 @@
 import Foundation
 import CoreLocation
 
-extension CLLocationCoordinate2D: Codable {
-  enum CodingKeys: String, CodingKey {
+extension CLLocationCoordinate2D : Codable {
+  enum CodingKeys : String, CodingKey {
     case latitude
     case longitude
   }
@@ -29,8 +29,8 @@ extension CLLocationCoordinate2D: Codable {
   }
 }
 
-extension CollectionPoint: Codable {
-  enum CodingKeys: String, CodingKey {
+extension CollectionPoint : Codable {
+  enum CodingKeys : String, CodingKey {
     case location
     case date
   }
@@ -48,14 +48,14 @@ extension CollectionPoint: Codable {
   }
 }
 
-extension Worker: Codable {
-  enum CodingKeys: String, CodingKey {
+extension Worker : Codable {
+  enum CodingKeys : String, CodingKey {
     case firstname
     case lastname
     case assignedOrchards
     case kind
     case details
-    case phoneNumber
+    case email
     case id
   }
   
@@ -65,11 +65,10 @@ extension Worker: Codable {
     
     firstname = try values.decode(String.self, forKey: .firstname)
     lastname = try values.decode(String.self, forKey: .lastname)
-    assignedOrchards = try values.decode(Array<String>.self,
-                                         forKey: .assignedOrchards)
+    assignedOrchards = try values.decode(Array<String>.self, forKey: .assignedOrchards)
     kind = try values.decode(Worker.Kind.self, forKey: .kind)
     details = try values.decode(String.self, forKey: .details)
-    phoneNumber = try values.decode(String.self, forKey: .phoneNumber)
+    email = try values.decode(String.self, forKey: .email)
     id = try values.decode(String.self, forKey: .id)
   }
   
@@ -81,7 +80,7 @@ extension Worker: Codable {
     try container.encode(assignedOrchards, forKey: .assignedOrchards)
     try container.encode(kind, forKey: .kind)
     try container.encode(details, forKey: .details)
-    try container.encode(phoneNumber, forKey: .phoneNumber)
+    try container.encode(email, forKey: .email)
     try container.encode(id, forKey: .id)
   }
 }

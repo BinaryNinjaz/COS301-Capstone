@@ -25,10 +25,7 @@ public final class SessionRow: OptionsRow<PushSelectorCell<Session>>, PresenterR
       controllerProvider: ControllerProvider.callback {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let vc = storyboard.instantiateViewController(withIdentifier: "sessionTrackedViewController")
-        guard let svc = vc as? SessionViewController else {
-          fatalError("We should never get here")
-        }
-        return svc
+        return vc as! SessionViewController
       },
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })
   }

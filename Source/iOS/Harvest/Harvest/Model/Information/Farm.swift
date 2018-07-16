@@ -8,7 +8,7 @@
 
 import Swift
 
-final class Farm: Codable {
+class Farm : Codable {
   var name: String
   var companyName: String
   var email: String
@@ -39,13 +39,13 @@ final class Farm: Codable {
       "contactNumber": contactNumber,
       "province": province,
       "neartestTown": nearestTown,
-      "further": details
+      "info": details
     ]]
   }
 }
 
-extension Farm: Equatable {
-  static func == (lhs: Farm, rhs: Farm) -> Bool {
+extension Farm : Equatable {
+  static func ==(lhs: Farm, rhs: Farm) -> Bool {
     return lhs.id == rhs.id
       && lhs.name == rhs.name
       && lhs.companyName == rhs.companyName
@@ -57,7 +57,7 @@ extension Farm: Equatable {
   }
 }
 
-extension Farm: CustomStringConvertible {
+extension Farm : CustomStringConvertible {
   var description: String {
     return name
   }

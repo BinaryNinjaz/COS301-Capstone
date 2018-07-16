@@ -24,23 +24,19 @@ public final class OrchardInFarmRow: OptionsRow<PushSelectorCell<Box>>, Presente
       controllerProvider: ControllerProvider.callback {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let vc = storyboard.instantiateViewController(withIdentifier: "entityViewController")
-        guard let evc = vc as? EntityViewController else {
-          fatalError("We should never get here. We instantiated from entityViewController")
-        }
+        let evc = vc as! EntityViewController
         return evc
       },
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })
   }
   
-  public required init(tag: String?, orchard: Orchard, callback: @escaping (OrchardInFarmRow) -> Void) {
+  public required init(tag: String?, orchard: Orchard, callback: @escaping (OrchardInFarmRow) -> ()) {
     super.init(tag: tag)
     presentationMode = .show(
       controllerProvider: ControllerProvider.callback {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let vc = storyboard.instantiateViewController(withIdentifier: "entityViewController")
-        guard let evc = vc as? EntityViewController else {
-          fatalError("We should never get here. We instantiated from entityViewController")
-        }
+        let evc = vc as! EntityViewController
         evc.entity = EntityItem.orchard(orchard)
         return evc
       },
