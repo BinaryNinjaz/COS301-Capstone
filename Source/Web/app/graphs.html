@@ -18,6 +18,8 @@
     
     <!--Graph file-->
     <script src="graphs.js" type="text/javascript"></script>
+    <!--Graph date-->
+    <script src="graphDateFunctions.js" type="text/javascript"></script>
     
     
     <!-- Bootstrap-->
@@ -29,14 +31,6 @@
     
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- This file needs to be included when youre working with charts -->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-         initPage(); //Caling the function that is gonna begin everything for us
-        /*
-        calls to graphs.js will go here to retrieve the required information
-       */
-     });
-    </script>
 	
   </head>
   <body>
@@ -54,8 +48,11 @@
                     <label>Select an orchard:
                         <select id="orchardSelect"></select>
                     </label> 
-                    <label>Select a specific week to look at:
-                        <input type="week" id="weekSelect" />
+                    <label>Select starting date:
+                        <input type="date" id="weekSelect" onchange="changeLabel()" />
+                    </label>
+                    <label>Ending Date:
+                        <input type="input" id="endDate" readonly="true" />
                     </label>
                     <button type = "button" id='orchardFilter' onclick='filterOrchard()'>
                         Filter Orchard Graph</button>
@@ -77,5 +74,16 @@
                 </div>
             </div>
 	</div>
+      <script type="text/javascript">
+      $(document).ready(function() {
+         initPage(); //Caling the function that is gonna begin everything for us
+        /*
+         * Below are examples that can be used to filter
+        What to enter to worker graph to test:
+            Worker = Peter Parker, Date = 2018/07/16
+        What to enter to orchard graph to test:
+       */
+     });
+    </script>
   </body>
 </html>
