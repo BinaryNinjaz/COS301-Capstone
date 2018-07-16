@@ -265,7 +265,7 @@ function orchardPerformance(start, end, id){
    keys.endDate = endDate;
    keys.uid = userID();
    $.post(baseUrl, keys, (data, status) => {
-        alterGraph(data,'orchard');
+        changeOrchardGraph(data);
     });
 }
 
@@ -284,21 +284,18 @@ function workerPerformance(start, end, id){
    keys.endDate = endDate;
    keys.uid = userID();
    $.post(baseUrl, keys, (data, status) => {
-        alterGraph(data,'worker');
+        changeWorkerGraph(data);
     });
 }
 
-//updates specific graph based on user input
-function alterGraph(response,str){
-    if(str==='orchard'){ //alter orchard graph
-        console.log(response); // just here to show the object in question
-        //updating of orchard graph will go here
-    }else if(str==='worker'){ //alter worker graph
-        console.log(response); // just here to show the object in question
-        //updating of worker graph will go here
-    }else{ // can use this to make graphs blank (implemented later)
-        //used when str does not equal worker or orchard
-    }
+//updates orchard graph based on user input
+function changeOrchardGraph(data){
+    
+}
+
+//updates worker graph based on user input
+function changeWorkerGraph(data){
+    
 }
 
 //used to show end of week that user selected for the orchard
