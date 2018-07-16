@@ -119,6 +119,10 @@
     <string name="info_orch_map_permissionDialog_message">We would like access to your location so that you can find yourself on the map, making the orchard easier to find. It\'s alright if you don\'t want to give it to us, you\'ll just need to find the orchard from scratch!</string>
     <string name="info_orch_map_permissionDialog_title">Location Permission</string>
     <string name="info_orch_map_permissionDialog_okay">Continue</string>
+    <string name="info_orch_map_locTitle">Location Information</string>
+    <string name="info_orch_map_locMes">Your Location Information seems to be disabled, would you like to enable it so we can you can find yourself on the map?</string>
+    <string name="info_orch_map_locYes">Yes</string>
+    <string name="info_orch_map_locNo">No</string>
 
     <!--Strings related to Information on Workers-->
     <string name="info_work_fName">Worker Name:</string>
