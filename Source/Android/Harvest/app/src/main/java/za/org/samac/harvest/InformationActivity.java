@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.DialogFragment;
@@ -32,8 +33,11 @@ import static za.org.samac.harvest.util.Category.NOTHING;
 import static za.org.samac.harvest.util.Category.ORCHARD;
 import static za.org.samac.harvest.util.Category.WORKER;
 
-public class InformationActivity extends AppCompatActivity{
+public class InformationActivity extends AppCompatActivity implements InfoOrchardMapFragment.LocNotAskAgain{
 
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+    private boolean mapLocationPermissionSessionAsked = false;
+    private boolean mapLocationInformationSessionAsked = false;
     private BottomNavigationView bottomNavigationView;
     private Data data;
     private boolean editing = false, map = false;
@@ -641,6 +645,8 @@ public class InformationActivity extends AppCompatActivity{
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         InfoOrchardMapFragment infoOrchardMapFragment = new InfoOrchardMapFragment();
+        infoOrchardMapFragment.setPermissionAskedInSession(mapLocationPermissionSessionAsked);
+        infoOrchardMapFragment.setLocationInformationAskedInSession(mapLocationInformationSessionAsked);
         fragmentTransaction.replace(R.id.infoMainPart, infoOrchardMapFragment, "MAP");
         fragmentTransaction.addToBackStack(null);
         infoOrchardMapFragment.setMapShowBottomBit(editing);
@@ -664,6 +670,29 @@ public class InformationActivity extends AppCompatActivity{
             temp = (InfoWorkerFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
         }
         temp.checkEvent(view);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
+        switch (requestCode){
+            case PERMISSION_REQUEST_COARSE_LOCATION:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    temp.activateLocation();
+                }
+                else {
+                    if (!temp.isExplanationShown()){
+                        temp.permissionAsk();
+                    }
+                }
+                mapLocationPermissionSessionAsked = true;
+                break;
+        }
+    }
+
+    public void LocationInformationAsked(){
+        mapLocationInformationSessionAsked = true;
     }
 }
 
