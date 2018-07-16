@@ -240,7 +240,7 @@ function workerPerformance(start, end, id){
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
-      var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
+      var chart = new google.visualization.BarChart(document.getElementById("curve_chart"));
       chart.draw(view, options);
   }
 }
