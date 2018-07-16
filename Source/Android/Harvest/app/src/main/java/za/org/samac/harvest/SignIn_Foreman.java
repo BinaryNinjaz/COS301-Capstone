@@ -234,11 +234,7 @@ public class SignIn_Foreman extends AppCompatActivity {
 //                phoneNumberField.setBackgroundColor(getResources().getColor(R.color.androidGrey));
                 String number = phoneNumberField.getText().toString();
 
-                number = number.replaceAll("-", "");
-                number = number.replaceAll(" ", "");
-                if (!number.startsWith("+")){
-                    number = number.replaceFirst("0", "+" + GetCountryZipCode());
-                }
+                number = AppUtil.normalisePhoneNumber(number, this);
                 
                 startPhoneNumberVerification(number);
                 v.setEnabled(false);
@@ -293,11 +289,6 @@ public class SignIn_Foreman extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot worker : dataSnapshot.getChildren()){
                     String workerPhone = worker.getKey();
-                    workerPhone = workerPhone.replaceAll("-", "");
-                    workerPhone = workerPhone.replaceAll(" ", "");
-                    if (!workerPhone.startsWith("+")){
-                        workerPhone = workerPhone.replaceFirst("0", "+" + GetCountryZipCode());
-                    }
                     if (workerPhone.equals(systemPhone)){
                             //TODO: More than just ids
                             for (DataSnapshot child : worker.getChildren()){
@@ -396,25 +387,5 @@ public class SignIn_Foreman extends AppCompatActivity {
         phoneConfLook.setText(systemPhone);
         farmTip.setVisibility(View.VISIBLE);
         farmOkay.setVisibility(View.VISIBLE);
-    }
-
-    //Thank you Wais
-    //https://stackoverflow.com/questions/5402253/getting-telephone-country-code-with-android
-    public String GetCountryZipCode(){
-        String CountryID="";
-        String CountryZipCode="";
-
-        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        //getNetworkCountryIso
-        CountryID= manager.getSimCountryIso().toUpperCase();
-        String[] rl=this.getResources().getStringArray(R.array.CountryCodes);
-        for(int i=0;i<rl.length;i++){
-            String[] g=rl[i].split(",");
-            if(g[1].trim().equals(CountryID.trim())){
-                CountryZipCode=g[0];
-                break;
-            }
-        }
-        return CountryZipCode;
     }
 }

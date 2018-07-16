@@ -35,7 +35,6 @@ import static za.org.samac.harvest.util.Category.WORKER;
 
 public class InformationActivity extends AppCompatActivity implements InfoOrchardMapFragment.LocNotAskAgain{
 
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private boolean mapLocationPermissionSessionAsked = false;
     private boolean mapLocationInformationSessionAsked = false;
     private BottomNavigationView bottomNavigationView;
@@ -677,7 +676,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
         switch (requestCode){
-            case PERMISSION_REQUEST_COARSE_LOCATION:
+            case InfoOrchardMapFragment.PERMISSION_REQUEST_COARSE_LOCATION:
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     temp.activateLocation();
                 }

@@ -50,7 +50,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private List<LatLng> coordinates;
     private Polygon polygon;
     private boolean pSet = false;
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+    protected static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
     LocNotAskAgain locCallback;
 
