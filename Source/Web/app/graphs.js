@@ -212,16 +212,17 @@ function getOrchardId(name){
 }
 
 //takes information chosen by user for worker filter to pass to worker performance function
+//date to test function 2018/
 function filterWorker(){
     var name = document.getElementById('workerSelect').value;
-    var date = new Date(document.getElementById('workerDateSelect').value);
+    var date = document.getElementById('workerDateSelect').value;
     if(name!== '' && date!== ''){
-        var start=date;
-        start.setHours(6);
-        start.setMinutes(0);
-        var end =date;
+        var start = new Date(date);
+        var end=new Date(date);
         end.setHours(18);
         end.setMinutes(0);
+        start.setHours(6);
+        start.setMinutes(0);
         var id = getWorkerId(name);
         workerPerformance(start, end, id);
     }else{
@@ -251,8 +252,7 @@ var uid;	/* user ID variable */
 //converts a date to seconds since epoch
 function dateToSeconds(date){ return Math.floor( date.getTime() / 1000 ) }
 
-//updates orchard graph based on user input
-//still needs further implemention
+//starts post request for orchard
 function orchardPerformance(start, end, id){
    groupBy = 'orchard';
    period = 'daily';
@@ -260,12 +260,10 @@ function orchardPerformance(start, end, id){
    endDate = dateToSeconds(end);
    uid = id;
    var params = constructParams(groupBy,period,startDate,endDate,uid);
-   var response = sendPostRequest(params);
-   //implementation will go here
+   sendPostRequest(params);
 }
 
-//updates worker graph based on user input
-//still needs further implemention
+//starts post request for worker
 function workerPerformance(start, end, id){
    groupBy = 'worker';
    period = 'hourly';
@@ -273,8 +271,7 @@ function workerPerformance(start, end, id){
    endDate = dateToSeconds(end);
    uid = id;
    var params = constructParams(groupBy,period,startDate,endDate,uid);
-   var response = sendPostRequest(params);
-   //implementation will go here  
+   sendPostRequest(params);
 }
 
 //creates the parameter string for the http post request
@@ -296,8 +293,17 @@ function sendPostRequest(params){
 
     http.onreadystatechange = function() {//Call a function when the state changes
         if(http.readyState == 4 && http.status == 200) {
-            return http.responseText;
+            alterGraph(http.responseText);
         }
     }
     http.send(params); //Specifies the type of data you want to send
+}
+
+//updates specific graph based on user input
+function alterGraph(response){
+    if(groupBy==='orchard'){ //alter orchard graph
+        console.log(response);
+    }else{ //alter worker graph
+        console.log(response);
+    }
 }
