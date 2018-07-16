@@ -67,6 +67,7 @@ public class SpiralGraph extends AppCompatActivity {
     private ArrayList<Integer> yield;
     private String sessionKey;
     private static String orchardKey;
+    private static String orchardName;
     private Query query;
     private static final String TAG = "Analytics";
     ArrayList<RadarEntry> entries = new ArrayList<>();
@@ -119,6 +120,7 @@ public class SpiralGraph extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
         orchardKey = getIntent().getStringExtra("key");
+        orchardName = getIntent().getStringExtra("name");
         getTotalBagsPerDay();
         //displayGraph();
     }
@@ -255,7 +257,7 @@ public class SpiralGraph extends AppCompatActivity {
                             spiralGraphView.setVisibility(View.VISIBLE);
                             spiralGraph.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
-                            RadarDataSet dataset = new RadarDataSet(entries, "Dataset");
+                            RadarDataSet dataset = new RadarDataSet(entries, orchardName);
                             dataset.setFillColor(ColorTemplate.VORDIPLOM_COLORS[0]);
                             dataset.setFillAlpha(145);
                             dataset.setDrawFilled(true);

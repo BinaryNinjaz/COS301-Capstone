@@ -52,6 +52,7 @@ public class ForemanRecyclerViewAdapter extends RecyclerView.Adapter<ForemanRecy
                 details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 Intent key = details.putExtra("key", foremenKey);
+                Intent name = details.putExtra("name", foremenName);
 
                 context.startActivity(details);
             }
