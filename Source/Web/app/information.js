@@ -407,11 +407,17 @@ function dispOrch(id) {
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
         "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
-        "" +
-       
+        "" +       
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
-        "" +
+        "<div class='col-sm-9'>"+
+        "<select class='form-control' id='orchFarm'>Micro</select>"+
+        "<select class='form-control' id='orchFarm'>Drip</select>"+
+        "<select class='form-control' id='orchFarm'>Floopy</select>"+
+        "<select class='form-control' id='orchFarm'>Drag Lines</select>"+
+        "<select class='form-control' id='orchFarm'>Other</select>"+
+        "<select class='form-control' id='orchFarm'>None(dry land)</select>"+
+        "</div></div>" +
+        "" +        
         "</form>"
       ;
       initEditOrchardMap(true, true);
