@@ -16,6 +16,12 @@ var foremen = []; /* Array containing a list of Foremen names */
 var workers = []; /* Array containing a list of workers names */
 var orchards = []; /* Array containing a list of Orchard names */
 
+//var groupBy = ''; /* grouping variable */
+//var period = '';	/* period time space variable */
+//var startDate = '';	/* Begin date variable */
+//var endDate = '';	/* End date variable */
+//var id0 = '';	/* user ID variable */
+
 /*firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     $(window).bind("load", function() {
@@ -243,84 +249,54 @@ function getWorkerId(name){
     return id;
 }
 
-var groupBy; /* grouping variable */
-var period;	/* period time space variable */
-var startDate;	/* Begin date variable */
-var endDate;	/* End date variable */
-var id0;	/* user ID variable */
-
 //converts a date to seconds since epoch
-function dateToSeconds(date){ return Math.floor( date.getTime() / 1000 ) }
+function dateToSeconds(date){ return date.getTime() / 1000 ; }
 
 //starts post request for orchard
 function orchardPerformance(start, end, id){
-   groupBy = 'orchard';
-   period = 'daily';
-   startDate = dateToSeconds(start);
-   endDate = dateToSeconds(end);
-   id0 = id;
-   var params = constructParams(groupBy,period,startDate,endDate,id0);
-   sendPostRequest(params);
+   const groupBy = 'orchard';
+   const period = 'daily';
+   const startDate = dateToSeconds(start);
+   const endDate = dateToSeconds(end);
+   //baseUrl is set to 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions'
+   var keys = {};
+   keys.id0 = id;
+   keys.groupBy = groupBy;
+   keys.period = period;
+   keys.startDate = startDate;
+   keys.endDate = endDate;
+   keys.uid = userID();
+   $.post(baseUrl, keys, (data, status) => {
+        alterGraph(data,'orchard');
+    });
 }
 
 //starts post request for worker
 function workerPerformance(start, end, id){
-   groupBy = 'worker';
-   period = 'hourly';
-   startDate = dateToSeconds(start);
-   endDate = dateToSeconds(end);
-   id0 = id;
-   var params = constructParams(groupBy,period,startDate,endDate,id0);
-   sendPostRequest(params);
+   const groupBy = 'worker';
+   const period = 'hourly';
+   const startDate = dateToSeconds(start);
+   const endDate = dateToSeconds(end);
+   //baseUrl is set to 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions'
+   var keys = {};
+   keys.id0 = id;
+   keys.groupBy = groupBy;
+   keys.period = period;
+   keys.startDate = startDate;
+   keys.endDate = endDate;
+   keys.uid = userID();
+   $.post(baseUrl, keys, (data, status) => {
+        alterGraph(data,'worker');
+    });
 }
-
-//creates the parameter string for the http post request
-function constructParams(groupBy,period,startDate,endDate,id0){
-    var params = '';
-    params = params +'id0='+id0;
-    params = params +'&groupBy='+groupBy;
-    params = params +'&period='+period;
-    params = params +'&startDate='+startDate;
-    params = params +'&endDate='+endDate;
-    params = params +'&uid='+userID;
-    return params;
-}
-
-function sendPostRequest(params){
-    var http = new createCORSRequest();
-    
-    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); //HTTP Header
-
-    http.onreadystatechange = function() {//Call a function when the state changes
-        if(http.readyState == 4 && http.status == 200) {
-            alterGraph(http.responseText);
-        }
-    }
-    http.send(params); //Specifies the type of data you want to send
-}
-
-function createCORSRequest() {
-  var xhr = new XMLHttpRequest();
-  if ("withCredentials" in xhr) {
-    // XHR for Chrome/Firefox/Opera/Safari.
-    xhr.open('POST', baseUrl, true);
-  } else if (typeof XDomainRequest != "undefined") {
-    // XDomainRequest for IE.
-    xhr = new XDomainRequest();
-    xhr.open('POST', baseUrl);
-  } else {
-    // CORS not supported.
-    xhr = null;
-  }
-  return xhr;
-}
-
 
 //updates specific graph based on user input
-function alterGraph(response){
-    if(groupBy==='orchard'){ //alter orchard graph
+function alterGraph(response,str){
+    if(str==='orchard'){ //alter orchard graph
         console.log(response);
-    }else{ //alter worker graph
+    }else if(str==='worker'){ //alter worker graph
         console.log(response);
+    }else{ // can use this to make graphs blank (implemented later)
+        
     }
 }
