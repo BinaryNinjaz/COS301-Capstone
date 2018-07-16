@@ -102,7 +102,7 @@ public class WorkerOrForeman extends AppCompatActivity{
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(WorkerOrForeman.this, LoginActivity.class));
+                    startActivity(new Intent(WorkerOrForeman.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();

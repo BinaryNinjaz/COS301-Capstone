@@ -130,17 +130,17 @@ public class WorkersForBarGraph extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(WorkersForBarGraph.this, LoginActivity.class));
+                    startActivity(new Intent(WorkersForBarGraph.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(WorkersForBarGraph.this, LoginActivity.class));
+                                    startActivity(new Intent(WorkersForBarGraph.this, SignIn_Choose.class));
                                 }
                             });
                 }

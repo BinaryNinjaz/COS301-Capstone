@@ -197,12 +197,12 @@ public class PieChart extends AppCompatActivity {
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(PieChart.this, LoginActivity.class));
+                                    startActivity(new Intent(PieChart.this, SignIn_Choose.class));
                                 }
                             });
                 }

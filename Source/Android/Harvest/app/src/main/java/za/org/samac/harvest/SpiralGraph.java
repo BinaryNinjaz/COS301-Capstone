@@ -297,7 +297,7 @@ public class SpiralGraph extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(SpiralGraph.this, LoginActivity.class));
+                    startActivity(new Intent(SpiralGraph.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();

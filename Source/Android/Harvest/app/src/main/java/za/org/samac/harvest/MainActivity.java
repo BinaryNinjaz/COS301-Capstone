@@ -320,8 +320,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
             }
 
-    }
-
     ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
     ArrayList<String> coords = new ArrayList<>();
     List<Double> polygonStoreX = new ArrayList();
@@ -605,17 +603,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
 
                 // Google sign out
-                //TODO: Get back to this
-
-//                if (LoginActivity.mGoogleSignInClient != null) {
-//                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
-//                            new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                                }
-//                            });
-//                }
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(MainActivity.this, SignIn_Choose.class));
+                                }
+                            });
+                }
 
                 finish();
                 return true;
