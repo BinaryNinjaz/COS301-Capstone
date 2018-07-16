@@ -253,10 +253,13 @@ public class SpiralGraph extends AppCompatActivity {
                             public void run() {
                             progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
                             spiralGraphView.setVisibility(View.VISIBLE);
-                            //spiralGraph.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutQuad));
+                            spiralGraph.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
                             RadarDataSet dataset = new RadarDataSet(entries, "Dataset");
-                            //dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+                            dataset.setFillColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+                            dataset.setFillAlpha(145);
+                            dataset.setDrawFilled(true);
+                            dataset.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
 
                             RadarData data = new RadarData(dataset);//labels was one of the parameters
                             spiralGraph.setData(data); // set the data and list of lables into chart

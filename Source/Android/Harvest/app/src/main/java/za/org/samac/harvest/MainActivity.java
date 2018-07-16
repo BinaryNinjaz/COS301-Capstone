@@ -838,7 +838,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         childUpdates.put("coord", coordinates);
                         childUpdates.put("display", foremanName);
 
-                        myRef2.removeValue();
+                        //myRef2.removeValue();
                         myRef2.updateChildren(childUpdates);//store location
                     }
                 }
@@ -854,6 +854,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         if (child.toString().equals(foremanID)) {
+                            myRef.removeValue();
                             locationWanted = true;
                             break;
                         }

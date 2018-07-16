@@ -232,7 +232,7 @@ public class BarGraph extends AppCompatActivity {
                             public void run() {
                                 progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
                                 barGraphView.setVisibility(View.VISIBLE);
-                                barChart.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInBack));
+                                barChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
                                 BarDataSet dataset = new BarDataSet(entries, "Hours");
                                 dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
