@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setLocation(location);
         }
 
-//        locationPermissions();
+        locationPermissions();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationEnabled = true;
             if (locationManager == null) {
