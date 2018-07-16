@@ -79,7 +79,7 @@ function firebaseLogin() {
         } else {
             alert(errorMessage);
         }
-        console.log(error);
+       // console.log(error.code);
     });
 }
 

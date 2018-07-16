@@ -1,6 +1,9 @@
+/* Vincent Added comments to the following code below */
 const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions';
-const database = firebase.database();
-const user = function() { return firebase.auth().currentUser };
+const database = firebase.database();	/* Pointing to database on firebase cloud */
+const user = function() { return firebase.auth().currentUser }; /* Function which authenticates user */
+
+/* Function returns the user ID of the selected user */
 const userID = function() {
   if (user() !== null) {
     return user().uid ;
@@ -9,9 +12,9 @@ const userID = function() {
   }
 }
 
-var foremen = [];
-var workers = [];
-var orchards = [];
+var foremen = []; /* Array containing a list of Foremen names */
+var workers = []; /* Array containing a list of workers names */
+var orchards = []; /* Array containing a list of Orchard names */
 
 /*firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
@@ -21,14 +24,17 @@ var orchards = [];
   }
 });*/
 
+/* Function returns a pointer to the list of workers of the particular user ID */
 function workersRef() {
   return database.ref('/' + userID()  + '/workers');
 }
 
+/* Function returns a pointer to the list of orchards of the particular user ID */
 function orchardsRef() {
   return database.ref('/' + userID()  + '/orchards');
 }
 
+/* Function returns a worker pointed to by the callback parameter */
 function getWorkers(callback) {
   const ref = firebase.database().ref('/' + userID() + '/workers');
   ref.once('value').then((snapshot) => {
@@ -36,6 +42,7 @@ function getWorkers(callback) {
   });
 }
 
+/* Function returns an orchard pointed to by the callback parameter */
 function getOrchards(_callback) {
   const ref = firebase.database().ref('/' + userID() + '/orchards');
   ref.once('value').then((snapshot) => {
@@ -43,15 +50,17 @@ function getOrchards(_callback) {
   });
 }
 
+/* Function returns a foremen, given a particular key */
 function foremanForKey(key) {
   for (var k in foremen) {
     if (foremen[k].key === key) {
       return foremen[k];
     }
   }
-  return {value: {name: "Farm", surname: "Owner"}};
+  return {value: {name: "Farm", surname: "Owner"}}; //The return value is a JSON object
 }
 
+/* Function returns a worker, given a particular key */
 function workerForKey(key) {
   for (var k in workers) {
     if (workers[k].key === key) {
@@ -63,10 +72,11 @@ function workerForKey(key) {
 
 //calls functions that populate the drop down lists and worker/orchard arrays
 function initPage(){
-    initOrchards();
-    initWorkers();
+    initOrchards(); //This function initiates the orchards immediately when the analytics page is accessed (for selction)
+    initWorkers();	//This function initiates the workers immediately when the analytics page is accessed (for selection)
 }
 
+/* This function loads all available orchards in the database, for graph filtering */
 function initOrchards(){
     var orchardSelect = document.getElementById('orchardSelect');
     getOrchards((orchardsSnap) => {
@@ -82,6 +92,7 @@ function initOrchards(){
     }); 
 }
 
+/* This function loads all available workers in the database, for graph filtering */
 function initWorkers(){
    var workerSelect = document.getElementById('workerSelect');
    getWorkers((workersSnap) => {
@@ -113,10 +124,11 @@ function filterOrchard(){
         orchardPerformance(start, end, id);
     }else{
         window.alert("Some fields in the orchard filter appear to be blank. \n"
-        +"Please enter them to continue.");
+        +"Please enter them to continue."); //Appropriate error message when loading fails
     }
 }
 
+/* This function returns the Orchard ID when given the name of the orchard */
 function getOrchardId(name){
     var id='';
     for (var k in orchards) {
@@ -139,10 +151,11 @@ function filterWorker(){
         workerPerformance(start, end, id);
     }else{
         window.alert("Some fields in the worker filter appear to be blank. \n"
-        +"Please enter them to continue.");
+        +"Please enter them to continue."); //Appropriate error message when loading of workers fails 
     }
 }
 
+/* This function returns the worker ID, given the name of a particular worker */
 function getWorkerId(name){
     var id='';
     for (var k in workers) {
@@ -154,11 +167,11 @@ function getWorkerId(name){
     return id;
 }
 
-var groupBy;
-var period;
-var startDate;
-var endDate;
-var uid;
+var groupBy; /* grouping variable */
+var period;	/* period time space variable */
+var startDate;	/* Begin date variable */
+var endDate;	/* End date variable */
+var uid;	/* user ID variable */
 
 //converts a date to seconds since epoch
 function dateToSeconds(date){ return Math.floor( date.getTime() / 1000 ) }

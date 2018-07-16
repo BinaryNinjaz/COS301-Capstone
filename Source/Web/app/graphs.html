@@ -1,15 +1,16 @@
 <html>
 <!-- Vincent worked on this on 9/05/2018 -->
 <!-- Shaun made some changes 11/07/2018  -->
+<!-- Vincent worked on this on 13/07/2018 -->
   <head>
   <meta charset="utf-8" />
   <title>Analytics</title>
   
     <!--Firebase-->
-    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-database.js"></script>
-    <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script><!--Firebase application-->
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script><!--Firebase authentication-->
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-database.js"></script><!--Firebase database functionality-->
+    <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script><!--Calling predefined Firebase functions-->
     
     <!--jQuery-->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -29,37 +30,12 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- This file needs to be included when youre working with charts -->
     <script type="text/javascript">
       $(document).ready(function() {
-          initPage();
+         initPage(); //Caling the function that is gonna begin everything for us
         /*
         calls to graphs.js will go here to retrieve the required information
        */
 
-       google.charts.load('current', {'packages':['corechart']}); //This takes google API package to using charts
-       google.charts.setOnLoadCallback(drawChart1); //This is googles event handler to load the chart we are gonna draw
-
-       function drawChart1() { /* I am temporarily drawing a function for multiple orchards, this will be tweaked tomorrow */
-         var data1 = google.visualization.arrayToDataTable([
-           ['Weeks Of The Month', 'Orchard A', 'Orchard B', 'Orchard C', 'Orchard D'],
-           ['1',  1000,      400,	500,      600],
-           ['2',  1170,      460,	560,      400],
-           ['3',  800,       520,	700,      820],
-                   ['4',  1000,       500,	600,      700],
-                   ['5',  1200,       540,	1000,      600]
-         ]);
-
-         var options1 = {
-           title: 'Graph Showing Orchard Performance', /* This is the title of the graph */
-           curveType: 'function', /* The curve type is a function */
-           legend: { position: 'bottom' }
-         };
-
-                 //Store the google visualization of a line chart into a variable
-         var chart1 = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-         chart1.draw(data1, options1);
-       }
-
- /*      						This is the beggining of the pie						*/
+		/*This is the beggining of the pie						*/
          google.charts.load('current', {'packages':['corechart']});
          google.charts.setOnLoadCallback(drawChart);
 
@@ -83,6 +59,87 @@
          }
      });
     </script>
+	<script>
+		window.onload = function () {
+			
+		var chart = new CanvasJS.Chart("curve_chart", { /* Choosing element to display the fraph on */
+			animationEnabled: true,
+			
+			title:{
+				text:"Number of bags collected per hour by Teboho Mokoena" //Setting the title of the graph
+			},
+			axisX:{ /* Setting the interval to increment with when a bag has been collected*/
+				interval: 1
+			},
+			axisY2:{ /* Setting the color of the bars on the bar graph to match the theme of the page*/
+				interlacedColor: "rgba(0,255,0,.2)",
+				gridColor: "rgba(0,10,0,.1)",
+				title: "Number of Bags"
+			},
+			data: [{
+				type: "bar", //Setting the type of the graph
+				name: "Bags", //Name of the variables collected 
+				axisYType: "secondary",
+				color: "#00a33f", //Matching the color of the graph to that of the chosen theme
+				dataPoints: [ //These are the data points to plot the graph
+					{ y: 8, label: "06:00 - 07:00" },
+					{ y: 6, label: "07:00 - 08:00" },
+					{ y: 7, label: "08:00 - 09:00" },
+					{ y: 7, label: "09:00 - 10:00" },
+					{ y: 5, label: "10:00 - 11:00" },
+					{ y: 9, label: "11:00 - 12:00" },
+					{ y: 7, label: "12:00 - 13:00" },
+					{ y: 7, label: "13:00 - 14:00" },
+					{ y: 9, label: "14:00 - 15:00" },
+					{ y: 8, label: "15:00 - 16:00" },
+					{ y: 11, label: "16:00 - 17:00" },
+					{ y: 15, label: "17:00 - 18:00" }
+				]
+			}]
+		});
+		chart.render(); //Display the graph
+
+		}
+	</script>
+	<script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ["Period", "Number of Bags", { role: "style" } ],
+        ["06:00 - 07:00", 8, "#00a33f"],
+        ["07:00 - 08:00", 6, "#00a33f"],
+        ["08:00 - 09:00", 3, "#00a33f"],
+		["09:00 - 10:00", 7, "#00a33f"],
+        ["10:00 - 11:00", 5, "#00a33f"],
+        ["11:00 - 12:00", 9, "#00a33f"],
+		["12:00 - 13:00", 7, "#00a33f"],
+        ["13:00 - 14:00", 7, "#00a33f"],
+        ["14:00 - 15:00", 9, "#00a33f"],
+        ["15:00 - 16:00", 8, "#00a33f"],
+		["16:00 - 17:00", 11, "#00a33f"],
+        ["17:00 - 18:00", 15, "#00a33f"]
+      ]);
+
+      var view = new google.visualization.DataView(data);
+      view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
+
+      var options = {
+        title: "Number of bags collected per hour by Teboho Mokoena", //This is a temporary title for the Graph
+        width: 1200, //Setting the width 
+        height: 700, //Setting the height
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
+      chart.draw(view, options);
+  }
+  </script>
   </head>
   <body>
 	<div class="topnav">
@@ -124,6 +181,9 @@
                         Filter Worker Performance Graph </button>
                 </div>
             </div>
+			<div id="barchart_values" style="width: 900px; height: 300px;"></div>
 	</div>
+	
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
   </body>
 </html>
