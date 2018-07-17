@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <ScrollView
         android:id="@+id/login_form"
@@ -78,7 +78,8 @@
                     android:id="@+id/linkForgotAccountDetails"
                     android:text="@string/forgotAccountDetails"
                     style="@style/TextView.links"
-                    android:gravity="center"
+                    android:gravity="bottom|center"
+                    android:layout_gravity="bottom|center"
                     android:layout_marginTop="10dp"/>
 
             </LinearLayout>
