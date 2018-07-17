@@ -1,0 +1,37 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:selectable="false"
+        android:title="Account Email" />
+
+    <PreferenceCategory
+        android:title="@string/pref_account_category_login">
+
+        <Preference
+            android:title="@string/pref_account_email" />
+        <Preference
+            android:title="@string/pref_account_password" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_account_category_extra">
+
+        <EditTextPreference
+            android:title="@string/pref_account_organization" />
+
+        <EditTextPreference
+            android:title="@string/pref_account_fname" />
+        <EditTextPreference
+            android:title="@string/pref_account_sname" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_account_category_delete">
+
+        <Preference
+            android:title="@string/pref_account_delete" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
