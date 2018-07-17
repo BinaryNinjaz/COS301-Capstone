@@ -521,7 +521,7 @@ function orchSave(type, id) {
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
-      irregation: document.getElementById("irregation").value
+      irrigation: document.getElementById("irrigation").value
     });
     popOrch();
   }
@@ -537,7 +537,7 @@ function orchSave(type, id) {
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
-      irregation: document.getElementById("irregation").value
+      irrigation: document.getElementById("irrigation").value
     });
   }
   popOrch();
@@ -577,7 +577,7 @@ function orchMod(id) {
         "</div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' value='" + snapshot.val().name + "'></div> </div> " +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='irregation' value='" + snapshot.val().irrigation + "'></div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
