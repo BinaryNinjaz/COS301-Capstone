@@ -22,7 +22,7 @@
 
     <string name="signIn_choose_farmer">Farmer</string>
     <string name="signIn_choose_foreman">Foreman</string>
-    <string name="signIn_choose_create">Create a new Farmer account</string>
+    <string name="signIn_choose_create">Don\'t Have An Account</string>
     <string name="signIn_choose_tip">Would you like to sign in as a</string>
     <string name="signIn_choose_or">or a</string>
     <string name="signIn_choose_alternatively">or alternatively</string>

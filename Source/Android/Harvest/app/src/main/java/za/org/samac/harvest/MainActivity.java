@@ -796,6 +796,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     }
 
                     if (secondsLocationIsNull >= 30 && btnStart.getTag() != "green") {
+                        secondsLocationIsNull = 0;
                         progressBar.setVisibility(View.GONE);
                         Snackbar.make(recyclerView, "Could not obtaining GPS Information. Please restart session.", 5000)
                             .setAction("OK", new View.OnClickListener() {

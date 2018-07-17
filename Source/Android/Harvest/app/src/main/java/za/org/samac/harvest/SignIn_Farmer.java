@@ -102,8 +102,6 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_farmer);
-        linearLayout = findViewById(R.id.backgroundHarvest);
-        //linearLayout.setAlpha((float) 0.5);
 
         // Set up the login form.
         edtEmail = findViewById(R.id.edtEmail);
@@ -227,71 +225,6 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
 
         mAuth = FirebaseAuth.getInstance();//initialisation the FirebaseAuth instance
     }
-
-    private void applyBlur() {
-        linearLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                linearLayout.getViewTreeObserver().removeOnPreDrawListener(this);
-                linearLayout.buildDrawingCache();
-
-                Bitmap bmp = linearLayout.getDrawingCache();
-                blur(bmp, login_form);
-                return true;
-            }
-        });
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void blur(Bitmap bkg, View view) {
-        long startMs = System.currentTimeMillis();
-
-        float radius = 20;
-
-        Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth()),
-                (int) (view.getMeasuredHeight()), Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(overlay);
-
-        canvas.translate(-view.getLeft(), -view.getTop());
-        canvas.drawBitmap(bkg, 0, 0, null);
-
-        RenderScript rs = RenderScript.create(SignIn_Farmer.this);
-
-        Allocation overlayAlloc = Allocation.createFromBitmap(
-                rs, overlay);
-
-        ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(
-                rs, overlayAlloc.getElement());
-
-        blur.setInput(overlayAlloc);
-
-        blur.setRadius(radius);
-
-        blur.forEach(overlayAlloc);
-
-        overlayAlloc.copyTo(overlay);
-
-        view.setBackground(new BitmapDrawable(
-                getResources(), overlay));
-
-        rs.destroy();
-        //statusText.setText(System.currentTimeMillis() - startMs + "ms");
-    }
-
-    @Override
-    public String toString() {
-        return "RenderScript";
-    }
-
-    private TextView addStatusText(ViewGroup container) {
-        TextView result = new TextView(SignIn_Farmer.this);
-        result.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        result.setTextColor(0xFFFFFFFF);
-        container.addView(result);
-        return result;
-    }
-
 
     public static void setEdtEmail(EditText e) {
         edtEmail = e;

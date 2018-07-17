@@ -9,8 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/backgrdsmaller"
-    android:id="@+id/backgroundHarvest"
+    android:background="@drawable/backgrdsmallerblurlight"
     tools:context=".SignIn_Farmer">
 
     <!-- Login progress -->
@@ -35,7 +34,7 @@
 
             <TextView
             android:text="@string/app_name"
-            style="@style/TextView.Heading" />
+            style="@style/TextView.Heading"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,8 +58,9 @@
 
                     <EditText
                         android:id="@+id/edtPassword"
+                        style="@style/Widget.AppCompat.AutoCompleteTextView"
+                        android:textColorHint="@color/colorPrimary"
                         android:hint="@string/prompt_enter_password"
-                        style="@style/EditText"
                         android:inputType="textPassword" />
 
                 </android.support.design.widget.TextInputLayout>
