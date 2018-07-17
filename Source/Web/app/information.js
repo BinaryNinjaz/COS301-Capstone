@@ -402,8 +402,8 @@ function dispOrch(id) {
         "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
         "</div>" +
         "" +       
-        "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'><select class='form-control' id='irregation'></select></div></div>" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='irrigationType'></div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
@@ -454,8 +454,8 @@ function dispOrch(id) {
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().bagMass + " Kg</p></div> </div>" +
           "" +
-           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irregation:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().irregation + "</p></div> </div>" +
+           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation:</label>" +
+          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().irrigation + "</p></div> </div>" +
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
@@ -513,6 +513,7 @@ function orchSave(type, id) {
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
       further: document.getElementById("oi").value,
+      irrigation: document.getElementById("irrigationType").value,
       // date: document.getElementById("orchDate").value,
       date: seconds,
       xDim: document.getElementById("orchDimX").value,
@@ -520,8 +521,8 @@ function orchSave(type, id) {
       unit: document.getElementById("orchDimUnit").value,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
-      farm: farmID,
-      irrigation: document.getElementById("irrigation").value
+      farm: farmID
+      
     });
     popOrch();
   }
@@ -530,14 +531,15 @@ function orchSave(type, id) {
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
       further: document.getElementById("oi").value,
+      irrigation: document.getElementById("irrigationType").value,
       date: seconds,
       xDim: document.getElementById("orchDimX").value,
       yDim: document.getElementById("orchDimY").value,
       unit: document.getElementById("orchDimUnit").value,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
-      farm: farmID,
-      irrigation: document.getElementById("irrigation").value
+      farm: farmID
+      
     });
   }
   popOrch();
@@ -577,7 +579,7 @@ function orchMod(id) {
         "</div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='irregation' value='" + snapshot.val().irrigation + "'></div> </div> " +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='irrigationType' value='" + snapshot.val().irrigation + "'></div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
