@@ -408,6 +408,12 @@ function dispOrch(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
         "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='date'>Row Spacing:</label>" +
+        "<div class='col-sm-9'><input type='date' class='form-control' id='rowSpacing'></div></div> " +
+        "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='date'>Tree Spacing:</label>" +
+        "<div class='col-sm-9'><input type='date' class='form-control' id='treeSpacing'></div></div> " +
+        "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
         "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimX'></div>" +
         "<div class='col-sm-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
@@ -417,7 +423,7 @@ function dispOrch(id) {
         "</div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
+        "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
         "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
@@ -650,7 +656,6 @@ function popWork() {
     searchDisp();
   });
 }
-
 
 //worker functions
 function dispWork(id) {
