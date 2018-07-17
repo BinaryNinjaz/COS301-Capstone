@@ -66,6 +66,7 @@ public class BarGraph extends AppCompatActivity {
     private String lastSession;
     private Date latestDate;
     private static String workerKey;
+    private static String workerName;
     private static final String TAG = "Analytics";
     private ArrayList<BarEntry> entries = new ArrayList<>();
     private com.github.mikephil.charting.charts.PieChart pieChart;
@@ -117,6 +118,7 @@ public class BarGraph extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
         workerKey = getIntent().getStringExtra("key");
+        workerName = getIntent().getStringExtra("name");
         getTotalBagsPerDay();
         //displayGraph();
     }
@@ -232,9 +234,9 @@ public class BarGraph extends AppCompatActivity {
                             public void run() {
                                 progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
                                 barGraphView.setVisibility(View.VISIBLE);
-                                barChart.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInBack));
+                                barChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
-                                BarDataSet dataset = new BarDataSet(entries, "Hours");
+                                BarDataSet dataset = new BarDataSet(entries, workerName);
                                 dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
 
                                 BarData data = new BarData(dataset);//labels was one of the parameters

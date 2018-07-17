@@ -82,7 +82,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                                 showNavFrag();
                                 return true;
                             case R.id.actionSession:
-                                Intent openSessions= new Intent(InformationActivity.this, SessionsMap.class);
+                                Intent openSessions= new Intent(InformationActivity.this, Sessions.class);
                                 openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openSessions, 0);
                                 return true;
