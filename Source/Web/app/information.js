@@ -199,6 +199,9 @@ function dispFarm(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmName'></div> </div> " +
       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='companyName'></div> </div> " +
+      "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact'></div> </div> " +
       "" +
@@ -228,6 +231,9 @@ function dispFarm(id) {
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().name + "</p> </div> </div> " +
+        "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
+        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().companyName + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().contactNo + "</p> </div> </div> " +
@@ -271,6 +277,7 @@ function farmSave(type, id) {
   if (type === 0) {
     let newRef = firebase.database().ref('/' + userID() + "/farms/").push({
       name: document.getElementById("farmName").value,
+      companyName: document.getElementById("companyName").value,
       further: document.getElementById("farmFurther").value,
       contactNo: document.getElementById("farmContact").value,
       email: document.getElementById("farmEmail").value,
@@ -283,6 +290,7 @@ function farmSave(type, id) {
   else if (type === 1) {
     firebase.database().ref('/' + userID() + "/farms/" + id).update({
       name: document.getElementById("farmName").value,
+      companyName: document.getElementById("companyName").value,
       further: document.getElementById("farmFurther").value,
       contactNo: document.getElementById("farmContact").value,
       email: document.getElementById("farmEmail").value,
@@ -310,6 +318,9 @@ function farmMod(id) {
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' value='" + snapshot.val().name + "'></div> </div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' value='" + snapshot.val().companyName + "'></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'>" + snapshot.val().further + "</textarea></div> </div>" +
