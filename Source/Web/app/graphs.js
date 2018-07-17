@@ -178,7 +178,7 @@ function initWorkers(){
 }
 
 //this function returns the date of the monday of a given week
-function getDateOfISOWeek(w, y) {
+/*function getDateOfISOWeek(w, y) {
     var simple = new Date(y, 0, 1 + (w - 1) * 7);
     var dow = simple.getDay();
     var ISOweekStart = simple;
@@ -187,7 +187,7 @@ function getDateOfISOWeek(w, y) {
     }else{
         ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
     }return ISOweekStart;
-}
+}*/
 
 //takes information chosen by user for orchard filter to pass to orchard performance function
 function filterOrchard(){
