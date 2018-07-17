@@ -326,7 +326,7 @@ function farmMod(id) {
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'>" + snapshot.val().further + "</textarea></div> </div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().contactNo + "'></div> </div> " +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().phoneNumber + "'></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmEmail' value='" + snapshot.val().email + "'></div> </div> " +
@@ -413,14 +413,14 @@ function dispOrch(id) {
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='treeSpacing'></div></div> " +
-        "" +
+        /*"" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
         "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimX'></div>" +
         "<div class='col-sm-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
         "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimY'> </div>" +
         "<div class='col-sm-1 col-sm-offset-1'><p class='form-control-static' style='text-align: right'>Unit:</p></div>" +
         "<div class='col-sm-2'><input type='text' class='form-control' id='orchDimUnit'></div> " +
-        "</div> " +
+        "</div> " +*/
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
         "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
@@ -472,10 +472,10 @@ function dispOrch(id) {
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree spacing:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().treeSpacing + "</p></div></div> " +
           "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Dimensions:</label>" +
+          /*"<div class='form-group'><label class='control-label col-sm-2' for='text'>Dimensions:</label>" +
           "<div class='col-sm-9'><p class ='form-control-static'>" + snapshot.val().xDim + " x " + snapshot.val().yDim + " " + snapshot.val().unit + "</p></div>" +
           "</div> " +
-          "" +
+          "" +*/
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().further + "</p></div> </div>" +
           "" +
@@ -604,14 +604,14 @@ function orchMod(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='treeSpacing' value='" + snapshot.val().treeSpacing + "'></div></div> " +
         "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
+       /* "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
         "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimX' value ='" + snapshot.val().xDim + "'></div>" +
         "<div class='col-sm-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
         "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimY' value ='" + snapshot.val().yDim + "'> </div>" +
         "<div class='col-sm-1 col-sm-offset-1'><p class='form-control-static' style='text-align: right'>Unit:</p></div>" +
         "<div class='col-sm-2'><input type='text' class='form-control' id='orchDimUnit' value ='" + snapshot.val().unit + "'></div> " +
         "</div> " +
-        "" +
+        "" +        */
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
         "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'>" + snapshot.val().further + "</textarea></div> </div>" +
         "" +
