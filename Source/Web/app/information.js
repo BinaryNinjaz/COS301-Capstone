@@ -408,11 +408,11 @@ function dispOrch(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
         "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='date'>Row Spacing:</label>" +
-        "<div class='col-sm-9'><input type='date' class='form-control' id='rowSpacing'></div></div> " +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing'></div></div> " +
         "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='date'>Tree Spacing:</label>" +
-        "<div class='col-sm-9'><input type='date' class='form-control' id='treeSpacing'></div></div> " +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree Spacing:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='treeSpacing'></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
         "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimX'></div>" +
