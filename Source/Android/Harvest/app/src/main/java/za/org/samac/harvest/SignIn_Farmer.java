@@ -6,7 +6,13 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.renderscript.Allocation;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -24,9 +30,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -79,6 +89,8 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
     private Button btnLogin;
     private Button btnLoginWithGoogle;
     private TextView linkForgotAccountDetails;
+    private LinearLayout linearLayout;
+    private ImageView imageView;
 
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
     private static final String TAG = "EmailPassword";
@@ -90,6 +102,9 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_farmer);
+        linearLayout = findViewById(R.id.backgroundHarvest);
+        //linearLayout.setAlpha((float) 0.5);
+
         // Set up the login form.
         edtEmail = findViewById(R.id.edtEmail);
 
@@ -212,6 +227,71 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
 
         mAuth = FirebaseAuth.getInstance();//initialisation the FirebaseAuth instance
     }
+
+    private void applyBlur() {
+        linearLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                linearLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+                linearLayout.buildDrawingCache();
+
+                Bitmap bmp = linearLayout.getDrawingCache();
+                blur(bmp, login_form);
+                return true;
+            }
+        });
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void blur(Bitmap bkg, View view) {
+        long startMs = System.currentTimeMillis();
+
+        float radius = 20;
+
+        Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth()),
+                (int) (view.getMeasuredHeight()), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(overlay);
+
+        canvas.translate(-view.getLeft(), -view.getTop());
+        canvas.drawBitmap(bkg, 0, 0, null);
+
+        RenderScript rs = RenderScript.create(SignIn_Farmer.this);
+
+        Allocation overlayAlloc = Allocation.createFromBitmap(
+                rs, overlay);
+
+        ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(
+                rs, overlayAlloc.getElement());
+
+        blur.setInput(overlayAlloc);
+
+        blur.setRadius(radius);
+
+        blur.forEach(overlayAlloc);
+
+        overlayAlloc.copyTo(overlay);
+
+        view.setBackground(new BitmapDrawable(
+                getResources(), overlay));
+
+        rs.destroy();
+        //statusText.setText(System.currentTimeMillis() - startMs + "ms");
+    }
+
+    @Override
+    public String toString() {
+        return "RenderScript";
+    }
+
+    private TextView addStatusText(ViewGroup container) {
+        TextView result = new TextView(SignIn_Farmer.this);
+        result.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        result.setTextColor(0xFFFFFFFF);
+        container.addView(result);
+        return result;
+    }
+
 
     public static void setEdtEmail(EditText e) {
         edtEmail = e;
