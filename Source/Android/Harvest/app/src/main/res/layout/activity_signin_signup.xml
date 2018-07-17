@@ -78,6 +78,18 @@
                     style="@style/TextInputLayout">
 
                     <EditText
+                        android:id="@+id/edtOrganization"
+                        android:hint="@string/prompt_enter_organization"
+                        style="@style/EditText"
+                        android:inputType="text"/>
+
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    style="@style/TextInputLayout">
+
+                    <EditText
                         android:id="@+id/edtPassword"
                         android:hint="@string/prompt_enter_newPassword"
                         style="@style/EditText"

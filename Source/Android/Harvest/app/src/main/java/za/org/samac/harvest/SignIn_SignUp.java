@@ -36,6 +36,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +72,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
     private EditText edtFirstName;
     private EditText edtSurname;
     private EditText edtEmail;
+    private EditText edtOrganization;
     private EditText edtPassword;
     private EditText edtConfirmPassword;
     private View signUp_progress;
@@ -93,6 +96,8 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
 
         edtEmail = findViewById(R.id.edtEmail);
         //populateAutoComplete();
+
+        edtOrganization = findViewById(R.id.edtOrganization);
 
         edtPassword = findViewById(R.id.edtPassword);
         /*edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -195,6 +200,20 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                             Snackbar.make(signUp_form, "Registration Successful", Snackbar.LENGTH_LONG).show();
                             signUp_progress.setVisibility(View.GONE);
 
+                            //Add the name, surname, and organization to Firebase
+                            EditText fname, sname, org, email;
+                            fname = findViewById(R.id.edtFirstName);
+                            sname = findViewById(R.id.edtSurname);
+                            org = findViewById(R.id.edtOrganization);
+                            email = findViewById(R.id.edtEmail);
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference userAdmin = database.getReference(user.getUid() + "/admin/");
+                            userAdmin.child("firstname").setValue(fname.getText().toString());
+                            userAdmin.child("surname").setValue(sname.getText().toString());
+                            userAdmin.child("organization").setValue(org.getText().toString());
+                            userAdmin.child("email").setValue(email.getText().toString());
+
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -269,23 +288,24 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             edtEmail.setError(null);
         }
 
-        String surname = edtSurname.getText().toString();
-        if (TextUtils.isEmpty(surname)) {
-            edtSurname.setError("Required.");
-            focusView = edtSurname;
-            valid = false;
-        } else {
-            edtSurname.setError(null);
-        }
-
-        String firstName = edtFirstName.getText().toString();
-        if (TextUtils.isEmpty(firstName)) {
-            edtFirstName.setError("Required.");
-            focusView = edtFirstName;
-            valid = false;
-        } else {
-            edtFirstName.setError(null);
-        }
+        //TODO: Should this really be necessary?
+//        String surname = edtSurname.getText().toString();
+//        if (TextUtils.isEmpty(surname)) {
+//            edtSurname.setError("Required.");
+//            focusView = edtSurname;
+//            valid = false;
+//        } else {
+//            edtSurname.setError(null);
+//        }
+//
+//        String firstName = edtFirstName.getText().toString();
+//        if (TextUtils.isEmpty(firstName)) {
+//            edtFirstName.setError("Required.");
+//            focusView = edtFirstName;
+//            valid = false;
+//        } else {
+//            edtFirstName.setError(null);
+//        }
 
         if (valid == false) {
             // There was an error; don't attempt login and focus the first

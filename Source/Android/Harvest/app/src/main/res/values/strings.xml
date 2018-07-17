@@ -57,6 +57,7 @@
     <string name="prompt_enter_firstName">First name</string>
     <string name="prompt_enter_newPassword">New Password</string>
     <string name="prompt_enter_username">Username</string>
+    <string name="prompt_enter_organization">Organization</string>
 
     <string name="forgotAccountDetails"><a>Forgot account details?</a></string>
     <string name="prompt_confirm_Password">Confirm Password</string>
