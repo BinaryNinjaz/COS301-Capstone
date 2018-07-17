@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.List;
+import java.util.Vector;
 
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Orchard;
@@ -100,10 +101,6 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         mView = getView().findViewById(R.id.info_orch_map_map);
         mView.onCreate(savedInstanceState);
         mView.getMapAsync(this);
-
-//        data.findObject(ID);
-        Orchard orchard = data.getActiveOrchard();
-        coordinates = orchard.getCoordinates();
     }
 
     @Override
@@ -242,8 +239,8 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         this.show = show;
     }
 
-    public void setDataAndOrchardID(Data data, String ID){
-        this.data = data;
+    public void setCoordinates(List<LatLng> coords){
+        this.coordinates = coords;
     }
 
     public void redraw(){
@@ -274,7 +271,9 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     }
 
     public void removeLast(){
-        coordinates.remove(coordinates.size() - 1);
+        if (coordinates.size() != 0) {
+            coordinates.remove(coordinates.size() - 1);
+        }
         redraw();
     }
 }

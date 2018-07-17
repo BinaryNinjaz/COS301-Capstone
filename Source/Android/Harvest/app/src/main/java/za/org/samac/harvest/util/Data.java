@@ -668,6 +668,12 @@ public class Data {
         category = temp;
     }
 
+    public void clearActiveObjects(){
+        activeWorker = null;
+        activeOrchard = null;
+        activeFarm = null;
+    }
+
     public Worker getActiveWorker(){
         return activeWorker;
     }

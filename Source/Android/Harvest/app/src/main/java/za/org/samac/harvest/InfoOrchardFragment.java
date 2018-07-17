@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +62,7 @@ public class InfoOrchardFragment extends Fragment {
     private TextView further;
 
     private Vector<String> cults;
+    private List<LatLng> coords;
 
     public InfoOrchardFragment() {
         // Required empty public constructor
@@ -322,6 +325,10 @@ public class InfoOrchardFragment extends Fragment {
         this.data = data;
     }
 
+    public void setCoords(List<LatLng> coords){
+        this.coords = coords;
+    }
+
     public void beEditable(final boolean editable){
         this.editable = editable;
     }
@@ -403,6 +410,9 @@ public class InfoOrchardFragment extends Fragment {
 
         newOrch.setFurther(further.getText().toString());
         newOrch.setID(data.getNextIDForAddition());
+
+        newOrch.setCoordinates(coords);
+
         data.addOrchard(newOrch);
     }
 

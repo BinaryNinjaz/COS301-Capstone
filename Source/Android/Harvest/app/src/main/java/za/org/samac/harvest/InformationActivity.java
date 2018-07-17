@@ -18,14 +18,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Stack;
+import java.util.Vector;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Orchard;
 
 import static za.org.samac.harvest.util.Category.FARM;
 import static za.org.samac.harvest.util.Category.NAV;
@@ -41,6 +45,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     private Data data;
     private boolean editing = false, map = false;
     private Stack<Category> backViews = new Stack<>();
+    private List<LatLng> coords;
 
     Category selectedCat = NOTHING;
 
@@ -150,6 +155,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 selectedCat = NAV;
             }
             else if(getSupportFragmentManager().getBackStackEntryCount() == 3){
+                data.clearActiveObjects();
                 switch (selectedCat){
                     case FARM:
                         setTitle("Farms");
@@ -211,6 +217,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 fragmentTransaction1.addToBackStack(null);
                 newInfoOrchardFragment1.beNew(true);
                 newInfoOrchardFragment1.setData(data);
+
+                coords = new Vector<>();
+                newInfoOrchardFragment1.setCoords(coords);
+
                 setTitle("Create Orchard");
                 fragmentTransaction1.commit();
                 selectedCat = ORCHARD;
@@ -649,7 +659,18 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         fragmentTransaction.replace(R.id.infoMainPart, infoOrchardMapFragment, "MAP");
         fragmentTransaction.addToBackStack(null);
         infoOrchardMapFragment.setMapShowBottomBit(editing);
-        infoOrchardMapFragment.setDataAndOrchardID(data, v.getTag().toString());
+
+        //Set the correct coords for the map
+        Orchard orchard = data.getActiveOrchard();
+        if (orchard == null){
+            //It's new, so give it these coords, which will be saved in the orchard fragment.
+            infoOrchardMapFragment.setCoordinates(coords);
+        }
+        else {
+            //It's not new, so just give it the same coords that the data has, and the map will update those.
+            infoOrchardMapFragment.setCoordinates(orchard.getCoordinates());
+        }
+
         fragmentTransaction.commit();
     }
 
