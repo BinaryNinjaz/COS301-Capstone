@@ -582,7 +582,7 @@ function orchMod(id) {
         "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
         "" +
         "</form>"
-      ;
+      ;//need to fix referencing
       initEditOrchardMap(false, true);
       updatePolygon(snapshot);
 
@@ -700,7 +700,7 @@ function dispWork(id) {
                     "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().surname + "</p> </div> </div>" +
 		    "" +
                     "<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity Number:</label>" +
-                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().identityNo + "</p> </div> </div>" +
+                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().idNumber + "</p> </div> </div>" +
 		    "" +
 		    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Phone Number:</label>" +
                     "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().phoneNumber + "</p> </div> </div>" +
@@ -771,7 +771,7 @@ function workSave(type, id) {
     newRef = firebase.database().ref('/' + userID() +"/workers/").push({
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
-      identityNo: document.getElementById("workID").value,
+      idNumber: document.getElementById("workID").value,
       phoneNumber: document.getElementById("workContactNo").value,
       orchard: orchID,
       type: workType,
@@ -795,7 +795,7 @@ function workSave(type, id) {
       firebase.database().ref('/' + userID() +"/workers/" + id).update({
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
-      identityNo: document.getElementById("workID").value,
+      idNumber: document.getElementById("workID").value,
       phoneNumber: document.getElementById("workContactNo").value,
       orchard: orchID,
       type: workType,
@@ -837,7 +837,7 @@ function workMod(id) {
         "<div class='col-sm-9'><input type='text' class='form-control' id='workSName' value='" + snapshot.val().surname + "'></div> </div>" +
         "" +
 	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity Number:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='workID' value='" + snapshot.val().identityNo + "'></div> </div>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='workID' value='" + snapshot.val().idNumber + "'></div> </div>" +
         "" +	    
 	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Phone Number:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='workContactNo' value='" + snapshot.val().phoneNumber + "'></div> </div>" +
