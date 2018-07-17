@@ -401,6 +401,9 @@ function dispOrch(id) {
         "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass'></div>" +
         "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
         "</div>" +
+        "" +       
+        "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Irrigation Type:</label>" +
+        "<div class='col-sm-9'><select class='form-control' id='irregation'></select></div></div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
@@ -418,10 +421,7 @@ function dispOrch(id) {
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
         "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
-        "" +       
-        "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'><select class='form-control' id='irregation'></select></div></div>" +
-        "" +        
+         "" +        
         "</form>"
       ;
       initEditOrchardMap(true, true);
@@ -454,6 +454,9 @@ function dispOrch(id) {
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().bagMass + " Kg</p></div> </div>" +
           "" +
+           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irregation:</label>" +
+          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().irregation + "</p></div> </div>" +
+          "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
           "" +
@@ -470,9 +473,7 @@ function dispOrch(id) {
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Workers:</label>" +
           "<div class='col-sm-9' id='workerButtons'></div></div>" +
           "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irregation:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().irregation + "</p></div> </div>" +
-          "" +
+         
           "</form>"
         ;
 
@@ -574,6 +575,9 @@ function orchMod(id) {
         "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass' value='" + snapshot.val().bagMass + "'></div>" +
         "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
         "</div>" +
+        "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation Type:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' value='" + snapshot.val().name + "'></div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
