@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private ProgressBar progressBar;
     private RelativeLayout relLayout;
     private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
-    private TextView textView;
+    private static TextView textView;
     private WorkerRecyclerViewAdapter adapter;
     private LocationManager locationManager;
     private Location location;
