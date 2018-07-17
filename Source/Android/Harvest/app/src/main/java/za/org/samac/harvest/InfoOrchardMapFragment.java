@@ -16,11 +16,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.Manifest;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,12 +33,15 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 import java.util.Vector;
 
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Orchard;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -51,6 +59,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private List<LatLng> coordinates;
     private Polygon polygon;
     private boolean pSet = false;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
     protected static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
     LocNotAskAgain locCallback;
@@ -61,6 +70,9 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //Create location provider
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_info_orchard_map, container, false);
     }
@@ -109,13 +121,16 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
 
         redraw();
 
+        //Always get location.
+        activateLocation();
+
         if (show) {
             gMap.setOnMapLongClickListener(this);
-            activateLocation();
+//            activateLocation();
         }
-        else {
-            gMap.getUiSettings().setMyLocationButtonEnabled(false);
-        }
+//        else {
+//            gMap.getUiSettings().setMyLocationButtonEnabled(false);
+//        }
     }
 
     public void activateLocation(){
@@ -127,9 +142,28 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
             if (!locationInformationAskedInSession) {
                 LocationInformationCheck();
             }
+            ZoomTo();
         }
         else if (!permissionAskedInSession){
             permissionAsk();
+        }
+    }
+
+    private void ZoomTo(){
+        //Zoom to last known location
+        try {
+            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        LatLng userLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 10));
+                    }
+                }
+            });
+        }
+        catch (SecurityException e){
+            Log.i(TAG, "ZoomTo: No Permission.");
         }
     }
 
