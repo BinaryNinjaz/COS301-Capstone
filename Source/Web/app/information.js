@@ -703,7 +703,7 @@ function dispWork(id) {
                     "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().identityNo + "</p> </div> </div>" +
 		    "" +
 		    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Phone Number:</label>" +
-                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().phoneNo + "</p> </div> </div>" +
+                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().phoneNumber + "</p> </div> </div>" +
 		    "" +
                     "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchard:</label>" +
                     "<div class='col-sm-9'><span id='workOrchDisp'></span></div></div>" +
@@ -772,7 +772,7 @@ function workSave(type, id) {
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
       identityNo: document.getElementById("workID").value,
-      phoneNo: document.getElementById("workContactNo").value,
+      phoneNumber: document.getElementById("workContactNo").value,
       orchard: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
@@ -795,8 +795,8 @@ function workSave(type, id) {
       firebase.database().ref('/' + userID() +"/workers/" + id).update({
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
-	identityNo: document.getElementById("workID").value,
-      phoneNo: document.getElementById("workContactNo").value,
+      identityNo: document.getElementById("workID").value,
+      phoneNumber: document.getElementById("workContactNo").value,
       orchard: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
@@ -840,7 +840,7 @@ function workMod(id) {
         "<div class='col-sm-9'><input type='text' class='form-control' id='workID' value='" + snapshot.val().identityNo + "'></div> </div>" +
         "" +	    
 	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Phone Number:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='workContactNo' value='" + snapshot.val().phoneNo + "'></div> </div>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='workContactNo' value='" + snapshot.val().phoneNumber + "'></div> </div>" +
         "" +	
         "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchard:</label>" +
         "<div class='col-sm-9'><select class='form-control' id='workOrch'></select></div></div>" +
