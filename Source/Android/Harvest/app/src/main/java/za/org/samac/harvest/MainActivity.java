@@ -460,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         /*int i = 0;
         int j = polygon.size() - 1;*/
-        Boolean c = false;
+        /*Boolean c = false;
 
         int k = 0;
         int m = px.size()- 1;
@@ -471,18 +471,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             if (yValid && pointx < xValidCond) {
                 c = !c;
             }
-        }
+        }*/
 
-        /*for (; i < polygon.size(); j = i++) {
-            Point pi = (Point) polygon.get(i);
-            Point pj = (Point) polygon.get(j);
-            final Boolean yValid = (pi.y > pointy) != (pj.y > pointy);
-            final Double xValidCond = (pj.x - pi.x) * (pointx - pi.y) / (pj.y - pi.y) + pi.x;
+        int i = 0;
+        int j = px.size() - 1;
+        Boolean c = false;
+        for (; i < px.size(); j = i++) {
+            final Boolean yValid = (py.get(i) > pointy) != (py.get(j) > pointy);
+            final Double xValidCond = (px.get(j) - px.get(i)) * (pointy - py.get(i)) / (py.get(j) - py.get(i)) + px.get(i);
 
             if (yValid && pointx < xValidCond) {
                 c = !c;
             }
-        }*/
+        }
+
         return c;
     }
 
