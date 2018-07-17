@@ -598,6 +598,12 @@ function orchMod(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
         "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
+        "<div class='col-sm-9'><input type='date' class='form-control' id='text' value='" +  snapshot.val().rowSpacing + "'></div></div> " +
+        "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='date'>Tree Spacing:</label>" +
+        "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + snapshot.val().treeSpacing + "'></div></div> " +
+        "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
         "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimX' value ='" + snapshot.val().xDim + "'></div>" +
         "<div class='col-sm-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
