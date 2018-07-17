@@ -245,7 +245,7 @@ function dispFarm(id) {
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().province + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().town + " </p> </div> </div> " +
+        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().nearestTown + " </p> </div> </div> " +
         "" +
         "</form>"
       ;
@@ -275,7 +275,7 @@ function farmSave(type, id) {
       contactNo: document.getElementById("farmContact").value,
       email: document.getElementById("farmEmail").value,
       province: document.getElementById("farmProvince").value,
-      town: (document.getElementById("farmTown").value+"")
+      nearestTown: (document.getElementById("farmTown").value+"")
     });
     id = newRef.getKey();
     popFarm();
@@ -287,7 +287,7 @@ function farmSave(type, id) {
       contactNo: document.getElementById("farmContact").value,
       email: document.getElementById("farmEmail").value,
       province: document.getElementById("farmProvince").value,
-      town: document.getElementById("farmTown").value
+      nearestTown: document.getElementById("farmTown").value
     });
   }
   popFarm();
@@ -324,7 +324,7 @@ function farmMod(id) {
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince' value='" + snapshot.val().province + "'></div> </div> " +
        "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown' value='" + snapshot.val().town + " '></div> </div> " +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown' value='" + snapshot.val().nearestTown + " '></div> </div> " +
       "" +
       "</form>"
     ;
