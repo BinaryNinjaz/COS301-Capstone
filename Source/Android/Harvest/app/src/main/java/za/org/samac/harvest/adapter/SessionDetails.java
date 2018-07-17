@@ -204,9 +204,10 @@ public class SessionDetails extends AppCompatActivity {
         pieChartView.setVisibility(View.VISIBLE);
         pieChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
         pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.getLegend().setEnabled(false);
 
         PieDataSet dataset = new PieDataSet(entries, "Dataset");
-        dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        dataset.setColors(ColorTemplate.COLORFUL_COLORS);
         dataset.setValueTextColor(Color.BLACK);
 
         PieData data = new PieData(dataset);//labels was one of the parameters

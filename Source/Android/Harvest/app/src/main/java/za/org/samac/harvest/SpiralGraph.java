@@ -258,10 +258,10 @@ public class SpiralGraph extends AppCompatActivity {
                             spiralGraph.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
                             RadarDataSet dataset = new RadarDataSet(entries, orchardName);
-                            dataset.setFillColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+                            dataset.setFillColor(ColorTemplate.COLORFUL_COLORS[0]);
                             dataset.setFillAlpha(145);
                             dataset.setDrawFilled(true);
-                            dataset.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+                            dataset.setColor(ColorTemplate.COLORFUL_COLORS[0]);
 
                             RadarData data = new RadarData(dataset);//labels was one of the parameters
                             spiralGraph.setData(data); // set the data and list of lables into chart

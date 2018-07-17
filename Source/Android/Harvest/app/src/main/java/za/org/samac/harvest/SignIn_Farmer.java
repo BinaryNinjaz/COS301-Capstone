@@ -181,7 +181,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                 AlertDialog.Builder alert = new AlertDialog.Builder(SignIn_Farmer.this);
 
                 //TODO: center "Reset Password"
-                alert.setMessage(Html.fromHtml("<b>"+"Reset Password"+"</b>"+"<br>"+"Please enter your email, you will receive an email to recover your password."));
+                alert.setMessage(Html.fromHtml("<b>"+"Reset Password"+"</b>"+"<br>"+"Please enter your email, you will receive an email to reset your password."));
 
                 final EditText email = new EditText(SignIn_Farmer.this);
                 email.setInputType(InputType.TYPE_CLASS_TEXT

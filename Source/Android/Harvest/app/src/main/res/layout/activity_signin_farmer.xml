@@ -58,9 +58,8 @@
 
                     <EditText
                         android:id="@+id/edtPassword"
-                        style="@style/Widget.AppCompat.AutoCompleteTextView"
-                        android:textColorHint="@color/colorPrimary"
                         android:hint="@string/prompt_enter_password"
+                        style="@style/EditText"
                         android:inputType="textPassword" />
 
                 </android.support.design.widget.TextInputLayout>

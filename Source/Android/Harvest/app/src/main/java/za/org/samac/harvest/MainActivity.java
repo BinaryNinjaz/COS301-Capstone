@@ -940,30 +940,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         } else {
             //TODO: check if app closes or crashes
             progressBar.setVisibility(View.GONE);
-            if (adapter.totalBagsCollected == 0) {
-                String msg = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-                dlgAlert.setMessage(msg);
-                dlgAlert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        recyclerView.setVisibility(View.GONE);
-                        dialog.dismiss();
-                    }
-                });
-                dlgAlert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        DatabaseReference myRef;
-                        myRef = database.getReference(farmerKey + "/sessions/" + sessionKey);//path to sessions increment in Firebase
-                        myRef.removeValue();//remove latest increment
-                        adapter.setIncrement();
-                        recyclerView.setVisibility(View.GONE);
-                        dialog.dismiss();
-                        rejectSess = true;
-                    }
-                });
-                dlgAlert.setCancelable(false);
-                dlgAlert.create().show();
-            }
+            String msger = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
+            AlertDialog.Builder dlgAlerter = new AlertDialog.Builder(this);
+            dlgAlerter.setMessage(msger);
+            dlgAlerter.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlerter.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    DatabaseReference myRef;
+                    myRef = database.getReference(farmerKey + "/sessions/" + sessionKey);//path to sessions increment in Firebase
+                    myRef.removeValue();//remove latest increment
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                    rejectSess = true;
+                }
+            });
+            dlgAlerter.setCancelable(false);
+            dlgAlerter.create().show();
 
             if (rejectSess == false) {
                 endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
@@ -978,8 +976,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             int m = (int) (((elapsedTime / 1000) / 60) % 60);
             int s = (int) ((elapsedTime / 1000) % 60);
             //this is the output of the pop up when the user clicks stop (the session)
+            //TODO: ckeck iOS thread on slack
+            //TODO: add press start again
             String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
-            String msg = "A total of " + adapter.totalBagsCollected + " bags have been collected in " + timeTaken + ".";
+            String msg = adapter.totalBagsCollected + " bags collected " + timeTaken + ".";
             if (locationEnabled) {
                 locationManager.removeUpdates(mLocationListener);
             }
