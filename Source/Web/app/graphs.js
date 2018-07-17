@@ -22,13 +22,16 @@ var orchards = []; /* Array containing a list of Orchard names */
 //var endDate = '';	/* End date variable */
 //var id0 = '';	/* user ID variable */
 
-/*firebase.auth().onAuthStateChanged(function (user) {
+firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     $(window).bind("load", function() {
       initPage();
     });
+  }else{
+      workers=[];
+      orchards=[];
   }
-});*/
+});
 
 /* Function returns a pointer to the list of workers of the particular user ID */
 function workersRef() {
