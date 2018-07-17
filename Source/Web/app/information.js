@@ -467,12 +467,12 @@ function dispOrch(id) {
           "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + rowSpacing + "</p></div></div> " +
+          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().rowSpacing + "</p></div></div> " +
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree spacing:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + treeSpacing + "</p></div></div> " +
+          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().treeSpacing + "</p></div></div> " +
           "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
+          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Dimensions:</label>" +
           "<div class='col-sm-9'><p class ='form-control-static'>" + snapshot.val().xDim + " x " + snapshot.val().yDim + " " + snapshot.val().unit + "</p></div>" +
           "</div> " +
           "" +
