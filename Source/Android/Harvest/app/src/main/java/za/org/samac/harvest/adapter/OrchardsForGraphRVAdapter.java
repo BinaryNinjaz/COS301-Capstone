@@ -46,6 +46,7 @@ public class OrchardsForGraphRVAdapter extends RecyclerView.Adapter<OrchardsForG
                 details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 Intent key = details.putExtra("key", orchardKey);
+                Intent name = details.putExtra("name", orchardName);
 
                 context.startActivity(details);
             }

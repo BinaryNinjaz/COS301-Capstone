@@ -202,7 +202,7 @@ public class SessionDetails extends AppCompatActivity {
 
         //progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
         pieChartView.setVisibility(View.VISIBLE);
-        pieChart.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutQuad));
+        pieChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
         pieChart.setEntryLabelColor(Color.BLACK);
 
         PieDataSet dataset = new PieDataSet(entries, "Dataset");

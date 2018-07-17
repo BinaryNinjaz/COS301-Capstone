@@ -65,7 +65,6 @@
 
             <Button
                 android:id="@+id/sessionDetailsMapButton"
-                style="@android:style/Widget.Holo.Light.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginEnd="32dp"
@@ -74,6 +73,9 @@
                 android:text="@string/sessionDetailsViewPickups"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                style="@style/Button"
+                android:background="@color/white"
+                android:textColor="@color/black"
                 app:layout_constraintTop_toBottomOf="@+id/sessionDetailEndDateTextView" />
 
                 <com.github.mikephil.charting.charts.PieChart
