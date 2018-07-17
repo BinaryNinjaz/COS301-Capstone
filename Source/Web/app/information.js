@@ -533,8 +533,9 @@ function orchSave(type, id) {
       unit: document.getElementById("orchDimUnit").value,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
-      farm: farmID
-      
+      farm: farmID,
+      rowSpacing: document.getElementById("rowSpacing").value,
+      treeSpacing: document.getElementById("treeSpacing").value
     });
     popOrch();
   }
@@ -550,8 +551,9 @@ function orchSave(type, id) {
       unit: document.getElementById("orchDimUnit").value,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
-      farm: farmID
-      
+      farm: farmID,
+      rowSpacing: document.getElementById("rowSpacing").value,
+      treeSpacing: document.getElementById("treeSpacing").value
     });
   }
   popOrch();
