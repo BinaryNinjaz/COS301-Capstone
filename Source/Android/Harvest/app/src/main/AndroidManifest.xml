@@ -97,13 +97,29 @@
         <activity android:name=".adapter.SessionDetails"
             android:label="@string/title_activity_sessions"></activity>
         <activity android:name=".OrchardsForGraph"
-            android:label="@string/title_stats" />
+            android:label="@string/title_stats"
+            android:parentActivityName=".Analytics" />
+
         <activity android:name=".WorkerOrForeman"
-            android:label="@string/title_stats" />
+            android:label="@string/title_stats"
+            android:parentActivityName=".Analytics">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Analytics"/>
+        </activity>
+
         <activity android:name=".ForemenForBarGraph"
-            android:label="@string/title_stats" />
+            android:label="@string/title_stats"
+            android:parentActivityName=".WorkerOrForeman">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WorkerOrForeman"/>
+        </activity>
+
         <activity android:name=".WorkersForBarGraph"
-            android:label="@string/title_stats" />
+            android:label="@string/title_stats"
+            android:parentActivityName=".WorkerOrForeman" />
+
         <activity android:name=".BarGraph"
             android:label="@string/title_stats" />
     </application>
