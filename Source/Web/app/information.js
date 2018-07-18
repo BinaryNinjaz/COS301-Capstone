@@ -525,6 +525,8 @@ function orchSave(type, id) {
   const farmID = farm.substring(farm.indexOf("<") + 1, farm.indexOf(">"));
   let d = new Date(document.getElementById("orchDate").valueAsDate);
   let seconds = d.getTime() / 1000;
+  var cult = document.getElementById("cultivars").value;
+  cult = cult.split(",");
   if (type === 0) {
     firebase.database().ref('/' + userID() +"/orchards/").push({
       name: document.getElementById("orchName").value,
@@ -533,7 +535,7 @@ function orchSave(type, id) {
       irrigation: document.getElementById("irrigationType").value,
       // date: document.getElementById("orchDate").value,
       date: seconds,
-      cultivars: document.getElementById("cultivars").value,
+      cultivars: cult,
       /*xDim: document.getElementById("orchDimX").value,
       yDim: document.getElementById("orchDimY").value,
       unit: document.getElementById("orchDimUnit").value,
@@ -552,7 +554,7 @@ function orchSave(type, id) {
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
-      cultivars: document.getElementById("cultivars").value,
+      cultivars: cult,
       /*xDim: document.getElementById("orchDimX").value,
       yDim: document.getElementById("orchDimY").value,
       unit: document.getElementById("orchDimUnit").value,
