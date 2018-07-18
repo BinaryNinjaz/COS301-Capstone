@@ -376,6 +376,7 @@ function changeWorkerGraph(data){
         legend: { position: "none" }, //This will be determined by the UX designer
       };
 	  var chart = new google.visualization.BarChart(document.getElementById("curve_chart"));
+	  chart.draw(view, options);
 }
 
 //edits value of end date label when a starting date is picked
