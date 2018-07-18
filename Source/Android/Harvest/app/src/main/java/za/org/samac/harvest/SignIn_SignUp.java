@@ -80,6 +80,8 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
     private Button btnSignUp;
     private Button btnLogin;
 
+    private String oldEmail;
+
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
     private static final String TAG = "EmailPassword";//tag I used for log
 
@@ -160,9 +162,10 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                 if (!hasFocus){
                     String email = edtEmail.getText().toString();
                     String org = edtOrganization.getText().toString();
-                    if (org.equals("") || org.equals(email)){
+                    if (org.equals("") || org.equals(oldEmail)){
                         edtOrganization.setText(email);
                     }
+                    oldEmail = email;
                 }
             }
         });
