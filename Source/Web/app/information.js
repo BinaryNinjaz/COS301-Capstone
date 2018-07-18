@@ -533,6 +533,7 @@ function orchSave(type, id) {
       irrigation: document.getElementById("irrigationType").value,
       // date: document.getElementById("orchDate").value,
       date: seconds,
+      cultivars: document.getElementById("cultivars").value,
       /*xDim: document.getElementById("orchDimX").value,
       yDim: document.getElementById("orchDimY").value,
       unit: document.getElementById("orchDimUnit").value,
@@ -551,6 +552,7 @@ function orchSave(type, id) {
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
+      cultivars: document.getElementById("cultivars").value,
       /*xDim: document.getElementById("orchDimX").value,
       yDim: document.getElementById("orchDimY").value,
       unit: document.getElementById("orchDimUnit").value,
@@ -602,6 +604,10 @@ function orchMod(id) {
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
+        "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars' value='" + snapshot.val().cultivars + "'></div> </div> " +
+        "" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing' value='" +  snapshot.val().rowSpacing + "'></div></div> " +
