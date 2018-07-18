@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private RelativeLayout relLayout;
     private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
     private static TextView textView;
+    private TextView textViewPressStart;
     private WorkerRecyclerViewAdapter adapter;
     private LocationManager locationManager;
     private Location location;
@@ -276,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         btnStart.setTag("green");//it is best not to use the tag to identify button status
 
+        textViewPressStart = findViewById(R.id.startText);
         recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -772,12 +774,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
-        ExecutorService threadPoolExecutor = Executors.newSingleThreadExecutor();
-
-        /*if (location != null) {
-            Future longRunningTaskFuture = threadPoolExecutor.submit(runnable);
-            longRunningTaskFuture.cancel(true);
-        }*/
+        textViewPressStart.setVisibility(View.GONE);
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && btnStart.getTag() == "green") {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            String msg = "These services are unavailable, please switch on location to gain access";
+            dlgAlert.setMessage(msg);
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(false);
+            dlgAlert.create().show();
+        }
 
         if(location == null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.VISIBLE);
@@ -940,6 +952,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         } else {
             //TODO: check if app closes or crashes
             progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
             String msger = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
             AlertDialog.Builder dlgAlerter = new AlertDialog.Builder(this);
             dlgAlerter.setMessage(msger);
@@ -976,7 +989,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             int m = (int) (((elapsedTime / 1000) / 60) % 60);
             int s = (int) ((elapsedTime / 1000) % 60);
             //this is the output of the pop up when the user clicks stop (the session)
-            //TODO: ckeck iOS thread on slack
+            //TODO: check iOS thread on slack
             //TODO: add press start again
             String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
             String msg = adapter.totalBagsCollected + " bags collected " + timeTaken + ".";
@@ -993,25 +1006,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             collections collectionObj = adapter.getCollectionObj();
             collectionObj.sessionEnd();
             //****writeToFirebase(collectionObj);
-            if (rejectSess == false) {
-                //pop up is used to show how many bags were collected in the elapsed time
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-                dlgAlert.setMessage(msg);
-                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        adapter.setIncrement();
-                        recyclerView.setVisibility(View.GONE);
-                        dialog.dismiss();
-                    }
-                });
-                dlgAlert.setCancelable(false);
-                dlgAlert.create().show();
-            }
+            //pop up is used to show how many bags were collected in the elapsed time
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            dlgAlert.setMessage(msg);
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(false);
+            dlgAlert.create().show();
 
             btnStart.setBackgroundColor(Color.parseColor("#FF0CCB29"));
 
             btnStart.setText("Start");
             btnStart.setTag("green");
+            textViewPressStart.setVisibility(View.VISIBLE);
         }
     }
 
