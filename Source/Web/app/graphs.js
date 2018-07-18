@@ -375,6 +375,7 @@ function changeWorkerGraph(data){
         bar: {groupWidth: "95%"}, //This is the grouping width of the bar graph
         legend: { position: "none" }, //This will be determined by the UX designer
       };
+	  var chart = new google.visualization.BarChart(document.getElementById("curve_chart"));
 }
 
 //edits value of end date label when a starting date is picked
