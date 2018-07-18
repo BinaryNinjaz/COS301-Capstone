@@ -290,7 +290,7 @@ function workerPerformance(start, end, id){
 
 //updates orchard graph based on user input
 function changeOrchardGraph(data){
-    console.log(data); // can be removed, just used to view json object
+    console.log(data.key); // can be removed, just used to view json object
 }
 
 //updates worker graph based on user input
