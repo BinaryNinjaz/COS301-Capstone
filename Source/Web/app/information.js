@@ -408,7 +408,7 @@ function dispOrch(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
         "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivar:</label>" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars'></div> </div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
