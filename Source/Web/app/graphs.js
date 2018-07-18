@@ -362,6 +362,12 @@ function changeWorkerGraph(data){
     function drawChart() {
     var data = google.visualization.arrayToDataTable(data);
 	var view = new google.visualization.DataView(data);
+	view.setColumns([0, 1,
+                       { calc: "stringify",
+                         sourceColumn: 1,
+                         type: "string",
+                         role: "annotation" },
+                       2]);
 }
 
 //edits value of end date label when a starting date is picked
