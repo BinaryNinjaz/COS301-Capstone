@@ -361,6 +361,7 @@ function changeWorkerGraph(data){
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
     var data = google.visualization.arrayToDataTable(data);
+	var view = new google.visualization.DataView(data);
 }
 
 //edits value of end date label when a starting date is picked
