@@ -15,7 +15,7 @@ public final class HarvestUser {
   var firstname: String
   var lastname: String
   var uid: String
-  var farmName: String
+  var organisationName: String
   var temporary: HarvestUser?
   
   var displayName: String {
@@ -29,7 +29,7 @@ public final class HarvestUser {
     firstname = ""
     lastname = ""
     uid = ""
-    farmName = ""
+    organisationName = ""
   }
   
   init(json: [String: Any]) {
@@ -37,8 +37,8 @@ public final class HarvestUser {
     firstname = json["firstname"] as? String ?? ""
     lastname = json["lastname"] as? String ?? ""
     accountIdentifier = json["accountIdentifier"] as? String ?? ""
-    let defaultFarmName = firstname + " " + lastname + " Farms"
-    farmName = json["farmName"] as? String ?? defaultFarmName
+    let defaultFarmName = accountIdentifier
+    organisationName = json["organization"] as? String ?? defaultFarmName
     workingForID = []
     selectedWorkingForID = nil
   }
@@ -47,7 +47,7 @@ public final class HarvestUser {
     return [
       "firstname": firstname,
       "lastname": lastname,
-      "farmName": farmName,
+      "organization": organisationName,
       "accountIdentifier": accountIdentifier,
       "uid": uid
     ]
@@ -56,7 +56,7 @@ public final class HarvestUser {
   func setUser(
     _ user: User,
     _ password: String?,
-    _ completion: @escaping ([(uid: String, wid: String)], Bool) -> Void
+    _ completion: @escaping ([(uid: String, wid: String)]?, Bool) -> Void
   ) {
     if let password = password {
       UserDefaults.standard.set(password: password)
@@ -77,7 +77,8 @@ public final class HarvestUser {
         
         HarvestUser.current.firstname = user.firstname
         HarvestUser.current.lastname = user.lastname
-        completion(ids, true)
+        HarvestUser.current.organisationName = user.organisationName
+        completion(nil, true)
       }
     })
   }
@@ -90,6 +91,7 @@ public final class HarvestUser {
     HarvestUser.current.firstname = ""
     HarvestUser.current.lastname = ""
     HarvestUser.current.accountIdentifier = ""
+    HarvestUser.current.organisationName = ""
     HarvestUser.current.uid = ""
     HarvestUser.current.workingForID = []
     HarvestUser.current.selectedWorkingForID = nil

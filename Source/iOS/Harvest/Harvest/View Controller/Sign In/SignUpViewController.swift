@@ -13,6 +13,7 @@ class SignUpViewController: UIViewController {
   @IBOutlet weak var firstnameTextField: UITextField!
   @IBOutlet weak var lastnameTextField: UITextField!
   @IBOutlet weak var usernameTextField: UITextField!
+  @IBOutlet weak var organisationName: UITextField!
   @IBOutlet weak var passwordTextField: UITextField!
   @IBOutlet weak var confirmPasswordTextField: UITextField!
   @IBOutlet weak var signUpButton: UIButton!
@@ -108,7 +109,12 @@ class SignUpViewController: UIViewController {
     }
     
     isLoading = true
-    HarvestDB.signUp(withEmail: username, andPassword: password, name: (fname, lname), on: self) {w in
+    let orgName = organisationName.text != "" ? organisationName.text : username
+    HarvestDB.signUp(
+      with: (username, password),
+      name: (fname, lname),
+      organisationName: orgName ?? username,
+      on: self) {w in
       if w {
         HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
           if w,
@@ -150,16 +156,29 @@ class SignUpViewController: UIViewController {
     firstnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))
     lastnameTextField.addLeftImage(#imageLiteral(resourceName: "Name"))
     usernameTextField.addLeftImage(#imageLiteral(resourceName: "Mail"))
+    organisationName.addLeftImage(#imageLiteral(resourceName: "Globe"))
     passwordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
     confirmPasswordTextField.addLeftImage(#imageLiteral(resourceName: "Lock"))
     
     firstnameTextField.delegate = self
     lastnameTextField.delegate = self
     usernameTextField.delegate = self
+    organisationName.delegate = self
     passwordTextField.delegate = self
     confirmPasswordTextField.delegate = self
+    
+    firstnameTextField.becomeFirstResponder()
   }
-
+  
+  @IBAction func emailValueChanged(_ sender: Any) {
+    if usernameTextField.text == "" {
+      organisationName.placeholder = "Organisation Name"
+    } else {
+      organisationName.placeholder = usernameTextField.text
+    }
+    
+  }
+  
   override var prefersStatusBarHidden: Bool {
     return true
   }
@@ -185,6 +204,8 @@ extension SignUpViewController: UITextFieldDelegate {
     } else if textField === lastnameTextField {
       usernameTextField.becomeFirstResponder()
     } else if textField === usernameTextField {
+      organisationName.becomeFirstResponder()
+    } else if textField == organisationName {
       passwordTextField.becomeFirstResponder()
     } else if textField === passwordTextField {
       confirmPasswordTextField.becomeFirstResponder()

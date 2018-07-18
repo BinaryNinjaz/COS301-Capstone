@@ -109,4 +109,11 @@ extension CAGradientLayer {
                     cornerRadius: 5,
                     borderColor: [UIColor].cancelRegistrationButton[1])
   }
+  
+  static var orangeButton: CAGradientLayer {
+    return gradient(colors: .deleteButton,
+                    locations: [0.0, 1.0],
+                    cornerRadius: 5,
+                    borderColor: [UIColor].deleteButton[1])
+  }
 }

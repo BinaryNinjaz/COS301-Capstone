@@ -113,7 +113,7 @@ class StatEntitySelectionViewController: FormViewController, TypedRowControllerT
           }
         })
       }
-      
+      print(svc.stat as Any)
       self.navigationController?.pushViewController(svc, animated: true)
     }
     

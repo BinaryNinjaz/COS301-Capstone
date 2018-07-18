@@ -16,7 +16,6 @@ extension HarvestDB {
         completion(nil)
         return
       }
-      
       let hu = HarvestUser(json: user)
       completion(hu)
     }

@@ -32,6 +32,10 @@ enum IrrigationKind: String, CustomStringConvertible {
 }
 
 public final class Orchard {
+  enum WorkerAssignmentOperation {
+    case remove, add, assigned, unassigned
+  }
+  
   var bagMass: Double
   var coords: [CLLocationCoordinate2D]
   var crop: String
@@ -43,6 +47,7 @@ public final class Orchard {
   var treeSpacing: Double
   var rowSpacing: Double
   var irrigationKind: IrrigationKind
+  var assignedWorkers = [(String, WorkerAssignmentOperation)]() // only for infoRepresentation purposes
   
   var id: String
   var tempory: Orchard?

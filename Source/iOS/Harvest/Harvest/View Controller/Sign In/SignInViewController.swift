@@ -102,7 +102,7 @@ class SignInViewController: UIViewController {
   @IBAction func forgotAccountTouchUp(_ sender: UIButton) {
     let emailRequest = UIAlertController(
       title: "Reset Password",
-      message: "Please enter your email. You will then receive an email to reset your password.",
+      message: "Please enter your email, you will then receive an email to reset your password.",
       preferredStyle: .alert)
     
     emailRequest.addTextField { (email) in email.keyboardType = .emailAddress }

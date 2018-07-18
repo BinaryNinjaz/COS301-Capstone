@@ -40,7 +40,7 @@ public final class StatSetupViewController: FormViewController {
     foremenRow = MultipleSelectorRow<Worker> { row in
       row.title = "Foreman Selection"
       row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
-      row.options?.append(Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid))
+      row.options?.append(Worker(HarvestUser.current))
       row.value = row.options?.first != nil ? [row.options!.first!] : []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
@@ -48,7 +48,7 @@ public final class StatSetupViewController: FormViewController {
       }
     }.cellUpdate { _, row in
       row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
-      row.options?.append(Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid))
+      row.options?.append(Worker(HarvestUser.current))
     }
     
     orchardsRow = MultipleSelectorRow<Orchard> { row in

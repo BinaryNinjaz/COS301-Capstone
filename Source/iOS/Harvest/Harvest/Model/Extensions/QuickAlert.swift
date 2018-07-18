@@ -55,4 +55,23 @@ extension UIAlertController {
     
     controller?.present(alert, animated: true, completion: nil)
   }
+  
+  static func present(
+    question: String,
+    detail: String,
+    on controller: UIViewController?,
+    completion: @escaping () -> Void
+  ) {
+    let alert = UIAlertController(title: question, message: detail, preferredStyle: .alert)
+    
+    let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+    let confirm = UIAlertAction(title: "Delete", style: .default) { _ in
+      completion()
+    }
+    
+    alert.addAction(cancel)
+    alert.addAction(confirm)
+    
+    controller?.present(alert, animated: true, completion: nil)
+  }
 }

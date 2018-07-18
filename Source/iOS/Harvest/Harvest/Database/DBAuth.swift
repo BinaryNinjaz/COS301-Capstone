@@ -14,8 +14,13 @@ extension HarvestDB {
   static func requestWorkingFor(
     _ controller: UIViewController?,
     _ completion: @escaping (Bool) -> Void
-  ) -> ([(uid: String, wid: String)], Bool) -> Void {
+  ) -> ([(uid: String, wid: String)]?, Bool) -> Void {
     return { ids, succ in
+      guard let ids = ids else { // is farmer
+        completion(true)
+        return
+      }
+      
       if let (uid, wid) = UserDefaults.standard.getUWID() {
         HarvestUser.current.selectedWorkingForID = (uid, wid)
         completion(true)
@@ -23,8 +28,11 @@ extension HarvestDB {
         HarvestUser.current.selectedWorkingForID = ids.first!
         completion(true)
       } else if ids.count == 0 {
-        // Farmer shouldn't be working for anyone
-        completion(true)
+        UIAlertController.present(
+          title: "You're Not Working For Anyone",
+          message: "Ensure you've been added to the farm as a worker by your employer.",
+          on: controller,
+          completion: { completion(false) })
       } else {
         HarvestDB.getWorkingForFarmNames(uids: ids.map { $0.uid }, result: [], completion: { (names) in
           UIAlertController.present(
@@ -111,15 +119,15 @@ extension HarvestDB {
   }
   
   static func signUp(
-    withEmail email: String,
-    andPassword password: String,
+    with details: (email: String, password: String),
     name: (first: String, last: String),
+    organisationName: String,
     on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().createUser(
-      withEmail: email,
-      password: password
+      withEmail: details.email,
+      password: details.password
     ) { (user, error) in
       if let error = error {
         UIAlertController.present(title: "Sign Up Failure",
@@ -137,8 +145,8 @@ extension HarvestDB {
         return
       }
       
-      UserDefaults.standard.set(password: password)
-      UserDefaults.standard.set(username: email)
+      UserDefaults.standard.set(password: details.password)
+      UserDefaults.standard.set(username: details.email)
       
       let changeRequest = user.createProfileChangeRequest()
       changeRequest.displayName = name.first + " " + name.last
@@ -146,7 +154,8 @@ extension HarvestDB {
       
       HarvestUser.current.firstname = name.first
       HarvestUser.current.lastname = name.last
-      HarvestUser.current.setUser(user, password, HarvestDB.requestWorkingFor(controller, completion))
+      HarvestUser.current.organisationName = organisationName
+      HarvestUser.current.setUser(user, details.password, HarvestDB.requestWorkingFor(controller, completion))
       HarvestDB.save(harvestUser: HarvestUser.current)
       
       completion(true)
@@ -211,8 +220,8 @@ extension HarvestDB {
       }
       UserDefaults.standard.set(verificationID: verificationID)
       
-      UIAlertController.present(title: "Enter Code in Password Field",
-                                message: "Enter the code from the SMS sent to you into the password",
+      UIAlertController.present(title: "Enter Code into Text Field",
+                                message: "Enter the 6-digit code from the SMS sent to you into the text field",
                                 on: controller)
       
       completion?(true)
@@ -247,7 +256,7 @@ extension HarvestDB {
   }
   
   static func getWorkingForFarmName(uid: String, completion: @escaping (String?) -> Void) {
-    let fnref = ref.child(uid + "/admin/farmName")
+    let fnref = ref.child(uid + "/admin/organisationName")
     fnref.observeSingleEvent(of: .value) { (snapshot) in
       guard let name = snapshot.value as? String else {
         completion(nil)

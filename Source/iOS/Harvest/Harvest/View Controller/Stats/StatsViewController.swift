@@ -74,19 +74,20 @@ class StatsViewController: UIViewController {
   }
   
   func updateBarChart(with data: BarChartData?) {
-    guard let barData = data else {
-      barChart?.data = nil
-      return
-    }
-    if barData.dataSetCount > 1 {
-      let groupSize = 0.2
-      let barSpace = 0.03
-      let gg = barData.groupWidth(groupSpace: groupSize, barSpace: barSpace)
-      barChart?.xAxis.axisMaximum = Double(barData.dataSets[0].entryCount) * gg + 0
-      
-      barData.groupBars(fromX: 0, groupSpace: groupSize, barSpace: barSpace)
-    }
     DispatchQueue.main.async {
+      guard let barData = data else {
+        self.barChart?.data = nil
+        return
+      }
+      if barData.dataSetCount > 1 {
+        let groupSize = 0.2
+        let barSpace = 0.03
+        let gg = barData.groupWidth(groupSpace: groupSize, barSpace: barSpace)
+        self.barChart?.xAxis.axisMaximum = Double(barData.dataSets[0].entryCount) * gg + 0
+        
+        barData.groupBars(fromX: 0, groupSpace: groupSize, barSpace: barSpace)
+      }
+      
       if self.period == .daily {
         self.radarChart?.notifyDataSetChanged()
         self.radarChart?.data = barData.radarChartData()
