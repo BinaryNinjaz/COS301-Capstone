@@ -153,6 +153,7 @@ function initOrchards(){
           orchards.push({key: k, value: val});
           var option = document.createElement("option");
           option.text = val.name;
+		  //console.log(option);
           orchardSelect.options.add(option);
         });
     }); 
@@ -293,12 +294,48 @@ function workerPerformance(start, end, id){
 
 //updates orchard graph based on user input
 function changeOrchardGraph(data){
-    console.log(data.key); // can be removed, just used to view json object
+    //console.log(data.key); // can be removed, just used to view json object
+	if(data == undefined){console.log("Hi Vincent");}
+	console.log(JSON.stringify(data));
+    var name = document.getElementById('orchardSelect').value;
+	var key = getOrchardId(name);
+	console.log(data[key]);
+	var values = data[key];
+	var sevenDays = ["Sunday","Monday","Tuesday","Wednesday","Thursady","Friday","Saturday"];
+	var data = [];
+	for(var i=0;i<7;i++){
+		if(values[sevenDays[i]] === undefined){
+			data.push(0);
+		}else{
+			data.push(values[sevenDays[i]]);
+		}
+	}
+	var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                    //The size of the labels array will depend on the start date and the end date.
+                    //The labels will be the dates, from the specified start till the specified end.
+                    labels: ['Sunday','Monday','Tuesday','Wednesday','Thursady','Friday','Saturday'], //This will contain the dates plotted on each point. (give me the dates)
+                    datasets: [{
+                    label: "Number of Bags p/day", //These are the number of bags per day since the start date and the end date
+
+                    //The following values in the data array are the number of bags collected each day. from start date to end date
+                    data: data, //The size of this will also depend on the start and the end date
+                    backgroundColor: '#4CAF50' //Color of the area 
+            }]
+            }
+    });
 }
 
 //updates worker graph based on user input
 function changeWorkerGraph(data){
     console.log(data); // can be removed, just used to view json object
+	var name = document.getElementById('workerSelect').value;
+	var key = getWorkerId(name);
+	var values = data[key];
+	var hourly = ["6","7","8","9","10","11","12","13","14","15","16","17","18"];
+	
 }
 
 //edits value of end date label when a starting date is picked
