@@ -79,7 +79,7 @@ function firebaseLogin() {
         } else {
             alert(errorMessage);
         }
-        console.log(error);
+       // console.log(error.code);
     });
 }
 
@@ -95,4 +95,10 @@ function sendPasswordResetEmail(emailAddress) {
     }).catch(function (error) {
         // An error happened.
     });
+}
+
+function locationLookup(callback) {
+  $.get('http://ip-api.com/json', (data, response) => {
+    callback(data, response);
+  });
 }

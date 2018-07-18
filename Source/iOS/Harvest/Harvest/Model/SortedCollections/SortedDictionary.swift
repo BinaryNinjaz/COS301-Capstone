@@ -3,16 +3,20 @@ import Swift
 struct SortedDictionary<Key: Hashable, Value> : Collection {
   typealias SortingElement = Key
   
-  struct Index : Comparable, Strideable {
+  struct DefaultIndex: Comparable, Strideable {
     typealias Stride = Int
     
     var boxed: Int
     
-    static func ==(lhs: Index, rhs: Index) -> Bool {
+    init(_ b: Int) {
+      boxed = b
+    }
+    
+    static func == (lhs: Index, rhs: Index) -> Bool {
       return lhs.boxed == rhs.boxed
     }
     
-    static func <(lhs: Index, rhs: Index) -> Bool {
+    static func < (lhs: Index, rhs: Index) -> Bool {
       return lhs.boxed < rhs.boxed
     }
     
@@ -21,7 +25,7 @@ struct SortedDictionary<Key: Hashable, Value> : Collection {
     }
     
     func advanced(by n: Int) -> Index {
-      return Index(boxed: boxed + n)
+      return Index(boxed + n)
     }
   }
   
@@ -44,33 +48,40 @@ struct SortedDictionary<Key: Hashable, Value> : Collection {
     _ref = SortedArray.init(pairs.map { $0.0 }, areInIncreasingOrder: areInIncreasingOrder)
   }
   
-  var startIndex: Index {
-    return Index(boxed: _ref.startIndex)
+  var startIndex: DefaultIndex {
+    return Index(_ref.startIndex)
   }
   
-  var endIndex: Index {
-    return Index(boxed: _ref.endIndex)
+  var endIndex: DefaultIndex {
+    return Index(_ref.endIndex)
   }
   
-  func index(after: Index) -> Index {
-    return Index(boxed: _ref.index(after: after.boxed))
+  func index(after: DefaultIndex) -> DefaultIndex {
+    return Index(_ref.index(after: after.boxed))
   }
   
-  subscript(index: Index) -> Element {
+  subscript(index: DefaultIndex) -> Element {
     let key = _ref[index.boxed]
     let value = _dict[key]
     return (key: key, value: value!)
   }
+  
+  func mapValues<T>(_ f: (Value) -> T) -> SortedDictionary<Key, T> {
+    var result = SortedDictionary<Key, T>(areInIncreasingOrder)
+    result._dict = _dict.mapValues(f)
+    result._ref.insert(elements: _dict.keys)
+    return result
+  }
 }
 
-extension SortedDictionary : SortedUniqueInsertableCollection, CustomStringConvertible {
+extension SortedDictionary: SortedUniqueInsertableCollection, CustomStringConvertible {
   @discardableResult
   mutating func insert(unique element: Element) -> (Bool, Index) {
     let (contains, idx) = insertionPoint(for: element.key)
     if !contains {
       let i = _ref.insert(element.key)
       _dict[element.key] = element.value
-      return (false, Index(boxed: i))
+      return (false, DefaultIndex(i))
     } else {
       return (true, idx)
     }
@@ -104,7 +115,7 @@ extension SortedDictionary where Key: Comparable {
   }
 }
 
-extension SortedDictionary : RangeRemovableCollection {
+extension SortedDictionary: RangeRemovableCollection {
   mutating func removeSubrange(_ bounds: Range<Index>) {
     for ref_offset in stride(from: bounds.lowerBound, to: bounds.upperBound, by: 1) {
       guard let idx = _dict.index(forKey: _ref[ref_offset.boxed]) else {
@@ -116,7 +127,7 @@ extension SortedDictionary : RangeRemovableCollection {
   }
 }
 
-extension SortedDictionary : RandomAccessCollection {
+extension SortedDictionary: RandomAccessCollection {
   subscript(key: Key) -> Value? {
     get {
       return _dict[key]

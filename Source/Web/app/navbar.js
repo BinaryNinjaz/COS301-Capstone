@@ -9,8 +9,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 		var name;
 		if (user != null) {
 			name = user.email;
-		}  
-		document.getElementById("emailInNav").innerHTML = name + " <span class=\"glyphicon glyphicon-cog\"></span>"	
+		}
+		$(window).bind("load", function() {
+			document.getElementById("emailInNav").innerHTML = name + " <span class=\"glyphicon glyphicon-cog\"></span>";
+		});
+		
 	}
 });
 

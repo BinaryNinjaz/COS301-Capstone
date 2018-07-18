@@ -8,7 +8,7 @@
 
 import Eureka
 
-public struct Box : Equatable {
+public struct Box: Equatable {
 }
 
 public class EntityViewController: FormViewController, TypedRowControllerType {
@@ -16,7 +16,7 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
   public typealias RowValue = Box
   public var onDismissCallback: ((UIViewController) -> Void)?
   
-  var entity: EntityItem? = nil
+  var entity: EntityItem?
   
   @IBOutlet weak var saveButton: UIBarButtonItem!
   
@@ -41,34 +41,40 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
       return
     }
     
+    let errors = form.validate(includeHidden: false)
+    guard errors.count == 0 else {
+      let errorList = errors.lazy.map { $0.msg }.joined(separator: "\n")
+      UIAlertController.present(title: "Invalid Input", message: errorList, on: self)
+      return
+    }
+    
     switch entity {
-    case let .farm(f):
-      if let t = f.tempory {
-        HarvestDB.save(farm: t)
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-      }
-    case let .orchard(o):
-      if let t = o.tempory {
-        HarvestDB.save(orchard: t)
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-      }
-    case let .worker(w):
-      if let t = w.tempory {
-        HarvestDB.save(worker: t, oldEmail: w.email)
-        w.email = t.email
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-      }
-    case let .session(s):
-      if let t = s.tempory {
-        HarvestDB.save(session: t)
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-      }
-    case let .user(u):
-      if let t = u.temporary {
-        HarvestDB.save(harvestUser: t)
-        HarvestUser.current = HarvestUser(json: t.json())
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-      }
+    case let .farm(f) where f.tempory != nil:
+      HarvestDB.save(farm: f.tempory!)
+      self.navigationItem.rightBarButtonItem?.isEnabled = false
+      
+    case let .orchard(o) where o.tempory != nil:
+      HarvestDB.save(orchard: o.tempory!)
+      self.navigationItem.rightBarButtonItem?.isEnabled = false
+      
+    case let .worker(w) where w.tempory != nil:
+      HarvestDB.save(worker: w.tempory!, oldNumber: w.phoneNumber)
+      w.phoneNumber = w.tempory!.phoneNumber
+      self.navigationItem.rightBarButtonItem?.isEnabled = false
+      
+    case let .session(s) where s.tempory != nil:
+      HarvestDB.save(session: s.tempory!)
+      self.navigationItem.rightBarButtonItem?.isEnabled = false
+      
+    case let .user(u) where u.temporary != nil:
+      HarvestDB.save(harvestUser: u.temporary!)
+      HarvestUser.current = HarvestUser(json: u.temporary!.json())
+      self.navigationItem.rightBarButtonItem?.isEnabled = false
+      
+    default:
+      UIAlertController.present(title: "Cannot Save",
+                                message: "The item you are trying to save cannot be saved",
+                                on: self)
     }
   }
   

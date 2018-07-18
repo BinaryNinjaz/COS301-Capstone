@@ -9,7 +9,10 @@
 import UIKit
 
 extension UIAlertController {
-  static func alertController(title: String, message: String) -> UIAlertController {
+  static func alertController(
+    title: String,
+    message: String
+  ) -> UIAlertController {
     let alert = UIAlertController(
       title: title,
       message: message,
@@ -20,5 +23,17 @@ extension UIAlertController {
     alert.addAction(okay)
     
     return alert
+  }
+  
+  static func present(
+    title: String,
+    message: String,
+    on controller: UIViewController?,
+    completion: (() -> Void)? = nil
+  ) {
+    if let controller = controller {
+      let alert = UIAlertController.alertController(title: title, message: message)
+      controller.present(alert, animated: true, completion: completion)
+    }
   }
 }
