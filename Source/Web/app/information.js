@@ -408,6 +408,9 @@ function dispOrch(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
         "" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivar:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars'></div> </div>" +
+        "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing'></div></div> " +
         "" +
@@ -466,6 +469,9 @@ function dispOrch(id) {
           "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
           "" +
+          "<div class='form-group'><label class='control-label col-sm-2' for='date'>Cultivars:</label>" +
+          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().cultivars + "</p></div></div> " +
+          "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().rowSpacing + "</p></div></div> " +
           "" +
@@ -484,8 +490,7 @@ function dispOrch(id) {
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Workers:</label>" +
           "<div class='col-sm-9' id='workerButtons'></div></div>" +
-          "" +
-         
+          "" +         
           "</form>"
         ;
 
@@ -537,7 +542,7 @@ function orchSave(type, id) {
       rowSpacing: document.getElementById("rowSpacing").value,
       treeSpacing: document.getElementById("treeSpacing").value
     });
-    popOrch();
+    //popOrch();
   }
   else if (type === 1) {
     firebase.database().ref('/' + userID() +"/orchards/" + id).update({
