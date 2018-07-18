@@ -416,14 +416,6 @@ function dispOrch(id) {
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='treeSpacing'></div></div> " +
-        /*"" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
-        "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimX'></div>" +
-        "<div class='col-sm-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
-        "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimY'> </div>" +
-        "<div class='col-sm-1 col-sm-offset-1'><p class='form-control-static' style='text-align: right'>Unit:</p></div>" +
-        "<div class='col-sm-2'><input type='text' class='form-control' id='orchDimUnit'></div> " +
-        "</div> " +*/
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
         "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
@@ -463,7 +455,7 @@ function dispOrch(id) {
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().bagMass + " Kg</p></div> </div>" +
           "" +
-           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation:</label>" +
+          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().irrigation + "</p></div> </div>" +
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
@@ -477,11 +469,7 @@ function dispOrch(id) {
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree spacing:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().treeSpacing + "</p></div></div> " +
-          "" +
-          /*"<div class='form-group'><label class='control-label col-sm-2' for='text'>Dimensions:</label>" +
-          "<div class='col-sm-9'><p class ='form-control-static'>" + snapshot.val().xDim + " x " + snapshot.val().yDim + " " + snapshot.val().unit + "</p></div>" +
-          "</div> " +
-          "" +*/
+          "" +         
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().further + "</p></div> </div>" +
           "" +
@@ -499,7 +487,6 @@ function dispOrch(id) {
 
         farmSnapshot.forEach(function (farm) {
           if (farm.key === snapshot.val().farm) {
-            // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
             document.getElementById("orchFarmDisp").innerHTML = "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispFarm(\"" + farm.key + "\")'>" + farm.val().name + "</button></div>";
           }
         });
@@ -528,18 +515,14 @@ function orchSave(type, id) {
   var cult = document.getElementById("cultivars").value;
   cult = cult.split(",");
   if (type === 0) {
-    firebase.database().ref('/' + userID() +"/orchards/").push({
+      firebase.database().ref('/' + userID() +"/orchards/").push({
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
-      // date: document.getElementById("orchDate").value,
       date: seconds,
       cultivars: cult,
-      /*xDim: document.getElementById("orchDimX").value,
-      yDim: document.getElementById("orchDimY").value,
-      unit: document.getElementById("orchDimUnit").value,
-      */bagMass: document.getElementById("orchBagMass").value,
+      bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
       rowSpacing: document.getElementById("rowSpacing").value,
@@ -617,14 +600,6 @@ function orchMod(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='treeSpacing' value='" + snapshot.val().treeSpacing + "'></div></div> " +
         "" +
-       /* "<div class='form-group'><label class='control-label col-sm-2' for='date'>Dimensions:</label>" +
-        "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimX' value ='" + snapshot.val().xDim + "'></div>" +
-        "<div class='col-sm-1'><p class='form-control-static' style='text-align: center'>x</p></div>" +
-        "<div class='col-sm-2'><input type='number' class='form-control' id='orchDimY' value ='" + snapshot.val().yDim + "'> </div>" +
-        "<div class='col-sm-1 col-sm-offset-1'><p class='form-control-static' style='text-align: right'>Unit:</p></div>" +
-        "<div class='col-sm-2'><input type='text' class='form-control' id='orchDimUnit' value ='" + snapshot.val().unit + "'></div> " +
-        "</div> " +
-        "" +        */
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
         "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'>" + snapshot.val().further + "</textarea></div> </div>" +
         "" +
