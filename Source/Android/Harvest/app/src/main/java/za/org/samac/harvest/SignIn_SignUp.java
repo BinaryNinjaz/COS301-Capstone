@@ -152,6 +152,20 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
         });
 
         mAuth = FirebaseAuth.getInstance();//initialisation the FirebaseAuth instance
+
+        //Set organization to email
+        edtEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus){
+                    String email = edtEmail.getText().toString();
+                    String org = edtOrganization.getText().toString();
+                    if (org.equals("") || org.equals(email)){
+                        edtOrganization.setText(email);
+                    }
+                }
+            }
+        });
     }
 
     @Override
