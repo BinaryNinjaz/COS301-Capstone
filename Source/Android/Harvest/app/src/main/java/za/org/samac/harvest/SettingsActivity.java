@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -36,23 +38,11 @@ import java.util.List;
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
-    private FirebaseDatabase database;
-    private DatabaseReference userAdmin;
-
-    private FirebaseUser user;
-
-    private boolean isFarmer;
-
-    private String email;
-    private String organization;
-    private String fname;
-    private String sname;
-
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener(){
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
@@ -133,23 +123,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
-
-        //Firebase setup
-        database = FirebaseDatabase.getInstance();
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            userAdmin = database.getReference("/" + user.getUid() + "/admin/");
-
-            //determine if farmer
-            isFarmer = true;
-            for(UserInfo profile : user.getProviderData()){
-                if (profile.getProviderId().equals(PhoneAuthProvider.PROVIDER_ID)){
-                    isFarmer = false;
-                    break;
-                }
-            }
-        }
     }
+
+
 
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
@@ -178,12 +154,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
-        if (isFarmer) {
-            loadHeadersFromResource(R.xml.pref_headers, target);
-        }
-        else {
-            loadHeadersFromResource(R.xml.pref_headers_foreman, target);
-        }
+        loadHeadersFromResource(R.xml.pref_headers, target);
     }
 
     /**
@@ -201,11 +172,50 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class AccountPreferenceFragment extends PreferenceFragment {
+
+        private FirebaseDatabase database;
+        private DatabaseReference userAdmin;
+
+        private FirebaseUser user;
+
+        private boolean isFarmer;
+
+        private PreferenceScreen preferenceScreen;
+
+        private String email;
+        private String organization;
+        private String fname;
+        private String sname;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_account);
             setHasOptionsMenu(true);
+
+            preferenceScreen = (PreferenceScreen) findPreference(getString(R.string.pref_account_key));
+
+            //Firebase setup
+            database = FirebaseDatabase.getInstance();
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                userAdmin = database.getReference("/" + user.getUid() + "/admin/");
+
+                //determine if farmer
+                isFarmer = true;
+                for(UserInfo profile : user.getProviderData()){
+                    if (profile.getProviderId().equals(PhoneAuthProvider.PROVIDER_ID)){
+                        isFarmer = false;
+                        break;
+                    }
+                }
+            }
+
+            //Hide farmer stuff
+            if (!isFarmer){
+                preferenceScreen.removePreference(findPreference(getString(R.string.pref_account_category_extra_key)));
+                preferenceScreen.removePreference(findPreference(getString(R.string.pref_account_category_login_key)));
+            }
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are

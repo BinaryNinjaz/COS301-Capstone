@@ -142,18 +142,31 @@
     <!-- Account settings -->
     <string name="pref_header_account">Account</string>
 
+    <string name="pref_account_key">pref_account_account_key</string>
 
     <string name="pref_account_category_login">Login Details</string>
+    <string name="pref_account_category_login_key">pref_account_category_login_key</string>
     <string name="pref_account_email">Change Email</string>
+    <string name="pref_account_email_key">pref_account_email_key</string>
     <string name="pref_account_password">Change Password</string>
+    <string name="pref_account_password_key">pref_account_password_key</string>
 
     <string name="pref_account_category_extra">Extra Account Information</string>
+    <string name="pref_account_category_extra_key">pref_account_category_extra_key</string>
     <string name="pref_account_organization">Organization</string>
+    <string name="pref_account_organization_key">pref_account_organization_key</string>
     <string name="pref_account_fname">First Name</string>
+    <string name="pref_account_fname_key">pref_account_fname_key</string>
     <string name="pref_account_sname">Surname</string>
+    <string name="pref_account_sname_key">pref_account_sname_key</string>
 
-    <string name="pref_account_category_delete">Delete Account</string>
+    <string name="pref_account_category_management">Account Management</string>
     <string name="pref_account_delete">Delete Account</string>
+    <string name="pref_account_delete_key">pref_account_delete_key</string>
+
+
+
+
 
     <string name="title_activity_sessions">Sessions</string>
     <string name="title_activity_sessions_map">Map</string>
