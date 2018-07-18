@@ -131,7 +131,7 @@ function initPage(){
                        2]);
       var nameOfWorker; //This has to be assigned the name of the worker/the id ow the worker
       var options = {
-        title: "Number of bags collected per hour by Teboho Mokoena", //Teboho Mokoena will be replaced with 'nameOfWorker' variable
+        title: "Number of bags collected per hour", //Teboho Mokoena will be replaced with 'nameOfWorker' variable
         width: 1200, //Setting the width 
         height: 500, //Setting the height
         bar: {groupWidth: "95%"}, //This is the grouping width of the bar graph
@@ -368,6 +368,13 @@ function changeWorkerGraph(data){
                          type: "string",
                          role: "annotation" },
                        2]);
+	 var options = {
+        title: "Number of bags collected per hour", //Teboho Mokoena will be replaced with 'nameOfWorker' variable
+        width: 1200, //Setting the width 
+        height: 500, //Setting the height
+        bar: {groupWidth: "95%"}, //This is the grouping width of the bar graph
+        legend: { position: "none" }, //This will be determined by the UX designer
+      };
 }
 
 //edits value of end date label when a starting date is picked
