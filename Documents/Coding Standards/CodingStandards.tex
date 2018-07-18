@@ -1,4 +1,5 @@
 \documentclass[12pt]{article}
+\usepackage{graphicx}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -7,22 +8,33 @@
   filecolor=magenta,      
   urlcolor=cyan,
 }
-
-\title{Coding Standards}
-\author{Binary Ninjaz}
-\date{}
-
 \begin{document}
-  \maketitle
+
+\title{Coding Standards Document}
+\maketitle
+\center{\textbf{Team Name:} Binary Ninjaz\\}
+\center{\textbf{System Name:} Harvest\\}
+\includegraphics[scale=0.3]{harvestIcon.png}
+\center{\textbf{Client Name:} Barry Christie\\ }
+\center{\textbf{Team Members:\\} 
+Teboho Mokoena (u14415888)\\
+Sizo Duma (u15245579)\\
+Letanyan Delon Arumugam (u14228123)\\
+John Ojo (u15096794)\\
+Kevin Reid (u15008739)\\
+Shaun Yates (u16007493)\\ }
   \newpage
   
   \tableofcontents
   \newpage
+
+  \section{Detailed System Design}
+  \includegraphics[width=1.2\linewidth]{UMLClassDiag.png}
+  \newpage
   
-  \section{Introduction}
-  The project and design we've undertaken means that we will need to use multiple languages and IDE's to complete the project. As such we hav decided that the best common practice and standards of each language shall be the standard that is used for that respective language/environment.
-  
-  \section{Language Style Guides}
+  \section{Coding Conventions}
+  \flushleft
+  The project and design we've undertaken means that we will need to use multiple languages and IDE's to complete the project. As such we have decided that the best common practice and standards of each language shall be the standard that is used for that respective language/environment.
   \subsection{HTML/CSS}
   The HTML and CSS standards we shall follow will be the ones of \href{https://google.github.io/styleguide/htmlcssguide.html}{Google's HTML/CSS style guide}
   
@@ -34,34 +46,19 @@
   \subsection{Swift}
   For Swift we will use \href{https://swift.org/documentation/api-design-guidelines/}{Apple design guidelines}.
   
-  \section{Git Structure}
-  \subsection{Branching}
-  Rule one, always, is never work out of \texttt{master}. A new branch is created when someone wants to implement, or experiment with something that is not theirs, or in the \texttt{master}, so they will branch off of the relevant branch, to make their proposed changes.
-  \subsubsection{Naming}
-  A branch shall never contain an individuals name, rather it must be informative as to what the intention of the branch is, however, it is in the best interests of readability to keep the name short. An example of a terrible name is \texttt{Joe}; another is \texttt{JoeWebsiteChanges}, where the name contains a member name, and gives very little information as to what is going on in the branch. Bad, but barely acceptable names are \texttt{WebsiteChanges}, or \texttt{WebsiteExperimentation}. Ideal names are as follows: in the case of a branch where the website is ultimately being assembled, by merging other branches into it, and the only modifications taking place are to structure the files, or a quick fix, such as changing the colour of a button, \texttt{Website}; in the case that a new homepage is created for the website, where the homepage is created, and merged into \texttt{Website} on completion, \texttt{Website-Homepage}; finally, if infamous \textit{Joe}, wants to propose a change to the \texttt{Website-Homepage} branch, where he wants to change the colour of a button, but Joe has not been assigned, or is not the primary benefactor to \texttt{Website-Homepage}, he creates a new \texttt{Website-Homepage-ButtonColourChange} branch. Notice that in the ideal examples it is possible to track down the source of a branch, to understand exactly what it's purpose is.
+  \center\section{File Structure}
+  \includegraphics[width=1.2\linewidth]{FileStructure.png}
+  \flushleft\subsection{Branching}
   
-  \subsection{Merging}
-  After changes have been made on the branch, the creator, who wants to merge, shall then make a pull request on GitHub, and announce the request on Slack, after which it shall become the responsibility of the entire team, but more importantly that of the original branch maintainer to analyze and comment on the changes; the exact location of the discussion is trivial, however GitHub provides a better, and more concrete platform for this discussion to take place, where inline comments can be made. After a sufficient amount of time and discussion has passed, either the branch maintainer (if it is a minor change), or the entire team (if it is to master, or a major change) shall decide to merge or not.
+  An example structure is shown above, showing that \texttt{master} is never worked on directly. Each subsystem has its own respective branch, and these branches branch off \texttt{Developer}, and in turn any changes done to a branch would then branch off that specific branch. A \texttt{Developer} branch is used, to act in much the same way as \texttt{master}, but as a proxy, so that before merging that branch to master, the entire system can be reviewed there before a more solid commitment is made.
+  \subsection{Naming}
+  \flushleft
+  A branch shall never contain an individuals name, rather it must be informative as to what the intention of the branch is whilst also remaining short. An example of a  name that would be deemed unacceptable is \texttt{Joe}; another would be \texttt{JoeWebsiteChanges}, where the name contains a member name, and gives very little information as to what is going on in the branch. Bad, but barely acceptable names are \texttt{WebsiteChanges}, or \texttt{WebsiteExperimentation}. Ideal names are as follows: in the case of a branch where the website is ultimately being assembled, by merging other branches into it, and the only modifications taking place are to structure the files, or a quick fix, such as changing the colour of a button, \texttt{Website}; in the case that a new homepage is created for the website, where the homepage is created, and merged into \texttt{Website} on completion, \texttt{Website-Homepage}. Finally, if a user wants to propose a change to the \texttt{Website-Homepage} branch, where he wants to change the colour of a button, but the user has not been assigned, or is not the primary benefactor to \texttt{Website-Homepage}, he creates a new \texttt{Website-Homepage-ButtonColourChange} branch. Notice that in the ideal examples it is possible to track down the source of a branch, to understand exactly what it's purpose is.
   
-  \subsection{The Bulleted Rules}
-  \begin{itemize}
-   \item \textit{Never} make modifications directly to \texttt{master}.
-   \item A \texttt{Developer} branch is used, to act in much the same way as \texttt{master}, but as a proxy, so that before merging that branch to master, the entire system can be reviewed there before a more solid commitment is made to \texttt{master}.
-   \item Never directly make modifications to somebody else's code, rather branch, make the change, submit a pull request, then announce the request on Slack.
-   \item If you absolutely feel the need to work in a branch that you did not create, message the branch creator and ask for permission.
-   \item Never approve your own pull request, let the team leader, or the active benefactor to the branch you want to merge with make the merge.
-   \item Allow a sufficient amount of time and discussion to pass before merging---this applies to any merge, no matter how small, the key is in judging the time and discussion that needs to pass: the larger the merge, the larger the discussion.
-   \item Before merging, every member involved with the issue must comment, even if it is to say ``yes.'' If someone doesn't comment, follow up with them.
-   \item Before making a pull request, ensure that there are currently no pull requests to merge into the branch that you want to have merged with the other branch. Example: you want to merge \texttt{Website-Homepage} into \texttt{Website}, but there is a pull request to merge \texttt{Website-Homepage-ButtonColourChange} into \texttt{Website-Homepage}; in this instance, the later, active, pull request (\texttt{Website-Homepage-ButtonColourChange} into \texttt{Website-Homepage}) must be delt with first.
-   \item Once a branch has been merged into it's source, and the branch is no longer needed, delete it.
-   \item If you decide to abandon a branch that you created, and nobody else is working on, delete it.
-   \item If you suspect that somebody else's branch is abandoned, reach out to them and offer to delete it.
-   \item Never put your own name in the name of a branch.
-   \item Give branches an informative name.
-   \item Name the branch such that the branch it is modifying can be identified.
-   
-  \end{itemize}
-
+  \center\section{Code Review Process}
+  \flushleft
+All code reviewing is done on GitHub, and occurs every time there are changes done to code, or if new code has been implemented. Currently, pre-commit reviews are utilized and although it is a slower process compared to post-commit reviews, it always for more people to be aware of changes to the code and could possibly lead to better implementation as more eyes usually means more ideas. \newline
+After changes have been made on the branch, the creator, who wants to merge, will then make a pull request on GitHub, and announce the request on Slack. After which it shall become the responsibility of the entire team, but more importantly that of the original branch maintainer to analyze and comment on the changes. The exact location of the discussion is trivial, however GitHub provides a better, and more concrete platform for this discussion to take place, where inline comments can be made. After a sufficient amount of time and discussion has passed, either the branch maintainer (if it is a minor change), or the entire team (if it is to master, or a major change) shall decide to merge or not.
 
   
 \end{document}
