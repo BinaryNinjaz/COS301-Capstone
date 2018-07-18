@@ -849,6 +849,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
 
+        Map<String, Object> sessionDate = new HashMap<>();
+        sessionDate.put("start_date", startSessionTime);
+
+        if (isFarmer) {
+            sessionDate.put("wid", uid);//add foreman database ID to session;
+        } else {
+            sessionDate.put("wid", foremanID);//add foreman database ID to session;
+        }
+
+        sessRef.updateChildren(sessionDate);//save data to Firebase
+
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
         if (location != null) {
@@ -935,16 +946,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 }
             });
         }
-
-        Map<String, Object> sessionDate = new HashMap<>();
-        sessionDate.put("start_date", startSessionTime);
-
-        if (isFarmer) {
-            sessionDate.put("wid", uid);//add foreman database ID to session;
-        } else {
-            sessionDate.put("wid", foremanID);//add foreman database ID to session;
-        }
-
 
         if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
