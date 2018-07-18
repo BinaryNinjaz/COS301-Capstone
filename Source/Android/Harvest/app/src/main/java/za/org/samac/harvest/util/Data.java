@@ -213,16 +213,24 @@ public class Data {
                             //Iterate through every data set
                             for (DataSnapshot dataSet : setOData.getChildren()) {
                                 Worker temp = new Worker();
+                                temp.setfID(dataSet.getKey());
                                 temp.setfName(dataSet.child("name").getValue(String.class));
                                 temp.setsName(dataSet.child("surname").getValue(String.class));
-                                
+
                                 //Orchards
                                 List<Orchard> newOrhards = new Vector<>();
                                 for (DataSnapshot orchard : dataSet.child("orchards").getChildren()){
-                                    newOrhards.add(getOrchardFromIDString(orchard.getValue(String.class)));
+                                    Orchard newOrchard = getOrchardFromIDString(orchard.getValue(String.class));
+                                    if (newOrchard != null) {
+                                        newOrhards.add(newOrchard);
+                                    }
+                                    else {
+                                        //orchard does not exist, mark the worker for change, and it'll update.
+                                        changes.Modify(Category.WORKER, temp.getfID());
+                                    }
                                 }
                                 temp.setAssignedOrchards(newOrhards);
-                                
+
                                 //Type
                                 String sType = dataSet.child("type").getValue(String.class);
                                 WorkerType type = WorkerType.WORKER;
@@ -231,11 +239,10 @@ public class Data {
                                     type = WorkerType.FOREMAN;
                                 }
                                 temp.setWorkerType(type);
-                                
+
                                 temp.setnID(dataSet.child("idNumber").getValue(String.class));
                                 temp.setFurther(dataSet.child("info").getValue(String.class));
                                 temp.setPhone(dataSet.child("phoneNumber").getValue(String.class));
-                                temp.setfID(dataSet.getKey());
 
                                 workers.addElement(temp);
                             }
@@ -698,25 +705,33 @@ public class Data {
         return orchards;
     }
 
-    public void modifyActiveFarm(Farm activeFarm, boolean overwriteID) {
+    //If overwriteID is false, then the id of the new object and the active object must match
+
+    public boolean modifyActiveFarm(Farm activeFarm, boolean overwriteID) {
         if ((!this.activeFarm.ID.equals(activeFarm.ID) && overwriteID) || this.activeFarm.ID.equals(activeFarm.ID)) {
             this.activeFarm = activeFarm;
             changes.Modify(category, activeFarm.ID);
+            return true;
         }
+        return false;
     }
 
-    public void modifyActiveOrchard(Orchard activeOrchard, boolean overwriteID) {
+    public boolean modifyActiveOrchard(Orchard activeOrchard, boolean overwriteID) {
         if ((!this.activeOrchard.ID.equals(activeOrchard.ID) && overwriteID) || this.activeOrchard.ID.equals(activeOrchard.ID)) {
             this.activeOrchard = activeOrchard;
             changes.Modify(category, activeOrchard.ID);
+            return true;
         }
+        return false;
     }
 
-    public void modifyActiveWorker(Worker activeWorker, boolean overwriteID) {
+    public boolean modifyActiveWorker(Worker activeWorker, boolean overwriteID) {
         if ((!this.activeWorker.fID.equals(activeWorker.fID) && overwriteID) || this.activeWorker.fID.equals(activeWorker.fID)) {
             this.activeWorker = activeWorker;
             changes.Modify(category, activeWorker.fID);
+            return true;
         }
+        return false;
     }
 
     public String getNextIDForAddition(){
