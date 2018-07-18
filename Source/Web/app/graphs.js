@@ -347,7 +347,7 @@ function changeWorkerGraph(data){
 				"15:00 - 16:00",
 				"16:00 - 17:00",
 				"17:00 - 18:00"];
-	var data = [];
+	var data = {["Period", "Number of Bags", { role: "style" } ]};
 	for(var i=0;i<hourly.length;i++){
 		if(values[hourly[i]] === undefined){
 			data.push([hours[i], 0, "#4CAF50"]);
@@ -356,6 +356,11 @@ function changeWorkerGraph(data){
 			data.push([hours[i], values[hourly[i]], "#4CAF50"]);
 		}
 	}
+	
+	google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+    var data = google.visualization.arrayToDataTable(data);
 }
 
 //edits value of end date label when a starting date is picked
