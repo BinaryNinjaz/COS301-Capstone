@@ -25,16 +25,16 @@ function yieldsRef() {
   return firebase.database().ref('/' + userID() + '/sessions');
 }
 
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    $(window).bind("load", function() {
-      initOrchards();
-    });
-  } else {
+$(window).bind("load", () => {
+  let succ = () => {
+    initOrchards();
+  };
+  let fail = () => {
     orchardPolys = [];
     orchards = [];
     farms = [];
-  }
+  };
+  retryUntilTimeout(succ, fail, 1000);
 });
 
 var orchards = [];

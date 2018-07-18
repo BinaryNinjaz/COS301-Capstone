@@ -21,26 +21,16 @@ function yieldsRef() {
   return firebase.database().ref('/' + userID() + '/sessions');
 }
 
-var timeout = 1000;
-function init() {
-  if (user()) {
+$(window).bind("load", () => {
+  let succ = () => {
     initPage();
     initMap();
     google.charts.load('current', {'packages':['corechart']});
-  } else {
-    if (timeout > 0 && timeout < 1000 * 60 * 5) {
-      setTimeout(init, timeout);
-      timeout *= Math.min(timeout, 1000 * 60 * 5);
-    } else {
-      timeout = 0;
-      alert("Network timeout. Try Reloading the page later.");
-    }
+  };
+  let fail = () => {
     sessions = [];
-  }
-}
-
-$(window).bind("load", () => {
-  init();
+  };
+  retryUntilTimeout(succ, fail, 1000);
 });
 
 var map;
