@@ -775,6 +775,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
         textViewPressStart.setVisibility(View.GONE);
+
+        if (workers.size() == 0 && btnStart.getTag() == "green") {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            String msg = "No workers added to orchard";
+            dlgAlert.setMessage(msg);
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(false);
+            dlgAlert.create().show();
+        }
+
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && btnStart.getTag() == "green") {
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
@@ -791,15 +807,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             dlgAlert.create().show();
         }
 
-        if(location == null && btnStart.getTag() == "green") {
+        if (location == null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.VISIBLE);
             Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
             recyclerView.setVisibility(View.GONE);
 
-            handler.postDelayed(new Runnable(){
-                public void run(){
+            handler.postDelayed(new Runnable() {
+                public void run() {
                     //do something
-                    if(location == null) {
+                    if (location == null) {
 
                     } else {
                         progressBar.setVisibility(View.GONE);
@@ -811,13 +827,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         secondsLocationIsNull = 0;
                         progressBar.setVisibility(View.GONE);
                         Snackbar.make(recyclerView, "Could not obtaining GPS Information. Please restart session.", 5000)
-                            .setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                                .setAction("OK", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
 
-                                }
-                            })
-                            .show();
+                                    }
+                                })
+                                .show();
                         return;
                     }
 
@@ -835,7 +851,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
-        if(location != null) {
+        if (location != null) {
             final DatabaseReference myRef;
             myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
 
@@ -951,6 +967,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("orange");
         } else {
             //TODO: check if app closes or crashes
+            textViewPressStart.setText(R.string.pressStart);
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
             String msger = adapter.totalBagsCollected + " bags collected, would you like to save this session?";

@@ -223,6 +223,7 @@
     <string name="sessionDetailsViewPickups">Tracked Path and Collection Points</string>
     <string name="foremen">Foremen</string>
     <string name="workers">Workers</string>
+    <string name="pressStart">Press \'Start\' to begin tracking worker collections</string>
 
     <!--Country codes for formatting telephone numbers-->
     <string-array name="CountryCodes" >
