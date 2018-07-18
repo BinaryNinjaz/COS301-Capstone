@@ -858,9 +858,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             sessionDate.put("wid", foremanID);//add foreman database ID to session;
         }
 
-        sessRef.updateChildren(sessionDate);//save data to Firebase
-
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
+
+        sessRef.updateChildren(sessionDate);//save data to Firebase
 
         if (location != null) {
             final DatabaseReference myRef;
