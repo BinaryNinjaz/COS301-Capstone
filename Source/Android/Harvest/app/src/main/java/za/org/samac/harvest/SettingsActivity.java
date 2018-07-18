@@ -2,7 +2,9 @@ package za.org.samac.harvest;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,19 +13,33 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -47,7 +63,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
 
-            if (preference instanceof ListPreference) {
+            /*if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
@@ -58,7 +74,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
-
+*/
             /*} else if (preference instanceof RingtonePreference) {
                 // For ringtone preferences, look up the correct display value
                 // using RingtoneManager.
@@ -80,11 +96,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         preference.setSummary(name);
                     }
                 }*/
-            } else {
+//            } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
                 preference.setSummary(stringValue);
-            }
+//            }
             return true;
         }
     };
@@ -182,15 +198,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         private PreferenceScreen preferenceScreen;
 
-        private String email;
-        private String organization;
-        private String fname;
-        private String sname;
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_account);
+
             setHasOptionsMenu(true);
 
             preferenceScreen = (PreferenceScreen) findPreference(getString(R.string.pref_account_key));
@@ -215,6 +227,157 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             if (!isFarmer){
                 preferenceScreen.removePreference(findPreference(getString(R.string.pref_account_category_extra_key)));
                 preferenceScreen.removePreference(findPreference(getString(R.string.pref_account_category_login_key)));
+                preferenceScreen.removePreference(findPreference(getString(R.string.pref_account_category_management_key)));
+
+                getActivity().setTitle(user.getPhoneNumber());
+            }
+            else {
+                getActivity().setTitle(user.getEmail());
+
+                //Set summaries
+                userAdmin.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String fname = dataSnapshot.child("firstname").getValue(String.class);
+                        String sname = dataSnapshot.child("surname").getValue(String.class);
+                        String org = dataSnapshot.child("organization").getValue(String.class);
+
+                        findPreference(getString(R.string.pref_account_fname_key)).setSummary(fname);
+                        findPreference(getString(R.string.pref_account_sname_key)).setSummary(sname);
+                        findPreference(getString(R.string.pref_account_organization_key)).setSummary(org);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                //Update Email
+                //TODO: Verification email
+                findPreference(getString(R.string.pref_account_email_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, final Object newValue) {
+                        user.updateEmail(newValue.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()){
+                                    getActivity().setTitle(newValue.toString());
+                                    userAdmin.child("email").setValue(newValue.toString());
+                                    Log.d(TAG, "User email updated.");
+                                }
+                            }
+                        });
+
+                        return false;
+                    }
+                });
+
+                //Update Password
+                findPreference(getString(R.string.pref_account_password_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        user.updatePassword(newValue.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d(TAG, "User password updated.");
+                            }
+                        });
+
+                        return false;
+                    }
+                });
+
+                //Organization Name
+                findPreference(getString(R.string.pref_account_organization_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        userAdmin.child("organization").setValue(newValue.toString());
+                        preference.setSummary(newValue.toString());
+
+                        return false;
+                    }
+                });
+
+                //First Name
+                findPreference(getString(R.string.pref_account_fname_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        userAdmin.child("firstname").setValue(newValue.toString());
+                        preference.setSummary(newValue.toString());
+
+                        return false;
+                    }
+                });
+
+                //Surname
+                findPreference(getString(R.string.pref_account_sname_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        userAdmin.child("firstname").setValue(newValue.toString());
+                        preference.setSummary(newValue.toString());
+
+                        return false;
+                    }
+                });
+
+                //Delete Account
+                findPreference(getString(R.string.pref_account_delete_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                        builder.setMessage(R.string.pref_account_delete_alert_message)
+                                .setTitle(R.string.pref_account_delete_alert_title)
+                                .setPositiveButton(R.string.pref_account_delete_alert_yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //Another confirmation dialog
+                                        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+
+                                        builder1.setTitle(R.string.pref_account_delete_alert_sure_title)
+                                                .setMessage(R.string.pref_account_delete_alert_sure_message)
+                                                .setPositiveButton(R.string.pref_account_delete_alert_sure_yes, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        FirebaseAuth.getInstance().getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()){
+                                                                    database.getReference("/" + user.getUid() + "/").setValue(null);
+                                                                    Log.d(TAG, "User account deleted");
+                                                                    startActivity(new Intent(getActivity(), SignIn_Choose.class));
+                                                                    getActivity().finish();
+                                                                }
+                                                                else {
+                                                                    Log.e(TAG, "User account deletion failed");
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                })
+                                                .setNegativeButton(R.string.pref_account_delete_alert_sure_no, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+
+                                        builder1.show();
+                                    }
+                                })
+                                .setNegativeButton(R.string.pref_account_delete_alert_no, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                        builder.show();
+
+                        return true;
+                    }
+                });
             }
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
@@ -223,6 +386,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // guidelines.
 //            bindPreferenceSummaryToValue(findPreference("example_text"));
 //            bindPreferenceSummaryToValue(findPreference("example_list"));
+        }
+
+        /**
+         * Reauthenticate the user.
+         * @return true if the authentication was successful, false if the user canceled.
+         */
+        private boolean reAuth(){
+
+        }
+
+        /**
+         * Show a dialog to get account information from the user.
+         * @param again true if the user is trying again.
+         * @return what the user entered. [email, password]
+         */
+        private String[] askReAuth(boolean again){
+
         }
 
         @Override

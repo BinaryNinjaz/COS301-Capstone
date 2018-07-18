@@ -146,14 +146,14 @@
 
     <string name="pref_account_category_login">Login Details</string>
     <string name="pref_account_category_login_key">pref_account_category_login_key</string>
-    <string name="pref_account_email">Change Email</string>
+    <string name="pref_account_email">Update Email</string>
     <string name="pref_account_email_key">pref_account_email_key</string>
-    <string name="pref_account_password">Change Password</string>
+    <string name="pref_account_password">Update Password</string>
     <string name="pref_account_password_key">pref_account_password_key</string>
 
     <string name="pref_account_category_extra">Extra Account Information</string>
     <string name="pref_account_category_extra_key">pref_account_category_extra_key</string>
-    <string name="pref_account_organization">Organization</string>
+    <string name="pref_account_organization">Organization Name</string>
     <string name="pref_account_organization_key">pref_account_organization_key</string>
     <string name="pref_account_fname">First Name</string>
     <string name="pref_account_fname_key">pref_account_fname_key</string>
@@ -161,8 +161,24 @@
     <string name="pref_account_sname_key">pref_account_sname_key</string>
 
     <string name="pref_account_category_management">Account Management</string>
+    <string name="pref_account_category_management_key">pref_account_category_management_key</string>
     <string name="pref_account_delete">Delete Account</string>
     <string name="pref_account_delete_key">pref_account_delete_key</string>
+
+    <string name="pref_account_delete_alert_title">Are you sure?</string>
+    <string name="pref_account_delete_alert_message">You are about to delete your account.
+        \nAll related information, such as workers, orchards, sessions, and etc will be deleted.
+        \nYou will be unable to recover this information if you make a new account.</string>
+    <string name="pref_account_delete_alert_yes">Delete Account</string>
+    <string name="pref_account_delete_alert_no">Cancel</string>
+
+    <string name="pref_account_delete_alert_sure_title">Are you sure you\'re sure?</string>
+    <string name="pref_account_delete_alert_sure_message">Everything will be lost.\n\nForever.\n\nThat\'s a long time…</string>
+    <string name="pref_account_delete_alert_sure_yes">No Going Back</string>
+    <string name="pref_account_delete_alert_sure_no">Cancel</string>
+
+    <string name="pref_account_reAuth">Please confirm your sign in details.</string>
+    <string name="pref_account_reAuthAgain">Sign in details incorrect, please try again.</string>
 
 
 

@@ -11,12 +11,15 @@
         android:title="@string/pref_account_category_login"
         android:key="@string/pref_account_category_login_key">
 
-        <Preference
+        <EditTextPreference
             android:title="@string/pref_account_email"
-            android:key="@string/pref_account_email_key"/>
-        <Preference
+            android:key="@string/pref_account_email_key"
+            android:inputType="textEmailAddress"/>
+
+        <EditTextPreference
             android:title="@string/pref_account_password"
-            android:key="@string/pref_account_password_key"/>
+            android:key="@string/pref_account_password_key"
+            android:inputType="textPassword"/>
 
     </PreferenceCategory>
 
@@ -31,13 +34,16 @@
         <EditTextPreference
             android:title="@string/pref_account_fname"
             android:key="@string/pref_account_fname_key"/>
+
         <EditTextPreference
             android:title="@string/pref_account_sname"
-            android:key="@string/pref_account_sname_key"/>
+            android:key="@string/pref_account_sname_key" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_account_category_management">
+        android:title="@string/pref_account_category_management"
+        android:key="@string/pref_account_category_management_key">
 
         <Preference
             android:title="@string/pref_account_delete"
