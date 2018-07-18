@@ -408,7 +408,7 @@ function dispOrch(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
         "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars:</label>" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars'></div> </div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
@@ -565,8 +565,8 @@ function orchSave(type, id) {
       treeSpacing: document.getElementById("treeSpacing").value
     });
   }
-  popOrch();
-  dispOrch(id);
+   popWork();
+  clear3();
 }
 
 function orchMod(id) {
@@ -607,7 +607,7 @@ function orchMod(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
         "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars:</label>" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars' value='" + snapshot.val().cultivars + "'></div> </div> " +
         "" +
         "" +
@@ -653,6 +653,7 @@ function orchMod(id) {
 function delOrch(id) {
   firebase.database().ref('/' + userID() +'/orchards/' + id).remove();
   popOrch();
+  //dispOrch();
   clear3();
 }
 
