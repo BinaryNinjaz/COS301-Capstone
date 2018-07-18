@@ -26,6 +26,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -117,6 +118,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                     if(validateForm()) {
+                        hideSoftKeyboard();
                         createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
                     }
 
@@ -135,6 +137,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 if(validateForm()) {
+                    hideSoftKeyboard();
                     createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
                 }
             }
@@ -164,6 +167,13 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
 
     private void updateUI(FirebaseUser currentUser) {
 
+    }
+
+    public void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     private void createAccount(String email, String password) {
