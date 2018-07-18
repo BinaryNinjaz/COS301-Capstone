@@ -21,16 +21,26 @@ function yieldsRef() {
   return firebase.database().ref('/' + userID() + '/sessions');
 }
 
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    $(window).bind("load", function() {
-      initPage();
-      initMap();
-      google.charts.load('current', {'packages':['corechart']});
-    });
+var timeout = 1000;
+function init() {
+  if (user()) {
+    initPage();
+    initMap();
+    google.charts.load('current', {'packages':['corechart']});
   } else {
+    if (timeout > 0 && timeout < 1000 * 60 * 5) {
+      setTimeout(init, timeout);
+      timeout *= Math.min(timeout, 1000 * 60 * 5);
+    } else {
+      timeout = 0;
+      alert("Network timeout. Try Reloading the page later.");
+    }
     sessions = [];
   }
+}
+
+$(window).bind("load", () => {
+  init();
 });
 
 var map;
