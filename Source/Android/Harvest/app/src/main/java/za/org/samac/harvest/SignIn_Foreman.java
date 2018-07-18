@@ -149,6 +149,9 @@ public class SignIn_Foreman extends AppCompatActivity {
                 mResendToken = forceResendingToken;
                 state = STATE_CODE_SENT;
                 updateUI();
+
+                //Set Focus to verification field
+                verificationField.requestFocus();
             }
         };
     }
