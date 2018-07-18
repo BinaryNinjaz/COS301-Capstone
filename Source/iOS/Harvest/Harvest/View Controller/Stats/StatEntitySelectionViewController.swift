@@ -7,6 +7,7 @@
 //
 
 import Eureka
+import SCLAlertView
 
 class StatEntitySelectionViewController: FormViewController, TypedRowControllerType {
   var row: RowOf<[EntityItem]>!
@@ -68,10 +69,7 @@ class StatEntitySelectionViewController: FormViewController, TypedRowControllerT
       row.title = "Display Stats"
     }.onCellSelection { _, _ in
       guard !self.selected.isEmpty else {
-        UIAlertController.present(
-          title: "Nothing Selected",
-          message: "Please select some things to view by tapping on them",
-          on: self)
+        SCLAlertView().showNotice("Nothing Selected", subTitle: "Please select some things to view by tapping on them")
         return
       }
       

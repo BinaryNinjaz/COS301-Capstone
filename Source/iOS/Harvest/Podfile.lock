@@ -72,6 +72,7 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
+  - SCLAlertView (0.8)
   - SnapKit (4.0.0)
 
 DEPENDENCIES:
@@ -85,6 +86,7 @@ DEPENDENCIES:
   - Firebase/Functions
   - GoogleMaps
   - GoogleSignIn
+  - SCLAlertView
   - SnapKit (~> 4.0.0)
 
 SPEC CHECKSUMS:
@@ -105,8 +107,9 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 390ea358e5a0d0133153806f744662dad933d06b
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
-PODFILE CHECKSUM: ee45cf64a23aaaf844851d35fb2e19163f438f0a
+PODFILE CHECKSUM: c399500bbdf16725bb0ecb900f7817574cf9271d
 
 COCOAPODS: 1.4.0

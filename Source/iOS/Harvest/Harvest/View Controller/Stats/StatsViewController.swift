@@ -9,6 +9,7 @@
 import UIKit
 import Charts
 import SnapKit
+import SCLAlertView
 
 class StatsViewController: UIViewController {
   var stat: Stat?
@@ -62,7 +63,7 @@ class StatsViewController: UIViewController {
     radarChart?.isHidden = true
     
     guard let stat = stat else {
-      UIAlertController.present(title: "No Data", message: "There is no data available to show", on: self)
+      SCLAlertView().showWarning("No Data", subTitle: "There is no data available to show")
       return
     }
     

@@ -8,6 +8,7 @@
 
 // swiftlint:disable function_body_length
 import Eureka
+import SCLAlertView
 
 extension UIViewController {
   func prebuiltGraph(
@@ -246,16 +247,18 @@ extension Worker {
     let deleteWorkerRow = ButtonRow { row in
       row.title = "Delete Worker"
     }.onCellSelection { (_, _) in
-      UIAlertController.present(
-        question: "Are You Sure You Want to Delete \(self.name)?",
-        detail: """
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Delete") {
+        HarvestDB.delete(worker: self) { (_, _) in
+          formVC.navigationController?.popViewController(animated: true)
+        }
+      }
+      
+      alert.showWarning("Are You Sure You Want to Delete \(self.name)?", subTitle: """
         You will not be able to get back any information about this worker.
         Any work done by this worker will no longer have any statistics associated with them.
-        """, on: formVC) {
-          HarvestDB.delete(worker: self) { (_, _) in
-            formVC.navigationController?.popViewController(animated: true)
-          }
-      }
+        """)
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
@@ -412,15 +415,17 @@ extension Farm {
     let deleteFarmRow = ButtonRow { row in
       row.title = "Delete Farm"
     }.onCellSelection { (_, _) in
-      UIAlertController.present(
-        question: "Are You Sure You Want to Delete \(self.name)?",
-        detail: """
-        You will not be able to get back any information about this farm.
-        """, on: formVC) {
-          HarvestDB.delete(farm: self) { (_, _) in
-            formVC.navigationController?.popViewController(animated: true)
-          }
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Delete") {
+        HarvestDB.delete(farm: self) { (_, _) in
+          formVC.navigationController?.popViewController(animated: true)
+        }
       }
+      
+      alert.showWarning("Are You Sure You Want to Delete \(self.name)?", subTitle: """
+        You will not be able to get back any information about this farm.
+        """)
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
@@ -485,6 +490,7 @@ public class DeletableMultivaluedSection: MultivaluedSection {
 }
 
 extension Orchard {
+  // swiftlint:disable cyclomatic_complexity
   func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Orchard(json: json()[id] ?? [:], id: id)
@@ -656,16 +662,19 @@ extension Orchard {
     let deleteOrchardRow = ButtonRow { row in
       row.title = "Delete Orchard"
     }.onCellSelection { (_, _) in
-      UIAlertController.present(
-        question: "Are You Sure You Want to Delete \(self.name)?",
-        detail: """
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Delete") {
+        HarvestDB.delete(orchard: self) { (_, _) in
+          formVC.navigationController?.popViewController(animated: true)
+        }
+      }
+      
+      alert.showWarning("Are You Sure You Want to Delete \(self.name)?", subTitle: """
         You will not be able to get back any information about this farm.
         Any work done in this orchard will no longer display any statistics.
-        """, on: formVC) {
-          HarvestDB.delete(orchard: self) { (_, _) in
-            formVC.navigationController?.popViewController(animated: true)
-          }
-      }
+        """)
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red

@@ -9,6 +9,7 @@
 import Firebase
 import GoogleSignIn
 import Disk
+import SCLAlertView
 
 extension HarvestDB {
   static func requestWorkingFor(
@@ -28,27 +29,29 @@ extension HarvestDB {
         HarvestUser.current.selectedWorkingForID = ids.first!
         completion(true)
       } else if ids.count == 0 {
-        UIAlertController.present(
-          title: "You're Not Working For Anyone",
-          message: "Ensure you've been added to the farm as a worker by your employer.",
-          on: controller,
-          completion: { completion(false) })
+        let alert = SCLAlertView()
+        alert.addButton("Done", action: { completion(false) })
+        
+        alert.showNotice(
+          "You're Not Working For Anyone",
+          subTitle: "Ensure you've been added to the farm as a worker by your employer.")
+        
       } else {
         HarvestDB.getWorkingForFarmNames(uids: ids.map { $0.uid }, result: [], completion: { (names) in
-          UIAlertController.present(
-            title: "Select A Farm",
-            message: "Please select the farm that you want to log into",
-            options: zip(names, ids).map { ($0.0, $0.1.uid) },
-            on: controller) { option in
+          let alert = SCLAlertView(
+            appearance: .optionsAppearance,
+            options: zip(names, ids).map { ($0.0, $0.1.uid) }) { option in
               guard let fullOption = ids.first(where: { $0.uid == option }) else {
                 completion(false)
                 return
               }
-              
+          
               HarvestUser.current.selectedWorkingForID = fullOption
               UserDefaults.standard.set(uid: fullOption.uid, wid: fullOption.wid)
               completion(true)
             }
+          
+          alert.showNotice("Select A Farm", subTitle: "Please select the farm that you want to log into")
         })
         
       }
@@ -63,18 +66,13 @@ extension HarvestDB {
   ) {
     Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
       if let err = error {
-        UIAlertController.present(title: "Sign In Failure",
-                                  message: err.localizedDescription,
-                                  on: controller)
-        
+        SCLAlertView().showError("Sign In Failure", subTitle: err.localizedDescription)
         completion(false)
         return
       }
       
       guard let user = user else {
-        UIAlertController.present(title: "Sign In Failure",
-                                  message: "An unknown error occured",
-                                  on: controller)
+        SCLAlertView().showError("Sign In Failure", subTitle: "An unknow error occured")
         completion(false)
         return
       }
@@ -95,17 +93,13 @@ extension HarvestDB {
   ) {
     Auth.auth().signIn(with: credential) { (user, error) in
       if let error = error {
-        UIAlertController.present(title: "Sign In Failure",
-                                  message: error.localizedDescription,
-                                  on: controller)
+        SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
         completion(false)
         return
       }
       
       guard let user = user else {
-        UIAlertController.present(title: "Sign In Failure",
-                                  message: "An unknown error occured",
-                                  on: controller)
+        SCLAlertView().showError("Sign In Failure", subTitle: "An unknow error occured")
         completion(false)
         return
       }
@@ -130,17 +124,13 @@ extension HarvestDB {
       password: details.password
     ) { (user, error) in
       if let error = error {
-        UIAlertController.present(title: "Sign Up Failure",
-                                  message: error.localizedDescription,
-                                  on: controller)
+        SCLAlertView().showError("Sign Up Failure", subTitle: error.localizedDescription)
         completion(false)
         return
       }
       
       guard let user = user else {
-        UIAlertController.present(title: "Sign Up Failure",
-                                  message: "An unknown error occured",
-                                  on: controller)
+        SCLAlertView().showError("Sign Up Failure", subTitle: "An unknown error occured")
         completion(false)
         return
       }
@@ -178,9 +168,7 @@ extension HarvestDB {
       
     } catch {
       //    FIXME  #warning("Complete with proper errors")
-      UIAlertController.present(title: "Sign Out Failure",
-                                message: "An unknown error occured",
-                                on: controller)
+      SCLAlertView().showError("Sign Out Failure", subTitle: "An unknown error occured")
       completion(false)
       return
     }
@@ -193,15 +181,12 @@ extension HarvestDB {
   ) {
     Auth.auth().sendPasswordReset(withEmail: email) { (error) in
       if let error = error {
-        UIAlertController.present(title: "Reset Password Failure",
-                                  message: error.localizedDescription,
-                                  on: controller)
+        SCLAlertView().showError("Reset Password Failure", subTitle: error.localizedDescription)
         return
       }
-      
-      UIAlertController.present(title: "Password Reset Sent",
-                                message: "An email was sent to \(email) to reset your password",
-                                on: controller)
+      SCLAlertView().showSuccess(
+        "Password Reset Sent",
+        subTitle: "An email was sent to \(email) to reset your password")
     }
   }
   
@@ -212,17 +197,15 @@ extension HarvestDB {
   ) {
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { (verificationID, error) in
       if let error = error {
-        UIAlertController.present(title: "An Error Occured",
-                                  message: error.localizedDescription,
-                                  on: controller)
+        SCLAlertView().showError("An Error Occured", subTitle: error.localizedDescription)
         completion?(false)
         return
       }
       UserDefaults.standard.set(verificationID: verificationID)
       
-      UIAlertController.present(title: "Enter Code into Text Field",
-                                message: "Enter the 6-digit code from the SMS sent to you into the text field",
-                                on: controller)
+      SCLAlertView().showInfo(
+        "Enter Code into Text Field",
+        subTitle: "Enter the 6-digit code from the SMS sent to you into the text field")
       
       completion?(true)
     }
@@ -256,7 +239,7 @@ extension HarvestDB {
   }
   
   static func getWorkingForFarmName(uid: String, completion: @escaping (String?) -> Void) {
-    let fnref = ref.child(uid + "/admin/organisationName")
+    let fnref = ref.child(uid + "/admin/organization")
     fnref.observeSingleEvent(of: .value) { (snapshot) in
       guard let name = snapshot.value as? String else {
         completion(nil)

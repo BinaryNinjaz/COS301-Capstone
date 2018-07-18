@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import GoogleSignIn
 import Disk
+import SCLAlertView
 
 class SignInViewController: UIViewController {
   @IBOutlet weak var usernameTextField: UITextField!
@@ -81,18 +82,16 @@ class SignInViewController: UIViewController {
   
   @IBAction func signInTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text, username != "" else {
-      UIAlertController.present(title: "No Email Provided",
-                                message: """
-                                Please input an email address to log in as a farm owner.
-                                """,
-                                on: self)
+      SCLAlertView().showError(
+        "No Email Provided",
+        subTitle: "Please input an email address to log in as a farm owner.")
       return
     }
     
     guard let password = passwordTextField.text, password != "" else {
-      UIAlertController.present(title: "Password Not Long Enough",
-                                message: "Password length must be at least 6 characters long",
-                                on: self)
+      SCLAlertView().showError(
+        "Password Not Long Enough",
+        subTitle: "Password length must be at least 6 characters long")
       return
     }
     
@@ -100,35 +99,31 @@ class SignInViewController: UIViewController {
   }
   
   @IBAction func forgotAccountTouchUp(_ sender: UIButton) {
-    let emailRequest = UIAlertController(
-      title: "Reset Password",
-      message: "Please enter your email, you will then receive an email to reset your password.",
-      preferredStyle: .alert)
+    let emailRequestAlert = SCLAlertView(appearance: .warningAppearance)
     
-    emailRequest.addTextField { (email) in email.keyboardType = .emailAddress }
+    let textField = emailRequestAlert.addTextField()
     
-    emailRequest.addAction(UIAlertAction(title: "Request Reset", style: .default, handler: { [weak emailRequest] _ in
-      guard let email = emailRequest?.textFields?[0].text, email != "" else {
-        UIAlertController.present(title: "No Email",
-                                  message: "Please enter an email address",
-                                  on: self)
+    emailRequestAlert.addButton("Cancel", action: {})
+    emailRequestAlert.addButton("Request Reset") {
+      guard let email = textField.text, email != "" else {
+        SCLAlertView().showError(
+          "No Email",
+          subTitle: "Please enter an email address")
         
         return
       }
       guard email.isEmail() else {
-        UIAlertController.present(title: "Not a Valid Email",
-                                  message: "Please enter a valid email address",
-                                  on: self)
+        SCLAlertView().showError("Not a Valid Email", subTitle: "Please enter a valid email address")
         
         return
       }
       
       HarvestDB.resetPassword(forEmail: email, on: self)
-    }))
+    }
     
-    emailRequest.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-    
-    present(emailRequest, animated: true, completion: nil)
+    emailRequestAlert.showEdit(
+      "Reset Password",
+      subTitle: "Please enter your email, you will then receive an email to reset your password.")
     
   }
   
@@ -186,10 +181,7 @@ extension SignInViewController: GIDSignInUIDelegate {
 extension SignInViewController: GIDSignInDelegate {
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
     if let error = error {
-      UIAlertController.present(title: "An Error Occured",
-                                message: error.localizedDescription,
-                                on: self)
-      
+      SCLAlertView().showError("An Error Occured", subTitle: error.localizedDescription)
       isLoading = false
       return
     }

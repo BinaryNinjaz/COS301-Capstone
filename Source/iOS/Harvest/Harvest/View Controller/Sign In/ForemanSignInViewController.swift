@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import SCLAlertView
 
 class ForemanSignInViewController: UIViewController {
   @IBOutlet weak var titleVisualEffectView: UIVisualEffectView!
@@ -153,11 +154,9 @@ class ForemanSignInViewController: UIViewController {
       isLoading = true
       phoneNumber = numberInputTextField.text
       guard let pn = phoneNumber else {
-        UIAlertController.present(title: "Invalid Phone Number",
-                                  message: """
-                                  Please enter a valid phone number to sign in.
-                                  """,
-                                  on: self)
+        SCLAlertView().showError(
+          "Invalid Phone Number",
+          subTitle: "Please enter a valid phone number to sign in.")
         return
       }
       
@@ -169,22 +168,18 @@ class ForemanSignInViewController: UIViewController {
       verificationCode = numberInputTextField.text
       
       guard let vc = verificationCode else {
-        UIAlertController.present(title: "No Verification Code",
-                                  message: """
-                                  Please enter the verification code that was sent to you by SMS.
-                                  """,
-                                  on: self)
+        SCLAlertView().showError(
+          "No Verification Code",
+          subTitle: "Please enter the verification code that was sent to you by SMS.")
         return
       }
       
       if let verificationID = UserDefaults.standard.getVerificationID() {
         attempSignIn(withVerificationID: verificationID, verificationCode: vc)
       } else {
-        UIAlertController.present(title: "Verification Error",
-                                  message: """
-                                  Please try requesting another verification code and trying again.
-                                  """,
-                                  on: self)
+        SCLAlertView().showError(
+          "Verification Failed",
+          subTitle: "Please try requesting another verification code and trying again.")
       }
     }
     
@@ -199,11 +194,7 @@ class ForemanSignInViewController: UIViewController {
   
   @IBAction func resendButtonTouchUp(_ sender: UIButton) {
     guard let pn = phoneNumber, state == .wantsVerificationCode else {
-      UIAlertController.present(title: "Invalid Phone Number",
-                                message: """
-                                  Please enter a valid phone number to sign in.
-                                  """,
-                                on: self)
+      SCLAlertView().showError("Invalid Phone Number", subTitle: "Please enter a valid phone number to sign in.")
       return
     }
     

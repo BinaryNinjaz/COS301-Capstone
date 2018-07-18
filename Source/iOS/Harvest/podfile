@@ -12,6 +12,7 @@ target 'Harvest' do
   pod 'Disk'
   pod 'Charts'
   pod 'SnapKit', '~> 4.0.0'
+  pod 'SCLAlertView'
   
   target 'HarvestTests' do
     inherit! :search_paths

@@ -7,6 +7,7 @@
 //
 
 import Eureka
+import SCLAlertView
 
 public struct Box: Equatable {
 }
@@ -44,7 +45,7 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
     let errors = form.validate(includeHidden: false)
     guard errors.count == 0 else {
       let errorList = errors.lazy.map { $0.msg }.joined(separator: "\n")
-      UIAlertController.present(title: "Invalid Input", message: errorList, on: self)
+      SCLAlertView().showError("Invalid Input", subTitle: errorList)
       return
     }
     
@@ -72,9 +73,7 @@ public class EntityViewController: FormViewController, TypedRowControllerType {
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     default:
-      UIAlertController.present(title: "Cannot Save",
-                                message: "The item you are trying to save cannot be saved",
-                                on: self)
+      SCLAlertView().showError("Cannot Save", subTitle: "The item you are trying to save cannot be saved")
     }
   }
   

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import SCLAlertView
 
 class TrackerViewController: UIViewController {
   static var tracker: Tracker?
@@ -94,46 +95,35 @@ class TrackerViewController: UIViewController {
   
   fileprivate func presentYieldCollection() {
     let amount = tracker?.totalCollected() ?? 0
-    let alert = UIAlertController(title: "\(amount) Bags Collected",
-      message: "The session duration was \(tracker?.durationFormatted() ?? "")",
-      preferredStyle: .alert)
     
-    let collect = UIAlertAction(title: "Finish Collecting", style: .default) { _ in
+    let collection = SCLAlertView(appearance: .optionsAppearance)
+    collection.addButton("Finish Collecting") {
       self.finishCollecting()
     }
-    
-    let cancel = UIAlertAction(title: "Continue Collecting", style: .cancel) { _ in }
-    
-    let discard = UIAlertAction(title: "Discard All Collections", style: .default) { _ in
+    collection.addButton("Continue Collecting") {}
+    collection.addButton("Discard All Collections") {
       self.discardCollections()
     }
     
-    alert.addAction(collect)
-#if DEBUG
-    alert.addAction(discard)
-#endif
-    alert.addAction(cancel)
-    
-    present(alert, animated: true, completion: nil)
+    collection.showNotice(
+      "\(amount) Bags Collected",
+      subTitle: "The session duration was \(tracker?.durationFormatted() ?? "")")
   }
   
   fileprivate func presentNoYieldCollection() {
-    let alert = UIAlertController(title: "0 Bags Collected",
-      message: "There was no bags collected. Would you like to save this session?",
-      preferredStyle: .alert)
+    let collection = SCLAlertView(appearance: .optionsAppearance)
     
-    let collect = UIAlertAction(title: "Yes, Finish Collecting", style: .default) { _ in
+    collection.addButton("Yes, Finish Collecting") {
       self.finishCollecting()
     }
     
-    let discard = UIAlertAction(title: "No, Discard All Collections", style: .default) { _ in
+    collection.addButton("No, Discard All Collections") {
       self.discardCollections()
     }
     
-    alert.addAction(collect)
-    alert.addAction(discard)
-    
-    present(alert, animated: true, completion: nil)
+    collection.showWarning(
+      "Save 0 Bags Collected?",
+      subTitle: "There was no bags collected. Would you like to save this session?")
   }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -163,9 +153,9 @@ class TrackerViewController: UIViewController {
         
         workerCollectionView?.reloadData()
       } else {
-        UIAlertController.present(title: "Cannot Access Location",
-                                  message: "Please turn on location services for Harvest from within the Settings App",
-                                  on: self)
+        SCLAlertView().showError(
+          "Cannot Access Location",
+          subTitle: "Please turn on location services for Harvest from within the Settings App")
       }
     } else {
       if tracker?.collections.count ?? 0 > 0 {

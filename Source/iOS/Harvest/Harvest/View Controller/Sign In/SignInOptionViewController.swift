@@ -10,6 +10,7 @@ import UIKit
 import GoogleSignIn
 import Firebase
 import Disk
+import SCLAlertView
 
 class SignInOptionViewController: UIViewController {
   @IBOutlet weak var signUpButton: UIButton!
@@ -154,9 +155,7 @@ extension SignInOptionViewController: GIDSignInUIDelegate {
 extension SignInOptionViewController: GIDSignInDelegate {
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
     if let error = error {
-      UIAlertController.present(title: "An Error Occured",
-                                message: error.localizedDescription,
-                                on: self)
+      SCLAlertView().showError("An Error Occured", subTitle: error.localizedDescription)
       return
     }
     

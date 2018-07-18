@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SCLAlertView
 
 class SignUpViewController: UIViewController {
 
@@ -57,54 +58,54 @@ class SignUpViewController: UIViewController {
   // swiftlint:disable function_body_length
   @IBAction func signUpTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text, username != "" else {
-      UIAlertController.present(title: "No email address provided",
-                                message: "Please provide an email address to create an account",
-                                on: self)
+      SCLAlertView().showError(
+        "No email address provided",
+        subTitle: "Please provide an email address to create an account")
       return
     }
     
     guard let password = passwordTextField.text, password.count >= 6 else {
-      UIAlertController.present(title: "Password too short",
-                                message: "Password must be at least 6 characters long",
-                                on: self)
+      SCLAlertView().showError(
+        "Password too short",
+        subTitle: "Password must be at least 6 characters long")
       return
     }
     
     guard username.isEmail() else {
-      UIAlertController.present(title: "Invalid Email Address",
-                                message: "Please provide a valid email address",
-                                on: self)
+      SCLAlertView().showError(
+        "Invalid Email Address",
+        subTitle: "Please provide a valid email address")
       return
     }
     
     guard let fname = firstnameTextField.text, fname != "" else {
-      UIAlertController.present(title: "No first name provided",
-                                message: "Please provide a first name to create an account",
-                                on: self)
+      SCLAlertView().showError(
+        "No first name provided",
+        subTitle: "Please provide a first name to create an account")
       return
     }
     
     guard let lname = lastnameTextField.text, lname != "" else {
-      UIAlertController.present(title: "No last name provided",
-                                        message: "Please provide a last name to create an account",
-                                        on: self)
+      SCLAlertView().showError(
+        "No last name provided",
+        subTitle: "Please provide a last name to create an account")
       return
     }
     
     guard let confirmedPassword = confirmPasswordTextField.text, confirmedPassword != "" else {
-      UIAlertController.present(title: "No confirm password provided",
-                                message: "Please provide a confirm password to create an account",
-                                on: self)
+      SCLAlertView().showError(
+        "No confirm password provided",
+        subTitle: "Please provide a confirm password to create an account")
       return
     }
     
     guard confirmedPassword == password else {
-      UIAlertController.present(title: "Mismatching passwords",
-                                message: """
-                                Your passwords are not matching. Please provide the same password in both\
-                                password prompts
-                                """,
-                                on: self)
+      SCLAlertView().showError(
+        "Mismatching passwords",
+        subTitle: """
+          Your passwords are not matching. Please provide the same password in both \
+          password prompts
+          """)
       return
     }
     
