@@ -6,6 +6,7 @@
 //  Copyright © 2018 Letanyan Arumugam. All rights reserved.
 //
 
+// swiftlint:disable line_length
 // swiftlint:disable function_body_length
 
 import XCTest
@@ -30,7 +31,7 @@ class HarvestEntityAuth: XCTestCase {
     super.tearDown()
   }
   
-  func testSignOut() {
+  func test0SignOut() {
     XCUIDevice.shared.orientation = .portrait
     let app = XCUIApplication()
     let settings = app.tabBars.buttons["Settings"]
@@ -41,7 +42,7 @@ class HarvestEntityAuth: XCTestCase {
     }
   }
   
-  func testLogIn() {
+  func test1LogIn() {
     XCUIDevice.shared.orientation = .portrait
     let app = XCUIApplication()
     
@@ -50,7 +51,6 @@ class HarvestEntityAuth: XCTestCase {
       let app2 = app
       let app = app2
       app.images["Hand"].tap()
-      XCUIDevice.shared.orientation = .portrait
       app.textFields["Email"].tap()
       
       let iKey = app2/*@START_MENU_TOKEN@*/.keys["i"]/*[[".keyboards.keys[\"i\"]",".keys[\"i\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/

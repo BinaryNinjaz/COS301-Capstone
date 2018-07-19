@@ -62,7 +62,7 @@ class SignInViewController: UIViewController {
   
   func attemptSignIn(with credential: AuthCredential) {
     isLoading = true
-    HarvestDB.signIn(with: credential, on: self) { success in
+    HarvestDB.signIn(with: credential) { success in
       if success, let vc = self.mainViewToPresent() {
         self.present(vc, animated: true, completion: nil)
       }
@@ -118,7 +118,7 @@ class SignInViewController: UIViewController {
         return
       }
       
-      HarvestDB.resetPassword(forEmail: email, on: self)
+      HarvestDB.resetPassword(forEmail: email)
     }
     
     emailRequestAlert.showEdit(

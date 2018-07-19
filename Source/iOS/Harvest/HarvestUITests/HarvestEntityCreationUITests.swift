@@ -120,26 +120,8 @@ class HarvestEntityCreationUITests: XCTestCase {
     aKey.tap()
     app2/*@START_MENU_TOKEN@*/.keys["n"]/*[[".keyboards.keys[\"n\"]",".keys[\"n\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
     aKey.tap()
-    tablesQuery2.children(matching: .other)["INFORMATION"].children(matching: .other)["INFORMATION"].tap()
-    tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["A B"]/*[[".cells.staticTexts[\"A B\"]",".staticTexts[\"A B\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
     app.navigationBars["Harvest.EntityView"].buttons["Save"].tap()
     
     XCTAssertFalse(app.navigationBars["Harvest.EntityView"].buttons["Save"].isEnabled)
-  }
-  
-  func test4TrackerCollection() {
-    
-    let app = XCUIApplication()
-    app.buttons["Start"].tap()
-    
-    let workerclickercollectionviewCollectionView = app.collectionViews["workerClickerCollectionView"]
-    let button = workerclickercollectionviewCollectionView/*@START_MENU_TOKEN@*/.buttons["+"]/*[[".cells.buttons[\"+\"]",".buttons[\"+\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-    button.tap()
-    button.tap()
-    button.tap()
-    workerclickercollectionviewCollectionView/*@START_MENU_TOKEN@*/.buttons["-"]/*[[".cells.buttons[\"-\"]",".buttons[\"-\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-    app.buttons["Stop"].tap()
-    app.alerts["2 Bags Collected"].buttons["Discard All Collections"].tap()
-    
   }
 }

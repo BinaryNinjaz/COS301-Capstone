@@ -37,11 +37,11 @@ class SignInOptionViewController: UIViewController {
     signUpButton.apply(gradient: .signUpButton)
     
     if let user = Auth.auth().currentUser {
-      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor(self, { succ in
+      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor { succ in
         if succ, let vc = self.mainViewToPresent() {
           self.present(vc, animated: true, completion: nil)
         }
-      }))
+      })
       
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
@@ -69,7 +69,7 @@ class SignInOptionViewController: UIViewController {
   }
   
   func attemptSignIn(with credential: AuthCredential) {
-    HarvestDB.signIn(with: credential, on: self) { success in
+    HarvestDB.signIn(with: credential) { success in
       if success {
         if let vc = self.mainViewToPresent() {
           self.present(vc, animated: true, completion: nil)

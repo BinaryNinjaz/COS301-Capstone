@@ -128,7 +128,7 @@ class ForemanSignInViewController: UIViewController {
   
   func attemptSignIn(with credential: AuthCredential) {
     isLoading = true
-    HarvestDB.signIn(with: credential, on: self) { success in
+    HarvestDB.signIn(with: credential) { success in
       self.isLoading = false
       if success {
         if let vc = self.mainViewToPresent() {

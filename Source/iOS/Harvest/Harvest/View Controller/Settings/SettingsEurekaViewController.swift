@@ -43,7 +43,7 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     let logoutRow = ButtonRow { row in
       row.title = "Logout"
       }.onCellSelection { (_, _) in
-        HarvestDB.signOut(on: self) { w in
+        HarvestDB.signOut { w in
           if w,
             let vc = self
               .storyboard?

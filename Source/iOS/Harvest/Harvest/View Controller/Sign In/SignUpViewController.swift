@@ -114,19 +114,18 @@ class SignUpViewController: UIViewController {
     HarvestDB.signUp(
       with: (username, password),
       name: (fname, lname),
-      organisationName: orgName ?? username,
-      on: self) {w in
-      if w {
-        HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
-          if w,
-            let vc = self.mainViewToPresent() {
-            self.present(vc, animated: true, completion: nil)
+      organisationName: orgName ?? username) { w in
+        if w {
+          HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
+            if w,
+              let vc = self.mainViewToPresent() {
+              self.present(vc, animated: true, completion: nil)
+            }
+            self.isLoading = false
           }
+        } else {
           self.isLoading = false
         }
-      } else {
-        self.isLoading = false
-      }
     }
     
   }

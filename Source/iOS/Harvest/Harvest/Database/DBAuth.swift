@@ -13,7 +13,6 @@ import SCLAlertView
 
 extension HarvestDB {
   static func requestWorkingFor(
-    _ controller: UIViewController?,
     _ completion: @escaping (Bool) -> Void
   ) -> ([(uid: String, wid: String)]?, Bool) -> Void {
     return { ids, succ in
@@ -79,7 +78,7 @@ extension HarvestDB {
         return
       }
       
-      HarvestUser.current.setUser(user, password, HarvestDB.requestWorkingFor(controller, completion))
+      HarvestUser.current.setUser(user, password, HarvestDB.requestWorkingFor(completion))
       
       if let oldSession = try? Disk
         .retrieve("session", from: .applicationSupport, as: Tracker.self) {
@@ -90,7 +89,6 @@ extension HarvestDB {
   
   static func signIn(
     with credential: AuthCredential,
-    on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().signIn(with: credential) { (user, error) in
@@ -106,7 +104,7 @@ extension HarvestDB {
         return
       }
       
-      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor(controller, completion))
+      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor(completion))
       
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
@@ -118,7 +116,6 @@ extension HarvestDB {
     with details: (email: String, password: String),
     name: (first: String, last: String),
     organisationName: String,
-    on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().createUser(
@@ -147,7 +144,7 @@ extension HarvestDB {
       HarvestUser.current.firstname = name.first
       HarvestUser.current.lastname = name.last
       HarvestUser.current.organisationName = organisationName
-      HarvestUser.current.setUser(user, details.password, HarvestDB.requestWorkingFor(controller, completion))
+      HarvestUser.current.setUser(user, details.password, HarvestDB.requestWorkingFor(completion))
       HarvestDB.save(harvestUser: HarvestUser.current)
       
       completion(true)
@@ -155,7 +152,6 @@ extension HarvestDB {
   }
   
   static func signOut(
-    on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     do {
@@ -178,8 +174,7 @@ extension HarvestDB {
   }
   
   static func resetPassword(
-    forEmail email: String,
-    on controller: UIViewController?
+    forEmail email: String
   ) {
     Auth.auth().sendPasswordReset(withEmail: email) { (error) in
       if let error = error {
