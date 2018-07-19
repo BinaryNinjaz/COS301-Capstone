@@ -47,11 +47,29 @@ public class MainActivityTest {
         SystemClock.sleep(5000);
 
         Espresso.onView(withId(R.id.button_start))
+                .check(matches(withText(R.string.start)));
+
+        Espresso.onView(withId(R.id.actionYieldTracker))
+                .check(matches(withText(R.string.bottomYieldTracker)));
+
+        Espresso.onView(withId(R.id.actionInformation))
+                .perform(ViewActions.click());
+
+        Espresso.onView(withId(R.id.actionInformation))
+                .check(matches(withText(R.string.titleInformation)));
+
+        Espresso.onView(withId(R.id.actionSession))
                 .perform(ViewActions.click());
 
         SystemClock.sleep(5000);
 
-        Espresso.onView(withId(R.id.relLayout))
+        Espresso.onView(withId(R.id.actionSession))
+                .check(matches(withText(R.string.title_activity_sessions)));
+
+        Espresso.onView(withId(R.id.actionStats))
                 .perform(ViewActions.click());
+
+        Espresso.onView(withId(R.id.actionStats))
+                .check(matches(withText(R.string.title_stats)));
     }
 }
