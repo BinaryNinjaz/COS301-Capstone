@@ -17,12 +17,6 @@ public class InputValidationTest {
 
     @Test
     public void loginValidator_CorrectFields_ReturnsTrue() {
-        assertThat(LoginActivity.validateForm(correctEmail, correctPassword), is(true));
-    }
-
-    @Test
-    public void signUpValidator_CorrectFields_ReturnsTrue() {
-        assertThat(SignUpActivity.validateForm(correctPassword, correctPassword,
-                correctEmail, correctFirstName, correctSurname), is(true));
+        assertThat(SignIn_Farmer.validateForm(correctEmail, correctPassword), is(true));
     }
 }
