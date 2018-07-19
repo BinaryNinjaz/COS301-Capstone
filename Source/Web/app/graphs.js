@@ -363,8 +363,8 @@ function changeWorkerGraph(data){
 	google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
-    var data = google.visualization.arrayToDataTable(data);
-	var view = new google.visualization.DataView(data);
+    var data1 = google.visualization.arrayToDataTable(data);
+	var view = new google.visualization.DataView(data1);
 	view.setColumns([0, 1,
                        { calc: "stringify",
                          sourceColumn: 1,
