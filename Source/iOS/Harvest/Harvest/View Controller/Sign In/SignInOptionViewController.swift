@@ -10,6 +10,7 @@ import UIKit
 import GoogleSignIn
 import Firebase
 import Disk
+import SCLAlertView
 
 class SignInOptionViewController: UIViewController {
   @IBOutlet weak var signUpButton: UIButton!
@@ -21,13 +22,13 @@ class SignInOptionViewController: UIViewController {
     let result = storyboard?
       .instantiateViewController(withIdentifier: "mainTabBarViewController")
       as? MainTabBarViewController
-    
-    if HarvestUser.current.workingForID != nil {
+
+    if !HarvestUser.current.workingForID.isEmpty {
       result?.setUpForForeman()
     } else {
       result?.setUpForFarmer()
     }
-    
+
     return result
   }
   
@@ -36,11 +37,11 @@ class SignInOptionViewController: UIViewController {
     signUpButton.apply(gradient: .signUpButton)
     
     if let user = Auth.auth().currentUser {
-      HarvestUser.current.setUser(user, nil) { (_) in
-        if let vc = self.mainViewToPresent() {
+      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor { succ in
+        if succ, let vc = self.mainViewToPresent() {
           self.present(vc, animated: true, completion: nil)
         }
-      }
+      })
       
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
@@ -68,7 +69,7 @@ class SignInOptionViewController: UIViewController {
   }
   
   func attemptSignIn(with credential: AuthCredential) {
-    HarvestDB.signIn(with: credential, on: self) { success in
+    HarvestDB.signIn(with: credential) { success in
       if success {
         if let vc = self.mainViewToPresent() {
           self.present(vc, animated: true, completion: nil)
@@ -154,9 +155,7 @@ extension SignInOptionViewController: GIDSignInUIDelegate {
 extension SignInOptionViewController: GIDSignInDelegate {
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
     if let error = error {
-      UIAlertController.present(title: "An Error Occured",
-                                message: error.localizedDescription,
-                                on: self)
+      SCLAlertView().showError("An Error Occured", subTitle: error.localizedDescription)
       return
     }
     

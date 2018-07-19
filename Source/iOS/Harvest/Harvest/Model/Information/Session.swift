@@ -156,7 +156,7 @@ final class ShallowSession {
     guard let json = json as? [String: Any] else {
       startDate = Date()
       id = startDate.description
-      foreman = Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid)
+      foreman = Worker(HarvestUser.current)
       return
     }
     
@@ -165,7 +165,7 @@ final class ShallowSession {
     id = json["key"] as? String ?? d.description
     
     let wid = json["wid"] as? String ?? ""
-    foreman = Entities.shared.worker(withId: wid) ?? Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid)
+    foreman = Entities.shared.worker(withId: wid) ?? Worker(HarvestUser.current)
   }
   
   func json() -> Any {

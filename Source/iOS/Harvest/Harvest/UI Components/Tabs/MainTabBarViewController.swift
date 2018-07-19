@@ -25,6 +25,8 @@ class MainTabBarViewController: UITabBarController {
     HarvestDB.listenLocationRequested { locRequested in
       LocationTracker.shared.requestLocation(wantsLocation: locRequested)
     }
+    
+    Entities.shared.start()
   }
   
   override func viewWillDisappear(_ animated: Bool) {

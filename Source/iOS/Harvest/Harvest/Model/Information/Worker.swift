@@ -39,7 +39,7 @@ final class Worker {
     lastname = json["surname"] as? String ?? ""
     assignedOrchards = json.orchards()
     details = json["info"] as? String ?? ""
-    phoneNumber = json["phoneNumber"] as? String ?? ""
+    phoneNumber = (json["phoneNumber"] as? String ?? "").removedFirebaseInvalids()
     idNumber = json["idNumber"] as? String ?? ""
     
     if let kinds = json["type"] as? String {
@@ -62,6 +62,10 @@ final class Worker {
       "phoneNumber": phoneNumber,
       "idNumber": idNumber
     ]]
+  }
+  
+  convenience init(_ user: HarvestUser) {
+    self.init(json: ["name": "Farm Owner"], id: user.uid)
   }
   
   var name: String {

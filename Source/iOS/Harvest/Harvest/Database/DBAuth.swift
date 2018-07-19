@@ -9,8 +9,56 @@
 import Firebase
 import GoogleSignIn
 import Disk
+import SCLAlertView
 
 extension HarvestDB {
+  static func requestWorkingFor(
+    _ completion: @escaping (Bool) -> Void
+  ) -> ([(uid: String, wid: String)]?, Bool) -> Void {
+    return { ids, succ in
+      guard let ids = ids else { // is farmer
+        completion(true)
+        return
+      }
+      
+      if let (uid, wid) = UserDefaults.standard.getUWID() {
+        HarvestUser.current.selectedWorkingForID = (uid, wid)
+        completion(true)
+      } else if ids.count == 1 {
+        HarvestUser.current.selectedWorkingForID = ids.first!
+        completion(true)
+      } else if ids.count == 0 {
+        let alert = SCLAlertView()
+        alert.addButton("Done", action: { completion(false) })
+        
+        alert.showNotice(
+          "You're Not Working For Anyone",
+          subTitle: "Ensure you've been added to the farm as a worker by your employer.")
+        
+      } else {
+        HarvestDB.getWorkingForFarmNames(uids: ids.map { $0.uid }, result: [], completion: { (names) in
+          let alert = SCLAlertView(
+            appearance: .optionsAppearance,
+            options: zip(names, ids).map { ($0.0, $0.1.uid) }) { option in
+              guard let fullOption = ids.first(where: { $0.uid == option }) else {
+                completion(false)
+                return
+              }
+          
+              HarvestUser.current.selectedWorkingForID = fullOption
+              UserDefaults.standard.set(uid: fullOption.uid, wid: fullOption.wid)
+              completion(true)
+            }
+          
+          alert.showNotice(
+            "Select An Organization",
+            subTitle: "Please select the organization that you want to log into")
+        })
+        
+      }
+    }
+  }
+  
   static func signIn(
     withEmail email: String,
     andPassword password: String,
@@ -19,23 +67,18 @@ extension HarvestDB {
   ) {
     Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
       if let err = error {
-        UIAlertController.present(title: "Sign In Failure",
-                                  message: err.localizedDescription,
-                                  on: controller)
-        
+        SCLAlertView().showError("Sign In Failure", subTitle: err.localizedDescription)
         completion(false)
         return
       }
       
       guard let user = user else {
-        UIAlertController.present(title: "Sign In Failure",
-                                  message: "An unknown error occured",
-                                  on: controller)
+        SCLAlertView().showError("Sign In Failure", subTitle: "An unknow error occured")
         completion(false)
         return
       }
       
-      HarvestUser.current.setUser(user, password, completion)
+      HarvestUser.current.setUser(user, password, HarvestDB.requestWorkingFor(completion))
       
       if let oldSession = try? Disk
         .retrieve("session", from: .applicationSupport, as: Tracker.self) {
@@ -46,29 +89,23 @@ extension HarvestDB {
   
   static func signIn(
     with credential: AuthCredential,
-    on controller: UIViewController?,
-    completion: ((Bool) -> Void)?
+    completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().signIn(with: credential) { (user, error) in
       if let error = error {
-        UIAlertController.present(title: "Sign In Failure",
-                                  message: error.localizedDescription,
-                                  on: controller)
-        completion?(false)
+        SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+        completion(false)
         return
       }
       
       guard let user = user else {
-        UIAlertController.present(title: "Sign In Failure",
-                                  message: "An unknown error occured",
-                                  on: controller)
-        completion?(false)
+        SCLAlertView().showError("Sign In Failure", subTitle: "An unknow error occured")
+        completion(false)
         return
       }
       
-      HarvestUser.current.setUser(user, nil) { _ in
-        completion?(true)
-      }
+      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor(completion))
+      
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
       }
@@ -76,34 +113,29 @@ extension HarvestDB {
   }
   
   static func signUp(
-    withEmail email: String,
-    andPassword password: String,
+    with details: (email: String, password: String),
     name: (first: String, last: String),
-    on controller: UIViewController?,
+    organisationName: String,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().createUser(
-      withEmail: email,
-      password: password
+      withEmail: details.email,
+      password: details.password
     ) { (user, error) in
       if let error = error {
-        UIAlertController.present(title: "Sign Up Failure",
-                                  message: error.localizedDescription,
-                                  on: controller)
+        SCLAlertView().showError("Sign Up Failure", subTitle: error.localizedDescription)
         completion(false)
         return
       }
       
       guard let user = user else {
-        UIAlertController.present(title: "Sign Up Failure",
-                                  message: "An unknown error occured",
-                                  on: controller)
+        SCLAlertView().showError("Sign Up Failure", subTitle: "An unknown error occured")
         completion(false)
         return
       }
       
-      UserDefaults.standard.set(password: password)
-      UserDefaults.standard.set(username: email)
+      UserDefaults.standard.set(password: details.password)
+      UserDefaults.standard.set(username: details.email)
       
       let changeRequest = user.createProfileChangeRequest()
       changeRequest.displayName = name.first + " " + name.last
@@ -111,7 +143,8 @@ extension HarvestDB {
       
       HarvestUser.current.firstname = name.first
       HarvestUser.current.lastname = name.last
-      HarvestUser.current.setUser(user, password, completion)
+      HarvestUser.current.organisationName = organisationName
+      HarvestUser.current.setUser(user, details.password, HarvestDB.requestWorkingFor(completion))
       HarvestDB.save(harvestUser: HarvestUser.current)
       
       completion(true)
@@ -119,9 +152,8 @@ extension HarvestDB {
   }
   
   static func signOut(
-    on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
-    ) {
+  ) {
     do {
       TrackerViewController.tracker?.storeSession()
       TrackerViewController.tracker = nil
@@ -134,9 +166,7 @@ extension HarvestDB {
       
     } catch {
       //    FIXME  #warning("Complete with proper errors")
-      UIAlertController.present(title: "Sign Out Failure",
-                                message: "An unknown error occured",
-                                on: controller)
+      SCLAlertView().showError("Sign Out Failure", subTitle: "An unknown error occured")
       completion(false)
       return
     }
@@ -144,20 +174,16 @@ extension HarvestDB {
   }
   
   static func resetPassword(
-    forEmail email: String,
-    on controller: UIViewController?
+    forEmail email: String
   ) {
     Auth.auth().sendPasswordReset(withEmail: email) { (error) in
       if let error = error {
-        UIAlertController.present(title: "Reset Password Failure",
-                                  message: error.localizedDescription,
-                                  on: controller)
+        SCLAlertView().showError("Reset Password Failure", subTitle: error.localizedDescription)
         return
       }
-      
-      UIAlertController.present(title: "Password Reset Sent",
-                                message: "An email was sent to \(email) to reset your password",
-                                on: controller)
+      SCLAlertView().showSuccess(
+        "Password Reset Sent",
+        subTitle: "An email was sent to \(email) to reset your password")
     }
   }
   
@@ -168,24 +194,22 @@ extension HarvestDB {
   ) {
     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { (verificationID, error) in
       if let error = error {
-        UIAlertController.present(title: "An Error Occured",
-                                  message: error.localizedDescription,
-                                  on: controller)
+        SCLAlertView().showError("An Error Occured", subTitle: error.localizedDescription)
         completion?(false)
         return
       }
       UserDefaults.standard.set(verificationID: verificationID)
       
-      UIAlertController.present(title: "Enter Code in Password Field",
-                                message: "Enter the code from the SMS sent to you into the password",
-                                on: controller)
+      SCLAlertView().showInfo(
+        "Enter Code into Text Field",
+        subTitle: "Enter the 6-digit code from the SMS sent to you into the text field")
       
       completion?(true)
     }
   }
   
   static func getWorkingFor(
-    completion: @escaping ((uid: String, wid: String)?) -> Void
+    completion: @escaping ([(uid: String, wid: String)]) -> Void
   ) {
     let wfref = ref.child(
       Path.workingFor
@@ -193,21 +217,54 @@ extension HarvestDB {
         + HarvestUser.current.accountIdentifier.removedFirebaseInvalids())
     wfref.observeSingleEvent(of: .value) { (snapshot) in
       guard let _uids = snapshot.value as? [String: Any] else {
-        completion(nil)
+        completion([])
         return
       }
-      var result: (String, String)? = nil
+      var result: [(String, String)] = []
       
       for (uid, _wid) in _uids {
         guard let wid = _wid as? String else {
-          result = (uid, "")
+          result += [(uid, "")]
           continue
         }
         
-        result = (uid, wid)
+        result += [(uid, wid)]
       }
       
       completion(result)
     }
+  }
+  
+  static func getWorkingForFarmName(uid: String, completion: @escaping (String?) -> Void) {
+    let fnref = ref.child(uid + "/admin/organization")
+    fnref.observeSingleEvent(of: .value) { (snapshot) in
+      guard let name = snapshot.value as? String else {
+        completion(nil)
+        return
+      }
+      completion(name)
+    }
+  }
+  
+  static func getWorkingForFarmNames(
+    uids: [String],
+    result: [String],
+    completion: @escaping ([String]) -> Void
+  ) {
+    guard let uid = uids.first else {
+      completion(result)
+      return
+    }
+    HarvestDB.getWorkingForFarmName(uid: uid) { (name) in
+      let rest = Array(uids.dropFirst())
+      
+      guard let name = name else {
+        HarvestDB.getWorkingForFarmNames(uids: rest, result: result + [uid], completion: completion)
+        return
+      }
+      
+      HarvestDB.getWorkingForFarmNames(uids: rest, result: result + [name], completion: completion)
+    }
+    
   }
 }

@@ -13,7 +13,10 @@ enum HarvestDB {
   
   enum Path {
     static var parent: String {
-      return HarvestUser.current.workingForID?.uid ?? HarvestUser.current.uid
+      if ref is DatabaseReferenceMock {
+        return "foo"
+      }
+      return HarvestUser.current.selectedWorkingForID?.uid ?? HarvestUser.current.uid
     }
     static var yields: String {
       return "\(Path.parent)/yields"
@@ -50,13 +53,14 @@ enum HarvestDB {
 
 extension String {
   func removedFirebaseInvalids() -> String {
-    var result = ""
+    var result = String()
+    result.reserveCapacity(count)
     
     for c in self {
-      if !".".contains(c) {
-        result += "\(c)"
-      } else {
-        result += ","
+      switch c {
+      case ".": result += ","
+      case " ": continue
+      default: result += "\(c)"
       }
     }
     
