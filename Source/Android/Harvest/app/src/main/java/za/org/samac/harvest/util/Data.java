@@ -579,7 +579,8 @@ public class Data {
         else if(category == Category.WORKER){
             result = new String[workers.size()];
             for (int i = 0; i < workers.size(); i++) {
-                result[i] = workers.elementAt(i).sName + ", " + workers.elementAt(i).fName;
+//                result[i] = workers.elementAt(i).sName + ", " + workers.elementAt(i).fName;
+                result[i] = workers.elementAt(i).toString();
             }
             return result;
         }
