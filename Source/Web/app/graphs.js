@@ -347,7 +347,10 @@ function changeWorkerGraph(data){
 				"15:00 - 16:00",
 				"16:00 - 17:00",
 				"17:00 - 18:00"];
-	var data = {["Period", "Number of Bags", { role: "style" } ]};
+	//var data = {["Period", "Number of Bags", { role: "style" } ]};
+	var data = [
+    ["Period", "Number of Bags", { role: "style" } ],
+  ];
 	for(var i=0;i<hourly.length;i++){
 		if(values[hourly[i]] === undefined){
 			data.push([hours[i], 0, "#4CAF50"]);
