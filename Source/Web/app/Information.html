@@ -5,7 +5,6 @@
     <title>Information</title>
 
     <!--Here import stuff-->
-
     <!--Firebase-->
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
@@ -42,32 +41,42 @@
 <!--NavBar-->
 <div class="topnav">
     <ul class="nav navbar-nav">
+        <li>
         <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+        </li>
+        <li>
         <a class='active' href="Information.html">Information</a>
+        </li>
+        <li>
         <a href="Sessions.html">Sessions</a>
+        </li>
+        <li>
         <a href="HeatMap.html">Heatmap</a>
+        </li>
+        <li>
+        <a href="graphs.html">Analytics</a>
+        </li>
     </ul>
 
-    <ul class="pull-right nav navbar-nav">
-        <a href="Settings.html" id="emailInNav"></a>
-        <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-    </ul>
-</div>
+ 
+        <ul class="pull-right nav navbar-nav">
+            <a href="Settings.html" id="emailInNav"></a>
+            <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> &nbsp;</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </ul>
+    </div>
 
-<!--Page Body-->
+<!--Body of the page-->
 <div class="row">
     <div class="col-sm-2" id="col1">
         <!--Column One-->
         <button type="button" class="btn btn-primary" id="farm" onclick="popFarm()">Farms</button>
         <button type="button" class="btn btn-primary" id="orchInfo" onclick="popOrch()">Orchards</button>
-        <button type="button" class="btn btn-primary" id="workers" onclick="popWork()">Workers</button>
-        <!--<button type="button" class="btn btn-primary" id="yield" onclick="popYield()">TODO: Yield Information</button>-->
-        <!--<a onclick="fbSignIn('u15008739@tuks.co.za','fbPass')" href="#">Sign In</a>-->
+        <button type="button" class="btn btn-primary" id="workers" onclick="popWork()">Workers</button>       
     </div>
     <div class="col-sm-2" id="col2">
         <!--Column Two-->

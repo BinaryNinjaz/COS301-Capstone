@@ -38,22 +38,33 @@
     <body>
         <div class="topnav">
             <ul class="nav navbar-nav">
-                <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-                <a href="Information.html">Information</a>
-                <a href="Sessions.html">Sessions</a>
-                <a class='active' href="HeatMap.html">Heatmap</a>
+                    <li>
+                    <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a> 
+                    </li>
+                    <li>
+                    <a href="Information.html">Information</a>
+                    </li>
+                    <li>
+                    <a href="Sessions.html">Sessions</a>
+                    </li>
+                    <li>
+                    <a class="active" href="HeatMap.html">Heatmap</a>
+                    </li>
+                    <li>
+                    <a href="graphs.html">Analytics</a>
+                    </li>
             </ul>
 
             <ul class="pull-right nav navbar-nav">
-                <a href="Settings.html" id="emailInNav"></a>
-                <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </ul>
-        </div>
+            <a href="Settings.html" id="emailInNav"></a>
+            <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> &nbsp;</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </ul>
+    </div>
         
         <div class="container">
             <div class="row">
@@ -75,7 +86,28 @@
                     <div class="map" id="map"></div>
                 </div>
             </div>
+        </div>        
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div id="orchardFiltering">
+                        <h2>Orchard Filtering</h2>
+                        <label>Start From:</label>
+                        <input type='date' class='form-control' id='startDate' onchange="updateHeatmap()">
+                        </br>
+                        <label>Ending At:</label>
+                        <input type='date' class='form-control' id='endDate' onchange="updateHeatmap()">
+                        <div id="orchards">
+                        </div>
+                        <div id="spinner">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-9" style="margin-top: 4px">
+                    <div class="map" id="map"></div>
+                </div>
+            </div>
         </div>
-        
     </body>
 </html>
