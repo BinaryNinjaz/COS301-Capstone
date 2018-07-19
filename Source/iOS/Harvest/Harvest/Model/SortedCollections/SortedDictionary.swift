@@ -43,7 +43,7 @@ struct SortedDictionary<Key: Hashable, Value> : Collection {
   
   init(uniqueKeysWithValues pairs: [(Key, Value)],
        _ areInIncreasingOrder: @escaping (Key, Key) -> Bool) {
-    _dict = Dictionary.init(uniqueKeysWithValues: pairs)
+    _dict = Dictionary.init(pairs, uniquingKeysWith: { _, b in b })
     self.areInIncreasingOrder = areInIncreasingOrder
     _ref = SortedArray.init(pairs.map { $0.0 }, areInIncreasingOrder: areInIncreasingOrder)
   }

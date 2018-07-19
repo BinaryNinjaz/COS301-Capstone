@@ -1,4 +1,6 @@
 \documentclass[12pt]{article}
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\usepackage{graphicx}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -7,61 +9,227 @@
   filecolor=magenta,      
   urlcolor=cyan,
 }
-
-\title{Coding Standards}
-\author{Binary Ninjaz}
-\date{}
-
 \begin{document}
-  \maketitle
-  \newpage
-  
-  \tableofcontents
-  \newpage
-  
-  \section{Introduction}
-  The project and design we've undertaken means that we will need to use multiple languages and IDE's to complete the project. As such we hav decided that the best common practice and standards of each language shall be the standard that is used for that respective language/environment.
-  
-  \section{Language Style Guides}
-  \subsection{HTML/CSS}
+
+\title{Coding Standards Document}
+\maketitle
+\center{\textbf{Team Name:} Binary Ninjaz\\}
+\center{\textbf{System Name:} Harvest\\}
+\includegraphics[scale=0.3]{harvestIcon.png}
+\center{\textbf{Client Name:} Barry Christie\\ }{\textbf{Client Affiliation:} Operations Manager at SAMAC\\}
+\center{\textbf{Team Members:\\} 
+Teboho Mokoena (u14415888)\\
+Sizo Duma (u15245579)\\
+Letanyan Delon Arumugam (u14228123)\\
+John Ojo (u15096794)\\
+Kevin Reid (u15008739)\\
+Shaun Yates (u16007493)\\ }
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Detailed System Design}
+\includegraphics[width=1.2\linewidth]{UMLClassDiag.png}
+\newpage
+
+\section{Coding Conventions}
+  \flushleft
+  The project and design we've undertaken means that we will need to use multiple languages and IDE's to complete the project. As such we have decided that the best common practice and standards of each language shall be the standard that is used for that respective language/environment. Linters are also used to enforce many of the rules we follow.
+  \subsection{General Rules}
+  \begin{itemize}
+  \item Attributes:\newline
+    special @ sign attributes should be on their own line. \newline
+     \newline
+  \item Class Delegate Pattern:\newline
+    Delegate pattern should be implemented using protocols/interfaces. In the case of protocols \newline
+    the protocol must be a class protocol. \newline
+     \newline
+  \item Closing Brace:\newline
+    The closing brace inside a parameter must not be followed by whitespace. \newline
+    Incorrect Usage: `array.map({ .0 }  )` \newline
+    Correct Usage: `array.map({ .0 })` \newline
+     \newline
+  \item Closure Closing Indentation:\newline
+    The closures closing brace must end on the same column that the starting lines column is on. \newline
+    Incorrect Usage: \newline
+    \begin{verbatim}
+    func foo() {
+      }
+    \end{verbatim}
+    Correct Usage: \newline
+    \begin{verbatim}
+    func foo() {
+    }
+    \end{verbatim}
+  \item Closure Spacing:\newline
+    Closures must have at least a single space inside of each brace. \newline
+     \newline
+  \item Comma Spacing:\newline
+    A comma must not have any space infront of it and only one space after it. \newline
+     \newline
+  \item Conditional Return Positions:\newline
+    Any return statement from a conditional branch must be on a newline \newline
+    Incorrect Usage: \newline
+    \begin{verbatim}
+    if (true) { return 0; } else { return 1; }
+    \end{verbatim}
+    Correct Usage: \newline
+    \begin{verbatim}
+    if (true) {
+      return 0;
+    } else {
+      return 1;
+    }
+    \end{verbatim}
+  \item Cyclomatic Complexity:\newline
+    The cyclomatic complexity of a function body should not exceed more than 10. \newline
+     \newline
+  \item Singleton Direct Initialization:\newline
+    Singleton classes should not be directly instantiated. \newline
+     \newline
+  \item Optional Boolean:\newline
+    Where available an Optional may not be used to wrap a Boolean. Prefer an enum instead. \newline
+     \newline
+  \item Prefer Non-Optional Collection:\newline
+    Where available an Optional should not be a preferred method of wrapping a collection. Instead try to \newline
+    use a collections emptiness to handle nullity as well. \newline
+     \newline
+  \item Empty Count:\newline
+    Use isEmpty property and not check emptiness via count/length property. \newline
+     \newline
+  \item Empty Parameter:\newline
+    Prefer Void over an empty parameter \newline
+     \newline
+  \item String isEmpty:\newline
+    Prefer using isEmpty over checking equality to an empty string \newline
+     \newline
+  \item Avoid Fallthrough:\newline
+    Switch statements should not fallthrough to subsequent cases but instead always break at the end of  \newline
+    a case. \newline
+     \newline
+  \item File Length:\newline
+    File lengths should not exceed more than 2000 lines. \newline
+     \newline
+  \item File Name:\newline
+    A file name should match the name of a class/struct/extension it contains. \newline
+     \newline
+  \item Function Body Length:\newline
+    Length of a function body should not exceed 150 lines. \newline
+     \newline
+  \item Default Parameters at End:\newline
+    Default parameters should be the last parameters in a parameter list. \newline
+     \newline
+  \item Function Parameter Count:\newline
+    A maximum of 5 parameters per function should be allowed. \newline
+     \newline
+  \item Type Names:\newline
+    Type names should start with an uppercase letter and be of length 1 to 20 characters. Each \newline
+    character should only be an alphanumeric. Where subsequent words in the name are also  \newline
+    capitalized. \newline
+     \newline
+  \item Identifier Name:\newline
+    Type names should start with an lowercase letter and be of length 1 to 20 characters. Each \newline
+    character should only be an alphanumeric. Where subsequent words in the name are capitalized. \newline
+    Or names can be all uppercased if deemed fit. \newline
+     \newline
+  \item Tuple Size:\newline
+    Where available tuple sizes may not exceed an arity of 3. \newline
+     \newline
+  \item Leading Whitespace:\newline
+    Files may not start with whitespace (excluding comments) \newline
+     \newline
+  \item Line Length:\newline
+    Lines should not exceed 120 characters. \newline
+     \newline
+  \item Mark Comments:\newline
+    Mark comments should follow "MARK: ..." or "MARK: -..." \newline
+     \newline
+  \item Fix Me Comments:\newline
+    Fix me comments should be treated as warnings and follow the format "FIXME: ..." \newline
+  \item Todo Comments:\newline
+    Todo comments should be treated as warnings and follow the format "TODO: ..." \newline
+  \item Type Nesting:\newline
+    Types should not be nested more than one type scope deep. \newline
+     \newline
+  \item Open Brace Spacing:\newline
+    Open braces should be on the same line as the declaration and be preceded by a single space. \newline
+     \newline
+  \item Operator Whitespace:\newline
+    Operators should be surrounded by an equal number of whitespace characters. \newline
+     \newline
+  \item Redundant Void Return:\newline
+    Void returning functions should not be explicitly stated if not needed. \newline
+     \newline
+  \item Modify Assign Operators:\newline
+    Prefer operators such as +=, *=, -=, /= over constructs such as `a = a + 42` \newline
+     \newline
+  \item Sorted Imports:\newline
+    Import list should be sorted alphabetically \newline
+     \newline
+  \item Statement Positions:\newline
+    Else and catch statements should be on their own line. \newline
+     \newline
+  \item Switch Case Statement Indentation:\newline
+    Case statement indentation should be the same as the switch statements indentation. \newline
+    Incorrect Usage: \newline
+    \begin{verbatim}
+    switch f {
+      case a:
+    }
+    \end{verbatim}
+    Correct Usage: \newline
+    \begin{verbatim}
+    switch f {
+    case a:
+    }
+    \end{verbatim}
+  \item Trailing Newline:\newline
+    Files should have a single newline at the end. \newline
+     \newline
+  \item Type Body Length:\newline
+    A types body length should not exceed 500 lines. \newline
+     \newline
+  \item Unneeded Break:\newline
+    Switch statements should not have unnecessary break statements. \newline
+     \newline
+  \item Vertical Whitespace:\newline
+    Limit vertical whitespace to a single empty line. \newline
+  \end{itemize} \newpage
+  \subsection{Conventions used for Specific Languages}
+  \subsubsection{HTML/CSS}
   The HTML and CSS standards we shall follow will be the ones of \href{https://google.github.io/styleguide/htmlcssguide.html}{Google's HTML/CSS style guide}
   
-  \subsection{JavaScript}
+  \subsubsection{JavaScript}
   For JavaScript we will be using \href{https://google.github.io/styleguide/jsguide.html}{Google's JavaScript style guide}.
   
-  \subsection{Java}
+  \subsubsection{Java}
   Similarly we will use \href{https://google.github.io/styleguide/javaguide.html}{Google's Java style guide}.
-  \subsection{Swift}
+  
+  \subsubsection{Swift}
   For Swift we will use \href{https://swift.org/documentation/api-design-guidelines/}{Apple design guidelines}.
   
-  \section{Git Structure}
-  \subsection{Branching}
-  Rule one, always, is never work out of \texttt{master}. A new branch is created when someone wants to implement, or experiment with something that is not theirs, or in the \texttt{master}, so they will branch off of the relevant branch, to make their proposed changes.
+\center\section{File Structure}
+  \subsection{File Structure Diagram}
+  \flushleft 
+  \includegraphics[width=1.2\linewidth]{FileStructure.png}
+  It is important to note that \texttt{Web/app} is where the main functionality of the website source code can be found and that \texttt{Web/functions} is strictly used for cloud functions.
+  
+  \center\subsection{Git Branch Structure}
+  \includegraphics[width=1.2\linewidth]{GitBranchStructure.png}
+  
+\flushleft\subsubsection{Branching}
+  An example structure is shown above, showing that \texttt{master} is never worked on directly. It is important to note that branch names given of feature branches are not necessarily set branches, but are examples to show branching structure. Each subsystem (Android, iOS, Website) has its own respective branch, and these branches branch off \texttt{Developer}, and in turn any changes done to a branch would then branch off that specific branch. 
+  A \texttt{Developer} branch is used, to act in much the same way as \texttt{master}, but as a proxy, so that before merging that branch to master, the entire system can be reviewed there before a more solid commitment is made.
   \subsubsection{Naming}
-  A branch shall never contain an individuals name, rather it must be informative as to what the intention of the branch is, however, it is in the best interests of readability to keep the name short. An example of a terrible name is \texttt{Joe}; another is \texttt{JoeWebsiteChanges}, where the name contains a member name, and gives very little information as to what is going on in the branch. Bad, but barely acceptable names are \texttt{WebsiteChanges}, or \texttt{WebsiteExperimentation}. Ideal names are as follows: in the case of a branch where the website is ultimately being assembled, by merging other branches into it, and the only modifications taking place are to structure the files, or a quick fix, such as changing the colour of a button, \texttt{Website}; in the case that a new homepage is created for the website, where the homepage is created, and merged into \texttt{Website} on completion, \texttt{Website-Homepage}; finally, if infamous \textit{Joe}, wants to propose a change to the \texttt{Website-Homepage} branch, where he wants to change the colour of a button, but Joe has not been assigned, or is not the primary benefactor to \texttt{Website-Homepage}, he creates a new \texttt{Website-Homepage-ButtonColourChange} branch. Notice that in the ideal examples it is possible to track down the source of a branch, to understand exactly what it's purpose is.
+  \flushleft
+  A branch shall never contain an individuals name, rather it must be informative as to what the intention of the branch is whilst also remaining short. An example of a  name that would be deemed unacceptable is \texttt{Joe}; another would be \texttt{JoeWebsiteChanges}, where the name contains a member name, and gives very little information as to what is going on in the branch. Bad, but barely acceptable names are \texttt{WebsiteChanges}, or \texttt{WebsiteExperimentation}. Ideal names are as follows: in the case of a branch where the website is ultimately being assembled, by merging other branches into it, and the only modifications taking place are to structure the files, or a quick fix, such as changing the colour of a button, \texttt{Website}; in the case that a new homepage is created for the website, where the homepage is created, and merged into \texttt{Website} on completion, \texttt{Website-Homepage}. Finally, if a user wants to propose a change to the \texttt{Website-Homepage} branch, where he wants to change the colour of a button, but the user has not been assigned, or is not the primary benefactor to \texttt{Website-Homepage}, he creates a new \texttt{Website-Homepage-ButtonColourChange} branch. Notice that in the ideal examples it is possible to track down the source of a branch, to understand exactly what it's purpose is.
   
-  \subsection{Merging}
-  After changes have been made on the branch, the creator, who wants to merge, shall then make a pull request on GitHub, and announce the request on Slack, after which it shall become the responsibility of the entire team, but more importantly that of the original branch maintainer to analyze and comment on the changes; the exact location of the discussion is trivial, however GitHub provides a better, and more concrete platform for this discussion to take place, where inline comments can be made. After a sufficient amount of time and discussion has passed, either the branch maintainer (if it is a minor change), or the entire team (if it is to master, or a major change) shall decide to merge or not.
-  
-  \subsection{The Bulleted Rules}
-  \begin{itemize}
-   \item \textit{Never} make modifications directly to \texttt{master}.
-   \item A \texttt{Developer} branch is used, to act in much the same way as \texttt{master}, but as a proxy, so that before merging that branch to master, the entire system can be reviewed there before a more solid commitment is made to \texttt{master}.
-   \item Never directly make modifications to somebody else's code, rather branch, make the change, submit a pull request, then announce the request on Slack.
-   \item If you absolutely feel the need to work in a branch that you did not create, message the branch creator and ask for permission.
-   \item Never approve your own pull request, let the team leader, or the active benefactor to the branch you want to merge with make the merge.
-   \item Allow a sufficient amount of time and discussion to pass before merging---this applies to any merge, no matter how small, the key is in judging the time and discussion that needs to pass: the larger the merge, the larger the discussion.
-   \item Before merging, every member involved with the issue must comment, even if it is to say ``yes.'' If someone doesn't comment, follow up with them.
-   \item Before making a pull request, ensure that there are currently no pull requests to merge into the branch that you want to have merged with the other branch. Example: you want to merge \texttt{Website-Homepage} into \texttt{Website}, but there is a pull request to merge \texttt{Website-Homepage-ButtonColourChange} into \texttt{Website-Homepage}; in this instance, the later, active, pull request (\texttt{Website-Homepage-ButtonColourChange} into \texttt{Website-Homepage}) must be delt with first.
-   \item Once a branch has been merged into it's source, and the branch is no longer needed, delete it.
-   \item If you decide to abandon a branch that you created, and nobody else is working on, delete it.
-   \item If you suspect that somebody else's branch is abandoned, reach out to them and offer to delete it.
-   \item Never put your own name in the name of a branch.
-   \item Give branches an informative name.
-   \item Name the branch such that the branch it is modifying can be identified.
-   
-  \end{itemize}
-
+  \newpage
+  \center\section{Code Review Process}
+  \flushleft
+All code reviewing is done on GitHub, and occurs every time there are changes done to code, or if new code has been implemented. Currently, pre-commit reviews are utilized and although it is a slower process compared to post-commit reviews, it always for more people to be aware of changes to the code and could possibly lead to better implementation as more eyes usually means more ideas. \newline
+After changes have been made on the branch, the creator, who wants to merge, will then make a pull request on GitHub, and announce the request on Slack. After which it shall become the responsibility of the entire team, but more importantly that of the original branch maintainer to analyze and comment on the changes. The exact location of the discussion is trivial, however GitHub provides a better, and more concrete platform for this discussion to take place, where inline comments can be made. After a sufficient amount of time and discussion has passed, either the branch maintainer (if it is a minor change), or the entire team (if it is to master, or a major change) shall decide to merge or not.
 
   
 \end{document}

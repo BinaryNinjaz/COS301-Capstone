@@ -71,14 +71,15 @@ extension HarvestDB {
   }
   
   static func saveWorkerReference(_ worker: Worker, _ oldNumber: String) {
-    let workerRefs = ref.child(Path.workingFor
-      + "/"
-      + worker.phoneNumber.removedFirebaseInvalids())
-    
-    let update = [
-      HarvestUser.current.uid: worker.id
-    ]
-    workerRefs.updateChildValues(update)
+    if worker.phoneNumber != "" {
+      let workerRefs = ref.child(Path.workingFor
+        + "/"
+        + worker.phoneNumber.removedFirebaseInvalids())
+      let update = [
+        HarvestUser.current.uid: worker.id
+      ]
+      workerRefs.updateChildValues(update)
+    }
   }
   
   static func delete(

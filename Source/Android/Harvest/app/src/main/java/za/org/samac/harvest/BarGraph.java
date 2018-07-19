@@ -66,6 +66,7 @@ public class BarGraph extends AppCompatActivity {
     private String lastSession;
     private Date latestDate;
     private static String workerKey;
+    private static String workerName;
     private static final String TAG = "Analytics";
     private ArrayList<BarEntry> entries = new ArrayList<>();
     private com.github.mikephil.charting.charts.PieChart pieChart;
@@ -117,6 +118,7 @@ public class BarGraph extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
         workerKey = getIntent().getStringExtra("key");
+        workerName = getIntent().getStringExtra("name");
         getTotalBagsPerDay();
         //displayGraph();
     }
@@ -134,7 +136,7 @@ public class BarGraph extends AppCompatActivity {
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
-        base = base + "&startDate=" + (currentTime - 7 * 24 * 60 * 13);
+        base = base + "&startDate=" + (currentTime - 60 * 13);
         base = base + "&endDate=" + currentTime;
         base = base + "&uid=" + farmerKey;
 
@@ -215,6 +217,7 @@ public class BarGraph extends AppCompatActivity {
                         }
 
                         XAxis xAxis = barChart.getXAxis();
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                         xAxis.setXOffset(0f);
                         xAxis.setYOffset(0f);
                         xAxis.setTextSize(8f);
@@ -232,10 +235,10 @@ public class BarGraph extends AppCompatActivity {
                             public void run() {
                                 progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
                                 barGraphView.setVisibility(View.VISIBLE);
-                                barChart.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInBack));
+                                barChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
-                                BarDataSet dataset = new BarDataSet(entries, "Hours");
-                                dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+                                BarDataSet dataset = new BarDataSet(entries, workerName);
+                                dataset.setColors(ColorTemplate.COLORFUL_COLORS);
 
                                 BarData data = new BarData(dataset);//labels was one of the parameters
                                 barChart.setData(data); // set the data and list of lables into chart
@@ -277,18 +280,18 @@ public class BarGraph extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(BarGraph.this, LoginActivity.class));
+                    startActivity(new Intent(BarGraph.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
                 // Google sign out
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(BarGraph.this, LoginActivity.class));
+                                    startActivity(new Intent(BarGraph.this, SignIn_Choose.class));
                                 }
                             });
                 }
@@ -303,5 +306,4 @@ public class BarGraph extends AppCompatActivity {
         }
 //        return false;
     }
-
 }

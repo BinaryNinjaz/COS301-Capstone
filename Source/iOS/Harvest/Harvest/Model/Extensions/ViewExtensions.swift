@@ -20,6 +20,7 @@ extension UIView {
 
 extension UITextField {
   func addLeftImage(_ image: UIImage) {
+    leftView = nil
     leftViewMode = .always
     let h = bounds.height - 4
     let wrapper = UIView(frame: CGRect(x: 0, y: 0, width: h + 8, height: h))
@@ -108,6 +109,13 @@ enum Snap {
         make.left.equalTo(0)
         make.width.equalToSuperview()
       }
+    }
+  }
+  
+  static func center(in controller: UIViewController) -> (ConstraintMaker) -> Void {
+    return { make in
+      make.centerX.equalToSuperview()
+      make.centerY.equalToSuperview()
     }
   }
 }

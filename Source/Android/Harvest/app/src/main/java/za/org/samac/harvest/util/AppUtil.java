@@ -2,6 +2,7 @@ package za.org.samac.harvest.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.telephony.TelephonyManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,6 +53,37 @@ public class AppUtil {
         editor.commit();//commit writes synchronously
     }
 
+    public static String readStringFromSharedPrefs(Context context, String key){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_shared_prefrences), Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, null);
+    }
 
+    public static String normalisePhoneNumber(String number, Context context){
+        number = number.replaceAll("-", "");
+        number = number.replaceAll(" ", "");
 
+        //Thank you Wais
+        //https://stackoverflow.com/questions/5402253/getting-telephone-country-code-with-android
+
+        if (!number.startsWith("+")) {
+            String CountryZipCode = "";
+            String CountryID = "";
+
+            TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (manager != null) {
+                CountryID = manager.getSimCountryIso().toUpperCase();
+            }
+            String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
+            for (String aRl : rl) {
+                String[] g = aRl.split(",");
+                if (g[1].trim().equals(CountryID.trim())) {
+                    CountryZipCode = g[0];
+                    break;
+                }
+            }
+            number = number.replaceFirst("0", "+" + CountryZipCode);
+        }
+
+        return number;
+    }
 }

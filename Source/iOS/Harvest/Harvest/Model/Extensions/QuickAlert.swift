@@ -7,33 +7,35 @@
 //
 
 import UIKit
+import SCLAlertView
 
-extension UIAlertController {
-  static func alertController(
-    title: String,
-    message: String
-  ) -> UIAlertController {
-    let alert = UIAlertController(
-      title: title,
-      message: message,
-      preferredStyle: .alert)
+extension SCLAlertView {
+  convenience init(
+    appearance: SCLAppearance,
+    options: [(display: String, uid: String)],
+    completion: @escaping (String) -> Void
+  ) {
+    self.init(appearance: appearance)
     
-    let okay = UIAlertAction(title: "Okay", style: .default, handler: nil)
-    
-    alert.addAction(okay)
-    
-    return alert
+    for option in options {
+      addButton(option.display) {
+        completion(option.uid)
+      }
+    }
+  }
+}
+
+extension SCLAlertView.SCLAppearance {
+  static var warningAppearance: SCLAlertView.SCLAppearance {
+    return SCLAlertView.SCLAppearance(
+      showCloseButton: false,
+      buttonsLayout: .horizontal
+    )
   }
   
-  static func present(
-    title: String,
-    message: String,
-    on controller: UIViewController?,
-    completion: (() -> Void)? = nil
-  ) {
-    if let controller = controller {
-      let alert = UIAlertController.alertController(title: title, message: message)
-      controller.present(alert, animated: true, completion: completion)
-    }
+  static var optionsAppearance: SCLAlertView.SCLAppearance {
+    return SCLAlertView.SCLAppearance(
+      showCloseButton: false
+    )
   }
 }

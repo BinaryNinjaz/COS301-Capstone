@@ -200,6 +200,21 @@ extension HarvestCloud {
       return [.hourly, .daily, .weekly, .monthly, .yearly]
     }
     
+    static func cases(forRange r: (Date, Date)) -> [TimePeriod] {
+      let days = Calendar.current.dateComponents([.day], from: r.0, to: r.1).day!
+      let weeks = Calendar.current.dateComponents([.weekOfYear], from: r.0, to: r.1).weekOfYear!
+      
+      if days <= 1 {
+        return [.hourly]
+      } else if weeks <= 1 {
+        return [.daily]
+      } else if weeks <= 4 {
+        return [.weekly]
+      } else {
+        return [.weekly, .monthly]
+      }
+    }
+    
     var description: String {
       switch self {
       case .hourly: return "hourly"
@@ -210,14 +225,21 @@ extension HarvestCloud {
       }
     }
     
-    func fullDataSet() -> [String] {
+    func fullDataSet(between start: Date? = nil, and end: Date? = nil, limitToDate: Bool = false) -> [String] {
       switch self {
       case .hourly:
         return (0...23).map(String.init)
       case .daily:
         return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
       case .weekly:
-        return (1...54).map(String.init)
+        let base = (1...54).map(String.init)
+        if limitToDate {
+          guard let s = start?.weekNumber(), let e = end?.weekNumber() else {
+            return base
+          }
+          return (s...e).map(String.init)
+        }
+        return base
       case .monthly:
         return [
           "January",
@@ -238,14 +260,25 @@ extension HarvestCloud {
       }
     }
     
-    func fullPrintableDataSet() -> [String] {
+    func fullPrintableDataSet(
+      between start: Date? = nil,
+      and end: Date? = nil,
+      limitToDate: Bool = false
+    ) -> [String] {
       switch self {
       case .hourly:
         return (0...23).map { ($0 < 10 ? "0\($0):00" : "\($0):00") + ($0 < 12 ? "am" : "pm") }
       case .daily:
         return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
       case .weekly:
-        return (1...52).map(String.init) // FIXME: Show proper week labels using real dates for the starting date
+        let base = (1...54).map { Date.startOfWeek(from: $0) }
+        if limitToDate {
+          guard let s = start?.weekNumber(), let e = end?.weekNumber() else {
+            return base
+          }
+          return (s...e).map { Date.startOfWeek(from: $0) }
+        }
+        return base
       case .monthly:
         return [
           "Jan",

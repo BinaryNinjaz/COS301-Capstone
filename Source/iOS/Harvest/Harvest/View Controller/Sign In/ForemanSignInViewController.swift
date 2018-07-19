@@ -8,12 +8,17 @@
 
 import UIKit
 import Firebase
+import SCLAlertView
 
 class ForemanSignInViewController: UIViewController {
   @IBOutlet weak var titleVisualEffectView: UIVisualEffectView!
   @IBOutlet weak var numberInputTextField: UITextField!
   @IBOutlet weak var nextButton: UIButton!
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+  @IBOutlet weak var instructionLabel: UILabel!
+  @IBOutlet weak var cancelButton: UIButton!
+  @IBOutlet weak var resendButton: UIButton!
+  @IBOutlet weak var instructionVisualEffectView: UIVisualEffectView!
   
   var phoneNumber: String?
   var verificationCode: String?
@@ -33,22 +38,34 @@ class ForemanSignInViewController: UIViewController {
     didSet {
       switch state {
       case .wantsPhoneNumber:
+        instructionLabel.text = """
+          Please enter your phone number to receive a SMS with a verification code. Ensure you add \
+          your area code. Example \(Phoney.formatted(number: "0123456789") ?? "")
+          """
         numberInputTextField.addLeftImage(#imageLiteral(resourceName: "Phone"))
         numberInputTextField.placeholder = "Phone Number"
-        numberInputTextField.textAlignment = .left
         numberInputTextField.keyboardType = .phonePad
         numberInputTextField.text = ""
         
         nextButton.setTitle("Get Sign In Code", for: .normal)
         
+        cancelButton.isHidden = true
+        resendButton.isHidden = true
+        
       case .wantsVerificationCode:
-        numberInputTextField.leftView = nil
+        instructionLabel.text = """
+          We've sent you a 6-digit verification code via SMS, please enter it above once you've \
+          received it.
+          """
+        numberInputTextField.addLeftImage(#imageLiteral(resourceName: "Link"))
         numberInputTextField.placeholder = "SMS Verification Code"
-        numberInputTextField.textAlignment = .center
         numberInputTextField.keyboardType = .numberPad
         numberInputTextField.text = ""
         
         nextButton.setTitle("Sign In", for: .normal)
+        
+        cancelButton.isHidden = false
+        resendButton.isHidden = false
       }
     }
   }
@@ -58,6 +75,9 @@ class ForemanSignInViewController: UIViewController {
       let ani = {
         self.nextButton.alpha = self.isLoading ? 0 : 1
         self.numberInputTextField.alpha = self.isLoading ? 0 : 1
+        self.instructionLabel.alpha = self.isLoading ? 0 : 1
+        self.cancelButton.alpha = self.isLoading ? 0 : 1
+        self.resendButton.alpha = self.isLoading ? 0 : 1
         
         if self.isLoading {
           self.activityIndicator.startAnimating()
@@ -75,7 +95,7 @@ class ForemanSignInViewController: UIViewController {
       .instantiateViewController(withIdentifier: "mainTabBarViewController")
       as? MainTabBarViewController
     
-    if HarvestUser.current.workingForID != nil {
+    if !HarvestUser.current.workingForID.isEmpty {
       result?.setUpForForeman()
     } else {
       result?.setUpForFarmer()
@@ -108,7 +128,7 @@ class ForemanSignInViewController: UIViewController {
   
   func attemptSignIn(with credential: AuthCredential) {
     isLoading = true
-    HarvestDB.signIn(with: credential, on: self) { success in
+    HarvestDB.signIn(with: credential) { success in
       self.isLoading = false
       if success {
         if let vc = self.mainViewToPresent() {
@@ -132,17 +152,18 @@ class ForemanSignInViewController: UIViewController {
     switch state {
     case .wantsPhoneNumber:
       isLoading = true
-      phoneNumber = numberInputTextField.text
+      phoneNumber = Phoney.formatted(number: numberInputTextField.text ?? "")?.removedFirebaseInvalids()
       guard let pn = phoneNumber else {
-        UIAlertController.present(title: "Invalid Phone Number",
-                                  message: """
-                                  Please enter a valid phone number to sign in.
-                                  """,
-                                  on: self)
+        SCLAlertView().showError(
+          "Invalid Phone Number",
+          subTitle: "Please enter a valid phone number to sign in.")
         return
       }
       
-      HarvestDB.verify(phoneNumber: pn, on: self) { _ in
+      HarvestDB.verify(phoneNumber: pn, on: self) { succ in
+        if !succ && self.state == .wantsVerificationCode {
+          self.state.nextState()
+        }
         self.isLoading = false
       }
       
@@ -150,23 +171,38 @@ class ForemanSignInViewController: UIViewController {
       verificationCode = numberInputTextField.text
       
       guard let vc = verificationCode else {
-        UIAlertController.present(title: "No Verification Code",
-                                  message: """
-                                  Please enter the verification code that was sent to you by SMS.
-                                  """,
-                                  on: self)
+        SCLAlertView().showError(
+          "No Verification Code",
+          subTitle: "Please enter the verification code that was sent to you by SMS.")
         return
       }
       
       if let verificationID = UserDefaults.standard.getVerificationID() {
         attempSignIn(withVerificationID: verificationID, verificationCode: vc)
       } else {
-        UIAlertController.present(title: "Verification Error",
-                                  message: """
-                                  Please try requesting another verification code and trying again.
-                                  """,
-                                  on: self)
+        SCLAlertView().showError(
+          "Verification Failed",
+          subTitle: "Please try requesting another verification code and trying again.")
       }
+    }
+    
+    state.nextState()
+  }
+  
+  @IBAction func cancelButtonTouchUp(_ sender: UIButton) {
+    if state == .wantsVerificationCode {
+      state.nextState()
+    }
+  }
+  
+  @IBAction func resendButtonTouchUp(_ sender: UIButton) {
+    guard let pn = phoneNumber, state == .wantsVerificationCode else {
+      SCLAlertView().showError("Invalid Phone Number", subTitle: "Please enter a valid phone number to sign in.")
+      return
+    }
+    
+    HarvestDB.verify(phoneNumber: pn, on: self) { _ in
+      self.isLoading = false
     }
     
     state.nextState()
@@ -179,13 +215,28 @@ class ForemanSignInViewController: UIViewController {
     nextButton.setOriginX(view.frame.width / 2 - nextButton.frame.width / 2)
     nextButton.setOriginY(activityIndicator.frame.origin.y)
     
-    numberInputTextField.setOriginY(nextButton.frame.origin.y - numberInputTextField.frame.height - 16)
-    numberInputTextField.setWidth(nextButton.frame.width)
+    cancelButton.setWidth(nextButton.frame.width / 2 - 4)
+    cancelButton.setOriginX(nextButton.frame.origin.x)
+    cancelButton.setOriginY(nextButton.frame.origin.y + nextButton.frame.height + 16)
+    
+    resendButton.setWidth(cancelButton.frame.width)
+    resendButton.setOriginX(cancelButton.frame.origin.x + cancelButton.frame.width + 8)
+    resendButton.setOriginY(cancelButton.frame.origin.y)
+    
+    instructionVisualEffectView.setWidth(nextButton.frame.width)
+    instructionVisualEffectView.setOriginX(nextButton.frame.origin.x)
+    instructionVisualEffectView.setOriginY(nextButton.frame.origin.y - instructionVisualEffectView.frame.height - 8)
+    
+    numberInputTextField.setOriginX(instructionVisualEffectView.frame.origin.x)
+    numberInputTextField.setOriginY(instructionVisualEffectView.frame.origin.y - numberInputTextField.frame.height - 8)
+    numberInputTextField.setWidth(instructionVisualEffectView.frame.width)
     
     titleVisualEffectView.setWidth(numberInputTextField.frame.width)
     titleVisualEffectView.setOriginX(view.frame.width / 2 - titleVisualEffectView.frame.width / 2)
     titleVisualEffectView.setOriginY(numberInputTextField.frame.origin.y - titleVisualEffectView.frame.height - 16)
     
     nextButton.apply(gradient: .signInButton)
+    cancelButton.apply(gradient: .orangeButton)
+    resendButton.apply(gradient: .signInButton)
   }
 }
