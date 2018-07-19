@@ -98,7 +98,7 @@ function initPage(){
 
                     //The following values in the data array are the number of bags collected each day. from start date to end date
                     data: [4, 0, 5, 0, 0, 0, 4], //The size of this will also depend on the start and the end date
-                    backgroundColor: '#4CAF50' //Color of the area 
+                    pontBackgroundColor: '#4CAF50' //Color of the area 
             }]
             }
     });
@@ -294,36 +294,35 @@ function workerPerformance(start, end, id){
 
 //updates orchard graph based on user input
 function changeOrchardGraph(data){
-    //console.log(data.key); // can be removed, just used to view json object
-	if(data == undefined){console.log("Hi Vincent");}
-	console.log(JSON.stringify(data));
+    console.log(data); // can be removed, just used to view json object
+    //if(data == undefined){console.log("Hi Vincent");}
+    //console.log(JSON.stringify(data));
     var name = document.getElementById('orchardSelect').value;
-	var key = getOrchardId(name);
-	console.log(data[key]);
-	var values = data[key];
-	var sevenDays = ["Sunday","Monday","Tuesday","Wednesday","Thursady","Friday","Saturday"];
-	var data = [];
-	for(var i=0;i<7;i++){
-		if(values[sevenDays[i]] === undefined){
-			data.push(0);
-		}else{
-			data.push(values[sevenDays[i]]);
-		}
-	}
-	var ctx = document.getElementById("myChart").getContext('2d');
+    var key = getOrchardId(name);
+    var values = data[key];
+    var sevenDays = ["Sunday","Monday","Tuesday","Wednesday","Thursady","Friday","Saturday"];
+    var data = [];
+    for(var i=0;i<7;i++){
+        if(values[sevenDays[i]] === undefined){
+            data.push(0);
+        }else{
+            data.push(values[sevenDays[i]]);
+        }
+    }
+    var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                    //The size of the labels array will depend on the start date and the end date.
-                    //The labels will be the dates, from the specified start till the specified end.
-                    labels: ['Sunday','Monday','Tuesday','Wednesday','Thursady','Friday','Saturday'], //This will contain the dates plotted on each point. (give me the dates)
-                    datasets: [{
+        type: 'radar',
+        data: {
+                //The size of the labels array will depend on the start date and the end date.
+                //The labels will be the dates, from the specified start till the specified end.
+                labels: ['Sunday','Monday','Tuesday','Wednesday','Thursady','Friday','Saturday'], //This will contain the dates plotted on each point. (give me the dates)
+                datasets: [{
                     label: "Number of Bags p/day", //These are the number of bags per day since the start date and the end date
 
                     //The following values in the data array are the number of bags collected each day. from start date to end date
                     data: data, //The size of this will also depend on the start and the end date
-                    backgroundColor: '#4CAF50' //Color of the area 
-            }]
+                    pointBackgroundColor: '#4CAF50' //Color of the area 
+                }]
             }
     });
 }
@@ -331,39 +330,39 @@ function changeOrchardGraph(data){
 //updates worker graph based on user input
 function changeWorkerGraph(data){
     console.log(data); // can be removed, just used to view json object
-	var name = document.getElementById('workerSelect').value;
-	var key = getWorkerId(name);
-	var values = data[key];
-	var hourly = ["6","7","8","9","10","11","12","13","14","15","16","17","18"];
-	var hours = ["06:00 - 07:00",
-				"07:00 - 08:00",
-				"08:00 - 09:00",
-				"09:00 - 10:00",
-				"10:00 - 11:00",
-				"11:00 - 12:00",
-				"12:00 - 13:00",
-				"13:00 - 14:00",
-				"14:00 - 15:00",
-				"15:00 - 16:00",
-				"16:00 - 17:00",
-				"17:00 - 18:00"];
-	//var data = {["Period", "Number of Bags", { role: "style" } ]};
-	var data = [
-    ["Period", "Number of Bags", { role: "style" } ],
-  ];
-	for(var i=0;i<hourly.length;i++){
-		if(values[hourly[i]] === undefined){
-			data.push([hours[i], 0, "#4CAF50"]);
-		}else{
-			//data.push(values[sevenDays[i]]);
-			data.push([hours[i], values[hourly[i]], "#4CAF50"]);
-		}
-	}
+    var name = document.getElementById('workerSelect').value;
+    var key = getWorkerId(name);
+    var values = data[key];
+    var hourly = ["6","7","8","9","10","11","12","13","14","15","16","17","18"];
+    var hours = ["06:00 - 07:00",
+                "07:00 - 08:00",
+                "08:00 - 09:00",
+                "09:00 - 10:00",
+                "10:00 - 11:00",
+                "11:00 - 12:00",
+                "12:00 - 13:00",
+                "13:00 - 14:00",
+                "14:00 - 15:00",
+                "15:00 - 16:00",
+                "16:00 - 17:00",
+                "17:00 - 18:00"];
+    //var data = {["Period", "Number of Bags", { role: "style" } ]};
+    var temp = [
+        ["Period", "Number of Bags", { role: "style" } ],
+    ];
+    for(var i=0;i<hourly.length;i++){
+        if(values[hourly[i]] === undefined){
+            temp.push([hours[i], 0, "#4CAF50"]);
+        }else{
+            //data.push(values[sevenDays[i]]);
+            temp.push([hours[i], values[hourly[i]], "#4CAF50"]);
+        }
+    }
 	
-	google.charts.load("current", {packages:["corechart"]});
+    google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
-    var data1 = google.visualization.arrayToDataTable(data);
+        var data1 = google.visualization.arrayToDataTable(temp);
 	var view = new google.visualization.DataView(data1);
 	view.setColumns([0, 1,
                        { calc: "stringify",
@@ -371,16 +370,17 @@ function changeWorkerGraph(data){
                          type: "string",
                          role: "annotation" },
                        2]);
-	 var options = {
-        title: "Number of bags collected per hour", //Teboho Mokoena will be replaced with 'nameOfWorker' variable
-        width: 1200, //Setting the width 
-        height: 500, //Setting the height
-        bar: {groupWidth: "95%"}, //This is the grouping width of the bar graph
-        legend: { position: "none" }, //This will be determined by the UX designer
-      };
-	  var chart = new google.visualization.BarChart(document.getElementById("curve_chart"));
-	  chart.draw(view, options);
-}}
+	var options = {
+            title: "Number of bags collected per hour", //Teboho Mokoena will be replaced with 'nameOfWorker' variable
+            width: 1200, //Setting the width 
+            height: 500, //Setting the height
+            bar: {groupWidth: "95%"}, //This is the grouping width of the bar graph
+            legend: { position: "none" }, //This will be determined by the UX designer
+        };
+        var chart = new google.visualization.BarChart(document.getElementById("curve_chart"));
+        chart.draw(view, options);
+    }
+}
 
 //edits value of end date label when a starting date is picked
 function changeLabel(){
