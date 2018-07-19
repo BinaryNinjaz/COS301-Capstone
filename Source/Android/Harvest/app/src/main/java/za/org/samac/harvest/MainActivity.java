@@ -481,8 +481,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private String urlExpectYieldText() {
         String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield?";
-        System.out.println(" ************************* " + correctOrchard + " ************************* ");
-        base = base + "orchardId=" + correctOrchard;//"-LCEFgdMMO80LR98BzPC";//currentOrchard;//get correct orchard ID
+        base = base + "orchardId=" + correctOrchard;
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
@@ -498,10 +497,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 public void run() {
                     try {
                         String response = sendGet(urlExpectYieldText());
-                        System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% ");
                         JSONObject obj = new JSONObject(response);
                         final Double expectedYield = obj.getDouble("expected"); // This is the value
-                        System.out.println(" $$$$$$$$$$$$$$$$$$$ " + expectedYield + " $$$$$$$$$$$$$$$$$$$ ");
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 textView = findViewById(R.id.textView);
@@ -646,8 +643,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.getKey());
 
                     String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+
                     //only add if person is a worker (not a foreman)
-                    if(zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
+                    if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
                         Worker workerObj = new Worker();
                         workerObj.setName(fullName);
                         workerObj.setValue(0);
@@ -667,12 +665,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             }
                         }
 
-                        if (zoneSnapshot.child("email").getValue(String.class) != null) {
+                        /*if (zoneSnapshot.child("email").getValue(String.class) != null) {
                             if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
                                 foremanID = zoneSnapshot.getKey();
                                 foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
                             }
-                        }
+                        }*/
                     }
                 }
 
