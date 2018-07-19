@@ -108,7 +108,8 @@ public class Worker{
 
     @Override
     public String toString() {
-        return sName + ", " + fName;
+//        return sName + ", " + fName;
+        return fName + " " + sName;
     }
 
     public void addOrchard (Orchard orchard){
