@@ -122,14 +122,27 @@ public class SessionDetails extends AppCompatActivity {
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        DatabaseReference dbref = database.getReference(MainActivity.farmerKey + "/sessions/" + getIntent().getStringExtra("key"));
+        final DatabaseReference dbref = database.getReference(MainActivity.farmerKey + "/sessions/" + getIntent().getStringExtra("key"));
 
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    //startDate = new Date((long)(zoneSnapshot.child("start_date").getValue(Double.class)*1000));
+                if (dataSnapshot.getValue() == null) {
+                    dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
+                                startDate = new Date((long)(zoneSnapshot.child("start_date").getValue(Double.class)*1000));
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
+                System.out.println("&&&&&&&&&&& "+dataSnapshot+" &&&&&&&&&&& "+dataSnapshot.getValue()+" **** "+dataSnapshot.child("start_date"));
                 startDate = new Date((long)(dataSnapshot.child("start_date").getValue(Double.class) * 1000));
                 Double ed = dataSnapshot.child("end_date").getValue(Double.class);
                 if (ed != null) {
