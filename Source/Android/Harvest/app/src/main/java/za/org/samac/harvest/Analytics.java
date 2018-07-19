@@ -43,20 +43,12 @@ public class Analytics extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                /*Intent openMainActivity= new Intent(Analytics.this, MainActivity.class);
-                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);*/
                                 startActivity(new Intent(Analytics.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(Analytics.this, InformationActivity.class);
-                                openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openInformation, 0);
+                                startActivity(new Intent(Analytics.this, InformationActivity.class));
                                 return true;
                             case R.id.actionSession:
-                                /*Intent openSessions= new Intent(Analytics.this, Sessions.class);
-                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openSessions, 0);*/
                                 startActivity(new Intent(Analytics.this, Sessions.class));
                                 return true;
                             case R.id.actionStats:

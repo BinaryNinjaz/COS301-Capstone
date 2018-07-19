@@ -50,6 +50,10 @@ public class YieldTrackerTest {
 
         SystemClock.sleep(3000);//wait for splash
 
+        //choose sign in ****************************************************************************
+        Espresso.onView((withId(R.id.signIn_choose_farmer)))
+                .perform(ViewActions.click());
+
         //log in ****************************************************************************
         Espresso.onView((withId(R.id.edtEmail)))
                 .perform(ViewActions.typeText(username_tobe_typed));
