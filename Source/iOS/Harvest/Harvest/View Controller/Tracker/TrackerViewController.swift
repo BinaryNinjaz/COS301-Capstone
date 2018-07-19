@@ -24,11 +24,13 @@ class TrackerViewController: UIViewController {
   var currentLocation: CLLocation?
   var currentOrchardID: String = "" {
     didSet {
-      if currentOrchardID != "" {
+      if !currentOrchardID.isEmpty {
         filteredWorkers = filteredWorkers.filter { $0.assignedOrchards.contains(currentOrchardID) }
-        DispatchQueue.main.async {
-          self.workerCollectionView?.reloadData()
-        }
+      } else {
+        filteredWorkers = workers
+      }
+      DispatchQueue.main.async {
+        self.workerCollectionView?.reloadData()
       }
     }
   }
@@ -198,17 +200,17 @@ class TrackerViewController: UIViewController {
     workerCollectionView?.accessibilityIdentifier = "workerClickerCollectionView"
     
     workerCollectionView?.contentInset = UIEdgeInsets(top: 0,
-                                                     left: 0,
-                                                     bottom: 106,
-                                                     right: 0)
+                                                      left: 0,
+                                                      bottom: 106,
+                                                      right: 0)
     
     yieldLabel?.attributedText = attributedStringForYieldCollection(0, expectedYield)
   }
-
+  
   override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
   }
-
+  
 }
 
 extension TrackerViewController: CLLocationManagerDelegate {
@@ -246,8 +248,8 @@ extension TrackerViewController: CLLocationManagerDelegate {
     let expectedText = tracker == nil
       ? " -- "
       : b.isNaN
-        ? " Not Enough Data "
-        : Int(b).description
+      ? " Not Enough Data "
+      : Int(b).description
     let expectedAmount = NSAttributedString(string: expectedText, attributes: regularFont)
     
     let result = NSMutableAttributedString()
@@ -313,7 +315,7 @@ extension TrackerViewController: UICollectionViewDataSource {
   func collectionView(
     _ collectionView: UICollectionView,
     cellForItemAt indexPath: IndexPath
-  ) -> UICollectionViewCell {
+    ) -> UICollectionViewCell {
     let labelCellID = "labelWorkerCollectionViewCell"
     let loadingCellID = "loadingWorkerCollectionViewCell"
     let workerCellID = "workerCollectionViewCell"
@@ -321,7 +323,7 @@ extension TrackerViewController: UICollectionViewDataSource {
     guard tracker != nil else {
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: labelCellID, for: indexPath)
         as? LabelWorkingCollectionViewCell else {
-        return UICollectionViewCell()
+          return UICollectionViewCell()
       }
       cell.textLabel.text = "Press 'Start' to begin tracking worker collections"
       return cell
@@ -330,7 +332,7 @@ extension TrackerViewController: UICollectionViewDataSource {
     guard gotWorkers else {
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: labelCellID, for: indexPath)
         as? LabelWorkingCollectionViewCell else {
-        return UICollectionViewCell()
+          return UICollectionViewCell()
       }
       cell.textLabel.text = "No workers were added to your farm.\nAdd workers in Information"
       return cell
@@ -347,19 +349,26 @@ extension TrackerViewController: UICollectionViewDataSource {
     guard !filteredWorkers.isEmpty else {
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: labelCellID, for: indexPath)
         as? LabelWorkingCollectionViewCell else {
-        return UICollectionViewCell()
+          return UICollectionViewCell()
       }
       guard let searchText = searchBar?.text else {
         cell.textLabel.text = "Unknown Error Occured"
         return cell
       }
-      cell.textLabel.text = "No workers that contains '\(searchText)' in their name"
+      if searchText.isEmpty {
+        let o = Entities.shared.orchards.first { $0.value.id == self.currentOrchardID }?.value
+        let oname = o?.name ?? ""
+        let ofarm = Entities.shared.farms.first { $0.value.id == o?.assignedFarm }?.value.name ?? ""
+        cell.textLabel.text = "No workers are assigned in this current orchard '\(ofarm) - \(oname)'"
+      } else {
+        cell.textLabel.text = "No workers that contains '\(searchText)' in their name"
+      }
       return cell
     }
     
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: workerCellID, for: indexPath)
       as? WorkerCollectionViewCell else {
-      return UICollectionViewCell()
+        return UICollectionViewCell()
     }
     
     let worker = filteredWorkers[indexPath.row]
@@ -372,13 +381,14 @@ extension TrackerViewController: UICollectionViewDataSource {
     
     let cy = r.y
     let ch = cell.frame.size.height
-    let g = CAGradientLayer.gradient(colors: [
-                                       UIColor.gradientColor(from: .sessionTiles, atFraction: cy / h),
-                                       UIColor.gradientColor(from: .sessionTiles, atFraction: (cy + ch) / h)
-                                     ],
-                                     locations: [0, 1],
-                                     cornerRadius: 0,
-                                     borderColor: .clear)
+    let g = CAGradientLayer.gradient(
+      colors: [
+        UIColor.gradientColor(from: .sessionTiles, atFraction: cy / h),
+        UIColor.gradientColor(from: .sessionTiles, atFraction: (cy + ch) / h)
+      ],
+      locations: [0, 1],
+      cornerRadius: 0,
+      borderColor: .clear)
     
     cell.myBackgroundView.apply(gradient: g)
     
@@ -416,13 +426,14 @@ extension TrackerViewController: UICollectionViewDataSource {
       let cy = r.y
       let ch = cell.frame.size.height
       
-      let g = CAGradientLayer.gradient(colors: [
-                                         UIColor.gradientColor(from: .sessionTiles, atFraction: cy / h),
-                                         UIColor.gradientColor(from: .sessionTiles, atFraction: (cy + ch) / h)
-                                       ],
-                                       locations: [0, 1],
-                                       cornerRadius: 0,
-                                       borderColor: .clear)
+      let g = CAGradientLayer.gradient(
+        colors: [
+          UIColor.gradientColor(from: .sessionTiles, atFraction: cy / h),
+          UIColor.gradientColor(from: .sessionTiles, atFraction: (cy + ch) / h)
+        ],
+        locations: [0, 1],
+        cornerRadius: 0,
+        borderColor: .clear)
       
       cell.myBackgroundView.apply(gradient: g)
       
@@ -481,7 +492,7 @@ extension TrackerViewController: UISearchBarDelegate {
       if currentOrchardID != "" && !worker.assignedOrchards.contains(currentOrchardID) {
         return false
       }
-      guard searchText != "" else {
+      guard !searchText.isEmpty else {
         return true
       }
       return (worker.firstname + " " + worker.lastname)
