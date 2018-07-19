@@ -136,7 +136,7 @@ public class BarGraph extends AppCompatActivity {
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
-        base = base + "&startDate=" + (currentTime - 7 * 24 * 60 * 13);
+        base = base + "&startDate=" + (currentTime - 60 * 13);
         base = base + "&endDate=" + currentTime;
         base = base + "&uid=" + farmerKey;
 
