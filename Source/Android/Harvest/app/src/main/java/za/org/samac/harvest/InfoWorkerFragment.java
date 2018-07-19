@@ -40,8 +40,6 @@ public class InfoWorkerFragment extends Fragment {
     private Data data;
     private String ID;
 
-    private String normalNumber = "";
-
     private boolean editable = false;
     private boolean newCreation = false;
 
@@ -243,7 +241,7 @@ public class InfoWorkerFragment extends Fragment {
             worker.setWorkerType(WorkerType.WORKER);
         }
 
-        worker.setPhone(phone.getText().toString());
+        worker.setPhone(AppUtil.normalisePhoneNumber(phone.getText().toString(), getContext()));
         worker.setFurther(further.getText().toString());
 
         //Assigned Orchards
@@ -271,7 +269,7 @@ public class InfoWorkerFragment extends Fragment {
             newWorker.setWorkerType(WorkerType.WORKER);
         }
 
-        newWorker.setPhone(phone.getText().toString());
+        newWorker.setPhone(AppUtil.normalisePhoneNumber(phone.getText().toString(), getContext()));
         newWorker.setFurther(further.getText().toString());
 
         //Assigned Orchards
