@@ -85,6 +85,7 @@
 		16E3751120F0F74E0023AD2C /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3751020F0F74E0023AD2C /* DateHelpers.swift */; };
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
 		16F5796721000CB50086325B /* PhoneyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F5796621000CB50086325B /* PhoneyFormatter.swift */; };
+		16F579692100FBAF0086325B /* HarvestEntityAuthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F579682100FBAF0086325B /* HarvestEntityAuthUITests.swift */; };
 		16FF431E20DFF106001092CF /* DBCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431D20DFF106001092CF /* DBCloud.swift */; };
 		16FF432020E19117001092CF /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431F20E19117001092CF /* LocationHelper.swift */; };
 		16FF432220E3B8B8001092CF /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF432120E3B8B8001092CF /* LocationTracker.swift */; };
@@ -195,6 +196,7 @@
 		16E3751020F0F74E0023AD2C /* DateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelpers.swift; sourceTree = "<group>"; };
 		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16F5796621000CB50086325B /* PhoneyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneyFormatter.swift; sourceTree = "<group>"; };
+		16F579682100FBAF0086325B /* HarvestEntityAuthUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityAuthUITests.swift; sourceTree = "<group>"; };
 		16FF431B20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/Main.strings; sourceTree = "<group>"; };
 		16FF431C20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		16FF431D20DFF106001092CF /* DBCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBCloud.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 		1604E4C1206958E900E9BA15 /* HarvestUITests */ = {
 			isa = PBXGroup;
 			children = (
+				16F579682100FBAF0086325B /* HarvestEntityAuthUITests.swift */,
 				165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */,
 				165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */,
 				1604E4C4206958E900E9BA15 /* Info.plist */,
@@ -944,6 +947,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */,
+				16F579692100FBAF0086325B /* HarvestEntityAuthUITests.swift in Sources */,
 				165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

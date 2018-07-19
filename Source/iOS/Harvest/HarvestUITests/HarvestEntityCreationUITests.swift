@@ -7,9 +7,8 @@
 //
 
 // swiftlint:disable line_length
-/// swiftlint:disable function_body_length
 
-// IMPORTANT user must be logged in
+// IMPORTANT run HarvestEntityAuthUITests first
 
 import XCTest
 
