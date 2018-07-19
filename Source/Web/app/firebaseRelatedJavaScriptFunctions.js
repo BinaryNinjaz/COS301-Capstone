@@ -39,6 +39,19 @@ if (title !== "Harvest | Login and Register") {
   });
 }
 
+function retryUntilTimeout(succ, fail, timeout) {
+  if (firebase.auth().currentUser) {
+    succ()
+  } else {
+    if (timeout > 0 && timeout < 1000 * 60 * 5) {
+      setTimeout(succ, timeout * 2);
+    } else {
+      alert("Network timeout. Try Reloading the page later.");
+    }
+    fail();
+  }
+}
+
 function firebaseRegister(email, password) {
     if(password.length < 6) {
         password += "s3cr3ts4uc3";
@@ -79,7 +92,7 @@ function firebaseLogin() {
         } else {
             alert(errorMessage);
         }
-        console.log(error);
+       // console.log(error.code);
     });
 }
 

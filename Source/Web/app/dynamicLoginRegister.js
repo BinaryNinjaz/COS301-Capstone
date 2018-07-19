@@ -1,6 +1,6 @@
 let page = 0; //0 being login, 1 being sign up
 
-
+// This will add the login with google functionality
 function googleLogin(){
 	var provider = new firebase.auth.GoogleAuthProvider();
 	provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
@@ -126,10 +126,6 @@ function register() {
 }
 
 function checkPass(pass1, pass2) {
-    // if (pass1 === "" || pass2 === "") {
-    //     document.getElementById("errorSpace").innerHTML = "<p class='errmsg'>Passwords cannot be empty</p>";
-    //     return false;
-    // }
 	if(page === 0){
 		return false;
 	}
@@ -186,9 +182,6 @@ input.addEventListener("keyup", function(event) {
         document.getElementById("myInput").click();
     }
 });
-/* What Vincent Added on 04/05/2018 ends here. */
-
-
 
 
 

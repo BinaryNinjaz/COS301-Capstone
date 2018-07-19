@@ -4,12 +4,13 @@ function locationsRef() {
   return firebase.database().ref('/' + userID() + '/locations');
 }
 
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    $(window).bind("load", function() {
-      initForemen();
-    });
-  }
+$(window).bind("load", function() {
+  let succ = () => {
+    initForemen();
+  };
+  let fail = () => {
+  };
+  retryUntilTimeout(succ, fail, 1000);
 });
 
 var foremen = [];
