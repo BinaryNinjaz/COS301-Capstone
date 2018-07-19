@@ -40,7 +40,7 @@ class ForemanSignInViewController: UIViewController {
       case .wantsPhoneNumber:
         instructionLabel.text = """
           Please enter your phone number to receive a SMS with a verification code. Ensure you add \
-          your area code. Example +27 71 1234567
+          your area code. Example \(Phoney.formatted(number: "0123456789") ?? "")
           """
         numberInputTextField.addLeftImage(#imageLiteral(resourceName: "Phone"))
         numberInputTextField.placeholder = "Phone Number"
@@ -152,7 +152,7 @@ class ForemanSignInViewController: UIViewController {
     switch state {
     case .wantsPhoneNumber:
       isLoading = true
-      phoneNumber = numberInputTextField.text
+      phoneNumber = Phoney.formatted(number: numberInputTextField.text ?? "")?.removedFirebaseInvalids()
       guard let pn = phoneNumber else {
         SCLAlertView().showError(
           "Invalid Phone Number",
@@ -160,7 +160,10 @@ class ForemanSignInViewController: UIViewController {
         return
       }
       
-      HarvestDB.verify(phoneNumber: pn, on: self) { _ in
+      HarvestDB.verify(phoneNumber: pn, on: self) { succ in
+        if !succ && self.state == .wantsVerificationCode {
+          self.state.nextState()
+        }
         self.isLoading = false
       }
       

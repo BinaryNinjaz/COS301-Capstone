@@ -53,13 +53,14 @@ enum HarvestDB {
 
 extension String {
   func removedFirebaseInvalids() -> String {
-    var result = ""
+    var result = String()
+    result.reserveCapacity(count)
     
     for c in self {
-      if !".".contains(c) {
-        result += "\(c)"
-      } else {
-        result += ","
+      switch c {
+      case ".": result += ","
+      case " ": continue
+      default: result += "\(c)"
       }
     }
     

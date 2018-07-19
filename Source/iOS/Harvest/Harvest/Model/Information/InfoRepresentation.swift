@@ -214,10 +214,10 @@ extension Worker {
       row.add(rule: RuleRequired(msg: "• Phone numbers must exist for foreman"))
       row.validationOptions = .validatesAlways
       row.title = "Phone Number"
-      row.value = phoneNumber
-      row.placeholder = "012 3456789"
+      row.value = Phoney.formatted(number: phoneNumber)
+      row.placeholder = Phoney.formatted(number: "0123456789")
     }.onChange { row in
-      self.tempory?.phoneNumber = row.value ?? ""
+      self.tempory?.phoneNumber = Phoney.formatted(number: row.value) ?? ""
       onChange()
     }.onRowValidationChanged { (cell, row) in
       if row.validationErrors.isEmpty {
@@ -283,7 +283,9 @@ extension Worker {
       
       +++ Section.init(
         header: "Role",
-        footer: "Any foreman phone number must include its area code. Example +27 71 1234567")
+        footer: """
+        Any foreman phone number must include its area code. Example \(Phoney.formatted(number: "0123456789") ?? "")
+        """)
       <<< isForemanRow
       <<< phoneRow
 //      <<< emailRow

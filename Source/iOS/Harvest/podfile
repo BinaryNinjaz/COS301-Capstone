@@ -13,6 +13,7 @@ target 'Harvest' do
   pod 'Charts'
   pod 'SnapKit', '~> 4.0.0'
   pod 'SCLAlertView'
+  pod 'PhoneNumberKit', '~> 2.1'
   
   target 'HarvestTests' do
     inherit! :search_paths

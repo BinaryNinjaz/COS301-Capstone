@@ -72,6 +72,12 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
+  - PhoneNumberKit (2.1.0):
+    - PhoneNumberKit/PhoneNumberKitCore (= 2.1.0)
+    - PhoneNumberKit/UIKit (= 2.1.0)
+  - PhoneNumberKit/PhoneNumberKitCore (2.1.0)
+  - PhoneNumberKit/UIKit (2.1.0):
+    - PhoneNumberKit/PhoneNumberKitCore
   - SCLAlertView (0.8)
   - SnapKit (4.0.0)
 
@@ -86,6 +92,7 @@ DEPENDENCIES:
   - Firebase/Functions
   - GoogleMaps
   - GoogleSignIn
+  - PhoneNumberKit (~> 2.1)
   - SCLAlertView
   - SnapKit (~> 4.0.0)
 
@@ -107,9 +114,10 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 390ea358e5a0d0133153806f744662dad933d06b
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  PhoneNumberKit: 62003f40ff75315fd3738286558bc365365ac222
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
-PODFILE CHECKSUM: c399500bbdf16725bb0ecb900f7817574cf9271d
+PODFILE CHECKSUM: 155152a26213d8d8cb6d78632eb6a9e391c10196
 
 COCOAPODS: 1.4.0

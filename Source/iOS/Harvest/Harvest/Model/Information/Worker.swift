@@ -39,7 +39,7 @@ final class Worker {
     lastname = json["surname"] as? String ?? ""
     assignedOrchards = json.orchards()
     details = json["info"] as? String ?? ""
-    phoneNumber = json["phoneNumber"] as? String ?? ""
+    phoneNumber = (json["phoneNumber"] as? String ?? "").removedFirebaseInvalids()
     idNumber = json["idNumber"] as? String ?? ""
     
     if let kinds = json["type"] as? String {
