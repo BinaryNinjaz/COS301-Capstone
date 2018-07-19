@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -65,6 +66,7 @@ public class SessionDetails extends AppCompatActivity {
     private ArrayList<Worker> foremen;
     private HashMap<String, String> foremenID;
     private ProgressBar progressBar;
+    private LinearLayout linearLayoutSessDetails;
 
     private BottomNavigationView bottomNavigationView;
     private FirebaseDatabase database;
@@ -88,7 +90,9 @@ public class SessionDetails extends AppCompatActivity {
         setContentView(R.layout.activity_session_details);
 
         progressBar = findViewById(R.id.progressBar);
-        //progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+        linearLayoutSessDetails = findViewById(R.id.linearLayoutSessDetails);
+        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+        linearLayoutSessDetails.setVisibility(View.GONE);
         pieChartView = findViewById(R.id.pieChart);
 
         collected = new collections("");
@@ -127,13 +131,63 @@ public class SessionDetails extends AppCompatActivity {
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() == null) {
+                if (dataSnapshot == null || dataSnapshot.getValue() == null) {
                     dbref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
-                                startDate = new Date((long)(zoneSnapshot.child("start_date").getValue(Double.class)*1000));
+                            startDate = new Date((long) (dataSnapshot.child("start_date").getValue(Double.class) * 1000));
+                            Double ed = dataSnapshot.child("end_date").getValue(Double.class);
+                            if (ed != null) {
+                                endDate = new Date((long) (ed * 1000));
+                            } else {
+                                endDate = startDate;
                             }
+                            key = dataSnapshot.getKey();
+                            workerKeys = new ArrayList<>();
+                            workerName = new ArrayList<>();
+                            yield = new ArrayList<>();
+
+                            wid = dataSnapshot.child("wid").getValue(String.class);
+                            for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
+                                Double lat = childSnapshot.child("lat").getValue(Double.class);
+                                Double lng = childSnapshot.child("lng").getValue(Double.class);
+                                Location loc = new Location("");
+                                loc.setLatitude(lat.doubleValue());
+                                loc.setLongitude(lng.doubleValue());
+
+                                collected.addTrack(loc);
+                            }
+                            for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
+                                String workername = workerID.get(childSnapshot.getKey());
+                                int count = 0;
+                                for (DataSnapshot collection : childSnapshot.getChildren()) {
+                                    System.out.println(collection);
+                                    Double lat = collection.child("coord").child("lat").getValue(Double.class);
+                                    Double lng = collection.child("coord").child("lng").getValue(Double.class);
+                                    Location loc = new Location("");
+                                    loc.setLatitude(lat.doubleValue());
+                                    loc.setLongitude(lng.doubleValue());
+                                    Double time = childSnapshot.child("date").getValue(Double.class);
+
+                                    collected.addCollection(workername, loc, time);
+                                    count++;
+                                }
+                                collections.put(workername, (float) count);
+                            }
+
+                            displayGraph();
+
+                            TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
+                            TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
+                            TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
+
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                            formatter.setCalendar(Calendar.getInstance());
+
+                            String fname = foremenID.get(wid) == null ? "Farm Owner" : foremenID.get(wid);
+                            foremanTextView.setText("Foreman: " + fname);
+                            startTime.setText("Time Started: " + formatter.format(startDate));
+                            endTime.setText("Time Ended: " + formatter.format(endDate));
                         }
 
                         @Override
@@ -141,61 +195,62 @@ public class SessionDetails extends AppCompatActivity {
 
                         }
                     });
-                }
-                System.out.println("&&&&&&&&&&& "+dataSnapshot+" &&&&&&&&&&& "+dataSnapshot.getValue()+" **** "+dataSnapshot.child("start_date"));
-                startDate = new Date((long)(dataSnapshot.child("start_date").getValue(Double.class) * 1000));
-                Double ed = dataSnapshot.child("end_date").getValue(Double.class);
-                if (ed != null) {
-                    endDate = new Date((long)(ed * 1000));
                 } else {
-                    endDate = startDate;
-                }
-                key = dataSnapshot.getKey();
-                workerKeys = new ArrayList<>();
-                workerName = new ArrayList<>();
-                yield = new ArrayList<>();
+                    System.out.println("&&&&&&&&&&& " + dataSnapshot + " &&&&&&&&&&& " + dataSnapshot.getValue() + " **** " + dataSnapshot.child("start_date"));
+                    startDate = new Date((long) (dataSnapshot.child("start_date").getValue(Double.class) * 1000));
+                    Double ed = dataSnapshot.child("end_date").getValue(Double.class);
+                    if (ed != null) {
+                        endDate = new Date((long) (ed * 1000));
+                    } else {
+                        endDate = startDate;
+                    }
+                    key = dataSnapshot.getKey();
+                    workerKeys = new ArrayList<>();
+                    workerName = new ArrayList<>();
+                    yield = new ArrayList<>();
 
-                wid = dataSnapshot.child("wid").getValue(String.class);
-                for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
-                    Double lat = childSnapshot.child("lat").getValue(Double.class);
-                    Double lng = childSnapshot.child("lng").getValue(Double.class);
-                    Location loc = new Location("");
-                    loc.setLatitude(lat.doubleValue());
-                    loc.setLongitude(lng.doubleValue());
-
-                    collected.addTrack(loc);
-                }
-                for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
-                    String workername = workerID.get(childSnapshot.getKey());
-                    int count = 0;
-                    for (DataSnapshot collection : childSnapshot.getChildren()) {
-                        System.out.println(collection);
-                        Double lat = collection.child("coord").child("lat").getValue(Double.class);
-                        Double lng = collection.child("coord").child("lng").getValue(Double.class);
+                    wid = dataSnapshot.child("wid").getValue(String.class);
+                    for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
+                        Double lat = childSnapshot.child("lat").getValue(Double.class);
+                        Double lng = childSnapshot.child("lng").getValue(Double.class);
                         Location loc = new Location("");
                         loc.setLatitude(lat.doubleValue());
                         loc.setLongitude(lng.doubleValue());
-                        Double time = childSnapshot.child("date").getValue(Double.class);
 
-                        collected.addCollection(workername, loc, time);
-                        count++;
+                        collected.addTrack(loc);
                     }
-                    collections.put(workername, (float) count);
+                    for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
+                        String workername = workerID.get(childSnapshot.getKey());
+                        int count = 0;
+                        for (DataSnapshot collection : childSnapshot.getChildren()) {
+                            System.out.println(collection);
+                            Double lat = collection.child("coord").child("lat").getValue(Double.class);
+                            Double lng = collection.child("coord").child("lng").getValue(Double.class);
+                            Location loc = new Location("");
+                            loc.setLatitude(lat.doubleValue());
+                            loc.setLongitude(lng.doubleValue());
+                            Double time = childSnapshot.child("date").getValue(Double.class);
+
+                            collected.addCollection(workername, loc, time);
+                            count++;
+                        }
+                        collections.put(workername, (float) count);
+                    }
+
+                    displayGraph();
+
+                    TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
+                    TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
+                    TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                    formatter.setCalendar(Calendar.getInstance());
+
+                    String fname = foremenID.get(wid) == null ? "Farm Owner" : foremenID.get(wid);
+                    foremanTextView.setText("Foreman: " + fname);
+                    startTime.setText("Time Started: " + formatter.format(startDate));
+                    endTime.setText("Time Ended: " + formatter.format(endDate));
                 }
-
-                displayGraph();
-
-                TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
-                TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
-                TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
-
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                formatter.setCalendar(Calendar.getInstance());
-
-                String fname = foremenID.get(wid) == null ? "Farm Owner" : foremenID.get(wid);
-                foremanTextView.setText("Foreman: " + fname);
-                startTime.setText("Time Started: " + formatter.format(startDate));
-                endTime.setText("Time Ended: " + formatter.format(endDate));
             }
 
             @Override
@@ -213,7 +268,8 @@ public class SessionDetails extends AppCompatActivity {
             entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
         }
 
-        //progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+        progressBar.setVisibility(View.GONE);
+        linearLayoutSessDetails.setVisibility(View.VISIBLE);
         pieChartView.setVisibility(View.VISIBLE);
         pieChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
         pieChart.setEntryLabelColor(Color.BLACK);
