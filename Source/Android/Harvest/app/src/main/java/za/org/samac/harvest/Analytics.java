@@ -46,7 +46,6 @@ public class Analytics extends AppCompatActivity {
                                 startActivity(new Intent(Analytics.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(Analytics.this, InformationActivity.class);
                                 startActivity(new Intent(Analytics.this, InformationActivity.class));
                                 return true;
                             case R.id.actionSession:
