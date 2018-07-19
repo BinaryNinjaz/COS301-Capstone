@@ -283,6 +283,7 @@ public class SignIn_Foreman extends AppCompatActivity {
     }
 
     public void findFarms(){
+
         farms.clear();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference workingFor = database.getReference("/WorkingFor/");
@@ -299,41 +300,43 @@ public class SignIn_Foreman extends AppCompatActivity {
                     }
                 }
 
-                //Set all the organizations
-                for (final Organization org : farms){
-                    DatabaseReference orgAdmin = database.getReference("/" + org.getID() + "/admin/");
-                    orgAdmin.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String orgName = dataSnapshot.child("organization").getValue(String.class);
-                            if (orgName != null) {
-                                if (!orgName.equals("")){
-                                    org.setOrganizationName(orgName);
-                                }
-                            }
-                            if (org.toString() == null){
-                                org.setOrganizationName(dataSnapshot.child("email").getValue(String.class));
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-
-                if (farms.size() == 1){
-                    state = STATE_FARM_ONE;
-                    updateUI();
-                }
-                else if(farms.size() == 0){
+                if (farms.size() == 0){
                     state = STATE_FARM_NONE;
                     updateUI();
                 }
                 else {
-                    state = STATE_FARM_MULTI;
-                    updateUI();
+                    //Set all the organizations
+                    for (final Organization org : farms) {
+                        DatabaseReference orgAdmin = database.getReference("/" + org.getID() + "/admin/");
+                        orgAdmin.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String orgName = dataSnapshot.child("organization").getValue(String.class);
+                                if (orgName != null) {
+                                    if (!orgName.equals("")) {
+                                        org.setOrganizationName(orgName);
+                                    }
+                                }
+                                if (org.toString() == null) {
+                                    org.setOrganizationName(dataSnapshot.child("email").getValue(String.class));
+                                }
+                                if (state != STATE_FARM_MULTI && state != STATE_FARM_ONE){
+                                    if (farms.size() == 1){
+                                        state = STATE_FARM_ONE;
+                                        updateUI();
+                                    }
+                                    else {
+                                        state = STATE_FARM_MULTI;
+                                        updateUI();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+                    }
                 }
             }
 
@@ -433,7 +436,7 @@ public class SignIn_Foreman extends AppCompatActivity {
             if (organization != null) {
                 return organization;
             }
-            return "";
+            return id;
         }
 
         public String getID(){
