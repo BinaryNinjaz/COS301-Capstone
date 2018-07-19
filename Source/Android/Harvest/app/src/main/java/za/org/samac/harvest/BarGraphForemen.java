@@ -52,7 +52,7 @@ public class BarGraphForemen extends AppCompatActivity {
     private String userUid;
     private String lastSession;
     private Date latestDate;
-    private static String formanKey;
+    private static String foremanKey;
     private static String formanName;
     private static final String TAG = "Analytics";
     private ArrayList<BarEntry> entries = new ArrayList<>();
@@ -104,7 +104,7 @@ public class BarGraphForemen extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
-        formanKey = getIntent().getStringExtra("key");
+        foremanKey = getIntent().getStringExtra("key");
         formanName = getIntent().getStringExtra("name");
         getTotalBagsPerDay();
         //displayGraph();
@@ -117,7 +117,7 @@ public class BarGraphForemen extends AppCompatActivity {
 
     private static String urlParameters() {
         String base = "";
-        base = base + "id0=" + formanKey;
+        base = base + "id0=" + foremanKey;
         base = base + "&groupBy=" + "foreman";
         base = base + "&period=" + "hourly";
         double currentTime;
@@ -189,7 +189,7 @@ public class BarGraphForemen extends AppCompatActivity {
                         time.add("14");
                         time.add("15");
                         time.add("16");
-                        JSONObject objWorker = objs.getJSONObject(formanKey);
+                        JSONObject objWorker = objs.getJSONObject(foremanKey);
 
                         final ArrayList<Integer> total = new ArrayList<>();
 
