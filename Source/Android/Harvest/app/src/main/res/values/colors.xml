@@ -15,4 +15,5 @@
     <color name="info_orchard_map_polygon_fill">#1A0000BB</color>
     <color name="signIn_verification_resend">#FFA500</color>
     <color name="signIn_verification_cancel">#FF8C00</color>
+    <color name="loginTextColor">#80000000</color>
 </resources>
