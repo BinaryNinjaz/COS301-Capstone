@@ -25,16 +25,16 @@ function yieldsRef() {
   return firebase.database().ref('/' + userID() + '/sessions');
 }
 
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    $(window).bind("load", function() {
-      initOrchards();
-    });
-  } else {
+$(window).bind("load", () => {
+  let succ = () => {
+    initOrchards();
+  };
+  let fail = () => {
     orchardPolys = [];
     orchards = [];
     farms = [];
-  }
+  };
+  retryUntilTimeout(succ, fail, 1000);
 });
 
 var orchards = [];
@@ -147,7 +147,7 @@ function requestedOrchardIds() {
   var result = {};
   for (var i = 0; i < orchards.length; i++) {
     if (orchards[i].showing) {
-      result["orchardId" + String(i)] = orchards[i].key;
+      result["orchardId" + i] = orchards[i].key;
     }
   }
   return result;
@@ -160,7 +160,7 @@ function updateHeatmap() {
   const startDate = new Date(document.getElementById("startDate").value);
   const endDate = new Date(document.getElementById("endDate").value);
   const startTime = startDate.getTime() / 1000;
-  const endTime = endDate.getTime() / 1000;
+  const endTime = endDate.getTime() / 1000 + 60 * 60 * 24;
   
   keys.startDate = startTime;
   keys.endDate = endTime;
