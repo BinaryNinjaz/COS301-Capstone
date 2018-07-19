@@ -10,36 +10,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.RadarData;
-import com.github.mikephil.charting.data.RadarDataSet;
-import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import org.json.JSONObject;
 
@@ -56,7 +43,7 @@ import za.org.samac.harvest.util.AppUtil;
 
 import static za.org.samac.harvest.MainActivity.farmerKey;
 
-public class BarGraph extends AppCompatActivity {
+public class BarGraphForemen extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -65,8 +52,8 @@ public class BarGraph extends AppCompatActivity {
     private String userUid;
     private String lastSession;
     private Date latestDate;
-    private static String workerKey;
-    private static String workerName;
+    private static String formanKey;
+    private static String formanName;
     private static final String TAG = "Analytics";
     private ArrayList<BarEntry> entries = new ArrayList<>();
     private com.github.mikephil.charting.charts.PieChart pieChart;
@@ -92,19 +79,19 @@ public class BarGraph extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(BarGraph.this, MainActivity.class);
+                                Intent openMainActivity= new Intent(BarGraphForemen.this, MainActivity.class);
                                 openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(BarGraph.this, InformationActivity.class);
+                                Intent openInformation= new Intent(BarGraphForemen.this, InformationActivity.class);
                                 openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                Intent openAnalytics= new Intent(BarGraph.this, Analytics.class);
+                                Intent openAnalytics= new Intent(BarGraphForemen.this, Analytics.class);
                                 openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openAnalytics, 0);
                                 return true;
@@ -117,8 +104,8 @@ public class BarGraph extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
-        workerKey = getIntent().getStringExtra("key");
-        workerName = getIntent().getStringExtra("name");
+        formanKey = getIntent().getStringExtra("key");
+        formanName = getIntent().getStringExtra("name");
         getTotalBagsPerDay();
         //displayGraph();
     }
@@ -130,8 +117,8 @@ public class BarGraph extends AppCompatActivity {
 
     private static String urlParameters() {
         String base = "";
-        base = base + "id0=" + workerKey;
-        base = base + "&groupBy=" + "worker";
+        base = base + "id0=" + formanKey;
+        base = base + "&groupBy=" + "foreman";
         base = base + "&period=" + "hourly";
         double currentTime;
         double divideBy1000Var = 1000.0000000;
@@ -202,7 +189,7 @@ public class BarGraph extends AppCompatActivity {
                         time.add("14");
                         time.add("15");
                         time.add("16");
-                        JSONObject objWorker = objs.getJSONObject(workerKey);
+                        JSONObject objWorker = objs.getJSONObject(formanKey);
 
                         final ArrayList<Integer> total = new ArrayList<>();
 
@@ -237,7 +224,7 @@ public class BarGraph extends AppCompatActivity {
                                 barGraphView.setVisibility(View.VISIBLE);
                                 barChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
-                                BarDataSet dataset = new BarDataSet(entries, workerName);
+                                BarDataSet dataset = new BarDataSet(entries, formanName);
                                 dataset.setColors(ColorTemplate.COLORFUL_COLORS);
 
                                 BarData data = new BarData(dataset);//labels was one of the parameters
@@ -275,12 +262,12 @@ public class BarGraph extends AppCompatActivity {
             case R.id.search:
                 return true;
             case R.id.settings:
-                startActivity(new Intent(BarGraph.this, SettingsActivity.class));
+                startActivity(new Intent(BarGraphForemen.this, SettingsActivity.class));
                 return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(BarGraph.this, SignIn_Choose.class));
+                    startActivity(new Intent(BarGraphForemen.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
@@ -291,7 +278,7 @@ public class BarGraph extends AppCompatActivity {
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(BarGraph.this, SignIn_Choose.class));
+                                    startActivity(new Intent(BarGraphForemen.this, SignIn_Choose.class));
                                 }
                             });
                 }

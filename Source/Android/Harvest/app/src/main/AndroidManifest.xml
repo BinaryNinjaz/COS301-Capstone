@@ -122,6 +122,7 @@
 
         <activity android:name=".BarGraph"
             android:label="@string/title_stats" />
+        <activity android:name=".BarGraphForemen" />
     </application>
 
 </manifest>
