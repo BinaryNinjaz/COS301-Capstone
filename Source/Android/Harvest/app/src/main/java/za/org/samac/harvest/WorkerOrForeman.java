@@ -29,6 +29,8 @@ public class WorkerOrForeman extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker_or_foreman);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
 
@@ -38,9 +40,7 @@ public class WorkerOrForeman extends AppCompatActivity{
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(WorkerOrForeman.this, MainActivity.class);
-                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);
+                                startActivity(new Intent(WorkerOrForeman.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
                                 Intent openInformation= new Intent(WorkerOrForeman.this, InformationActivity.class);
@@ -48,7 +48,7 @@ public class WorkerOrForeman extends AppCompatActivity{
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
-                                Intent openSessions= new Intent(WorkerOrForeman.this, SessionsMap.class);
+                                Intent openSessions= new Intent(WorkerOrForeman.this, Sessions.class);
                                 openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openSessions, 0);
                                 return true;
@@ -102,7 +102,7 @@ public class WorkerOrForeman extends AppCompatActivity{
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(WorkerOrForeman.this, LoginActivity.class));
+                    startActivity(new Intent(WorkerOrForeman.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();

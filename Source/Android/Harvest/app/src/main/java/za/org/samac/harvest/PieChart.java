@@ -1,8 +1,6 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.MediaCas;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -29,7 +27,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import za.org.samac.harvest.util.AppUtil;
@@ -195,17 +192,17 @@ public class PieChart extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(PieChart.this, LoginActivity.class));
+                    startActivity(new Intent(PieChart.this, SignIn_Farmer.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(PieChart.this, LoginActivity.class));
+                                    startActivity(new Intent(PieChart.this, SignIn_Choose.class));
                                 }
                             });
                 }

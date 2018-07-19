@@ -21,9 +21,12 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".SignIn_Choose" />
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login">
+            android:name=".SignIn_Farmer"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".SignIn_Choose">
 
             <!-- Makes this the first screen the user sees once app is opened -->
             <!--
@@ -35,8 +38,14 @@
             -->
         </activity>
         <activity
-            android:name=".SignUpActivity"
-            android:label="@string/title_activity_sign_up" />
+            android:name=".SignIn_Foreman"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".SignIn_Choose" />
+        <activity
+            android:name=".SignIn_SignUp"
+            android:label="@string/title_activity_sign_up"
+            android:parentActivityName=".SignIn_Choose"/>
+
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
@@ -88,15 +97,32 @@
         <activity android:name=".adapter.SessionDetails"
             android:label="@string/title_activity_sessions"></activity>
         <activity android:name=".OrchardsForGraph"
-            android:label="@string/title_stats" />
+            android:label="@string/title_stats"
+            android:parentActivityName=".Analytics" />
+
         <activity android:name=".WorkerOrForeman"
-            android:label="@string/title_stats" />
+            android:label="@string/title_stats"
+            android:parentActivityName=".Analytics">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Analytics"/>
+        </activity>
+
         <activity android:name=".ForemenForBarGraph"
-            android:label="@string/title_stats" />
+            android:label="@string/title_stats"
+            android:parentActivityName=".WorkerOrForeman">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".WorkerOrForeman"/>
+        </activity>
+
         <activity android:name=".WorkersForBarGraph"
-            android:label="@string/title_stats" />
+            android:label="@string/title_stats"
+            android:parentActivityName=".WorkerOrForeman" />
+
         <activity android:name=".BarGraph"
             android:label="@string/title_stats" />
+        <activity android:name=".BarGraphForemen" />
     </application>
 
 </manifest>

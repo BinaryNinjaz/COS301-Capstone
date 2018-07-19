@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:gravity="center_horizontal"
+                android:layout_centerInParent="true"
                 android:textSize="15dp"
                 android:text="Sam" />
 
@@ -43,11 +44,12 @@
                 <Button
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/btnMinus"
+                    style="@style/Base.Widget.AppCompat.ButtonBar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="-"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="30dp"
                     android:background="@drawable/button_background_green"/>
 
@@ -64,12 +66,13 @@
 
                 <Button
                     android:id="@+id/btnPlus"
+                    style="@style/Base.Widget.AppCompat.ButtonBar"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:text="+"
-                    android:textColor="@color/white"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="30dp"
                     android:background="@drawable/button_background_green"/>
 

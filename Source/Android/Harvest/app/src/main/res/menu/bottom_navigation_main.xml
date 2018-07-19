@@ -17,12 +17,14 @@
             android:id="@+id/actionSession"
             android:enabled="true"
             android:icon="@android:drawable/ic_menu_view"
-            android:title="Sessions"
+            android:title="@string/title_activity_sessions"
             app:showAsAction="ifRoom" />
         <item
             android:id="@+id/actionStats"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_view"
+            android:icon="@drawable/baseline_bar_chart_black_18dp"
+            android:iconTint="@color/grey"
+            android:iconTintMode="add"
             android:title="@string/title_stats"
             app:showAsAction="ifRoom"/>
 </menu>

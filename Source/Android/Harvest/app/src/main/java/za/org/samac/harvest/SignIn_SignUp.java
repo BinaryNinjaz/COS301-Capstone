@@ -26,12 +26,11 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -42,9 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import za.org.samac.harvest.util.AppUtil;
 
@@ -53,7 +50,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -76,6 +73,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private EditText edtFirstName;
     private EditText edtSurname;
     private EditText edtEmail;
+    private EditText edtOrganization;
     private EditText edtPassword;
     private EditText edtConfirmPassword;
     private View signUp_progress;
@@ -83,13 +81,15 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private Button btnSignUp;
     private Button btnLogin;
 
+    private String oldEmail;
+
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
     private static final String TAG = "EmailPassword";//tag I used for log
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_signin_signup);
         // Set up the sign up form.
         edtFirstName = findViewById(R.id.edtFirstName);
         //populateAutoComplete();
@@ -99,6 +99,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
         edtEmail = findViewById(R.id.edtEmail);
         //populateAutoComplete();
+
+        edtOrganization = findViewById(R.id.edtOrganization);
 
         edtPassword = findViewById(R.id.edtPassword);
         /*edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -118,6 +120,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                     if(validateForm()) {
+                        hideSoftKeyboard();
                         createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
                     }
 
@@ -136,6 +139,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             @Override
             public void onClick(View view) {
                 if(validateForm()) {
+                    hideSoftKeyboard();
                     createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
                 }
             }
@@ -146,13 +150,28 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                Intent intent = new Intent(SignIn_SignUp.this, SignIn_Farmer.class);
                 startActivity(intent);
                 finish();//kill current Activity
             }
         });
 
         mAuth = FirebaseAuth.getInstance();//initialisation the FirebaseAuth instance
+
+        //Set organization to email
+        edtEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus){
+                    String email = edtEmail.getText().toString();
+                    String org = edtOrganization.getText().toString();
+                    if (org.equals("") || org.equals(oldEmail)){
+                        edtOrganization.setText(email);
+                    }
+                    oldEmail = email;
+                }
+            }
+        });
     }
 
     @Override
@@ -165,6 +184,13 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
     private void updateUI(FirebaseUser currentUser) {
 
+    }
+
+    public void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     private void createAccount(String email, String password) {
@@ -201,10 +227,24 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
                             Snackbar.make(signUp_form, "Registration Successful", Snackbar.LENGTH_LONG).show();
                             signUp_progress.setVisibility(View.GONE);
 
+                            //Add the name, surname, and organization to Firebase
+                            EditText fname, sname, org, email;
+                            fname = findViewById(R.id.edtFirstName);
+                            sname = findViewById(R.id.edtSurname);
+                            org = findViewById(R.id.edtOrganization);
+                            email = findViewById(R.id.edtEmail);
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference userAdmin = database.getReference(user.getUid() + "/admin/");
+                            userAdmin.child("firstname").setValue(fname.getText().toString());
+                            userAdmin.child("surname").setValue(sname.getText().toString());
+                            userAdmin.child("organization").setValue(org.getText().toString());
+                            userAdmin.child("email").setValue(email.getText().toString());
+
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(SignIn_SignUp.this, InformationActivity.class);
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }
@@ -214,7 +254,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
 
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            /*Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                            /*Toast.makeText(SignIn_SignUp.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);*/
 
@@ -275,23 +315,24 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
             edtEmail.setError(null);
         }
 
-        String surname = edtSurname.getText().toString();
-        if (TextUtils.isEmpty(surname)) {
-            edtSurname.setError("Required.");
-            focusView = edtSurname;
-            valid = false;
-        } else {
-            edtSurname.setError(null);
-        }
-
-        String firstName = edtFirstName.getText().toString();
-        if (TextUtils.isEmpty(firstName)) {
-            edtFirstName.setError("Required.");
-            focusView = edtFirstName;
-            valid = false;
-        } else {
-            edtFirstName.setError(null);
-        }
+        //TODO: Should this really be necessary?
+//        String surname = edtSurname.getText().toString();
+//        if (TextUtils.isEmpty(surname)) {
+//            edtSurname.setError("Required.");
+//            focusView = edtSurname;
+//            valid = false;
+//        } else {
+//            edtSurname.setError(null);
+//        }
+//
+//        String firstName = edtFirstName.getText().toString();
+//        if (TextUtils.isEmpty(firstName)) {
+//            edtFirstName.setError("Required.");
+//            focusView = edtFirstName;
+//            valid = false;
+//        } else {
+//            edtFirstName.setError(null);
+//        }
 
         if (valid == false) {
             // There was an error; don't attempt login and focus the first
@@ -487,7 +528,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderCallbacks
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(SignUpActivity.this,
+                new ArrayAdapter<>(SignIn_SignUp.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         //edtEmail.setAdapter(adapter);

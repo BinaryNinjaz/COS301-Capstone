@@ -1,0 +1,54 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/pref_account_key">
+
+    <!--<Preference-->
+        <!--android:selectable="false"-->
+        <!--android:title="Account"-->
+        <!--android:key="@string/pref_account_account_key"-->
+        <!--android:enabled="false"/>-->
+
+    <PreferenceCategory
+        android:title="@string/pref_account_category_login"
+        android:key="@string/pref_account_category_login_key">
+
+        <EditTextPreference
+            android:title="@string/pref_account_email"
+            android:key="@string/pref_account_email_key"
+            android:inputType="textEmailAddress"/>
+
+        <EditTextPreference
+            android:title="@string/pref_account_password"
+            android:key="@string/pref_account_password_key"
+            android:inputType="textPassword"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_account_category_extra"
+        android:key="@string/pref_account_category_extra_key">
+
+        <EditTextPreference
+            android:title="@string/pref_account_organization"
+            android:key="@string/pref_account_organization_key"/>
+
+        <EditTextPreference
+            android:title="@string/pref_account_fname"
+            android:key="@string/pref_account_fname_key"/>
+
+        <EditTextPreference
+            android:title="@string/pref_account_sname"
+            android:key="@string/pref_account_sname_key" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_account_category_management"
+        android:key="@string/pref_account_category_management_key">
+
+        <Preference
+            android:title="@string/pref_account_delete"
+            android:key="@string/pref_account_delete_key"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

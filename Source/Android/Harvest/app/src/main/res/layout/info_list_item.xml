@@ -14,6 +14,8 @@
         android:layout_marginTop="8dp"
         android:onClick="onSelectItemButtClick"
         android:text="Button"
+        android:textColor="@color/black"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
