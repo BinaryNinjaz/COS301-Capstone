@@ -21,16 +21,16 @@ function yieldsRef() {
   return firebase.database().ref('/' + userID() + '/sessions');
 }
 
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    $(window).bind("load", function() {
-      initPage();
-      initMap();
-      google.charts.load('current', {'packages':['corechart']});
-    });
-  } else {
+$(window).bind("load", () => {
+  let succ = () => {
+    initPage();
+    initMap();
+    google.charts.load('current', {'packages':['corechart']});
+  };
+  let fail = () => {
     sessions = [];
-  }
+  };
+  retryUntilTimeout(succ, fail, 1000);
 });
 
 var map;
