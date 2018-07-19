@@ -4,7 +4,6 @@
 
     <header
         android:fragment="za.org.samac.harvest.SettingsActivity$AccountPreferenceFragment"
-        android:icon="@android:drawable/ic_lock_idle_lock"
         android:title="@string/pref_header_account" />
 
 </preference-headers>
