@@ -77,7 +77,7 @@ public class SignIn_Foreman extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private String systemPhone;
-    private List<String> farms;
+    private List<Organization> farms;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -261,14 +261,13 @@ public class SignIn_Foreman extends AppCompatActivity {
                 break;
             case R.id.signIn_foreman_farm_okay:
                 switch (state){
-                    //TODO: More than just ids
                     case STATE_FARM_ONE:
-                        AppUtil.writeStringToSharedPrefs(this, getString(R.string.farmerID_Pref), farms.get(0));
+                        AppUtil.writeStringToSharedPrefs(this, getString(R.string.farmerID_Pref), farms.get(0).getID());
                         Intent openMain = new Intent(this, MainActivity.class);
                         startActivityIfNeeded(openMain, 0);
                         break;
                     case STATE_FARM_MULTI:
-                        String id = (String) farmChoose.getSelectedItem();
+                        String id = ((Organization) farmChoose.getSelectedItem()).getID();
                         AppUtil.writeStringToSharedPrefs(this, getString(R.string.farmerID_Pref), id);
                         Intent openMain1 = new Intent(this, MainActivity.class);
                         startActivityIfNeeded(openMain1, 0);
@@ -285,7 +284,7 @@ public class SignIn_Foreman extends AppCompatActivity {
 
     public void findFarms(){
         farms.clear();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference workingFor = database.getReference("/WorkingFor/");
         workingFor.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -293,12 +292,37 @@ public class SignIn_Foreman extends AppCompatActivity {
                 for (DataSnapshot worker : dataSnapshot.getChildren()){
                     String workerPhone = worker.getKey();
                     if (workerPhone.equals(systemPhone)){
-                            //TODO: More than just ids
-                            for (DataSnapshot child : worker.getChildren()){
-                                farms.add(child.getKey());
-                            }
+                        for (DataSnapshot child : worker.getChildren()){
+//                            farms.add(child.getKey());
+                            farms.add(new Organization(child.getKey()));
+                        }
                     }
                 }
+
+                //Set all the organizations
+                for (final Organization org : farms){
+                    DatabaseReference orgAdmin = database.getReference("/" + org.getID() + "/admin/");
+                    orgAdmin.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String orgName = dataSnapshot.child("organization").getValue(String.class);
+                            if (orgName != null) {
+                                if (!orgName.equals("")){
+                                    org.setOrganizationName(orgName);
+                                }
+                            }
+                            if (org.toString() == null){
+                                org.setOrganizationName(dataSnapshot.child("email").getValue(String.class));
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
                 if (farms.size() == 1){
                     state = STATE_FARM_ONE;
                     updateUI();
@@ -366,7 +390,8 @@ public class SignIn_Foreman extends AppCompatActivity {
                 showConfirmationBasics();
                 farmTip.setText(R.string.signIn_foreman_farmOne);
                 farmOneLook.setVisibility(View.VISIBLE);
-                farmOneLook.setText(farms.get(0));
+                farmOneLook.setText(farms.get(0).toString());
+                farmOkay.setText(getText(R.string.signIn_foreman_verificationOkay));
                 break;
             case STATE_FARM_MULTI:
                 showConfirmationBasics();
@@ -374,6 +399,7 @@ public class SignIn_Foreman extends AppCompatActivity {
                 farmChoose.setVisibility(View.VISIBLE);
                 ArrayAdapter sAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, farms);
                 farmChoose.setAdapter(sAdapter);
+                farmOkay.setText(getText(R.string.signIn_foreman_verificationOkay));
                 break;
         }
     }
@@ -390,5 +416,28 @@ public class SignIn_Foreman extends AppCompatActivity {
         phoneConfLook.setText(systemPhone);
         farmTip.setVisibility(View.VISIBLE);
         farmOkay.setVisibility(View.VISIBLE);
+    }
+
+    class Organization{
+        private String organization, id;
+
+        Organization(String id){
+            this.id = id;
+        }
+
+        public void setOrganizationName(String name){
+            organization = name;
+        }
+
+        public String toString(){
+            if (organization != null) {
+                return organization;
+            }
+            return "";
+        }
+
+        public String getID(){
+            return id;
+        }
     }
 }
