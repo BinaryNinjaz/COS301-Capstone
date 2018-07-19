@@ -38,147 +38,58 @@ enum Stat {
       }
   }
   
-  func foremanComparison(
-    startDate: Date,
-    endDate: Date,
-    period: HarvestCloud.TimePeriod,
-    completion: @escaping (BarChartData?) -> Void
-  ) {
-    guard case let .foremanComparison(foremen) = self else {
-      completion(nil)
-      return
-    }
-    
-    var ids = [String]()
-    for foreman in foremen {
-      ids.append(foreman.id)
-    }
-    
-    var dataSets = [BarChartDataSet]()
-    
-    comparison(
-      ids: ids,
-      grouping: .foreman,
-      startDate: startDate,
-      endDate: endDate,
-      period: period) { json in
-        guard let json = json else {
-          completion(nil)
-          return
-        }
-        var i = 0
-        let colors = ChartColorTemplates.harvest()
-        for (key, _dataSetObject) in json {
-          guard let dataSetObject = _dataSetObject as? [String: Double] else {
-            continue
-          }
-          
-          let worker = Entities.shared.worker(withId: key)
-          
-          let dataSet = BarChartDataSet()
-          dataSet.label = worker?.name ?? "Unknown Foreman"
-          
-          for (e, x) in period.fullDataSet().enumerated() {
-            if let y = dataSetObject[x] {
-              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
-            } else {
-              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: 0.0))
-            }
-          }
-          
-          dataSet.setColor(colors[i % colors.count])
-          dataSet.drawValuesEnabled = false
-          i += 1
-          dataSets.append(dataSet)
-        }
-        
-        let data = BarChartData(dataSets: dataSets)
-        
-        completion(data)
-    }
-  }
-  
-  func workerComparison(
-    startDate: Date,
-    endDate: Date,
-    period: HarvestCloud.TimePeriod,
-    completion: @escaping (BarChartData?) -> Void
-  ) {
-    guard case let .workerComparison(foremen) = self else {
-      completion(nil)
-      return
-    }
-    
-    var ids = [String]()
-    for foreman in foremen {
-      ids.append(foreman.id)
-    }
-    
-    var dataSets = [BarChartDataSet]()
-    
-    comparison(
-      ids: ids,
-      grouping: .worker,
-      startDate: startDate,
-      endDate: endDate,
-      period: period) { json in
-        guard let json = json else {
-          completion(nil)
-          return
-        }
-        var i = 0
-        let colors = ChartColorTemplates.harvest()
-        for (key, _dataSetObject) in json {
-          guard let dataSetObject = _dataSetObject as? [String: Double] else {
-            continue
-          }
-          
-          let worker = Entities.shared.worker(withId: key)
-          
-          let dataSet = BarChartDataSet()
-          dataSet.label = worker?.name ?? "Unknown Worker"
-          
-          for (e, x) in period.fullDataSet().enumerated() {
-            if let y = dataSetObject[x] {
-              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
-            } else {
-              _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: 0.0))
-            }
-          }
-          
-          dataSet.setColor(colors[i % colors.count])
-          dataSet.drawValuesEnabled = false
-          i += 1
-          dataSets.append(dataSet)
-        }
-        
-        let data = BarChartData(dataSets: dataSets)
-        
-        completion(data)
+  func identifiers(for grouping: HarvestCloud.GroupBy) -> [String]? {
+    var entities: [EntityItem]
+    switch grouping {
+    case .foreman:
+      guard case let .foremanComparison(foremen) = self else {
+        return nil
       }
+      entities = foremen.map { .worker($0) }
+      
+    case .worker:
+      guard case let .workerComparison(workers) = self else {
+        return nil
+      }
+      entities = workers.map { .worker($0) }
+      
+    case .orchard:
+      guard case let .orchardComparison(orchards) = self else {
+        return nil
+      }
+      entities = orchards.map { .orchard($0) }
+    }
+    
+    var ids = [String]()
+    for entity in entities {
+      switch entity {
+      case let .worker(w): ids.append(w.id)
+      case let .orchard(o): ids.append(o.id)
+      default: continue
+      }
+    }
+    
+    return ids
   }
   
-  func orchardComparison(
+  func entityComparison(
+    grouping: HarvestCloud.GroupBy,
     startDate: Date,
     endDate: Date,
     period: HarvestCloud.TimePeriod,
     completion: @escaping (BarChartData?) -> Void
   ) {
-    guard case let .orchardComparison(orchards) = self else {
+    
+    guard let ids = identifiers(for: grouping) else {
       completion(nil)
       return
-    }
-    
-    var ids = [String]()
-    for orchard in orchards {
-      ids.append(orchard.id)
     }
     
     var dataSets = [BarChartDataSet]()
     
     comparison(
       ids: ids,
-      grouping: .orchard,
+      grouping: grouping,
       startDate: startDate,
       endDate: endDate,
       period: period) { json in
@@ -193,12 +104,20 @@ enum Stat {
             continue
           }
           
+          let worker = Entities.shared.worker(withId: key)
           let orchard = Entities.shared.orchards.first { $0.value.id == key }.map { $0.value }
           
           let dataSet = BarChartDataSet()
-          dataSet.label = orchard?.name ?? "Unknown Orchard"
           
-          for (e, x) in period.fullDataSet().enumerated() {
+          let missingMessage = grouping == .orchard
+            ? "Orchard"
+            : grouping == .worker ? "Worker" : "Foreman"
+          dataSet.label = (grouping == .orchard
+            ? orchard?.name
+            : worker?.name) ?? "Unknown \(missingMessage)"
+          
+          for (e, x) in period.fullDataSet(between: startDate, and: endDate,
+            limitToDate: period == .weekly).enumerated() {
             if let y = dataSetObject[x] {
               _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
             } else {
@@ -217,7 +136,6 @@ enum Stat {
         completion(data)
       }
   }
-  
 }
 
 extension ChartColorTemplates {
@@ -266,6 +184,6 @@ extension ChartColorTemplates {
   }
   
   static func harvest() -> [UIColor] {
-    return harvestWood()
+    return harvestColorful()
   }
 }

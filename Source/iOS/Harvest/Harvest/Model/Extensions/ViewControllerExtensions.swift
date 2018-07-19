@@ -6,7 +6,7 @@
 //  Copyright © 2018 Letanyan Arumugam. All rights reserved.
 //
 
-import UIKit
+import Eureka
 
 extension UIViewController {
   func hideKeyboardWhenTappedAround() {
@@ -19,5 +19,38 @@ extension UIViewController {
   
   @objc func dismissKeyboard() {
     view.endEditing(true)
+  }
+}
+
+public protocol ReloadableViewController {
+  func setUp()
+  func tearDown()
+}
+
+public class ReloadableFormViewController: FormViewController, ReloadableViewController {
+  public func setUp() {
+    fatalError()
+  }
+  
+  public func tearDown() {
+    fatalError()
+  }
+  
+  func addRefreshControl() {
+    let refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action: #selector(refreshList(_:)), for: .valueChanged)
+    tableView.addSubview(refreshControl)
+  }
+  
+  @objc func refreshList(_ refreshControl: UIRefreshControl) {
+    refreshControl.endRefreshing()
+    tearDown()
+    setUp()
+  }
+  
+  public override func viewDidLoad() {
+    super.viewDidLoad()
+    addRefreshControl()
+    setUp()
   }
 }

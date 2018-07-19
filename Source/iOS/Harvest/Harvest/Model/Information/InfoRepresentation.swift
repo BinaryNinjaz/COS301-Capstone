@@ -8,6 +8,7 @@
 
 // swiftlint:disable function_body_length
 import Eureka
+import SCLAlertView
 
 extension UIViewController {
   func prebuiltGraph(
@@ -91,13 +92,31 @@ extension FormViewController {
       period: .weekly,
       stat: stat)
     
+    let thisYear = Date().thisMonth()
+    let thisYearsPerformance = prebuiltGraph(
+      title: "This Years Performance",
+      startDate: thisYear.0,
+      endDate: thisYear.1,
+      period: .monthly,
+      stat: stat)
+    
+    let lastYear = Date().lastMonth()
+    let lastYearsPerformance = prebuiltGraph(
+      title: "Last Years Performance",
+      startDate: lastYear.0,
+      endDate: lastYear.1,
+      period: .monthly,
+      stat: stat)
+    
     return [
       todaysPerformance,
       yesterdaysPerformance,
       thisWeeksPerformance,
       lastWeeksPerformance,
       thisMonthsPerformance,
-      lastMonthsPerformance
+      lastMonthsPerformance,
+      thisYearsPerformance,
+      lastYearsPerformance
     ]
   }
 }
@@ -110,7 +129,7 @@ extension Worker {
     let orchards = Entities.shared.orchards
     
     let orchardSection = SelectableSection<ListCheckRow<Orchard>>(
-      "Assigned Orchard",
+      "Assigned Orchards",
       selectionType: .multipleSelection)
     
     for (_, orchard) in orchards {
@@ -195,10 +214,10 @@ extension Worker {
       row.add(rule: RuleRequired(msg: "• Phone numbers must exist for foreman"))
       row.validationOptions = .validatesAlways
       row.title = "Phone Number"
-      row.value = phoneNumber
-      row.placeholder = "012 3456789"
+      row.value = Phoney.formatted(number: phoneNumber)
+      row.placeholder = Phoney.formatted(number: "0123456789")
     }.onChange { row in
-      self.tempory?.phoneNumber = row.value ?? ""
+      self.tempory?.phoneNumber = Phoney.formatted(number: row.value) ?? ""
       onChange()
     }.onRowValidationChanged { (cell, row) in
       if row.validationErrors.isEmpty {
@@ -228,9 +247,18 @@ extension Worker {
     let deleteWorkerRow = ButtonRow { row in
       row.title = "Delete Worker"
     }.onCellSelection { (_, _) in
-      HarvestDB.delete(worker: self) { (_, _) in
-        formVC.navigationController?.popViewController(animated: true)
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Delete") {
+        HarvestDB.delete(worker: self) { (_, _) in
+          formVC.navigationController?.popViewController(animated: true)
+        }
       }
+      
+      alert.showWarning("Are You Sure You Want to Delete \(self.name)?", subTitle: """
+        You will not be able to get back any information about this worker.
+        Any work done by this worker will no longer have any statistics associated with them.
+        """)
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
@@ -253,7 +281,11 @@ extension Worker {
       <<< lastnameRow
       <<< idRow
       
-      +++ Section("Role")
+      +++ Section.init(
+        header: "Role",
+        footer: """
+        Any foreman phone number must include its area code. Example \(Phoney.formatted(number: "0123456789") ?? "")
+        """)
       <<< isForemanRow
       <<< phoneRow
 //      <<< emailRow
@@ -262,10 +294,11 @@ extension Worker {
 //      <<< phoneRow
     
       +++ orchardSection
-      
-      +++ performanceSection
     
-      +++ Section("Information")
+    _ = id != "" ? (form +++ performanceSection) : form
+    
+    form
+      +++ Section("Further Information")
       <<< infoRow
       
       +++ Section()
@@ -384,9 +417,17 @@ extension Farm {
     let deleteFarmRow = ButtonRow { row in
       row.title = "Delete Farm"
     }.onCellSelection { (_, _) in
-      HarvestDB.delete(farm: self) { (_, _) in
-        formVC.navigationController?.popViewController(animated: true)
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Delete") {
+        HarvestDB.delete(farm: self) { (_, _) in
+          formVC.navigationController?.popViewController(animated: true)
+        }
       }
+      
+      alert.showWarning("Are You Sure You Want to Delete \(self.name)?", subTitle: """
+        You will not be able to get back any information about this farm.
+        """)
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
@@ -407,7 +448,7 @@ extension Farm {
       +++ orchardsSection
       <<< orchardRow
       
-      +++ Section("Information")
+      +++ Section("Further Information")
       <<< detailsRow
     
       +++ Section()
@@ -451,6 +492,7 @@ public class DeletableMultivaluedSection: MultivaluedSection {
 }
 
 extension Orchard {
+  // swiftlint:disable cyclomatic_complexity
   func information(for formVC: FormViewController, onChange: @escaping () -> Void) {
     let form = formVC.form
     tempory = Orchard(json: json()[id] ?? [:], id: id)
@@ -494,7 +536,16 @@ extension Orchard {
     }
     
     let nameRow = NameRow { row in
+      let uniqueNameRule = RuleClosure<String> { (_) -> ValidationError? in
+        let notUnique = Entities.shared.orchards.contains {
+          $0.value.name == row.value
+            && $0.value.assignedFarm == self.tempory?.assignedFarm
+            && $0.value.id != self.id
+        }
+        return notUnique ? ValidationError(msg: "• Orchard names in the same farm must have different names") : nil
+      }
       row.add(rule: RuleRequired(msg: "• Orchard names must be filled in"))
+      row.add(rule: uniqueNameRule)
       row.title = "Orchard Name"
       row.value = name
       row.placeholder = "Name of the orchard"
@@ -580,14 +631,15 @@ extension Orchard {
       onChange()
     }
     
-    let farmSelection = PickerRow<Farm> { row in
+    let farmSelection = PushRow<Farm> { row in
+      row.title = "Assigned Farm"
       row.add(rule: RuleRequired(msg: "• A farm must be selected for an orchard to be a part of"))
       row.options = []
       var aFarm: Farm? = nil
       
       for (_, farm) in farms {
         let farm = farm
-        row.options.append(farm)
+        row.options?.append(farm)
         if farm.id == assignedFarm {
           aFarm = farm
         }
@@ -621,12 +673,54 @@ extension Orchard {
     let deleteOrchardRow = ButtonRow { row in
       row.title = "Delete Orchard"
     }.onCellSelection { (_, _) in
-      HarvestDB.delete(orchard: self) { (_, _) in
-        formVC.navigationController?.popViewController(animated: true)
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Delete") {
+        HarvestDB.delete(orchard: self) { (_, _) in
+          formVC.navigationController?.popViewController(animated: true)
+        }
       }
+      
+      alert.showWarning("Are You Sure You Want to Delete \(self.name)?", subTitle: """
+        You will not be able to get back any information about this farm.
+        Any work done in this orchard will no longer display any statistics.
+        """)
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .white
       cell.backgroundColor = .red
+    }
+    
+    let assignedWorkersRow = MultipleSelectorRow<Worker> { row in
+      row.title = "Assigned Workers"
+      self.tempory?.assignedWorkers = []
+      var opts = [Worker]()
+      var vals = Set<Worker>()
+      for (_, worker) in Entities.shared.workers {
+        opts.append(worker)
+        if worker.assignedOrchards.contains(id) {
+          vals.insert(worker)
+          self.tempory?.assignedWorkers.append((worker.id, .assigned))
+        } else {
+          self.tempory?.assignedWorkers.append((worker.id, .unassigned))
+        }
+        row.options = opts
+        row.value = vals
+      }
+    }.onChange { row in
+      var idx = 0
+      for (assignedWorker, status) in self.tempory?.assignedWorkers ?? [] {
+        if [.remove, .unassigned].contains(status)
+        && row.value?.contains(where: { $0.id == assignedWorker }) ?? false {
+          self.tempory?.assignedWorkers[idx] = (assignedWorker, .add)
+        } else if [.add, .assigned].contains(status)
+        && !(row.value?.contains(where: { $0.id == assignedWorker }) ?? false) {
+          self.tempory?.assignedWorkers[idx] = (assignedWorker, .remove)
+        }
+        
+        idx += 1
+      }
+      onChange()
     }
     
     form
@@ -650,12 +744,18 @@ extension Orchard {
       <<< widthRow
       <<< heightRow
     
-      +++ Section("Part of Farm")
+      +++ Section("Assigned Farm")
       <<< farmSelection
-      
-      +++ performanceSection
     
-      +++ Section("Information")
+      +++ Section("Assigned Workers")
+      <<< assignedWorkersRow
+      
+    if id != "" {
+      form +++ performanceSection
+    }
+    
+    form
+      +++ Section("Further Information")
       <<< detailsRow
       
       +++ Section()
@@ -720,6 +820,17 @@ extension HarvestUser {
     let form = formVC.form
     temporary = HarvestUser(json: json())
     
+    let organisationNameRow = TextRow { row in
+      row.title = "Organisation Name"
+      row.value = HarvestUser.current.organisationName
+      row.placeholder = "Name of the Organisation"
+    }.cellUpdate { (cell, _) in
+      cell.textField.clearButtonMode = .whileEditing
+    }.onChange { row in
+      self.temporary?.organisationName = row.value ?? ""
+      onChange()
+    }
+    
     let firstnameRow = TextRow { row in
       row.title = "First Name"
       row.value = HarvestUser.current.firstname
@@ -743,7 +854,10 @@ extension HarvestUser {
     }
     
     form
-      +++ Section("Name")
+      +++ Section("Organisation Name")
+      <<< organisationNameRow
+      
+      +++ Section("Farmer Name")
       <<< firstnameRow
       <<< lastnameRow
   }

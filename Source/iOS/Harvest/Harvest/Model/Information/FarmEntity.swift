@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum EntityItem {
+enum EntityItem: Equatable, CustomStringConvertible {
   enum Kind {
     case farm, orchard, worker, session
     case shallowSession
@@ -33,6 +33,32 @@ enum EntityItem {
     case let .user(u): return u.displayName
     }
   }
+  
+  var id: String {
+    switch self {
+    case let .farm(f): return f.id
+    case let .orchard(o): return o.id
+    case let .worker(w): return w.id
+    case let .session(s): return s.id
+    case let .shallowSession(s): return s.id
+    case let .user(u): return u.uid
+    }
+  }
+  
+  var description: String {
+    switch self {
+    case let .farm(f): return f.description
+    case let .orchard(o): return o.description
+    case let .worker(w): return w.description
+    case let .session(s): return s.description
+    case let .shallowSession(s): return s.description
+    case let .user(u): return u.displayName
+    }
+  }
+  
+  static func == (lhs: EntityItem, rhs: EntityItem) -> Bool {
+    return lhs.id == rhs.id
+  }
 }
 
 final class Entities {
@@ -47,6 +73,10 @@ final class Entities {
   static var shared = Entities()
   
   private init() {
+    
+  }
+  
+  func start() { // MUST be called at the start of main program after login
     watch(.farm)
     watch(.orchard)
     watch(.worker)
@@ -100,7 +130,8 @@ final class Entities {
       HarvestDB.getOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.assignedFarm + orchard.name + orchard.id, orchard)
+            let fn = Entities.shared.farms.first { $1.id == orchard.assignedFarm }?.value.name ?? ""
+            return (fn + orchard.name + orchard.id + orchard.assignedFarm, orchard)
         }, <)
         completion(self)
       }
@@ -110,6 +141,10 @@ final class Entities {
         self.farms = SortedDictionary(
           uniqueKeysWithValues: farms.map { farm in
             return (farm.name + farm.id, farm)
+        }, <)
+        self.orchards = SortedDictionary(
+          uniqueKeysWithValues: self.orchards.map { _, v in
+            (farms.first { $0.id == v.id }?.name ?? "" + v.name + v.id, v)
         }, <)
         completion(self)
       }
@@ -127,7 +162,7 @@ final class Entities {
       HarvestCloud.getShallowSessions(onPage: 1, ofSize: 100) { (sessions) in
         self.shallowSessions = SortedDictionary(
           uniqueKeysWithValues: sessions.map { session in
-            return (session.startDate.description, session)
+            return (session.key, session)
         }, >)
         completion(self)
       }

@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import GoogleMaps
 import Eureka
+import SCLAlertView
 
 public class OrchardAreaViewController:
 UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerDelegate {
@@ -44,9 +45,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       collections.removeAll()
       updatePolygon()
     } else {
-      UIAlertController.present(title: "No More Points",
-                                message: "There are no more points in the orchard to delete",
-                                on: self)
+      SCLAlertView().showInfo("No More Points", subTitle: "There are no more points in the orchard to delete")
     }
     
   }
@@ -56,9 +55,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       collections.removeLast()
       updatePolygon()
     } else {
-      UIAlertController.present(title: "No More Points",
-                                message: "There are no more points in the orchard to delete",
-                                on: self)
+      SCLAlertView().showInfo("No More Points", subTitle: "There are no more points in the orchard to delete")
     }
     
   }
