@@ -51,7 +51,9 @@ extension HarvestDB {
               completion(true)
             }
           
-          alert.showNotice("Select A Farm", subTitle: "Please select the farm that you want to log into")
+          alert.showNotice(
+            "Select An Organization",
+            subTitle: "Please select the organization that you want to log into")
         })
         
       }
