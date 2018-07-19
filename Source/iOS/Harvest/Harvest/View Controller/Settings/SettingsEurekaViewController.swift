@@ -27,11 +27,13 @@ struct OrganizationInfo: CustomStringConvertible, Equatable {
   }
 }
 
-class SettingsEurekaViewController: FormViewController {
+class SettingsEurekaViewController: ReloadableFormViewController {
   /// swiftlint:disable function_body_length
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+  }
+  
+  override func setUp() {
     let userRow = HarvestUser.current.accountIdentifier
     
     let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
@@ -40,37 +42,37 @@ class SettingsEurekaViewController: FormViewController {
     
     let logoutRow = ButtonRow { row in
       row.title = "Logout"
-    }.onCellSelection { (_, _) in
-      HarvestDB.signOut(on: self) { w in
-        if w,
-          let vc = self
-            .storyboard?
-            .instantiateViewController(withIdentifier: "signInOptionViewController") {
-          self.present(vc, animated: true, completion: nil)
+      }.onCellSelection { (_, _) in
+        HarvestDB.signOut(on: self) { w in
+          if w,
+            let vc = self
+              .storyboard?
+              .instantiateViewController(withIdentifier: "signInOptionViewController") {
+            self.present(vc, animated: true, completion: nil)
+          }
         }
-      }
     }
     
     let resignRow = ButtonRow { row in
       row.title = "Resign"
-    }.onCellSelection { (_, _) in
-      let confirmationAlert = SCLAlertView(appearance: .warningAppearance)
-      confirmationAlert.addButton("Cancel", action: {})
-      confirmationAlert.addButton("Resign") {
-        HarvestDB.resign { _, _ in
-          if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInOptionViewController") {
-            self.present(vc, animated: true, completion: nil)
+      }.onCellSelection { (_, _) in
+        let confirmationAlert = SCLAlertView(appearance: .warningAppearance)
+        confirmationAlert.addButton("Cancel", action: {})
+        confirmationAlert.addButton("Resign") {
+          HarvestDB.resign { _, _ in
+            if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInOptionViewController") {
+              self.present(vc, animated: true, completion: nil)
+            }
           }
         }
-      }
-      
-      confirmationAlert.showWarning("Are You Sure?", subTitle: """
+        
+        confirmationAlert.showWarning("Are You Sure?", subTitle: """
       Are you sure you want to remove yourself from association with you current farm?
       """)
-      
-    }.cellUpdate { (cell, _) in
-      cell.textLabel?.textColor = .white
-      cell.backgroundColor = .red
+        
+      }.cellUpdate { (cell, _) in
+        cell.textLabel?.textColor = .white
+        cell.backgroundColor = .red
     }
     
     if HarvestUser.current.workingForID.isEmpty { // is farmer
@@ -85,7 +87,10 @@ class SettingsEurekaViewController: FormViewController {
         +++ Section()
         <<< resignRow
     }
-    
+  }
+  
+  override func tearDown() {
+    form.removeAll()
   }
   
 }

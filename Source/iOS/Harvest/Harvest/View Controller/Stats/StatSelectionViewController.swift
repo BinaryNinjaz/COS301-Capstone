@@ -9,7 +9,9 @@
 import Eureka
 
 // swiftlint:disable type_body_length
-public final class StatSelectionViewController: FormViewController {  
+final class StatSelectionViewController: ReloadableFormViewController {
+  var refreshControl: UIRefreshControl?
+  
   func customGraph() -> LabelRow {
     return LabelRow { row in
       row.title = "Make Your Own Graph"
@@ -387,9 +389,7 @@ public final class StatSelectionViewController: FormViewController {
     ]
   }
   
-  public override func viewDidLoad() {
-    super.viewDidLoad()
-    
+  override func setUp() {
     let orchardSection = Section("Orchard Comparison")
     for stat in orchardPerformances() {
       orchardSection <<< stat
@@ -408,12 +408,20 @@ public final class StatSelectionViewController: FormViewController {
     form
       +++ Section("Custom")
       <<< customGraph()
-    
+      
       +++ orchardSection
-    
+      
       +++ workerSection
       
       +++ foremanSection
+  }
+  
+  override func tearDown() {
+    form.removeAll()
+  }
+  
+  public override func viewDidLoad() {
+    super.viewDidLoad()
   }
   
   public override func viewWillDisappear(_ animated: Bool) {

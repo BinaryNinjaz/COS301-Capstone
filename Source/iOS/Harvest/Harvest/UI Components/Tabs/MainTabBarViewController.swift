@@ -26,8 +26,7 @@ class MainTabBarViewController: UITabBarController {
       LocationTracker.shared.requestLocation(wantsLocation: locRequested)
     }
     
-    Entities.shared.watch(.worker)
-    Entities.shared.watch(.orchard)
+    Entities.shared.start()
   }
   
   override func viewWillDisappear(_ animated: Bool) {

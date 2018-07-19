@@ -184,6 +184,6 @@ extension ChartColorTemplates {
   }
   
   static func harvest() -> [UIColor] {
-    return harvestWood()
+    return harvestColorful()
   }
 }

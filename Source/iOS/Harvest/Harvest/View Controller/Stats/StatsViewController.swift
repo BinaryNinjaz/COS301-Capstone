@@ -21,6 +21,7 @@ class StatsViewController: UIViewController {
   var pieChart: PieChartView?
   var lineChart: LineChartView?
   var radarChart: RadarChartView?
+  var activityIndicator: UIActivityIndicatorView?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -37,6 +38,9 @@ class StatsViewController: UIViewController {
     barChart = BarChartView(frame: frame)
     pieChart = PieChartView(frame: frame)
     radarChart = RadarChartView(frame: frame)
+    activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    activityIndicator?.color = UIColor.harvestGreen
+    activityIndicator?.stopAnimating()
     
     drawChart()
     
@@ -44,11 +48,13 @@ class StatsViewController: UIViewController {
     view.addSubview(pieChart!)
     view.addSubview(lineChart!)
     view.addSubview(radarChart!)
+    view.addSubview(activityIndicator!)
     
     barChart?.snp.makeConstraints(Snap.fillParent(on: self))
     lineChart?.snp.makeConstraints(Snap.fillParent(on: self))
     pieChart?.snp.makeConstraints(Snap.fillParent(on: self))
     radarChart?.snp.makeConstraints(Snap.fillParent(on: self))
+    setActivityPosition()
     
     setUpLineChart()
     setUpBarChart()
@@ -61,9 +67,12 @@ class StatsViewController: UIViewController {
     barChart?.isHidden = true
     pieChart?.isHidden = true
     radarChart?.isHidden = true
+    activityIndicator?.startAnimating()
+    print(activityIndicator?.frame as Any, activityIndicator?.isAnimating as Any)
     
     guard let stat = stat else {
       SCLAlertView().showWarning("No Data", subTitle: "There is no data available to show")
+      activityIndicator?.stopAnimating()
       return
     }
     
@@ -76,6 +85,7 @@ class StatsViewController: UIViewController {
   
   func updateBarChart(with data: BarChartData?) {
     DispatchQueue.main.async {
+      self.activityIndicator?.stopAnimating()
       guard let barData = data else {
         self.barChart?.data = nil
         return
@@ -196,6 +206,16 @@ class StatsViewController: UIViewController {
       l.yEntrySpace = 0
     }
   }
+  
+  func setActivityPosition() {
+    activityIndicator?.setOriginX(view.frame.width / 2 - (activityIndicator?.frame.width ?? 0) / 2)
+    activityIndicator?.setOriginY(view.frame.height / 2 - (activityIndicator?.frame.height ?? 0) / 2)
+  }
+  
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    setActivityPosition()
+  }
 }
 
 extension DateFormatter: IAxisValueFormatter {
@@ -276,7 +296,6 @@ extension BarChartData {
       chartData.drawValuesEnabled = false
       chartData.label = dataSet.label
       result.addDataSet(chartData)
-      
     }
     
     return result

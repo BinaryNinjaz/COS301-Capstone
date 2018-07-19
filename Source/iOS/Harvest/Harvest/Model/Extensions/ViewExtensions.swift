@@ -111,6 +111,13 @@ enum Snap {
       }
     }
   }
+  
+  static func center(in controller: UIViewController) -> (ConstraintMaker) -> Void {
+    return { make in
+      make.centerX.equalToSuperview()
+      make.centerY.equalToSuperview()
+    }
+  }
 }
 
 extension UIImage {

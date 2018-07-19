@@ -73,6 +73,10 @@ final class Entities {
   static var shared = Entities()
   
   private init() {
+    
+  }
+  
+  func start() { // MUST be called at the start of main program after login
     watch(.farm)
     watch(.orchard)
     watch(.worker)
@@ -126,7 +130,8 @@ final class Entities {
       HarvestDB.getOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.assignedFarm + orchard.name + orchard.id, orchard)
+            let fn = Entities.shared.farms.first { $1.id == orchard.assignedFarm }?.value.name ?? ""
+            return (fn + orchard.name + orchard.id + orchard.assignedFarm, orchard)
         }, <)
         completion(self)
       }
@@ -136,6 +141,10 @@ final class Entities {
         self.farms = SortedDictionary(
           uniqueKeysWithValues: farms.map { farm in
             return (farm.name + farm.id, farm)
+        }, <)
+        self.orchards = SortedDictionary(
+          uniqueKeysWithValues: self.orchards.map { _, v in
+            (farms.first { $0.id == v.id }?.name ?? "" + v.name + v.id, v)
         }, <)
         completion(self)
       }
@@ -153,7 +162,7 @@ final class Entities {
       HarvestCloud.getShallowSessions(onPage: 1, ofSize: 100) { (sessions) in
         self.shallowSessions = SortedDictionary(
           uniqueKeysWithValues: sessions.map { session in
-            return (session.startDate.description, session)
+            return (session.key, session)
         }, >)
         completion(self)
       }

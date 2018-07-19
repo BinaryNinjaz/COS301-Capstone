@@ -536,7 +536,16 @@ extension Orchard {
     }
     
     let nameRow = NameRow { row in
+      let uniqueNameRule = RuleClosure<String> { (_) -> ValidationError? in
+        let notUnique = Entities.shared.orchards.contains {
+          $0.value.name == row.value
+            && $0.value.assignedFarm == self.tempory?.assignedFarm
+            && $0.value.id != self.id
+        }
+        return notUnique ? ValidationError(msg: "• Orchard names in the same farm must have different names") : nil
+      }
       row.add(rule: RuleRequired(msg: "• Orchard names must be filled in"))
+      row.add(rule: uniqueNameRule)
       row.title = "Orchard Name"
       row.value = name
       row.placeholder = "Name of the orchard"

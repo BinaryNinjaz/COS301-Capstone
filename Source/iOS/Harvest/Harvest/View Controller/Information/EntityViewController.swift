@@ -12,7 +12,7 @@ import SCLAlertView
 public struct Box: Equatable {
 }
 
-public class EntityViewController: FormViewController, TypedRowControllerType {
+public final class EntityViewController: FormViewController, TypedRowControllerType {
   public var row: RowOf<Box>!
   public typealias RowValue = Box
   public var onDismissCallback: ((UIViewController) -> Void)?
