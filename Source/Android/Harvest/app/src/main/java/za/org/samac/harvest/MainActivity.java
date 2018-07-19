@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -30,18 +29,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,13 +54,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
 import za.org.samac.harvest.adapter.collections;
 import za.org.samac.harvest.domain.Worker;
@@ -92,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     //used same names as IDs in xml
     private Button btnStart;
     private ProgressBar progressBar;
-    private RelativeLayout relLayout;
+    private android.support.constraint.ConstraintLayout constraintLayout;
     private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
     private static TextView textView;
     private WorkerRecyclerViewAdapter adapter;
@@ -256,12 +244,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             setContentView(R.layout.activity_foreman);
         }
 
-        relLayout = findViewById(R.id.relLayout);
+        constraintLayout = findViewById(R.id.relLayout);
         progressBar = findViewById(R.id.progressBar);
         btnStart = findViewById(R.id.button_start);
 
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
-        relLayout.setVisibility(View.GONE);
+        constraintLayout.setVisibility(View.GONE);
 
         if (isFarmer){
             farmerKey = uid;
@@ -319,8 +307,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     return true;
                                 }
                             });
-                }
-            }
+        }
+    }
 
     ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
     ArrayList<String> coords = new ArrayList<>();
@@ -679,7 +667,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 workersSearch.addAll(workers);
 
                 progressBar.setVisibility(View.GONE);//remove progress bar
-                relLayout.setVisibility(View.VISIBLE);
+                constraintLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 //user pressed start and all went well with retrieving data
             }
@@ -688,7 +676,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "onCancelled", databaseError.toException());
                 progressBar.setVisibility(View.GONE);
-                relLayout.setVisibility(View.VISIBLE);
+                constraintLayout.setVisibility(View.VISIBLE);
             }
         });
     }
