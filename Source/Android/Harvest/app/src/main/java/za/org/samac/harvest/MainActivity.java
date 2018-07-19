@@ -297,24 +297,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         @Override
                         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                             switch (item.getItemId()) {
-                                case R.id.actionYieldTracker:
-                                    return true;
-                                case R.id.actionInformation:
-//                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
-                                            Intent openMainActivity= new Intent(MainActivity.this, InformationActivity.class);
-                                            openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openMainActivity, 0);
+                                        case R.id.actionYieldTracker:
+                                            return true;
+                                        case R.id.actionInformation:
+                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
                                             return true;
                                         case R.id.actionSession:
-                                            /*Intent openSessions= new Intent(MainActivity.this, Sessions.class);
-                                            openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openSessions, 0);*/
                                             startActivity(new Intent(MainActivity.this, Sessions.class));
                                             return true;
                                         case R.id.actionStats:
-                                            /*Intent openAnalytics= new Intent(MainActivity.this, Analytics.class);
-                                            openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openAnalytics, 0);*/
                                             startActivity(new Intent(MainActivity.this, Analytics.class));
                                             return true;
                                     }
