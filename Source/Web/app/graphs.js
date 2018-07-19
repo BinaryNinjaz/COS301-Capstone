@@ -16,12 +16,6 @@ var foremen = []; /* Array containing a list of Foremen names */
 var workers = []; /* Array containing a list of workers names */
 var orchards = []; /* Array containing a list of Orchard names */
 
-//var groupBy = ''; /* grouping variable */
-//var period = '';	/* period time space variable */
-//var startDate = '';	/* Begin date variable */
-//var endDate = '';	/* End date variable */
-//var id0 = '';	/* user ID variable */
-
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     $(window).bind("load", function() {
@@ -181,18 +175,6 @@ function initWorkers(){
     });
 }
 
-//this function returns the date of the monday of a given week
-/*function getDateOfISOWeek(w, y) {
-    var simple = new Date(y, 0, 1 + (w - 1) * 7);
-    var dow = simple.getDay();
-    var ISOweekStart = simple;
-    if (dow <= 4){
-        ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-    }else{
-        ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
-    }return ISOweekStart;
-}*/
-
 //takes information chosen by user for orchard filter to pass to orchard performance function
 function filterOrchard(){
     var name = document.getElementById('orchardSelect').value;
@@ -295,8 +277,6 @@ function workerPerformance(start, end, id){
 //updates orchard graph based on user input
 function changeOrchardGraph(data){
     console.log(data); // can be removed, just used to view json object
-    //if(data == undefined){console.log("Hi Vincent");}
-    //console.log(JSON.stringify(data));
     var name = document.getElementById('orchardSelect').value;
     var key = getOrchardId(name);
     var values = data[key];
