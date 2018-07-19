@@ -136,7 +136,7 @@ public class BarGraph extends AppCompatActivity {
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
-        base = base + "&startDate=" + (currentTime - 7 * 24 * 60 * 13);
+        base = base + "&startDate=" + (currentTime - 60 * 13);
         base = base + "&endDate=" + currentTime;
         base = base + "&uid=" + farmerKey;
 
@@ -217,6 +217,7 @@ public class BarGraph extends AppCompatActivity {
                         }
 
                         XAxis xAxis = barChart.getXAxis();
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                         xAxis.setXOffset(0f);
                         xAxis.setYOffset(0f);
                         xAxis.setTextSize(8f);
@@ -237,7 +238,7 @@ public class BarGraph extends AppCompatActivity {
                                 barChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
                                 BarDataSet dataset = new BarDataSet(entries, workerName);
-                                dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+                                dataset.setColors(ColorTemplate.COLORFUL_COLORS);
 
                                 BarData data = new BarData(dataset);//labels was one of the parameters
                                 barChart.setData(data); // set the data and list of lables into chart
@@ -305,5 +306,4 @@ public class BarGraph extends AppCompatActivity {
         }
 //        return false;
     }
-
 }

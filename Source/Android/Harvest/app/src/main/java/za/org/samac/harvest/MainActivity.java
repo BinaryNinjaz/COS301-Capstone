@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private RelativeLayout relLayout;
     private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
     private static TextView textView;
+    private TextView textViewPressStart;
     private WorkerRecyclerViewAdapter adapter;
     private LocationManager locationManager;
     private Location location;
@@ -276,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         btnStart.setTag("green");//it is best not to use the tag to identify button status
 
+        textViewPressStart = findViewById(R.id.startText);
         recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -479,8 +481,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private String urlExpectYieldText() {
         String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield?";
-        System.out.println(" ************************* " + correctOrchard + " ************************* ");
-        base = base + "orchardId=" + correctOrchard;//"-LCEFgdMMO80LR98BzPC";//currentOrchard;//get correct orchard ID
+        base = base + "orchardId=" + correctOrchard;
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
@@ -496,10 +497,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 public void run() {
                     try {
                         String response = sendGet(urlExpectYieldText());
-                        System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% ");
                         JSONObject obj = new JSONObject(response);
                         final Double expectedYield = obj.getDouble("expected"); // This is the value
-                        System.out.println(" $$$$$$$$$$$$$$$$$$$ " + expectedYield + " $$$$$$$$$$$$$$$$$$$ ");
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 textView = findViewById(R.id.textView);
@@ -644,8 +643,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.getKey());
 
                     String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+
                     //only add if person is a worker (not a foreman)
-                    if(zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
+                    if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
                         Worker workerObj = new Worker();
                         workerObj.setName(fullName);
                         workerObj.setValue(0);
@@ -665,12 +665,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             }
                         }
 
-                        if (zoneSnapshot.child("email").getValue(String.class) != null) {
+                        /*if (zoneSnapshot.child("email").getValue(String.class) != null) {
                             if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
                                 foremanID = zoneSnapshot.getKey();
                                 foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
                             }
-                        }
+                        }*/
                     }
                 }
 
@@ -772,22 +772,48 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
-        ExecutorService threadPoolExecutor = Executors.newSingleThreadExecutor();
+        textViewPressStart.setVisibility(View.GONE);
 
-        /*if (location != null) {
-            Future longRunningTaskFuture = threadPoolExecutor.submit(runnable);
-            longRunningTaskFuture.cancel(true);
-        }*/
+        if (workers.size() == 0 && btnStart.getTag() == "green") {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            String msg = "No workers added to orchard";
+            dlgAlert.setMessage(msg);
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(false);
+            dlgAlert.create().show();
+        }
 
-        if(location == null && btnStart.getTag() == "green") {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && btnStart.getTag() == "green") {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            String msg = "These services are unavailable, please switch on location to gain access";
+            dlgAlert.setMessage(msg);
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(false);
+            dlgAlert.create().show();
+        }
+
+        if (location == null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.VISIBLE);
             Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
             recyclerView.setVisibility(View.GONE);
 
-            handler.postDelayed(new Runnable(){
-                public void run(){
+            handler.postDelayed(new Runnable() {
+                public void run() {
                     //do something
-                    if(location == null) {
+                    if (location == null) {
 
                     } else {
                         progressBar.setVisibility(View.GONE);
@@ -796,15 +822,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     }
 
                     if (secondsLocationIsNull >= 30 && btnStart.getTag() != "green") {
+                        secondsLocationIsNull = 0;
                         progressBar.setVisibility(View.GONE);
                         Snackbar.make(recyclerView, "Could not obtaining GPS Information. Please restart session.", 5000)
-                            .setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                                .setAction("OK", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
 
-                                }
-                            })
-                            .show();
+                                    }
+                                })
+                                .show();
                         return;
                     }
 
@@ -820,20 +847,30 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
 
+        Map<String, Object> sessionDate = new HashMap<>();
+        sessionDate.put("start_date", startSessionTime);
+
+        if (isFarmer) {
+            sessionDate.put("wid", uid);//add foreman database ID to session;
+        } else {
+            sessionDate.put("wid", foremanID);//add foreman database ID to session;
+        }
+
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
-        if(location != null) {
+        sessRef.updateChildren(sessionDate);//save data to Firebase
+
+        if (location != null) {
             final DatabaseReference myRef;
             myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
 
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if (child.toString().equals(foremanID)) {
+                    if (dataSnapshot != null) {
+                        if (dataSnapshot.getKey().toString().equals(foremanID)) {
                             myRef.removeValue();
                             locationWanted = true;
-                            break;
                         }
                     }
 
@@ -908,16 +945,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             });
         }
 
-        Map<String, Object> sessionDate = new HashMap<>();
-        sessionDate.put("start_date", startSessionTime);
-
-        if (isFarmer) {
-            sessionDate.put("wid", uid);//add foreman database ID to session;
-        } else {
-            sessionDate.put("wid", foremanID);//add foreman database ID to session;
-        }
-
-
         if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
             textView.setVisibility(View.GONE);
@@ -938,31 +965,31 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("orange");
         } else {
             //TODO: check if app closes or crashes
+            textViewPressStart.setText(R.string.pressStart);
             progressBar.setVisibility(View.GONE);
-            if (adapter.totalBagsCollected == 0) {
-                String msg = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-                dlgAlert.setMessage(msg);
-                dlgAlert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        recyclerView.setVisibility(View.GONE);
-                        dialog.dismiss();
-                    }
-                });
-                dlgAlert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        DatabaseReference myRef;
-                        myRef = database.getReference(farmerKey + "/sessions/" + sessionKey);//path to sessions increment in Firebase
-                        myRef.removeValue();//remove latest increment
-                        adapter.setIncrement();
-                        recyclerView.setVisibility(View.GONE);
-                        dialog.dismiss();
-                        rejectSess = true;
-                    }
-                });
-                dlgAlert.setCancelable(false);
-                dlgAlert.create().show();
-            }
+            recyclerView.setVisibility(View.GONE);
+            String msger = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
+            AlertDialog.Builder dlgAlerter = new AlertDialog.Builder(this);
+            dlgAlerter.setMessage(msger);
+            dlgAlerter.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlerter.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    DatabaseReference myRef;
+                    myRef = database.getReference(farmerKey + "/sessions/" + sessionKey);//path to sessions increment in Firebase
+                    myRef.removeValue();//remove latest increment
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                    rejectSess = true;
+                }
+            });
+            dlgAlerter.setCancelable(false);
+            dlgAlerter.create().show();
 
             if (rejectSess == false) {
                 endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
@@ -977,8 +1004,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             int m = (int) (((elapsedTime / 1000) / 60) % 60);
             int s = (int) ((elapsedTime / 1000) % 60);
             //this is the output of the pop up when the user clicks stop (the session)
+            //TODO: check iOS thread on slack
+            //TODO: add press start again
             String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
-            String msg = "A total of " + adapter.totalBagsCollected + " bags have been collected in " + timeTaken + ".";
+            String msg = adapter.totalBagsCollected + " bags collected " + timeTaken + ".";
             if (locationEnabled) {
                 locationManager.removeUpdates(mLocationListener);
             }
@@ -992,25 +1021,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             collections collectionObj = adapter.getCollectionObj();
             collectionObj.sessionEnd();
             //****writeToFirebase(collectionObj);
-            if (rejectSess == false) {
-                //pop up is used to show how many bags were collected in the elapsed time
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-                dlgAlert.setMessage(msg);
-                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        adapter.setIncrement();
-                        recyclerView.setVisibility(View.GONE);
-                        dialog.dismiss();
-                    }
-                });
-                dlgAlert.setCancelable(false);
-                dlgAlert.create().show();
-            }
+            //pop up is used to show how many bags were collected in the elapsed time
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            dlgAlert.setMessage(msg);
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(false);
+            dlgAlert.create().show();
 
             btnStart.setBackgroundColor(Color.parseColor("#FF0CCB29"));
 
             btnStart.setText("Start");
             btnStart.setTag("green");
+            textViewPressStart.setVisibility(View.VISIBLE);
         }
     }
 

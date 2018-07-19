@@ -96,6 +96,9 @@ public class ForemenForBarGraph extends AppCompatActivity {
                     }
                 }
 
+
+                foremenKeys.add(MainActivity.farmerKey);
+                foremen.add("Farm Owner");
                 adapter = new ForemanRecyclerViewAdapter(getApplicationContext(), foremen, foremenKeys);
                 recyclerView = findViewById(R.id.recView);//this encapsulates the worker buttons, it is better than gridview
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

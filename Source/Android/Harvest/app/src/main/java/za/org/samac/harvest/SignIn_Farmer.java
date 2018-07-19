@@ -3,10 +3,17 @@ package za.org.samac.harvest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.renderscript.Allocation;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -24,9 +31,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -79,6 +91,8 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
     private Button btnLogin;
     private Button btnLoginWithGoogle;
     private TextView linkForgotAccountDetails;
+    private LinearLayout linearLayout;
+    private ImageView imageView;
 
     private FirebaseAuth mAuth;//declared an instance of FirebaseAuth
     private static final String TAG = "EmailPassword";
@@ -90,6 +104,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_farmer);
+
         // Set up the login form.
         edtEmail = findViewById(R.id.edtEmail);
 
@@ -98,6 +113,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                    hideSoftKeyboard();
                     signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());//attemptLogin();
                     return true;
                 }
@@ -121,6 +137,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideSoftKeyboard();
                 signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
             }
         });
@@ -168,7 +185,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                 AlertDialog.Builder alert = new AlertDialog.Builder(SignIn_Farmer.this);
 
                 //TODO: center "Reset Password"
-                alert.setMessage(Html.fromHtml("<b>"+"Reset Password"+"</b>"+"<br>"+"Please enter your email, you will receive an email to recover your password."));
+                alert.setMessage(Html.fromHtml("<b>"+"Reset Password"+"</b>"+"<br>"+"Please enter your email, you will receive an email to reset your password."));
 
                 final EditText email = new EditText(SignIn_Farmer.this);
                 email.setInputType(InputType.TYPE_CLASS_TEXT
@@ -219,6 +236,13 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
 
     public static void setEdtPassword(EditText p) {
         edtPassword = p;
+    }
+
+    public void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -353,6 +377,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                             AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
 
                             Snackbar.make(login_form, "Log In Successful", Snackbar.LENGTH_LONG).show();
+
                             login_progress.setVisibility(View.GONE);
                             new Handler().postDelayed(new Runnable() {
                                 @Override

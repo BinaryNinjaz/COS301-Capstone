@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import za.org.samac.harvest.adapter.ForemanRecyclerViewAdapter;
+import za.org.samac.harvest.adapter.WorkerForBarGraphRecyclerViewAdapter;
 import za.org.samac.harvest.util.AppUtil;
 
 public class WorkersForBarGraph extends AppCompatActivity {
@@ -32,7 +32,7 @@ public class WorkersForBarGraph extends AppCompatActivity {
     private ArrayList<String> workerKeys;
     private DatabaseReference workersRef;
     private FirebaseDatabase database;
-    private ForemanRecyclerViewAdapter adapter;
+    private WorkerForBarGraphRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
 
@@ -40,6 +40,8 @@ public class WorkersForBarGraph extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foremen_for_bar_graph);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
@@ -96,7 +98,7 @@ public class WorkersForBarGraph extends AppCompatActivity {
                     }
                 }
 
-                adapter = new ForemanRecyclerViewAdapter(getApplicationContext(), workers, workerKeys);
+                adapter = new WorkerForBarGraphRecyclerViewAdapter(getApplicationContext(), workers, workerKeys);
                 recyclerView = findViewById(R.id.recView);//this encapsulates the worker buttons, it is better than gridview
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 recyclerView.setHasFixedSize(false);

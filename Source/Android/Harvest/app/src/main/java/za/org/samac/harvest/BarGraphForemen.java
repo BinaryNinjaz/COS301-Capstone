@@ -1,12 +1,10 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,27 +13,20 @@ import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.data.RadarData;
-import com.github.mikephil.charting.data.RadarDataSet;
-import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
@@ -52,7 +43,7 @@ import za.org.samac.harvest.util.AppUtil;
 
 import static za.org.samac.harvest.MainActivity.farmerKey;
 
-public class SpiralGraph extends AppCompatActivity {
+public class BarGraphForemen extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -61,29 +52,23 @@ public class SpiralGraph extends AppCompatActivity {
     private String userUid;
     private String lastSession;
     private Date latestDate;
-    private String workerKey;
-    private ArrayList<String> workerKeys;
-    private ArrayList<String> workerName;
-    private ArrayList<Integer> yield;
-    private String sessionKey;
-    private static String orchardKey;
-    private static String orchardName;
-    private Query query;
+    private static String foremanKey;
+    private static String formanName;
     private static final String TAG = "Analytics";
-    ArrayList<RadarEntry> entries = new ArrayList<>();
-    com.github.mikephil.charting.charts.PieChart pieChart;
+    private ArrayList<BarEntry> entries = new ArrayList<>();
+    private com.github.mikephil.charting.charts.PieChart pieChart;
     private ProgressBar progressBar;
-    private RadarChart spiralGraph;
-    private com.github.mikephil.charting.charts.RadarChart spiralGraphView;
+    private BarChart barChart;
+    private com.github.mikephil.charting.charts.BarChart barGraphView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_spiral_graph);
+        setContentView(R.layout.activity_bar_graph);
 
         progressBar = findViewById(R.id.progressBar);
-        spiralGraphView = findViewById(R.id.spiralChart);
-        spiralGraph = (RadarChart) findViewById(R.id.spiralChart);
+        barGraphView = findViewById(R.id.barChart);
+        barChart = (BarChart) findViewById(R.id.barChart);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
@@ -94,19 +79,19 @@ public class SpiralGraph extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(SpiralGraph.this, MainActivity.class);
+                                Intent openMainActivity= new Intent(BarGraphForemen.this, MainActivity.class);
                                 openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(SpiralGraph.this, InformationActivity.class);
+                                Intent openInformation= new Intent(BarGraphForemen.this, InformationActivity.class);
                                 openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                Intent openAnalytics= new Intent(SpiralGraph.this, Analytics.class);
+                                Intent openAnalytics= new Intent(BarGraphForemen.this, Analytics.class);
                                 openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openAnalytics, 0);
                                 return true;
@@ -119,8 +104,8 @@ public class SpiralGraph extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
-        orchardKey = getIntent().getStringExtra("key");
-        orchardName = getIntent().getStringExtra("name");
+        foremanKey = getIntent().getStringExtra("key");
+        formanName = getIntent().getStringExtra("name");
         getTotalBagsPerDay();
         //displayGraph();
     }
@@ -132,13 +117,13 @@ public class SpiralGraph extends AppCompatActivity {
 
     private static String urlParameters() {
         String base = "";
-        base = base + "id0=" + orchardKey;
-        base = base + "&groupBy=" + "orchard";//get correct orchard ID
-        base = base + "&period=" + "daily";
+        base = base + "id0=" + foremanKey;
+        base = base + "&groupBy=" + "foreman";
+        base = base + "&period=" + "hourly";
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
-        base = base + "&startDate=" + (currentTime - 7 * 24 * 60 * 60);
+        base = base + "&startDate=" + (currentTime - 60 * 13);
         base = base + "&endDate=" + currentTime;
         base = base + "&uid=" + farmerKey;
 
@@ -189,61 +174,43 @@ public class SpiralGraph extends AppCompatActivity {
                         JSONObject objs = new JSONObject(response);
                         System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% " + objs.keys());
                         //put entries in graph
-                        final String Sunday = "Sunday";
-                        final String Monday = "Monday";
-                        final String Tuesday = "Tuesday";
-                        final String Wednesday = "Wednesday";
-                        final String Thursday = "Thursday";
-                        final String Friday = "Friday";
-                        final String Saturday = "Saturday";
-                        int totalSunday = 0;
-                        int totalMonday = 0;
-                        int totalTuesday = 0;
-                        int totalWednesday = 0;
-                        int totalThursday = 0;
-                        int totalFriday = 0;
-                        int totalSaturday = 0;
-                        JSONObject objOrchard = objs.getJSONObject(orchardKey);
+                        final ArrayList<String> time = new ArrayList<>();
+                        //time received is 2 hour behind so ahd to compensate
+                        time.add("4");
+                        time.add("5");
+                        time.add("6");
+                        time.add("7");
+                        time.add("8");
+                        time.add("9");
+                        time.add("10");
+                        time.add("11");
+                        time.add("12");
+                        time.add("13");
+                        time.add("14");
+                        time.add("15");
+                        time.add("16");
+                        JSONObject objWorker = objs.getJSONObject(foremanKey);
 
-                        if (objOrchard.has(Sunday) == true) {
-                            totalSunday = objOrchard.getInt(Sunday);
-                        }
-                        if (objOrchard.has(Monday) == true) {
-                            totalMonday = objOrchard.getInt(Monday);
-                        }
-                        if (objOrchard.has(Tuesday) == true) {
-                            totalTuesday = objOrchard.getInt(Tuesday);
-                        }
-                        if (objOrchard.has(Wednesday) == true) {
-                            totalWednesday = objOrchard.getInt(Wednesday);
-                        }
-                        if (objOrchard.has(Thursday) == true) {
-                            totalThursday = objOrchard.getInt(Thursday);
-                        }
-                        if (objOrchard.has(Friday) == true) {
-                            totalFriday = objOrchard.getInt(Friday);
-                        }
-                        if (objOrchard.has(Saturday) == true) {
-                            totalSaturday = objOrchard.getInt(Saturday);
+                        final ArrayList<Integer> total = new ArrayList<>();
+
+                        for (int i = 0; i < time.size(); i++) {
+                            if (objWorker.has(time.get(i)) == true) {
+                                total.add(objWorker.getInt(time.get(i)));
+                            } else {
+                                total.add(0);
+                            }
+
+                            entries.add(new BarEntry(i, total.get(i)));
                         }
 
-                        entries.add(new RadarEntry(totalSunday, Sunday));
-                        entries.add(new RadarEntry(totalMonday, Monday));
-                        entries.add(new RadarEntry(totalTuesday, Tuesday));
-                        entries.add(new RadarEntry(totalWednesday, Wednesday));
-                        entries.add(new RadarEntry(totalThursday, Thursday));
-                        entries.add(new RadarEntry(totalFriday, Friday));
-                        entries.add(new RadarEntry(totalSaturday, Saturday));
-
-                        XAxis xAxis = spiralGraph.getXAxis();
+                        XAxis xAxis = barChart.getXAxis();
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                         xAxis.setXOffset(0f);
                         xAxis.setYOffset(0f);
                         xAxis.setTextSize(8f);
                         xAxis.setValueFormatter(new IAxisValueFormatter() {
 
-                            private String[] mFactors = new String[]{Sunday, Monday,
-                                    Tuesday, Wednesday,
-                                    Thursday, Friday, Saturday};
+                            private String[] mFactors = new String[]{"6am", "7am", "8am", "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm"};
 
                             @Override
                             public String getFormattedValue(float value, AxisBase axis) {
@@ -253,23 +220,20 @@ public class SpiralGraph extends AppCompatActivity {
 
                         runOnUiThread(new Runnable() {
                             public void run() {
-                            progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
-                            spiralGraphView.setVisibility(View.VISIBLE);
-                            spiralGraph.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
+                                progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+                                barGraphView.setVisibility(View.VISIBLE);
+                                barChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
-                            RadarDataSet dataset = new RadarDataSet(entries, orchardName);
-                            dataset.setFillColor(ColorTemplate.COLORFUL_COLORS[0]);
-                            dataset.setFillAlpha(145);
-                            dataset.setDrawFilled(true);
-                            dataset.setColor(ColorTemplate.COLORFUL_COLORS[0]);
+                                BarDataSet dataset = new BarDataSet(entries, formanName);
+                                dataset.setColors(ColorTemplate.COLORFUL_COLORS);
 
-                            RadarData data = new RadarData(dataset);//labels was one of the parameters
-                            spiralGraph.setData(data); // set the data and list of lables into chart
+                                BarData data = new BarData(dataset);//labels was one of the parameters
+                                barChart.setData(data); // set the data and list of lables into chart
 
-                            Description description = new Description();
-                            description.setText("Orchard Performance");
-                            spiralGraph.setDescription(description);  // set the description
-                            spiralGraph.notifyDataSetChanged();
+                                Description description = new Description();
+                                description.setText("Per Hour Worker Performance");
+                                barChart.setDescription(description);  // set the description
+                                barChart.notifyDataSetChanged();
                             }
                         });
                     } catch (Exception e) {
@@ -284,6 +248,7 @@ public class SpiralGraph extends AppCompatActivity {
         }
     }
 
+    //Handle the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -297,15 +262,25 @@ public class SpiralGraph extends AppCompatActivity {
             case R.id.search:
                 return true;
             case R.id.settings:
-                startActivity(new Intent(SpiralGraph.this, SettingsActivity.class));
+                startActivity(new Intent(BarGraphForemen.this, SettingsActivity.class));
                 return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(SpiralGraph.this, SignIn_Choose.class));
+                    startActivity(new Intent(BarGraphForemen.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
+                }
+                // Google sign out
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(BarGraphForemen.this, SignIn_Choose.class));
+                                }
+                            });
                 }
                 finish();
                 return true;

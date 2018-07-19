@@ -29,6 +29,8 @@ public class WorkerOrForeman extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker_or_foreman);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
 

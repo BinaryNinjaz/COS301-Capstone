@@ -22,13 +22,13 @@
 
     <string name="signIn_choose_farmer">Farmer</string>
     <string name="signIn_choose_foreman">Foreman</string>
-    <string name="signIn_choose_create">Create a new Farmer account</string>
+    <string name="signIn_choose_create">Don\'t Have An Account</string>
     <string name="signIn_choose_tip">Would you like to sign in as a</string>
     <string name="signIn_choose_or">or a</string>
     <string name="signIn_choose_alternatively">or alternatively</string>
 
     <string name="signIn_foreman_phone">Phone Number</string>
-    <string name="signIn_foreman_phoneWarning">We might need to send you an SMS to verify the number, wherein standard rates may apply.</string>
+    <string name="signIn_foreman_phoneWarning">We will send you an SMS with a verification code.</string>
     <string name="signIn_foreman_fail">Failure signing in or registering, please try again.</string>
     <string name="signIn_foreman_fail_invalidNumber">Invalid phone number.</string>
     <string name="signIn_foreman_fail_SMS">SMS quota exceeded, in which case, please try again later.</string>
@@ -201,6 +201,7 @@
     <string name="sessionDetailsViewPickups">Tracked Path and Collection Points</string>
     <string name="foremen">Foremen</string>
     <string name="workers">Workers</string>
+    <string name="pressStart">Press \'Start\' to begin tracking worker collections</string>
 
     <!--Country codes for formatting telephone numbers-->
     <string-array name="CountryCodes" >
