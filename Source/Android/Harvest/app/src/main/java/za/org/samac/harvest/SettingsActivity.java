@@ -250,7 +250,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String fname = dataSnapshot.child("firstname").getValue(String.class);
-                        String sname = dataSnapshot.child("surname").getValue(String.class);
+                        String sname = dataSnapshot.child("lastname").getValue(String.class);
                         String org = dataSnapshot.child("organization").getValue(String.class);
 
                         findPreference(getString(R.string.pref_account_fname_key)).setSummary(fname);
