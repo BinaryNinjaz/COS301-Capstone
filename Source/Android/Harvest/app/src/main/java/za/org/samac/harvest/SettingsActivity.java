@@ -314,7 +314,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 findPreference(getString(R.string.pref_account_sname_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        userAdmin.child("firstname").setValue(newValue.toString());
+                        userAdmin.child("lastname").setValue(newValue.toString());
                         preference.setSummary(newValue.toString());
 
                         return false;
