@@ -103,7 +103,12 @@ extension HarvestDB {
         .removedFirebaseInvalids()).removeValue { err, ref in
         completion(err, ref)
       }
-      workingFor.child(worker.phoneNumber.removedFirebaseInvalids()).removeValue()
+      if let uid = HarvestUser.current.selectedWorkingForID?.uid {
+        workingFor
+          .child(worker.phoneNumber.removedFirebaseInvalids())
+          .child(uid)
+          .removeValue()
+      }
     })
   }
   
@@ -116,6 +121,10 @@ extension HarvestDB {
     }
     
     let worker = workers[workerIdx]
-    delete(worker: worker.value, completion: completion)
+    delete(worker: worker.value) { err, ref in
+      HarvestDB.signOut { _ in
+        completion(err, ref)
+      }
+    }
   }
 }

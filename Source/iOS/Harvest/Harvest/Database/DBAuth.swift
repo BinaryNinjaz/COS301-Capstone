@@ -16,20 +16,28 @@ extension HarvestDB {
     _ completion: @escaping (Bool) -> Void
   ) -> ([(uid: String, wid: String)]?, Bool) -> Void {
     return { ids, succ in
-      guard let ids = ids else { // is farmer
+      guard let ids = ids else { // ensure is foreman else call completion(true)
         completion(true)
         return
       }
       
       if let (uid, wid) = UserDefaults.standard.getUWID() {
         HarvestUser.current.selectedWorkingForID = (uid, wid)
+        HarvestDB.getWorkingForFarmName(uid: uid) { (name) in
+          HarvestUser.current.organisationName = name ?? "your farm"
+        }
         completion(true)
       } else if ids.count == 1 {
         HarvestUser.current.selectedWorkingForID = ids.first!
+        HarvestDB.getWorkingForFarmName(uid: ids.first!.uid) { (name) in
+          HarvestUser.current.organisationName = name ?? "your farm"
+        }
         completion(true)
       } else if ids.count == 0 {
-        let alert = SCLAlertView()
-        alert.addButton("Done", action: { completion(false) })
+        HarvestUser.current.reset()
+        
+        let alert = SCLAlertView(appearance: .optionsAppearance)
+        alert.addButton("Okay", action: { completion(false) })
         
         alert.showNotice(
           "You're Not Working For Anyone",
@@ -39,12 +47,12 @@ extension HarvestDB {
         HarvestDB.getWorkingForFarmNames(uids: ids.map { $0.uid }, result: [], completion: { (names) in
           let alert = SCLAlertView(
             appearance: .optionsAppearance,
-            options: zip(names, ids).map { ($0.0, $0.1.uid) }) { option in
+            options: zip(names, ids).map { ($0.0, $0.1.uid) }) { option, name in
               guard let fullOption = ids.first(where: { $0.uid == option }) else {
                 completion(false)
                 return
               }
-          
+              HarvestUser.current.organisationName = name
               HarvestUser.current.selectedWorkingForID = fullOption
               UserDefaults.standard.set(uid: fullOption.uid, wid: fullOption.wid)
               completion(true)
@@ -265,6 +273,5 @@ extension HarvestDB {
       
       HarvestDB.getWorkingForFarmNames(uids: rest, result: result + [name], completion: completion)
     }
-    
   }
 }
