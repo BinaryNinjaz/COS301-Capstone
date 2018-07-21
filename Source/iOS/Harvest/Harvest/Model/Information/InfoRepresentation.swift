@@ -282,11 +282,7 @@ extension Worker {
       <<< lastnameRow
       <<< idRow
       
-      +++ Section.init(
-        header: "Role",
-        footer: """
-        Any foreman phone number must include its area code. Example \(Phoney.formatted(number: "0123456789") ?? "")
-        """)
+      +++ Section("Role")
       <<< isForemanRow
       <<< phoneRow
 //      <<< emailRow
@@ -800,6 +796,25 @@ extension Session {
       }
     }
     
+    let deleteSessionRow = ButtonRow { row in
+      row.title = "Delete Session"
+    }.onCellSelection { (_, _) in
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Delete") {
+        HarvestDB.delete(session: self) { (_, _) in
+          formVC.navigationController?.popViewController(animated: true)
+        }
+      }
+      
+      alert.showWarning("Are You Sure You Want to Delete this Session?", subTitle: """
+      You will not be able to get back any information about this session.
+      """)
+    }.cellUpdate { (cell, _) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
+    }
+    
     form
       +++ Section("Foreman")
       <<< displayRow
@@ -813,6 +828,9 @@ extension Session {
     
       +++ Section("Worker Performance Summary")
       <<< chartRow
+    
+      +++ Section()
+      <<< deleteSessionRow
   }
 }
 
