@@ -10,7 +10,7 @@ import UIKit
 
 class SessionSelectionViewController: UITableViewController {
   var pageIndex: String?
-  let pageSize: UInt = 20
+  let pageSize: UInt = 21
   var isLoading = false
   var selectedSession: Session?
   var sessions = SortedDictionary<Date, [Session]>(>)
