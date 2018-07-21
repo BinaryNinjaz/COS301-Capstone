@@ -312,10 +312,11 @@ extension TrackerViewController: UICollectionViewDataSource {
   }
   
   // swiftlint:disable function_body_length
+  // swiftlint:disable cyclomatic_complexity
   func collectionView(
     _ collectionView: UICollectionView,
     cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
+  ) -> UICollectionViewCell {
     let labelCellID = "labelWorkerCollectionViewCell"
     let loadingCellID = "loadingWorkerCollectionViewCell"
     let workerCellID = "workerCollectionViewCell"

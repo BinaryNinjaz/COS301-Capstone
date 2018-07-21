@@ -7,6 +7,7 @@
 //
 
 import Firebase
+import SCLAlertView
 
 extension HarvestDB {
   static func getHarvestUser(_ completion: @escaping (HarvestUser?) -> Void) {
@@ -33,10 +34,38 @@ extension HarvestDB {
     }
   }
   
-  static func save(harvestUser: HarvestUser) {
+  static func save(harvestUser: HarvestUser, oldEmail: String) {
     let admin = ref.child(Path.admin)
     
     let update = harvestUser.json()
     admin.updateChildValues(update)
+    
+    if harvestUser.accountIdentifier != oldEmail, let user = Auth.auth().currentUser {
+      user.updateEmail(to: harvestUser.accountIdentifier) { (error) in
+        if let error = error {
+          SCLAlertView().showError("An Error Occurred", subTitle: error.localizedDescription)
+        }
+      }
+    }
+  }
+  
+  static func delete(harvestUser: HarvestUser, completion: @escaping (Bool) -> Void) {
+    
+    guard Path.parent != "" else {
+      SCLAlertView().showError(
+        "User does not exist",
+        subTitle: "It appears that the user does not have an an account")
+      return
+    }
+    
+    let user = ref.child(Path.parent)
+    user.removeValue { (err, _) in
+      if let err = err {
+        SCLAlertView().showError("An Error Occurred", subTitle: err.localizedDescription)
+        completion(false)
+      } else {
+        completion(true)
+      }
+    }
   }
 }
