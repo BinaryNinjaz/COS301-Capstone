@@ -109,10 +109,8 @@ class SessionSelectionViewController: UITableViewController {
     }
     let sidx = SessionsIndex(indexPath.section)
     
-    HarvestDB.getSession(id: sessions[sidx].value[indexPath.row].id) { s in
-      self.selectedSession = s
-      self.performSegue(withIdentifier: "SessionToItem", sender: self)
-    }
+    self.selectedSession = sessions[sidx].value[indexPath.row]
+    self.performSegue(withIdentifier: "SessionToItem", sender: self)
   }
   
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
