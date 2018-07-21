@@ -153,7 +153,7 @@ extension HarvestDB {
       HarvestUser.current.lastname = name.last
       HarvestUser.current.organisationName = organisationName
       HarvestUser.current.setUser(user, details.password, HarvestDB.requestWorkingFor(completion))
-      HarvestDB.save(harvestUser: HarvestUser.current)
+      HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
       
       completion(true)
     }
