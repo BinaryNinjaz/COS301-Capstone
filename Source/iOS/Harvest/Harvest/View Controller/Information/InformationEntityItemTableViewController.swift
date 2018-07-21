@@ -83,9 +83,6 @@ class InformationEntityItemTableViewController: UITableViewController {
     case .session:
       break
       
-    case .shallowSession:
-      break
-      
     case .user:
       break
       
@@ -95,23 +92,15 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
 
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return kind == .session ? Entities.shared.sessionDates().count : 1
+    return 1
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return kind == .session
-      ? Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[section]).count
-      : (items?.count ?? 0)
+    return items?.count ?? 0
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "informationEntityItemCell", for: indexPath)
-    
-    guard kind != .session else {
-      let items = Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[indexPath.section])
-      cell.textLabel?.text = items[indexPath.row].foreman.description
-      return cell
-    }
     
     guard let item = items?[indexPath.row] else {
       return cell
@@ -126,8 +115,6 @@ class InformationEntityItemTableViewController: UITableViewController {
       cell.textLabel?.text = f.name
     case let .session(s):
       cell.textLabel?.text = s.foreman.description
-    case .shallowSession:
-      break
     case .user:
       cell.textLabel?.text = ""
     }
@@ -136,27 +123,8 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-    guard kind != .session else {
-      let items = Entities.shared.sessionsFor(day: Entities.shared.sessionDates()[indexPath.section])
-      selectedEntity = .session(items[indexPath.row])
-      return indexPath
-    }
-    
     selectedEntity = items?[indexPath.row]
     return indexPath
-  }
-  
-  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    let dates = Entities.shared.sessionDates()
-    guard dates.count > 0 else {
-      return nil
-    }
-    
-    let date = dates[section]
-    
-    return kind == .session ? formatter.string(from: date)  : nil
   }
   
   override func tableView(

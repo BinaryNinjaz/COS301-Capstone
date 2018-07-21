@@ -9,12 +9,12 @@
 import UIKit
 
 class SessionSelectionViewController: UITableViewController {
-  typealias SessionsIndex = SortedDictionary<Date, [ShallowSession]>.DefaultIndex
-  var sessions = SortedDictionary<Date, [ShallowSession]>(>)
-  var pageNo = 1
-  let pageSize = 20
+  var pageIndex: String?
+  let pageSize: UInt = 20
   var isLoading = false
   var selectedSession: Session?
+  var sessions = SortedDictionary<Date, [Session]>(>)
+  typealias SessionsIndex = SortedDictionary<Date, [Session]>.Index
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -40,11 +40,11 @@ class SessionSelectionViewController: UITableViewController {
     
     isLoading = true
     tableView.reloadData()
-    HarvestCloud.getShallowSessions(onPage: pageNo, ofSize: pageSize) { (psessions) in
+    HarvestDB.getSessions(limitedToLast: pageSize, fromKey: pageIndex) { (psessions, lastKey) in
       self.sessions.accumulateByDay(with: psessions)
       DispatchQueue.main.async {
+        self.pageIndex = lastKey
         self.isLoading = false
-        self.pageNo += 1
         self.tableView.reloadData()
       }
     }
@@ -56,12 +56,12 @@ class SessionSelectionViewController: UITableViewController {
     }
     
     isLoading = true
-    HarvestCloud.getShallowSessions(onPage: 1, ofSize: pageSize) { (psessions) in
+    HarvestDB.getSessions(limitedToLast: pageSize, fromKey: nil) { (psessions, lastKey) in
       self.sessions.removeAll()
       self.sessions.accumulateByDay(with: psessions)
       DispatchQueue.main.async {
         self.isLoading = false
-        self.pageNo = 1
+        self.pageIndex = lastKey
         self.refreshControl?.endRefreshing()
         self.tableView.reloadData()
       }

@@ -120,7 +120,7 @@ final class StatSetupViewController: ReloadableFormViewController {
         self.navigationController?.pushViewController(svc, animated: true)
     }
     
-    Entities.shared.getMultiplesOnce([.orchard, .session, .worker]) { (_) in
+    Entities.shared.getMultiplesOnce([.orchard, .worker]) { (_) in
       self.form
         +++ Section()
         <<< statKind
