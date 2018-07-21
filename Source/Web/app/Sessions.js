@@ -65,6 +65,15 @@ function workerForKey(key) {
   return undefined;
 }
 
+function sessionForKey(key) {
+  for (var k in sessions) {
+    if (sessions[k].key === key) {
+      return sessions[k];
+    }
+  }
+  return undefined;
+}
+
 function sessionsListLoader(loading) {
   var sessionsListHolder = document.getElementById("sessionsListLoader");
   if (!loading) {
@@ -110,7 +119,7 @@ function newPage() {
       .endAt(pageIndex)
       .limitToLast(pageSize);
   }
-  
+  var tempSessions = [];
   ref.once('value').then((snapshot) => {
     var lastSession = "";
     var resultHtml = [];
@@ -124,10 +133,17 @@ function newPage() {
         const name = foreman.value.name + " " + foreman.value.surname;
         const text = name + " - " + (new Date(obj.start_date * 1000)).toLocaleString();
         resultHtml.unshift("<button type='button' class='btn btn-primary' style='margin: 4px' onclick=loadSession('" + child.key + "') >" + text + "</button>");
+        tempSessions.unshift({val: obj, key: child.key});
       }
     });
+    tempSessions.pop();
+    for (var i = 0; i < tempSessions.length; i++) {
+      sessions.push(tempSessions[i]);
+    }
+    
     resultHtml.pop();
     sessionsList.innerHTML += resultHtml.join("");
+    
     pageIndex = lastSession;
     sessionsListLoader(false)
   });
@@ -142,83 +158,82 @@ function loadSession(sessionID) {
     ["Worker", "Total Bags Collected"],
   ];
   
-  ref.once('value').then((snapshot) => {
-    const val = snapshot.val();
-    const start = new Date(val.start_date * 1000);
-    const end = new Date(val.end_date * 1000);
-    const wid = val.wid;
-    const foreman = foremanForKey(wid);
-    const fname = foreman.value.name + " " + foreman.value.surname;
-    
-    var sessionDetails = document.getElementById("sessionDetails");
-    
-    sessionDetails.innerHTML = "<form class=form-horizontal'><div class='form-group'>"
-    sessionDetails.innerHTML += "<div class='col-sm-12'><label>Foreman: </label> " + fname + "</div>"
-    sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Started: </label><p> " + start.toLocaleString() + "</p></div>"
-    sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Ended: </label><p> " + end.toLocaleString() + "</p></div>"
-    sessionDetails.innerHTML += "</div></form>";
-    
-    var first = true;
-    
-    if (val.track !== undefined) {
-      var track = [];
-      for (const ckey in val.track) {
-        const coord = val.track[ckey];
-        const loc = new google.maps.LatLng(coord.lat, coord.lng)
-        track.push(loc);
+  const val = sessionForKey(sessionID).val;
+  
+  const start = new Date(val.start_date * 1000);
+  const end = new Date(val.end_date * 1000);
+  const wid = val.wid;
+  const foreman = foremanForKey(wid);
+  const fname = foreman.value.name + " " + foreman.value.surname;
+  
+  var sessionDetails = document.getElementById("sessionDetails");
+  
+  sessionDetails.innerHTML = "<form class=form-horizontal'><div class='form-group'>"
+  sessionDetails.innerHTML += "<div class='col-sm-12'><label>Foreman: </label> " + fname + "</div>"
+  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Started: </label><p> " + start.toLocaleString() + "</p></div>"
+  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Ended: </label><p> " + end.toLocaleString() + "</p></div>"
+  sessionDetails.innerHTML += "</div></form>";
+  
+  var first = true;
+  
+  if (val.track !== undefined) {
+    var track = [];
+    for (const ckey in val.track) {
+      const coord = val.track[ckey];
+      const loc = new google.maps.LatLng(coord.lat, coord.lng)
+      track.push(loc);
+      if (first) {
+        map.setCenter(loc);
+        map.setZoom(15);
+        first = false;
+      }
+    }
+    if (polypath !== undefined) {
+      polypath.setMap(null);
+    }
+    polypath = new google.maps.Polyline({
+      path: track,
+      geodesic: true,
+      strokeColor: '#0000FF',
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
+      map: map
+    });
+  }
+  
+  for (const marker in markers) {
+    markers[marker].setMap(null)
+  }
+  
+  if (val.collections !== undefined) {
+    for (const ckey in val.collections) {
+      const collection = val.collections[ckey];
+      const worker = workerForKey(ckey);
+      
+      var wname = "";
+      if (worker !== undefined) {
+        wname = worker.value.name + " " + worker.value.surname;
+      }
+      
+      graphData.push([wname, collection.length]);
+      
+      for (const pkey in collection) {
+        const pickup = collection[pkey];
+        const coord = new google.maps.LatLng(pickup.coord.lat, pickup.coord.lng);
         if (first) {
-          map.setCenter(loc);
-          map.setZoom(15);
+          map.setCenter(coord);
           first = false;
         }
-      }
-      if (polypath !== undefined) {
-        polypath.setMap(null);
-      }
-      polypath = new google.maps.Polyline({
-        path: track,
-        geodesic: true,
-        strokeColor: '#0000FF',
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
-        map: map
-      });
-    }
-    
-    for (const marker in markers) {
-      markers[marker].setMap(null)
-    }
-    
-    if (val.collections !== undefined) {
-      for (const ckey in val.collections) {
-        const collection = val.collections[ckey];
-        const worker = workerForKey(ckey);
-        
-        var wname = "";
-        if (worker !== undefined) {
-          wname = worker.value.name + " " + worker.value.surname;
-        }
-        
-        graphData.push([wname, collection.length]);
-        
-        for (const pkey in collection) {
-          const pickup = collection[pkey];
-          const coord = new google.maps.LatLng(pickup.coord.lat, pickup.coord.lng);
-          if (first) {
-            map.setCenter(coord);
-            first = false;
-          }
-          var marker = new google.maps.Marker({
-            position: coord,
-            map: map,
-            title: wname
-          });
-          markers.push(marker);
-        }
+        var marker = new google.maps.Marker({
+          position: coord,
+          map: map,
+          title: wname
+        });
+        markers.push(marker);
       }
     }
-    initGraph(graphData);
-  });
+  }
+  initGraph(graphData);
 }
 
 function initGraph(collections) {
