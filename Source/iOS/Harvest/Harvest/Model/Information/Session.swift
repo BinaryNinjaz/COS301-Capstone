@@ -206,8 +206,8 @@ extension Date {
   }
 }
 
-extension SortedDictionary where Key == Date, Value == [ShallowSession] {
-  mutating func accumulateByDay(with sessions: [ShallowSession]) {
+extension SortedDictionary where Key == Date, Value == [Session] {
+  mutating func accumulateByDay(with sessions: [Session]) {
     for session in sessions {
       var inserted = false
       for (key, _) in self {

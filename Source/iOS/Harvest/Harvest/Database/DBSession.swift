@@ -9,9 +9,12 @@
 import Firebase
 
 extension HarvestDB {
-  static func getSessions(_ completion: @escaping ([Session]) -> Void) {
-    let sref = ref.child(Path.sessions)
-    sref.observeSingleEvent(of: .value) { (snapshot) in
+  static func getSessions(
+    limitedToLast n: UInt,
+    fromKey end: String?,
+    _ completion: @escaping ([Session], String) -> Void
+  ) {
+    let reader: (DataSnapshot) -> Void = { snapshot in
       var sessions = [Session]()
       for _child in snapshot.children {
         guard let child = _child as? DataSnapshot else {
@@ -21,12 +24,20 @@ extension HarvestDB {
         guard let session = child.value as? [String: Any] else {
           continue
         }
-        
-        let s = Session(json: session, id: child.key)
-        sessions.append(s)
+        let w = Session(json: session, id: child.key)
+        sessions.append(w)
       }
-      completion(sessions)
+      completion(sessions, sessions.last?.id ?? "")
     }
+    
+    let sref: DatabaseQuery
+    if let end = end {
+      sref = ref.child(Path.sessions).queryEnding(atValue: end).queryLimited(toLast: n)
+    } else {
+      sref = ref.child(Path.sessions).queryLimited(toLast: n)
+    }
+    
+    sref.observeSingleEvent(of: .value, with: reader)
   }
   
   static func getSession(id: String, _ completion: @escaping (Session) -> Void) {
@@ -38,26 +49,6 @@ extension HarvestDB {
       
       let s = Session(json: session, id: snapshot.key)
       completion(s)
-    }
-  }
-  
-  static func watchSessions(_ completion: @escaping ([Session]) -> Void) {
-    let sref = ref.child(Path.sessions)
-    sref.observe(.value) { (snapshot) in
-      var sessions = [Session]()
-      for _child in snapshot.children {
-        guard let child = _child as? DataSnapshot else {
-          continue
-        }
-        
-        guard let session = child.value as? [String: Any] else {
-          continue
-        }
-        
-        let s = Session(json: session, id: child.key)
-        sessions.append(s)
-      }
-      completion(sessions)
     }
   }
   
