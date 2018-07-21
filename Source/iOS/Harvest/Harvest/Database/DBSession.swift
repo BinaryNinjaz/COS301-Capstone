@@ -25,16 +25,23 @@ extension HarvestDB {
           continue
         }
         let w = Session(json: session, id: child.key)
-        sessions.append(w)
+        sessions.insert(w, at: 0)
       }
-      completion(sessions, sessions.last?.id ?? "")
+      let end = sessions.last?.id ?? ""
+      sessions.removeLast()
+      completion(sessions, end)
     }
     
     let sref: DatabaseQuery
     if let end = end {
-      sref = ref.child(Path.sessions).queryEnding(atValue: end).queryLimited(toLast: n)
+      sref = ref.child(Path.sessions)
+        .queryOrderedByKey()
+        .queryEnding(atValue: end)
+        .queryLimited(toLast: n)
     } else {
-      sref = ref.child(Path.sessions).queryLimited(toLast: n)
+      sref = ref.child(Path.sessions)
+        .queryOrderedByKey()
+        .queryLimited(toLast: n)
     }
     
     sref.observeSingleEvent(of: .value, with: reader)
