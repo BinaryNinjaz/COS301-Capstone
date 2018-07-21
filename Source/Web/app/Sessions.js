@@ -1,6 +1,6 @@
 const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/flattendSessions?';
-var pageNo = 0;
-var pageSize = 8;
+var pageIndex = null;
+var pageSize = 21;
 const user = function() { return firebase.auth().currentUser };
 const userID = function() {
   if (user() !== null) {
@@ -97,21 +97,39 @@ function initPage() {
 
 var sessions = [];
 function newPage() {
-  pageNo++;
+  var ref;
   sessionsListLoader(true);
-  const requrl = baseUrl + "pageNo=" + pageNo + "&pageSize=" + pageSize + "&uid=" + userID();
   var sessionsList = document.getElementById("sessionsList");
-  $.get(requrl, (data, status) => {
-    for (const key in data) {
-      const obj = data[key];
+  if (pageIndex === null) {
+    ref = firebase.database().ref('/' + userID() + '/sessions')
+      .orderByKey()
+      .limitToLast(pageSize);
+  } else {
+    ref = firebase.database().ref('/' + userID() + '/sessions')
+      .orderByKey()
+      .endAt(pageIndex)
+      .limitToLast(pageSize);
+  }
+  
+  ref.once('value').then((snapshot) => {
+    var lastSession = "";
+    var resultHtml = [];
+    snapshot.forEach((child) => {
+      const obj = child.val();
       const foreman = foremanForKey(obj.wid);
       if (foreman !== undefined) {
+        if (lastSession === "") {
+          lastSession = child.key;
+        }
         const name = foreman.value.name + " " + foreman.value.surname;
         const text = name + " - " + (new Date(obj.start_date * 1000)).toLocaleString();
-        sessionsList.innerHTML += "<button type='button' class='btn btn-primary' style='margin: 4px' onclick=loadSession('" + data[key].key + "') >" + text + "</button>";
+        resultHtml.unshift("<button type='button' class='btn btn-primary' style='margin: 4px' onclick=loadSession('" + child.key + "') >" + text + "</button>");
       }
-    }
-    sessionsListLoader(false);
+    });
+    resultHtml.pop();
+    sessionsList.innerHTML += resultHtml.join("");
+    pageIndex = lastSession;
+    sessionsListLoader(false)
   });
 }
 
