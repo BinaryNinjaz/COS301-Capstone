@@ -66,9 +66,11 @@ class SettingsEurekaViewController: ReloadableFormViewController {
           }
         }
         
-        confirmationAlert.showWarning("Are You Sure?", subTitle: """
-      Are you sure you want to remove yourself from association with you current farm?
-      """)
+        confirmationAlert.showWarning(
+          "Are You Sure?",
+          subTitle: """
+          Are you sure you want to resign from working for "\(HarvestUser.current.organisationName)"?
+          """)
         
       }.cellUpdate { (cell, _) in
         cell.textLabel?.textColor = .white
