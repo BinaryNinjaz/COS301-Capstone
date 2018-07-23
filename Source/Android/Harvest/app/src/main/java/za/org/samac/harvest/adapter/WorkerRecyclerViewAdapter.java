@@ -141,11 +141,11 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 childUpdates.put("coord", coordinates);
                 childUpdates.put("date", currentTime);
 
-
                 Map<String, Object> sessionDate = new HashMap<>();
                 sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
                 endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
                 sessionDate.put("end_date", endSessionTime);
+                sessRef.updateChildren(sessionDate);//save data to Firebase
                 myRef.updateChildren(childUpdates);//store plus button info in Firebase
 
                 collectionObj.addCollection(personName, location);
@@ -179,7 +179,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
                     endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
                     sessionDate.put("end_date", endSessionTime);
-
+                    sessRef.updateChildren(sessionDate);//save data to Firebase
+                    
                     farmerKey = MainActivity.farmerKey;
                     myRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
                     myRef.removeValue();//remove latest increment

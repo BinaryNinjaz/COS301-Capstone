@@ -275,13 +275,9 @@ public class BarGraphForemen extends AppCompatActivity {
                 }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return true;
         }
-//        return false;
     }
 }
