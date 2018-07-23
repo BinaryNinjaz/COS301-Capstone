@@ -9,11 +9,25 @@
 import Firebase
 
 extension HarvestDB {
+  private static var sessionListners = [UInt]()
+  private static var sessionEndKey: String?
+  
   static func getSessions(
     limitedToLast n: UInt,
-    fromKey end: String?,
-    _ completion: @escaping ([Session], String) -> Void
+    _ completion: @escaping ([Session]) -> Void
   ) {
+    let sref: DatabaseQuery
+    if let end = sessionEndKey {
+      sref = ref.child(Path.sessions)
+        .queryOrderedByKey()
+        .queryEnding(atValue: end)
+        .queryLimited(toLast: n)
+    } else {
+      sref = ref.child(Path.sessions)
+        .queryOrderedByKey()
+        .queryLimited(toLast: n)
+    }
+    
     let reader: (DataSnapshot) -> Void = { snapshot in
       var sessions = [Session]()
       for _child in snapshot.children {
@@ -27,24 +41,21 @@ extension HarvestDB {
         let w = Session(json: session, id: child.key)
         sessions.insert(w, at: 0)
       }
-      let end = sessions.last?.id ?? ""
+      sessionEndKey = sessions.last?.id
       sessions.removeLast()
-      completion(sessions, end)
+      completion(sessions)
     }
     
-    let sref: DatabaseQuery
-    if let end = end {
-      sref = ref.child(Path.sessions)
-        .queryOrderedByKey()
-        .queryEnding(atValue: end)
-        .queryLimited(toLast: n)
-    } else {
-      sref = ref.child(Path.sessions)
-        .queryOrderedByKey()
-        .queryLimited(toLast: n)
-    }
-    
-    sref.observeSingleEvent(of: .value, with: reader)
+    sessionListners += [sref.observe(.value, with: reader)]
+  }
+  
+  static func getRefreshedSessions(
+    limitedToLast n: UInt,
+    _ completion: @escaping ([Session]) -> Void
+  ) {
+    sessionListners.forEach { ref.removeObserver(withHandle: $0) }
+    sessionEndKey = nil
+    getSessions(limitedToLast: n, completion)
   }
   
   static func getSession(id: String, _ completion: @escaping (Session) -> Void) {

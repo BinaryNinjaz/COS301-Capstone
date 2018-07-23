@@ -13,8 +13,8 @@ class SessionSelectionViewController: UITableViewController {
   let pageSize: UInt = 21
   var isLoading = false
   var selectedSession: Session?
-  var sessions = SortedDictionary<Date, [Session]>(>)
-  typealias SessionsIndex = SortedDictionary<Date, [Session]>.Index
+  var sessions = SortedDictionary<Date, SortedSet<Session>>(>)
+  typealias SessionsIndex = SortedDictionary<Date, SortedSet<Session>>.Index
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -40,10 +40,9 @@ class SessionSelectionViewController: UITableViewController {
     
     isLoading = true
     tableView.reloadData()
-    HarvestDB.getSessions(limitedToLast: pageSize, fromKey: pageIndex) { (psessions, lastKey) in
+    HarvestDB.getSessions(limitedToLast: pageSize) { psessions in
       self.sessions.accumulateByDay(with: psessions)
       DispatchQueue.main.async {
-        self.pageIndex = lastKey
         self.isLoading = false
         self.tableView.reloadData()
       }
@@ -56,12 +55,11 @@ class SessionSelectionViewController: UITableViewController {
     }
     
     isLoading = true
-    HarvestDB.getSessions(limitedToLast: pageSize, fromKey: nil) { (psessions, lastKey) in
+    HarvestDB.getRefreshedSessions(limitedToLast: pageSize) { psessions in
       self.sessions.removeAll()
       self.sessions.accumulateByDay(with: psessions)
       DispatchQueue.main.async {
         self.isLoading = false
-        self.pageIndex = lastKey
         self.refreshControl?.endRefreshing()
         self.tableView.reloadData()
       }
@@ -126,10 +124,6 @@ class SessionSelectionViewController: UITableViewController {
     let date = sessions[sidx].key
     
     return formatter.string(from: date)
-  }
-  
-  override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-    isLoading = false
   }
   
   override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
