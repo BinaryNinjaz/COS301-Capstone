@@ -753,20 +753,29 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void onClickStart(View v) {
         textViewPressStart.setVisibility(View.GONE);
 
-        startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
-
         Map<String, Object> sessionDate = new HashMap<>();
-        sessionDate.put("start_date", startSessionTime);
 
-        if (isFarmer) {
-            sessionDate.put("wid", uid);//add foreman database ID to session;
-        } else {
-            sessionDate.put("wid", foremanID);//add foreman database ID to session;
+        //set initial Firebase data
+        if (btnStart.getTag() == "green") {
+            sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
+            sessionKey = sessRef.push().getKey();//generate key/ID for a session
+            sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//put key in database
+            
+            startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
+
+            sessionDate.put("start_date", startSessionTime);
+
+            if (isFarmer) {
+                sessionDate.put("wid", uid);//add foreman database ID to session;
+            } else {
+                sessionDate.put("wid", foremanID);//add foreman database ID to session;
+            }
+
+            endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
+            sessionDate.put("end_date", endSessionTime);
+
+            sessRef.updateChildren(sessionDate);//save data to Firebase
         }
-
-        sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
-
-        sessRef.updateChildren(sessionDate);//save data to Firebase
 
         if (workers.size() == 0 && btnStart.getTag() == "green") {
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
@@ -930,8 +939,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.notifyDataSetChanged();
         }
         if (btnStart.getTag() == "green") {
-            sessionKey = sessRef.push().getKey();//generate key/ID for a session
-
             adapter.setPlusEnabled(true);
             adapter.setMinusEnabled(true);
             track = new HashMap<Integer, Location>(); //used in firebase function

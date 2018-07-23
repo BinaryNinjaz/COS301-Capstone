@@ -64,6 +64,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private String workerIncrement;
     //private String userUid;
     private String farmerKey;
+    private DatabaseReference sessRef;
+    private double endSessionTime;
     private boolean gotCorrectFarmerKey;
     private DatabaseReference workersRef;
     private static final String TAG = "Button";
@@ -139,6 +141,11 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 childUpdates.put("coord", coordinates);
                 childUpdates.put("date", currentTime);
 
+
+                Map<String, Object> sessionDate = new HashMap<>();
+                sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
+                endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
+                sessionDate.put("end_date", endSessionTime);
                 myRef.updateChildren(childUpdates);//store plus button info in Firebase
 
                 collectionObj.addCollection(personName, location);
@@ -167,6 +174,11 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     workerID = worker.getID();//get worker ID
                     sessionKey = MainActivity.sessionKey;//get key/ID for a session
                     workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
+
+                    Map<String, Object> sessionDate = new HashMap<>();
+                    sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
+                    endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
+                    sessionDate.put("end_date", endSessionTime);
 
                     farmerKey = MainActivity.farmerKey;
                     myRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
