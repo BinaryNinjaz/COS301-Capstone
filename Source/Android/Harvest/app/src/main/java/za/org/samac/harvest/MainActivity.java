@@ -878,11 +878,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             myRef.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if (child.toString().equals(foremanID)) {
+                    if (dataSnapshot != null) {
+                        if (dataSnapshot.getKey().toString().equals(foremanID)) {
                             myRef.removeValue();
                             locationWanted = true;
-                            break;
                         }
                     }
 
