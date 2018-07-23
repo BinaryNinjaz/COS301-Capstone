@@ -179,7 +179,7 @@ public class BarGraphForemen extends AppCompatActivity {
                         for (int i = 6; i<=18; i++) {
                             time.add(""+i);
                         }
-                        
+
                         JSONObject objWorker = objs.getJSONObject(foremanKey);
 
                         final ArrayList<Integer> total = new ArrayList<>();

@@ -753,6 +753,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void onClickStart(View v) {
         textViewPressStart.setVisibility(View.GONE);
 
+        startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
+
+        Map<String, Object> sessionDate = new HashMap<>();
+        sessionDate.put("start_date", startSessionTime);
+
+        if (isFarmer) {
+            sessionDate.put("wid", uid);//add foreman database ID to session;
+        } else {
+            sessionDate.put("wid", foremanID);//add foreman database ID to session;
+        }
+
+        sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
+
+        sessRef.updateChildren(sessionDate);//save data to Firebase
+
         if (workers.size() == 0 && btnStart.getTag() == "green") {
             AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             String msg = "No workers added to orchard";
@@ -823,21 +838,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
-
-        startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
-
-        Map<String, Object> sessionDate = new HashMap<>();
-        sessionDate.put("start_date", startSessionTime);
-
-        if (isFarmer) {
-            sessionDate.put("wid", uid);//add foreman database ID to session;
-        } else {
-            sessionDate.put("wid", foremanID);//add foreman database ID to session;
-        }
-
-        sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
-
-        sessRef.updateChildren(sessionDate);//save data to Firebase
 
         if (location != null) {
             final DatabaseReference myRef;
@@ -973,6 +973,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
                 sessionDate.put("end_date", endSessionTime);
                 sessRef.updateChildren(sessionDate);//save data to Firebase
+            }
+
+            if (rejectSess == true) {
+                sessRef.removeValue();
             }
 
             stopTime = System.currentTimeMillis();
