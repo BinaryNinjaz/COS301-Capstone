@@ -171,7 +171,7 @@ All of the subsystems---Android, iOS, and website---run independently, but use F
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Communications.png}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webDiagramCommunications.png}
  \caption{Communications}
  \label{Communications}
 \end{figure}
@@ -193,23 +193,44 @@ With regards to configuring the iOS and Android applications: location services 
 \subsection{Mobile}
 
 \subsubsection{Creating an Account}
-The application will open by default on the log in screen. If you do not have an account you can press the "Sign Up" button. Once on the sign up page enter your details an press "Create Account". You will then be logged in accordingly.
+The application will open by default on the log in screen. From here the user can choose to sign in as a farmer or as a foreman, or to create a new farmer account. A foreman does not need to create an account, they simply sign in with their phone number, however the farmer must ensure that the foreman appears on their system and that the foreman's number is correct.\\
+To create a farmer account the following information is required:
+\begin{itemize}
+\item Email
+\item Password
+\end{itemize}
+Additionally the following information can be optionally provided:
+\begin{itemize}
+\item First name
+\item Surname
+\item Organization
+\end{itemize}
+Organization is most important since it will be used by foremen to identify your organization when they log in. \textbf{If it is not provided, you will be identified by your email, which will then be visible to your foremen.}
 
 \begin{figure}[h]
  \centering
- \includegraphics[width=6cm, keepaspectratio]{Images/signupIOS.png}
- \caption{Sign Up Mobile Form}
+ \includegraphics[width=6cm, keepaspectratio]{Images/mobileLoginChoose.png}
+ \caption{Sign In/Up Method Choose}
  \label{SignUpMobile}
 \end{figure}
 
-\subsubsection{Logging In}
-When on the log in screen enter your email and its password you used to create the account, alternatively click log in with Google to use Google credentials if they have been linked with Harvest. If you have already logged in the app will keep you logged in until you log out.
+\subsubsection{Logging In as a Farmer}
+When on the log in screen enter your email and its password you used to create the account, alternatively click log in with Google to use Google credentials, which will be linked to Harvest if they have not already. If you have already logged in the app will keep you logged in until you log out.
 \begin{figure}[h]
  \centering
- \includegraphics[width=6cm, keepaspectratio]{Images/loginIOS.png}
- \caption{Log In Mobile Form}
+ \includegraphics[width=6cm, keepaspectratio]{Images/mobileLoginFarmer.png}
+ \caption{Log In Form for Farmer}
  \label{LogInMobile}
 \end{figure}
+
+\subsubsection{Logging In as a Foreman}
+
+Simply enter your mobile phone number and press the button. A verification code may be sent to you via SMS, which will then need to be entered. Once that is done a confirmation screen will be displayed, it will show the phone number saved in the system so that the farmer can confirm that it is saved correctly. Then, depending on the situation, the following will be displayed:
+\begin{itemize}
+ \item If the foreman is not assigned to any organization, then they will be prompted to go back and will not be able to continue.
+ \item If the foreman is assigned to a single organization, the name will be displayed, and they will then be able to continue to the clicker as seen in \ref{Clicker}.
+ \item On the off chance that the foreman is assigned to multiple organizations, they will be able to select which organization they wish to work for for the session. In order to change this, they must log out and in again.
+\end{itemize}
 
 \subsubsection{Logging Out}
 The Log out button can be found at the bottom of the Harvest "Settings" Tab.
@@ -222,7 +243,7 @@ The Log out button can be found at the bottom of the Harvest "Settings" Tab.
 
 \begin{figure}[h]
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Map.png}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webDiagramMap.png}
  \caption{Website Map}
  \label{WebsiteMap}
 \end{figure}
@@ -232,7 +253,7 @@ The Log out button can be found at the bottom of the Harvest "Settings" Tab.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Register-Page.png}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webRegister-Page.png}
  \caption{Register Page}
  \label{RegisterPage}
 \end{figure}
@@ -244,58 +265,139 @@ The Log out button can be found at the bottom of the Harvest "Settings" Tab.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Login-Page.png}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webLogin.png}
  \caption{Login Page}
  \label{LoginPage}
 \end{figure}
 
-\paragraph{Logging In}The user simply enters the correct email address and password associated with their account, and clicks on the green \texttt{Log In} button. The user will the now be taken to \ref{HomePage}.
+\paragraph{Logging In}The user simply enters the correct email address and password associated with their account, and clicks on the green \texttt{Log In} button. The user will the now be taken to \ref{webHome}.
 
-\subsubsection{Home Page}
-Once the user has logged in, they will be taken to the home page, as seen in \ref{HomePage}. The home page is the starting point of the system, it serves simply by providing a real time updating feed of all bag drops, and a map overview of the farm and the locations of foremen.
-
-\subsubsection{Universal Features}
-Once the user is logged in, all web pages follow a similar design, so that use is consistent and manageable. The navbar that appears at the top of all logged in screens is consistent. Buttons in the navbar, from left to right are (note that the active page is always highlighted in green): 
-\paragraph{Harvest Home}Takes the user to the home page, as seen in \ref{HomePage}.
-\paragraph{View/Edit Information}Takes the user to the View/Edit Information page, as seen in \ref{InformationPage}.
-\paragraph{Heatmap}Takes the user to the heatmap page, as seen in 
-\ref{HeatMap}.
-\paragraph{Sign Out}Logs the user out of the system, and returns them to the login page, as seen in 
-\ref{LoginPage}
-
-\begin{figure}
- \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Home-Page.png}
- \caption{Home Page}
- \label{HomePage}
-\end{figure}
-\begin{figure}
- \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/heatMapWeb.png}
- \caption{Heat Map}
- \label{HeatMap}
-\end{figure}
+\subsubsection{Logging Out}
+\label{webLoggingOut}
+The \texttt{Sign Out} button can be clicked, at the top right of the navigation bar, to sign out at any time.
 
 \newpage
 \section{Using the System}
 
 \subsection{Mobile}
-\subsubsection{Using the Clicker}
-When using the clicker ensure that you start the session first before clicking a worker to collect a yield from them. The procedure of using the clicker works as follows:
+\subsubsection{Navigating}
+If a foreman is logged in, then they can only access the clicker.\\
+A farmer will have a navigation bar displayed at the bottom that they can use to get to different functionalities of the application.\\
+\\
+\textit{A discrepancy between iOS and Android exists in the form of settings. To access the settings in Android, the three dots must be pressed on, in the top right, and settings chosen.}\\
+\\
+The following is accessable through the navigation bar:
+\begin{itemize}
+\item \ref{Mobile Yield Tracker}: Yield Tracker
+\item \ref{Mobile Information}: Information
+\item \ref{Mobile Sessions}: Sessions 
+\item \ref{Mobile Statistics}: Statistics
+\item \ref{Mobile Settings}: Settings (OS dependent)
+\end{itemize}
+\subsubsection{Using the Yield Tracker}
+\label{Mobile Yield Tracker}
 
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/mobileClicker.png}
+ \caption{Yield Tracker}
+ \label{Yield Tracker}
+\end{figure}
+
+The Yield Tracker is shown in \ref{Yield Tracker}. Should the required location permission be disallowed, and the GPS disabled, then this system will not work. The user will be prompted to enable this services.\\
+Note that the bar at the bottom is only displayed when a farmer is logged in. A foreman will have no access to the other functionalities of the application.\\
+\\
+To use the Yield Tracker the following process is followed:
 \begin{enumerate}
 \item Press "Start"
-\item Click a workers name when they bring in a bag.
+\item Click the plus buttons bellow the workers name to increment or decrement the amount of bags they dropped off.
 \item Press "Stop"
+\item A summary of the session will be displayed.
+\item The session can then be saved or discarded.
 \end{enumerate}
 
+\subsubsection{Information}
+\label{Mobile Information}
+This works exactly the same way as in the website, please see \ref{Web Information}.\\
+Please see, however, \ref{Android Information Buttons}, for a description of unlabled buttons with regards to Information on Android. Whereby:
+\subparagraph{Add} creates a new item.
+\subparagraph{Save} saves the item that is being modified.
+\subparagraph{Edit} allows for editing of the currently displayed item.
+\subparagraph{Delete} deletes the item that is being edited. A conformation will be displayed.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/AndroidInformationButtons.png}
+ \caption{Android Information Buttons}
+ \label{Android Information Buttons}
+\end{figure}
+
+\subsubsection{Sessions}
+\label{Mobile Sessions}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/mobileSession.png}
+ \caption{Session}
+ \label{Mobile Session}
+\end{figure}
+
+Here a list of all sessions carried out is displayed. A session can be selected to get retrieve further information about it. See \ref{Mobile Session}. The button \texttt{TRACKED PATH AND COLLECTION POINTS} can be selected to see a map, where all of the orchards can be seen, as well as the path that was taken by the foreman that was administering the session. Red pins can also be seen along the path, where each indicates where the foreman was when they indicated a bag dropped by a worker.
+
+\subsubsection{Statistics}
+\label{Mobile Statistics}
+
+From here, varies statistics can be seen.
+
+\subsubsection{Settings}
+\label{Mobile Settings}
+
+The following settings are available:
+\begin{itemize}
+ \item Account: account related settings.
+ \begin{itemize}
+  \item Update Email: change email address (may need to re-authorize.)
+  \item Update Password: change password (may need to re-authorize.)
+  \item Organization: change the name of the organization, used by foremen to identify it.
+  \item First Name: change first name.
+  \item Surname: change surname.
+  \item Delete Account: delete the account. \textbf{This is irreversible, all information related to the account will be lost} (may need to re-authorize.)
+ \end{itemize}
+ \item Logout (iOS only, on android this is accessed from the menu that is used to access settings.)
+\end{itemize}
+\textit{Some sensitive settings, such as deleting the account, may require the user to re-authorize. In this scenario, a dialog will pop up asking them to re-enter their email and password; after which the action will be performed.}
+
 \subsection{Website}
+\subsubsection{Navigating}
+\label{webNavigating}
+On all web pages a consistent navbar can be seen at the top of the page. The following items are always present:
+\begin{itemize}
+ \item \ref{webHome}: Home Page
+ \item \ref{webInformation}: Information
+ \item \ref{webSessions}: Sessions
+ \item \ref{webHeatmap}: Heatmap
+ \item \ref{webAnalytics}: Analytics
+ \item \ref{webSettings}: Settings
+ \item \ref{webLoggingOut}: Sign Out
+\end{itemize}
+\subsubsection{Home Page}
+\label{webHome}
+Once the user has logged in, they will be taken to the home page, as seen in \ref{HomePage}. The home page is the starting point of the system, it serves simply by providing a real time updating feed of all bag drops, and a map overview of the farm and the locations of foremen.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/webHome-Page.png}
+ \caption{Home Page}
+ \label{HomePage}
+\end{figure}
+
 \subsubsection{View/Edit Information}
+\label{webInformation}
 \paragraph{Introduction}The View/Edit Information page can be found at any time by clicking on the \texttt{View/Edit Information} button in the navbar. Once clicked on, the user will be taken to \ref{InformationPage}. The concept is that almost all information can be viewed from this page, and once the relevant information has been located, it can also be edited.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Information-Page.png}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-Page.png}
  \caption{View/Edit Information Page}
  \label{InformationPage}
 \end{figure}
@@ -304,37 +406,30 @@ When using the clicker ensure that you start the session first before clicking a
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Information-Workers.png}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-Workers.png}
  \caption{Workers}
  \label{InformationPageWorkers}
 \end{figure}
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Information-Joe.png}
- \caption{Joe Soap}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-LookWorker.png}
+ \caption{Looking at a Worker}
  \label{InformationPageJoe}
 \end{figure}
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Information-Pear.png}
- \caption{Pear Shaped}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webViewOrchard.png}
+ \caption{Looking at an Orchard}
  \label{InformationPagePear}
-\end{figure}
-
-\begin{figure}
- \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Information-Joe-Pear.png}
- \caption{Joe Soap Through Pear Shaped}
- \label{InformationPageJoePear}
 \end{figure}
 
 \paragraph{Adding Information}Note that at the top of the second list in \ref{InformationPageWorkers}, \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear} there is a green \texttt{Add Farm}, \texttt{Add Orchard}, or \texttt{Add Worker} button, clicking this button will display the interface to enter the necessary information. An example of this can be seen in \ref{InformationAddOrchard}, where a new orchard can be created. Once all of the necessary information has been entered, then the \texttt{Save} button can be clicked to create the new orchard, note that none of the fields are required.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Information-AddOrchard.png}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-AddOrchard.png}
  \caption{Adding an Orchard}
  \label{InformationAddOrchard}
 \end{figure}
@@ -343,8 +438,8 @@ When using the clicker ensure that you start the session first before clicking a
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/Information-Mod-Joe.png}
- \caption{Modifying Information}
+ \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-Mod-Worker.png}
+ \caption{Modifying a Worker}
  \label{InformationModJoe}
 \end{figure}
 
@@ -378,6 +473,33 @@ Below, the fields stored are described.
 \item \textit{Information}: any further textual information about the worker.
 \item \textit{Foreman Email}: in the case of a foreman, their email address for linking to their app.
 \end{itemize}
+\subsubsection{Sessions}
+\label{webSessions}
+From here, a list of all sessions can be seen and selected. Once selected, information about the session will be displayed. Above the map the foreman that administered the session; and the time started, and ended; are displayed. The map shows the path taken by the foreman, as well as where they were when they indicated a bag drop. Please see \ref{webSession}. Below the map a pie chart is displayed, showing what portion of the total bags dropped was done by each worker.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/webSession.png}
+ \caption{Session}
+ \label{webSession}
+\end{figure}
+
+\subsubsection{Heatmap}
+\label{webHeatmap}
+
+The heatmap (\ref{webHeatmap}) shows where the majority of bag drops took place, by having more active areas be redder.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/webHeatMap.png}
+ \caption{Heat Map}
+ \label{HeatMap}
+\end{figure}
+\subsubsection{Analytics}
+\label{webAnalytics}
+\subsubsection{Settings}
+\label{webSettings}
+
 
 \newpage
 \section{Troubleshooting}
