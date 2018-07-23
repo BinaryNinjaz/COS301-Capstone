@@ -123,13 +123,17 @@ public final class Session {
   }
 }
 
-extension Session: Equatable {
+extension Session: Hashable {
   public static func == (lhs: Session, rhs: Session) -> Bool {
     return lhs.id == rhs.id
       && lhs.startDate == rhs.startDate
       && lhs.endDate == rhs.endDate
       && lhs.foreman == rhs.foreman
       && lhs.track == rhs.track
+  }
+  
+  public var hashValue: Int {
+    return id.hashValue
   }
 }
 
@@ -206,19 +210,26 @@ extension Date {
   }
 }
 
-extension SortedDictionary where Key == Date, Value == [Session] {
+extension SortedDictionary where Key == Date, Value == SortedSet<Session> {
+  func contains(session: Session) -> Bool {
+    return contains { _, list in
+      list.contains { $0.id == session.id }
+    }
+  }
+  
   mutating func accumulateByDay(with sessions: [Session]) {
-    for session in sessions {
+    for session in sessions where !contains(session: session) {
       var inserted = false
       for (key, _) in self {
         if key.sameDay(as: session.startDate) {
-          self[key] = self[key]! + [session]
+          self[key]!.insert(unique: session)
           inserted = true
           break
         }
       }
       if !inserted {
-        self[session.startDate] = [session]
+        self[session.startDate] = SortedSet<Session> { $0.startDate > $1.startDate }
+        self[session.startDate]!.insert(unique: session)
       }
     }
   }
