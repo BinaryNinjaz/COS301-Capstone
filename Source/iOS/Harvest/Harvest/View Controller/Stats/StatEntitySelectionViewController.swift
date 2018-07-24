@@ -115,7 +115,6 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
             }
           })
         }
-        print(svc.stat as Any)
         self.navigationController?.pushViewController(svc, animated: true)
     }
     
