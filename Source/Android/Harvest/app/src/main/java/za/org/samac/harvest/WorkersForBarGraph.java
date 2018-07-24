@@ -35,6 +35,7 @@ public class WorkersForBarGraph extends AppCompatActivity {
     private WorkerForBarGraphRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class WorkersForBarGraph extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -77,6 +78,12 @@ public class WorkersForBarGraph extends AppCompatActivity {
 
         init();
         collectOrchards();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);//set correct item to pop out on the nav bar
     }
 
     public void init() {

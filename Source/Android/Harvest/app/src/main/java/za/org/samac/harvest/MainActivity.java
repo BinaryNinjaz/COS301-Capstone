@@ -190,6 +190,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);//set correct item to pop out on the nav bar
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == GPS_SETTINGS_UPDATE) {

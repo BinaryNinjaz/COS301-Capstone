@@ -40,6 +40,7 @@ public class OrchardsForGraph extends AppCompatActivity {
     private OrchardsForGraphRVAdapter adapter;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class OrchardsForGraph extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -82,6 +83,12 @@ public class OrchardsForGraph extends AppCompatActivity {
         this.orchards = new ArrayList<>();
         this.orchardKeys = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);//set correct item to pop out on the nav bar
     }
 
     public void collectOrchards() {
