@@ -48,7 +48,6 @@ public class ForemenForBarGraph extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
 
-        bottomNavigationView.setSelectedItemId(R.id.actionSession);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override

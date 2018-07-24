@@ -52,7 +52,7 @@ public class OrchardsForGraph extends AppCompatActivity {
         //bottom nav bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setSelectedItemId(R.id.actionSession);
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -62,14 +62,10 @@ public class OrchardsForGraph extends AppCompatActivity {
                                 startActivity(new Intent(OrchardsForGraph.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(OrchardsForGraph.this, InformationActivity.class);
-                                openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openInformation, 0);
+                                startActivity(new Intent(OrchardsForGraph.this, InformationActivity.class));
                                 return true;
                             case R.id.actionSession:
-                                Intent openSessions= new Intent(OrchardsForGraph.this, Sessions.class);
-                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openSessions, 0);
+                                startActivity(new Intent(OrchardsForGraph.this, Sessions.class));
                                 return true;
                             case R.id.actionStats:
                                 return true;
