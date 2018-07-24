@@ -7,7 +7,7 @@ public class Pickup {
     public Double lat;
     public Double lng;
 
-    public void addLocation(Location location, Double adate) {
+    public Pickup(Location location, Double adate) {
         if(location!=null) {
             lng = (location.getLongitude());
             lat = (location.getLatitude());

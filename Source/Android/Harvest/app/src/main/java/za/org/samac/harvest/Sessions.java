@@ -206,43 +206,34 @@ public class Sessions extends AppCompatActivity {
                     formatter.setCalendar(Calendar.getInstance());
                     final String date = formatter.format(item.startDate);
 
-                    System.out.println(aChild.getKey());
-
-                    for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
-                        Double lat = childSnapshot.child("lat").getValue(Double.class);
-                        Double lng = childSnapshot.child("lng").getValue(Double.class);
+                    for (DataSnapshot trackSnapshot : aChild.child("track").getChildren()) {
+                        Double lat = trackSnapshot.child("lat").getValue(Double.class);
+                        Double lng = trackSnapshot.child("lng").getValue(Double.class);
                         Location loc = new Location("");
                         loc.setLatitude(lat.doubleValue());
                         loc.setLongitude(lng.doubleValue());
 
-                        //collected.addTrack(loc);
+                        item.addTrack(loc);
                     }
-                    for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
-                        String workername = workerID.get(childSnapshot.getKey());
+                    for (DataSnapshot collectionSnapshot : aChild.child("collections").getChildren()) {
+                        String workerName = workerID.get(collectionSnapshot.getKey());
                         int count = 0;
-                        for (DataSnapshot collection : childSnapshot.getChildren()) {
-                            System.out.println(collection);
+                        for (DataSnapshot collection : collectionSnapshot.getChildren()) {
                             Double lat = collection.child("coord").child("lat").getValue(Double.class);
                             Double lng = collection.child("coord").child("lng").getValue(Double.class);
                             Location loc = new Location("");
                             loc.setLatitude(lat.doubleValue());
                             loc.setLongitude(lng.doubleValue());
-                            Double time = childSnapshot.child("date").getValue(Double.class);
+                            Double time = collectionSnapshot.child("date").getValue(Double.class);
 
-                            item.addCollection(workername, loc, time);
+                            item.addCollection(workerName, loc, time);
                             count++;
                         }
-                        //collections.put(workername, (float) count);
                     }
-
 
                     tempSessions.add(item);
                     tempDates.add(date);
-
-
                 }
-
-
 
                 if (tempSessions.size() > 0) {
                     for (int i = tempSessions.size() - 1; i > 0; i--) { // we miss the first one on purpose so it isn't duplicated on subsequent calls

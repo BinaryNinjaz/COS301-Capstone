@@ -2,6 +2,7 @@ package za.org.samac.harvest;
 
 import android.location.Location;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -12,17 +13,19 @@ public class SessionItem {
     public Date startDate;
     public Date endDate;
     public String foreman;
-    public HashMap<String, Pickup> collections = new HashMap<>();
+    public HashMap<String, ArrayList<Pickup>> collections = new HashMap<>();
+    public ArrayList<Location> track = new ArrayList<>();
 
     public void addCollection(String workerName, Location location, Double date){
         if(collections.containsKey(workerName)) {
-            Pickup data = collections.get(workerName);
-            data.addLocation(location, date);
-            collections.put(workerName, data);
+            collections.get(workerName).add(new Pickup(location, date));
         }else {
-            Pickup data = new Pickup();
-            data.addLocation(location, date);
-            collections.put(workerName, data);
+            collections.put(workerName, new ArrayList<Pickup>());
+            collections.get(workerName).add(new Pickup(location, date));
         }
+    }
+
+    public void addTrack(Location loc) {
+        track.add(loc);
     }
 }
