@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import za.org.samac.harvest.Sessions;
 import za.org.samac.harvest.SignIn_Choose;
 import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.R;
@@ -126,133 +127,52 @@ public class SessionDetails extends AppCompatActivity {
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        final DatabaseReference dbref = database.getReference(MainActivity.farmerKey + "/sessions/" + getIntent().getStringExtra("key"));
+        final DatabaseReference dbref = database.getReference(MainActivity.farmerKey + "/sessions/" + Sessions.selectedItem.key);
+
+
 
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot == null || dataSnapshot.getValue() == null) {
-                    dbref.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            startDate = new Date((long) (dataSnapshot.child("start_date").getValue(Double.class) * 1000));
-                            Double ed = dataSnapshot.child("end_date").getValue(Double.class);
-                            if (ed != null) {
-                                endDate = new Date((long) (ed * 1000));
-                            } else {
-                                endDate = startDate;
-                            }
-                            key = dataSnapshot.getKey();
-                            workerKeys = new ArrayList<>();
-                            workerName = new ArrayList<>();
-                            yield = new ArrayList<>();
-
-                            wid = dataSnapshot.child("wid").getValue(String.class);
-                            for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
-                                Double lat = childSnapshot.child("lat").getValue(Double.class);
-                                Double lng = childSnapshot.child("lng").getValue(Double.class);
-                                Location loc = new Location("");
-                                loc.setLatitude(lat.doubleValue());
-                                loc.setLongitude(lng.doubleValue());
-
-                                collected.addTrack(loc);
-                            }
-                            for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
-                                String workername = workerID.get(childSnapshot.getKey());
-                                int count = 0;
-                                for (DataSnapshot collection : childSnapshot.getChildren()) {
-                                    System.out.println(collection);
-                                    Double lat = collection.child("coord").child("lat").getValue(Double.class);
-                                    Double lng = collection.child("coord").child("lng").getValue(Double.class);
-                                    Location loc = new Location("");
-                                    loc.setLatitude(lat.doubleValue());
-                                    loc.setLongitude(lng.doubleValue());
-                                    Double time = childSnapshot.child("date").getValue(Double.class);
-
-                                    collected.addCollection(workername, loc, time);
-                                    count++;
-                                }
-                                collections.put(workername, (float) count);
-                            }
-
-                            displayGraph();
-
-                            TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
-                            TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
-                            TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
-
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                            formatter.setCalendar(Calendar.getInstance());
-
-                            String fname = foremenID.get(wid) == null ? "Farm Owner" : foremenID.get(wid);
-                            foremanTextView.setText("Foreman: " + fname);
-                            startTime.setText("Time Started: " + formatter.format(startDate));
-                            endTime.setText("Time Ended: " + formatter.format(endDate));
+                dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //startDate = new Date((long) (dataSnapshot.child("start_date").getValue(Double.class) * 1000));
+                        startDate = Sessions.selectedItem.startDate;
+                        Double ed = dataSnapshot.child("end_date").getValue(Double.class);
+                        if (ed != null) {
+                            endDate = new Date((long) (ed * 1000));
+                        } else {
+                            endDate = startDate;
                         }
+                        key = dataSnapshot.getKey();
+                        workerKeys = new ArrayList<>();
+                        workerName = new ArrayList<>();
+                        yield = new ArrayList<>();
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                        wid = dataSnapshot.child("wid").getValue(String.class);
 
-                        }
-                    });
-                } else {
-                    System.out.println("&&&&&&&&&&& " + dataSnapshot + " &&&&&&&&&&& " + dataSnapshot.getValue() + " **** " + dataSnapshot.child("start_date"));
-                    startDate = new Date((long) (dataSnapshot.child("start_date").getValue(Double.class) * 1000));
-                    Double ed = dataSnapshot.child("end_date").getValue(Double.class);
-                    if (ed != null) {
-                        endDate = new Date((long) (ed * 1000));
-                    } else {
-                        endDate = startDate;
-                    }
-                    key = dataSnapshot.getKey();
-                    workerKeys = new ArrayList<>();
-                    workerName = new ArrayList<>();
-                    yield = new ArrayList<>();
+                        displayGraph();
 
-                    wid = dataSnapshot.child("wid").getValue(String.class);
-                    for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
-                        Double lat = childSnapshot.child("lat").getValue(Double.class);
-                        Double lng = childSnapshot.child("lng").getValue(Double.class);
-                        Location loc = new Location("");
-                        loc.setLatitude(lat.doubleValue());
-                        loc.setLongitude(lng.doubleValue());
+                        TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
+                        TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
+                        TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
 
-                        collected.addTrack(loc);
-                    }
-                    for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
-                        String workername = workerID.get(childSnapshot.getKey());
-                        int count = 0;
-                        for (DataSnapshot collection : childSnapshot.getChildren()) {
-                            System.out.println(collection);
-                            Double lat = collection.child("coord").child("lat").getValue(Double.class);
-                            Double lng = collection.child("coord").child("lng").getValue(Double.class);
-                            Location loc = new Location("");
-                            loc.setLatitude(lat.doubleValue());
-                            loc.setLongitude(lng.doubleValue());
-                            Double time = childSnapshot.child("date").getValue(Double.class);
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                        formatter.setCalendar(Calendar.getInstance());
 
-                            collected.addCollection(workername, loc, time);
-                            count++;
-                        }
-                        collections.put(workername, (float) count);
+                        String fname = foremenID.get(wid) == null ? "Farm Owner" : foremenID.get(wid);
+                        foremanTextView.setText("Foreman: " + fname);
+                        startTime.setText("Time Started: " + formatter.format(startDate));
+                        endTime.setText("Time Ended: " + formatter.format(endDate));
                     }
 
-                    displayGraph();
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                    TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
-                    TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
-                    TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
-
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                    formatter.setCalendar(Calendar.getInstance());
-
-                    String fname = foremenID.get(wid) == null ? "Farm Owner" : foremenID.get(wid);
-                    foremanTextView.setText("Foreman: " + fname);
-                    startTime.setText("Time Started: " + formatter.format(startDate));
-                    endTime.setText("Time Ended: " + formatter.format(endDate));
-                }
+                    }
+                });
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

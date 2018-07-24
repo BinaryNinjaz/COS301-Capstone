@@ -1,6 +1,7 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -56,6 +57,7 @@ import za.org.samac.harvest.util.AppUtil;
 
 import static za.org.samac.harvest.MainActivity.farmerKey;
 import static za.org.samac.harvest.MainActivity.getForemen;
+import static za.org.samac.harvest.MainActivity.getWorkers;
 
 public class Sessions extends AppCompatActivity {
 
@@ -72,6 +74,9 @@ public class Sessions extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SessionsViewAdapter adapter;
     private ProgressBar progressBar;
+    public static SessionItem selectedItem;
+    private ArrayList<Worker> workers;
+    private HashMap<String, String> workerID;
 
     private String pageIndex = null;
     private Integer pageSize = 8;
@@ -83,6 +88,15 @@ public class Sessions extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+
+        workers = getWorkers(); // get worker info to loop through it
+        workerID = new HashMap<>();
+        for(int i = 0 ; i < workers.size() ; ++i) {
+            String id = workers.get(i).getID();
+            String name = workers.get(i).getName();
+            workerID.put(id, name);
+        }
+
 
         foremen = getForemen(); // get worker info to loop through it
         foremenID = new HashMap<>();
@@ -194,9 +208,41 @@ public class Sessions extends AppCompatActivity {
 
                     System.out.println(aChild.getKey());
 
+                    for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
+                        Double lat = childSnapshot.child("lat").getValue(Double.class);
+                        Double lng = childSnapshot.child("lng").getValue(Double.class);
+                        Location loc = new Location("");
+                        loc.setLatitude(lat.doubleValue());
+                        loc.setLongitude(lng.doubleValue());
+
+                        //collected.addTrack(loc);
+                    }
+                    for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
+                        String workername = workerID.get(childSnapshot.getKey());
+                        int count = 0;
+                        for (DataSnapshot collection : childSnapshot.getChildren()) {
+                            System.out.println(collection);
+                            Double lat = collection.child("coord").child("lat").getValue(Double.class);
+                            Double lng = collection.child("coord").child("lng").getValue(Double.class);
+                            Location loc = new Location("");
+                            loc.setLatitude(lat.doubleValue());
+                            loc.setLongitude(lng.doubleValue());
+                            Double time = childSnapshot.child("date").getValue(Double.class);
+
+                            item.addCollection(workername, loc, time);
+                            count++;
+                        }
+                        //collections.put(workername, (float) count);
+                    }
+
+
                     tempSessions.add(item);
                     tempDates.add(date);
+
+
                 }
+
+
 
                 if (tempSessions.size() > 0) {
                     for (int i = tempSessions.size() - 1; i > 0; i--) { // we miss the first one on purpose so it isn't duplicated on subsequent calls

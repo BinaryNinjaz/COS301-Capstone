@@ -53,6 +53,7 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
             public void onClick(View v) {
                 Intent details = new Intent(context, SessionDetails.class);
                 details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Sessions.selectedItem = item;
                 Intent key = details.putExtra("key", item.key);
                 Intent sdate = details.putExtra("start_date", item.startDate);
                 Intent wkey = details.putExtra("wid", item.foreman);
