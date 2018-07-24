@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private static TextView textView;
     private TextView textViewPressStart;
     private WorkerRecyclerViewAdapter adapter;
-    private LocationManager locationManager;
+    public static LocationManager locationManager;
     private Location location;
     private FirebaseAuth mAuth;
     private boolean locationEnabled = false;
@@ -192,7 +192,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onResume(){
         super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);//set correct item to pop out on the nav bar
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);//set correct item to pop out on the nav bar
+        }
     }
 
     @Override
@@ -679,30 +681,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void getFarmKey() {
-//        String convertEmail = currentUserEmail;
-//        emailInDB = convertEmail.replace(".", ",");
-//        DatabaseReference outerRef = database.getReference("WorkingFor/"+emailInDB);
-//        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot child : dataSnapshot.getChildren()) {
-//                    farmerKey = child.getKey();
-//
-//                    farmerKey = child.getKey();
-//                    getPolygon();//set expected yield
-//                    farmLevelRef = database.getReference(farmerKey);//Firebase reference
-//                    workersRef = farmLevelRef.child("workers");
-//                    collectWorkers();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.w(TAG, "onCancelled", databaseError.toException());
-//            }
-//        });
-//        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
-//        farmerKey = sharedPreferences.getString(getString(R.string.sharedPref_signIn_farmerid), "0");
         farmerKey = AppUtil.readStringFromSharedPrefs(this, getString(R.string.farmerID_Pref));
         if (farmerKey == null){
             FirebaseAuth.getInstance().signOut();
@@ -776,18 +754,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && btnStart.getTag() == "green") {
-            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             String msg = "These services are unavailable, please switch on location to gain access";
-            dlgAlert.setMessage(msg);
-            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            AlertDialog.Builder dlgAlertIfNoLocation = new AlertDialog.Builder(this);
+            dlgAlertIfNoLocation.setMessage(msg);
+            dlgAlertIfNoLocation.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     adapter.setIncrement();
                     recyclerView.setVisibility(View.GONE);
                     dialog.dismiss();
                 }
             });
-            dlgAlert.setCancelable(false);
-            dlgAlert.create().show();
+            dlgAlertIfNoLocation.setCancelable(false);
+            dlgAlertIfNoLocation.create().show();
         }
 
         if (location == null && btnStart.getTag() == "green") {
