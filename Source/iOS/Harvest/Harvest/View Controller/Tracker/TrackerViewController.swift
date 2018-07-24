@@ -24,11 +24,6 @@ class TrackerViewController: UIViewController {
   var currentLocation: CLLocation?
   var currentOrchardID: String = "" {
     didSet {
-      if !currentOrchardID.isEmpty {
-        filteredWorkers = filteredWorkers.filter { $0.assignedOrchards.contains(currentOrchardID) }
-      } else {
-        filteredWorkers = workers
-      }
       DispatchQueue.main.async {
         self.workerCollectionView?.reloadData()
       }
@@ -36,16 +31,29 @@ class TrackerViewController: UIViewController {
   }
   var workers: [Worker] = [] {
     didSet {
-      filteredWorkers = workers
       if currentOrchardID != "" {
-        filteredWorkers = filteredWorkers.filter { $0.assignedOrchards.contains(currentOrchardID) }
         DispatchQueue.main.async {
           self.workerCollectionView?.reloadData()
         }
       }
     }
   }
-  var filteredWorkers: [Worker] = []
+  var filteredWorkers: [Worker] {
+    return workers.filter { (worker) -> Bool in
+      if currentOrchardID != "" && !worker.assignedOrchards.contains(currentOrchardID) {
+        return false
+      }
+      guard let searchText = searchBar?.text else {
+        return true
+      }
+      guard !searchText.isEmpty else {
+        return true
+      }
+      return (worker.firstname + " " + worker.lastname)
+        .uppercased()
+        .contains(searchText.uppercased())
+    }
+  }
   var expectedYield: Double = .nan
   var gotWorkers = false
   
@@ -231,6 +239,11 @@ extension TrackerViewController: CLLocationManagerDelegate {
             self.expectedYield)
         }
       }
+    } else {
+      currentOrchardID = ""
+      self.yieldLabel?.attributedText = self.attributedStringForYieldCollection(
+        self.tracker?.totalCollected() ?? 0,
+        .nan)
     }
   }
   
@@ -252,7 +265,25 @@ extension TrackerViewController: CLLocationManagerDelegate {
       : Int(b).description
     let expectedAmount = NSAttributedString(string: expectedText, attributes: regularFont)
     
+    let o = Entities.shared.orchards.first { $0.value.id == self.currentOrchardID }?.value
+    let oname = o?.name ?? ""
+    let ofarm = Entities.shared.farms.first { $0.value.id == o?.assignedFarm }?.value.name ?? ""
+    
+    let formatter = NumberFormatter()
+    formatter.positiveFormat = "0.####"
+    formatter.negativeFormat = "-0.####"
+    let lat = formatter.string(from: NSNumber(value: currentLocation?.coordinate.latitude ?? 0.0)) ?? ""
+    let lng = formatter.string(from: NSNumber(value: currentLocation?.coordinate.longitude ?? 0.0)) ?? ""
+    
+    let loc = lat + "   " + lng
+    let name = NSAttributedString(string: oname + " [ " + loc + " ]\n", attributes: regularFont)
+    let farm = NSAttributedString(string: ofarm + ": ", attributes: boldFont)
+    
     let result = NSMutableAttributedString()
+    if o != nil {
+      result.append(farm)
+      result.append(name)
+    }
     result.append(current)
     result.append(currentAmount)
     result.append(expected)
@@ -467,7 +498,10 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
     let ofh = sbh + tbh + nch + coh
     
     let w = collectionView.frame.width
-    let h = collectionView.frame.height - ofh
+    let h = collectionView.frame.height
+      - ofh
+      - view.layoutMargins.top
+      - view.layoutMargins.bottom
     
     let n = CGFloat(Int(w / 156))
     
@@ -489,18 +523,6 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
 
 extension TrackerViewController: UISearchBarDelegate {
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-    filteredWorkers = workers.filter({ (worker) -> Bool in
-      if currentOrchardID != "" && !worker.assignedOrchards.contains(currentOrchardID) {
-        return false
-      }
-      guard !searchText.isEmpty else {
-        return true
-      }
-      return (worker.firstname + " " + worker.lastname)
-        .uppercased()
-        .contains(searchText.uppercased())
-    })
-    
     workerCollectionView?.reloadData()
     searchBar.becomeFirstResponder()
   }

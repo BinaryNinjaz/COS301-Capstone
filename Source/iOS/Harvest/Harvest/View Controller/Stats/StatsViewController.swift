@@ -68,7 +68,6 @@ class StatsViewController: UIViewController {
     pieChart?.isHidden = true
     radarChart?.isHidden = true
     activityIndicator?.startAnimating()
-    print(activityIndicator?.frame as Any, activityIndicator?.isAnimating as Any)
     
     guard let stat = stat else {
       SCLAlertView().showWarning("No Data", subTitle: "There is no data available to show")

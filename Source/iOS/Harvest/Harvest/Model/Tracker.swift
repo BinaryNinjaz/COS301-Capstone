@@ -71,10 +71,7 @@ struct Tracker: Codable {
   mutating func track(location: CLLocation) -> String? {
     var result: String? = nil
     if let o = Entities.shared.orchards.first(where: { $0.value.contains(location.coordinate) }) {
-      if o.value.id != currentOrchard {
-        currentOrchard = o.value.id
-        result = o.value.id
-      }
+      result = o.value.id
     }
     UserDefaults.standard.track(location: location, index: trackCount)
     trackCount += 1
@@ -82,10 +79,14 @@ struct Tracker: Codable {
     return result
   }
   
-  func updateExpectedYield(orchardId: String, completion: @escaping (Double) -> Void) {
-    HarvestCloud.getExpectedYield(orchardId: orchardId, date: Date()) { (expected) in
-      completion(expected)
+  mutating func updateExpectedYield(orchardId: String, completion: @escaping (Double) -> Void) {
+    if orchardId != currentOrchard {
+      currentOrchard = orchardId
+      HarvestCloud.getExpectedYield(orchardId: orchardId, date: Date()) { (expected) in
+        completion(expected)
+      }
     }
+    
   }
   
   func pathTracked() -> [CLLocationCoordinate2D] {
