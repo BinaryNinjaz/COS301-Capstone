@@ -34,7 +34,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
       let yesterday = Date().yesterday()
       row.startDate = yesterday.0
       row.endDate = yesterday.1
-      row.period = .daily
+      row.period = .hourly
       row.grouping = .orchard
       row.value = Entities.shared.orchards.map { EntityItem.orchard($0.value) }
     }
@@ -44,7 +44,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
       let today = Date().today()
       row.startDate = today.0
       row.endDate = today.1
-      row.period = .daily
+      row.period = .hourly
       row.grouping = .orchard
       row.value = Entities.shared.orchards.map { EntityItem.orchard($0.value) }
     }
@@ -128,7 +128,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
       let yesterday = Date().yesterday()
       row.startDate = yesterday.0
       row.endDate = yesterday.1
-      row.period = .daily
+      row.period = .hourly
       row.grouping = .worker
       row.value = Entities.shared.workers.compactMap {
         if $0.value.kind == .worker {
@@ -143,7 +143,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
       let today = Date().today()
       row.startDate = today.0
       row.endDate = today.1
-      row.period = .daily
+      row.period = .hourly
       row.grouping = .worker
       row.value = Entities.shared.workers.compactMap {
         if $0.value.kind == .worker {
@@ -262,7 +262,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
       let yesterday = Date().yesterday()
       row.startDate = yesterday.0
       row.endDate = yesterday.1
-      row.period = .daily
+      row.period = .hourly
       row.grouping = .foreman
       row.value = Entities.shared.workers.compactMap {
         if $0.value.kind == .foreman {
@@ -277,7 +277,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
       let today = Date().today()
       row.startDate = today.0
       row.endDate = today.1
-      row.period = .weekly
+      row.period = .hourly
       row.grouping = .foreman
       row.value = Entities.shared.workers.compactMap {
         if $0.value.kind == .foreman {
@@ -307,7 +307,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
       let thisWeek = Date().thisWeek()
       row.startDate = thisWeek.0
       row.endDate = thisWeek.1
-      row.period = .weekly
+      row.period = .daily
       row.grouping = .foreman
       row.value = Entities.shared.workers.compactMap {
         if $0.value.kind == .foreman {

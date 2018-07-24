@@ -102,12 +102,14 @@ class StatsViewController: UIViewController {
       if self.period == .daily {
         self.radarChart?.notifyDataSetChanged()
         self.radarChart?.data = barData.radarChartData()
+        self.radarChart?.data?.setDrawValues(true)
         
         self.radarChart?.isHidden = false
         self.radarChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
       } else {
         self.barChart?.notifyDataSetChanged()
         self.barChart?.data = barData
+        self.barChart?.data?.setDrawValues(true)
         
         self.barChart?.isHidden = false
         self.barChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
