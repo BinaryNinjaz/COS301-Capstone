@@ -101,6 +101,65 @@ public final class Orchard {
       "irrigation": irrigationKind.rawValue
     ]]
   }
+  
+  // swiftlint:disable cyclomatic_complexity
+  func search(for text: String) -> [(String, String)] {
+    var result = [(String, String)]()
+    
+    let text = text.lowercased()
+    
+    if name.lowercased().contains(text) {
+      result.append(("Name", name))
+    }
+    
+    let farmName = Entities.shared.farms.first { $0.value.id == assignedFarm }.map { $0.value.name } ?? ""
+    if farmName.lowercased().contains(text) {
+      result.append(("Assigned Farm", farmName))
+    }
+    
+    let workerNames = Entities.shared.workers
+      .filter { $0.value.assignedOrchards.contains(id) }
+      .map { $0.value.name }
+    let foundWorkers = workerNames.filter { $0.lowercased().contains(text) }
+    if let f = foundWorkers.first {
+      result.append(("Assigned Workers", f + (foundWorkers.count == 1 ? "" : ", ...")))
+    }
+    
+    if crop.lowercased().contains(text) {
+      result.append(("Crop", crop))
+    }
+    
+    let foundCultivars = cultivars.filter { $0.lowercased().contains(text) }
+    if let c = foundCultivars.first {
+      result.append(("Cultivar", c + (foundCultivars.count == 1 ? "" : ", ...")))
+    }
+    
+    if irrigationKind.rawValue.lowercased().contains(text) {
+      result.append(("Irrigation Kind", irrigationKind.rawValue))
+    }
+    
+    if treeSpacing.description.contains(text) {
+      result.append(("Tree Spacing", treeSpacing.description))
+    }
+    
+    if rowSpacing.description.contains(text) {
+      result.append(("Row Spacing", rowSpacing.description))
+    }
+    
+    if details.lowercased().contains(text) {
+      result.append(("Details", ""))
+    }
+    
+    if date.description.lowercased().contains(text) {
+      result.append(("Date", date.description))
+    }
+    
+    if bagMass.description.contains(text) {
+      result.append(("Bag Mass", bagMass.description))
+    }
+    
+    return result
+  }
 }
 
 extension Orchard: Equatable {

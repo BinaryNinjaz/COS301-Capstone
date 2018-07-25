@@ -17,6 +17,9 @@ class InformationEntityItemTableViewController: UITableViewController {
     }
   }
   
+  @IBOutlet weak var searchBar: UISearchBar?
+  var filteredItems: SortedDictionary<String, SortedArray<EntityItem.SearchPair>>?
+  
   var items: SortedDictionary<String, EntityItem>? {
     return Entities.shared.items(for: kind)
   }
@@ -34,6 +37,10 @@ class InformationEntityItemTableViewController: UITableViewController {
     if listnerId == nil {
       listnerId = Entities.shared.listen { self.tableView.reloadData() }
     }
+    
+    searchBar?.delegate = self
+    
+    tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
   }
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
@@ -92,17 +99,33 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
 
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return 1
+    return filteredItems?.count ?? 1
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return items?.count ?? 0
+    if let filtered = filteredItems {
+      let s = filtered.startIndex
+      let i = filtered.index(s, offsetBy: section)
+      return filtered[i].value.count
+    } else {
+      return items?.count ?? 0
+    }
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "informationEntityItemCell", for: indexPath)
     
-    guard let item = items?[indexPath.row] else {
+    let item: EntityItem
+    let reason: String?
+    if let filtered = filteredItems {
+      let s = filtered.startIndex
+      let i = filtered.index(s, offsetBy: indexPath.section)
+      let pair = filtered[i].value[indexPath.row]
+      (item, reason) = (pair.item, pair.reason)
+    } else if let i = items?[indexPath.row] {
+      item = i
+      reason = ""
+    } else {
       return cell
     }
     
@@ -119,12 +142,30 @@ class InformationEntityItemTableViewController: UITableViewController {
       cell.textLabel?.text = ""
     }
     
+    cell.detailTextLabel?.text = reason
+    
     return cell
   }
   
   override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-    selectedEntity = items?[indexPath.row]
+    if let filtered = filteredItems {
+      let s = filtered.startIndex
+      let i = filtered.index(s, offsetBy: indexPath.section)
+      selectedEntity = filtered[i].value[indexPath.row].item
+    } else {
+      selectedEntity = items?[indexPath.row]
+    }
     return indexPath
+  }
+  
+  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    if let filtered = filteredItems {
+      let s = filtered.startIndex
+      let i = filtered.index(s, offsetBy: section)
+      return filtered[i].key
+    } else {
+      return navigationItem.title ?? ""
+    }
   }
   
   override func tableView(
@@ -144,4 +185,15 @@ class InformationEntityItemTableViewController: UITableViewController {
     }
   }
   
+}
+
+extension InformationEntityItemTableViewController: UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    if searchText.isEmpty {
+      filteredItems = nil
+    } else {
+      filteredItems = items?.search(for: searchText)
+    }
+    tableView.reloadData()
+  }
 }
