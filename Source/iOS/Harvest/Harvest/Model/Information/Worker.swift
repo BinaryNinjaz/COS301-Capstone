@@ -78,6 +78,54 @@ final class Worker {
       "phoneNumber": HarvestUser.current.accountIdentifier
     ], id: HarvestUser.current.uid)
   }
+  
+  func search(for text: String) -> [(String, String)] {
+    var result = [(String, String)]()
+    
+    let text = text.lowercased()
+    
+    if firstname.lowercased().contains(text) {
+      result.append(("First Name", firstname))
+    }
+    
+    if lastname.lowercased().contains(text) {
+      result.append(("Last Name", lastname))
+    }
+    
+    let orchardNames = Entities.shared.orchards
+      .filter { assignedOrchards.contains($0.value.id) }
+      .map { $0.value.name }
+    let foundOrchards = orchardNames.filter { $0.lowercased().contains(text) }
+    if let f = foundOrchards.first {
+      result.append(("Assigned Orchard", f + (foundOrchards.count == 1 ? "" : ", ...")))
+    }
+    
+    let farmNames = Entities.shared.farms
+      .filter { assignedOrchards.contains($0.value.id) }
+      .map { $0.value.name }
+    let foundFarms = farmNames.filter { $0.lowercased().contains(text) }
+    if let f = foundFarms.first {
+      result.append(("Assgined Farm", f + (foundFarms.count == 1 ? "" : ", ...")))
+    }
+    
+    if details.lowercased().contains(text) {
+      result.append(("Details", ""))
+    }
+    
+    if (kind == .worker ? "worker" : "foreman").contains(text) {
+      result.append(("Kind", kind == .worker ? "Worker" : "Foreman"))
+    }
+    
+    if phoneNumber.lowercased().contains(text) {
+      result.append(("Phone Number", phoneNumber))
+    }
+    
+    if idNumber.lowercased().contains(text) {
+      result.append(("ID Number", idNumber))
+    }
+    
+    return result
+  }
 }
 
 extension Worker: Hashable {
