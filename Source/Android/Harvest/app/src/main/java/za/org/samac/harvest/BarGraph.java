@@ -78,6 +78,7 @@ public class BarGraph extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar_graph);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
         barGraphView = findViewById(R.id.barChart);
@@ -114,7 +115,6 @@ public class BarGraph extends AppCompatActivity {
                 });
 
         //Start the first fragment
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
         workerKey = getIntent().getStringExtra("key");
@@ -288,13 +288,8 @@ public class BarGraph extends AppCompatActivity {
                 }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-//        return false;
     }
 }

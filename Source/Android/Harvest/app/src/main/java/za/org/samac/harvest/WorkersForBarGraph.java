@@ -158,8 +158,7 @@ public class WorkersForBarGraph extends AppCompatActivity {
 //                onBackPressed();
 //                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
 //        return false;
     }

@@ -46,6 +46,7 @@ public class OrchardsForGraph extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orchards_for_graph);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
@@ -151,13 +152,8 @@ public class OrchardsForGraph extends AppCompatActivity {
                 }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-//        return false;
     }
 }

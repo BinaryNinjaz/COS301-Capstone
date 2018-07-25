@@ -88,6 +88,7 @@ public class SessionDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_details);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
         linearLayoutSessDetails = findViewById(R.id.linearLayoutSessDetails);
@@ -322,13 +323,8 @@ public class SessionDetails extends AppCompatActivity {
                 }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-//        return false;
     }
 }
