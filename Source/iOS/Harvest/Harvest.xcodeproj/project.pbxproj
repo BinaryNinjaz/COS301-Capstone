@@ -71,6 +71,11 @@
 		16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */; };
 		16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */; };
 		16BF89952108BD4D00B023A7 /* Collections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF89942108BD4D00B023A7 /* Collections.swift */; };
+		16BF899D2108F78200B023A7 /* qh2s.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 16BF89982108F78200B023A7 /* qh2s.gpx */; };
+		16BF899E2108F78200B023A7 /* h2s.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 16BF89992108F78200B023A7 /* h2s.gpx */; };
+		16BF899F2108F78200B023A7 /* BlockU.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 16BF899A2108F78200B023A7 /* BlockU.gpx */; };
+		16BF89A02108F78200B023A7 /* outa.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 16BF899B2108F78200B023A7 /* outa.gpx */; };
+		16BF89A12108F78200B023A7 /* trouter.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 16BF899C2108F78200B023A7 /* trouter.gpx */; };
 		16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */; };
 		16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */; };
 		16C82F5A20819B6E0074595C /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5520819B6E0074595C /* Edge.swift */; };
@@ -183,6 +188,11 @@
 		16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
 		16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatEntitySelectionViewController.swift; sourceTree = "<group>"; };
 		16BF89942108BD4D00B023A7 /* Collections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collections.swift; sourceTree = "<group>"; };
+		16BF89982108F78200B023A7 /* qh2s.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = qh2s.gpx; sourceTree = "<group>"; };
+		16BF89992108F78200B023A7 /* h2s.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = h2s.gpx; sourceTree = "<group>"; };
+		16BF899A2108F78200B023A7 /* BlockU.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = BlockU.gpx; sourceTree = "<group>"; };
+		16BF899B2108F78200B023A7 /* outa.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = outa.gpx; sourceTree = "<group>"; };
+		16BF899C2108F78200B023A7 /* trouter.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = trouter.gpx; sourceTree = "<group>"; };
 		16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingWorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWorkingCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F5520819B6E0074595C /* Edge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Edge.swift; sourceTree = "<group>"; };
@@ -325,6 +335,7 @@
 		1604E4D22069598D00E9BA15 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				16BF89972108F76800B023A7 /* GPX */,
 				1604E4A9206958E900E9BA15 /* Assets.xcassets */,
 			);
 			path = Assets;
@@ -506,6 +517,18 @@
 				164F30A620D4745900E7772A /* Verification.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		16BF89972108F76800B023A7 /* GPX */ = {
+			isa = PBXGroup;
+			children = (
+				16BF899B2108F78200B023A7 /* outa.gpx */,
+				16BF899A2108F78200B023A7 /* BlockU.gpx */,
+				16BF899C2108F78200B023A7 /* trouter.gpx */,
+				16BF89982108F78200B023A7 /* qh2s.gpx */,
+				16BF89992108F78200B023A7 /* h2s.gpx */,
+			);
+			path = GPX;
 			sourceTree = "<group>";
 		};
 		16C82F5420819B4C0074595C /* GeoKit */ = {
@@ -690,9 +713,14 @@
 			files = (
 				1604E4AD206958E900E9BA15 /* LaunchScreen.storyboard in Resources */,
 				1604E4AA206958E900E9BA15 /* Assets.xcassets in Resources */,
+				16BF89A02108F78200B023A7 /* outa.gpx in Resources */,
+				16BF89A12108F78200B023A7 /* trouter.gpx in Resources */,
 				1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */,
 				16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */,
 				1604E4A8206958E900E9BA15 /* Main.storyboard in Resources */,
+				16BF899E2108F78200B023A7 /* h2s.gpx in Resources */,
+				16BF899D2108F78200B023A7 /* qh2s.gpx in Resources */,
+				16BF899F2108F78200B023A7 /* BlockU.gpx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
