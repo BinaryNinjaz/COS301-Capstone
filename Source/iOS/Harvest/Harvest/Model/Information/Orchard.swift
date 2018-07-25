@@ -150,8 +150,12 @@ public final class Orchard {
       result.append(("Details", ""))
     }
     
-    if date.description.lowercased().contains(text) {
-      result.append(("Date", date.description))
+    let formatter = DateFormatter()
+    formatter.dateStyle = .full
+    formatter.timeStyle = .full
+    let d = formatter.string(from: date)
+    if d.lowercased().contains(text) {
+      result.append(("Date", d))
     }
     
     if bagMass.description.contains(text) {

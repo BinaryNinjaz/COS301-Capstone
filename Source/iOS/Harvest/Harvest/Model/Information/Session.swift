@@ -121,10 +121,15 @@ public final class Session {
     ]]
   }
   
+  // swiftlint:disable cyclomatic_complexity
   func search(for text: String) -> [(String, String)] {
     var result = [(String, String)]()
     
     let text = text.lowercased()
+    
+    let formatter = DateFormatter()
+    formatter.dateStyle = .full
+    formatter.timeStyle = .full
     
     let personProps = ["First Name", "Last Name", "ID Number", "Phone Number"]
     let orchardProps = ["Name", "Crop", "Cultivar", "Irrigation Kind"]
@@ -134,13 +139,15 @@ public final class Session {
         result.append(("Foreman " + prop, reason))
       }
     }
-    
-    if startDate.description.lowercased().contains(text) {
-      result.append(("Start Date", text))
+  
+    let sd = formatter.string(from: startDate)
+    if sd.lowercased().contains(text) {
+      result.append(("Start Date", sd))
     }
     
-    if endDate.description.lowercased().contains(text) {
-      result.append(("End Date", text))
+    let ed = formatter.string(from: endDate)
+    if ed.lowercased().contains(text) {
+      result.append(("End Date", ed))
     }
     
     for (w, points) in collections {
