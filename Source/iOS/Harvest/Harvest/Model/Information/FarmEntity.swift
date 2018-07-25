@@ -8,20 +8,16 @@
 
 import Foundation
 
-enum EntityItem: Equatable, CustomStringConvertible {
-  struct SearchPair: Comparable {
-    var item: EntityItem
-    var reason: String
-    
-    init(_ item: EntityItem, _ reason: String) {
-      (self.item, self.reason) = (item, reason)
-    }
-    
-    static func < (lhs: SearchPair, rhs: SearchPair) -> Bool {
-      return lhs.item.name < rhs.item.name
-    }
-  }
+struct SearchPair<Item: Equatable>: Equatable {
+  var item: Item
+  var reason: String
   
+  init(_ item: Item, _ reason: String) {
+    (self.item, self.reason) = (item, reason)
+  }
+}
+
+enum EntityItem: Equatable, CustomStringConvertible {
   enum Kind {
     case farm, orchard, worker, session
     case user
@@ -240,17 +236,21 @@ final class Entities {
 }
 
 extension SortedDictionary where Value == EntityItem {
-  func search(for text: String) -> SortedDictionary<String, SortedArray<EntityItem.SearchPair>> {
-    var result = SortedDictionary<String, SortedArray<EntityItem.SearchPair>>()
+  func search(for text: String) -> SortedDictionary<String, SortedArray<SearchPair<EntityItem>>> {
+    var result = SortedDictionary<String, SortedArray<SearchPair<EntityItem>>>()
     
     for (_, entity) in self {
       let props = entity.search(for: text)
       
       for (prop, reason) in props {
         if result[prop] == nil {
-          result[prop] = SortedArray<EntityItem.SearchPair>([])
+          result[prop] = SortedArray<SearchPair<EntityItem>>([]) { $0.item.name < $1.item.name }
         }
-        result[prop]?.insert(EntityItem.SearchPair(entity, reason))
+        let pair = SearchPair(entity, reason)
+        if !(result[prop]?.contains(pair) ?? true) {
+          result[prop]?.insert(pair)
+        }
+        
       }
     }
     

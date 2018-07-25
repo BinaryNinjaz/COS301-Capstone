@@ -13,8 +13,10 @@ class SessionSelectionViewController: UITableViewController {
   let pageSize: UInt = 21
   var isLoading = false
   var selectedSession: Session?
+  var filteredSessions: SortedDictionary<String, SortedArray<SearchPair<Session>>>?
   var sessions = SortedDictionary<Date, SortedSet<Session>>(>)
   typealias SessionsIndex = SortedDictionary<Date, SortedSet<Session>>.Index
+  @IBOutlet weak var searchBar: UISearchBar?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -22,6 +24,8 @@ class SessionSelectionViewController: UITableViewController {
     refreshControl = UIRefreshControl()
     refreshControl?.addTarget(self, action: #selector(refreshList(_:)), for: .valueChanged)
     tableView.addSubview(refreshControl!)
+    
+    searchBar?.delegate = self
     
     loadNewPage()
   }
@@ -67,14 +71,21 @@ class SessionSelectionViewController: UITableViewController {
   }
   
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return sessions.count + (isLoading ? 1 : 0)
+    return (filteredSessions?.count ?? sessions.count) + (isLoading ? 1 : 0)
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if isLoading && section == sessions.count {
       return 1
     }
-    return sessions[SessionsIndex(section)].value.count
+    
+    if let filtered = filteredSessions {
+      let s = filtered.startIndex
+      let i = filtered.index(s, offsetBy: section)
+      return filtered[i].value.count
+    } else {
+      return sessions[SessionsIndex(section)].value.count
+    }
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -88,16 +99,32 @@ class SessionSelectionViewController: UITableViewController {
     
     let cell = tableView.dequeueReusableCell(withIdentifier: "sessionSelectionCell", for: indexPath)
     
-    let sidx = SessionsIndex(indexPath.section)
+    if let filtered = filteredSessions {
+      let s = filtered.startIndex
+      let i = filtered.index(s, offsetBy: indexPath.section)
+      let pair = filtered[i].value[indexPath.row]
+      let (item, reason) = (pair.item, pair.reason)
+      
+      let formatter = DateFormatter()
+      formatter.dateStyle = .short
+      formatter.timeStyle = .short
+      
+      cell.textLabel?.text = item.foreman.name + " - " + formatter.string(from: item.startDate)
+      cell.detailTextLabel?.text = reason
+    } else {
+      let sidx = SessionsIndex(indexPath.section)
+      
+      let formatter = DateFormatter()
+      formatter.dateStyle = .none
+      formatter.timeStyle = .short
+      
+      let session = sessions[sidx].value[indexPath.row]
+      let date = session.startDate
+      let name = session.foreman.description
+      cell.textLabel?.text = name + " - " + formatter.string(from: date)
+      cell.detailTextLabel?.text = ""
+    }
     
-    let formatter = DateFormatter()
-    formatter.dateStyle = .none
-    formatter.timeStyle = .short
-    
-    let session = sessions[sidx].value[indexPath.row]
-    let date = session.startDate
-    let name = session.foreman.description
-    cell.textLabel?.text =  name + " - " + formatter.string(from: date)
     return cell
   }
   
@@ -105,25 +132,37 @@ class SessionSelectionViewController: UITableViewController {
     guard !isLoading || indexPath.section != sessions.count else {
       return
     }
-    let sidx = SessionsIndex(indexPath.section)
     
-    self.selectedSession = sessions[sidx].value[indexPath.row]
-    self.performSegue(withIdentifier: "SessionToItem", sender: self)
+    if let filtered = filteredSessions {
+      let s = filtered.startIndex
+      let i = filtered.index(s, offsetBy: indexPath.section)
+      selectedSession = filtered[i].value[indexPath.row].item
+      performSegue(withIdentifier: "SessionToItem", sender: self)
+    } else {
+      let sidx = SessionsIndex(indexPath.section)
+      
+      selectedSession = sessions[sidx].value[indexPath.row]
+      performSegue(withIdentifier: "SessionToItem", sender: self)
+    }
   }
   
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    
     guard !isLoading || section != sessions.count else {
       return nil
     }
     
-    let sidx = SessionsIndex(section)
-    
-    let date = sessions[sidx].key
-    
-    return formatter.string(from: date)
+    if let filtered = filteredSessions {
+      let s = filtered.startIndex
+      let i = filtered.index(s, offsetBy: section)
+      return filtered[i].key
+    } else {
+      let formatter = DateFormatter()
+      formatter.dateStyle = .medium
+      
+      let sidx = SessionsIndex(section)
+      let date = sessions[sidx].key
+      return formatter.string(from: date)
+    }
   }
   
   override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -152,5 +191,16 @@ class SessionSelectionViewController: UITableViewController {
     entityVC.title = session.description
     entityVC.entity = .session(session)
     
+  }
+}
+
+extension SessionSelectionViewController: UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    if searchText.isEmpty {
+      filteredSessions = nil
+    } else {
+      filteredSessions = sessions.search(for: searchText)
+    }
+    tableView.reloadData()
   }
 }

@@ -18,7 +18,7 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
   
   @IBOutlet weak var searchBar: UISearchBar?
-  var filteredItems: SortedDictionary<String, SortedArray<EntityItem.SearchPair>>?
+  var filteredItems: SortedDictionary<String, SortedArray<SearchPair<EntityItem>>>?
   
   var items: SortedDictionary<String, EntityItem>? {
     return Entities.shared.items(for: kind)

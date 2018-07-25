@@ -13,6 +13,14 @@ import Disk
 struct CollectionPoint {
   var location: CLLocationCoordinate2D
   var date: Date
+  var orchard: Orchard?
+  
+  init(location: CLLocationCoordinate2D, date: Date) {
+    self.location = location
+    self.date = date
+    
+    orchard = Entities.shared.orchards.first { $0.value.contains(location) }?.value
+  }
 }
 
 struct Tracker: Codable {

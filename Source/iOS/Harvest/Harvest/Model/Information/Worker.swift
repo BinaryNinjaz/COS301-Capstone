@@ -105,7 +105,7 @@ final class Worker {
       .map { $0.value.name }
     let foundFarms = farmNames.filter { $0.lowercased().contains(text) }
     if let f = foundFarms.first {
-      result.append(("Assgined Farm", f + (foundFarms.count == 1 ? "" : ", ...")))
+      result.append(("Assigned Farm", f + (foundFarms.count == 1 ? "" : ", ...")))
     }
     
     if details.lowercased().contains(text) {
