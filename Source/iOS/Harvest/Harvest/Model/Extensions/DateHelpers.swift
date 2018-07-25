@@ -104,3 +104,20 @@ extension Date {
     return formatter.string(from: self)
   }
 }
+
+extension DateFormatter {
+  static func iso8601() -> DateFormatter {
+    let result = DateFormatter()
+    result.locale = Locale.current
+    result.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZZZZZ"
+    return result
+  }
+  
+  static func iso8601String(from date: Date) -> String {
+    return DateFormatter.iso8601().string(from: date)
+  }
+  
+  static func iso8601Date(from string: String) -> Date {
+    return DateFormatter.iso8601().date(from: string)!
+  }
+}

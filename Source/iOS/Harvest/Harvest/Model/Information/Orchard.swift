@@ -152,7 +152,7 @@ public final class Orchard {
     
     let formatter = DateFormatter()
     formatter.dateStyle = .full
-    formatter.timeStyle = .full
+    formatter.timeStyle = .none
     let d = formatter.string(from: date)
     if d.lowercased().contains(text) {
       result.append(("Date", d))

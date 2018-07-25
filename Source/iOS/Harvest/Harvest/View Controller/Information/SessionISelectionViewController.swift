@@ -70,12 +70,16 @@ class SessionSelectionViewController: UITableViewController {
     }
   }
   
+  var itemGroupCount: Int {
+    return filteredSessions?.count ?? sessions.count
+  }
+  
   override func numberOfSections(in tableView: UITableView) -> Int {
-    return (filteredSessions?.count ?? sessions.count) + (isLoading ? 1 : 0)
+    return itemGroupCount + (isLoading ? 1 : 0)
   }
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    if isLoading && section == sessions.count {
+    if isLoading && section == itemGroupCount {
       return 1
     }
     
@@ -89,7 +93,7 @@ class SessionSelectionViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    if isLoading && indexPath.section == sessions.count {
+    if isLoading && indexPath.section == itemGroupCount {
       let cell = tableView.dequeueReusableCell(withIdentifier: "sessionSelectionLoadingCell", for: indexPath)
       for subview in cell.contentView.subviews where subview is UIActivityIndicatorView {
         (subview as? UIActivityIndicatorView)?.startAnimating()
@@ -129,7 +133,7 @@ class SessionSelectionViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard !isLoading || indexPath.section != sessions.count else {
+    guard !isLoading || indexPath.section != itemGroupCount else {
       return
     }
     
@@ -147,7 +151,7 @@ class SessionSelectionViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    guard !isLoading || section != sessions.count else {
+    guard !isLoading || section != itemGroupCount else {
       return nil
     }
     
