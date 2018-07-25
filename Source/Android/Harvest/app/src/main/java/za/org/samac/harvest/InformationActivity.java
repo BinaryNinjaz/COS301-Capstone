@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.DatePicker;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
@@ -574,16 +576,21 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(InformationActivity.this, SignIn_Choose.class));
+                                }
+                            });
+                }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return true;
         }
-//        return false;
     }
 
     public void onGotoButtClick(View view){

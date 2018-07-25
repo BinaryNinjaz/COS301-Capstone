@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -28,7 +30,6 @@ public class WorkerOrForeman extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker_or_foreman);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
@@ -59,8 +60,6 @@ public class WorkerOrForeman extends AppCompatActivity{
                         return true;
                     }
                 });
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         //user selects to see pie chart
         perSesWorkerComparison = findViewById(R.id.btnWorkers);
@@ -113,16 +112,20 @@ public class WorkerOrForeman extends AppCompatActivity{
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(WorkerOrForeman.this, SignIn_Choose.class));
+                                }
+                            });
+                }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-//        return false;
     }
 
 }

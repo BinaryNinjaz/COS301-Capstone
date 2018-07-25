@@ -92,27 +92,14 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_signin_signup);
         // Set up the sign up form.
         edtFirstName = findViewById(R.id.edtFirstName);
-        //populateAutoComplete();
 
         edtSurname = findViewById(R.id.edtSurname);
-        //populateAutoComplete();
 
         edtEmail = findViewById(R.id.edtEmail);
-        //populateAutoComplete();
 
         edtOrganization = findViewById(R.id.edtOrganization);
 
         edtPassword = findViewById(R.id.edtPassword);
-        /*edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });*/
 
         edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
         edtConfirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -201,15 +188,6 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
 
         signUp_form.setVisibility(View.INVISIBLE);
         signUp_progress.setVisibility(View.VISIBLE);
-        if (password.length() < 6) {
-            /*int paddingCount = 6 - password.length();
-
-            for(int i = 0; i < paddingCount; i++) {
-                password += '#';
-            }*/
-
-            password += "s3cr3ts4uc3";
-        }
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -299,6 +277,16 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             edtPassword.setError(null);
         }
 
+        if (isPasswordValid(password)) {
+            edtPassword.setError("Passwords must be at least 6 characters.");
+            focusView = edtPassword;
+            valid = false;
+        } else {
+            edtPassword.setError(null);
+        }
+
+
+
         //check if two passwords entered match
         if (!confirmPassword.equals(password)) {
             valid = false;
@@ -306,7 +294,6 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
 
         String email = edtEmail.getText().toString();
         if (isEmailValid(email) == false) {
-            //edtEmail.setError("Invalid email.");//this isn't working
             edtEmail.setError(getString(R.string.error_invalid_email));
             focusView = edtEmail;
             focusView.requestFocus();
@@ -338,13 +325,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } /*else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }*/
+        }
 
         return valid;
     }
@@ -451,8 +432,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: we are still debating on what value to use
-        return password.length() > 0;
+        return password.length() > 5;
     }
 
     /**
