@@ -70,6 +70,7 @@
 		16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */; };
 		16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */; };
 		16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */; };
+		16BF89952108BD4D00B023A7 /* Collections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF89942108BD4D00B023A7 /* Collections.swift */; };
 		16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */; };
 		16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */; };
 		16C82F5A20819B6E0074595C /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5520819B6E0074595C /* Edge.swift */; };
@@ -181,6 +182,7 @@
 		16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatEntitySelectionRow.swift; sourceTree = "<group>"; };
 		16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
 		16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatEntitySelectionViewController.swift; sourceTree = "<group>"; };
+		16BF89942108BD4D00B023A7 /* Collections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collections.swift; sourceTree = "<group>"; };
 		16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingWorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWorkingCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F5520819B6E0074595C /* Edge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Edge.swift; sourceTree = "<group>"; };
@@ -479,6 +481,7 @@
 				16FF431F20E19117001092CF /* LocationHelper.swift */,
 				16E3751020F0F74E0023AD2C /* DateHelpers.swift */,
 				16F5796621000CB50086325B /* PhoneyFormatter.swift */,
+				16BF89942108BD4D00B023A7 /* Collections.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -910,6 +913,7 @@
 				167448C9208A49F700FA605C /* FarmEntity.swift in Sources */,
 				167448B12089299B00FA605C /* Orchard.swift in Sources */,
 				167448D3208A5C3C00FA605C /* DBTracker.swift in Sources */,
+				16BF89952108BD4D00B023A7 /* Collections.swift in Sources */,
 				167448C72089430C00FA605C /* EntityViewController.swift in Sources */,
 				16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */,
 				16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */,

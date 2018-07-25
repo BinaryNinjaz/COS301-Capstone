@@ -85,7 +85,6 @@ extension Dictionary where Key == String, Value == Any {
 }
 
 public final class Session {
-  
   var endDate: Date
   var startDate: Date
   
@@ -120,6 +119,51 @@ public final class Session {
       "track": track.firbaseCoordRepresentation(),
       "collections": collections.firebaseSessionRepresentation()
     ]]
+  }
+  
+  func search(for text: String) -> [(String, String)] {
+    var result = [(String, String)]()
+    
+    let text = text.lowercased()
+    
+    let personProps = ["First Name", "Last Name", "ID Number", "Phone Number"]
+    let orchardProps = ["Name", "Crop", "Cultivar", "Irrigation Kind"]
+    
+    for (prop, reason) in foreman.search(for: text) {
+      if personProps.contains(prop) {
+        result.append(("Foreman " + prop, reason))
+      }
+    }
+    
+    if startDate.description.lowercased().contains(text) {
+      result.append(("Start Date", text))
+    }
+    
+    if endDate.description.lowercased().contains(text) {
+      result.append(("End Date", text))
+    }
+    
+    for (w, points) in collections {
+      for (prop, reason) in w.search(for: text) {
+        if personProps.contains(prop) {
+          result.append(("Worker " + prop, reason))
+        }
+      }
+      
+      var orchards = [Orchard]()
+      for point in points {
+        if let orchard = point.orchard, !orchards.contains(where: { $0.id == orchard.id }) {
+          orchards.append(orchard)
+          for (prop, reason) in orchard.search(for: text) {
+            if orchardProps.contains(prop) {
+              result.append(("Orchard " + prop, reason))
+            }
+          }
+        }
+      }
+    }
+    
+    return result
   }
 }
 
@@ -232,5 +276,27 @@ extension SortedDictionary where Key == Date, Value == SortedSet<Session> {
         self[session.startDate]!.insert(unique: session)
       }
     }
+  }
+}
+
+extension SortedDictionary where Value == SortedSet<Session> {
+  func search(for text: String) -> SortedDictionary<String, SortedArray<SearchPair<Session>>> {
+    var result = SortedDictionary<String, SortedArray<SearchPair<Session>>>()
+    for (_, sessions) in self {
+      for session in sessions {
+        let props = session.search(for: text)
+        
+        for (prop, reason) in props {
+          if result[prop] == nil {
+            result[prop] = SortedArray<SearchPair<Session>>([]) { $0.item.startDate < $1.item.startDate }
+          }
+          let pair = SearchPair(session, reason)
+          if !(result[prop]?.contains(pair) ?? true) {
+            result[prop]?.insert(pair)
+          }
+        }
+      }
+    }
+    return result
   }
 }
