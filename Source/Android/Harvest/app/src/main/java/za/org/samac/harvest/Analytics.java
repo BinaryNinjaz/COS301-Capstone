@@ -82,6 +82,12 @@ public class Analytics extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);//set correct item to pop out on the nav bar
+    }
+
     //Handle the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

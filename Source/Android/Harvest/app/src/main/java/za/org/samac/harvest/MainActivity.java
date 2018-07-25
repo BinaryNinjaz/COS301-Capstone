@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private static TextView textView;
     private TextView textViewPressStart;
     private WorkerRecyclerViewAdapter adapter;
-    private LocationManager locationManager;
+    public static LocationManager locationManager;
     private Location location;
     private FirebaseAuth mAuth;
     private boolean locationEnabled = false;
@@ -187,6 +187,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
         statusCheck();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);//set correct item to pop out on the nav bar
+        }
     }
 
     @Override
@@ -795,18 +803,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && btnStart.getTag() == "green") {
-            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
             String msg = "These services are unavailable, please switch on location to gain access";
-            dlgAlert.setMessage(msg);
-            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            AlertDialog.Builder dlgAlertIfNoLocation = new AlertDialog.Builder(this);
+            dlgAlertIfNoLocation.setMessage(msg);
+            dlgAlertIfNoLocation.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     adapter.setIncrement();
                     recyclerView.setVisibility(View.GONE);
                     dialog.dismiss();
                 }
             });
-            dlgAlert.setCancelable(false);
-            dlgAlert.create().show();
+            dlgAlertIfNoLocation.setCancelable(false);
+            dlgAlertIfNoLocation.create().show();
         }
 
         if (location == null && btnStart.getTag() == "green") {

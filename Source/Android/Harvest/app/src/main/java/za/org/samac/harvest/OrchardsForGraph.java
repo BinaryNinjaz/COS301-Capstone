@@ -40,6 +40,7 @@ public class OrchardsForGraph extends AppCompatActivity {
     private OrchardsForGraphRVAdapter adapter;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +51,9 @@ public class OrchardsForGraph extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setSelectedItemId(R.id.actionSession);
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -62,14 +63,10 @@ public class OrchardsForGraph extends AppCompatActivity {
                                 startActivity(new Intent(OrchardsForGraph.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(OrchardsForGraph.this, InformationActivity.class);
-                                openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openInformation, 0);
+                                startActivity(new Intent(OrchardsForGraph.this, InformationActivity.class));
                                 return true;
                             case R.id.actionSession:
-                                Intent openSessions= new Intent(OrchardsForGraph.this, Sessions.class);
-                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openSessions, 0);
+                                startActivity(new Intent(OrchardsForGraph.this, Sessions.class));
                                 return true;
                             case R.id.actionStats:
                                 return true;
@@ -86,6 +83,12 @@ public class OrchardsForGraph extends AppCompatActivity {
         this.orchards = new ArrayList<>();
         this.orchardKeys = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);//set correct item to pop out on the nav bar
     }
 
     public void collectOrchards() {

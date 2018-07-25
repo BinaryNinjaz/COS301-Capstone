@@ -1,6 +1,8 @@
 package za.org.samac.harvest.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -49,20 +51,17 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private ArrayList<TextView> incrementViews;
     private Location location;
     public int totalBagsCollected;
-    //private FirebaseAuth mAuth;
     private collections collectionObj;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private double currentLat;
     private double currentLong;
-    //private Date currentTime;
     private double currentTime;
     private double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String sessionKey;
     private String workerID;
     private String workerIncrement;
-    //private String userUid;
     private String farmerKey;
     private DatabaseReference sessRef;
     private double endSessionTime;
@@ -78,8 +77,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         minus = new ArrayList<>();
         incrementViews = new ArrayList<>();
         String email = "";
-        //mAuth = FirebaseAuth.getInstance();
-        //FirebaseUser user = mAuth.getCurrentUser();
+
         if (user != null) {
             email = user.getEmail();
         }
@@ -113,6 +111,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Integer value = worker.getValue() + 1;
                 holder.increment.setText(String.format("%d", value));
 

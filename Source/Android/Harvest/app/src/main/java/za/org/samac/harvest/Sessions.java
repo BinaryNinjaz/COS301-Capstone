@@ -70,6 +70,7 @@ public class Sessions extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SessionsViewAdapter adapter;
     private ProgressBar progressBar;
+    BottomNavigationView bottomNavigationView;
 
     private Integer pageNo = 0;
     private Integer pageSize = 8;
@@ -105,7 +106,7 @@ public class Sessions extends AppCompatActivity {
         getNewPage();
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -136,6 +137,12 @@ public class Sessions extends AppCompatActivity {
         adapter.setSessions(sessions);
         adapter.setDates(dates);
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionSession);//set correct item to pop out on the nav bar
     }
 
     private void addButtons() {

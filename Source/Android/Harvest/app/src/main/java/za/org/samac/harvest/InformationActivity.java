@@ -96,6 +96,12 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         showNavFrag();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
+    }
+
     private void showNavFrag(){
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
