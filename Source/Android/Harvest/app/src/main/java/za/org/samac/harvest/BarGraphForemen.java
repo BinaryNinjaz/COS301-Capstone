@@ -123,7 +123,7 @@ public class BarGraphForemen extends AppCompatActivity {
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
-        base = base + "&startDate=" + (currentTime - 60 * 13);
+        base = base + "&startDate=" + (currentTime - 60 * 60 * 13);
         base = base + "&endDate=" + currentTime;
         base = base + "&uid=" + farmerKey;
 
@@ -175,20 +175,11 @@ public class BarGraphForemen extends AppCompatActivity {
                         System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% " + objs.keys());
                         //put entries in graph
                         final ArrayList<String> time = new ArrayList<>();
-                        //time received is 2 hour behind so ahd to compensate
-                        time.add("4");
-                        time.add("5");
-                        time.add("6");
-                        time.add("7");
-                        time.add("8");
-                        time.add("9");
-                        time.add("10");
-                        time.add("11");
-                        time.add("12");
-                        time.add("13");
-                        time.add("14");
-                        time.add("15");
-                        time.add("16");
+                        //UTC time
+                        for (int i = 6; i<=18; i++) {
+                            time.add(""+i);
+                        }
+
                         JSONObject objWorker = objs.getJSONObject(foremanKey);
 
                         final ArrayList<Integer> total = new ArrayList<>();
@@ -284,13 +275,9 @@ public class BarGraphForemen extends AppCompatActivity {
                 }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return true;
         }
-//        return false;
     }
 }
