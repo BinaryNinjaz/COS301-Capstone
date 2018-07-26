@@ -671,8 +671,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     long startTime = 0, stopTime = 0;
     Handler handler = new Handler();
     int delay = 5000; //milliseconds
+    int trackDelay = 120000; //milliseconds
     Boolean locationWanted = false;
     int secondsLocationIsNull = 0;
+    int trackIndex = 0;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
@@ -774,6 +776,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
 
         if (location != null) {
+            //start track
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    //tracks every 2 minutes
+                    DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
+                    Map<String, Object> track = new HashMap<>();
+                    double currentLat = location.getLatitude();
+                    double currentLong = location.getLongitude();
+                    track.put("lat", currentLat);
+                    track.put("lng", currentLong);
+                    trackRef.updateChildren(track);
+                    trackIndex++;
+
+                    handler.postDelayed(this, trackDelay);
+                }
+            }, trackDelay);
+
             final DatabaseReference myRef;
             myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
 
