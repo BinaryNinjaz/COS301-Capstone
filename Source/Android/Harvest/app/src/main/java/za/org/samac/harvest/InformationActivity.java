@@ -539,22 +539,6 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-//        MenuItem searchMenu = menu.findItem(R.id.search);
-//        final SearchView searchView = (SearchView) searchMenu.getActionView();
-//        searchView.setIconified(false);
-//        searchView.requestFocusFromTouch();
-//        searchView.setOnQueryTextListener(this);
-//        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-//                return true;
-//            }
-//        });
         return true;
     }
 
