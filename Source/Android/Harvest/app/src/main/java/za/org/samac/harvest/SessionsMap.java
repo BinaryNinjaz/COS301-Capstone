@@ -52,6 +52,9 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
     private boolean isHere = false;
     private boolean isThere = false;
     private LatLng moveMapHere ; // just used to find where to move map to
+    private PolylineOptions polyline;
+    private ArrayList<MarkerOptions> pickups;
+
 
 
     @Override
@@ -81,10 +84,12 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         isFirstCollection = true; // just used to find where to move map to
         uid = user.getUid();
 
+        mMap.clear();
+
         PolylineOptions polyline = new PolylineOptions();
         polyline.color(Color.BLUE);
         boolean first = true;
-        for (Location loc : SessionDetails.collected.getTrack()) {
+        for (Location loc : Sessions.selectedItem.track) {
             LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
             if (first) {
                 moveMapHere = ll;
@@ -94,12 +99,12 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         }
         mMap.addPolyline(polyline);
 
-        HashMap<String, MyData> cols = (HashMap<String, MyData>) SessionDetails.collected.getIndividualCollections();
+        HashMap<String, ArrayList<Pickup>> cols = (HashMap<String, ArrayList<Pickup>>) Sessions.selectedItem.collections;
         for (String key : cols.keySet()) {
-            MyData data = cols.get(key);
+            ArrayList<Pickup> data = cols.get(key);
 
-            for (int i = 0; i < data.size; i++) {
-                LatLng ll = new LatLng(data.latitude.get(i), data.longitude.get(i));
+            for (int i = 0; i < data.size(); i++) {
+                LatLng ll = new LatLng(data.get(i).lat, data.get(i).lng);
                 if (first) {
                     moveMapHere = ll;
                     first = false;

@@ -1,6 +1,7 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Future;
@@ -54,10 +57,11 @@ import za.org.samac.harvest.util.AppUtil;
 
 import static za.org.samac.harvest.MainActivity.farmerKey;
 import static za.org.samac.harvest.MainActivity.getForemen;
+import static za.org.samac.harvest.MainActivity.getWorkers;
 
 public class Sessions extends AppCompatActivity {
 
-    private TreeMap<String, SessionItem.Selection> sessions; //used to store session data
+    private TreeMap<String, SessionItem> sessions; //used to store session data
     private ArrayList<String> dates;
     private Map<String, String> foremenID; //used to look up name with foreman id
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -70,18 +74,12 @@ public class Sessions extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SessionsViewAdapter adapter;
     private ProgressBar progressBar;
-    BottomNavigationView bottomNavigationView;
+    public static SessionItem selectedItem;
+    private ArrayList<Worker> workers;
+    private HashMap<String, String> workerID;
 
-    private Integer pageNo = 0;
+    private String pageIndex = null;
     private Integer pageSize = 8;
-
-    private String urlSessionText() {
-        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/flattendSessions?";
-        base = base + "pageNo=" + pageNo.toString();
-        base = base + "&pageSize=" + pageSize.toString();
-        base = base + "&uid=" + farmerKey;
-        return base;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +88,15 @@ public class Sessions extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+
+        workers = getWorkers(); // get worker info to loop through it
+        workerID = new HashMap<>();
+        for(int i = 0 ; i < workers.size() ; ++i) {
+            String id = workers.get(i).getID();
+            String name = workers.get(i).getName();
+            workerID.put(id, name);
+        }
+
 
         foremen = getForemen(); // get worker info to loop through it
         foremenID = new HashMap<>();
@@ -106,7 +113,7 @@ public class Sessions extends AppCompatActivity {
         getNewPage();
 
         //bottom nav bar
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -139,12 +146,6 @@ public class Sessions extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.actionSession);//set correct item to pop out on the nav bar
-    }
-
     private void addButtons() {
         adapter.setSessions(sessions);
         adapter.setDates(dates);
@@ -158,88 +159,110 @@ public class Sessions extends AppCompatActivity {
     }
 
     public void getNewPage() {
-        pageNo++;
-        try {
-            Thread thread = new Thread(new Runnable() {
+        DatabaseReference sessionsRef;
+        Query query;
 
-                @Override
-                public void run() {
-                    try  {
-                        String response = sendGet(urlSessionText());
-                        System.out.println(response);
-                        JSONArray objs = new JSONArray(response);
-                        for (int i = 0; i < objs.length(); i++) {
-                            JSONObject obj = objs.getJSONObject(i);
-                            SessionItem.Selection item = new SessionItem.Selection();
-                            item.key = obj.getString("key");
-                            item.startDate = new Date((long) (obj.getDouble("start_date") * 1000));
-                            if (obj.has("wid")) {
-                                item.foreman = foremenID.get(obj.getString("wid"));
-                            }
+        if (pageIndex == null) {
+            query = FirebaseDatabase.getInstance().getReference(farmerKey + "/sessions/").orderByKey().limitToLast(pageSize);
+        } else {
+            query = FirebaseDatabase.getInstance().getReference(farmerKey + "/sessions/").orderByKey().endAt(pageIndex).limitToLast(pageSize);
+        }
 
-                            if (item.foreman == null) {
-                                item.foreman = "Farm Owner";
-                            }
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String lastKey = "";
+                ArrayList<SessionItem> tempSessions = new ArrayList<>();
+                ArrayList<String> tempDates = new ArrayList<>();
+                for(DataSnapshot aChild : dataSnapshot.getChildren()){
+                    SessionItem item = new SessionItem();
 
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                            formatter.setCalendar(Calendar.getInstance());
-                            final String date = formatter.format(item.startDate);
-
-                            dates.add(date);
-                            sessions.put(date, item);
-                            runOnUiThread(new Runnable() {
-                                public void run(){
-                                    if (pageNo == 1) {
-                                        recyclerView = findViewById(R.id.recView);
-                                        //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
-                                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                                        //recyclerView.addItemDecoration(new DividerItemDecoration(Sessions.this, GridLayoutManager.VERTICAL));
-                                        recyclerView.setHasFixedSize(false);
-                                        recyclerView.setAdapter(adapter);
-                                        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                    }
-                                    adapter.notifyItemInserted(sessions.size() - 1);
-                                }
-                            });
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (lastKey == "") {
+                        lastKey = aChild.getKey();
                     }
+
+                    item.key = aChild.getKey();
+                    item.foreman = aChild.child("wid").getValue(String.class);
+                    if (aChild.hasChild("wid")) {
+                        item.foreman = foremenID.get(aChild.child("wid").getValue(String.class));
+                    }
+
+                    if (item.foreman == null) {
+                        item.foreman = "Farm Owner";
+                    }
+
+                    Double endDate = aChild.child("end_date").getValue(Double.class);
+                    Double startDate = aChild.child("start_date").getValue(Double.class);
+                    if (endDate == null) {
+                        endDate = 0.0;
+                    }
+                    if (startDate == null) {
+                        startDate = 0.0;
+                    }
+                    item.endDate = new Date((long) (endDate * 1000));
+                    item.startDate = new Date((long) (startDate * 1000));
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+                    formatter.setCalendar(Calendar.getInstance());
+                    final String date = formatter.format(item.startDate);
+
+                    for (DataSnapshot trackSnapshot : aChild.child("track").getChildren()) {
+                        Double lat = trackSnapshot.child("lat").getValue(Double.class);
+                        Double lng = trackSnapshot.child("lng").getValue(Double.class);
+                        Location loc = new Location("");
+                        loc.setLatitude(lat.doubleValue());
+                        loc.setLongitude(lng.doubleValue());
+
+                        item.addTrack(loc);
+                    }
+                    for (DataSnapshot collectionSnapshot : aChild.child("collections").getChildren()) {
+                        String workerName = workerID.get(collectionSnapshot.getKey());
+                        int count = 0;
+                        for (DataSnapshot collection : collectionSnapshot.getChildren()) {
+                            Double lat = collection.child("coord").child("lat").getValue(Double.class);
+                            Double lng = collection.child("coord").child("lng").getValue(Double.class);
+                            Location loc = new Location("");
+                            loc.setLatitude(lat.doubleValue());
+                            loc.setLongitude(lng.doubleValue());
+                            Double time = collectionSnapshot.child("date").getValue(Double.class);
+
+                            item.addCollection(workerName, loc, time);
+                            count++;
+                        }
+                    }
+
+                    tempSessions.add(item);
+                    tempDates.add(date);
                 }
-            });
 
-            thread.start();
+                if (tempSessions.size() > 0) {
+                    for (int i = tempSessions.size() - 1; i > 0; i--) { // we miss the first one on purpose so it isn't duplicated on subsequent calls
+                        sessions.put(tempDates.get(i), tempSessions.get(i));
+                        dates.add(tempDates.get(i));
+                    }
+                } else if (tempSessions.size() == 1) {
+                    sessions.put(tempDates.get(0), tempSessions.get(0));
+                    dates.add(tempDates.get(0));
+                }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    private String sendGet(String url) throws Exception {
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                if (pageIndex == null) {
+                    recyclerView = findViewById(R.id.recView);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setHasFixedSize(false);
+                    recyclerView.setAdapter(adapter);
+                    progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+                pageIndex = lastKey;
+                adapter.notifyItemInserted(sessions.size() - 1);
+            }
 
-        // optional default is GET
-        con.setRequestMethod("GET");
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        //add request header
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        return response.toString();
+            }
+        });
     }
 
     @Override
@@ -276,9 +299,13 @@ public class Sessions extends AppCompatActivity {
                 }
                 finish();
                 return true;
+//            case R.id.homeAsUp:
+//                onBackPressed();
+//                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return true;
         }
+//        return false;
     }
 }

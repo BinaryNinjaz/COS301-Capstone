@@ -25,7 +25,7 @@ import za.org.samac.harvest.Sessions;
 public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapter.SessionsViewHolder> {
 
     private ArrayList<String> dates;
-    private TreeMap<String, SessionItem.Selection> sessions;
+    private TreeMap<String, SessionItem> sessions;
     private Context context;
     private Sessions sessionsClass;
 
@@ -45,7 +45,7 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
     @Override
     public void onBindViewHolder(SessionsViewHolder holder, int position) {
         String date = dates.get(position);
-        final SessionItem.Selection item = sessions.get(date);
+        final SessionItem item = sessions.get(date);
 
         holder.sessionForeman.setText(item.foreman + " - " + dates.get(position));
         holder.sessionForeman.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +53,7 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
             public void onClick(View v) {
                 Intent details = new Intent(context, SessionDetails.class);
                 details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Sessions.selectedItem = item;
                 Intent key = details.putExtra("key", item.key);
                 Intent sdate = details.putExtra("start_date", item.startDate);
                 Intent wkey = details.putExtra("wid", item.foreman);
@@ -73,7 +74,7 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
 
 
 
-    public void setSessions(TreeMap<String, SessionItem.Selection> sessions) {
+    public void setSessions(TreeMap<String, SessionItem> sessions) {
         this.sessions = sessions;
     }
 
