@@ -400,13 +400,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                 polygonY.clear();
                             }
                         }
-
-                        //the user is not in polygon so collect all workers
-                        if (workers.size() == 0) {
-                            farmLevelRef = database.getReference(farmerKey);
-                            workersRef = farmLevelRef.child("workers");
-                            collectWorkersIfNotInPolygon();
-                        }
                     }
                 }
 
@@ -516,22 +509,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-//        MenuItem searchMenu = menu.findItem(R.id.search);
-//        final SearchView searchView = (SearchView) searchMenu.getActionView();
-//        searchView.setIconified(false);
-//        searchView.requestFocusFromTouch();
-//        searchView.setOnQueryTextListener(this);
-//        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-//                return true;
-//            }
-//        });
         return true;
     }
 
@@ -596,67 +573,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
 //        workersRef.addValueEventListener(new ValueEventListener() {
         workers.clear();//in case this asynchronous database puts all the names in the list already
-        workersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
-
-                    String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
-
-                    for (int i = 0; i<zoneSnapshot.child("orchards").getChildrenCount(); i++) {
-                        if (correctOrchard == zoneSnapshot.child("orchards").child("" + i).getValue(String.class)) {
-                            //only add if person is a worker (not a foreman)
-                            if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
-                                Worker workerObj = new Worker();
-                                workerObj.setName(fullName);
-                                workerObj.setValue(0);
-                                workerObj.setID(zoneSnapshot.getKey());
-                                workers.add(workerObj);
-                            } else {
-                                Worker workerObj = new Worker();
-                                workerObj.setName(fullName);
-                                workerObj.setValue(0);
-                                workerObj.setID(zoneSnapshot.getKey());
-                                foremen.add(workerObj);
-
-                                if (zoneSnapshot.child("phoneNumber").getValue(String.class) != null) {
-                                    if (zoneSnapshot.child("phoneNumber").getValue(String.class).equals(currentUserNumber)) {
-                                        foremanID = zoneSnapshot.getKey();
-                                        foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Collections.sort(workers, new WorkerComparator());
-
-                workersSearch.addAll(workers);
-
-                progressBar.setVisibility(View.GONE);//remove progress bar
-                constraintLayout.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-                //user pressed start and all went well with retrieving data
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-                progressBar.setVisibility(View.GONE);
-                constraintLayout.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    protected void collectWorkersIfNotInPolygon() {
-
-        /* TODO: The constant Listener causes a crash when a new worker is added, seemingly:
-            To reproduce
-            > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
-//        workersRef.addValueEventListener(new ValueEventListener() {
         workersRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -915,6 +831,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         childUpdates.put("coord", coordinates);
                         childUpdates.put("display", foremanName);
 
+                        locationWanted = false;
                         myRef2.updateChildren(childUpdates);//store location
                     }
                 }
