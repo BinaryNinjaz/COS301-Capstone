@@ -604,7 +604,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 }
                 finish();
                 return true;
-            case 16908332: //WTF Android??
+            case android.R.id.home:
                 showNavFrag();
                 return true;
             default:
