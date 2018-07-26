@@ -19,6 +19,7 @@ import java.util.Stack;
 import java.util.Vector;
 
 import za.org.samac.harvest.InfoListFragment;
+import za.org.samac.harvest.InformationActivity;
 
 /**
  * This monster class is used to store and manipulate almost, if not all, information in the database that belongs to the logged in farmer.
@@ -50,6 +51,8 @@ public class Data {
 
     protected Category category = Category.NOTHING;
 
+    protected static boolean pulling = false;
+
     /**
      * Constructor
      */
@@ -64,10 +67,16 @@ public class Data {
 //        pull();
     }
 
+    public static boolean isPulling() {
+        return pulling;
+    }
+
     /**
      * Replace all local information from Firebase, TODO: while preserving local changes.
      */
-    public void pull(final InfoListFragment list){
+    public void pull(final InformationActivity infoAct){
+
+        pulling = true;
 
         farms = new Vector<>();
         orchards = new Vector<>();
@@ -255,8 +264,11 @@ public class Data {
                     orchard.setAssignedFarm(getFarmFromIDString(orchard.getAssignedFarm().getID()));
                 }
 
-                if (list != null) {
-                    list.endRefresh();
+                pulling = false;
+
+                //Pull is done here
+                if (infoAct != null){
+                    infoAct.tellAllPullDone();
                 }
             }
 
