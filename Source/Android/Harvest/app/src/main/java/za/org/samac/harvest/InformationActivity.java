@@ -94,8 +94,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 });
 
         //Start the first fragment
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         showNavFrag();
+
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
     }
 
     @Override
@@ -120,6 +122,8 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         selectedCat = NAV;
+        toggleUpButton(false);
+        setTitle("Information");
     }
 
     public void tellAllPullDone(){
@@ -201,6 +205,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         }
     }
 
+    private void toggleUpButton(boolean on){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(on);
+    }
+
     //Handle Buttons
     public void onCreateButtClick(View view){
         String choice = view.getTag().toString();
@@ -271,6 +279,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             newInfoListFragment.setCat(selectedCat);
             fragmentTransaction.commit();
 //        newInfoListFragment.showList(selectedCat);
+            toggleUpButton(true);
         }
     }
 
@@ -297,6 +306,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         fragmentTransaction.commit();
         backViews.clear();
 //        newInfoListFragment.showList(selectedCat);
+        toggleUpButton(true);
     }
 
     //If a farm, orchard, worker is selected
@@ -593,6 +603,9 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                             });
                 }
                 finish();
+                return true;
+            case 16908332: //WTF Android??
+                showNavFrag();
                 return true;
             default:
                 super.onOptionsItemSelected(item);
