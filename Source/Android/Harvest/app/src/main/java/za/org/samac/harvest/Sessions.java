@@ -239,7 +239,7 @@ public class Sessions extends AppCompatActivity {
                     tempDates.add(date);
                 }
 
-                if (tempSessions.size() > 0) {
+                if (tempSessions.size() > 1) {
                     for (int i = tempSessions.size() - 1; i > 0; i--) { // we miss the first one on purpose so it isn't duplicated on subsequent calls
                         sessions.put(tempDates.get(i), tempSessions.get(i));
                         dates.add(tempDates.get(i));
