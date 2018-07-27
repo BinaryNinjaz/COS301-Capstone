@@ -678,7 +678,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     long startTime = 0, stopTime = 0;
     Handler handler = new Handler();
     int delay = 5000; //milliseconds
-    int trackDelay = 120000; //milliseconds
+    int trackDelay = 2000; //milliseconds
     Boolean locationWanted = false;
     int secondsLocationIsNull = 0;
     int trackIndex = 0;
@@ -782,8 +782,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             recyclerView.setVisibility(View.VISIBLE);
         }
 
-        if (location != null) {
+        if (location != null&& btnStart.getTag() == "green") {
             //start track
+            trackIndex = 0;
+            DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
+            Map<String, Object> track = new HashMap<>();
+            double currentLat = location.getLatitude();
+            double currentLong = location.getLongitude();
+            track.put("lat", currentLat);
+            track.put("lng", currentLong);
+            trackRef.updateChildren(track);
+
             handler.postDelayed(new Runnable() {
                 public void run() {
                     //tracks every 2 minutes
@@ -794,12 +803,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     track.put("lat", currentLat);
                     track.put("lng", currentLong);
                     trackRef.updateChildren(track);
+                    if (trackIndex > 0 && btnStart.getTag() == "green") {
+                        return;
+                    }
                     trackIndex++;
 
                     handler.postDelayed(this, trackDelay);
                 }
             }, trackDelay);
 
+            //************************************************** foreman tracking
             final DatabaseReference myRef;
             myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
 
@@ -825,6 +838,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         childUpdates.put("coord", coordinates);
                         childUpdates.put("display", foremanName);
 
+                        locationWanted = false;
                         myRef2.updateChildren(childUpdates);//store location
                     }
                 }
@@ -864,7 +878,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    if (dataSnapshot != null) {
+                        if (dataSnapshot.getKey().toString().equals(foremanID)) {
+                            myRef.removeValue();
+                            locationWanted = true;
+                        }
+                    }
 
+                    if (locationWanted == true) {
+                        DatabaseReference myRef2;
+                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+
+                        Map<String, Object> coordinates = new HashMap<>();
+                        coordinates.put("lat", location.getLatitude());
+                        coordinates.put("lng", location.getLongitude());
+
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("coord", coordinates);
+                        childUpdates.put("display", foremanName);
+
+                        locationWanted = false;
+                        myRef2.updateChildren(childUpdates);//store location
+                    }
                 }
 
                 @Override
@@ -901,7 +936,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setText("Stop");
             btnStart.setTag("orange");
         } else {
-            //TODO: check if app closes or crashes
+            //session ended
             textViewPressStart.setText(R.string.pressStart);
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
