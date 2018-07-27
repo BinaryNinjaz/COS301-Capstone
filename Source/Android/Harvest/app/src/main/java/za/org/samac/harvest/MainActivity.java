@@ -678,7 +678,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     long startTime = 0, stopTime = 0;
     Handler handler = new Handler();
     int delay = 5000; //milliseconds
-    int trackDelay = 2000; //milliseconds
+    int trackDelay = 120000; //milliseconds
     Boolean locationWanted = false;
     int secondsLocationIsNull = 0;
     int trackIndex = 0;
