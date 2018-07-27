@@ -21,7 +21,7 @@ extension HarvestDB {
         return
       }
       
-      if let (uid, wid) = UserDefaults.standard.getUWID() {
+      if let uid = UserDefaults.standard.getUID(), let wid = UserDefaults.standard.getWID() {
         HarvestUser.current.selectedWorkingForID = (uid, wid)
         HarvestDB.getWorkingForFarmName(uid: uid) { (name) in
           HarvestUser.current.organisationName = name ?? "your farm"
@@ -76,7 +76,8 @@ extension HarvestDB {
     Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
       if let error = error {
         let nserr = error as NSError
-        if [AuthErrorCode.emailAlreadyInUse, .wrongPassword].contains(AuthErrorCode(rawValue: nserr.code)) {
+        if [AuthErrorCode.emailAlreadyInUse, .wrongPassword, .userNotFound]
+          .contains(AuthErrorCode(rawValue: nserr.code)) {
           SCLAlertView().showError("Sign In Failure", subTitle: "Your Email or password is incorrect.")
         } else {
           SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
@@ -107,7 +108,8 @@ extension HarvestDB {
     Auth.auth().signIn(with: credential) { (user, error) in
       if let error = error {
         let nserr = error as NSError
-        if [AuthErrorCode.emailAlreadyInUse, .wrongPassword].contains(AuthErrorCode(rawValue: nserr.code)) {
+        if [AuthErrorCode.emailAlreadyInUse, .wrongPassword, .userNotFound]
+          .contains(AuthErrorCode(rawValue: nserr.code)) {
           SCLAlertView().showError("Sign In Failure", subTitle: "Your Email or password is incorrect.")
         } else {
           SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
@@ -122,7 +124,8 @@ extension HarvestDB {
         return
       }
       
-      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor(completion))
+      HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
+      HarvestUser.current.setUser(user, nil, { _, succ in completion(succ) })
       
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
@@ -182,9 +185,8 @@ extension HarvestDB {
       HarvestUser.current.reset()
       Entities.shared.reset()
       
-    } catch {
-      //    FIXME  #warning("Complete with proper errors")
-      SCLAlertView().showError("Sign Out Failure", subTitle: "An unknown error occured")
+    } catch let e {
+      SCLAlertView().showError("Sign Out Failure", subTitle: e.localizedDescription)
       completion(false)
       return
     }
