@@ -277,8 +277,8 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             edtPassword.setError(null);
         }
 
-        if (isPasswordValid(password)) {
-            edtPassword.setError("Passwords must be at least 6 characters.");
+        if (!isPasswordValid(password)) {
+            edtPassword.setError("Password must be at least 6 characters.");
             focusView = edtPassword;
             valid = false;
         } else {
@@ -289,7 +289,11 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
 
         //check if two passwords entered match
         if (!confirmPassword.equals(password)) {
+            edtConfirmPassword.setError("Passwords do not match");
+            focusView = edtConfirmPassword;
             valid = false;
+        } else {
+            edtConfirmPassword.setError(null);
         }
 
         String email = edtEmail.getText().toString();
