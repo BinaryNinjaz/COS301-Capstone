@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     //used same names as IDs in xml
     private Button btnStart;
     private ProgressBar progressBar;
+    private RelativeLayout relLayoutMainBottNav;
     private android.support.constraint.ConstraintLayout constraintLayout;
     private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
     private static TextView textView;
@@ -183,6 +185,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         database = FirebaseDatabase.getInstance();
 
         setContentView(R.layout.activity_main);
+        relLayoutMainBottNav = findViewById(R.id.relLayoutMainBottNav);
+        relLayoutMainBottNav.setVisibility(View.VISIBLE);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
@@ -245,10 +249,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         }
         if (isFarmer){
+            relLayoutMainBottNav.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);//remove progress bar
             setContentView(R.layout.activity_farmer);
         }
         else {
+            relLayoutMainBottNav.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);//remove progress bar
             setContentView(R.layout.activity_foreman);
         }
