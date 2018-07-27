@@ -269,6 +269,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if (isFarmer){
             farmerKey = uid;
             getPolygon();//set expected yield
+            currUserRef = database.getReference(uid);//Firebase reference
+            workersRef = currUserRef.child("workers");
+            collectWorkers();
         }
         else {
             getFarmKey();
@@ -395,10 +398,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             }
 
                             if (polygonContainsPoint(polygonX, polygonY) == true) {
-                                farmLevelRef = database.getReference(farmerKey);
-                                workersRef = farmLevelRef.child("workers");
-                                collectWorkers();
-
                                 getExpectedYield();//set expected yield
                                 break;
                             } else {
@@ -638,6 +637,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             return;
         }
         getPolygon();
+        farmLevelRef = database.getReference(farmerKey);
+        workersRef = farmLevelRef.child("workers");
+        collectWorkers();
     }
 
     public void statusCheck() {
