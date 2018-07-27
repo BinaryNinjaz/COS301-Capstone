@@ -59,52 +59,52 @@ class SignUpViewController: UIViewController {
   @IBAction func signUpTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text, username != "" else {
       SCLAlertView().showError(
-        "No email address provided",
-        subTitle: "Please provide an email address to create an account")
+        "No Email Address Provided",
+        subTitle: "Please provide an email address to create an account.")
       return
     }
     
     guard let password = passwordTextField.text, password.count >= 6 else {
       SCLAlertView().showError(
-        "Password too short",
-        subTitle: "Password must be at least 6 characters long")
+        "Password Too Short",
+        subTitle: "Password must be at least 6 characters.")
       return
     }
     
     guard username.isEmail() else {
       SCLAlertView().showError(
         "Invalid Email Address",
-        subTitle: "Please provide a valid email address")
+        subTitle: "Please provide a valid email address.")
       return
     }
     
     guard let fname = firstnameTextField.text, fname != "" else {
       SCLAlertView().showError(
-        "No first name provided",
-        subTitle: "Please provide a first name to create an account")
+        "No First Name Provided",
+        subTitle: "Please provide a first name to create an account.")
       return
     }
     
     guard let lname = lastnameTextField.text, lname != "" else {
       SCLAlertView().showError(
-        "No last name provided",
-        subTitle: "Please provide a last name to create an account")
+        "No Surname Provided",
+        subTitle: "Please provide a last name to create an account.")
       return
     }
     
     guard let confirmedPassword = confirmPasswordTextField.text, confirmedPassword != "" else {
       SCLAlertView().showError(
-        "No confirm password provided",
-        subTitle: "Please provide a confirm password to create an account")
+        "No Confirm Password Provided",
+        subTitle: "Please provide a confirm password to create an account.")
       return
     }
     
     guard confirmedPassword == password else {
       SCLAlertView().showError(
-        "Mismatching passwords",
+        "Passwords Do Not Match",
         subTitle: """
           Your passwords are not matching. Please provide the same password in both \
-          password prompts
+          password prompts.
           """)
       return
     }

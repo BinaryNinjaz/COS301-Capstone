@@ -131,7 +131,7 @@ public final class Session {
     formatter.dateStyle = .full
     formatter.timeStyle = .full
     
-    let personProps = ["First Name", "Last Name", "ID Number", "Phone Number"]
+    let personProps = ["Name", "ID Number", "Phone Number"]
     let orchardProps = ["Name", "Crop", "Cultivar", "Irrigation Kind"]
     
     for (prop, reason) in foreman.search(for: text) {
@@ -295,7 +295,7 @@ extension SortedDictionary where Value == SortedSet<Session> {
         
         for (prop, reason) in props {
           if result[prop] == nil {
-            result[prop] = SortedArray<SearchPair<Session>>([]) { $0.item.startDate < $1.item.startDate }
+            result[prop] = SortedArray<SearchPair<Session>>([]) { $0.item.startDate > $1.item.startDate }
           }
           let pair = SearchPair(session, reason)
           if !(result[prop]?.contains(pair) ?? true) {

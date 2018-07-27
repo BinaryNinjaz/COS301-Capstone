@@ -18,10 +18,21 @@ struct SearchPair<Item: Equatable>: Equatable {
 }
 
 enum EntityItem: Equatable, CustomStringConvertible {
-  enum Kind {
+  enum Kind: CustomStringConvertible {
     case farm, orchard, worker, session
     case user
     case none
+    
+    var description: String {
+      switch self {
+      case .farm: return "Farm"
+      case .orchard: return "Orchard"
+      case .worker: return "Worker"
+      case .session: return "Session"
+      case .user: return "User"
+      case .none: return "None"
+      }
+    }
   }
   
   case farm(Farm)
@@ -66,6 +77,16 @@ enum EntityItem: Equatable, CustomStringConvertible {
     case let .farm(f): return f.search(for: text)
     case let .orchard(o): return o.search(for: text)
     default: return []
+    }
+  }
+  
+  var kind: Kind {
+    switch self {
+    case .farm: return .farm
+    case .worker: return .worker
+    case .orchard: return .orchard
+    case .session: return .session
+    case .user: return .user
     }
   }
   

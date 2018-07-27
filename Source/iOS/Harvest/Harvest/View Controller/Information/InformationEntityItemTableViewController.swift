@@ -39,8 +39,6 @@ class InformationEntityItemTableViewController: UITableViewController {
     }
     
     searchBar?.delegate = self
-    
-    tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
   }
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
@@ -164,7 +162,7 @@ class InformationEntityItemTableViewController: UITableViewController {
       let i = filtered.index(s, offsetBy: section)
       return filtered[i].key
     } else {
-      return navigationItem.title ?? ""
+      return ""
     }
   }
   
