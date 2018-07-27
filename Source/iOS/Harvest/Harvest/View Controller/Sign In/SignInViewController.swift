@@ -91,7 +91,7 @@ class SignInViewController: UIViewController {
     guard let password = passwordTextField.text, password != "" else {
       SCLAlertView().showError(
         "Password Not Long Enough",
-        subTitle: "Password length must be at least 6 characters long")
+        subTitle: "Password length must be at least 6 characters.")
       return
     }
     

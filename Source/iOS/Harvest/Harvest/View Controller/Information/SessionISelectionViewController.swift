@@ -17,6 +17,7 @@ class SessionSelectionViewController: UITableViewController {
   var sessions = SortedDictionary<Date, SortedSet<Session>>(>)
   typealias SessionsIndex = SortedDictionary<Date, SortedSet<Session>>.Index
   @IBOutlet weak var searchBar: UISearchBar?
+  var searchText: String = ""
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -46,6 +47,11 @@ class SessionSelectionViewController: UITableViewController {
     tableView.reloadData()
     HarvestDB.getSessions(limitedToLast: pageSize) { psessions in
       self.sessions.accumulateByDay(with: psessions)
+      if self.searchText.isEmpty {
+        self.filteredSessions = nil
+      } else {
+        self.filteredSessions = self.sessions.search(for: self.searchText)
+      }
       DispatchQueue.main.async {
         self.isLoading = false
         self.tableView.reloadData()
@@ -62,6 +68,11 @@ class SessionSelectionViewController: UITableViewController {
     HarvestDB.getRefreshedSessions(limitedToLast: pageSize) { psessions in
       self.sessions.removeAll()
       self.sessions.accumulateByDay(with: psessions)
+      if self.searchText.isEmpty {
+        self.filteredSessions = nil
+      } else {
+        self.filteredSessions = self.sessions.search(for: self.searchText)
+      }
       DispatchQueue.main.async {
         self.isLoading = false
         self.refreshControl?.endRefreshing()
@@ -200,6 +211,7 @@ class SessionSelectionViewController: UITableViewController {
 
 extension SessionSelectionViewController: UISearchBarDelegate {
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    self.searchText = searchText
     if searchText.isEmpty {
       filteredSessions = nil
     } else {

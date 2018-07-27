@@ -74,8 +74,13 @@ extension HarvestDB {
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
-      if let err = error {
-        SCLAlertView().showError("Sign In Failure", subTitle: err.localizedDescription)
+      if let error = error {
+        let nserr = error as NSError
+        if [AuthErrorCode.emailAlreadyInUse, .wrongPassword].contains(AuthErrorCode(rawValue: nserr.code)) {
+          SCLAlertView().showError("Sign In Failure", subTitle: "Your Email or password is incorrect.")
+        } else {
+          SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+        }
         completion(false)
         return
       }
@@ -101,7 +106,12 @@ extension HarvestDB {
   ) {
     Auth.auth().signIn(with: credential) { (user, error) in
       if let error = error {
-        SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+        let nserr = error as NSError
+        if [AuthErrorCode.emailAlreadyInUse, .wrongPassword].contains(AuthErrorCode(rawValue: nserr.code)) {
+          SCLAlertView().showError("Sign In Failure", subTitle: "Your Email or password is incorrect.")
+        } else {
+          SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+        }
         completion(false)
         return
       }

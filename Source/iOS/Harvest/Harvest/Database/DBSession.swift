@@ -42,7 +42,9 @@ extension HarvestDB {
         sessions.insert(w, at: 0)
       }
       sessionEndKey = sessions.last?.id
-      sessions.removeLast()
+      if !sessions.isEmpty {
+        sessions.removeLast()
+      }
       completion(sessions)
     }
     

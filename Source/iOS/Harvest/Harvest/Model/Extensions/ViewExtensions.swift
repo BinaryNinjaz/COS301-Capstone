@@ -11,7 +11,9 @@ import SnapKit
 
 extension UIView {
   func apply(gradient: CAGradientLayer) {
-    layer.sublayers?.remove(at: 0)
+    if let sublayers = layer.sublayers, sublayers.count > 0 {
+      layer.sublayers?.remove(at: 0)
+    }
     backgroundColor = .clear
     gradient.frame = bounds
     layer.insertSublayer(gradient, at: 0)

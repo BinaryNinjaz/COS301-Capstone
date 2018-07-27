@@ -84,12 +84,8 @@ final class Worker {
     
     let text = text.lowercased()
     
-    if firstname.lowercased().contains(text) {
-      result.append(("First Name", firstname))
-    }
-    
-    if lastname.lowercased().contains(text) {
-      result.append(("Last Name", lastname))
+    if name.lowercased().contains(text) {
+      result.append(("Name", name))
     }
     
     let orchardNames = Entities.shared.orchards

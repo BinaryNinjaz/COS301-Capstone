@@ -63,8 +63,7 @@ struct Tracker: Codable {
   }
   
   mutating func pop(for worker: Worker) {
-    guard var collection = collections[worker],
-      !collection.isEmpty else {
+    guard var collection = collections[worker], !collection.isEmpty else {
       return
     }
     

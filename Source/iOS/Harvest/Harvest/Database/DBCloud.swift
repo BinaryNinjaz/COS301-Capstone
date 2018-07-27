@@ -267,7 +267,7 @@ extension HarvestCloud {
     ) -> [String] {
       switch self {
       case .hourly:
-        return (0...23).map { ($0 < 10 ? "0\($0):00" : "\($0):00") + ($0 < 12 ? "am" : "pm") }
+        return (0...23).map { ($0 < 10 ? "0\($0):00" : "\($0):00") }
       case .daily:
         return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
       case .weekly:
@@ -310,6 +310,14 @@ extension HarvestCloud {
       case .worker: return "worker"
       case .orchard: return "orchard"
       case .foreman: return "foreman"
+      }
+    }
+    
+    var title: String {
+      switch self {
+      case .worker: return "Worker"
+      case .orchard: return "Orchard"
+      case .foreman: return "Foreman"
       }
     }
   }
