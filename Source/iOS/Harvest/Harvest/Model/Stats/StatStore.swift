@@ -41,7 +41,7 @@ struct StatStore {
   }
   
   mutating func removeItem(withName name: String) {
-    if let _ = try? Disk.retrieve(name, from: .applicationSupport, as: Item.self) {
+    if (try? Disk.retrieve(name, from: .applicationSupport, as: Item.self)) != nil {
       try? Disk.remove(name, from: .applicationSupport)
       if let idx = statDataNames.index(of: name) {
         statDataNames.remove(at: idx)
