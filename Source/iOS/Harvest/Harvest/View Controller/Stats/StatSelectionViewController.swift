@@ -12,6 +12,7 @@ import SCLAlertView
 // swiftlint:disable type_body_length
 final class StatSelectionViewController: ReloadableFormViewController {
   var refreshControl: UIRefreshControl?
+  var showingAlert: Bool = false
   
   func customGraph() -> LabelRow {
     return LabelRow { row in
@@ -28,9 +29,46 @@ final class StatSelectionViewController: ReloadableFormViewController {
     }
   }
   
+  @objc func longPressCustomGraph(_ recognizer: UIGestureRecognizer) {
+    guard !showingAlert else {
+      return
+    }
+    
+    let alert = SCLAlertView(appearance: .optionsAppearance)
+    
+    let name = recognizer.accessibilityLabel ?? ""
+    
+    alert.addButton("Rename") {
+      let infoAlert = SCLAlertView(appearance: .warningAppearance)
+      
+      let nameTextField = infoAlert.addTextField()
+      
+      infoAlert.addButton("Rename") {
+        StatStore.shared.renameItem(withName: name, toNewName: nameTextField.text ?? "")
+      }
+      
+      infoAlert.addButton("Cancel") {}
+      
+      infoAlert.showEdit("New Name", subTitle: "Please enter a new name for '\(name)'.")
+      
+      self.showingAlert = false
+    }
+    
+    alert.addButton("Delete") {
+      StatStore.shared.removeItem(withName: name)
+      self.showingAlert = false
+    }
+    
+    alert.addButton("Cancel") {
+      self.showingAlert = false
+    }
+    
+    showingAlert = true
+    alert.showEdit(name, subTitle: "Select an option to perform on the graph '\(name)'.")
+  }
+  
   func customGraphSection() -> Section {
     let result = Section("Your Graphs")
-    
     for name in StatStore.shared.statDataNames {
       if let stat = StatStore.shared.getItem(withName: name) {
         result <<< ButtonRow { row in
@@ -38,47 +76,30 @@ final class StatSelectionViewController: ReloadableFormViewController {
         }.cellUpdate { cell, _ in
           cell.textLabel?.textAlignment = .left
           cell.textLabel?.textColor = .black
+          
+          let longPress = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(self.longPressCustomGraph(_:)))
+          longPress.accessibilityLabel = name
+          
+          cell.addGestureRecognizer(longPress)
         }.onCellSelection { _, _ in
-          let alert = SCLAlertView(appearance: .optionsAppearance)
           
-          alert.addButton("Rename") {
-            let infoAlert = SCLAlertView(appearance: .warningAppearance)
-            
-            let nameTextField = infoAlert.addTextField()
-            
-            infoAlert.addButton("Rename") {
-              StatStore.shared.renameItem(withName: name, toNewName: nameTextField.text ?? "")
-            }
-            
-            infoAlert.addButton("Cancel") {}
-            
-            infoAlert.showEdit("New Name", subTitle: "Please enter a new name for '\(name)'.")
+          guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
+            return
           }
           
-          alert.addButton("Delete") {
-            StatStore.shared.removeItem(withName: name)
+          guard let svc = vc as? StatsViewController else {
+            return
           }
           
-          alert.addButton("Show Graph") {
-            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
-              return
-            }
-            
-            guard let svc = vc as? StatsViewController else {
-              return
-            }
-            
-            svc.startDate = stat.startDate
-            svc.endDate = stat.endDate
-            svc.period = stat.period
-            svc.stat = Stat.untyped(stat.ids, stat.grouping)
-            
-            self.navigationController?.pushViewController(svc, animated: true)
-          }
+          svc.startDate = stat.startDate
+          svc.endDate = stat.endDate
+          svc.period = stat.period
+          svc.stat = Stat.untyped(stat.ids, stat.grouping)
           
-          alert.addButton("Cancel") {}
+          self.navigationController?.pushViewController(svc, animated: true)
           
-          alert.showEdit(name, subTitle: "Select an option to do with the graph.")
         }
       }
     }
