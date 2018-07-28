@@ -55,7 +55,7 @@
     <string name="title_activity_sign_up">Sign Up</string>
     <string name="prompt_enter_surname">Surname</string>
     <string name="prompt_enter_firstName">First name</string>
-    <string name="prompt_enter_newPassword">New Password (at least 6 characters)</string>
+    <string name="prompt_enter_newPassword">New Password</string>
     <string name="prompt_enter_username">Username</string>
     <string name="prompt_enter_organization">Organization Name</string>
 

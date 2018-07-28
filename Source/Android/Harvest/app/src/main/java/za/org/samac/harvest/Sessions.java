@@ -67,16 +67,17 @@ public class Sessions extends AppCompatActivity {
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid;
     private FirebaseDatabase database;
-    private DatabaseReference ref;
-    private DatabaseReference sessionsRef;
-    private DatabaseReference collectionsRef;
     private ArrayList<Worker> foremen;
     private RecyclerView recyclerView;
     private SessionsViewAdapter adapter;
     private ProgressBar progressBar;
     public static SessionItem selectedItem;
     private ArrayList<Worker> workers;
+    private ArrayList<String> workerKeys;
     private HashMap<String, String> workerID;
+    private DatabaseReference workersRef;
+    private DatabaseReference foremenRef;
+    private ArrayList<String> foremenKeys;
 
     private String pageIndex = null;
     private Integer pageSize = 8;
@@ -122,7 +123,9 @@ public class Sessions extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(Sessions.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(Sessions.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
                                 startActivity(new Intent(Sessions.this, InformationActivity.class));
@@ -145,6 +148,7 @@ public class Sessions extends AppCompatActivity {
         adapter.setDates(dates);
 
     }
+
 
     private void addButtons() {
         adapter.setSessions(sessions);

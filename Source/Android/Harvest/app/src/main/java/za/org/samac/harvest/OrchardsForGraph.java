@@ -61,7 +61,9 @@ public class OrchardsForGraph extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(OrchardsForGraph.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(OrchardsForGraph.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
                                 startActivity(new Intent(OrchardsForGraph.this, InformationActivity.class));
@@ -84,6 +86,12 @@ public class OrchardsForGraph extends AppCompatActivity {
         this.orchards = new ArrayList<>();
         this.orchardKeys = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(OrchardsForGraph.this, Analytics.class));
     }
 
     @Override

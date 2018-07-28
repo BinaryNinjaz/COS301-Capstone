@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -72,17 +73,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private static ArrayList<Worker> workers;
     private static ArrayList<Worker> foremen;
-    private ArrayList<Worker> workersSearch;
+    private static ArrayList<Worker> workersSearch;
     private Map<Integer, Location> track;
     int trackCount = 0;
     boolean namesShowing = false;
 
     //used same names as IDs in xml
     private Button btnStart;
-    private ProgressBar progressBar;
-    private android.support.constraint.ConstraintLayout constraintLayout;
-    private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
-    private static TextView textView;
+    private static ProgressBar progressBar;
+    private RelativeLayout relLayoutMainBottNav;
+    private static android.support.constraint.ConstraintLayout constraintLayout;
+    private static RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
+    public static TextView textView;
     private TextView textViewPressStart;
     private WorkerRecyclerViewAdapter adapter;
     public static LocationManager locationManager;
@@ -96,11 +98,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserEmail;
-    private String currentUserNumber;
+    private static String currentUserNumber;
     private String emailInDB;
     private String uid;
-    private String foremanID;
-    private String foremanName;
+    private static String foremanID;
+    private static String foremanName;
     private DatabaseReference currUserRef;
     private DatabaseReference farmRef;
     private DatabaseReference sessRef;
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private FirebaseDatabase database;
     //private Query q;
-    private DatabaseReference workersRef;
+    public static DatabaseReference workersRef;
     private BottomNavigationView bottomNavigationView;
 
     private void init() {
@@ -183,6 +185,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         database = FirebaseDatabase.getInstance();
 
         setContentView(R.layout.activity_main);
+        relLayoutMainBottNav = findViewById(R.id.relLayoutMainBottNav);
+        relLayoutMainBottNav.setVisibility(View.VISIBLE);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         determineIfFarmer();
@@ -245,10 +249,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         }
         if (isFarmer){
+            relLayoutMainBottNav.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);//remove progress bar
             setContentView(R.layout.activity_farmer);
         }
         else {
+            relLayoutMainBottNav.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);//remove progress bar
             setContentView(R.layout.activity_foreman);
         }
@@ -263,6 +269,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if (isFarmer){
             farmerKey = uid;
             getPolygon();//set expected yield
+            currUserRef = database.getReference(uid);//Firebase reference
+            workersRef = currUserRef.child("workers");
+            collectWorkers();
         }
         else {
             getFarmKey();
@@ -389,23 +398,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             }
 
                             if (polygonContainsPoint(polygonX, polygonY) == true) {
-                                farmLevelRef = database.getReference(farmerKey);
-                                workersRef = farmLevelRef.child("workers");
-                                collectWorkers();
-
-                                getExpectedYield();//set expected yield
+                                //getExpectedYield();//set expected yield
                                 break;
                             } else {
                                 polygonX.clear();
                                 polygonY.clear();
                             }
-                        }
-
-                        //the user is not in polygon so collect all workers
-                        if (workers.size() == 0) {
-                            farmLevelRef = database.getReference(farmerKey);
-                            workersRef = farmLevelRef.child("workers");
-                            collectWorkersIfNotInPolygon();
                         }
                     }
                 }
@@ -516,22 +514,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-//        MenuItem searchMenu = menu.findItem(R.id.search);
-//        final SearchView searchView = (SearchView) searchMenu.getActionView();
-//        searchView.setIconified(false);
-//        searchView.requestFocusFromTouch();
-//        searchView.setOnQueryTextListener(this);
-//        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-//                return true;
-//            }
-//        });
         return true;
     }
 
@@ -589,69 +571,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      * and an array of buttons to be added to the view
      */
 
-    protected void collectWorkers() {
-
-        /* TODO: The constant Listener causes a crash when a new worker is added, seemingly:
-            To reproduce
-            > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
-//        workersRef.addValueEventListener(new ValueEventListener() {
-        workers.clear();//in case this asynchronous database puts all the names in the list already
-        workersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
-
-                    String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
-
-                    for (int i = 0; i<zoneSnapshot.child("orchards").getChildrenCount(); i++) {
-                        if (correctOrchard == zoneSnapshot.child("orchards").child("" + i).getValue(String.class)) {
-                            //only add if person is a worker (not a foreman)
-                            if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
-                                Worker workerObj = new Worker();
-                                workerObj.setName(fullName);
-                                workerObj.setValue(0);
-                                workerObj.setID(zoneSnapshot.getKey());
-                                workers.add(workerObj);
-                            } else {
-                                Worker workerObj = new Worker();
-                                workerObj.setName(fullName);
-                                workerObj.setValue(0);
-                                workerObj.setID(zoneSnapshot.getKey());
-                                foremen.add(workerObj);
-
-                                if (zoneSnapshot.child("phoneNumber").getValue(String.class) != null) {
-                                    if (zoneSnapshot.child("phoneNumber").getValue(String.class).equals(currentUserNumber)) {
-                                        foremanID = zoneSnapshot.getKey();
-                                        foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Collections.sort(workers, new WorkerComparator());
-
-                workersSearch.addAll(workers);
-
-                progressBar.setVisibility(View.GONE);//remove progress bar
-                constraintLayout.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-                //user pressed start and all went well with retrieving data
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-                progressBar.setVisibility(View.GONE);
-                constraintLayout.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    protected void collectWorkersIfNotInPolygon() {
+    protected static void collectWorkers() {
 
         /* TODO: The constant Listener causes a crash when a new worker is added, seemingly:
             To reproduce
@@ -717,6 +637,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             return;
         }
         getPolygon();
+        farmLevelRef = database.getReference(farmerKey);
+        workersRef = farmLevelRef.child("workers");
+        collectWorkers();
     }
 
     public void statusCheck() {
@@ -754,12 +677,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      */
     long startTime = 0, stopTime = 0;
     Handler handler = new Handler();
+    Handler handlerForemanTracker = new Handler();
     int delay = 5000; //milliseconds
-    Boolean locationWanted = false;
+    int trackDelay = 120000; //milliseconds
+    int foremanTrackerDelay = 120000; //milliseconds
     int secondsLocationIsNull = 0;
+    int trackIndex = 0;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
+        textView = findViewById(R.id.textView);
         textViewPressStart.setVisibility(View.GONE);
 
         Map<String, Object> sessionDate = new HashMap<>();
@@ -857,88 +784,88 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             recyclerView.setVisibility(View.VISIBLE);
         }
 
-        if (location != null) {
-            final DatabaseReference myRef;
-            myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
+        if (location != null&& btnStart.getTag() == "green") {
+            //start track
+            trackIndex = 0;
+            DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
+            Map<String, Object> track = new HashMap<>();
+            double currentLat = location.getLatitude();
+            double currentLong = location.getLongitude();
+            track.put("lat", currentLat);
+            track.put("lng", currentLong);
+            trackRef.updateChildren(track);
 
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot != null) {
-                        if (dataSnapshot.getKey().toString().equals(foremanID)) {
-                            myRef.removeValue();
-                            locationWanted = true;
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    //tracks every 2 minutes
+                    DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
+                    Map<String, Object> track = new HashMap<>();
+                    double currentLat = location.getLatitude();
+                    double currentLong = location.getLongitude();
+                    track.put("lat", currentLat);
+                    track.put("lng", currentLong);
+                    trackRef.updateChildren(track);
+                    if (trackIndex > 0 && btnStart.getTag() == "green") {
+                        return;//end tracking because session is finished
+                    }
+                    trackIndex++;
+
+                    handler.postDelayed(this, trackDelay);
+                }
+            }, trackDelay);
+
+            //************************************************** foreman tracking
+            handlerForemanTracker.postDelayed(new Runnable() {
+                public void run() {
+                    //tracks every 2 minutes
+                    final DatabaseReference myRef;
+                    final DatabaseReference myRefDel;
+                    myRef = database.getReference(farmerKey + "/requestedLocations");//path to sessions increment in Firebase
+                    myRefDel = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Boolean locationWanted = false;
+                            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                if (child.getKey().toString().equals(foremanID)) {
+                                    myRefDel.removeValue();
+                                    locationWanted = true;
+                                }
+                            }
+
+                            if (locationWanted == true) {
+                                DatabaseReference myRef2;
+                                myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+
+                                Map<String, Object> coordinates = new HashMap<>();
+                                coordinates.put("lat", location.getLatitude());
+                                coordinates.put("lng", location.getLongitude());
+
+                                Map<String, Object> childUpdates = new HashMap<>();
+                                childUpdates.put("coord", coordinates);
+                                childUpdates.put("display", foremanName);
+                                double currentTime;
+                                currentTime = (System.currentTimeMillis()/divideBy1000Var);
+                                childUpdates.put("date", currentTime);
+
+                                locationWanted = false;
+                                myRef2.updateChildren(childUpdates);//store location
+                            }
                         }
-                    }
 
-                    if (locationWanted == true) {
-                        DatabaseReference myRef2;
-                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                        Map<String, Object> coordinates = new HashMap<>();
-                        coordinates.put("lat", location.getLatitude());
-                        coordinates.put("lng", location.getLongitude());
-
-                        Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("coord", coordinates);
-                        childUpdates.put("display", foremanName);
-
-                        myRef2.updateChildren(childUpdates);//store location
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            myRef.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    if (dataSnapshot != null) {
-                        if (dataSnapshot.getKey().toString().equals(foremanID)) {
-                            myRef.removeValue();
-                            locationWanted = true;
                         }
+                    });
+
+                    if (trackIndex > 0 && btnStart.getTag() == "green") {
+                        return;//end tracking because session is finished
                     }
 
-                    if (locationWanted == true) {
-                        DatabaseReference myRef2;
-                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
-
-                        Map<String, Object> coordinates = new HashMap<>();
-                        coordinates.put("lat", location.getLatitude());
-                        coordinates.put("lng", location.getLongitude());
-
-                        Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("coord", coordinates);
-                        childUpdates.put("display", foremanName);
-
-                        myRef2.updateChildren(childUpdates);//store location
-                    }
+                    handler.postDelayed(this, foremanTrackerDelay);
                 }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            }, foremanTrackerDelay);
         }
 
         if (!namesShowing) {
@@ -958,7 +885,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setText("Stop");
             btnStart.setTag("orange");
         } else {
-            //TODO: check if app closes or crashes
+            //session ended
             textViewPressStart.setText(R.string.pressStart);
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
@@ -1002,8 +929,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             int m = (int) (((elapsedTime / 1000) / 60) % 60);
             int s = (int) ((elapsedTime / 1000) % 60);
             //this is the output of the pop up when the user clicks stop (the session)
-            //TODO: check iOS thread on slack
-            //TODO: add press start again
             String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
             String msg = adapter.totalBagsCollected + " bags collected " + timeTaken + ".";
             if (locationEnabled) {
@@ -1011,6 +936,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
 
             adapter.totalBagsCollected = 0;//reset total number of bags collected for all workers
+            textView.setText("Current Yield: " + adapter.totalBagsCollected);
             for (int i = 0; i < workers.size(); i++) {
                 workers.get(i).setValue(0);
             }

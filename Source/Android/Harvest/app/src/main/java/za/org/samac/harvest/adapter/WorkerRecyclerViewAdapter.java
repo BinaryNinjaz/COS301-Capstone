@@ -149,6 +149,25 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
                 collectionObj.addCollection(personName, location);
                 ++totalBagsCollected;
+
+                //display incremented current yield
+                try {
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                MainActivity.textView.setText("Current Yield: " + totalBagsCollected);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                    thread.start();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 worker.setValue(value);
             }
         });
@@ -165,6 +184,26 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
                     collectionObj.removeCollection(personName);
                     --totalBagsCollected;
+
+                    //display incremented current yield
+                    try {
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    MainActivity.textView.setText("Current Yield: " + totalBagsCollected);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                        thread.start();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     worker.setValue(value);
 
                     //make changes on firebase

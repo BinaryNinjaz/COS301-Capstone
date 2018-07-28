@@ -43,7 +43,9 @@ public class Analytics extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(Analytics.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(Analytics.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
                                 startActivity(new Intent(Analytics.this, InformationActivity.class));
@@ -68,6 +70,7 @@ public class Analytics extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Analytics.this, WorkerOrForeman.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -78,6 +81,7 @@ public class Analytics extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Analytics.this, OrchardsForGraph.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
