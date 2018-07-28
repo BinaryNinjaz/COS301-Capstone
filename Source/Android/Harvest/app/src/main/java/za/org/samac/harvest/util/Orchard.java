@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -126,6 +127,45 @@ public class Orchard{
 
     public String getID() {
         return ID;
+    }
+
+    private String containsSubText(List<String> list, String text) {
+        text = text.toLowerCase();
+        for (String item : list) {
+            if (item.toLowerCase().compareTo(text) == 0) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<SearchedItem> search(String text) {
+        ArrayList<SearchedItem> result = new ArrayList<>();
+
+        text = text.toLowerCase();
+
+        for (SearchedItem item : assignedFarm.search(text)) {
+            result.add(new SearchedItem("Farm " + item.property, item.reason));
+        }
+
+        if ((getName()).toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Name", getName()));
+        }
+
+        if (getCrop().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Crop", getCrop()));
+        }
+
+        String culti = containsSubText(getCultivars(), text);
+        if (culti != null) {
+            result.add(new SearchedItem("Cultivar", culti));
+        }
+
+        if (getIrrigation().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Irrigation Type", getIrrigation()));
+        }
+
+        return result;
     }
 }
 
