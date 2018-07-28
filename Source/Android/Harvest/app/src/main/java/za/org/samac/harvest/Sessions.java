@@ -63,7 +63,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
     private ProgressBar progressBar;
     public static SessionItem selectedItem;
     private ArrayList<Worker> workers;
-    private ArrayList<Orchard> orchards;
+    public static ArrayList<Orchard> orchards;
     private ArrayList<Farm> farms;
     private HashMap<String, String> workerID;
     private DatabaseReference workersRef;
