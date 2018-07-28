@@ -46,13 +46,14 @@ public class Data {
 
     private static FirebaseDatabase database;
     private static DatabaseReference userRoot;
-    private static Farm activeFarm;
-    private static Orchard activeOrchard;
-    private static Worker activeWorker;
 
-    private static int nextID = 0;
+    private Farm activeFarm;
+    private Orchard activeOrchard;
+    private Worker activeWorker;
 
-    protected static Category category = Category.NOTHING;
+    private int nextID = 0;
+
+    protected Category category = Category.NOTHING;
 
     private static boolean pulling = false;
     private boolean pFarms = false;

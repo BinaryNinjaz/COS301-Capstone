@@ -383,9 +383,14 @@ public class Analytics extends AppCompatActivity {
             ids.add(box.getTag().toString());
         }
         else {
-            for (String id: ids){
-                if (id.equals(box.getTag().toString())){
-                    ids.remove(id);
+//            for (String id: ids){
+//                if (id.equals(box.getTag().toString())){
+//                    ids.remove(id);
+//                }
+//            }
+            for (int i = 0; i < ids.size(); i++){
+                if (ids.get(i).equals(box.getTag().toString())){
+                    ids.remove(i);
                 }
             }
         }
