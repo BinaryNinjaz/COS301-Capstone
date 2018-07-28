@@ -45,24 +45,15 @@ enum Stat {
     }
     
     var entities: [EntityItem]
-    switch grouping {
-    case .foreman:
-      guard case let .foremanComparison(foremen) = self else {
-        return nil
-      }
+    
+    if grouping == .foreman, case let .foremanComparison(foremen) = self {
       entities = foremen.map { .worker($0) }
-      
-    case .worker:
-      guard case let .workerComparison(workers) = self else {
-        return nil
-      }
+    } else if grouping == .worker, case let .workerComparison(workers) = self {
       entities = workers.map { .worker($0) }
-      
-    case .orchard:
-      guard case let .orchardComparison(orchards) = self else {
-        return nil
-      }
+    } else if grouping == .orchard, case let .orchardComparison(orchards) = self {
       entities = orchards.map { .orchard($0) }
+    } else {
+      return nil
     }
     
     var ids = [String]()
