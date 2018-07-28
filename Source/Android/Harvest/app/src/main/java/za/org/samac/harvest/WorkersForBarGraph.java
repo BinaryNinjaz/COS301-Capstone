@@ -57,7 +57,7 @@ public class WorkersForBarGraph extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(WorkersForBarGraph.this, MainActivity.class));
+                                finish();
                                 return true;
                             case R.id.actionInformation:
                                 Intent openInformation= new Intent(WorkersForBarGraph.this, InformationActivity.class);
@@ -78,6 +78,12 @@ public class WorkersForBarGraph extends AppCompatActivity {
 
         init();
         collectOrchards();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(WorkersForBarGraph.this, WorkerOrForeman.class));
     }
 
     @Override

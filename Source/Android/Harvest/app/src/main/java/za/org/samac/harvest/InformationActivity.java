@@ -74,9 +74,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-//                                finish();
-//                                startActivity(new Intent(InformationActivity.this, MainActivity.class));
-                                startActivity(new Intent(InformationActivity.this, MainActivity.class));
+                                finish();
                                 return true;
                             case R.id.actionInformation:
                                 showNavFrag();

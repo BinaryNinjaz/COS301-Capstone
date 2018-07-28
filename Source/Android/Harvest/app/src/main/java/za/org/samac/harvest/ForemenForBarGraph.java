@@ -56,7 +56,7 @@ public class ForemenForBarGraph extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(ForemenForBarGraph.this, MainActivity.class));
+                                finish();
                                 return true;
                             case R.id.actionInformation:
                                 Intent openInformation= new Intent(ForemenForBarGraph.this, InformationActivity.class);
@@ -83,6 +83,12 @@ public class ForemenForBarGraph extends AppCompatActivity {
         this.foremen = new ArrayList<>();
         this.foremenKeys = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(ForemenForBarGraph.this, WorkerOrForeman.class));
     }
 
     @Override

@@ -90,10 +90,6 @@ public class Sessions extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
-        database = FirebaseDatabase.getInstance();
-        MainActivity.workersRef = database.getReference(MainActivity.farmerKey + "/workers");
-        MainActivity.collectWorkers();
-
         workers = getWorkers(); // get worker info to loop through it
         workerID = new HashMap<>();
         for(int i = 0 ; i < workers.size() ; ++i) {
@@ -127,7 +123,7 @@ public class Sessions extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(Sessions.this, MainActivity.class));
+                                finish();
                                 return true;
                             case R.id.actionInformation:
                                 startActivity(new Intent(Sessions.this, InformationActivity.class));

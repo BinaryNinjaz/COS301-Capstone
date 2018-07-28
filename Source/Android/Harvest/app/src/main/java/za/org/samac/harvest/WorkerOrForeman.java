@@ -41,7 +41,7 @@ public class WorkerOrForeman extends AppCompatActivity{
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(WorkerOrForeman.this, MainActivity.class));
+                                finish();
                                 return true;
                             case R.id.actionInformation:
                                 Intent openInformation= new Intent(WorkerOrForeman.this, InformationActivity.class);
@@ -68,6 +68,7 @@ public class WorkerOrForeman extends AppCompatActivity{
             public void onClick(View view) {
                 Intent intent = new Intent(WorkerOrForeman.this, WorkersForBarGraph.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -78,8 +79,15 @@ public class WorkerOrForeman extends AppCompatActivity{
             public void onClick(View view) {
                 Intent intent = new Intent(WorkerOrForeman.this, ForemenForBarGraph.class);
                 startActivity(intent);
+                finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(WorkerOrForeman.this, Analytics.class));
     }
 
     @Override
