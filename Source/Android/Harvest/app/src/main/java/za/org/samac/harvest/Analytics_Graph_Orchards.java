@@ -1,12 +1,10 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,15 +12,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
@@ -32,12 +25,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
@@ -54,7 +44,10 @@ import za.org.samac.harvest.util.AppUtil;
 
 import static za.org.samac.harvest.MainActivity.farmerKey;
 
-public class SpiralGraph extends AppCompatActivity {
+/**
+ * Radar graph for orchards
+ */
+public class Analytics_Graph_Orchards extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -97,19 +90,19 @@ public class SpiralGraph extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(SpiralGraph.this, MainActivity.class);
+                                Intent openMainActivity= new Intent(Analytics_Graph_Orchards.this, MainActivity.class);
                                 openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(SpiralGraph.this, InformationActivity.class);
+                                Intent openInformation= new Intent(Analytics_Graph_Orchards.this, InformationActivity.class);
                                 openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                Intent openAnalytics= new Intent(SpiralGraph.this, Analytics.class);
+                                Intent openAnalytics= new Intent(Analytics_Graph_Orchards.this, Analytics.class);
                                 openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openAnalytics, 0);
                                 return true;
@@ -299,12 +292,12 @@ public class SpiralGraph extends AppCompatActivity {
             case R.id.search:
                 return true;
             case R.id.settings:
-                startActivity(new Intent(SpiralGraph.this, SettingsActivity.class));
+                startActivity(new Intent(Analytics_Graph_Orchards.this, SettingsActivity.class));
                 return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(SpiralGraph.this, SignIn_Choose.class));
+                    startActivity(new Intent(Analytics_Graph_Orchards.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
@@ -314,7 +307,7 @@ public class SpiralGraph extends AppCompatActivity {
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(SpiralGraph.this, SignIn_Choose.class));
+                                    startActivity(new Intent(Analytics_Graph_Orchards.this, SignIn_Choose.class));
                                 }
                             });
                 }

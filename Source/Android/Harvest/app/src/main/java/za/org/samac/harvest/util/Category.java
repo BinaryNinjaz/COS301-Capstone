@@ -5,5 +5,5 @@ public enum Category{
     ORCHARD,
     WORKER,
     NOTHING,
-    NAV
+    NAV,
 }

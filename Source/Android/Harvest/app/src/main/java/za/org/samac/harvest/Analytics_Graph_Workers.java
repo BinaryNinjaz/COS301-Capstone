@@ -43,7 +43,10 @@ import za.org.samac.harvest.util.AppUtil;
 
 import static za.org.samac.harvest.MainActivity.farmerKey;
 
-public class BarGraphForemen extends AppCompatActivity {
+/**
+ * Bar graph for workers
+ */
+public class Analytics_Graph_Workers extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -52,8 +55,8 @@ public class BarGraphForemen extends AppCompatActivity {
     private String userUid;
     private String lastSession;
     private Date latestDate;
-    private static String foremanKey;
-    private static String formanName;
+    private static String workerKey;
+    private static String workerName;
     private static final String TAG = "Analytics";
     private ArrayList<BarEntry> entries = new ArrayList<>();
     private com.github.mikephil.charting.charts.PieChart pieChart;
@@ -80,19 +83,19 @@ public class BarGraphForemen extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(BarGraphForemen.this, MainActivity.class);
+                                Intent openMainActivity= new Intent(Analytics_Graph_Workers.this, MainActivity.class);
                                 openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(BarGraphForemen.this, InformationActivity.class);
+                                Intent openInformation= new Intent(Analytics_Graph_Workers.this, InformationActivity.class);
                                 openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openInformation, 0);
                                 return true;
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                Intent openAnalytics= new Intent(BarGraphForemen.this, Analytics.class);
+                                Intent openAnalytics= new Intent(Analytics_Graph_Workers.this, Analytics.class);
                                 openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openAnalytics, 0);
                                 return true;
@@ -104,8 +107,8 @@ public class BarGraphForemen extends AppCompatActivity {
         //Start the first fragment
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
-        foremanKey = getIntent().getStringExtra("key");
-        formanName = getIntent().getStringExtra("name");
+        workerKey = getIntent().getStringExtra("key");
+        workerName = getIntent().getStringExtra("name");
         getTotalBagsPerDay();
         //displayGraph();
     }
@@ -117,8 +120,8 @@ public class BarGraphForemen extends AppCompatActivity {
 
     private static String urlParameters() {
         String base = "";
-        base = base + "id0=" + foremanKey;
-        base = base + "&groupBy=" + "foreman";
+        base = base + "id0=" + workerKey;
+        base = base + "&groupBy=" + "worker";
         base = base + "&period=" + "hourly";
         double currentTime;
         double divideBy1000Var = 1000.0000000;
@@ -180,7 +183,7 @@ public class BarGraphForemen extends AppCompatActivity {
                             time.add(""+i);
                         }
 
-                        JSONObject objWorker = objs.getJSONObject(foremanKey);
+                        JSONObject objWorker = objs.getJSONObject(workerKey);
 
                         final ArrayList<Integer> total = new ArrayList<>();
 
@@ -215,7 +218,7 @@ public class BarGraphForemen extends AppCompatActivity {
                                 barGraphView.setVisibility(View.VISIBLE);
                                 barChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
-                                BarDataSet dataset = new BarDataSet(entries, formanName);
+                                BarDataSet dataset = new BarDataSet(entries, workerName);
                                 dataset.setColors(ColorTemplate.COLORFUL_COLORS);
 
                                 BarData data = new BarData(dataset);//labels was one of the parameters
@@ -253,12 +256,12 @@ public class BarGraphForemen extends AppCompatActivity {
             case R.id.search:
                 return true;
             case R.id.settings:
-                startActivity(new Intent(BarGraphForemen.this, SettingsActivity.class));
+                startActivity(new Intent(Analytics_Graph_Workers.this, SettingsActivity.class));
                 return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(BarGraphForemen.this, SignIn_Choose.class));
+                    startActivity(new Intent(Analytics_Graph_Workers.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
@@ -269,7 +272,7 @@ public class BarGraphForemen extends AppCompatActivity {
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(BarGraphForemen.this, SignIn_Choose.class));
+                                    startActivity(new Intent(Analytics_Graph_Workers.this, SignIn_Choose.class));
                                 }
                             });
                 }

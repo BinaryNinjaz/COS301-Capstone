@@ -1,7 +1,9 @@
 package za.org.samac.harvest.util;
 
+import android.app.Activity;
 import android.location.Location;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.ViewDebug;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -36,27 +38,30 @@ public class Data {
      *    is available, the push can resolve any conflicts.
      */
 
-    protected Vector<Farm> farms;
-    protected Vector<Orchard> orchards;
-    protected Vector<Worker> workers;
-    protected Changes changes;
+    private static Vector<Farm> farms;
+    protected static Vector<Orchard> orchards;
+    protected static Vector<Worker> workers;
+    private static Changes changes;
 
-    private FirebaseDatabase database;
-    private DatabaseReference userRoot;
-    private Farm activeFarm;
-    private Orchard activeOrchard;
-    private Worker activeWorker;
+    private static FirebaseDatabase database;
+    private static DatabaseReference userRoot;
+    private static Farm activeFarm;
+    private static Orchard activeOrchard;
+    private static Worker activeWorker;
 
-    private int nextID = 0;
+    private static int nextID = 0;
 
-    protected Category category = Category.NOTHING;
+    protected static Category category = Category.NOTHING;
 
     private static boolean pulling = false;
     private boolean pFarms = false;
     private boolean pOrchards = false;
     private boolean pWorkers = false;
 
-    private InformationActivity infoAct = null;
+    private static boolean needsPull = true;
+
+
+    private Activity act = null;
 
     /**
      * Constructor
@@ -69,7 +74,10 @@ public class Data {
         orchards = new Vector<>();
         workers = new Vector<>();
         changes = new Changes();
-//        pull();
+        if (needsPull){
+            Log.i("Data", "Pulling for the first time.");
+            pull();
+        }
     }
 
     public static boolean isPulling() {
@@ -79,7 +87,9 @@ public class Data {
     /**
      * Replace all local information from Firebase, TODO: while preserving local changes.
      */
-    public void pull(final InformationActivity infoAct){
+    public void pull(){
+
+        needsPull = false;
 
         tellMeWhenDonePulling(Category.NOTHING);
 
@@ -87,8 +97,6 @@ public class Data {
         orchards = new Vector<>();
         workers = new Vector<>();
         changes = new Changes();
-
-        this.infoAct = infoAct;
 
         DatabaseReference curRef = userRoot.child("farms");
         curRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -102,7 +110,7 @@ public class Data {
                     temp.setEmail(dataSet.child("email").getValue(String.class));
                     temp.setPhone(dataSet.child("contactNumber").getValue(String.class));
                     temp.setProvince(dataSet.child("province").getValue(String.class));
-                    temp.setTown(dataSet.child("town").getValue(String.class)); //TODO: Verify this typo
+                    temp.setTown(dataSet.child("town").getValue(String.class));
                     temp.setFurther(dataSet.child("further").getValue(String.class));
                     temp.setID(dataSet.getKey());
                     farms.add(temp);
@@ -277,6 +285,10 @@ public class Data {
         });
     }
 
+    public void notifyMe(Activity act){
+        this.act = act;
+    }
+
     private void tellMeWhenDonePulling(Category cat){
         switch (cat){
             case FARM:
@@ -303,8 +315,11 @@ public class Data {
                 orchard.setAssignedFarm(getFarmFromIDString(orchard.getAssignedFarm().getID()));
             }
 
-            if (infoAct != null){
-                infoAct.tellAllPullDone();
+            if (act != null){
+                if (act.getClass() == InformationActivity.class){
+                    InformationActivity temp = (InformationActivity) act;
+                    temp.tellAllPullDone();
+                }
             }
         }
 

@@ -62,7 +62,8 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
         data = new Data();
-        data.pull(this);
+        data.notifyMe(this);
+        data.pull();
 
         //bottom navigation bar
         bottomNavigationView = findViewById(R.id.BottomNav);

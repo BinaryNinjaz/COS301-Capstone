@@ -7,19 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
 
-import za.org.samac.harvest.BarGraph;
-import za.org.samac.harvest.BarGraphForemen;
-import za.org.samac.harvest.PieChart;
+import za.org.samac.harvest.Analytics_Graph_Foremen;
 import za.org.samac.harvest.R;
-import za.org.samac.harvest.SessionItem;
-import za.org.samac.harvest.Sessions;
-import za.org.samac.harvest.domain.Foreman;
 
 public class ForemanRecyclerViewAdapter extends RecyclerView.Adapter<ForemanRecyclerViewAdapter.ForemanViewHolder> {
 
@@ -49,7 +41,7 @@ public class ForemanRecyclerViewAdapter extends RecyclerView.Adapter<ForemanRecy
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent details = new Intent(context, BarGraphForemen.class);
+                Intent details = new Intent(context, Analytics_Graph_Foremen.class);
                 details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 Intent key = details.putExtra("key", foremenKey);

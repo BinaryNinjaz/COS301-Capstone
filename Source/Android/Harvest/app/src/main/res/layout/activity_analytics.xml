@@ -4,37 +4,25 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/analMainPart"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/BottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/workerHistPerformance"
-            style="@style/Button"
-            android:textColor="@color/black"
-            android:background="@color/white"
-            android:text="@string/WorkerHistPerformance"/>
-
-        <Button
-            android:id="@+id/orchHistPerformance"
-            style="@style/Button"
-            android:background="@color/white"
-            android:textColor="@color/black"
-            android:text="@string/OrchHistPerformance"/>
-
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/BottomNav"
-        android:background="@drawable/navbar_background"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/navbar_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation_main" />
-
 
 </android.support.constraint.ConstraintLayout>

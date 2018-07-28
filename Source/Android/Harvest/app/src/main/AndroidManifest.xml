@@ -66,23 +66,46 @@
             android:name=".InformationActivity"
             android:label="@string/titleInformation" />
 
-        <activity
-            android:name=".Analytics"
-            android:label="@string/title_stats" />
 
         <activity
             android:name=".PieChart"
             android:label="@string/title_stats" />
 
+        <!--Analytics-->
         <activity
-            android:name=".SpiralGraph"
+            android:name=".Analytics"
+            android:label="@string/title_stats" />
+
+        <activity
+            android:name=".Analytics_Graph_Orchards"
             android:label="@string/title_stats"
             android:launchMode="singleTop"
-            android:parentActivityName=".OrchardsForGraph">
+            android:parentActivityName=".Analytics">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".OrchardsForGraph" />
+                android:value=".Analytics" />
         </activity>
+
+        <activity
+            android:name=".Analytics_Graph_Workers"
+            android:launchMode="singleTop"
+            android:label="@string/title_stats"
+            android:parentActivityName=".Analytics">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Analytics" />
+        </activity>
+
+        <activity
+            android:name=".Analytics_Graph_Foremen"
+            android:launchMode="singleTop"
+            android:label="@string/title_stats"
+            android:parentActivityName=".Analytics">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Analytics" />
+        </activity>
+        <!--End Analytics-->
 
         <activity
             android:name=".ForemenPerSession"
@@ -117,65 +140,6 @@
                 android:value=".Sessions" />
         </activity>
 
-        <activity
-            android:name=".OrchardsForGraph"
-            android:label="@string/title_stats"
-            android:launchMode="singleTop"
-            android:parentActivityName=".Analytics">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Analytics" />
-        </activity>
-
-        <activity
-            android:name=".WorkerOrForeman"
-            android:label="@string/title_stats"
-            android:launchMode="singleTop"
-            android:parentActivityName=".Analytics">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Analytics" />
-        </activity>
-
-        <activity
-            android:name=".ForemenForBarGraph"
-            android:label="@string/title_stats"
-            android:launchMode="singleTop"
-            android:parentActivityName=".WorkerOrForeman">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".WorkerOrForeman" />
-        </activity>
-
-        <activity
-            android:name=".WorkersForBarGraph"
-            android:label="@string/title_stats"
-            android:launchMode="singleTop"
-            android:parentActivityName=".WorkerOrForeman">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".WorkerOrForeman" />
-        </activity>
-
-        <activity
-            android:name=".BarGraph"
-            android:launchMode="singleTop"
-            android:label="@string/title_stats"
-            android:parentActivityName=".WorkersForBarGraph">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".WorkersForBarGraph" />
-        </activity>
-
-        <activity
-            android:name=".BarGraphForemen"
-            android:launchMode="singleTop"
-            android:label="@string/title_stats"
-            android:parentActivityName=".ForemenForBarGraph">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ForemenForBarGraph" />
-        </activity>
     </application>
 
 </manifest>

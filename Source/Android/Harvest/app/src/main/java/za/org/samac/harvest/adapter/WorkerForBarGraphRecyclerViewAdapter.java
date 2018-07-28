@@ -10,8 +10,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-import za.org.samac.harvest.BarGraph;
-import za.org.samac.harvest.BarGraphForemen;
+import za.org.samac.harvest.Analytics_Graph_Workers;
 import za.org.samac.harvest.R;
 
 public class WorkerForBarGraphRecyclerViewAdapter extends RecyclerView.Adapter<WorkerForBarGraphRecyclerViewAdapter.WorkerViewHolder>{
@@ -41,7 +40,7 @@ public class WorkerForBarGraphRecyclerViewAdapter extends RecyclerView.Adapter<W
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent details = new Intent(context, BarGraph.class);
+                Intent details = new Intent(context, Analytics_Graph_Workers.class);
                 details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 Intent key = details.putExtra("key", workerKey);
