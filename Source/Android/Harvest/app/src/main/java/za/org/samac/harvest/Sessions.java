@@ -67,16 +67,17 @@ public class Sessions extends AppCompatActivity {
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String uid;
     private FirebaseDatabase database;
-    private DatabaseReference ref;
-    private DatabaseReference sessionsRef;
-    private DatabaseReference collectionsRef;
     private ArrayList<Worker> foremen;
     private RecyclerView recyclerView;
     private SessionsViewAdapter adapter;
     private ProgressBar progressBar;
     public static SessionItem selectedItem;
     private ArrayList<Worker> workers;
+    private ArrayList<String> workerKeys;
     private HashMap<String, String> workerID;
+    private DatabaseReference workersRef;
+    private DatabaseReference foremenRef;
+    private ArrayList<String> foremenKeys;
 
     private String pageIndex = null;
     private Integer pageSize = 8;
@@ -88,6 +89,10 @@ public class Sessions extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+
+        database = FirebaseDatabase.getInstance();
+        MainActivity.workersRef = database.getReference(MainActivity.farmerKey + "/workers");
+        MainActivity.collectWorkers();
 
         workers = getWorkers(); // get worker info to loop through it
         workerID = new HashMap<>();
@@ -145,6 +150,7 @@ public class Sessions extends AppCompatActivity {
         adapter.setDates(dates);
 
     }
+
 
     private void addButtons() {
         adapter.setSessions(sessions);

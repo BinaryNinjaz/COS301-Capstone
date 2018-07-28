@@ -73,17 +73,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private static ArrayList<Worker> workers;
     private static ArrayList<Worker> foremen;
-    private ArrayList<Worker> workersSearch;
+    private static ArrayList<Worker> workersSearch;
     private Map<Integer, Location> track;
     int trackCount = 0;
     boolean namesShowing = false;
 
     //used same names as IDs in xml
     private Button btnStart;
-    private ProgressBar progressBar;
+    private static ProgressBar progressBar;
     private RelativeLayout relLayoutMainBottNav;
-    private android.support.constraint.ConstraintLayout constraintLayout;
-    private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
+    private static android.support.constraint.ConstraintLayout constraintLayout;
+    private static RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
     private static TextView textView;
     private TextView textViewPressStart;
     private WorkerRecyclerViewAdapter adapter;
@@ -98,11 +98,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserEmail;
-    private String currentUserNumber;
+    private static String currentUserNumber;
     private String emailInDB;
     private String uid;
-    private String foremanID;
-    private String foremanName;
+    private static String foremanID;
+    private static String foremanName;
     private DatabaseReference currUserRef;
     private DatabaseReference farmRef;
     private DatabaseReference sessRef;
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private FirebaseDatabase database;
     //private Query q;
-    private DatabaseReference workersRef;
+    public static DatabaseReference workersRef;
     private BottomNavigationView bottomNavigationView;
 
     private void init() {
@@ -571,7 +571,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      * and an array of buttons to be added to the view
      */
 
-    protected void collectWorkers() {
+    protected static void collectWorkers() {
 
         /* TODO: The constant Listener causes a crash when a new worker is added, seemingly:
             To reproduce

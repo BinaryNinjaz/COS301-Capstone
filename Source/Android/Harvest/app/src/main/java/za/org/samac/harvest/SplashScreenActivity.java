@@ -99,7 +99,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
 
                 if(AppUtil.isUserSignedIn(getApplicationContext())) {
-                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, InformationActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
