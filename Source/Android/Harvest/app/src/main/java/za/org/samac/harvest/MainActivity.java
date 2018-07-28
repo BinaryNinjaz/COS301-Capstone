@@ -679,7 +679,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     Handler handler = new Handler();
     int delay = 5000; //milliseconds
     int trackDelay = 120000; //milliseconds
-    Boolean locationWanted = false;
     int secondsLocationIsNull = 0;
     int trackIndex = 0;
 
@@ -814,14 +813,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             //************************************************** foreman tracking
             final DatabaseReference myRef;
-            myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
+            final DatabaseReference myRefDel;
+            myRef = database.getReference(farmerKey + "/requestedLocations");//path to sessions increment in Firebase
+            myRefDel = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
 
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot != null) {
-                        if (dataSnapshot.getKey().toString().equals(foremanID)) {
-                            myRef.removeValue();
+                    Boolean locationWanted = false;
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (child.getKey().toString().equals(foremanID)) {
+                            myRefDel.removeValue();
                             locationWanted = true;
                         }
                     }
@@ -837,10 +839,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         Map<String, Object> childUpdates = new HashMap<>();
                         childUpdates.put("coord", coordinates);
                         childUpdates.put("display", foremanName);
+                        //currentTime = (System.currentTimeMillis()/divideBy1000Var);
+                        //childUpdates.put("date", foremanName);
 
                         locationWanted = false;
                         myRef2.updateChildren(childUpdates);//store location
                     }
+
                 }
 
                 @Override
@@ -852,9 +857,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             myRef.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    if (dataSnapshot != null) {
-                        if (dataSnapshot.getKey().toString().equals(foremanID)) {
-                            myRef.removeValue();
+                    Boolean locationWanted = false;
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (child.getKey().toString().equals(foremanID)) {
+                            myRefDel.removeValue();
                             locationWanted = true;
                         }
                     }
@@ -878,28 +884,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    if (dataSnapshot != null) {
-                        if (dataSnapshot.getKey().toString().equals(foremanID)) {
-                            myRef.removeValue();
-                            locationWanted = true;
-                        }
-                    }
 
-                    if (locationWanted == true) {
-                        DatabaseReference myRef2;
-                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
-
-                        Map<String, Object> coordinates = new HashMap<>();
-                        coordinates.put("lat", location.getLatitude());
-                        coordinates.put("lng", location.getLongitude());
-
-                        Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("coord", coordinates);
-                        childUpdates.put("display", foremanName);
-
-                        locationWanted = false;
-                        myRef2.updateChildren(childUpdates);//store location
-                    }
                 }
 
                 @Override
