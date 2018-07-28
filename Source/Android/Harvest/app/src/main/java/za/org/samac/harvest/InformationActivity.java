@@ -62,7 +62,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
         data = new Data();
-        data.pull(null);
+        data.pull(this);
 
         //bottom navigation bar
         bottomNavigationView = findViewById(R.id.BottomNav);
@@ -94,8 +94,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 });
 
         //Start the first fragment
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         showNavFrag();
+
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
     }
 
     @Override
@@ -120,6 +122,15 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         selectedCat = NAV;
+        toggleUpButton(false);
+        setTitle("Information");
+    }
+
+    public void tellAllPullDone(){
+        InfoListFragment infoList = (InfoListFragment) getSupportFragmentManager().findFragmentByTag("LIST");
+        if (infoList != null) {
+            infoList.endRefresh();
+        }
     }
 
     //Override Back Button
@@ -194,6 +205,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         }
     }
 
+    private void toggleUpButton(boolean on){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(on);
+    }
+
     //Handle Buttons
     public void onCreateButtClick(View view){
         String choice = view.getTag().toString();
@@ -248,7 +263,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             InfoListFragment newInfoListFragment = new InfoListFragment();
-            fragmentTransaction.replace(R.id.infoMainPart, newInfoListFragment);
+            fragmentTransaction.replace(R.id.infoMainPart, newInfoListFragment, "LIST");
             fragmentTransaction.addToBackStack(null);
             newInfoListFragment.setData(data);
             if (view.getTag().equals("farms")) {
@@ -264,6 +279,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             newInfoListFragment.setCat(selectedCat);
             fragmentTransaction.commit();
 //        newInfoListFragment.showList(selectedCat);
+            toggleUpButton(true);
         }
     }
 
@@ -290,6 +306,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         fragmentTransaction.commit();
         backViews.clear();
 //        newInfoListFragment.showList(selectedCat);
+        toggleUpButton(true);
     }
 
     //If a farm, orchard, worker is selected
@@ -522,22 +539,6 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-//        MenuItem searchMenu = menu.findItem(R.id.search);
-//        final SearchView searchView = (SearchView) searchMenu.getActionView();
-//        searchView.setIconified(false);
-//        searchView.requestFocusFromTouch();
-//        searchView.setOnQueryTextListener(this);
-//        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-//                return true;
-//            }
-//        });
         return true;
     }
 
@@ -586,6 +587,9 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                             });
                 }
                 finish();
+                return true;
+            case android.R.id.home:
+                showNavFrag();
                 return true;
             default:
                 super.onOptionsItemSelected(item);
