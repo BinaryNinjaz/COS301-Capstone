@@ -677,8 +677,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      */
     long startTime = 0, stopTime = 0;
     Handler handler = new Handler();
+    Handler handlerForemanTracker = new Handler();
     int delay = 5000; //milliseconds
     int trackDelay = 120000; //milliseconds
+    int foremanTrackerDelay = 2000; //milliseconds
     int secondsLocationIsNull = 0;
     int trackIndex = 0;
 
@@ -803,7 +805,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     track.put("lng", currentLong);
                     trackRef.updateChildren(track);
                     if (trackIndex > 0 && btnStart.getTag() == "green") {
-                        return;
+                        return;//end tracking because session is finished
                     }
                     trackIndex++;
 
@@ -812,96 +814,57 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }, trackDelay);
 
             //************************************************** foreman tracking
-            final DatabaseReference myRef;
-            final DatabaseReference myRefDel;
-            myRef = database.getReference(farmerKey + "/requestedLocations");//path to sessions increment in Firebase
-            myRefDel = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
+            handlerForemanTracker.postDelayed(new Runnable() {
+                public void run() {
+                    //tracks every 2 minutes
+                    final DatabaseReference myRef;
+                    final DatabaseReference myRefDel;
+                    myRef = database.getReference(farmerKey + "/requestedLocations");//path to sessions increment in Firebase
+                    myRefDel = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Boolean locationWanted = false;
+                            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                if (child.getKey().toString().equals(foremanID)) {
+                                    myRefDel.removeValue();
+                                    locationWanted = true;
+                                }
+                            }
 
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Boolean locationWanted = false;
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if (child.getKey().toString().equals(foremanID)) {
-                            myRefDel.removeValue();
-                            locationWanted = true;
+                            if (locationWanted == true) {
+                                DatabaseReference myRef2;
+                                myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+
+                                Map<String, Object> coordinates = new HashMap<>();
+                                coordinates.put("lat", location.getLatitude());
+                                coordinates.put("lng", location.getLongitude());
+
+                                Map<String, Object> childUpdates = new HashMap<>();
+                                childUpdates.put("coord", coordinates);
+                                childUpdates.put("display", foremanName);
+                                double currentTime;
+                                currentTime = (System.currentTimeMillis()/divideBy1000Var);
+                                childUpdates.put("date", currentTime);
+
+                                locationWanted = false;
+                                myRef2.updateChildren(childUpdates);//store location
+                            }
                         }
-                    }
 
-                    if (locationWanted == true) {
-                        DatabaseReference myRef2;
-                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                        Map<String, Object> coordinates = new HashMap<>();
-                        coordinates.put("lat", location.getLatitude());
-                        coordinates.put("lng", location.getLongitude());
-
-                        Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("coord", coordinates);
-                        childUpdates.put("display", foremanName);
-                        //currentTime = (System.currentTimeMillis()/divideBy1000Var);
-                        //childUpdates.put("date", foremanName);
-
-                        locationWanted = false;
-                        myRef2.updateChildren(childUpdates);//store location
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            myRef.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Boolean locationWanted = false;
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if (child.getKey().toString().equals(foremanID)) {
-                            myRefDel.removeValue();
-                            locationWanted = true;
                         }
+                    });
+
+                    if (trackIndex > 0 && btnStart.getTag() == "green") {
+                        return;//end tracking because session is finished
                     }
 
-                    if (locationWanted == true) {
-                        DatabaseReference myRef2;
-                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
-
-                        Map<String, Object> coordinates = new HashMap<>();
-                        coordinates.put("lat", location.getLatitude());
-                        coordinates.put("lng", location.getLongitude());
-
-                        Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("coord", coordinates);
-                        childUpdates.put("display", foremanName);
-
-                        locationWanted = false;
-                        myRef2.updateChildren(childUpdates);//store location
-                    }
+                    handler.postDelayed(this, foremanTrackerDelay);
                 }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            }, foremanTrackerDelay);
         }
 
         if (!namesShowing) {
@@ -965,8 +928,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             int m = (int) (((elapsedTime / 1000) / 60) % 60);
             int s = (int) ((elapsedTime / 1000) % 60);
             //this is the output of the pop up when the user clicks stop (the session)
-            //TODO: check iOS thread on slack
-            //TODO: add press start again
             String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
             String msg = adapter.totalBagsCollected + " bags collected " + timeTaken + ".";
             if (locationEnabled) {
