@@ -275,7 +275,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(SignIn_Farmer.this, InformationActivity.class);//go to actual app
+                                    Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }
@@ -332,7 +332,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(SignIn_Farmer.this, InformationActivity.class);//go to actual app
+                                    Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
                                     startActivity(intent);
                                     finish();//kill current Activity
                                 }

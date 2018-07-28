@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private RelativeLayout relLayoutMainBottNav;
     private static android.support.constraint.ConstraintLayout constraintLayout;
     private static RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
-    private static TextView textView;
+    public static TextView textView;
     private TextView textViewPressStart;
     private WorkerRecyclerViewAdapter adapter;
     public static LocationManager locationManager;
@@ -398,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             }
 
                             if (polygonContainsPoint(polygonX, polygonY) == true) {
-                                getExpectedYield();//set expected yield
+                                //getExpectedYield();//set expected yield
                                 break;
                             } else {
                                 polygonX.clear();
@@ -680,12 +680,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     Handler handlerForemanTracker = new Handler();
     int delay = 5000; //milliseconds
     int trackDelay = 120000; //milliseconds
-    int foremanTrackerDelay = 2000; //milliseconds
+    int foremanTrackerDelay = 120000; //milliseconds
     int secondsLocationIsNull = 0;
     int trackIndex = 0;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
+        textView = findViewById(R.id.textView);
         textViewPressStart.setVisibility(View.GONE);
 
         Map<String, Object> sessionDate = new HashMap<>();
@@ -935,6 +936,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
 
             adapter.totalBagsCollected = 0;//reset total number of bags collected for all workers
+            textView.setText("Current Yield: " + adapter.totalBagsCollected);
             for (int i = 0; i < workers.size(); i++) {
                 workers.get(i).setValue(0);
             }
