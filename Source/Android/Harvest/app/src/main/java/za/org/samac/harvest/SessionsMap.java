@@ -99,7 +99,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         }
         mMap.addPolyline(polyline);
 
-        HashMap<String, ArrayList<Pickup>> cols = (HashMap<String, ArrayList<Pickup>>) Sessions.selectedItem.collections;
+        HashMap<String, ArrayList<Pickup>> cols = (HashMap<String, ArrayList<Pickup>>) Sessions.selectedItem.collectionPoints;
         for (String key : cols.keySet()) {
             ArrayList<Pickup> data = cols.get(key);
 
@@ -109,7 +109,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
                     moveMapHere = ll;
                     first = false;
                 }
-                mMap.addMarker(new MarkerOptions().position(ll).title(key));
+                mMap.addMarker(new MarkerOptions().position(ll).title(data.get(i).workerName));
             }
         }
 
