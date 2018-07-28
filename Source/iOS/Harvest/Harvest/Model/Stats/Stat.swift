@@ -10,6 +10,7 @@ import Charts
 import CoreLocation
 
 enum Stat {
+  case untyped([String], HarvestCloud.GroupBy)
   case foremanComparison([Worker])
   case workerComparison([Worker])
   case orchardComparison([Orchard])
@@ -39,6 +40,10 @@ enum Stat {
   }
   
   func identifiers(for grouping: HarvestCloud.GroupBy) -> [String]? {
+    if case let .untyped(ids, _) = self {
+      return ids
+    }
+    
     var entities: [EntityItem]
     switch grouping {
     case .foreman:

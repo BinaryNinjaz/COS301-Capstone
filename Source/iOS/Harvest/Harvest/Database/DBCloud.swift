@@ -189,7 +189,7 @@ extension HarvestCloud {
     static let timeGraphSessions = "timedGraphSessions"
   }
   
-  enum TimePeriod: CustomStringConvertible {
+  enum TimePeriod: String, CustomStringConvertible, Codable {
     case hourly
     case daily
     case weekly
@@ -300,10 +300,18 @@ extension HarvestCloud {
     }
   }
   
-  enum GroupBy: CustomStringConvertible {
+  enum GroupBy: String, CustomStringConvertible, Codable {
     case worker
     case orchard
     case foreman
+    
+    init(_ statKind: StatKind) {
+      switch statKind {
+      case .workers: self = .worker
+      case .orchards: self = .orchard
+      case .foremen: self = .foreman
+      }
+    }
     
     var description: String {
       switch self {

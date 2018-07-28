@@ -79,6 +79,12 @@ class StatsViewController: UIViewController {
     case .workerComparison: drawWorkerComparison()
     case .foremanComparison: drawForemanComparison()
     case .orchardComparison: drawOrchardComparison()
+    case let .untyped(_, kind):
+      switch kind {
+      case .worker: drawWorkerComparison()
+      case .foreman: drawForemanComparison()
+      case .orchard: drawOrchardComparison()
+      }
     }
   }
   
