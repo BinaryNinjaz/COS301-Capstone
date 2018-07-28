@@ -7,24 +7,72 @@
 //
 
 import Eureka
+import SCLAlertView
 
 final class StatSetupViewController: ReloadableFormViewController {
-  var workersRow: MultipleSelectorRow<Worker>! = nil
-  var orchardsRow: MultipleSelectorRow<Orchard>! = nil
-  var foremenRow: MultipleSelectorRow<Worker>! = nil
+  var statKindRow: PickerRow<StatKind>?
   
-  var startDateRow: DateRow! = nil
-  var endDateRow: DateRow! = nil
-  var periodRow: PushRow<HarvestCloud.TimePeriod>! = nil
+  var workersRow: MultipleSelectorRow<Worker>?
+  var orchardsRow: MultipleSelectorRow<Orchard>?
+  var foremenRow: MultipleSelectorRow<Worker>?
+  
+  var startDateRow: DateRow?
+  var endDateRow: DateRow?
+  var periodRow: PushRow<HarvestCloud.TimePeriod>?
   
   // swiftlint:disable function_body_length
   public override func viewDidLoad() {
     super.viewDidLoad()
+    navigationItem.rightBarButtonItem = UIBarButtonItem(
+      title: "Save",
+      style: .plain,
+      target: self,
+      action: #selector(saveStat))
+  }
+  
+  @objc func saveStat() {
+    var ids = [String]()
     
+    if let kind = statKindRow?.value {
+      switch kind {
+      case .workers:
+        for worker in workersRow?.value ?? [] {
+          ids.append(worker.id)
+        }
+      case .foremen:
+        for foreman in foremenRow?.value ?? [] {
+          ids.append(foreman.id)
+        }
+      case .orchards:
+        for orchard in orchardsRow?.value ?? [] {
+          ids.append(orchard.id)
+        }
+      }
+    }
+    
+    let sk = statKindRow?.value ?? .workers
+    let sd = startDateRow?.value ?? Date()
+    let ed = endDateRow?.value ?? Date()
+    let period = periodRow?.value ?? .daily
+    
+    let item = StatStore.Item(
+      ids: ids, startDate: sd, endDate: ed, period: period, grouping: HarvestCloud.GroupBy(sk))
+    
+    let alert = SCLAlertView(appearance: .warningAppearance)
+    let statNameTextView = alert.addTextField()
+    statNameTextView.placeholder = "Graph Name"
+    
+    alert.addButton("Save") {
+      StatStore.shared.saveItem(item: item, withName: statNameTextView.text ?? Date().description)
+    }
+    
+    alert.addButton("Cancel") {}
+    
+    alert.showEdit("Graph Name", subTitle: "Please enter a name to save your custom graph as.")
   }
   
   override func setUp() {
-    let statKind = PickerRow<StatKind>("Stat Kind") { row in
+    statKindRow = PickerRow<StatKind>("Stat Kind") { row in
       row.options = StatKind.allCases
       row.value = .workers
     }
@@ -88,7 +136,7 @@ final class StatSetupViewController: ReloadableFormViewController {
     
     let showStats = ButtonRow { row in
       row.title = "Display Stats"
-      }.onCellSelection { _, _ in
+    }.onCellSelection { _, _ in
         guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
           return
         }
@@ -97,22 +145,22 @@ final class StatSetupViewController: ReloadableFormViewController {
           return
         }
         
-        svc.startDate = self.startDateRow.value
-        svc.endDate = self.endDateRow.value
-        svc.period = self.periodRow.value
+        svc.startDate = self.startDateRow?.value
+        svc.endDate = self.endDateRow?.value
+        svc.period = self.periodRow?.value
         
-        let kind = statKind.value ?? .workers
+        let kind = self.statKindRow?.value ?? .workers
         switch kind {
         case .foremen:
-          if let fs = self.foremenRow.value {
+          if let fs = self.foremenRow?.value {
             svc.stat = .foremanComparison(Array(fs))
           }
         case .workers:
-          if let ws = self.workersRow.value {
+          if let ws = self.workersRow?.value {
             svc.stat = .workerComparison(Array(ws))
           }
         case .orchards:
-          if let os = self.orchardsRow.value {
+          if let os = self.orchardsRow?.value {
             svc.stat = .orchardComparison(Array(os))
           }
         }
@@ -121,19 +169,30 @@ final class StatSetupViewController: ReloadableFormViewController {
     }
     
     Entities.shared.getMultiplesOnce([.orchard, .worker]) { (_) in
+      guard let statKindRow = self.statKindRow,
+            let workersRow = self.workersRow,
+            let orchardsRow = self.orchardsRow,
+            let foremenRow = self.foremenRow,
+            let periodRow = self.periodRow,
+            let startDateRow = self.startDateRow,
+            let endDateRow = self.endDateRow
+      else {
+          return
+      }
+        
       self.form
         +++ Section()
-        <<< statKind
+        <<< statKindRow
         
         +++ Section()
-        <<< self.workersRow
-        <<< self.orchardsRow
-        <<< self.foremenRow
+        <<< workersRow
+        <<< orchardsRow
+        <<< foremenRow
         
         +++ Section("Details")
-        <<< self.periodRow
-        <<< self.startDateRow
-        <<< self.endDateRow
+        <<< periodRow
+        <<< startDateRow
+        <<< endDateRow
         
         +++ Section()
         <<< showStats
