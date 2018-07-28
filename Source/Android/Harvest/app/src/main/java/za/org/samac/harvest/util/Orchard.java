@@ -1,15 +1,12 @@
 package za.org.samac.harvest.util;
 
-import android.location.Location;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-public class Orchard{
+public class Orchard extends DBInfoObject {
     protected String name;
     protected String crop;
     protected List<LatLng> coordinates;
@@ -21,7 +18,6 @@ public class Orchard{
     protected Float tree;
     protected Vector<String> cultivars;
     protected String further;
-    protected String ID;
 
     public Orchard(){
         coordinates = new Vector<LatLng>();
@@ -126,6 +122,11 @@ public class Orchard{
 
     public String getID() {
         return ID;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
 

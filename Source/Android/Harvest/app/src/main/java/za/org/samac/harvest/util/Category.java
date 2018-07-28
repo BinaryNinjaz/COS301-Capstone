@@ -6,4 +6,5 @@ public enum Category{
     WORKER,
     NOTHING,
     NAV,
+    FOREMAN
 }

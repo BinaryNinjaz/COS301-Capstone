@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,8 +19,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Vector;
 
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
 
 /**
@@ -58,12 +61,6 @@ public class Analytics extends AppCompatActivity {
     Double start, end;
 
     // Needed to determine the correct graph
-    enum Category{
-        ORCHARD,
-        WORKER,
-        FOREMAN,
-        NOTHING
-    }
     Category category = Category.NOTHING;
 
     enum Period{ // The time period, not to be confused with the interval, which is called period on Firebase.
@@ -77,6 +74,8 @@ public class Analytics extends AppCompatActivity {
         LAST_YEAR,
         NOTHING
     }
+
+    //Activity related
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,8 +110,11 @@ public class Analytics extends AppCompatActivity {
                 });
         showMain();
 
+        ids = new Vector<>();
+
         //We'll do this here so it can pull before the selector if it needs to.
         data = new Data();
+        data.notifyMe(this);
     }
 
     @Override
@@ -169,7 +171,10 @@ public class Analytics extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(on);
     }
 
+    //Fragment display
+
     private void showMain(){
+        //Ask the user to pick a time and category filter
         toggleUpButton(false);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -188,8 +193,19 @@ public class Analytics extends AppCompatActivity {
     }
 
     private void showSelector(){
+        //Ask the user to select which things want to be displayed in the graph
+        toggleUpButton(true);
 
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Analytics_Selector analytics_selector = new Analytics_Selector();
+        analytics_selector.setDataAndCategory(this.data, this.category);
+        fragmentTransaction.replace(R.id.analMainPart, analytics_selector, "SELECTOR");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
+
+    //Button handling
 
     public void anal_main_buttonHandler(View v){
         switch (v.getId()){
@@ -352,12 +368,30 @@ public class Analytics extends AppCompatActivity {
     }
 
     public void anal_selector_buttonHandler(View v){
-
+        //At this point, we have everything we need: category, start date, end date, and ids to show.
     }
 
     public void anal_creator_buttonHandler(View v){
 
     }
+
+    //Fragment support
+
+    public void anal_checkEvent(View v){
+        CheckBox box = (CheckBox) v;
+        if (box.isChecked()){
+            ids.add(box.getTag().toString());
+        }
+        else {
+            for (String id: ids){
+                if (id.equals(box.getTag().toString())){
+                    ids.remove(id);
+                }
+            }
+        }
+    }
+
+    //Support functions
 
     private void determineDates(Period period){
         Calendar startCal = Calendar.getInstance();
@@ -499,5 +533,12 @@ public class Analytics extends AppCompatActivity {
 
         start = (double) startCal.getTimeInMillis();
         end = (double) endCal.getTimeInMillis();
+    }
+
+    public void pullDone(){
+        Analytics_Selector analytics_selector = (Analytics_Selector) getSupportFragmentManager().findFragmentByTag("SELECTOR");
+        if (analytics_selector != null){
+            analytics_selector.endRefresh();
+        }
     }
 }

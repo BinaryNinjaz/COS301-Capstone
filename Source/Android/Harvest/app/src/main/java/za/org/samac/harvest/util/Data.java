@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
+import za.org.samac.harvest.Analytics;
 import za.org.samac.harvest.InfoListFragment;
 import za.org.samac.harvest.InformationActivity;
 
@@ -39,9 +40,9 @@ public class Data {
      */
 
     private static Vector<Farm> farms;
-    protected static Vector<Orchard> orchards;
-    protected static Vector<Worker> workers;
-    private static Changes changes;
+    private static Vector<Orchard> orchards;
+    private static Vector<Worker> workers;
+    private Changes changes;
 
     private static FirebaseDatabase database;
     private static DatabaseReference userRoot;
@@ -70,9 +71,6 @@ public class Data {
         database = FirebaseDatabase.getInstance();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         userRoot = database.getReference(uid + "/");
-        farms = new Vector<>();
-        orchards = new Vector<>();
-        workers = new Vector<>();
         changes = new Changes();
         if (needsPull){
             Log.i("Data", "Pulling for the first time.");
@@ -320,6 +318,10 @@ public class Data {
                     InformationActivity temp = (InformationActivity) act;
                     temp.tellAllPullDone();
                 }
+                else if (act.getClass() == Analytics.class){
+                    Analytics temp = (Analytics) act;
+                    temp.pullDone();
+                }
             }
         }
 
@@ -419,7 +421,7 @@ public class Data {
                                 //Add to WorkingFor
                                 DatabaseReference workingFor = database.getReference("WorkingFor/");
                                 DatabaseReference workerWorking = workingFor.child(newWorker.phone);
-                                workerWorking.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(newWorker.fID);
+                                workerWorking.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(newWorker.ID);
                             }
                             else{
                                 objectRoot.child("type").setValue("Worker");
@@ -516,7 +518,7 @@ public class Data {
                                         workingForworker.child(uid).setValue(null);
                                     }
                                     DatabaseReference workerWorking = workingFor1.child(activeWorker.phone);
-                                    workerWorking.child(uid).setValue(activeWorker.fID);
+                                    workerWorking.child(uid).setValue(activeWorker.ID);
                                     activeWorker.oldPhone = activeWorker.phone;
 //                                }
                             }
@@ -668,7 +670,7 @@ public class Data {
     @Nullable
     public Worker getWorkerFromIDString(String findMe){
         for (Worker current: workers){
-            if (current.fID.equals(findMe)){
+            if (current.ID.equals(findMe)){
                 return current;
             }
         }
@@ -681,7 +683,7 @@ public class Data {
                 case ORCHARD:
                     return orchards.elementAt(pos).ID;
                 case WORKER:
-                    return workers.elementAt(pos).fID;
+                    return workers.elementAt(pos).ID;
                 case FARM:
                     return farms.elementAt(pos).ID;
             }
@@ -719,7 +721,7 @@ public class Data {
         }
         else if(category == Category.WORKER){
             for (Worker current : workers){
-                if(current.fID.equals(ID)){
+                if(current.ID.equals(ID)){
                     activeWorker = current;
                     return;
                 }
@@ -785,9 +787,9 @@ public class Data {
     }
 
     public boolean modifyActiveWorker(Worker activeWorker, boolean overwriteID) {
-        if ((!this.activeWorker.fID.equals(activeWorker.fID) && overwriteID) || this.activeWorker.fID.equals(activeWorker.fID)) {
+        if ((!this.activeWorker.ID.equals(activeWorker.ID) && overwriteID) || this.activeWorker.ID.equals(activeWorker.ID)) {
             this.activeWorker = activeWorker;
-            changes.Modify(category, activeWorker.fID);
+            changes.Modify(category, activeWorker.ID);
             return true;
         }
         return false;
