@@ -52,9 +52,11 @@ public class Analytics extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final String TAG = "Analytics";
 
     //Various Fragments
+    @SuppressWarnings("FieldCanBeLocal")
     private Analytics_Main analytics_main;
     private Analytics_Selector analytics_selector;
     private Analytics_Creator analytics_creator;
