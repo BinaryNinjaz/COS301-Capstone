@@ -10,7 +10,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-import za.org.samac.harvest.Analytics_Graph_Orchards;
+import za.org.samac.harvest.Analytics_Graph;
 import za.org.samac.harvest.R;
 
 public class OrchardsForGraphRVAdapter extends RecyclerView.Adapter<OrchardsForGraphRVAdapter.OrchardsViewHolder> {
@@ -41,7 +41,7 @@ public class OrchardsForGraphRVAdapter extends RecyclerView.Adapter<OrchardsForG
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent details = new Intent(context, Analytics_Graph_Orchards.class);
+                Intent details = new Intent(context, Analytics_Graph.class);
                 details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 Intent key = details.putExtra("key", orchardKey);

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -20,8 +19,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Vector;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
@@ -67,15 +64,22 @@ public class Analytics extends AppCompatActivity {
     public static final String KEY_START = "KEY_START";
     public static final String KEY_END = "KEY_END";
     public static final String KEY_INTERVAL = "KEY_INTERVAL";
-
+    public static final String KEY_GROUP = "KEY_GROUP";
+    
     //Intervals
-    private static final String NOTHING = "";
-    private static final String HOURLY = "hourly";
-    private static final String DAILY = "daily";
-    private static final String WEEKLY = "weekly";
-    private static final String MONTHLY = "monthly";
-    private static final String YEARLY = "yearly";
+    public static final String NOTHING = "";
+    public static final String HOURLY = "hourly";
+    public static final String DAILY = "daily";
+    public static final String WEEKLY = "weekly";
+    public static final String MONTHLY = "monthly";
+    public static final String YEARLY = "yearly";
 
+    //Groups
+    public static final String ORCHARD = "orchard";
+    public static final String WORKER = "worker";
+    public static final String FOREMAN = "foreman";
+    
+    @SuppressWarnings("FieldCanBeLocal")
     private final double THOUSAND = 1000.0000000;
 
     private String interval = NOTHING;
@@ -88,7 +92,7 @@ public class Analytics extends AppCompatActivity {
     Double start, end;
 
     // Needed to determine the correct graph
-    Category category = Category.NOTHING;
+    String group = ""; 
 
     enum Period{ // The time period, not to be confused with the interval, which is called period on Firebase.
         TODAY,
@@ -201,7 +205,7 @@ public class Analytics extends AppCompatActivity {
     //Fragment display
 
     private void showMain(){
-        //Ask the user to pick a time and category filter
+        //Ask the user to pick a time and group filter
         toggleUpButton(false);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -226,7 +230,19 @@ public class Analytics extends AppCompatActivity {
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         analytics_selector = new Analytics_Selector();
-        analytics_selector.setDataAndCategory(this.data, this.category);
+        Category temp = Category.NOTHING;
+        switch (group){
+            case ORCHARD:
+                temp = Category.ORCHARD;
+                break;
+            case WORKER:
+                temp = Category.WORKER;
+                break;
+            case FOREMAN:
+                temp = Category.FOREMAN;
+                break;
+        }
+        analytics_selector.setDataAndCategory(this.data, temp);
         fragmentTransaction.replace(R.id.analMainPart, analytics_selector, "SELECTOR");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -239,49 +255,49 @@ public class Analytics extends AppCompatActivity {
             //Orchard
 
             case R.id.anal_choose_orch_tod:
-                category = Category.ORCHARD;
+                group = ORCHARD;
                 determineDates(Period.TODAY);
                 showSelector();
                 break;
 
             case R.id.anal_choose_orch_yes:
-                category = Category.ORCHARD;
+                group = ORCHARD;
                 determineDates(Period.YESTERDAY);
                 showSelector();
                 break;
 
             case R.id.anal_choose_orch_tWeek:
-                category = Category.ORCHARD;
+                group = ORCHARD;
                 determineDates(Period.THIS_WEEK);
                 showSelector();
                 break;
 
             case R.id.anal_choose_orch_lWeek:
-                category = Category.ORCHARD;
+                group = ORCHARD;
                 determineDates(Period.LAST_WEEK);
                 showSelector();
                 break;
 
             case R.id.anal_choose_orch_tMonth:
-                category = Category.ORCHARD;
+                group = ORCHARD;
                 determineDates(Period.THIS_MONTH);
                 showSelector();
                 break;
 
             case R.id.anal_choose_orch_lMonth:
-                category = Category.ORCHARD;
+                group = ORCHARD;
                 determineDates(Period.LAST_MONTH);
                 showSelector();
                 break;
 
             case R.id.anal_choose_orch_tYear:
-                category = Category.ORCHARD;
+                group = ORCHARD;
                 determineDates(Period.THIS_YEAR);
                 showSelector();
                 break;
 
             case R.id.anal_choose_orch_lYear:
-                category = Category.ORCHARD;
+                group = ORCHARD;
                 determineDates(Period.LAST_YEAR);
                 showSelector();
                 break;
@@ -289,49 +305,49 @@ public class Analytics extends AppCompatActivity {
             //Worker
                 
             case R.id.anal_choose_work_tod:
-                category = Category.WORKER;
+                group = WORKER;
                 determineDates(Period.TODAY);
                 showSelector();
                 break;
 
             case R.id.anal_choose_work_yes:
-                category = Category.WORKER;
+                group = WORKER;
                 determineDates(Period.YESTERDAY);
                 showSelector();
                 break;
 
             case R.id.anal_choose_work_tWeek:
-                category = Category.WORKER;
+                group = WORKER;
                 determineDates(Period.THIS_WEEK);
                 showSelector();
                 break;
 
             case R.id.anal_choose_work_lWeek:
-                category = Category.WORKER;
+                group = WORKER;
                 determineDates(Period.LAST_WEEK);
                 showSelector();
                 break;
 
             case R.id.anal_choose_work_tMonth:
-                category = Category.WORKER;
+                group = WORKER;
                 determineDates(Period.THIS_MONTH);
                 showSelector();
                 break;
 
             case R.id.anal_choose_work_lMonth:
-                category = Category.WORKER;
+                group = WORKER;
                 determineDates(Period.LAST_MONTH);
                 showSelector();
                 break;
 
             case R.id.anal_choose_work_tYear:
-                category = Category.WORKER;
+                group = WORKER;
                 determineDates(Period.THIS_YEAR);
                 showSelector();
                 break;
 
             case R.id.anal_choose_work_lYear:
-                category = Category.WORKER;
+                group = WORKER;
                 determineDates(Period.LAST_YEAR);
                 showSelector();
                 break;
@@ -339,49 +355,49 @@ public class Analytics extends AppCompatActivity {
             //Foreman
 
             case R.id.anal_choose_fore_tod:
-                category = Category.FOREMAN;
+                group = FOREMAN;
                 determineDates(Period.TODAY);
                 showSelector();
                 break;
 
             case R.id.anal_choose_fore_yes:
-                category = Category.FOREMAN;
+                group = FOREMAN;
                 determineDates(Period.YESTERDAY);
                 showSelector();
                 break;
 
             case R.id.anal_choose_fore_tWeek:
-                category = Category.FOREMAN;
+                group = FOREMAN;
                 determineDates(Period.THIS_WEEK);
                 showSelector();
                 break;
 
             case R.id.anal_choose_fore_lWeek:
-                category = Category.FOREMAN;
+                group = FOREMAN;
                 determineDates(Period.LAST_WEEK);
                 showSelector();
                 break;
 
             case R.id.anal_choose_fore_tMonth:
-                category = Category.FOREMAN;
+                group = FOREMAN;
                 determineDates(Period.THIS_MONTH);
                 showSelector();
                 break;
 
             case R.id.anal_choose_fore_lMonth:
-                category = Category.FOREMAN;
+                group = FOREMAN;
                 determineDates(Period.LAST_YEAR);
                 showSelector();
                 break;
 
             case R.id.anal_choose_fore_tYear:
-                category = Category.FOREMAN;
+                group = FOREMAN;
                 determineDates(Period.THIS_YEAR);
                 showSelector();
                 break;
 
             case R.id.anal_choose_fore_lYear:
-                category = Category.FOREMAN;
+                group = FOREMAN;
                 determineDates(Period.LAST_YEAR);
                 showSelector();
                 break;
@@ -395,7 +411,7 @@ public class Analytics extends AppCompatActivity {
     }
 
     public void anal_selector_buttonHandler(View v){
-        //At this point, we have everything we need: category, start date, end date, and ids to show.
+        //At this point, we have everything we need: group, start date, end date, and ids to show.
         switch (v.getId()){
             case R.id.anal_select_proceed:
                 if (ids.size() < 1){
@@ -604,32 +620,13 @@ public class Analytics extends AppCompatActivity {
     }
 
     private void displayGraph(){
-        Intent intent = null;
         Bundle extras = new Bundle();
         extras.putStringArrayList(KEY_IDS, ids);
         extras.putDouble(KEY_START, start);
         extras.putDouble(KEY_END, end);
         extras.putString(KEY_INTERVAL, interval);
-        switch (category){
-            case ORCHARD:
-                intent = new Intent(this, Analytics_Graph_Orchards.class);
-                break;
-
-            case WORKER:
-                intent = new Intent(this, Analytics_Graph_Workers.class);
-                break;
-
-            case FOREMAN:
-                intent = new Intent(this, Analytics_Graph_Foremen.class);
-                break;
-        }
-
-        if (intent != null) {
-            intent.putExtras(extras);
-            startActivity(intent);
-        }
-        else {
-            Log.e(TAG, "displayGraph: intent is null.");
-        }
+        extras.putString(KEY_GROUP, group);
+        Intent intent = new Intent(this, Analytics_Graph.class).putExtras(extras);
+        startActivity(intent);
     }
 }

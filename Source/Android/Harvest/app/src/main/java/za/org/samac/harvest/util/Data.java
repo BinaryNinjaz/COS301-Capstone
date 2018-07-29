@@ -755,6 +755,30 @@ public class Data {
         return activeFarm;
     }
 
+    public String toStringID(String ID, Category category){
+        switch (category){
+            case ORCHARD:
+                Orchard temp = activeOrchard;
+                findObject(ID, category);
+                Orchard otherTemp = activeOrchard;
+                activeOrchard = temp;
+                return otherTemp.toString();
+            case WORKER:
+                Worker temp1 = activeWorker;
+                findObject(ID, category);
+                Worker otherTemp1 = activeWorker;
+                activeWorker = temp1;
+                return otherTemp1.toString();
+            case FARM:
+                Farm temp2 = activeFarm;
+                findObject(ID, category);
+                Farm otherTemp2 = activeFarm;
+                activeFarm = temp2;
+                return otherTemp2.toString();
+        }
+        return ID;
+    }
+
     public Vector<Farm> getFarms() {
         return farms;
     }

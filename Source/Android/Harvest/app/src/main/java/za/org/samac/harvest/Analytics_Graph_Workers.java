@@ -128,7 +128,7 @@ public class Analytics_Graph_Workers extends AppCompatActivity {
         //Start the first fragment
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
-        getTotalBagsPerDay();
+        generateAndDisplayGraph();
         //displayGraph();
     }
 
@@ -191,7 +191,7 @@ public class Analytics_Graph_Workers extends AppCompatActivity {
         return response.toString();
     }
 
-    public void getTotalBagsPerDay() {
+    public void generateAndDisplayGraph() {
         try {
             Thread thread = new Thread(new Runnable() {
                 @Override
