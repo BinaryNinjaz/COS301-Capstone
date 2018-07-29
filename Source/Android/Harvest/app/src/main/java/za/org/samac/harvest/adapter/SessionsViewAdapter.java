@@ -62,7 +62,7 @@ public class SessionsViewAdapter extends RecyclerView.Adapter<SessionsViewAdapte
         } else {
             SessionsItemViewHolder itemHolder = (SessionsItemViewHolder)holder;
 
-            SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM YYYY 'at' HH:mm", Locale.getDefault());
+            SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy 'at' HH:mm", Locale.getDefault());
             formatter.setCalendar(Calendar.getInstance());
             final String date = formatter.format(item.session.startDate);
 

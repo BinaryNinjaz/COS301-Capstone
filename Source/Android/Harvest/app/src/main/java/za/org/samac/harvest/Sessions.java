@@ -73,7 +73,8 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
     private String searchText = "";
 
     private String pageIndex = null;
-    private Integer pageSize = 8;
+    private Integer pageSize = 20;
+    private ArrayList<ValueEventListener> ids = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +161,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         if (filteredSessions == null) {
             for (String key : sessions.keySet()) {
                 SessionItem item = sessions.get(key);
-                adapterSource.add(new SearchedItem.Session(item, ""));
+                adapterSource.add(0, new SearchedItem.Session(item, ""));
             }
         } else {
             Integer section = 1;
@@ -185,7 +186,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
             query = FirebaseDatabase.getInstance().getReference(farmerKey + "/sessions/").orderByKey().endAt(pageIndex).limitToLast(pageSize);
         }
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        ValueEventListener listener = query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String lastKey = "";
@@ -272,12 +273,14 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                     recyclerView.setVisibility(View.VISIBLE);
                 }
                 pageIndex = lastKey;
+                Boolean reload = false;
                 if (searchText == "") {
                     filteredSessions = null;
                 } else {
-                    filterSessions();
+                    reload = filterSessions();
                 }
-                if (flattenDataSource()) {
+                if (flattenDataSource() || reload) {
+                    System.out.println("**********************");
                     adapter.notifyItemInserted(adapterSource.size() - 1);
                 }
             }
@@ -287,6 +290,8 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
 
             }
         });
+
+        ids.add(listener);
     }
 
     public void listenForOrchards() {
