@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
@@ -53,11 +55,36 @@ public class Analytics extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
+    private final String TAG = "Analytics";
+
+    //Various Fragments
+    private Analytics_Main analytics_main;
+    private Analytics_Selector analytics_selector;
+    private Analytics_Creator analytics_creator;
+
+    //Keys for the bundle
+    public static final String KEY_IDS = "KEY_IDS";
+    public static final String KEY_START = "KEY_START";
+    public static final String KEY_END = "KEY_END";
+    public static final String KEY_INTERVAL = "KEY_INTERVAL";
+
+    //Intervals
+    private static final String NOTHING = "";
+    private static final String HOURLY = "hourly";
+    private static final String DAILY = "daily";
+    private static final String WEEKLY = "weekly";
+    private static final String MONTHLY = "monthly";
+    private static final String YEARLY = "yearly";
+
+    private final double THOUSAND = 1000.0000000;
+
+    private String interval = NOTHING;
+
     // For the selector.
     private Data data;
 
     // Information needed by the graph
-    List<String> ids;
+    ArrayList<String> ids;
     Double start, end;
 
     // Needed to determine the correct graph
@@ -110,7 +137,7 @@ public class Analytics extends AppCompatActivity {
                 });
         showMain();
 
-        ids = new Vector<>();
+        ids = new ArrayList<>();
 
         //We'll do this here so it can pull before the selector if it needs to.
         data = new Data();
@@ -186,7 +213,7 @@ public class Analytics extends AppCompatActivity {
             fragmentManager.executePendingTransactions();
         }
 
-        Analytics_Main analytics_main = new Analytics_Main();
+        analytics_main = new Analytics_Main();
         fragmentTransaction.replace(R.id.analMainPart, analytics_main, "MAIN");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -198,7 +225,7 @@ public class Analytics extends AppCompatActivity {
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Analytics_Selector analytics_selector = new Analytics_Selector();
+        analytics_selector = new Analytics_Selector();
         analytics_selector.setDataAndCategory(this.data, this.category);
         fragmentTransaction.replace(R.id.analMainPart, analytics_selector, "SELECTOR");
         fragmentTransaction.addToBackStack(null);
@@ -369,6 +396,16 @@ public class Analytics extends AppCompatActivity {
 
     public void anal_selector_buttonHandler(View v){
         //At this point, we have everything we need: category, start date, end date, and ids to show.
+        switch (v.getId()){
+            case R.id.anal_select_proceed:
+                if (ids.size() < 1){
+                    analytics_selector.selectNoneError();
+                }
+                else {
+                    displayGraph();
+                }
+                break;
+        }
     }
 
     public void anal_creator_buttonHandler(View v){
@@ -414,6 +451,8 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
+                interval = HOURLY;
+
                 break;
 
             case YESTERDAY:
@@ -429,6 +468,8 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
+                interval = HOURLY;
+
                 break;
 
             case THIS_WEEK:
@@ -443,6 +484,8 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
+
+                interval = DAILY;
 
                 break;
 
@@ -461,6 +504,8 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
+                interval = DAILY;
+
                 break;
 
             case THIS_MONTH:
@@ -475,6 +520,8 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
+
+                interval = WEEKLY;
 
                 break;
 
@@ -493,6 +540,8 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
+                interval = WEEKLY;
+
                 break;
 
             case THIS_YEAR:
@@ -509,6 +558,8 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
+
+                interval = MONTHLY;
 
                 break;
 
@@ -529,21 +580,56 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
+                interval = MONTHLY;
+
                 break;
 
             case NOTHING:
-                Log.w("Analytics", "Period is nothing.");
+                Log.w(TAG, "Period is nothing.");
                 return;
         }
 
         start = (double) startCal.getTimeInMillis();
         end = (double) endCal.getTimeInMillis();
+
+        start /= THOUSAND;
+        end /= THOUSAND;
     }
 
     public void pullDone(){
         Analytics_Selector analytics_selector = (Analytics_Selector) getSupportFragmentManager().findFragmentByTag("SELECTOR");
         if (analytics_selector != null){
             analytics_selector.endRefresh();
+        }
+    }
+
+    private void displayGraph(){
+        Intent intent = null;
+        Bundle extras = new Bundle();
+        extras.putStringArrayList(KEY_IDS, ids);
+        extras.putDouble(KEY_START, start);
+        extras.putDouble(KEY_END, end);
+        extras.putString(KEY_INTERVAL, interval);
+        switch (category){
+            case ORCHARD:
+                intent = new Intent(this, Analytics_Graph_Orchards.class);
+                break;
+
+            case WORKER:
+                intent = new Intent(this, Analytics_Graph_Workers.class);
+                break;
+
+            case FOREMAN:
+                intent = new Intent(this, Analytics_Graph_Foremen.class);
+                break;
+        }
+
+        if (intent != null) {
+            intent.putExtras(extras);
+            startActivity(intent);
+        }
+        else {
+            Log.e(TAG, "displayGraph: intent is null.");
         }
     }
 }

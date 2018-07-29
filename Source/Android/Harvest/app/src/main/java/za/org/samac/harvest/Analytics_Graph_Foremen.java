@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,10 +65,30 @@ public class Analytics_Graph_Foremen extends AppCompatActivity {
     private BarChart barChart;
     private com.github.mikephil.charting.charts.BarChart barGraphView;
 
+    //Filters for the graph
+    private ArrayList<String> ids;
+    private double start, end;
+    private String interval;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar_graph);
+
+        try {
+            //Get the filters from the Bundle
+            Bundle extras = getIntent().getExtras();
+            ids = extras.getStringArrayList(Analytics.KEY_IDS);
+            start = extras.getDouble(Analytics.KEY_START);
+            end = extras.getDouble(Analytics.KEY_END);
+            interval = extras.getString(Analytics.KEY_INTERVAL);
+        }
+        catch (java.lang.NullPointerException e){
+            Log.e(TAG, "NPE from bundle");
+            e.printStackTrace();
+            finish();
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
@@ -107,8 +128,6 @@ public class Analytics_Graph_Foremen extends AppCompatActivity {
         //Start the first fragment
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
-        foremanKey = getIntent().getStringExtra("key");
-        formanName = getIntent().getStringExtra("name");
         getTotalBagsPerDay();
         //displayGraph();
     }
@@ -118,19 +137,24 @@ public class Analytics_Graph_Foremen extends AppCompatActivity {
         return base;
     }
 
-    private static String urlParameters() {
-        String base = "";
-        base = base + "id0=" + foremanKey;
-        base = base + "&groupBy=" + "foreman";
-        base = base + "&period=" + "hourly";
-        double currentTime;
-        double divideBy1000Var = 1000.0000000;
-        currentTime = (System.currentTimeMillis()/divideBy1000Var);
-        base = base + "&startDate=" + (currentTime - 60 * 60 * 13);
-        base = base + "&endDate=" + currentTime;
-        base = base + "&uid=" + farmerKey;
+    private String urlParameters() {
+        StringBuilder base = new StringBuilder();
+        //IDs
+        base.append("id0=").append(ids.get(0));
+        for (int i = 1; i < ids.size(); i++){
+            base.append("&id").append(i).append("=").append(ids.get(i));
+        }
+        //Determined by the activity, so constant.
+        base.append("&groupBy=").append("foreman");
+        //Interval
+        base.append("&period=").append(interval);
+        //Period
+        base.append("&startDate=").append(start);
+        base.append("&endDate=").append(end);
+        //UID
+        base.append("&uid=").append(farmerKey);
 
-        return base;
+        return base.toString();
     }
 
     // HTTP POST request

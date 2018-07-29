@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -85,6 +86,11 @@ public class Analytics_Selector extends Fragment{
         swipeRefreshLayout.setRefreshing(false);
         adapter = new Analytics_Selector_Adapter(data, category);
         recyclerView.setAdapter(adapter);
+    }
+
+    public void selectNoneError(){
+        Snackbar snackbar = Snackbar.make(recyclerView, getResources().getText(R.string.anal_selector_selectNone), 2000);
+        snackbar.show();
     }
 }
 

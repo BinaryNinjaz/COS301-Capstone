@@ -221,6 +221,9 @@
     <string name="anal_cus_tit">Custom</string>
     <string name="anal_cus_make">Make Your Own Graph</string>
 
+    <!--Selector-->
+    <string name="anal_selector_selectNone">You must select at least one item to display.</string>
+
 
 
     <string name="title_activity_sessions">Sessions</string>
