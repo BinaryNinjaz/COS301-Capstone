@@ -8,32 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 
-import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import za.org.samac.harvest.adapter.ForemanRecyclerViewAdapter;
-import za.org.samac.harvest.domain.Foreman;
 import za.org.samac.harvest.util.AppUtil;
 
 public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<ForemenPerSession.ForemenViewHolder>*/ {
     private BottomNavigationView bottomNavigationView;
-    private ArrayList<PieEntry> entries = new ArrayList<>();
-    private Button perSesWorkerComparison;
-
-    private List<Foreman> foremen;
-    private ForemanRecyclerViewAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foremen_session);
-
-        this.foremen = new ArrayList<>();
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionInformation);

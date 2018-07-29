@@ -85,26 +85,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Analytics" />
         </activity>
-
-        <activity
-            android:name=".Analytics_Graph_Workers"
-            android:launchMode="singleTop"
-            android:label="@string/title_stats"
-            android:parentActivityName=".Analytics">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Analytics" />
-        </activity>
-
-        <activity
-            android:name=".Analytics_Graph_Foremen"
-            android:launchMode="singleTop"
-            android:label="@string/title_stats"
-            android:parentActivityName=".Analytics">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Analytics" />
-        </activity>
         <!--End Analytics-->
 
         <activity
