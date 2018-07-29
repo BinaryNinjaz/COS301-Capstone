@@ -224,6 +224,11 @@
     <!--Selector-->
     <string name="anal_selector_selectNone">You must select at least one item to display.</string>
 
+    <!--Graphs-->
+    <string name="anal_graph_orchard">Orchard Performance</string>
+    <string name="anal_graph_foreman">Foreman Performance</string>
+    <string name="anal_graph_worker">Worker Performance</string>
+
 
 
     <string name="title_activity_sessions">Sessions</string>

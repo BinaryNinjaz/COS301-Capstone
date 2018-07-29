@@ -2,6 +2,7 @@ package za.org.samac.harvest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -84,6 +86,7 @@ public class Analytics_Graph extends AppCompatActivity {
     private Data data = new Data();
 
     private Category category;
+    private Description description = new Description();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,12 +121,15 @@ public class Analytics_Graph extends AppCompatActivity {
         switch (group){
             case Analytics.FOREMAN:
                 category = Category.WORKER;
+                description.setText(getResources().getString(R.string.anal_graph_foreman));
                 break;
             case Analytics.ORCHARD:
                 category = Category.ORCHARD;
+                description.setText(getResources().getString(R.string.anal_graph_orchard));
                 break;
             case Analytics.WORKER:
                 category = Category.WORKER;
+                description.setText(getResources().getString(R.string.anal_graph_worker));
                 break;
         }
 
@@ -202,7 +208,7 @@ public class Analytics_Graph extends AppCompatActivity {
                         "September",
                         "October",
                         "November",
-                        "September"
+                        "December"
                 };
             break;
         }
@@ -282,27 +288,39 @@ public class Analytics_Graph extends AppCompatActivity {
                         final List<Object> allEntries = new ArrayList<>();
                         int colour = 0;
 
-                        XAxis xAxis;
+                        int minTime = Integer.MAX_VALUE, maxTime = Integer.MIN_VALUE;
+
+                        XAxis xAxis = null;
 
                         if (interval.equals(Analytics.DAILY)){
                             //Radar
                             JSONArray names = functionResult.names();
                             if (names != null) {
                                 for (int i = 0; i < names.length(); i++) {
-                                    List<RadarEntry> entries = new ArrayList<>();
-                                    JSONObject object = functionResult.getJSONObject(names.get(i).toString());
-                                    JSONArray innerNames = object.names();
-                                    if (innerNames != null) {
-                                        for (int j = 0; j < innerNames.length(); j++) {
-                                            entries.add(new RadarEntry((float) object.getDouble(innerNames.get(j).toString()), innerNames.get(j).toString()));
+                                    if (!(names.get(i).toString().equals("avg"))) {
+                                        List<RadarEntry> entries = new ArrayList<>();
+                                        JSONObject object = functionResult.getJSONObject(names.get(i).toString());
+                                        JSONArray innerNames = object.names();
+                                        if (innerNames != null) {
+                                            for (int j = 0; j < innerNames.length(); j++) {
+                                                entries.add(new RadarEntry((float) object.getDouble(innerNames.get(j).toString()), innerNames.get(j).toString()));
+                                            }
+                                        } else {
+                                            //TODO: don't know about how good of an idea this is...
+                                            //Force objects with no entries to still display in the key.
+                                            entries.add(new RadarEntry(0, "Monday"));
+                                            entries.add(new RadarEntry(0, "Tuesday"));
+                                            entries.add(new RadarEntry(0, "Wednesday"));
+                                            entries.add(new RadarEntry(0, "Thursday"));
+                                            entries.add(new RadarEntry(0, "Friday"));
                                         }
+                                        RadarDataSet set = new RadarDataSet(entries, data.toStringID(names.get(i).toString(), category));
+                                        set.setFillColor(ColorTemplate.COLORFUL_COLORS[colour]);
+                                        set.setFillAlpha(145);
+                                        set.setDrawFilled(true);
+                                        set.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
+                                        allEntries.add(set);
                                     }
-                                    RadarDataSet set = new RadarDataSet(entries, data.toStringID(names.get(i).toString(), category));
-                                    set.setFillColor(ColorTemplate.COLORFUL_COLORS[colour]);
-                                    set.setFillAlpha(145);
-                                    set.setDrawFilled(true);
-                                    set.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
-                                    allEntries.add(set);
                                 }
                             }
                             RadarChart radarChart = (RadarChart) graph;
@@ -310,48 +328,89 @@ public class Analytics_Graph extends AppCompatActivity {
                         }
                         else {
                             //Bar
-//                            Iterator<String> iter = functionResult.keys();
+                            ArrayList<String> emptyEntries = new ArrayList<>();
                             JSONArray names = functionResult.names();
-                            for (int i = 0; i < names.length(); i++){
-                                List<BarEntry> entries = new ArrayList<>();
-//                                JSONObject object = functionResult
+                            if (names != null) {
+                                for (int i = 0; i < names.length(); i++) {
+                                    if (!names.get(i).toString().equals("avg")) {
+                                        List<BarEntry> entries = new ArrayList<>();
+                                        JSONObject object = functionResult.getJSONObject(names.get(i).toString());
+                                        JSONArray innerNames = object.names();
+                                        if (innerNames != null) {
+                                            for (int j = 0; j < innerNames.length(); j++) {
+                                                int key = getIntegerFromKey(innerNames.get(j).toString());
+                                                entries.add(new BarEntry(key, object.getInt(innerNames.get(j).toString())));
+                                                //key, value
+
+                                                if (key < minTime) {
+                                                    minTime = key;
+                                                }
+                                                if (key > maxTime) {
+                                                    maxTime = key;
+                                                }
+                                            }
+                                            BarDataSet set = new BarDataSet(entries, data.toStringID(names.get(i).toString(), category));
+                                            set.setColors(ColorTemplate.COLORFUL_COLORS[colour++]);
+                                            allEntries.add(set);
+                                        } else {
+                                            emptyEntries.add(data.toStringID(names.get(i).toString(), category));
+                                        }
+                                    }
+                                }
                             }
-//                            while (iter.hasNext()){
-//                                List<BarEntry> entries = new ArrayList<>();
-//                                JSONObject object = functionResult.getJSONObject(iter.toString());
-//                                Iterator<String> innerIter = object.keys();
-//                                while (iter.hasNext()){
-//                                    entries.add(new BarEntry(Integer.parseInt(innerIter.toString()), object.getInt(innerIter.toString())));
-//                                    innerIter.next();
-//                                }
-//                                BarDataSet set = new BarDataSet(entries, data.toStringID(iter.toString(), category));
-//                                set.setColors(ColorTemplate.COLORFUL_COLORS[colour++]);
-//                                allEntries.add(set);
-//                                iter.next();
-//                            }
-//                            BarChart barChart = (BarChart) graph;
-//                            xAxis = barChart.getXAxis();
+                            //Create entries for the empties
+                            for (String entry : emptyEntries){
+                                List<BarEntry> entries = new ArrayList<>();
+                                entries.add(new BarEntry(maxTime, 0));
+                                BarDataSet set = new BarDataSet(entries, entry);
+                                set.setColors(ColorTemplate.COLORFUL_COLORS[colour++]);
+                                allEntries.add(set);
+                            }
+
+                            BarChart barChart = (BarChart) graph;
+                            xAxis = barChart.getXAxis();
                         }
 
+                        //Make the labels
                         switch (interval){
                             case Analytics.WEEKLY:
+                                labels = new String[maxTime + 1];
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                                for (int i = minTime; i <= maxTime; i++){
+                                    cal.set(Calendar.WEEK_OF_YEAR, i);
+                                    String builder = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) +
+                                            "/" +
+                                            cal.get(Calendar.MONTH) +
+                                            "/" +
+                                            cal.get(Calendar.YEAR);
+                                    labels[i] = builder;
+                                }
                                 break;
                             case Analytics.YEARLY:
+                                //TODO: Make a custom graph and see what DB returns
                                 break;
                             default:
                                 populateLabels(interval);
                                 break;
                         }
 
-//                        xAxis.setXOffset(0f);
-//                        xAxis.setYOffset(0f);
-//                        xAxis.setTextSize(8f);
-//                        xAxis.setValueFormatter(new IAxisValueFormatter() {
-//                            @Override
-//                            public String getFormattedValue(float value, AxisBase axis) {
-//                                return labels[(int) value % labels.length];
-//                            }
-//                        });
+                        try {
+                            xAxis.setXOffset(0f);
+                            xAxis.setYOffset(0f);
+                            xAxis.setTextSize(8f);
+                            xAxis.setGranularity(1f);
+//                            xAxis.setLabelCount(labels.length);
+                            xAxis.setValueFormatter(new IAxisValueFormatter() {
+                                @Override
+                                public String getFormattedValue(float value, AxisBase axis) {
+                                    return labels[(int) value % labels.length];
+                                }
+                            });
+                        }
+                        catch (NullPointerException e){
+                            e.printStackTrace();
+                        }
 
                         runOnUiThread(new Runnable() {
                             public void run() {
@@ -367,6 +426,7 @@ public class Analytics_Graph extends AppCompatActivity {
                                         radarData.addDataSet(set);
                                     }
                                     spiralGraph.setData(radarData);
+                                    spiralGraph.setDescription(description);
                                     spiralGraph.notifyDataSetChanged();
                                 }
                                 else {
@@ -378,6 +438,7 @@ public class Analytics_Graph extends AppCompatActivity {
                                         barData.addDataSet(set);
                                     }
                                     barChart.setData(barData);
+                                    barChart.setDescription(description);
                                     barChart.notifyDataSetChanged();
                                 }
                             }
@@ -391,6 +452,45 @@ public class Analytics_Graph extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int getIntegerFromKey(String key){
+        switch (interval){
+            case Analytics.HOURLY:
+                return 0;
+            case Analytics.WEEKLY:
+                return Integer.parseInt(key);
+            case Analytics.MONTHLY:
+                switch (key){
+                    case "January":
+                        return 0;
+                    case "February":
+                        return 1;
+                    case "March":
+                        return 2;
+                    case "April":
+                        return 3;
+                    case "May":
+                        return 4;
+                    case "June":
+                        return 5;
+                    case "July":
+                        return 6;
+                    case "August":
+                        return 7;
+                    case "September":
+                        return 8;
+                    case "October":
+                        return 9;
+                    case "November":
+                        return 10;
+                    case "December":
+                        return 11;
+                }
+            case Analytics.YEARLY:
+                return 0;
+        }
+        return 0;
     }
 
     @Override
