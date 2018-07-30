@@ -486,7 +486,9 @@ public class Analytics_Graph extends AppCompatActivity {
                                     }
                                     barChart.setData(barData);
                                     barChart.setDescription(description);
+//                                    barChart.groupBars(0, 0.8f, 0.1f);
                                     barChart.notifyDataSetChanged();
+                                    barChart.setHighlightFullBarEnabled(true);
                                 }
                             }
                         });
@@ -504,7 +506,7 @@ public class Analytics_Graph extends AppCompatActivity {
     private int getIntegerFromKey(String key){
         switch (interval){
             case Analytics.HOURLY:
-                return 0;
+                return Integer.parseInt(key);
             case Analytics.WEEKLY:
                 return Integer.parseInt(key);
             case Analytics.MONTHLY:
@@ -535,7 +537,7 @@ public class Analytics_Graph extends AppCompatActivity {
                         return 11;
                 }
             case Analytics.YEARLY:
-                return 0;
+                return Integer.parseInt(key);
         }
         return 0;
     }
