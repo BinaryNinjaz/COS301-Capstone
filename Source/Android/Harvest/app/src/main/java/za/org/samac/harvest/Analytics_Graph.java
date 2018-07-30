@@ -283,6 +283,7 @@ public class Analytics_Graph extends AppCompatActivity {
 
                         //Get the result of the function
                         String response = sendPost(urlTotalBagsPerDay(), urlParameters());
+                        Log.i(TAG, response);
                         final JSONObject functionResult = new JSONObject(response);
 
                         final List<Object> allEntries = new ArrayList<>();
@@ -300,20 +301,66 @@ public class Analytics_Graph extends AppCompatActivity {
                                     if (!(names.get(i).toString().equals("avg"))) {
                                         List<RadarEntry> entries = new ArrayList<>();
                                         JSONObject object = functionResult.getJSONObject(names.get(i).toString());
-                                        JSONArray innerNames = object.names();
-                                        if (innerNames != null) {
-                                            for (int j = 0; j < innerNames.length(); j++) {
-                                                entries.add(new RadarEntry((float) object.getDouble(innerNames.get(j).toString()), innerNames.get(j).toString()));
-                                            }
-                                        } else {
-                                            //TODO: don't know about how good of an idea this is...
-                                            //Force objects with no entries to still display in the key.
+//                                        JSONArray innerNames = object.names();
+//                                        if (innerNames != null) {
+//                                            for (int j = 0; j < innerNames.length(); j++) {
+////                                                entries.add(new RadarEntry((float) object.getDouble(innerNames.get(j).toString()), innerNames.get(j).toString()));
+//                                            }
+//                                        } else {
+//                                            //TODO: don't know about how good of an idea this is...
+//                                            //Force objects with no entries to still display in the key.
+//                                            entries.add(new RadarEntry(0, "Monday"));
+//                                        }
+                                        try {
+                                            entries.add(new RadarEntry((float) object.getDouble("Monday"), "Monday"));
+                                        }
+                                        catch (org.json.JSONException e){
+                                            Log.i(TAG, "No value for [Monday]");
                                             entries.add(new RadarEntry(0, "Monday"));
+                                        }
+                                        try {
+                                            entries.add(new RadarEntry((float) object.getDouble("Tuesday"), "Tuesday"));
+                                        }
+                                        catch (org.json.JSONException e){
+                                            Log.i(TAG, "No value for [Tuesday]");
                                             entries.add(new RadarEntry(0, "Tuesday"));
+                                        }
+                                        try {
+                                            entries.add(new RadarEntry((float) object.getDouble("Wednesday"), "Wednesday"));
+                                        }
+                                        catch (org.json.JSONException e){
+                                            Log.i(TAG, "No value for [Wednesday]");
                                             entries.add(new RadarEntry(0, "Wednesday"));
+                                        }
+                                        try {
+                                            entries.add(new RadarEntry((float) object.getDouble("Thursday"), "Thursday"));
+                                        }
+                                        catch (org.json.JSONException e){
+                                            Log.i(TAG, "No value for [Thursday]");
                                             entries.add(new RadarEntry(0, "Thursday"));
+                                        }
+                                        try {
+                                            entries.add(new RadarEntry((float) object.getDouble("Friday"), "Friday"));
+                                        }
+                                        catch (org.json.JSONException e){
+                                            Log.i(TAG, "No value for [Friday]");
                                             entries.add(new RadarEntry(0, "Friday"));
                                         }
+                                        try {
+                                            entries.add(new RadarEntry((float) object.getDouble("Saturday"), "Saturday"));
+                                        }
+                                        catch (org.json.JSONException e){
+                                            Log.i(TAG, "No value for [Saturday]");
+                                            entries.add(new RadarEntry(0, "Saturday"));
+                                        }
+                                        try {
+                                            entries.add(new RadarEntry((float) object.getDouble("Sunday"), "Sunday"));
+                                        }
+                                        catch (org.json.JSONException e){
+                                            Log.i(TAG, "No value for [Sunday]");
+                                            entries.add(new RadarEntry(0, "Sunday"));
+                                        }
+
                                         RadarDataSet set = new RadarDataSet(entries, data.toStringID(names.get(i).toString(), category));
                                         set.setFillColor(ColorTemplate.COLORFUL_COLORS[colour]);
                                         set.setFillAlpha(145);
@@ -404,7 +451,7 @@ public class Analytics_Graph extends AppCompatActivity {
                             xAxis.setValueFormatter(new IAxisValueFormatter() {
                                 @Override
                                 public String getFormattedValue(float value, AxisBase axis) {
-                                    return labels[(int) value % labels.length];
+                                    return labels[Math.abs((int) value % labels.length)];
                                 }
                             });
                         }
