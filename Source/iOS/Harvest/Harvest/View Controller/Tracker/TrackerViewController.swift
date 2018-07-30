@@ -54,7 +54,6 @@ class TrackerViewController: UIViewController {
         .contains(searchText.uppercased())
     }
   }
-  var expectedYield: Double = .nan
   var gotWorkers = false
   
   @IBOutlet weak var startSessionButton: UIButton?
@@ -78,8 +77,6 @@ class TrackerViewController: UIViewController {
     tracker?.storeSession()
     
     tracker = nil
-    expectedYield = .nan
-    yieldLabel?.attributedText = attributedStringForYieldCollection(0, expectedYield)
     searchBar?.isUserInteractionEnabled = false
     
     workerCollectionView?.reloadData()
@@ -96,8 +93,6 @@ class TrackerViewController: UIViewController {
     self.startSessionButton?.apply(gradient: sessionLayer)
     
     self.tracker = nil
-    expectedYield = .nan
-    yieldLabel?.attributedText = attributedStringForYieldCollection(0, expectedYield)
     self.searchBar?.isUserInteractionEnabled = false
     
     self.workerCollectionView?.reloadData()
@@ -138,6 +133,38 @@ class TrackerViewController: UIViewController {
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
     return UIDevice.current.userInterfaceIdiom == .phone ? .portrait : .all
+  }
+  
+  func attributedStringForYieldCollection(_ a: Int) -> NSAttributedString {
+    let boldFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
+    let regularFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .regular)]
+    
+    let current = NSAttributedString(string: "Current Yield: ", attributes: boldFont)
+    let currentAmount = NSAttributedString(string: a.description, attributes: regularFont)
+    
+    let o = Entities.shared.orchards.first { $0.value.id == self.currentOrchardID }?.value
+    let oname = o?.name ?? ""
+    let ofarm = Entities.shared.farms.first { $0.value.id == o?.assignedFarm }?.value.name ?? ""
+    // FIXME: Remove coords from release build
+    let formatter = NumberFormatter()
+    formatter.positiveFormat = "0.####"
+    formatter.negativeFormat = "-0.####"
+    let lat = formatter.string(from: NSNumber(value: currentLocation?.coordinate.latitude ?? 0.0)) ?? ""
+    let lng = formatter.string(from: NSNumber(value: currentLocation?.coordinate.longitude ?? 0.0)) ?? ""
+    
+    let loc = lat + "   " + lng
+    let name = NSAttributedString(string: oname + " [ " + loc + " ]\n", attributes: regularFont)
+    let farm = NSAttributedString(string: ofarm + ": ", attributes: boldFont)
+    
+    let result = NSMutableAttributedString()
+    if o != nil {
+      result.append(farm)
+      result.append(name)
+    }
+    result.append(current)
+    result.append(currentAmount)
+    
+    return result
   }
   
   @IBAction func startSession(_ sender: Any) {
@@ -212,7 +239,7 @@ class TrackerViewController: UIViewController {
                                                       bottom: 106,
                                                       right: 0)
     
-    yieldLabel?.attributedText = attributedStringForYieldCollection(0, expectedYield)
+    yieldLabel?.attributedText = attributedStringForYieldCollection(0)
   }
   
   override func didReceiveMemoryWarning() {
@@ -231,65 +258,15 @@ extension TrackerViewController: CLLocationManagerDelegate {
     currentLocation = loc
     if let oid = tracker?.track(location: loc) {
       currentOrchardID = oid
-      tracker?.updateExpectedYield(orchardId: oid) { expected in
-        self.expectedYield = expected
-        DispatchQueue.main.async {
-          self.yieldLabel?.attributedText = self.attributedStringForYieldCollection(
-            self.tracker?.totalCollected() ?? 0,
-            self.expectedYield)
-        }
-      }
     } else {
       currentOrchardID = ""
       self.yieldLabel?.attributedText = self.attributedStringForYieldCollection(
-        self.tracker?.totalCollected() ?? 0,
-        .nan)
+        self.tracker?.totalCollected() ?? 0)
     }
   }
   
   func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
     print(error)
-  }
-  
-  func attributedStringForYieldCollection(_ a: Int, _ b: Double) -> NSAttributedString {
-    let boldFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
-    let regularFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .regular)]
-    
-    let current = NSAttributedString(string: "Current Yield: ", attributes: boldFont)
-    let currentAmount = NSAttributedString(string: a.description, attributes: regularFont)
-    let expected = NSAttributedString(string: "\nExpected Yield: ", attributes: boldFont)
-    let expectedText = tracker == nil
-      ? " -- "
-      : b.isNaN
-      ? " Not Enough Data "
-      : Int(b).description
-    let expectedAmount = NSAttributedString(string: expectedText, attributes: regularFont)
-    
-    let o = Entities.shared.orchards.first { $0.value.id == self.currentOrchardID }?.value
-    let oname = o?.name ?? ""
-    let ofarm = Entities.shared.farms.first { $0.value.id == o?.assignedFarm }?.value.name ?? ""
-    
-    let formatter = NumberFormatter()
-    formatter.positiveFormat = "0.####"
-    formatter.negativeFormat = "-0.####"
-    let lat = formatter.string(from: NSNumber(value: currentLocation?.coordinate.latitude ?? 0.0)) ?? ""
-    let lng = formatter.string(from: NSNumber(value: currentLocation?.coordinate.longitude ?? 0.0)) ?? ""
-    
-    let loc = lat + "   " + lng
-    let name = NSAttributedString(string: oname + " [ " + loc + " ]\n", attributes: regularFont)
-    let farm = NSAttributedString(string: ofarm + ": ", attributes: boldFont)
-    
-    let result = NSMutableAttributedString()
-    if o != nil {
-      result.append(farm)
-      result.append(name)
-    }
-    result.append(current)
-    result.append(currentAmount)
-    result.append(expected)
-    result.append(expectedAmount)
-    
-    return result
   }
 }
 
@@ -323,8 +300,7 @@ extension TrackerViewController: UICollectionViewDataSource {
         .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
       
       self.yieldLabel?.attributedText = self.attributedStringForYieldCollection(
-        self.tracker?.totalCollected() ?? 0,
-        self.expectedYield)
+        self.tracker?.totalCollected() ?? 0)
     }
   }
   
@@ -337,8 +313,7 @@ extension TrackerViewController: UICollectionViewDataSource {
         .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
       
       self.yieldLabel?.attributedText = self.attributedStringForYieldCollection(
-        self.tracker?.totalCollected() ?? 0,
-        self.expectedYield)
+        self.tracker?.totalCollected() ?? 0)
     }
   }
   

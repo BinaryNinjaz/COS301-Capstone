@@ -86,6 +86,7 @@ struct Tracker: Codable {
     return result
   }
   
+  @available(*, deprecated, message: "Expected yield is show directly to the user anymore.")
   mutating func updateExpectedYield(orchardId: String, completion: @escaping (Double) -> Void) {
     if orchardId != currentOrchard {
       currentOrchard = orchardId
@@ -93,7 +94,6 @@ struct Tracker: Codable {
         completion(expected)
       }
     }
-    
   }
   
   func pathTracked() -> [CLLocationCoordinate2D] {
