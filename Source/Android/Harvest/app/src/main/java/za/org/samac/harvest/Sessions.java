@@ -171,7 +171,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                 for (SearchedItem.Session item : items) {
                     adapterSource.add(section, item);
                 }
-                section += adapterSource.size();
+                section = adapterSource.size() + 1;
             }
         }
         return oldCount != adapterSource.size();
