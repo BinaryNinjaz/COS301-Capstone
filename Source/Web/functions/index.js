@@ -379,25 +379,25 @@ function roundDateToPeriod(timeinterval, period) {
 }
 
 function isSameYear(d1, d2) {
-  return moment(d1).startOf('year') === moment(d2).startOf('year');
+  return moment(d1).startOf('year').format('YYYY') === moment(d2).startOf('year').format('YYYY');
 }
 
 function isSameMonth(d1, d2) {
-  return moment(d1).startOf('month') === moment(d2).startOf('month');
+  return moment(d1).startOf('month').format('YYYY-MM') === moment(d2).startOf('month').format('YYYY-MM');
 }
 
 function isSameDay(d1, d2) {
-  return moment(d1).startOf('day') === moment(d2).startOf('day');
+  return moment(d1).startOf('day').format('YYYY-MM-DD') === moment(d2).startOf('day').format('YYYY-MM-DD');
 }
 
 function roundDateToRunningPeriod(timeinterval, period, sameYear, sameMonth, sameDay) {
-  const fmtYear = sameYear ? '' : 'YYYY-';
-  const fmtMonth = sameMonth ? '' : 'MM-';
+  const fmtYear = sameYear ? '' : 'YYYY ';
+  const fmtMonth = sameMonth ? '' : 'MMM ';
   const fmtDay = sameDay ? '' : 'DD';
   const fmt = fmtYear + fmtMonth + fmtDay;
   const date = new Date(timeinterval * 1000);
   if (period === "hourly") {
-    return moment(date).startOf('hour').format(fmt + ' HH');
+    return moment(date).startOf('hour').format(fmt + ' HH:mm');
   } else if (period === "daily") {
     return moment(date).startOf('day').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "weekly") {
@@ -510,6 +510,7 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     if (mode === undefined) {
       mode = "accum";
     }
+    const isRunningGraph = mode === 'running';
     const sd = new Date(startDate * 1000);
     const ed = new Date(endDate * 1000);
     
@@ -567,7 +568,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
             }
           }
         });
-        result["avg"] = averageOfSessionCounter(all, days);
+        if (!isRunningGraph) {
+          result["avg"] = averageOfSessionCounter(all, days);
+        }
         res.send(result);
         return true;
       }).catch((err) => {
@@ -618,7 +621,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
               }
             }
           });
-          result["avg"] = averageOfSessionCounter(all, days);
+          if (!isRunningGraph) {
+            result["avg"] = averageOfSessionCounter(all, days);
+          }
           res.send(result);
           return true;
         }).catch((err) => {
@@ -626,65 +631,5 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
         });
       });
     }
-  });
-});
-
-// -------- POST Body --------
-//
-// id0=[String]
-// id1=[String]
-// ...
-// idN=[String]
-//
-// groupBy=[worker, orchard, foreman]
-// period=[hourly, daily, weekly, monthly, yearly]
-// startDate=[Double]
-// endDate=[Double]
-// uid=[String]
-//
-// --------- Result -------------
-// let result = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
-// where * is some values determined by period hourly = YYYY-MM-dd hh, daily= YYYY-MM-dd
-// weekly = YYYY-MM-dd, monthly = YYYY-MM, yearly = YYYY
-// # is total number of bags collected
-exports.runningGraphSessions = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    const startDate = req.body.startDate;
-    const endDate = req.body.endDate;
-    const uid = req.body.uid;
-    const groupBy = req.body.groupBy;
-    const period = req.body.period;
-    
-    var result = {};
-    
-    var ids = [];
-    for (var i = 0; i < Object.keys(req.body).length; i++) {
-      const ikey = "id" + i;
-      if (req.body[ikey] !== undefined) {
-        ids.push(req.body[ikey]);
-        result[req.body[ikey]] = {};
-      }
-    }
-    
-    var sessionsRef = admin.database().ref('/' + uid + '/sessions');
-    
-    if (groupBy !== "orchard") {
-      sessionsRef.once('value').then((snapshot) => { 
-        snapshot.forEach((childSnapshot) => {
-          const key = childSnapshot.key;
-          const val = childSnapshot.val();
-          
-          
-        });
-      }).catch((err) => {
-        console.log(err);
-      });
-    } else {
-      orchardsCooked(ids, uid, (cookedOrchards) => {
-        
-      });
-    }
-    
-    
   });
 });
