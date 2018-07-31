@@ -7,8 +7,8 @@ enum HarvestDB {
 }
 
 enum HarvestCloud {
-//  static let baseURL = "http://localhost:5000/harvest-ios-1522082524457/us-central1/"
-  static let baseURL = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/"
+  static let baseURL = "http://localhost:5000/harvest-ios-1522082524457/us-central1/"
+//  static let baseURL = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/"
   
   static func component(onBase base: String, withArgs args: [(String, String)]) -> String {
     guard let first = args.first else {
@@ -194,12 +194,40 @@ enum HarvestCloud {
     }
   }
   
+  enum AvgRange : CustomStringConvertible {
+    case inclusive
+    case onlybefore
+    case all
+    
+    var description: String {
+      switch self {
+      case .inclusive: return "inclusive"
+      case .onlybefore: return "onlybefore"
+      case .all: return "all"
+      }
+    }
+  }
+  
+  enum Mode : CustomStringConvertible {
+    case accum
+    case running
+    
+    var description: String {
+      switch self {
+      case .accum: return "accum"
+      case .running: return "running"
+      }
+    }
+  }
+  
   static func timeGraphSessions(
     grouping: GroupBy,
     ids: [String],
     period: TimePeriod,
     startDate: Date,
     endDate: Date,
+    avgRange: AvgRange,
+    mode: Mode,
     completion: @escaping (Any) -> Void
   ) {
     var args = [
@@ -207,6 +235,8 @@ enum HarvestCloud {
       ("period", period.description),
       ("startDate", startDate.timeIntervalSince1970.description),
       ("endDate", endDate.timeIntervalSince1970.description),
+      ("avgRange", avgRange.description),
+      ("mode", mode.description),
       ("uid", HarvestDB.Path.parent)
     ]
     
@@ -236,7 +266,7 @@ func timeGraphSessionsWorker() {
   
   let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())!.timeIntervalSince1970
   
-  let s = Date(timeIntervalSince1970: wb * 0)
+  let s = Date(timeIntervalSince1970: wb)
   let e = Date()
   let g = HarvestCloud.GroupBy.worker
   let p = HarvestCloud.TimePeriod.daily
@@ -248,7 +278,14 @@ func timeGraphSessionsWorker() {
 //    "-LBykcR9o5_S_ndIYHj9", // Bruce Wayne 6
   ]
 
-  HarvestCloud.timeGraphSessions(grouping: g, ids: ids, period: p, startDate: s, endDate: e) { o in
+  HarvestCloud.timeGraphSessions(
+    grouping: g, 
+    ids: ids, 
+    period: p, 
+    startDate: s, 
+    endDate: e,
+    avgRange: .onlybefore,
+    mode: .running) { o in
     print(o)
   }
 }
@@ -269,7 +306,14 @@ func timeGraphSessionsOrchard() {
     "-LCnEEUlavG3eFLCC3MI", // Maths Building
   ]
 
-  HarvestCloud.timeGraphSessions(grouping: g, ids: ids, period: p, startDate: s, endDate: e) { o in
+  HarvestCloud.timeGraphSessions(
+    grouping: g, 
+    ids: ids, 
+    period: p, 
+    startDate: s, 
+    endDate: e,
+    avgRange: .onlybefore,
+    mode: .running) { o in
     print(o)
   }
 }

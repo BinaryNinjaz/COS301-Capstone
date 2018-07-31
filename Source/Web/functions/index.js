@@ -378,6 +378,39 @@ function roundDateToPeriod(timeinterval, period) {
   }
 }
 
+function isSameYear(d1, d2) {
+  return moment(d1).startOf('year') === moment(d2).startOf('year');
+}
+
+function isSameMonth(d1, d2) {
+  return moment(d1).startOf('month') === moment(d2).startOf('month');
+}
+
+function isSameDay(d1, d2) {
+  return moment(d1).startOf('day') === moment(d2).startOf('day');
+}
+
+function roundDateToRunningPeriod(timeinterval, period, sameYear, sameMonth, sameDay) {
+  const fmtYear = sameYear ? '' : 'YYYY-';
+  const fmtMonth = sameMonth ? '' : 'MM-';
+  const fmtDay = sameDay ? '' : 'DD';
+  const fmt = fmtYear + fmtMonth + fmtDay;
+  const date = new Date(timeinterval * 1000);
+  if (period === "hourly") {
+    return moment(date).startOf('hour').format(fmt + ' HH');
+  } else if (period === "daily") {
+    return moment(date).startOf('day').format(fmt === '' ? 'ddd' : fmt);
+  } else if (period === "weekly") {
+    return moment(date).startOf('week').format(fmt === '' ? 'ddd' : fmt);
+  } else if (period === "monthly") {
+    return moment(date).startOf('month').format(fmtYear + ' MMM');
+  } else if (period === "yearly") {
+    return moment(date).startOf('day').format('YYYY');
+  } else {
+    return '';
+  }
+}
+
 function incrSessionCounter(counter, key, accum) {
   if (key === "" || accum === "") {
     return;
@@ -446,15 +479,22 @@ function averageOfSessionCounter(counter, days) {
 // startDate=[Double]
 // endDate=[Double]
 // avgRange=[all, inclusive, onlybefore] default = onlybefore
+// mode=[accum, running]
 // uid=[String]
 //
-// --------- Result -------------
+// --------- Result ------------- Mode = Accum
 // let p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
 // where * is some values determined by period hourly = [0, 23], daily=[Sunday, ..., Saturday]
 // weekly = [0, 52], monthly = [January, ..., December], yearly = [0, Int.max)
 // # is total number of bags collected
 //
 // result = {avg: p, p}
+//
+// --------- Result ------------- Mode = Running
+// let result = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
+// where * is some values determined by period hourly = YYYY-MM-dd hh, daily= YYYY-MM-dd
+// weekly = YYYY-MM-dd, monthly = YYYY-MM, yearly = YYYY
+// # is total number of bags collected
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const startDate = req.body.startDate;
@@ -466,6 +506,16 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     if (avgRange === undefined) {
       avgRange = "onlybefore";
     }
+    var mode = req.body.mode;
+    if (mode === undefined) {
+      mode = "accum";
+    }
+    const sd = new Date(startDate * 1000);
+    const ed = new Date(endDate * 1000);
+    
+    const sameY = isSameYear(sd, ed);
+    const sameM = isSameMonth(sd, ed);
+    const sameD = isSameDay(sd, ed);
     
     var result = {};
     var all = {};
@@ -496,7 +546,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
             const collection = val.collections[workerKey];
             for (const pickupKey in collection) {
               const pickup = collection[pickupKey];
-              const accum = roundDateToPeriod(pickup.date, period);
+              const accum = mode === 'running'
+                ? roundDateToRunningPeriod(pickup.date, period, sameY, sameM, sameD)
+                : roundDateToPeriod(pickup.date, period);
               const wkey = groupBy === "foreman" ? foremanKey : workerKey;
               if (startDate <= pickup.date && pickup.date <= endDate) {
                 incrSessionCounter(result, wkey, accum);
@@ -534,7 +586,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
               
               for (const pickupKey in collection) {
                 const pickup = collection[pickupKey];
-                const accum = roundDateToPeriod(val.start_date, period);
+                const accum = mode === 'running'
+                  ? roundDateToRunningPeriod(pickup.date, period, sameY, sameM, sameD)
+                  : roundDateToPeriod(pickup.date, period);
                 const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
                 
                 var orckey = undefined;
@@ -572,5 +626,65 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
         });
       });
     }
+  });
+});
+
+// -------- POST Body --------
+//
+// id0=[String]
+// id1=[String]
+// ...
+// idN=[String]
+//
+// groupBy=[worker, orchard, foreman]
+// period=[hourly, daily, weekly, monthly, yearly]
+// startDate=[Double]
+// endDate=[Double]
+// uid=[String]
+//
+// --------- Result -------------
+// let result = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
+// where * is some values determined by period hourly = YYYY-MM-dd hh, daily= YYYY-MM-dd
+// weekly = YYYY-MM-dd, monthly = YYYY-MM, yearly = YYYY
+// # is total number of bags collected
+exports.runningGraphSessions = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    const startDate = req.body.startDate;
+    const endDate = req.body.endDate;
+    const uid = req.body.uid;
+    const groupBy = req.body.groupBy;
+    const period = req.body.period;
+    
+    var result = {};
+    
+    var ids = [];
+    for (var i = 0; i < Object.keys(req.body).length; i++) {
+      const ikey = "id" + i;
+      if (req.body[ikey] !== undefined) {
+        ids.push(req.body[ikey]);
+        result[req.body[ikey]] = {};
+      }
+    }
+    
+    var sessionsRef = admin.database().ref('/' + uid + '/sessions');
+    
+    if (groupBy !== "orchard") {
+      sessionsRef.once('value').then((snapshot) => { 
+        snapshot.forEach((childSnapshot) => {
+          const key = childSnapshot.key;
+          const val = childSnapshot.val();
+          
+          
+        });
+      }).catch((err) => {
+        console.log(err);
+      });
+    } else {
+      orchardsCooked(ids, uid, (cookedOrchards) => {
+        
+      });
+    }
+    
+    
   });
 });
