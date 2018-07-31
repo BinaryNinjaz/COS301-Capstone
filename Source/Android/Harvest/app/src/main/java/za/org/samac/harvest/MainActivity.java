@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static String sessionKey;
     public static String farmerKey;
     private boolean isFarmer = true;
+    private ArrayList<String> orchards = new ArrayList<>();
+    private ArrayList<String> orchardKeys = new ArrayList<>();
 
     private FirebaseDatabase database;
     //private Query q;
@@ -270,7 +272,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             getPolygon();//set expected yield
             currUserRef = database.getReference(uid);//Firebase reference
             workersRef = currUserRef.child("workers");
-            collectWorkers();
+            collectOrchards();
+            //collectWorkers();
         }
         else {
             getFarmKey();
@@ -325,6 +328,55 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     ArrayList<String> currentOrchard = new ArrayList<>();
     String correctOrchard = "";
     int holdi;
+
+    private void collectOrchards() {
+        currUserRef = database.getReference(uid);//Firebase reference
+        DatabaseReference orchRef;
+        orchRef = currUserRef.child("orchards");
+        orchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                    Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                    orchardKeys.add(zoneSnapshot.getKey().toString());
+                    orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                    String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                }
+
+                Collections.sort(workers, new WorkerComparator());
+
+                workersSearch.addAll(workers);
+
+                progressBar.setVisibility(View.GONE);//remove progress bar
+                constraintLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                //user pressed start and all went well with retrieving data
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+                progressBar.setVisibility(View.GONE);
+                constraintLayout.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void getOrchard() {
+
+        CharSequence orchardsSelected[] = orchards.toArray(new CharSequence[orchards.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Orchard(s)");
+        builder.setItems(orchardsSelected, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // the user clicked on colors[which]
+            }
+        });
+        builder.show();
+    }
 
     private void getPolygon() {
         DatabaseReference myRef;
@@ -638,7 +690,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         getPolygon();
         farmLevelRef = database.getReference(farmerKey);
         workersRef = farmLevelRef.child("workers");
-        collectWorkers();
+        collectOrchards();
+        //collectWorkers();
     }
 
     public void statusCheck() {
@@ -693,7 +746,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         //set initial Firebase data
         if (btnStart.getTag() == "green") {
-            trackIndex = 0;
+            collectWorkers();
             sessionEnded = false;
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
             sessionKey = sessRef.push().getKey();//generate key/ID for a session
@@ -787,7 +840,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
 
         if (location != null&& btnStart.getTag() == "green") {
-            //start track path of where phone has been
+            //start track
             trackIndex = 0;
             DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
             Map<String, Object> track = new HashMap<>();
