@@ -84,7 +84,7 @@ function showRegister(){
         document.getElementById("formData").innerHTML = "";
 	document.getElementById("formData").innerHTML = '<fieldset>'
 								+"<div class='card-header'>"
-                                                                    +"<h2>Sign Up For Harvest:</h2>"
+                                                                    +"<h2>Sign up for Harvest:</h2>"
                                                                 +"</div>"
                                                                 +"<div class='card-body'>"
                                                                     +'<div class="form-group">'
@@ -106,7 +106,7 @@ function showRegister(){
                                                                                                                +'data-type="tooltip" title="There are absolutely no password requirements">'
                                                                     +'</div>'
                                                                     +'<div class="form-group">'
-                                                                            +'<label style="text-align:left">Password Conformation</label>'
+                                                                            +'<label style="text-align:left">Password Confirmation</label>'
                                                                             +'<input placeholder="" type="password" class="form-control" id="passwordConf" required>'
                                                                     +'</div>'
                                                                     +'<div class="form-group" id="errorSpace"></div>'

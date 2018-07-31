@@ -60,3 +60,7 @@ ul {
 ul.ico {
     list-style-image: url('leaf2.png');// no-repeat left top;
 }
+
+.card-body label{
+    text-align: left;
+}
