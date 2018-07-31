@@ -672,16 +672,16 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <viewLayoutGuide key="safeArea" id="WVh-cf-GbO"/>
-                                <inset key="scrollIndicatorInsets" minX="0.0" minY="56" maxX="0.0" maxY="106"/>
+                                <inset key="scrollIndicatorInsets" minX="0.0" minY="56" maxX="0.0" maxY="98"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" sectionInsetReference="safeArea" id="ieY-Xz-2Oa">
                                     <size key="itemSize" width="156" height="109"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="56" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="8" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="workerCollectionViewCell" reuseIdentifier="workerCollectionViewCell" id="sYT-Q0-8zk" customClass="WorkerCollectionViewCell" customModule="Harvest" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="56" width="156" height="109"/>
+                                        <rect key="frame" x="0.0" y="8" width="156" height="109"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="156" height="109"/>
@@ -739,7 +739,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="loadingWorkerCollectionViewCell" reuseIdentifier="loadingWorkerCollectionViewCell" id="Asz-RN-Ysa" customClass="LoadingWorkerCollectionViewCell" customModule="Harvest" customModuleProvider="target">
-                                        <rect key="frame" x="219" y="56" width="156" height="109"/>
+                                        <rect key="frame" x="219" y="8" width="156" height="109"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="156" height="109"/>
@@ -757,7 +757,7 @@
                                         </constraints>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="labelWorkerCollectionViewCell" reuseIdentifier="labelWorkerCollectionViewCell" id="MhE-cb-7e9" customClass="LabelWorkingCollectionViewCell" customModule="Harvest" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="166" width="156" height="109"/>
+                                        <rect key="frame" x="0.0" y="118" width="156" height="109"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="156" height="109"/>
@@ -774,6 +774,52 @@
                                         </view>
                                         <connections>
                                             <outlet property="textLabel" destination="Shm-qc-oqw" id="dLf-Sj-7oM"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sessionOrchardsFilter" id="RvU-H0-GrF" customClass="SessionOrchardFilterCollectionViewCell" customModule="Harvest" customModuleProvider="target">
+                                        <rect key="frame" x="219" y="118" width="156" height="109"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="156" height="109"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="sessionOrchardFilterCollectionView" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="sfI-qK-Gnw">
+                                                    <rect key="frame" x="0.0" y="0.0" width="156" height="109"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="1" minimumInteritemSpacing="1" id="gVm-Sc-KT3">
+                                                        <size key="itemSize" width="210" height="35.600000000000001"/>
+                                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    </collectionViewFlowLayout>
+                                                    <cells>
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sessionOrchardFilterItem" id="qdi-SK-fxk" customClass="SessionFilterItemCollectionViewCell" customModule="Harvest" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="210" height="35.600000000000001"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                                <rect key="frame" x="0.0" y="0.0" width="210" height="35.600000000000001"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YHz-Ss-kno">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="210" height="36"/>
+                                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                            </view>
+                                                            <connections>
+                                                                <outlet property="titleLabel" destination="YHz-Ss-kno" id="2bR-uL-veK"/>
+                                                            </connections>
+                                                        </collectionViewCell>
+                                                    </cells>
+                                                </collectionView>
+                                            </subviews>
+                                        </view>
+                                        <connections>
+                                            <outlet property="collectionView" destination="sfI-qK-Gnw" id="a2s-G3-hFv"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

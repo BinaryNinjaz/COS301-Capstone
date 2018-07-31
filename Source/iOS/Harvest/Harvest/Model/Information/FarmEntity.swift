@@ -211,7 +211,7 @@ final class Entities {
       HarvestDB.watchOrchards { (orchards) in
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.name + orchard.id, orchard)
+            return (orchard.description, orchard)
         }, <)
         self.runListners()
       }
