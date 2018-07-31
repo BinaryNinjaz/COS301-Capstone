@@ -20,27 +20,23 @@ class TrackerViewController: UIViewController {
       TrackerViewController.tracker = newValue
     }
   }
+  
+  var sessionFilterManager: SessionFilterManager?
+  
   var locationManager: CLLocationManager?
   var currentLocation: CLLocation?
-  var currentOrchardID: String = "" {
+  var sessionOrchards: [String] = []
+  var workers: [Worker] = [] {
     didSet {
       DispatchQueue.main.async {
         self.workerCollectionView?.reloadData()
       }
     }
   }
-  var workers: [Worker] = [] {
-    didSet {
-      if currentOrchardID != "" {
-        DispatchQueue.main.async {
-          self.workerCollectionView?.reloadData()
-        }
-      }
-    }
-  }
   var filteredWorkers: [Worker] {
     return workers.filter { (worker) -> Bool in
-      if currentOrchardID != "" && !worker.assignedOrchards.contains(currentOrchardID) {
+      if !sessionOrchards.isEmpty
+      && !worker.assignedOrchards.contains(where: { sessionOrchards.contains($0) }) {
         return false
       }
       guard let searchText = searchBar?.text else {
@@ -142,19 +138,12 @@ class TrackerViewController: UIViewController {
     let current = NSAttributedString(string: "Current Yield: ", attributes: boldFont)
     let currentAmount = NSAttributedString(string: a.description, attributes: regularFont)
     
-    let o = Entities.shared.orchards.first { $0.value.id == self.currentOrchardID }?.value
+    let o = Entities.shared.orchards.first { $0.value.id == tracker?.currentOrchard }?.value
     let oname = o?.name ?? ""
     let ofarm = Entities.shared.farms.first { $0.value.id == o?.assignedFarm }?.value.name ?? ""
-    // FIXME: Remove coords from release build
-    let formatter = NumberFormatter()
-    formatter.positiveFormat = "0.####"
-    formatter.negativeFormat = "-0.####"
-    let lat = formatter.string(from: NSNumber(value: currentLocation?.coordinate.latitude ?? 0.0)) ?? ""
-    let lng = formatter.string(from: NSNumber(value: currentLocation?.coordinate.longitude ?? 0.0)) ?? ""
     
-    let loc = lat + "   " + lng
-    let name = NSAttributedString(string: oname + " [ " + loc + " ]\n", attributes: regularFont)
     let farm = NSAttributedString(string: ofarm + ": ", attributes: boldFont)
+    let name = NSAttributedString(string: oname + "\n", attributes: regularFont)
     
     let result = NSMutableAttributedString()
     if o != nil {
@@ -232,12 +221,19 @@ class TrackerViewController: UIViewController {
       self.updateWorkerCells(with: workers)
     }
     
+    sessionFilterManager = SessionFilterManager()
+    
+    sessionFilterManager?.orchardSelectionChanged = { selectedOrchards in
+      self.sessionOrchards = selectedOrchards
+    }
+    
     workerCollectionView?.accessibilityIdentifier = "workerClickerCollectionView"
     
-    workerCollectionView?.contentInset = UIEdgeInsets(top: 0,
-                                                      left: 0,
-                                                      bottom: 106,
-                                                      right: 0)
+    workerCollectionView?.contentInset = UIEdgeInsets(
+      top: 56,
+      left: 0,
+      bottom: (tabBarController?.tabBar.frame.height ?? 0) + (startSessionButton?.frame.height ?? 0),
+      right: 0)
     
     yieldLabel?.attributedText = attributedStringForYieldCollection(0)
   }
@@ -256,13 +252,9 @@ extension TrackerViewController: CLLocationManagerDelegate {
     }
     
     currentLocation = loc
-    if let oid = tracker?.track(location: loc) {
-      currentOrchardID = oid
-    } else {
-      currentOrchardID = ""
-      self.yieldLabel?.attributedText = self.attributedStringForYieldCollection(
-        self.tracker?.totalCollected() ?? 0)
-    }
+    tracker?.track(location: loc)
+    self.yieldLabel?.attributedText = self.attributedStringForYieldCollection(
+      self.tracker?.totalCollected() ?? 0)
   }
   
   func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -279,11 +271,13 @@ extension TrackerViewController: UICollectionViewDataSource {
   }
   
   func numberOfSections(in collectionView: UICollectionView) -> Int {
-    return 1
+    return 2
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return shouldDisplayMessage ? 1 : filteredWorkers.count
+    return section == 0
+      ? 1
+      : shouldDisplayMessage ? 1 : filteredWorkers.count
   }
   
   func incrementBagCollection(at indexPath: IndexPath) -> (WorkerCollectionViewCell) -> Void {
@@ -317,69 +311,56 @@ extension TrackerViewController: UICollectionViewDataSource {
     }
   }
   
-  // swiftlint:disable function_body_length
-  // swiftlint:disable cyclomatic_complexity
-  func collectionView(
-    _ collectionView: UICollectionView,
-    cellForItemAt indexPath: IndexPath
+  func labelWorkingCell(
+    title: String,
+    on collectionView: UICollectionView,
+    for indexPath: IndexPath
   ) -> UICollectionViewCell {
     let labelCellID = "labelWorkerCollectionViewCell"
-    let loadingCellID = "loadingWorkerCollectionViewCell"
-    let workerCellID = "workerCollectionViewCell"
-    
-    guard tracker != nil else {
-      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: labelCellID, for: indexPath)
-        as? LabelWorkingCollectionViewCell else {
-          return UICollectionViewCell()
-      }
-      cell.textLabel.text = "Press 'Start' to begin tracking worker collections"
-      return cell
-    }
-    
-    guard gotWorkers else {
-      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: labelCellID, for: indexPath)
-        as? LabelWorkingCollectionViewCell else {
-          return UICollectionViewCell()
-      }
-      cell.textLabel.text = "No workers were added to your farm.\nAdd workers in Information"
-      return cell
-    }
-    
-    guard !workers.isEmpty else {
-      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: loadingCellID, for: indexPath)
-        as? LoadingWorkerCollectionViewCell else {
-          return UICollectionViewCell()
-      }
-      return cell
-    }
-    
-    guard !filteredWorkers.isEmpty else {
-      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: labelCellID, for: indexPath)
-        as? LabelWorkingCollectionViewCell else {
-          return UICollectionViewCell()
-      }
-      guard let searchText = searchBar?.text else {
-        cell.textLabel.text = "Unknown Error Occured"
-        return cell
-      }
-      if searchText.isEmpty {
-        let o = Entities.shared.orchards.first { $0.value.id == self.currentOrchardID }?.value
-        let oname = o?.name ?? ""
-        let ofarm = Entities.shared.farms.first { $0.value.id == o?.assignedFarm }?.value.name ?? ""
-        cell.textLabel.text = "No workers are assigned in this current orchard '\(ofarm) - \(oname)'"
-      } else {
-        cell.textLabel.text = "No workers that contains '\(searchText)' in their name"
-      }
-      return cell
-    }
-    
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: workerCellID, for: indexPath)
-      as? WorkerCollectionViewCell else {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: labelCellID, for: indexPath)
+      as? LabelWorkingCollectionViewCell else {
         return UICollectionViewCell()
     }
-    
-    let worker = filteredWorkers[indexPath.row]
-    
+    cell.textLabel.text = title
+    return cell
+  }
+  
+  func loadingCell(on collectionView: UICollectionView, for indexPath: IndexPath) -> UICollectionViewCell {
+    let loadingCellID = "loadingWorkerCollectionViewCell"
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: loadingCellID, for: indexPath)
+      as? LoadingWorkerCollectionViewCell else {
+        return UICollectionViewCell()
+    }
+    return cell
+  }
+  
+  func labelFilteredErrorCell(
+    on collectionView: UICollectionView,
+    for indexPath: IndexPath
+  ) -> UICollectionViewCell {
+    let labelCellID = "labelWorkerCollectionViewCell"
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: labelCellID, for: indexPath)
+      as? LabelWorkingCollectionViewCell else {
+        return UICollectionViewCell()
+    }
+    guard let searchText = searchBar?.text else {
+      cell.textLabel.text = "Unknown Error Occured"
+      return cell
+    }
+    if searchText.isEmpty {
+      cell.textLabel.text = "No workers are assigned in any of the orchards you selected above"
+    } else {
+      cell.textLabel.text = "No workers that contains '\(searchText)' in their name"
+    }
+    return cell
+  }
+  
+  func setupWorkerCollectionViewCell(
+    _ cell: WorkerCollectionViewCell,
+    _ worker: Worker,
+    on collectionView: UICollectionView,
+    for indexPath: IndexPath
+  ) {
     cell.myBackgroundView.frame.size = cell.frame.size
     
     let r = collectionView.convert(cell.frame.origin, to: collectionView)
@@ -412,6 +393,66 @@ extension TrackerViewController: UICollectionViewDataSource {
     
     cell.inc = incrementBagCollection(at: indexPath)
     cell.dec = decrementBagCollection(at: indexPath)
+  }
+  
+  func sessionOrchardsFilterCell(
+    on collectionView: UICollectionView,
+    for indexPath: IndexPath
+  ) -> UICollectionViewCell {
+    let cellId = "sessionOrchardsFilter"
+    guard let cell = collectionView
+      .dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+      as? SessionOrchardFilterCollectionViewCell else {
+        return UICollectionViewCell()
+    }
+    
+    sessionFilterManager?.collectionView = cell.collectionView
+    cell.collectionView.delegate = sessionFilterManager
+    cell.collectionView.dataSource = sessionFilterManager
+    
+    return cell
+  }
+  
+  func collectionView(
+    _ collectionView: UICollectionView,
+    cellForItemAt indexPath: IndexPath
+  ) -> UICollectionViewCell {
+    
+    if indexPath.section == 0 {
+      return sessionOrchardsFilterCell(on: collectionView, for: indexPath)
+    }
+    
+    guard tracker != nil else {
+      return labelWorkingCell(
+        title: "Press 'Start' to begin tracking worker collections",
+        on: collectionView,
+        for: indexPath)
+    }
+    
+    guard gotWorkers else {
+      return labelWorkingCell(
+        title: "No workers were added to your farm.\nAdd workers in Information",
+        on: collectionView,
+        for: indexPath)
+    }
+    
+    guard !workers.isEmpty else {
+      return loadingCell(on: collectionView, for: indexPath)
+    }
+    
+    guard !filteredWorkers.isEmpty else {
+      return labelFilteredErrorCell(on: collectionView, for: indexPath)
+    }
+    
+    let workerCellID = "workerCollectionViewCell"
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: workerCellID, for: indexPath)
+      as? WorkerCollectionViewCell else {
+        return UICollectionViewCell()
+    }
+    
+    let worker = filteredWorkers[indexPath.row]
+    
+    setupWorkerCollectionViewCell(cell, worker, on: collectionView, for: indexPath)
     
     return cell
   }
@@ -477,10 +518,15 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
       - ofh
       - view.layoutMargins.top
       - view.layoutMargins.bottom
+      - 109
     
     let n = CGFloat(Int(w / 156))
     
     let cw = w / n - ((n - 1) / n)
+    
+    if indexPath.section == 0 {
+      return CGSize(width: w - 2, height: 109)
+    }
     
     return CGSize(width: shouldDisplayMessage ? w - 2 : cw,
                   height: shouldDisplayMessage ? h : 109)

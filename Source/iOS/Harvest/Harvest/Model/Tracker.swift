@@ -74,16 +74,14 @@ struct Tracker: Codable {
     saveState()
   }
   
-  /// returns the new orchard id
-  mutating func track(location: CLLocation) -> String? {
-    var result: String? = nil
+  mutating func track(location: CLLocation) {
+    currentOrchard = nil
     if let o = Entities.shared.orchards.first(where: { $0.value.contains(location.coordinate) }) {
-      result = o.value.id
+      currentOrchard = o.value.id
     }
     UserDefaults.standard.track(location: location, index: trackCount)
     trackCount += 1
     saveState()
-    return result
   }
   
   @available(*, deprecated, message: "Expected yield is show directly to the user anymore.")
