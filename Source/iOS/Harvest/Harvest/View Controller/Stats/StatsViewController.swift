@@ -17,7 +17,7 @@ class StatsViewController: UIViewController {
   var startDate: Date?
   var endDate: Date?
   
-  var barChart: BarChartView?
+  var barChart: CombinedChartView?
   var pieChart: PieChartView?
   var lineChart: LineChartView?
   var radarChart: RadarChartView?
@@ -35,7 +35,7 @@ class StatsViewController: UIViewController {
                        height: view.frame.height - navH * 2 - tabH)
     
     lineChart = LineChartView(frame: frame)
-    barChart = BarChartView(frame: frame)
+    barChart = CombinedChartView(frame: frame)
     pieChart = PieChartView(frame: frame)
     radarChart = RadarChartView(frame: frame)
     activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -88,7 +88,7 @@ class StatsViewController: UIViewController {
     }
   }
   
-  func updateBarChart(with data: BarChartData?) {
+  func updateBarChart(with data: BarChartData?, and lineData: LineChartData?) {
     DispatchQueue.main.async {
       self.activityIndicator?.stopAnimating()
       guard let barData = data else {
@@ -113,7 +113,14 @@ class StatsViewController: UIViewController {
         self.radarChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
       } else {
         self.barChart?.notifyDataSetChanged()
-        self.barChart?.data = barData
+        
+        let combinedData = CombinedChartData()
+        combinedData.barData = barData
+        if let lineData = lineData, barData.dataSetCount == 1 {
+          combinedData.lineData = lineData
+        }
+        
+        self.barChart?.data = combinedData
         self.barChart?.data?.setDrawValues(true)
         
         self.barChart?.isHidden = false

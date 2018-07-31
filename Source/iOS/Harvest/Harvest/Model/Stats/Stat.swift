@@ -73,15 +73,16 @@ enum Stat {
     startDate: Date,
     endDate: Date,
     period: HarvestCloud.TimePeriod,
-    completion: @escaping (BarChartData?) -> Void
+    completion: @escaping (BarChartData?, LineChartData?) -> Void
   ) {
     
     guard let ids = identifiers(for: grouping) else {
-      completion(nil)
+      completion(nil, nil)
       return
     }
     
     var dataSets = [BarChartDataSet]()
+    var lineData: LineChartData?
     
     comparison(
       ids: ids,
@@ -90,16 +91,26 @@ enum Stat {
       endDate: endDate,
       period: period) { json in
         guard let json = json else {
-          completion(nil)
+          completion(nil, nil)
           return
         }
+        print(json)
         var i = 0
         let colors = ChartColorTemplates.harvest()
         for (key, _dataSetObject) in json {
-          guard let dataSetObject = _dataSetObject as? [String: Double] else {
+          guard key != "avg" else {
+            lineData = self.entityAverages(
+              from: json[key] as? [String: Any],
+              grouping: grouping,
+              period: period,
+              startDate: startDate,
+              endDate: endDate)
             continue
           }
           
+          guard let dataSetObject = _dataSetObject as? [String: Double] else {
+            continue
+          }
           let worker = Entities.shared.worker(withId: key)
           let orchard = Entities.shared.orchards.first { $0.value.id == key }.map { $0.value }
           
@@ -112,8 +123,11 @@ enum Stat {
             ? orchard?.name
             : worker?.name) ?? "Unknown \(missingMessage)"
           
-          for (e, x) in period.fullDataSet(between: startDate, and: endDate,
-            limitToDate: period == .weekly).enumerated() {
+          let fullDataSet = period.fullDataSet(
+            between: startDate,
+            and: endDate,
+            limitToDate: period == .weekly)
+          for (e, x) in fullDataSet.enumerated() {
             if let y = dataSetObject[x] {
               _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
             } else {
@@ -123,14 +137,89 @@ enum Stat {
           
           dataSet.setColor(colors[i % colors.count])
           dataSet.drawValuesEnabled = false
+          dataSet.valueFormatter = DataValueFormatter()
           i += 1
           dataSets.append(dataSet)
         }
         
         let data = BarChartData(dataSets: dataSets)
         
-        completion(data)
+        completion(data, lineData)
       }
+  }
+  
+  func entityAverages(
+    from json: [String: Any]?,
+    grouping: HarvestCloud.GroupBy,
+    period: HarvestCloud.TimePeriod,
+    startDate: Date,
+    endDate: Date
+  ) -> LineChartData? {
+    guard let avgJson = json else {
+      return nil
+    }
+    
+    let colors = ChartColorTemplates.harvest()
+    var dataSets = [LineChartDataSet]()
+    var i = 0
+    for (key, _dataSetObject) in avgJson {
+      guard let dataSetObject = _dataSetObject as? [String: Double] else {
+        continue
+      }
+      
+      let worker = Entities.shared.worker(withId: key)
+      let orchard = Entities.shared.orchards.first { $0.value.id == key }.map { $0.value }
+      
+      let dataSet = LineChartDataSet()
+      
+      let missingMessage = grouping == .orchard
+        ? "Orchard"
+        : grouping == .worker ? "Worker" : "Foreman"
+      dataSet.label = ((grouping == .orchard
+        ? orchard?.name
+        : worker?.name) ?? "Unknown \(missingMessage)") + " (avg)"
+      
+      let fullDataSet = period.fullDataSet(
+        between: startDate,
+        and: endDate,
+        limitToDate: period == .weekly)
+      for (e, x) in fullDataSet.enumerated() {
+        if let y = dataSetObject[x] {
+          _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
+        } else {
+          _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: 0.0))
+        }
+      }
+      
+      dataSet.setColor(colors[i % colors.count].withAlphaComponent(0.4))
+      dataSet.drawValuesEnabled = false
+      dataSet.valueFormatter = DataValueFormatter()
+      dataSet.drawCirclesEnabled = false
+      dataSet.mode = .horizontalBezier
+      i += 1
+      dataSets.append(dataSet)
+    }
+    
+    return LineChartData(dataSets: dataSets)
+  }
+}
+
+final class DataValueFormatter: IValueFormatter {
+  func stringForValue(
+    _ value: Double,
+    entry: ChartDataEntry,
+    dataSetIndex: Int,
+    viewPortHandler: ViewPortHandler?
+  ) -> String {
+    if value.isZero {
+      return ""
+    } else if trunc(value) == value {
+      return Int(value).description
+    } else {
+      let formatter = NumberFormatter()
+      formatter.positiveFormat = ".#"
+      return formatter.string(from: NSNumber(value: value)) ?? ""
+    }
   }
 }
 
