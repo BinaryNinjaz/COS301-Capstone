@@ -225,6 +225,7 @@ class TrackerViewController: UIViewController {
     
     sessionFilterManager?.orchardSelectionChanged = { selectedOrchards in
       self.sessionOrchards = selectedOrchards
+      self.workerCollectionView?.reloadData()
     }
     
     workerCollectionView?.accessibilityIdentifier = "workerClickerCollectionView"
