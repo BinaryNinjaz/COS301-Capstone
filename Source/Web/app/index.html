@@ -50,33 +50,35 @@
     <!--                     <form action="" method="POST" > -->
                     <div class="card">
                         <div class="inputBlock">
-                            <fieldset>
-                                <div class="card-header">
-                                    <h2>Log in to Harvest:</h2>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <label style="text-align:left">Email</label>
-                                        <input type="text" class="form-control" id="username" required>
+                            <div id="formData">
+                                <fieldset>
+                                    <div class="card-header">
+                                        <h2>Log in to Harvest:</h2>
                                     </div>
-                                    <div class="form-group">
-                                        <label style="text-align:left">Password</label>
-                                        <input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label style="text-align:left">Email</label>
+                                            <input type="text" class="form-control" id="username" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="text-align:left">Password</label>
+                                            <input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">
+                                        </div>
+                                        <div>
+                                            <button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button><!-- Log In button -->                  
+                                        </div>                                    
+                                        <div>
+                                            <button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>                                    
+                                        </div>                                    
+                                        <div>
+                                            <button onclick="showRegister()" class="btn btn-primary">Don't have an account? Sign Up</button>		
+                                        </div>                                    
+                                        <div>
+                                            <a  onclick="resetPassword()" href="javascript:;">Forgot password</a>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button><!-- Log In button -->                  
-                                    </div>                                    
-                                    <div>
-                                        <button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>                                    
-                                    </div>                                    
-                                    <div>
-                                        <button onclick="showRegister()" class="btn btn-primary">Don't have an account? Sign Up</button>		
-                                    </div>                                    
-                                    <div>
-                                        <a  onclick="resetPassword()" href="javascript:;">Forgot password</a>
-                                    </div>
-                                </div>
-                            </fieldset>
+                                </fieldset>
+                            </div>
                         </div>
                     </div>
                 </div>                

@@ -58,60 +58,62 @@ function showLogin(){
                                                                     "<label style='text-align:left'>Email</label>"+
                                                                     "<input type='text' class='form-control' id='username' required>"+
                                                                 '</div>'+
-                                                            '<div class="form-group">'+
-                                                                '<label style="text-align:left">Password</label>'+
-                                                                '<input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">'+
+                                                                '<div class="form-group">'+
+                                                                    '<label style="text-align:left">Password</label>'+
+                                                                    '<input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">'+
+                                                                '</div>'+
+                                                                '<div>'+
+                                                                    '<button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button>'+                  
+                                                                '</div>'+                                    
+                                                                '<div>'+
+                                                                    '<button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>'+                                    
+                                                                '</div>'+                                    
+                                                                '<div>'+
+                                                                    '<button onclick="showRegister()" class="btn btn-primary">Dont have an account? Sign Up</button>'+		
+                                                                '</div>'+                                    
+                                                                '<div>'+
+                                                                    '<a  onclick="resetPassword()" href="javascript:;">Forgot password</a>'+
+                                                                '</div>'+
                                                             '</div>'+
-                                                            '<div>'+
-                                                                '<button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button>'+                  
-                                                            '</div>'+                                    
-                                                            '<div>'+
-                                                                '<button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>'+                                    
-                                                            '</div>'+                                    
-                                                            '<div>'+
-                                                                '<button onclick="showRegister()" class="btn btn-primary">Dont have an account? Sign Up</button>'+		
-                                                            '</div>'+                                    
-                                                            '<div>'+
-                                                                '<a  onclick="resetPassword()" href="javascript:;">Forgot password</a>'+
-                                                            '</div>'+
-                                                        '</div>'+
-                                                    '</fieldset>';
+                                                        '</fieldset>';
                     }
 
 /* This function is used to make the page dynamic, in that if user presses the registration button, it should render a registration form rather than  login*/
 function showRegister(){
 	page = 1;
         document.getElementById("formData").innerHTML = "";
-	document.getElementById("formData").innerHTML = '<fieldset class="inputBlock">'
+	document.getElementById("formData").innerHTML = '<fieldset>'
 								+"<div class='card-header'>"
                                                                     +"<h2>Sign Up For Harvest:</h2>"
                                                                 +"</div>"
-								+'<div class="form-group">'
-									+'<label style="text-align:left">First Name</label>'
-									+'<input placeholder="" type="text" class="form-control" id="name" required>'
-								+'</div>'
-								+'<div class="form-group">'
-									+'<label style="text-align:left">Surname</label>'
-									+'<input placeholder="" type="text" class="form-control" id="surname" required>'
-								+'</div>'
-								+'<div class="form-group">'
-									+'<label style="text-align:left">Email Address</label>'
-									+'<input type="text" class="form-control" id="email" required data-type="tooltip"'
-													   +'title="The email must be properly formatted, so joe@example.com">'
-								+'</div>'
-								+'<div class="form-group">'
-									+'<label style="text-align:left">New Password</label>'
-									+'<input placeholder="" type="password" class="form-control" id="password" required'
-													   +'data-type="tooltip" title="There are absolutely no password requirements">'
-								+'</div>'
-								+'<div class="form-group">'
-									+'<label style="text-align:left">Password Conformation</label>'
-									+'<input placeholder="" type="password" class="form-control" id="passwordConf" required>'
-								+'</div>'
-								+'<div class="form-group" id="errorSpace"></div>'
-								+'<button onclick="register()" class="btn btn-success">Create Account</button>'
-									+'<br /> <button class="btn btn-primary" onclick="showLogin();">Have an account? Log In</button>'
-							+'</fieldset>';
+                                                                +"<div class='card-body'>"
+                                                                    +'<div class="form-group">'
+                                                                            +'<label style="text-align:left">First Name</label>'
+                                                                            +'<input placeholder="" type="text" class="form-control" id="name" required>'
+                                                                    +'</div>'
+                                                                    +'<div class="form-group">'
+                                                                            +'<label style="text-align:left">Surname</label>'
+                                                                            +'<input placeholder="" type="text" class="form-control" id="surname" required>'
+                                                                    +'</div>'
+                                                                    +'<div class="form-group">'
+                                                                            +'<label style="text-align:left">Email Address</label>'
+                                                                            +'<input type="text" class="form-control" id="email" required data-type="tooltip"'
+                                                                                                               +'title="The email must be properly formatted, so joe@example.com">'
+                                                                    +'</div>'
+                                                                    +'<div class="form-group">'
+                                                                            +'<label style="text-align:left">New Password</label>'
+                                                                            +'<input placeholder="" type="password" class="form-control" id="password" required'
+                                                                                                               +'data-type="tooltip" title="There are absolutely no password requirements">'
+                                                                    +'</div>'
+                                                                    +'<div class="form-group">'
+                                                                            +'<label style="text-align:left">Password Conformation</label>'
+                                                                            +'<input placeholder="" type="password" class="form-control" id="passwordConf" required>'
+                                                                    +'</div>'
+                                                                    +'<div class="form-group" id="errorSpace"></div>'
+                                                                    +'<button onclick="register()" class="btn btn-success">Create Account</button>'
+                                                                            +'<br /> <button class="btn btn-primary" onclick="showLogin();">Have an account? Log In</button>'
+                                                                    +'</div>'
+                                                            +'</fieldset>';
                            
 }
 
