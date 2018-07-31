@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const cors = require('cors')({origin: true});
+const moment = require('moment');
 admin.initializeApp();
 
 // ?startDate=[Double]&endDate=[Double]&uid=[String]
@@ -377,6 +378,62 @@ function roundDateToPeriod(timeinterval, period) {
   }
 }
 
+function incrSessionCounter(counter, key, accum) {
+  if (key === "" || accum === "") {
+    return;
+  }
+  
+  if (counter[key] !== undefined) {
+    if (counter[key][accum] !== undefined) {
+      counter[key][accum] += 1;
+    } else {
+      counter[key][accum] = 1;
+    }
+  } else {
+    counter[key] = {};
+    counter[key][accum] = 1;
+  }
+}
+
+function updateDaysCounter(days, key, accum, period, pickedDate) {
+  const date = new Date(pickedDate * 1000);
+  const grouper = period === "weekly"
+    ? moment(date).startOf('week')
+    : period === "monthly"
+      ? moment(date).startOf('month')
+      : period === "yearly"
+        ? moment(date).startOf('year')
+        : moment(date).startOf('day');
+  if (days[key] === undefined) {
+    days[key] = {};
+  }
+  if (days[key][accum] === undefined) {
+    days[key][accum] = {};
+  }
+  if (days[key][accum][grouper] === undefined) {
+    days[key][accum][grouper] = 1;
+  }
+}
+
+function averageOfSessionCounter(counter, days) {
+  var result = {};
+  var keys = Object.keys(counter);
+  for (const ikey in keys) {
+    const key = keys[ikey];
+    const accums = Object.keys(counter[key]);
+    for (const iaccum in accums) {
+      const accum = accums[iaccum];
+      if (result[key] === undefined) {
+        result[key] = {};
+      }
+      var len = Object.keys(days[key][accum]).length;
+      if (len === undefined || len === null) { len = 1; }
+      result[key][accum] = counter[key][accum] / len;
+    }
+  }
+  return result;
+}
+
 // -------- POST Body --------
 //
 // id0=[String]
@@ -388,7 +445,16 @@ function roundDateToPeriod(timeinterval, period) {
 // period=[hourly, daily, weekly, monthly, yearly]
 // startDate=[Double]
 // endDate=[Double]
+// avgRange=[all, inclusive, onlybefore] default = onlybefore
 // uid=[String]
+//
+// --------- Result -------------
+// let p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
+// where * is some values determined by period hourly = [0, 23], daily=[Sunday, ..., Saturday]
+// weekly = [0, 52], monthly = [January, ..., December], yearly = [0, Int.max)
+// # is total number of bags collected
+//
+// result = {avg: p, p}
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const startDate = req.body.startDate;
@@ -396,8 +462,14 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     const uid = req.body.uid;
     const groupBy = req.body.groupBy;
     const period = req.body.period;
+    var avgRange = req.body.avgRange;
+    if (avgRange === undefined) {
+      avgRange = "onlybefore";
+    }
     
     var result = {};
+    var all = {};
+    var days = {};
     
     var ids = [];
     for (var i = 0; i < Object.keys(req.body).length; i++) {
@@ -415,32 +487,35 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
           const key = childSnapshot.key;
           const val = childSnapshot.val();
           
-          if (startDate <= val.start_date && val.start_date <= endDate) {
-            const foremanKey = val.wid;
-            for (const workerKey in val.collections) {
-              if (!(groupBy === "foreman" && arrayContainsItem(ids, foremanKey)
-              || groupBy === "worker" && arrayContainsItem(ids, workerKey))) {
-                continue;
+          const foremanKey = val.wid;
+          for (const workerKey in val.collections) {
+            if (!(groupBy === "foreman" && arrayContainsItem(ids, foremanKey)
+            || groupBy === "worker" && arrayContainsItem(ids, workerKey))) {
+              continue;
+            }
+            const collection = val.collections[workerKey];
+            for (const pickupKey in collection) {
+              const pickup = collection[pickupKey];
+              const accum = roundDateToPeriod(pickup.date, period);
+              const wkey = groupBy === "foreman" ? foremanKey : workerKey;
+              if (startDate <= pickup.date && pickup.date <= endDate) {
+                incrSessionCounter(result, wkey, accum);
               }
-              const collection = val.collections[workerKey];
-              for (const pickupKey in collection) {
-                const pickup = collection[pickupKey];
-                const accum = roundDateToPeriod(val.start_date, period);
-                const wkey = groupBy === "foreman" ? foremanKey : workerKey;
-                if (result[wkey] !== undefined) {
-                  if (result[wkey][accum] !== undefined) {
-                    result[wkey][accum] += 1;
-                  } else {
-                    result[wkey][accum] = 1;
-                  }
-                } else {
-                  result[wkey] = {};
-                  result[wkey][accum] = 1;
-                }
+              
+              if (avgRange === "all") {
+                incrSessionCounter(all, wkey, accum);
+                updateDaysCounter(days, wkey, accum, period, pickup.date);
+              } else if (avgRange === "inclusive" && pickup.date <= endDate) {
+                incrSessionCounter(all, wkey, accum);
+                updateDaysCounter(days, wkey, accum, period, pickup.date);
+              } else if (avgRange === "onlybefore" && pickup.date <= startDate) {
+                incrSessionCounter(all, wkey, accum);
+                updateDaysCounter(days, wkey, accum, period, pickup.date);
               }
             }
           }
         });
+        result["avg"] = averageOfSessionCounter(all, days);
         res.send(result);
         return true;
       }).catch((err) => {
@@ -453,40 +528,43 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
           snapshot.forEach((childSnapshot) => {
             const key = childSnapshot.key;
             const val = childSnapshot.val();
-            if (startDate <= val.start_date && val.start_date <= endDate) {
-              for (const workerKey in val.collections) {
-                const collection = val.collections[workerKey];
+            
+            for (const workerKey in val.collections) {
+              const collection = val.collections[workerKey];
+              
+              for (const pickupKey in collection) {
+                const pickup = collection[pickupKey];
+                const accum = roundDateToPeriod(val.start_date, period);
+                const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
                 
-                for (const pickupKey in collection) {
-                  const pickup = collection[pickupKey];
-                  const accum = roundDateToPeriod(val.start_date, period);
-                  const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
-                  
-                  var orckey = undefined;
-                  for (const okey in cookedOrchards) {
-                    if (polygonContainsPoint(cookedOrchards[okey].polygon, pnt)) {
-                      orckey = cookedOrchards[okey].id;
-                      break;
-                    }
+                var orckey = undefined;
+                for (const okey in cookedOrchards) {
+                  if (polygonContainsPoint(cookedOrchards[okey].polygon, pnt)) {
+                    orckey = cookedOrchards[okey].id;
+                    break;
                   }
-                  if (orckey === undefined) {
-                    continue;
-                  }
-                  
-                  if (result[orckey] !== undefined) {
-                    if (result[orckey][accum] !== undefined) {
-                      result[orckey][accum] += 1;
-                    } else {
-                      result[orckey][accum] = 1;
-                    }
-                  } else {
-                    result[orckey] = {};
-                    result[orckey][accum] = 1;
-                  }
+                }
+                if (orckey === undefined) {
+                  continue;
+                }
+                if (startDate <= pickup.date && pickup.date <= endDate) {
+                  incrSessionCounter(result, orckey, accum);
+                }
+                
+                if (avgRange === "all") {
+                  incrSessionCounter(all, orckey, accum);
+                  updateDaysCounter(days, orckey, accum, period, pickup.date);
+                } else if (avgRange === "inclusive" && pickup.date <= endDate) {
+                  incrSessionCounter(all, orckey, accum);
+                  updateDaysCounter(days, orckey, accum, period, pickup.date);
+                } else if (avgRange === "onlybefore" && pickup.date <= startDate) {
+                  incrSessionCounter(all, orckey, accum);
+                  updateDaysCounter(days, orckey, accum, period, pickup.date);
                 }
               }
             }
           });
+          result["avg"] = averageOfSessionCounter(all, days);
           res.send(result);
           return true;
         }).catch((err) => {
