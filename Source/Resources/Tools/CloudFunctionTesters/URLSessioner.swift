@@ -264,12 +264,12 @@ func orchardCollection() {
 func timeGraphSessionsWorker() {
   let cal = Calendar.current
   
-  let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())!.timeIntervalSince1970
+  let wb = cal.date(byAdding: Calendar.Component.weekday, value: -1, to: Date())!.timeIntervalSince1970
   
   let s = Date(timeIntervalSince1970: wb)
   let e = Date()
   let g = HarvestCloud.GroupBy.worker
-  let p = HarvestCloud.TimePeriod.daily
+  let p = HarvestCloud.TimePeriod.hourly
   
   let ids = [
     "-LBykXujU0Igjzvq5giB", // Peter Parker 3
