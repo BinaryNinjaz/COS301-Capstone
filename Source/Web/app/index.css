@@ -40,12 +40,12 @@ body {
     outline-width: 2px;
     letter-spacing: 3px;
     font-size: 30px;
-    width:500px;
+    //width:500px;
 }
 .list-heading {
     font-weight: bolder;
     font-size: 35px;
-	position: relative;
+    position: relative;
 }
 .center {
     position: relative;  
