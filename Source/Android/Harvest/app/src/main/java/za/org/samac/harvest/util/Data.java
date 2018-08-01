@@ -99,7 +99,7 @@ public class Data {
                                 temp.setEmail(dataSet.child("email").getValue(String.class));
                                 temp.setPhone(dataSet.child("contactNumber").getValue(String.class));
                                 temp.setProvince(dataSet.child("province").getValue(String.class));
-                                temp.setTown(dataSet.child("neartestTown").getValue(String.class)); //TODO: Verify this typo
+                                temp.setTown(dataSet.child("town").getValue(String.class)); //TODO: Verify this typo
                                 temp.setFurther(dataSet.child("further").getValue(String.class));
                                 temp.setID(dataSet.getKey());
                                 farms.add(temp);
@@ -213,16 +213,24 @@ public class Data {
                             //Iterate through every data set
                             for (DataSnapshot dataSet : setOData.getChildren()) {
                                 Worker temp = new Worker();
+                                temp.setfID(dataSet.getKey());
                                 temp.setfName(dataSet.child("name").getValue(String.class));
                                 temp.setsName(dataSet.child("surname").getValue(String.class));
-                                
+
                                 //Orchards
                                 List<Orchard> newOrhards = new Vector<>();
                                 for (DataSnapshot orchard : dataSet.child("orchards").getChildren()){
-                                    newOrhards.add(getOrchardFromIDString(orchard.getValue(String.class)));
+                                    Orchard newOrchard = getOrchardFromIDString(orchard.getValue(String.class));
+                                    if (newOrchard != null) {
+                                        newOrhards.add(newOrchard);
+                                    }
+                                    else {
+                                        //orchard does not exist, mark the worker for change, and it'll update.
+                                        changes.Modify(Category.WORKER, temp.getfID());
+                                    }
                                 }
                                 temp.setAssignedOrchards(newOrhards);
-                                
+
                                 //Type
                                 String sType = dataSet.child("type").getValue(String.class);
                                 WorkerType type = WorkerType.WORKER;
@@ -231,11 +239,10 @@ public class Data {
                                     type = WorkerType.FOREMAN;
                                 }
                                 temp.setWorkerType(type);
-                                
+
                                 temp.setnID(dataSet.child("idNumber").getValue(String.class));
                                 temp.setFurther(dataSet.child("info").getValue(String.class));
                                 temp.setPhone(dataSet.child("phoneNumber").getValue(String.class));
-                                temp.setfID(dataSet.getKey());
 
                                 workers.addElement(temp);
                             }
@@ -282,7 +289,7 @@ public class Data {
                             objectRoot.child("email").setValue(newFarm.email);
                             objectRoot.child("contactNumber").setValue(newFarm.phone);
                             objectRoot.child("province").setValue(newFarm.province);
-                            objectRoot.child("neartestTown").setValue(newFarm.town);
+                            objectRoot.child("town").setValue(newFarm.town);
                             objectRoot.child("further").setValue(newFarm.further);
                             break;
                         case ORCHARD:
@@ -351,10 +358,16 @@ public class Data {
                             //Type
                             if (newWorker.workerType == WorkerType.FOREMAN){
                                 objectRoot.child("type").setValue("Foreman");
+                                //Add to WorkingFor
+                                DatabaseReference workingFor = database.getReference("WorkingFor/");
+                                DatabaseReference workerWorking = workingFor.child(newWorker.phone);
+                                workerWorking.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(newWorker.fID);
                             }
                             else{
                                 objectRoot.child("type").setValue("Worker");
                             }
+
+
                             break;
                     }
                     break;
@@ -369,7 +382,7 @@ public class Data {
                             objectRoot.child("email").setValue(activeFarm.email);
                             objectRoot.child("contactNumber").setValue(activeFarm.phone);
                             objectRoot.child("province").setValue(activeFarm.province);
-                            objectRoot.child("neartestTown").setValue(activeFarm.town);
+                            objectRoot.child("town").setValue(activeFarm.town);
                             objectRoot.child("further").setValue(activeFarm.further);
                             break;
                         case ORCHARD:
@@ -435,10 +448,33 @@ public class Data {
                             //Type
                             if (activeWorker.workerType == WorkerType.FOREMAN){
                                 objectRoot.child("type").setValue("Foreman");
+                                //Modify WorkingFor
+//                                if(!activeWorker.oldPhone.equals(activeWorker.phone)) {
+                                    DatabaseReference workingFor1 = database.getReference("WorkingFor/");
+//                                    workingFor1.child(activeWorker.oldPhone).setValue(null);
+                                    DatabaseReference workingForworker = workingFor1.child(activeWorker.oldPhone);
+                                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    if (uid != null && workingForworker != null){
+                                        workingForworker.child(uid).setValue(null);
+                                    }
+                                    DatabaseReference workerWorking = workingFor1.child(activeWorker.phone);
+                                    workerWorking.child(uid).setValue(activeWorker.fID);
+                                    activeWorker.oldPhone = activeWorker.phone;
+//                                }
                             }
                             else if(activeWorker.workerType == WorkerType.WORKER){
                                 objectRoot.child("type").setValue("Worker");
+                                if (activeWorker.isWasForeman()){
+                                    DatabaseReference working = database.getReference("WorkingFor/");
+                                    working = working.child(activeWorker.oldPhone);
+                                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    if (uid != null && working != null){
+                                        working.child(uid).setValue(null);
+                                    }
+                                }
                             }
+
+
                             break;
                     }
                     break;
@@ -453,6 +489,14 @@ public class Data {
                             break;
                         case WORKER:
                             userRoot.child("workers").child(currentChange.ID).setValue(null);
+                            findObject(currentChange.ID);
+//                            database.getReference("WorkingFor/").child(activeWorker.oldPhone).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(null);
+                            DatabaseReference working = database.getReference("WorkingFor");
+                            working = working.child(activeWorker.oldPhone);
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            if (uid != null && working != null){
+                                working.child(uid).setValue(null);
+                            }
                             break;
                     }
                     break;
@@ -535,7 +579,8 @@ public class Data {
         else if(category == Category.WORKER){
             result = new String[workers.size()];
             for (int i = 0; i < workers.size(); i++) {
-                result[i] = workers.elementAt(i).sName + ", " + workers.elementAt(i).fName;
+//                result[i] = workers.elementAt(i).sName + ", " + workers.elementAt(i).fName;
+                result[i] = workers.elementAt(i).toString();
             }
             return result;
         }
@@ -631,6 +676,12 @@ public class Data {
         category = temp;
     }
 
+    public void clearActiveObjects(){
+        activeWorker = null;
+        activeOrchard = null;
+        activeFarm = null;
+    }
+
     public Worker getActiveWorker(){
         return activeWorker;
     }
@@ -655,25 +706,33 @@ public class Data {
         return orchards;
     }
 
-    public void modifyActiveFarm(Farm activeFarm, boolean overwriteID) {
+    //If overwriteID is false, then the id of the new object and the active object must match
+
+    public boolean modifyActiveFarm(Farm activeFarm, boolean overwriteID) {
         if ((!this.activeFarm.ID.equals(activeFarm.ID) && overwriteID) || this.activeFarm.ID.equals(activeFarm.ID)) {
             this.activeFarm = activeFarm;
             changes.Modify(category, activeFarm.ID);
+            return true;
         }
+        return false;
     }
 
-    public void modifyActiveOrchard(Orchard activeOrchard, boolean overwriteID) {
+    public boolean modifyActiveOrchard(Orchard activeOrchard, boolean overwriteID) {
         if ((!this.activeOrchard.ID.equals(activeOrchard.ID) && overwriteID) || this.activeOrchard.ID.equals(activeOrchard.ID)) {
             this.activeOrchard = activeOrchard;
             changes.Modify(category, activeOrchard.ID);
+            return true;
         }
+        return false;
     }
 
-    public void modifyActiveWorker(Worker activeWorker, boolean overwriteID) {
+    public boolean modifyActiveWorker(Worker activeWorker, boolean overwriteID) {
         if ((!this.activeWorker.fID.equals(activeWorker.fID) && overwriteID) || this.activeWorker.fID.equals(activeWorker.fID)) {
             this.activeWorker = activeWorker;
             changes.Modify(category, activeWorker.fID);
+            return true;
         }
+        return false;
     }
 
     public String getNextIDForAddition(){

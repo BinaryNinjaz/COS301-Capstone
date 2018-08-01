@@ -67,6 +67,7 @@ public class SpiralGraph extends AppCompatActivity {
     private ArrayList<Integer> yield;
     private String sessionKey;
     private static String orchardKey;
+    private static String orchardName;
     private Query query;
     private static final String TAG = "Analytics";
     ArrayList<RadarEntry> entries = new ArrayList<>();
@@ -119,6 +120,7 @@ public class SpiralGraph extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
         orchardKey = getIntent().getStringExtra("key");
+        orchardName = getIntent().getStringExtra("name");
         getTotalBagsPerDay();
         //displayGraph();
     }
@@ -253,10 +255,13 @@ public class SpiralGraph extends AppCompatActivity {
                             public void run() {
                             progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
                             spiralGraphView.setVisibility(View.VISIBLE);
-                            //spiralGraph.animateY(1000, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutQuad));
+                            spiralGraph.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
 
-                            RadarDataSet dataset = new RadarDataSet(entries, "Dataset");
-                            //dataset.setColors(ColorTemplate.VORDIPLOM_COLORS);
+                            RadarDataSet dataset = new RadarDataSet(entries, orchardName);
+                            dataset.setFillColor(ColorTemplate.COLORFUL_COLORS[0]);
+                            dataset.setFillAlpha(145);
+                            dataset.setDrawFilled(true);
+                            dataset.setColor(ColorTemplate.COLORFUL_COLORS[0]);
 
                             RadarData data = new RadarData(dataset);//labels was one of the parameters
                             spiralGraph.setData(data); // set the data and list of lables into chart
@@ -297,7 +302,7 @@ public class SpiralGraph extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(SpiralGraph.this, LoginActivity.class));
+                    startActivity(new Intent(SpiralGraph.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();

@@ -27,7 +27,6 @@ extension HarvestDB {
     ]
     
     let updates = [key: data]
-    
     cref.updateChildValues(updates)
   }
   
@@ -62,7 +61,7 @@ extension HarvestDB {
   }
   
   static func update(location: CLLocationCoordinate2D) {
-    guard let id = HarvestUser.current.workingForID else {
+    guard let id = HarvestUser.current.selectedWorkingForID else {
       return
     }
     
@@ -94,7 +93,7 @@ extension HarvestDB {
   static func listenLocationRequested(completion: @escaping (Bool) -> Void) {
     let requests = ref.child(Path.requestedLocations)
     locationRequestsListner = requests.observe(.childAdded) { (snapshot) in
-      if snapshot.key == HarvestUser.current.workingForID?.wid {
+      if snapshot.key == HarvestUser.current.selectedWorkingForID?.wid {
         deleteLocationRequest(forWorkerId: snapshot.key)
         completion(true)
       } else {
@@ -109,7 +108,7 @@ extension HarvestDB {
       guard let reqs = snapshot.value as? [String: Any] else {
         return
       }
-      for (k, _) in reqs where k == HarvestUser.current.workingForID?.wid {
+      for (k, _) in reqs where k == HarvestUser.current.selectedWorkingForID?.wid {
         deleteLocationRequest(forWorkerId: snapshot.key)
         completion(true)
       }

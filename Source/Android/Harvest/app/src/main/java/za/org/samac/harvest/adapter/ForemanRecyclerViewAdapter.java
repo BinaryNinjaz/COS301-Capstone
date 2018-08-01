@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import za.org.samac.harvest.BarGraph;
+import za.org.samac.harvest.BarGraphForemen;
 import za.org.samac.harvest.PieChart;
 import za.org.samac.harvest.R;
 import za.org.samac.harvest.SessionItem;
@@ -48,10 +49,11 @@ public class ForemanRecyclerViewAdapter extends RecyclerView.Adapter<ForemanRecy
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent details = new Intent(context, BarGraph.class);
+                Intent details = new Intent(context, BarGraphForemen.class);
                 details.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 Intent key = details.putExtra("key", foremenKey);
+                Intent name = details.putExtra("name", foremenName);
 
                 context.startActivity(details);
             }

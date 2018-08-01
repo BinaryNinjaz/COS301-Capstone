@@ -9,11 +9,13 @@
 import Firebase
 
 public final class HarvestUser {
-  var workingForID: (uid: String, wid: String)?
+  var workingForID: [(uid: String, wid: String)]
+  var selectedWorkingForID: (uid: String, wid: String)?
   var accountIdentifier: String
   var firstname: String
   var lastname: String
   var uid: String
+  var organisationName: String
   var temporary: HarvestUser?
   
   var displayName: String {
@@ -21,11 +23,13 @@ public final class HarvestUser {
   }
   
   init() {
-    workingForID = nil
+    workingForID = []
+    selectedWorkingForID = nil
     accountIdentifier = ""
     firstname = ""
     lastname = ""
     uid = ""
+    organisationName = ""
   }
   
   init(json: [String: Any]) {
@@ -33,20 +37,27 @@ public final class HarvestUser {
     firstname = json["firstname"] as? String ?? ""
     lastname = json["lastname"] as? String ?? ""
     accountIdentifier = json["accountIdentifier"] as? String ?? ""
-    workingForID = nil
+    let defaultFarmName = accountIdentifier
+    organisationName = json["organization"] as? String ?? defaultFarmName
+    workingForID = []
+    selectedWorkingForID = nil
   }
   
   func json() -> [String: Any] {
     return [
       "firstname": firstname,
       "lastname": lastname,
+      "organization": organisationName,
       "accountIdentifier": accountIdentifier,
-      "workingFor": workingForID ?? "",
       "uid": uid
     ]
   }
   
-  func setUser(_ user: User, _ password: String?, _ completion: @escaping (Bool) -> Void) {
+  func setUser(
+    _ user: User,
+    _ password: String?,
+    _ completion: @escaping ([(uid: String, wid: String)]?, Bool) -> Void
+  ) {
     if let password = password {
       UserDefaults.standard.set(password: password)
     }
@@ -55,18 +66,19 @@ public final class HarvestUser {
     accountIdentifier = user.email ?? user.phoneNumber ?? ""
     uid = user.uid
     
-    HarvestDB.getWorkingFor(completion: { id in
-      HarvestUser.current.workingForID = id
+    HarvestDB.getWorkingFor(completion: { ids in
+      HarvestUser.current.workingForID = ids
       
       HarvestDB.getHarvestUser { (user) in
         guard let user = user else {
-          completion(true)
+          completion(ids, true)
           return
         }
         
         HarvestUser.current.firstname = user.firstname
         HarvestUser.current.lastname = user.lastname
-        completion(true)
+        HarvestUser.current.organisationName = user.organisationName
+        completion(nil, true)
       }
     })
   }
@@ -74,12 +86,15 @@ public final class HarvestUser {
   func reset() {
     UserDefaults.standard.set(username: nil)
     UserDefaults.standard.set(password: nil)
+    UserDefaults.standard.set(uid: nil, wid: nil)
     
     HarvestUser.current.firstname = ""
     HarvestUser.current.lastname = ""
     HarvestUser.current.accountIdentifier = ""
+    HarvestUser.current.organisationName = ""
     HarvestUser.current.uid = ""
-    HarvestUser.current.workingForID = nil
+    HarvestUser.current.workingForID = []
+    HarvestUser.current.selectedWorkingForID = nil
   }
   
   static var current = HarvestUser()
@@ -126,5 +141,25 @@ public extension UserDefaults {
   
   public func getVerificationID() -> String? {
     return string(forKey: "verificationID")
+  }
+  
+  public func set(uid: String?, wid: String?) {
+    if let w = wid {
+      set(w, forKey: "wid")
+    } else {
+      removeObject(forKey: "wid")
+    }
+    if let u = uid {
+      set(u, forKey: "uid")
+    } else {
+      removeObject(forKey: "uid")
+    }
+  }
+  
+  public func getUWID() -> (uid: String, wid: String)? {
+    if let u = string(forKey: "uid"), let w = string(forKey: "wid") {
+      return (u, w)
+    }
+    return nil
   }
 }

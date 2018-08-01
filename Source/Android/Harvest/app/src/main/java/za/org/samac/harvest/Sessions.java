@@ -117,9 +117,7 @@ public class Sessions extends AppCompatActivity {
                                 startActivity(new Intent(Sessions.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(Sessions.this, InformationActivity.class);
-                                openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openInformation, 0);
+                                startActivity(new Intent(Sessions.this, InformationActivity.class));
                                 return true;
                             case R.id.actionSession:
                                 return true;
@@ -255,17 +253,17 @@ public class Sessions extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(Sessions.this, LoginActivity.class));
+                    startActivity(new Intent(Sessions.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(Sessions.this, LoginActivity.class));
+                                    startActivity(new Intent(Sessions.this, SignIn_Choose.class));
                                 }
                             });
                 }

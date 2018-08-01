@@ -55,6 +55,7 @@
 		167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448EA208C085900FA605C /* FirebaseConverter.swift */; };
 		1679DA4720DD5438007AB071 /* SignInOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */; };
 		1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */; };
+		1684F7A020F45B8700BC59EB /* DBMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1684F79F20F45B8700BC59EB /* DBMock.swift */; };
 		16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */; };
 		16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906055208E7FFA00BE5ADE /* ColorScheme.swift */; };
 		16906058208E801800BE5ADE /* Gradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906057208E801800BE5ADE /* Gradients.swift */; };
@@ -66,7 +67,9 @@
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
+		16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */; };
 		16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */; };
+		16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */; };
 		16C82F43207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */; };
 		16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */; };
 		16C82F5A20819B6E0074595C /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5520819B6E0074595C /* Edge.swift */; };
@@ -81,6 +84,8 @@
 		16E3750F20F0E4220023AD2C /* StatSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3750E20F0E4220023AD2C /* StatSelectionViewController.swift */; };
 		16E3751120F0F74E0023AD2C /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3751020F0F74E0023AD2C /* DateHelpers.swift */; };
 		16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */; };
+		16F5796721000CB50086325B /* PhoneyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F5796621000CB50086325B /* PhoneyFormatter.swift */; };
+		16F579692100FBAF0086325B /* HarvestEntityAuthUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F579682100FBAF0086325B /* HarvestEntityAuthUITests.swift */; };
 		16FF431E20DFF106001092CF /* DBCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431D20DFF106001092CF /* DBCloud.swift */; };
 		16FF432020E19117001092CF /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431F20E19117001092CF /* LocationHelper.swift */; };
 		16FF432220E3B8B8001092CF /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF432120E3B8B8001092CF /* LocationTracker.swift */; };
@@ -161,6 +166,7 @@
 		167448EA208C085900FA605C /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
 		1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOptionViewController.swift; sourceTree = "<group>"; };
 		1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForemanSignInViewController.swift; sourceTree = "<group>"; };
+		1684F79F20F45B8700BC59EB /* DBMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBMock.swift; sourceTree = "<group>"; };
 		16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrchardInFarmEurekaCell.swift; sourceTree = "<group>"; };
 		16906055208E7FFA00BE5ADE /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
 		16906057208E801800BE5ADE /* Gradients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradients.swift; sourceTree = "<group>"; };
@@ -172,7 +178,9 @@
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatEntitySelectionRow.swift; sourceTree = "<group>"; };
 		16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
+		16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatEntitySelectionViewController.swift; sourceTree = "<group>"; };
 		16C82F42207FF33B0074595C /* LoadingWorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingWorkerCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F44207FF34C0074595C /* LabelWorkingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWorkingCollectionViewCell.swift; sourceTree = "<group>"; };
 		16C82F5520819B6E0074595C /* Edge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Edge.swift; sourceTree = "<group>"; };
@@ -187,6 +195,8 @@
 		16E3750E20F0E4220023AD2C /* StatSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatSelectionViewController.swift; sourceTree = "<group>"; };
 		16E3751020F0F74E0023AD2C /* DateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelpers.swift; sourceTree = "<group>"; };
 		16F2BA4C20766065007652E8 /* WorkerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerCollectionViewCell.swift; sourceTree = "<group>"; };
+		16F5796621000CB50086325B /* PhoneyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneyFormatter.swift; sourceTree = "<group>"; };
+		16F579682100FBAF0086325B /* HarvestEntityAuthUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityAuthUITests.swift; sourceTree = "<group>"; };
 		16FF431B20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/Main.strings; sourceTree = "<group>"; };
 		16FF431C20DE628A001092CF /* af */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = af; path = af.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		16FF431D20DFF106001092CF /* DBCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBCloud.swift; sourceTree = "<group>"; };
@@ -279,6 +289,7 @@
 		1604E4C1206958E900E9BA15 /* HarvestUITests */ = {
 			isa = PBXGroup;
 			children = (
+				16F579682100FBAF0086325B /* HarvestEntityAuthUITests.swift */,
 				165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */,
 				165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */,
 				1604E4C4206958E900E9BA15 /* Info.plist */,
@@ -350,6 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				16420FCB2069718400E1A292 /* Database.swift */,
+				1684F79F20F45B8700BC59EB /* DBMock.swift */,
 				167448CA208A5B5D00FA605C /* DBAuth.swift */,
 				1690605D208F61DF00BE5ADE /* DBUser.swift */,
 				167448CC208A5B8100FA605C /* DBWorker.swift */,
@@ -375,6 +387,7 @@
 			children = (
 				16E3750E20F0E4220023AD2C /* StatSelectionViewController.swift */,
 				1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */,
+				16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */,
 				1657B74120A0E53800F5F478 /* StatsViewController.swift */,
 			);
 			path = Stats;
@@ -465,6 +478,7 @@
 				1690605B208E805400BE5ADE /* ViewExtensions.swift */,
 				16FF431F20E19117001092CF /* LocationHelper.swift */,
 				16E3751020F0F74E0023AD2C /* DateHelpers.swift */,
+				16F5796621000CB50086325B /* PhoneyFormatter.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -520,6 +534,7 @@
 				167448B92089306C00FA605C /* InformationEntityCollectionViewCell.swift */,
 				167448DD208A9F4900FA605C /* SessionEurekaCell.swift */,
 				160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */,
+				16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */,
 				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
 				16906061208F748600BE5ADE /* AdminEurekaCell.swift */,
 				16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */,
@@ -736,6 +751,8 @@
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac-f0850809/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/PhoneNumberKit/PhoneNumberKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SCLAlertView/SCLAlertView.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -748,6 +765,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PhoneNumberKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCLAlertView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
@@ -849,8 +868,10 @@
 				167448BA2089306C00FA605C /* InformationEntityCollectionViewCell.swift in Sources */,
 				1690605A208E803300BE5ADE /* ViewControllerExtensions.swift in Sources */,
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
+				16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
 				16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */,
+				16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */,
 				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
@@ -863,6 +884,7 @@
 				167448B620892BB500FA605C /* InfoRepresentation.swift in Sources */,
 				16420FCC2069718400E1A292 /* Database.swift in Sources */,
 				167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */,
+				1684F7A020F45B8700BC59EB /* DBMock.swift in Sources */,
 				167448C420893B8200FA605C /* SortedDictionary.swift in Sources */,
 				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
@@ -902,6 +924,7 @@
 				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,
 				167448DC208A897C00FA605C /* DBSession.swift in Sources */,
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
+				16F5796721000CB50086325B /* PhoneyFormatter.swift in Sources */,
 				1657B74020A0E18600F5F478 /* StatKind.swift in Sources */,
 				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
 				16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */,
@@ -924,6 +947,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */,
+				16F579692100FBAF0086325B /* HarvestEntityAuthUITests.swift in Sources */,
 				165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

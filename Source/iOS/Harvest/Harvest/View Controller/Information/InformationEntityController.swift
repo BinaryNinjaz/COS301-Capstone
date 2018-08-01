@@ -115,14 +115,14 @@ class InformationEntityController: UICollectionViewController {
     
     switch entity {
     case "Workers":
-      Entities.shared.getMultiplesOnce([.orchard, .worker]) { _ in
+      Entities.shared.getMultiplesOnce([.farm, .orchard, .worker]) { _ in
         self.selectedKind = .worker
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
       }
       
     case "Orchards":
-      Entities.shared.getMultiplesOnce([.farm, .orchard]) { _ in
+      Entities.shared.getMultiplesOnce([.worker, .farm, .orchard]) { _ in
         self.selectedKind = .orchard
         self.performSegue(withIdentifier: "EntityToItems", sender: self)
         self.goingToIndexPath = nil
@@ -154,14 +154,24 @@ extension InformationEntityController: UICollectionViewDelegateFlowLayout {
                       sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
     
-    let w = collectionView.frame.width
-    let h = collectionView.frame.height / 3.33
+    let w = (collectionView.frame.width
+      - collectionView.contentInset.left
+      - collectionView.contentInset.right
+      - view.layoutMargins.left
+      - view.layoutMargins.right)
+    let h = (collectionView.frame.height
+      - collectionView.contentInset.top
+      - collectionView.contentInset.bottom
+      - view.layoutMargins.top
+      - view.layoutMargins.bottom)
+        / 3.2
     
-    let n = CGFloat(Int(w / min(360, collectionView.frame.width - 1)))
+    let n = CGFloat(Int(w / 240))
     
-    let cw = n == 1 ? w - 2 : w / n - ((n - 1) / n)
+    let cw = w / n - ((n - 1) / n)
+    let ch = max(h, cw * 0.5)
     
-    return CGSize(width: cw, height: h)
+    return CGSize(width: cw, height: ch)
   }
   
   override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

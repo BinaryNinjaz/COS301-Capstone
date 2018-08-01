@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.DialogFragment;
@@ -15,15 +16,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.Stack;
+import java.util.Vector;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
@@ -36,12 +37,15 @@ import static za.org.samac.harvest.util.Category.NOTHING;
 import static za.org.samac.harvest.util.Category.ORCHARD;
 import static za.org.samac.harvest.util.Category.WORKER;
 
-public class InformationActivity extends AppCompatActivity{
+public class InformationActivity extends AppCompatActivity implements InfoOrchardMapFragment.LocNotAskAgain{
 
+    private boolean mapLocationPermissionSessionAsked = false;
+    private boolean mapLocationInformationSessionAsked = false;
     private BottomNavigationView bottomNavigationView;
     private Data data;
     private boolean editing = false, map = false;
     private Stack<Category> backViews = new Stack<>();
+    private List<LatLng> coords;
 
     Category selectedCat = NOTHING;
 
@@ -70,22 +74,16 @@ public class InformationActivity extends AppCompatActivity{
                             case R.id.actionYieldTracker:
 //                                finish();
 //                                startActivity(new Intent(InformationActivity.this, MainActivity.class));
-                                Intent openMainActivity= new Intent(InformationActivity.this, MainActivity.class);
-                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);
+                                startActivity(new Intent(InformationActivity.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
                                 showNavFrag();
                                 return true;
                             case R.id.actionSession:
-                                Intent openSessions= new Intent(InformationActivity.this, SessionsMap.class);
-                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openSessions, 0);
+                                startActivity(new Intent(InformationActivity.this, Sessions.class));
                                 return true;
                             case R.id.actionStats:
-                                Intent openAnalytics= new Intent(InformationActivity.this, Analytics.class);
-                                openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openAnalytics, 0);
+                                startActivity(new Intent(InformationActivity.this, Analytics.class));
                                 return true;
 
                         }
@@ -151,6 +149,7 @@ public class InformationActivity extends AppCompatActivity{
                 selectedCat = NAV;
             }
             else if(getSupportFragmentManager().getBackStackEntryCount() == 3){
+                data.clearActiveObjects();
                 switch (selectedCat){
                     case FARM:
                         setTitle("Farms");
@@ -212,6 +211,10 @@ public class InformationActivity extends AppCompatActivity{
                 fragmentTransaction1.addToBackStack(null);
                 newInfoOrchardFragment1.beNew(true);
                 newInfoOrchardFragment1.setData(data);
+
+                coords = new Vector<>();
+                newInfoOrchardFragment1.setCoords(coords);
+
                 setTitle("Create Orchard");
                 fragmentTransaction1.commit();
                 selectedCat = ORCHARD;
@@ -560,7 +563,7 @@ public class InformationActivity extends AppCompatActivity{
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(InformationActivity.this, LoginActivity.class));
+                    startActivity(new Intent(InformationActivity.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
@@ -645,10 +648,23 @@ public class InformationActivity extends AppCompatActivity{
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         InfoOrchardMapFragment infoOrchardMapFragment = new InfoOrchardMapFragment();
+        infoOrchardMapFragment.setPermissionAskedInSession(mapLocationPermissionSessionAsked);
+        infoOrchardMapFragment.setLocationInformationAskedInSession(mapLocationInformationSessionAsked);
         fragmentTransaction.replace(R.id.infoMainPart, infoOrchardMapFragment, "MAP");
         fragmentTransaction.addToBackStack(null);
         infoOrchardMapFragment.setMapShowBottomBit(editing);
-        infoOrchardMapFragment.setDataAndOrchardID(data, v.getTag().toString());
+
+        //Set the correct coords for the map
+        Orchard orchard = data.getActiveOrchard();
+        if (orchard == null){
+            //It's new, so give it these coords, which will be saved in the orchard fragment.
+            infoOrchardMapFragment.setCoordinates(coords);
+        }
+        else {
+            //It's not new, so just give it the same coords that the data has, and the map will update those.
+            infoOrchardMapFragment.setCoordinates(orchard.getCoordinates());
+        }
+
         fragmentTransaction.commit();
     }
 
@@ -668,6 +684,29 @@ public class InformationActivity extends AppCompatActivity{
             temp = (InfoWorkerFragment) getSupportFragmentManager().findFragmentByTag("EDIT");
         }
         temp.checkEvent(view);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
+        switch (requestCode){
+            case InfoOrchardMapFragment.PERMISSION_REQUEST_COARSE_LOCATION:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    temp.activateLocation();
+                }
+                else {
+                    if (!temp.isExplanationShown()){
+                        temp.permissionAsk();
+                    }
+                }
+                mapLocationPermissionSessionAsked = true;
+                break;
+        }
+    }
+
+    public void LocationInformationAsked(){
+        mapLocationInformationSessionAsked = true;
     }
 }
 

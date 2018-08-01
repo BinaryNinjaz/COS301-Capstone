@@ -16,15 +16,15 @@ var foremen = []; /* Array containing a list of Foremen names */
 var workers = []; /* Array containing a list of workers names */
 var orchards = []; /* Array containing a list of Orchard names */
 
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    $(window).bind("load", function() {
-      initPage();
-    });
-  }else{
-      workers=[];
-      orchards=[];
-  }
+$(window).bind("load", () => {
+  let succ = () => {
+    initPage();
+  };
+  let fail = () => {
+    workers = [];
+    orchards = [];
+  };
+  retryUntilTimeout(succ, fail, 1000);
 });
 
 /* Function returns a pointer to the list of workers of the particular user ID */

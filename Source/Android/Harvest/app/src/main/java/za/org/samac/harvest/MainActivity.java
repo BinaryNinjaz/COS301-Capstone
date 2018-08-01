@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,7 +21,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -31,22 +29,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,26 +45,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.WorkerRecyclerViewAdapter;
 import za.org.samac.harvest.adapter.collections;
 import za.org.samac.harvest.domain.Worker;
@@ -95,9 +80,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     //used same names as IDs in xml
     private Button btnStart;
     private ProgressBar progressBar;
-    private RelativeLayout relLayout;
+    private android.support.constraint.ConstraintLayout constraintLayout;
     private RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
-    private TextView textView;
+    private static TextView textView;
+    private TextView textViewPressStart;
     private WorkerRecyclerViewAdapter adapter;
     private LocationManager locationManager;
     private Location location;
@@ -121,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference farmLevelRef;
     public static String sessionKey;
     public static String farmerKey;
-    private boolean isFarmer = false;
+    private boolean isFarmer = true;
     Boolean rejectSess = false;
 
     private FirebaseDatabase database;
@@ -176,17 +162,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setLocation(location);
         }
 
-        locationEnabled = true;
-        if (locationManager == null) {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            if (locationManager != null) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                        LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
-                location = locationManager
-                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+        locationPermissions();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationEnabled = true;
+            if (locationManager == null) {
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                if (locationManager != null) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+                    location = locationManager
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+                }
             }
         }
-        locationPermissions();
         //new LocationHelper().getLocation(this);
 
         uid = user.getUid();
@@ -239,98 +227,80 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void determineIfFarmer() {
-        DatabaseReference outerRef = database.getReference();
-        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                    if (child.getKey().equals(uid)){
-                        isFarmer = true;
-                        break;
-                    }
+        if (user != null){
+            for(UserInfo profile : user.getProviderData()){
+                if (profile.getProviderId().equals(PhoneAuthProvider.PROVIDER_ID)){
+                    isFarmer = false;
+                    break;
                 }
+            }
+        }
+        if (isFarmer){
+            progressBar.setVisibility(View.GONE);//remove progress bar
+            setContentView(R.layout.activity_farmer);
+        }
+        else {
+            progressBar.setVisibility(View.GONE);//remove progress bar
+            setContentView(R.layout.activity_foreman);
+        }
 
-                if (isFarmer){
-                    progressBar.setVisibility(View.GONE);//remove progress bar
-                    setContentView(R.layout.activity_farmer);
-                }
-                else {
-                    progressBar.setVisibility(View.GONE);//remove progress bar
-                    setContentView(R.layout.activity_foreman);
-                }
+        constraintLayout = findViewById(R.id.relLayout);
+        progressBar = findViewById(R.id.progressBar);
+        btnStart = findViewById(R.id.button_start);
 
-                relLayout = findViewById(R.id.relLayout);
-                progressBar = findViewById(R.id.progressBar);
-                btnStart = findViewById(R.id.button_start);
+        progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
+        constraintLayout.setVisibility(View.GONE);
 
-                progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
-                relLayout.setVisibility(View.GONE);
+        if (isFarmer){
+            farmerKey = uid;
+            getPolygon();//set expected yield
+            currUserRef = database.getReference(uid);//Firebase reference
+            workersRef = currUserRef.child("workers");
+            collectWorkers();
+        }
+        else {
+            getFarmKey();
+        }
 
-                if (isFarmer){
-                    farmerKey = uid;
-                    getPolygon();//set expected yield
-                    currUserRef = database.getReference(uid);//Firebase reference
-                    workersRef = currUserRef.child("workers");
-                    collectWorkers();
-                }
-                else {
-                    getFarmKey();
-                }
+        btnStart.setTag("green");//it is best not to use the tag to identify button status
 
-                btnStart.setTag("green");//it is best not to use the tag to identify button status
+        textViewPressStart = findViewById(R.id.startText);
+        recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setVisibility(View.GONE);
 
-                recyclerView = findViewById(R.id.recyclerView);//this encapsulates the worker buttons, it is better than gridview
-                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, GridLayoutManager.VERTICAL));
-                recyclerView.setAdapter(adapter);
-                recyclerView.setVisibility(View.GONE);
+        //Handle the bottom nav here
+        if (isFarmer){
 
-                //Handle the bottom nav here
-                if (isFarmer){
+            //bottom navigation bar
+            bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-                    //bottom navigation bar
-                    bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-                    bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
-                    bottomNavigationView.setOnNavigationItemSelectedListener(
-                            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                                @Override
-                                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                    switch (item.getItemId()) {
+            bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
+            bottomNavigationView.setOnNavigationItemSelectedListener(
+                    new BottomNavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                            switch (item.getItemId()) {
                                         case R.id.actionYieldTracker:
                                             return true;
                                         case R.id.actionInformation:
-//                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
-                                            Intent openMainActivity= new Intent(MainActivity.this, InformationActivity.class);
-                                            openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openMainActivity, 0);
+                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
                                             return true;
                                         case R.id.actionSession:
-                                            /*Intent openSessions= new Intent(MainActivity.this, Sessions.class);
-                                            openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openSessions, 0);*/
                                             startActivity(new Intent(MainActivity.this, Sessions.class));
                                             return true;
                                         case R.id.actionStats:
-                                            /*Intent openAnalytics= new Intent(MainActivity.this, Analytics.class);
-                                            openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                            startActivityIfNeeded(openAnalytics, 0);*/
                                             startActivity(new Intent(MainActivity.this, Analytics.class));
                                             return true;
                                     }
                                     return true;
                                 }
                             });
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        }
     }
 
     ArrayList<String> pathsToOrchardCoords = new ArrayList<>();
@@ -432,8 +402,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             }
 
                             if (polygonContainsPoint(polygonX, polygonY) == true) {
-                                System.out.println(" @@@@@@@@@@@@@@@@@@@@@ " + "Contains Point" + " @@@@@@@@@@@@@@@@@@@@@ ");
                                 getExpectedYield();//set expected yield
+                                break;
                             } else {
                                 polygonX.clear();
                                 polygonY.clear();
@@ -460,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         /*int i = 0;
         int j = polygon.size() - 1;*/
-        Boolean c = false;
+        /*Boolean c = false;
 
         int k = 0;
         int m = px.size()- 1;
@@ -471,25 +441,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             if (yValid && pointx < xValidCond) {
                 c = !c;
             }
-        }
+        }*/
 
-        /*for (; i < polygon.size(); j = i++) {
-            Point pi = (Point) polygon.get(i);
-            Point pj = (Point) polygon.get(j);
-            final Boolean yValid = (pi.y > pointy) != (pj.y > pointy);
-            final Double xValidCond = (pj.x - pi.x) * (pointx - pi.y) / (pj.y - pi.y) + pi.x;
+        int i = 0;
+        int j = px.size() - 1;
+        Boolean c = false;
+        for (; i < px.size(); j = i++) {
+            final Boolean yValid = (py.get(i) > pointy) != (py.get(j) > pointy);
+            final Double xValidCond = (px.get(j) - px.get(i)) * (pointy - py.get(i)) / (py.get(j) - py.get(i)) + px.get(i);
 
             if (yValid && pointx < xValidCond) {
                 c = !c;
             }
-        }*/
+        }
+
         return c;
     }
 
     private String urlExpectYieldText() {
         String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield?";
-        System.out.println(" ************************* " + correctOrchard + " ************************* ");
-        base = base + "orchardId=" + correctOrchard;//"-LCEFgdMMO80LR98BzPC";//currentOrchard;//get correct orchard ID
+        base = base + "orchardId=" + correctOrchard;
         double currentTime;
         double divideBy1000Var = 1000.0000000;
         currentTime = (System.currentTimeMillis()/divideBy1000Var);
@@ -505,10 +476,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 public void run() {
                     try {
                         String response = sendGet(urlExpectYieldText());
-                        System.out.println(" %%%%%%%%%%%%% " + response + " %%%%%%%%%%%%% ");
                         JSONObject obj = new JSONObject(response);
                         final Double expectedYield = obj.getDouble("expected"); // This is the value
-                        System.out.println(" $$$$$$$$$$$$$$$$$$$ " + expectedYield + " $$$$$$$$$$$$$$$$$$$ ");
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 textView = findViewById(R.id.textView);
@@ -610,21 +579,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if (!AppUtil.isUserSignedIn()) {
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    startActivity(new Intent(MainActivity.this, SignIn_Choose.class));
                 } else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
 
                 // Google sign out
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                    startActivity(new Intent(MainActivity.this, SignIn_Choose.class));
                                 }
                             });
                 }
+
                 finish();
                 return true;
         }
@@ -637,7 +607,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      */
 
     protected void collectWorkers() {
-        workersRef.addValueEventListener(new ValueEventListener() {
+
+        /* TODO: The constant Listener causes a crash when a new worker is added, seemingly:
+            To reproduce
+            > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
+//        workersRef.addValueEventListener(new ValueEventListener() {
+        workersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
@@ -646,8 +622,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     //collectWorkers((Map<String, Object>) zoneSnapshot.child("name").getValue(), zoneSnapshot.getKey());
 
                     String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+
                     //only add if person is a worker (not a foreman)
-                    if(zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
+                    if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
                         Worker workerObj = new Worker();
                         workerObj.setName(fullName);
                         workerObj.setValue(0);
@@ -667,12 +644,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             }
                         }
 
-                        if (zoneSnapshot.child("email").getValue(String.class) != null) {
+                        /*if (zoneSnapshot.child("email").getValue(String.class) != null) {
                             if (zoneSnapshot.child("email").getValue(String.class).equals(currentUserEmail)) {
                                 foremanID = zoneSnapshot.getKey();
                                 foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
                             }
-                        }
+                        }*/
                     }
                 }
 
@@ -681,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 workersSearch.addAll(workers);
 
                 progressBar.setVisibility(View.GONE);//remove progress bar
-                relLayout.setVisibility(View.VISIBLE);
+                constraintLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 //user pressed start and all went well with retrieving data
             }
@@ -690,34 +667,47 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "onCancelled", databaseError.toException());
                 progressBar.setVisibility(View.GONE);
-                relLayout.setVisibility(View.VISIBLE);
+                constraintLayout.setVisibility(View.VISIBLE);
             }
         });
     }
 
     public void getFarmKey() {
-        String convertEmail = currentUserEmail;
-        emailInDB = convertEmail.replace(".", ",");
-        DatabaseReference outerRef = database.getReference("WorkingFor/"+emailInDB);
-        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    farmerKey = child.getKey();
-
-                    farmerKey = child.getKey();
-                    getPolygon();//set expected yield
-                    farmLevelRef = database.getReference(farmerKey);//Firebase reference
-                    workersRef = farmLevelRef.child("workers");
-                    collectWorkers();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-            }
-        });
+//        String convertEmail = currentUserEmail;
+//        emailInDB = convertEmail.replace(".", ",");
+//        DatabaseReference outerRef = database.getReference("WorkingFor/"+emailInDB);
+//        outerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                    farmerKey = child.getKey();
+//
+//                    farmerKey = child.getKey();
+//                    getPolygon();//set expected yield
+//                    farmLevelRef = database.getReference(farmerKey);//Firebase reference
+//                    workersRef = farmLevelRef.child("workers");
+//                    collectWorkers();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.w(TAG, "onCancelled", databaseError.toException());
+//            }
+//        });
+//        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPref_signIn), MODE_PRIVATE);
+//        farmerKey = sharedPreferences.getString(getString(R.string.sharedPref_signIn_farmerid), "0");
+        farmerKey = AppUtil.readStringFromSharedPrefs(this, getString(R.string.farmerID_Pref));
+        if (farmerKey == null){
+            FirebaseAuth.getInstance().signOut();
+            startActivityIfNeeded(new Intent(this, SignIn_Choose.class), 0);
+            finish();
+            return;
+        }
+        getPolygon();
+        farmLevelRef = database.getReference(farmerKey);
+        workersRef = farmLevelRef.child("workers");
+        collectWorkers();
     }
 
     public void statusCheck() {
@@ -761,22 +751,48 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
-        ExecutorService threadPoolExecutor = Executors.newSingleThreadExecutor();
+        textViewPressStart.setVisibility(View.GONE);
 
-        /*if (location != null) {
-            Future longRunningTaskFuture = threadPoolExecutor.submit(runnable);
-            longRunningTaskFuture.cancel(true);
-        }*/
+        if (workers.size() == 0 && btnStart.getTag() == "green") {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            String msg = "No workers added to orchard";
+            dlgAlert.setMessage(msg);
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(false);
+            dlgAlert.create().show();
+        }
 
-        if(location == null && btnStart.getTag() == "green") {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && btnStart.getTag() == "green") {
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            String msg = "These services are unavailable, please switch on location to gain access";
+            dlgAlert.setMessage(msg);
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(false);
+            dlgAlert.create().show();
+        }
+
+        if (location == null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.VISIBLE);
             Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
             recyclerView.setVisibility(View.GONE);
 
-            handler.postDelayed(new Runnable(){
-                public void run(){
+            handler.postDelayed(new Runnable() {
+                public void run() {
                     //do something
-                    if(location == null) {
+                    if (location == null) {
 
                     } else {
                         progressBar.setVisibility(View.GONE);
@@ -785,15 +801,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     }
 
                     if (secondsLocationIsNull >= 30 && btnStart.getTag() != "green") {
+                        secondsLocationIsNull = 0;
                         progressBar.setVisibility(View.GONE);
                         Snackbar.make(recyclerView, "Could not obtaining GPS Information. Please restart session.", 5000)
-                            .setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                                .setAction("OK", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
 
-                                }
-                            })
-                            .show();
+                                    }
+                                })
+                                .show();
                         return;
                     }
 
@@ -809,20 +826,30 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
 
+        Map<String, Object> sessionDate = new HashMap<>();
+        sessionDate.put("start_date", startSessionTime);
+
+        if (isFarmer) {
+            sessionDate.put("wid", uid);//add foreman database ID to session;
+        } else {
+            sessionDate.put("wid", foremanID);//add foreman database ID to session;
+        }
+
         sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
 
-        if(location != null) {
+        sessRef.updateChildren(sessionDate);//save data to Firebase
+
+        if (location != null) {
             final DatabaseReference myRef;
             myRef = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
 
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if (child.toString().equals(foremanID)) {
+                    if (dataSnapshot != null) {
+                        if (dataSnapshot.getKey().toString().equals(foremanID)) {
                             myRef.removeValue();
                             locationWanted = true;
-                            break;
                         }
                     }
 
@@ -838,7 +865,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         childUpdates.put("coord", coordinates);
                         childUpdates.put("display", foremanName);
 
-                        myRef2.removeValue();
                         myRef2.updateChildren(childUpdates);//store location
                     }
                 }
@@ -854,6 +880,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         if (child.toString().equals(foremanID)) {
+                            myRef.removeValue();
                             locationWanted = true;
                             break;
                         }
@@ -897,16 +924,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             });
         }
 
-        Map<String, Object> sessionDate = new HashMap<>();
-        sessionDate.put("start_date", startSessionTime);
-
-        if (isFarmer) {
-            sessionDate.put("wid", uid);//add foreman database ID to session;
-        } else {
-            sessionDate.put("wid", foremanID);//add foreman database ID to session;
-        }
-
-
         if (!namesShowing) {
             TextView textView = findViewById(R.id.startText);
             textView.setVisibility(View.GONE);
@@ -927,31 +944,31 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("orange");
         } else {
             //TODO: check if app closes or crashes
+            textViewPressStart.setText(R.string.pressStart);
             progressBar.setVisibility(View.GONE);
-            if (adapter.totalBagsCollected == 0) {
-                String msg = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-                dlgAlert.setMessage(msg);
-                dlgAlert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        recyclerView.setVisibility(View.GONE);
-                        dialog.dismiss();
-                    }
-                });
-                dlgAlert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        DatabaseReference myRef;
-                        myRef = database.getReference(farmerKey + "/sessions/" + sessionKey);//path to sessions increment in Firebase
-                        myRef.removeValue();//remove latest increment
-                        adapter.setIncrement();
-                        recyclerView.setVisibility(View.GONE);
-                        dialog.dismiss();
-                        rejectSess = true;
-                    }
-                });
-                dlgAlert.setCancelable(false);
-                dlgAlert.create().show();
-            }
+            recyclerView.setVisibility(View.GONE);
+            String msger = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
+            AlertDialog.Builder dlgAlerter = new AlertDialog.Builder(this);
+            dlgAlerter.setMessage(msger);
+            dlgAlerter.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlerter.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    DatabaseReference myRef;
+                    myRef = database.getReference(farmerKey + "/sessions/" + sessionKey);//path to sessions increment in Firebase
+                    myRef.removeValue();//remove latest increment
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                    rejectSess = true;
+                }
+            });
+            dlgAlerter.setCancelable(false);
+            dlgAlerter.create().show();
 
             if (rejectSess == false) {
                 endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
@@ -966,8 +983,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             int m = (int) (((elapsedTime / 1000) / 60) % 60);
             int s = (int) ((elapsedTime / 1000) % 60);
             //this is the output of the pop up when the user clicks stop (the session)
+            //TODO: check iOS thread on slack
+            //TODO: add press start again
             String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
-            String msg = "A total of " + adapter.totalBagsCollected + " bags have been collected in " + timeTaken + ".";
+            String msg = adapter.totalBagsCollected + " bags collected " + timeTaken + ".";
             if (locationEnabled) {
                 locationManager.removeUpdates(mLocationListener);
             }
@@ -981,25 +1000,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             collections collectionObj = adapter.getCollectionObj();
             collectionObj.sessionEnd();
             //****writeToFirebase(collectionObj);
-            if (rejectSess == false) {
-                //pop up is used to show how many bags were collected in the elapsed time
-                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-                dlgAlert.setMessage(msg);
-                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        adapter.setIncrement();
-                        recyclerView.setVisibility(View.GONE);
-                        dialog.dismiss();
-                    }
-                });
-                dlgAlert.setCancelable(false);
-                dlgAlert.create().show();
-            }
+            //pop up is used to show how many bags were collected in the elapsed time
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            dlgAlert.setMessage(msg);
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
+                    recyclerView.setVisibility(View.GONE);
+                    dialog.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(false);
+            dlgAlert.create().show();
 
             btnStart.setBackgroundColor(Color.parseColor("#FF0CCB29"));
 
             btnStart.setText("Start");
             btnStart.setTag("green");
+            textViewPressStart.setVisibility(View.VISIBLE);
         }
     }
 

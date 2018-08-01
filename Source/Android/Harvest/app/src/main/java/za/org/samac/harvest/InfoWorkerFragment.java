@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Worker;
@@ -60,12 +62,22 @@ public class InfoWorkerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragmente
         return inflater.inflate(R.layout.fragment_info_work, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+
+        getView().findViewById(R.id.info_work_phone_edit).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    EditText view = (EditText) v;
+                    view.setText(AppUtil.normalisePhoneNumber(view.getText().toString(), getActivity()));
+                }
+            }
+        });
 
         if ((editable && newCreation)) throw new AssertionError();
 
@@ -229,7 +241,7 @@ public class InfoWorkerFragment extends Fragment {
             worker.setWorkerType(WorkerType.WORKER);
         }
 
-        worker.setPhone(phone.getText().toString());
+        worker.setPhone(AppUtil.normalisePhoneNumber(phone.getText().toString(), getContext()));
         worker.setFurther(further.getText().toString());
 
         //Assigned Orchards
@@ -257,7 +269,7 @@ public class InfoWorkerFragment extends Fragment {
             newWorker.setWorkerType(WorkerType.WORKER);
         }
 
-        newWorker.setPhone(phone.getText().toString());
+        newWorker.setPhone(AppUtil.normalisePhoneNumber(phone.getText().toString(), getContext()));
         newWorker.setFurther(further.getText().toString());
 
         //Assigned Orchards

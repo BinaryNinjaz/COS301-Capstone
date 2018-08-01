@@ -96,6 +96,9 @@ public class ForemenForBarGraph extends AppCompatActivity {
                     }
                 }
 
+
+                foremenKeys.add(MainActivity.farmerKey);
+                foremen.add("Farm Owner");
                 adapter = new ForemanRecyclerViewAdapter(getApplicationContext(), foremen, foremenKeys);
                 recyclerView = findViewById(R.id.recView);//this encapsulates the worker buttons, it is better than gridview
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -130,17 +133,17 @@ public class ForemenForBarGraph extends AppCompatActivity {
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(ForemenForBarGraph.this, LoginActivity.class));
+                    startActivity(new Intent(ForemenForBarGraph.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
-                if (LoginActivity.mGoogleSignInClient != null) {
-                    LoginActivity.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(ForemenForBarGraph.this, LoginActivity.class));
+                                    startActivity(new Intent(ForemenForBarGraph.this, SignIn_Choose.class));
                                 }
                             });
                 }

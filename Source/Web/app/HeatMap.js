@@ -44,7 +44,6 @@ function changeSelection(checkbox) {
     if (orchards[i].key === checkbox.value) {
       if (checkbox.checked !== orchards[i].showing) {
         orchards[i].showing = checkbox.checked;
-        updateHeatmap();
       }
     }
   }
@@ -216,9 +215,12 @@ function updateSpiner(shouldSpin) {
   };
 
   var target = document.getElementById('spinner');
+  var button = document.getElementById('updateButton');
   if (shouldSpin) {
     spinner = new Spinner(opts).spin(target);
+    button.style.visibility = "hidden";
   } else {
+    button.style.visibility = "visible";
     spinner.stop();
     spinner = null;
   }
