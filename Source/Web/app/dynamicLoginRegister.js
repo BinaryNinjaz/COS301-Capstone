@@ -105,7 +105,7 @@ function showRegister(){
 											+'</div>'
 											+'<div class="form-group">'
 												+'<label style="text-align:left">Password Conformation</label>'
-												+'<input placeholder="" type="password" class="form-control" id="passwordConf" required>'
+												+'<input placeholder="" type="password" class="form-control" id="passwordConf">'
 											+'</div>'
 											+'<div class="form-group" id="errorSpace"></div>'
 											+'<button onclick="register()" class="btn btn-success">Create Account</button>'
@@ -135,8 +135,6 @@ function checkPass(pass1, pass2) {
 	}
     if (pass1 !== pass2) {
         document.getElementById("errorSpace").innerHTML = "<p class='errmsg'>Passwords do not match</p>";
-        document.getElementById("password").value = 0;
-        document.getElementById("passwordConf").value = 0;
         return false;
     }
     if (pass1 === pass2) {
