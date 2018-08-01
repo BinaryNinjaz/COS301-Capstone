@@ -14,15 +14,18 @@ function getOrchards(callback) {
   });
 }
 
-function getFarms(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/farms');
+function getWorkers(callback) {
+  const ref = firebase.database().ref('/' + userID() + '/workers');
   ref.once('value').then((snapshot) => {
     callback(snapshot);
   });
 }
 
-function yieldsRef() {
-  return firebase.database().ref('/' + userID() + '/sessions');
+function getFarms(callback) {
+  const ref = firebase.database().ref('/' + userID() + '/farms');
+  ref.once('value').then((snapshot) => {
+    callback(snapshot);
+  });
 }
 
 $(window).bind("load", () => {
@@ -98,7 +101,7 @@ function initOrchards() {
       farms.push({key: farm.key, value: farm.val()});
     });
     getOrchards((orchardsSnap) => {
-      var orchardsDiv = document.getElementById("orchards");
+      var orchardsDiv = document.getElementById("entities");
       orchardsDiv.innerHTML = "";
       orchards = [];
       orchardsSnap.forEach((orchard) => {
@@ -146,7 +149,7 @@ function requestedOrchardIds() {
   var result = {};
   for (var i = 0; i < orchards.length; i++) {
     if (orchards[i].showing) {
-      result["orchardId" + i] = orchards[i].key;
+      result["id" + i] = orchards[i].key;
     }
   }
   return result;
@@ -165,7 +168,7 @@ function updateHeatmap() {
   keys.endDate = endTime;
   keys.uid = userID();
   
-  const url = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/orchardCollectionsWithinDate';
+  const url = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/collectionsWithinDate';
   
   updateSpiner(true);
   $.post(url, keys, (data, status) => {

@@ -69,14 +69,23 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-3">
-                    <div id="orchardFiltering">
-                        <h2>Orchard Filtering</h2>
+                    <div id="filtering">
+                        <h2>Filtering</h2>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary active">
+                                <input type="radio" name="options" id="option1" checked> Orchards
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="option2"> Workers
+                            </label>
+                        </div>
+                        <br><br>
                         <label>Start From:</label>
                         <input type='date' class='form-control' id='startDate'>
                         </br>
                         <label>Ending At:</label>
                         <input type='date' class='form-control' id='endDate'>
-                        <div id="orchards">
+                        <div id="entities">
                         </div>
                         <button 
                         type="button" 
