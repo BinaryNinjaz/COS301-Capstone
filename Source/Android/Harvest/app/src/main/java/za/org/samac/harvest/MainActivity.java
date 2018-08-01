@@ -671,9 +671,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 workersSearch.addAll(workers);
 
-                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
                 constraintLayout.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 if (workers.size() == 0) {
                     TextView pressStart = findViewById(R.id.startText);
                     pressStart.setVisibility(View.VISIBLE);
@@ -775,7 +775,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 dlgAlertIfNoLocation.setCancelable(false);
                 dlgAlertIfNoLocation.create().show();
             } else {
-                getOrchard();
+                if (location != null) {
+                    getOrchard();
+                }
             }
 
             secondsLocationIsNull = 0;
@@ -812,8 +814,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     if (location == null) {
 
                     } else {
-                        progressBar.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
+                        getOrchard();
                         return;
                     }
 
