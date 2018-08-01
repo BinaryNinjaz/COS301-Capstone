@@ -1,18 +1,9 @@
-html {
-  
-  
-}
-body {
-    font-family: Sans-Serif;	
+
+body{
     background-color: transparent;
-    /* Center and scale the image nicely */
-    background-image: url("backgrdSmaller.jpg");
-  background-repeat: no-repeat;  
-  background-size: cover;
-  height: 100%;
-  width: 100%;
     
 }
+
 /* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
 .inputBlock {
 	position: relative;
@@ -31,21 +22,19 @@ body {
     float: left;
 }
 /* The right class should not be aligned, left margin should be 40%, color should be black , front size should be set to 30pxs*/
-.right{
-    position: relative;
-    float: left;
-    margin-left: auto;    
+#right{  
+          
     color: black;
     outline-color: #006633;
     outline-width: 2px;
-    letter-spacing: 3px;
-    font-size: 30px;
-    width:500px;
+    letter-spacing: 2px;
+    font-size: 24px;
+   
 }
 .list-heading {
     font-weight: bolder;
     font-size: 35px;
-	position: relative;
+    position: relative;
 }
 .center {
     position: relative;  
@@ -63,4 +52,30 @@ ul {
 
 ul.ico {
     list-style-image: url('leaf2.png');// no-repeat left top;
+}
+
+.card-body label{
+    text-align: left;
+}
+
+@media only screen and (min-width: 700px) {
+    html {
+        font-family: Sans-Serif;	
+        background-image: url("backgrdSmaller.jpg");
+        background-repeat: no-repeat;  
+        background-size: auto;  
+    }
+}
+@media only screen and (max-width: 728px) {
+   html {
+        font-family: Sans-Serif;	
+         background-image: url("backgrdSmaller.jpg");
+        background-repeat: no-repeat;  
+        background-size: cover;  
+    }
+}
+@media only screen and (max-width: 728px){
+    #right li, h3{
+        color: white;
+    }
 }
