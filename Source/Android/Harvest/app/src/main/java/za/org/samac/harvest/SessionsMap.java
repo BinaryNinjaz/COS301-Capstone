@@ -14,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +33,7 @@ import java.util.Map;
 import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.SessionDetails;
 import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.Orchard;
 
 import static za.org.samac.harvest.MainActivity.getWorkers;
 
@@ -54,8 +56,6 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
     private LatLng moveMapHere ; // just used to find where to move map to
     private PolylineOptions polyline;
     private ArrayList<MarkerOptions> pickups;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +99,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         }
         mMap.addPolyline(polyline);
 
-        HashMap<String, ArrayList<Pickup>> cols = (HashMap<String, ArrayList<Pickup>>) Sessions.selectedItem.collections;
+        HashMap<String, ArrayList<Pickup>> cols = (HashMap<String, ArrayList<Pickup>>) Sessions.selectedItem.collectionPoints;
         for (String key : cols.keySet()) {
             ArrayList<Pickup> data = cols.get(key);
 
@@ -109,7 +109,22 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
                     moveMapHere = ll;
                     first = false;
                 }
-                mMap.addMarker(new MarkerOptions().position(ll).title(key));
+                mMap.addMarker(new MarkerOptions().position(ll).title(data.get(i).workerName));
+            }
+        }
+
+        for (Orchard orchard : Sessions.orchards) {
+            if (!orchard.getCoordinates().isEmpty()) {
+                PolygonOptions polygon = new PolygonOptions();
+                polygon.fillColor(0x110000FF);
+                polygon.strokeColor(0x550000FF);
+                polygon.strokeWidth(3);
+
+                for (LatLng coord : orchard.getCoordinates()) {
+                    polygon.add(coord);
+                }
+
+                mMap.addPolygon(polygon);
             }
         }
 

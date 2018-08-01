@@ -779,6 +779,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
 
             secondsLocationIsNull = 0;
+            trackIndex = 0;
             sessionEnded = false;
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
             sessionKey = sessRef.push().getKey();//generate key/ID for a session
@@ -841,9 +842,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
 
         if (location != null&& btnStart.getTag() == "green") {
-            //start track
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);//only show workers once when location is in
+            //start track path of where phone has been
             trackIndex = 0;
             DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
             Map<String, Object> track = new HashMap<>();
