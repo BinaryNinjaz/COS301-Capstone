@@ -328,6 +328,10 @@ public class Data {
 
     }
 
+    public static void newAccount(){
+        needsPull = true;
+    }
+
     /**
      * Apply all changes to Firebase
      */

@@ -8,11 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import za.org.samac.harvest.util.Data;
+
 public class SignIn_Choose extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_choose);
+        Data.newAccount();
     }
 
     public void choseFarmer(View v){
