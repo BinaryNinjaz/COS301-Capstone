@@ -119,6 +119,22 @@ function showRegister(){
 
 /* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
 function register() {
+     document.getElementById("name").style.borderColor = "#D3D3D3";
+     document.getElementById("surname").style.borderColor = "#D3D3D3";
+    //need to check if other fields exist
+    var fname = document.getElementById("name").value;
+    if(fname===""){
+        document.getElementById("name").style.borderColor = "red";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        return false;
+    }    
+    var lname = document.getElementById("surname").value;
+    if(lname===""){
+        document.getElementById("surname").style.borderColor = "red";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        return false;
+    }
+    
     const email = document.getElementById("email").value;
     const pass = document.getElementById("password").value;
     if(checkPass(pass, document.getElementById("passwordConf").value)){

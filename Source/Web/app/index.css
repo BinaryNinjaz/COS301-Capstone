@@ -17,6 +17,10 @@
 }
 body{
     background-color: transparent;
+    
+}
+input {
+  //  border-color: black;
 }
 /* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
 .inputBlock {
