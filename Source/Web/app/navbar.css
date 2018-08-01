@@ -19,7 +19,10 @@
     background-color: #ddd; /*Grey*/
     color: black;
 }
-
+.nav 
+{
+	height: 50px;
+}
 /* Colour Co active/current link */
 .topnav a.active {
     background-color: #4CAF50; /*Green*/
