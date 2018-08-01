@@ -57,20 +57,21 @@ final class StatSetupViewController: ReloadableFormViewController {
     let period = periodRow?.value ?? .daily
     let mode = modeRow?.value == true ? HarvestCloud.Mode.accum : .running
     
-    let item = StatStore.Item(
-      ids: ids,
-      startDate: sd,
-      endDate: ed,
-      period: period,
-      grouping: HarvestCloud.GroupBy(sk),
-      mode: mode)
-    
     let alert = SCLAlertView(appearance: .warningAppearance)
     let statNameTextView = alert.addTextField()
     statNameTextView.placeholder = "Graph Name"
     
     alert.addButton("Save") {
-      StatStore.shared.saveItem(item: item, withName: statNameTextView.text ?? Date().description)
+      let item = StatStore.Item(
+        ids: ids,
+        startDate: sd,
+        endDate: ed,
+        period: period,
+        grouping: HarvestCloud.GroupBy(sk),
+        mode: mode,
+        name: statNameTextView.text ?? Date().description)
+      
+      StatStore.shared.saveItem(item: item)
     }
     
     alert.addButton("Cancel") {}
