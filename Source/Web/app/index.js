@@ -119,29 +119,30 @@ function showRegister(){
 
 /* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
 function register() {
-	const email = document.getElementById("email").value;
-	const pass = document.getElementById("password").value;
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
     if(checkPass(pass, document.getElementById("passwordConf").value)){
         firebaseRegister(email, pass);
-	}
+    }
 }
 
 function checkPass(pass1, pass2) {
 	if(page === 0){
-		return false;
+            return false;
 	}
-	if (pass1 === "" && pass2 === ""){
-        document.getElementById("errorSpace").innerHTML = "<br>";
+	/*else if (pass1 === "" && pass2 === ""){
+            document.getElementById("errorSpace").innerHTML = "<br>";
         return true;
-	}
+	}*/ 
+    //We can do this validation through html's minimum character attribute
     if (pass1 !== pass2) {
         document.getElementById("errorSpace").innerHTML = "<p class='errmsg'>Passwords do not match</p>";
-        document.getElementById("password").value = 0;
-        document.getElementById("passwordConf").value = 0;
+        //document.getElementById("password").value = 0;
+        //document.getElementById("passwordConf").value = 0;
         return false;
     }
     if (pass1 === pass2) {
-        document.getElementById("errorSpace").innerHTML = "<br>";
+        //document.getElementById("errorSpace").innerHTML = "<br>";
         return true;
     }
 }
