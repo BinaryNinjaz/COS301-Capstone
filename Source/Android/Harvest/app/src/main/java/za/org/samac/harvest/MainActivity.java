@@ -760,7 +760,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         //set initial Firebase data
         if (btnStart.getTag() == "green") {
-            getOrchard();
+            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                String msg = "These services are unavailable, please switch on location to gain access";
+                AlertDialog.Builder dlgAlertIfNoLocation = new AlertDialog.Builder(this);
+                dlgAlertIfNoLocation.setMessage(msg);
+                dlgAlertIfNoLocation.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.setIncrement();
+                        recyclerView.setVisibility(View.GONE);
+                        dialog.dismiss();
+                    }
+                });
+                dlgAlertIfNoLocation.setCancelable(false);
+                dlgAlertIfNoLocation.create().show();
+            } else {
+                getOrchard();
+            }
+
             secondsLocationIsNull = 0;
             sessionEnded = false;
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
@@ -781,22 +798,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             sessionDate.put("end_date", endSessionTime);
 
             sessRef.updateChildren(sessionDate);//save data to Firebase
-        }
-
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && btnStart.getTag() == "green") {
-            String msg = "These services are unavailable, please switch on location to gain access";
-            AlertDialog.Builder dlgAlertIfNoLocation = new AlertDialog.Builder(this);
-            dlgAlertIfNoLocation.setMessage(msg);
-            dlgAlertIfNoLocation.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    adapter.setIncrement();
-                    recyclerView.setVisibility(View.GONE);
-                    dialog.dismiss();
-                }
-            });
-            dlgAlertIfNoLocation.setCancelable(false);
-            dlgAlertIfNoLocation.create().show();
         }
 
         if (location == null && btnStart.getTag() == "green") {
