@@ -240,7 +240,7 @@ function dispFarm(id) {
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().companyName + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().contact + "</p> </div> </div> " +
+        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().contactNumber + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().email + "</p> </div> </div> " +
@@ -283,7 +283,7 @@ function farmSave(type, id) {
       name: document.getElementById("farmName").value,
       companyName: document.getElementById("companyName").value,
       further: document.getElementById("farmFurther").value,
-      contact: document.getElementById("farmContact").value,
+      contactNumber: document.getElementById("farmContact").value,
       email: document.getElementById("farmEmail").value,
       province: document.getElementById("farmProvince").value,
       town: (document.getElementById("farmTown").value+"")
@@ -296,7 +296,7 @@ function farmSave(type, id) {
       name: document.getElementById("farmName").value,
       companyName: document.getElementById("companyName").value,
       further: document.getElementById("farmFurther").value,
-      contact: document.getElementById("farmContact").value,
+      contactNumber: document.getElementById("farmContact").value,
       email: document.getElementById("farmEmail").value,
       province: document.getElementById("farmProvince").value,
       town: document.getElementById("farmTown").value
@@ -330,7 +330,7 @@ function farmMod(id) {
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'>" + snapshot.val().further + "</textarea></div> </div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().contact + "'></div> </div> " +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().contactNumber + "'></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmEmail' value='" + snapshot.val().email + "'></div> </div> " +
