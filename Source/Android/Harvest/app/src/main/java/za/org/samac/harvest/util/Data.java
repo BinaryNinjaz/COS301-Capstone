@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -841,6 +842,26 @@ public class Data {
     public void addWorker(Worker addMe){
         workers.addElement(addMe);
         changes.Add(Category.WORKER, addMe.getfID());
+    }
+
+    public List<DBInfoObject> search(String query){
+        List<DBInfoObject> result = new ArrayList<>();
+        for (Farm farm: farms){
+            if (farm.toString().toLowerCase().contains(query.toLowerCase())){
+                result.add(farm);
+            }
+        }
+        for (Orchard orchard: orchards){
+            if (orchard.toString().toLowerCase().contains(query.toLowerCase())){
+                result.add(orchard);
+            }
+        }
+        for (Worker worker: workers){
+            if (worker.toString().toLowerCase().contains(query.toLowerCase())){
+                result.add(worker);
+            }
+        }
+        return result;
     }
 
 

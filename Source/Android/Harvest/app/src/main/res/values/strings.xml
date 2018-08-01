@@ -205,7 +205,7 @@
     <string name="anal_work_lMonth">Last Month\'s Worker Performance</string>
     <string name="anal_work_tYear">This Year\'s Worker Performance</string>
     <string name="anal_work_lYear">Last Year\'s Worker Performance</string>
-    
+
     <!--Foreman Defaults-->
     <string name="anal_fore_tit">Foreman Comparison</string>
     <string name="anal_fore_tod">Today\'s Foreman Performance</string>
@@ -230,7 +230,6 @@
     <string name="anal_graph_worker">Worker Performance</string>
 
 
-
     <string name="title_activity_sessions">Sessions</string>
     <string name="title_activity_sessions_map">Map</string>
 
@@ -249,7 +248,7 @@
     <string name="pressStart">Press \'Start\' to begin tracking worker collections</string>
 
     <!--Country codes for formatting telephone numbers-->
-    <string-array name="CountryCodes" >
+    <string-array name="CountryCodes">
         <item>93,AF</item>
         <item>355,AL</item>
         <item>213,DZ</item>
@@ -457,4 +456,7 @@
         <item>260,ZM</item>
         <item>263,ZW</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
