@@ -89,25 +89,25 @@ function showRegister(){
                                                                 +"<div class='card-body'>"
                                                                     +'<div class="form-group">'
                                                                             +'<label style="text-align:left">First Name</label>'
-                                                                            +'<input placeholder="" type="text" class="form-control" id="name" required>'
+                                                                            +'<input placeholder="" type="text" class="form-control" id="name" required />'
                                                                     +'</div>'
                                                                     +'<div class="form-group">'
                                                                             +'<label style="text-align:left">Surname</label>'
-                                                                            +'<input placeholder="" type="text" class="form-control" id="surname" required>'
+                                                                            +'<input placeholder="" type="text" class="form-control" id="surname" required />'
                                                                     +'</div>'
                                                                     +'<div class="form-group">'
                                                                             +'<label style="text-align:left">Email Address</label>'
                                                                             +'<input type="text" class="form-control" id="email" required data-type="tooltip"'
-                                                                                                               +'title="The email must be properly formatted, so joe@example.com">'
+                                                                                                               +'title="The email must be properly formatted, so joe@example.com" />'
                                                                     +'</div>'
                                                                     +'<div class="form-group">'
                                                                             +'<label style="text-align:left">New Password</label>'
-                                                                            +'<input placeholder="" type="password" class="form-control" id="password" required'
-                                                                                                               +'data-type="tooltip" title="There are absolutely no password requirements">'
+                                                                            +'<input placeholder="" type="password" class="form-control" id="password"'
+                                                                                                               +'data-type="tooltip" title="Minimum 6 character password" required />'
                                                                     +'</div>'
                                                                     +'<div class="form-group">'
                                                                             +'<label style="text-align:left">Password Confirmation</label>'
-                                                                            +'<input placeholder="" type="password" class="form-control" id="passwordConf" required>'
+                                                                            +'<input placeholder="" type="password" class="form-control" id="passwordConf" required />'
                                                                     +'</div>'
                                                                     +'<div class="form-group" id="errorSpace"></div>'
                                                                     +'<button onclick="register()" class="btn btn-success">Create Account</button>'
@@ -119,8 +119,12 @@ function showRegister(){
 
 /* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
 function register() {
-     document.getElementById("name").style.borderColor = "#D3D3D3";
-     document.getElementById("surname").style.borderColor = "#D3D3D3";
+    document.getElementById("name").style.borderColor = "#A9A9A9";
+     document.getElementById("name").style.borderColor = "#A9A9A93";
+     document.getElementById("surname").style.borderColor = "#A9A9A9";
+     document.getElementById("email").style.borderColor = "#A9A9A9";
+     document.getElementById("passwordConf").style.borderColor = "#A9A9A9";
+     document.getElementById("password").style.borderColor = "#A9A9A9";
     //need to check if other fields exist
     var fname = document.getElementById("name").value;
     if(fname===""){
@@ -134,6 +138,19 @@ function register() {
         document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
         return false;
     }
+    //var email = document.getElementById("email").value;
+    /*if(email===""){
+        document.getElementById("email").style.borderColor = "red";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        return false;
+    }*/
+   // var pass = document.getElementById("password").value;
+   /* if(pass===""){
+        document.getElementById("password").style.borderColor = "red";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        return false;
+    }*/
+   
     
     const email = document.getElementById("email").value;
     const pass = document.getElementById("password").value;
