@@ -18,21 +18,23 @@
 .topnav a:hover {
     background-color: #ddd; /*Grey*/
     color: black;
-}
+}/*
 #emailInNav
 {
 	padding-top: 12px;
 }
-.nav 
+#signing
 {
-	height: 50px; /* This reduces the height of the div which contains the navbar */
-}
+	
+}*/
+
 /* Colour Co active/current link */
 .topnav a.active {
     background-color: #4CAF50; /*Green*/
     color: white;
 }
-
+.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;}
+.navbar-nav > a {padding-top:10px !important; padding-bottom:10px !important;}
 h1 {
     font-family: sans-serif;
     color: black;
