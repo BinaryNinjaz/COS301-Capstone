@@ -44,7 +44,7 @@ label {
 .form-control {
     border-color: grey;
 }
-.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;}
+.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;} /* This determines the height of the navbar */
 .navbar-nav > a {padding-top:10px !important; padding-bottom:10px !important;}
 button {
     background-color: #4CAF50; /*Green*/

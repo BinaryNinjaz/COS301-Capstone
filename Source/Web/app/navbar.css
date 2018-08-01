@@ -35,6 +35,7 @@
 }
 .navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;} /* This determines the height of the navbar */
 .navbar-nav > a {padding-top:10px !important; padding-bottom:10px !important;} /* This is for consistency with the height of the navbar */
+
 h1 {
     font-family: sans-serif;
     color: black;
