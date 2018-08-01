@@ -69,39 +69,36 @@ final class StatSelectionViewController: ReloadableFormViewController {
   
   func customGraphSection() -> Section {
     let result = Section("Your Graphs")
-    for name in StatStore.shared.statDataNames {
-      if let stat = StatStore.shared.getItem(withName: name) {
-        result <<< ButtonRow { row in
-          row.title = name
-        }.cellUpdate { cell, _ in
-          cell.textLabel?.textAlignment = .left
-          cell.textLabel?.textColor = .black
-          
-          let longPress = UILongPressGestureRecognizer(
-            target: self,
-            action: #selector(self.longPressCustomGraph(_:)))
-          longPress.accessibilityLabel = name
-          
-          cell.addGestureRecognizer(longPress)
-        }.onCellSelection { _, _ in
-          
-          guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
-            return
-          }
-          
-          guard let svc = vc as? StatsViewController else {
-            return
-          }
-          
-          svc.startDate = stat.startDate
-          svc.endDate = stat.endDate
-          svc.period = stat.period
-          svc.stat = Stat.untyped(stat.ids, stat.grouping)
-          svc.mode = stat.mode
-          
-          self.navigationController?.pushViewController(svc, animated: true)
-          
+    for stat in StatStore.shared.store {
+      result <<< ButtonRow { row in
+        row.title = stat.name
+      }.cellUpdate { cell, _ in
+        cell.textLabel?.textAlignment = .left
+        cell.textLabel?.textColor = .black
+        
+        let longPress = UILongPressGestureRecognizer(
+          target: self,
+          action: #selector(self.longPressCustomGraph(_:)))
+        longPress.accessibilityLabel = stat.name
+        
+        cell.addGestureRecognizer(longPress)
+      }.onCellSelection { _, _ in
+        
+        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
+          return
         }
+        
+        guard let svc = vc as? StatsViewController else {
+          return
+        }
+        
+        svc.startDate = stat.startDate
+        svc.endDate = stat.endDate
+        svc.period = stat.period
+        svc.stat = Stat.untyped(stat.ids, stat.grouping)
+        svc.mode = stat.mode
+        
+        self.navigationController?.pushViewController(svc, animated: true)
       }
     }
     

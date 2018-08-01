@@ -16,54 +16,38 @@ struct StatStore {
     var period: HarvestCloud.TimePeriod
     var grouping: HarvestCloud.GroupBy
     var mode: HarvestCloud.Mode
+    var name: String
   }
   
   static var shared = StatStore()
   
-  var statDataNames: [String]
-  var statData: [Item]
+  let path = "StatStore"
+  var store: [Item]
   
   init() {
-    statDataNames = (try? Disk.retrieve("StatDataNames", from: .applicationSupport, as: [String].self))
-      ?? []
-    statData = []
-    for name in statDataNames {
-      if let data = try? Disk.retrieve(name, from: .applicationSupport, as: Item.self) {
-        statData.append(data)
-      }
-    }
+    store = (try? Disk.retrieve(path, from: .documents, as: [Item].self)) ?? []
   }
   
-  mutating func saveItem(item: Item, withName name: String) {
-    try? Disk.append(name, to: "StatDataNames", in: .applicationSupport)
-    try? Disk.save(item, to: .applicationSupport, as: name)
-    statDataNames.append(name)
-    statData.append(item)
+  mutating func saveItem(item: Item) {
+    try? Disk.append(item, to: path, in: .documents)
+    store.append(item)
   }
   
   mutating func removeItem(withName name: String) {
-    if (try? Disk.retrieve(name, from: .applicationSupport, as: Item.self)) != nil {
-      try? Disk.remove(name, from: .applicationSupport)
-      if let idx = statDataNames.index(of: name) {
-        statDataNames.remove(at: idx)
-        statData.remove(at: idx)
-      }
-      try? Disk.save(statDataNames, to: .applicationSupport, as: "StatDataNames")
+    if let idx = store.index(where: { $0.name == name }) {
+      store.remove(at: idx)
+      try? Disk.save(store, to: .documents, as: path)
     }
   }
   
   mutating func renameItem(withName name: String, toNewName newName: String) {
-    if let item = try? Disk.retrieve(name, from: .applicationSupport, as: Item.self) {
-      try? Disk.remove(name, from: .applicationSupport)
-      try? Disk.save(item, to: .applicationSupport, as: newName)
-      if let idx = statDataNames.index(of: name) {
-        statDataNames[idx] = newName
-      }
-      try? Disk.save(statDataNames, to: .applicationSupport, as: "StatDataNames")
+    if let idx = store.index(where: { $0.name == name }) {
+      store[idx].name = newName
+      try? Disk.save(store, to: .documents, as: path)
     }
   }
   
   func getItem(withName name: String) -> Item? {
-    return try? Disk.retrieve(name, from: .applicationSupport, as: Item.self)
+    return store.first { $0.name == name }
   }
 }
