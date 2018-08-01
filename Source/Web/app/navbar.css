@@ -21,7 +21,7 @@
 }
 .nav 
 {
-	height: 50px;
+	height: 50px; /* This reduces the height of the div which contains the navbar */
 }
 /* Colour Co active/current link */
 .topnav a.active {
