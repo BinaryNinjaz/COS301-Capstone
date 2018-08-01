@@ -36,10 +36,6 @@ h1 {
     font-family: sans-serif;
     color: black;
 }
-.nav 
-{
-	height: 60px; /* This reduces the height of the div which contains the navbar */
-}
 label {
     font-family: sans-serif;
     color: black;
@@ -48,7 +44,8 @@ label {
 .form-control {
     border-color: grey;
 }
-
+.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;}
+.navbar-nav > a {padding-top:10px !important; padding-bottom:10px !important;}
 button {
     background-color: #4CAF50; /*Green*/
     color: white;
