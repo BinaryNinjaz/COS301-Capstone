@@ -4,12 +4,11 @@ html {
 }
 body {
     font-family: Sans-Serif;	
-    background-color: transparent;
-    /* Center and scale the image nicely */
-    background-image: url("backgrdSmaller.jpg");
+   // background-color: transparent;
+    /* Center and scale the image nicely */   
+     background-image: url("backgrdSmaller.jpg");
     background-repeat: no-repeat;  
-    background-size: cover;  
-    
+    background-size: auto;  
 }
 /* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
 .inputBlock {
