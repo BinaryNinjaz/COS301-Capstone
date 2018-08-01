@@ -50,7 +50,7 @@ enum HarvestCloud {
     static let shallowSessions = "flattendSessions"
     static let sessionsWithDates = "sessionsWithinDates"
     static let expectedYield = "expectedYield"
-    static let orchardCollections = "orchardCollectionsWithinDate"
+    static let collections = "collectionsWithinDate"
     static let timeGraphSessions = "timedGraphSessions"
   }
   
@@ -135,25 +135,27 @@ enum HarvestCloud {
     }
   }
   
-  static func orchardCollections(
-    orchardIds: [String], 
+  static func collections(
+    ids: [String], 
     startDate: Date, 
-    endDate: Date, 
+    endDate: Date,
+    groupBy: HarvestCloud.GroupBy,
     completion: @escaping ([Any]) -> Void
   ) {
     var args = [
       ("startDate", startDate.timeIntervalSince1970.description),
       ("endDate", endDate.timeIntervalSince1970.description),
+      ("groupBy", groupBy.description),
       ("uid", HarvestDB.Path.parent)
     ]
     
-    for (i, o) in orchardIds.enumerated() {
-      args.append(("orchardId\(i)", o))
+    for (i, o) in ids.enumerated() {
+      args.append(("id\(i)", o))
     }
     
     let body = makeBody(withArgs: args)
     
-    runTask(Identifiers.orchardCollections, withBody: body) { (serial) in
+    runTask(Identifiers.collections, withBody: body) { (serial) in
       guard let json = serial as? [Any] else {
         return
       }
@@ -252,11 +254,11 @@ enum HarvestCloud {
   }
 }
 
-func orchardCollection() {
+func collection() {
   let s = Date(timeIntervalSince1970: 1529853470 * 0)
   let e = Date()
 
-  HarvestCloud.orchardCollections(orchardIds: ["-LCEFgdMMO80LR98BzPC"], startDate: s, endDate: e) { f in
+  HarvestCloud.collections(ids: ["-LBykXujU0Igjzvq5giB"], startDate: s, endDate: e, groupBy: .worker) { f in
     print(f)
   }
 }
@@ -324,6 +326,8 @@ func expectedYield() {
   }
 }
 
-timeGraphSessionsWorker()
+collection()
+
+//timeGraphSessionsWorker()
 
 RunLoop.main.run()
