@@ -109,7 +109,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference farmLevelRef;
     public static String sessionKey;
     public static String farmerKey;
+    public static String selectedOrchardKey;
     private boolean isFarmer = true;
+    private ArrayList<String> orchards = new ArrayList<>();
+    private ArrayList<String> orchardKeys = new ArrayList<>();
 
     private FirebaseDatabase database;
     //private Query q;
@@ -267,10 +270,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         if (isFarmer){
             farmerKey = uid;
-            getPolygon();//set expected yield
+            //getPolygon();//set expected yield
             currUserRef = database.getReference(uid);//Firebase reference
             workersRef = currUserRef.child("workers");
-            collectWorkers();
+            collectOrchards();
         }
         else {
             getFarmKey();
@@ -325,6 +328,54 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     ArrayList<String> currentOrchard = new ArrayList<>();
     String correctOrchard = "";
     int holdi;
+
+    private void collectOrchards() {
+        currUserRef = database.getReference(uid);//Firebase reference
+        DatabaseReference orchRef;
+        orchRef = currUserRef.child("orchards");
+        orchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                    Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                    orchardKeys.add(zoneSnapshot.getKey().toString());
+                    orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                }
+
+                progressBar.setVisibility(View.GONE);//remove progress bar
+                constraintLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                //user pressed start and all went well with retrieving data
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+                progressBar.setVisibility(View.GONE);
+                constraintLayout.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void getOrchard() {
+
+        CharSequence orchardsSelected[] = orchards.toArray(new CharSequence[orchards.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Orchard");
+        builder.setItems(orchardsSelected, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // the user clicked on colors[which]
+                selectedOrchardKey = orchardKeys.get(which);
+                progressBar.setVisibility(View.VISIBLE);
+                collectWorkers();
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
 
     private void getPolygon() {
         DatabaseReference myRef;
@@ -570,7 +621,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
      * and an array of buttons to be added to the view
      */
 
-    protected static void collectWorkers() {
+    protected void collectWorkers() {
 
         /* TODO: The constant Listener causes a crash when a new worker is added, seemingly:
             To reproduce
@@ -582,27 +633,35 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
                     Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
-
+                    String workerOrchards = "";
                     String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                    if (zoneSnapshot.child("orchards") != null) {
+                        workerOrchards = "";
+                        for (DataSnapshot orch : zoneSnapshot.child("orchards").getChildren()) {
+                            workerOrchards += orch;
+                        }
+                    }
 
-                    //only add if person is a worker (not a foreman)
-                    if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
-                        Worker workerObj = new Worker();
-                        workerObj.setName(fullName);
-                        workerObj.setValue(0);
-                        workerObj.setID(zoneSnapshot.getKey());
-                        workers.add(workerObj);
-                    } else {
-                        Worker workerObj = new Worker();
-                        workerObj.setName(fullName);
-                        workerObj.setValue(0);
-                        workerObj.setID(zoneSnapshot.getKey());
-                        foremen.add(workerObj);
+                    if (workerOrchards.contains(selectedOrchardKey)) {
+                        //collect workers
+                        if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
+                            Worker workerObj = new Worker();
+                            workerObj.setName(fullName);
+                            workerObj.setValue(0);
+                            workerObj.setID(zoneSnapshot.getKey());
+                            workers.add(workerObj);
+                        } else {
+                            Worker workerObj = new Worker();
+                            workerObj.setName(fullName);
+                            workerObj.setValue(0);
+                            workerObj.setID(zoneSnapshot.getKey());
+                            foremen.add(workerObj);
 
-                        if (zoneSnapshot.child("phoneNumber").getValue(String.class) != null) {
-                            if (zoneSnapshot.child("phoneNumber").getValue(String.class).equals(currentUserNumber)) {
-                                foremanID = zoneSnapshot.getKey();
-                                foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                            if (zoneSnapshot.child("phoneNumber").getValue(String.class) != null) {
+                                if (zoneSnapshot.child("phoneNumber").getValue(String.class).equals(currentUserNumber)) {
+                                    foremanID = zoneSnapshot.getKey();
+                                    foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                                }
                             }
                         }
                     }
@@ -612,9 +671,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 workersSearch.addAll(workers);
 
-                progressBar.setVisibility(View.GONE);//remove progress bar
+                progressBar.setVisibility(View.VISIBLE);
                 constraintLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
+                if (workers.size() == 0) {
+                    TextView pressStart = findViewById(R.id.startText);
+                    pressStart.setVisibility(View.VISIBLE);
+                    pressStart.setText("No workers added to orchard");
+                    recyclerView.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                }
                 //user pressed start and all went well with retrieving data
             }
 
@@ -635,10 +701,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             finish();
             return;
         }
-        getPolygon();
+        //getPolygon();
         farmLevelRef = database.getReference(farmerKey);
         workersRef = farmLevelRef.child("workers");
-        collectWorkers();
+        collectOrchards();
+        //collectWorkers();
     }
 
     public void statusCheck() {
@@ -693,6 +760,25 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         //set initial Firebase data
         if (btnStart.getTag() == "green") {
+            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                String msg = "These services are unavailable, please switch on location to gain access";
+                AlertDialog.Builder dlgAlertIfNoLocation = new AlertDialog.Builder(this);
+                dlgAlertIfNoLocation.setMessage(msg);
+                dlgAlertIfNoLocation.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.setIncrement();
+                        recyclerView.setVisibility(View.GONE);
+                        dialog.dismiss();
+                    }
+                });
+                dlgAlertIfNoLocation.setCancelable(false);
+                dlgAlertIfNoLocation.create().show();
+            } else {
+                getOrchard();
+            }
+
+            secondsLocationIsNull = 0;
             trackIndex = 0;
             sessionEnded = false;
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
@@ -713,37 +799,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             sessionDate.put("end_date", endSessionTime);
 
             sessRef.updateChildren(sessionDate);//save data to Firebase
-        }
-
-        if (workers.size() == 0 && btnStart.getTag() == "green") {
-            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-            String msg = "No workers added to orchard";
-            dlgAlert.setMessage(msg);
-            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    adapter.setIncrement();
-                    recyclerView.setVisibility(View.GONE);
-                    dialog.dismiss();
-                }
-            });
-            dlgAlert.setCancelable(false);
-            dlgAlert.create().show();
-        }
-
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && btnStart.getTag() == "green") {
-            String msg = "These services are unavailable, please switch on location to gain access";
-            AlertDialog.Builder dlgAlertIfNoLocation = new AlertDialog.Builder(this);
-            dlgAlertIfNoLocation.setMessage(msg);
-            dlgAlertIfNoLocation.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    adapter.setIncrement();
-                    recyclerView.setVisibility(View.GONE);
-                    dialog.dismiss();
-                }
-            });
-            dlgAlertIfNoLocation.setCancelable(false);
-            dlgAlertIfNoLocation.create().show();
         }
 
         if (location == null && btnStart.getTag() == "green") {
@@ -787,6 +842,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
 
         if (location != null&& btnStart.getTag() == "green") {
+            progressBar.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);//only show workers once when location is in
             //start track path of where phone has been
             trackIndex = 0;
             DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
@@ -892,6 +949,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("orange");
         } else {
             //session ended
+            workers.clear();
+            workersSearch.clear();
+            TextView pressStart = findViewById(R.id.startText);
+            pressStart.setText(R.string.pressStart);
+
             sessionEnded = true;
             endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
             sessionDate.put("end_date", endSessionTime);
