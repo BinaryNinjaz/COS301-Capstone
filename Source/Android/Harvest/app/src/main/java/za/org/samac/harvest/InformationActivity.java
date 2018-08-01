@@ -779,7 +779,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     private void closeSearch(){
         if (searching){
             searching = false;
-//            searchView.onActionViewCollapsed();
+            searchView.onActionViewCollapsed();
 //            getMenuInflater().inflate(R.menu.menu, this.menu);
         }
     }
