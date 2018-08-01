@@ -16,7 +16,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
   
   func customGraph() -> LabelRow {
     return LabelRow { row in
-      row.title = "Make Your Own Graph"
+      row.title = "Create Graph"
     }.cellUpdate { cell, _ in
       cell.textLabel?.textAlignment = .center
       cell.textLabel?.textColor = .addOrchard
@@ -97,6 +97,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
           svc.endDate = stat.endDate
           svc.period = stat.period
           svc.stat = Stat.untyped(stat.ids, stat.grouping)
+          svc.mode = stat.mode
           
           self.navigationController?.pushViewController(svc, animated: true)
           
@@ -488,13 +489,13 @@ final class StatSelectionViewController: ReloadableFormViewController {
     }
     
     form
+      +++ customGraphSection()
+      
       +++ orchardSection
       
       +++ workerSection
       
       +++ foremanSection
-    
-      +++ customGraphSection()
   }
   
   override func tearDown() {

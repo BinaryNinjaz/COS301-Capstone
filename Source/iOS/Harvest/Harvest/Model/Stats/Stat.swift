@@ -22,6 +22,7 @@ enum Stat {
     startDate: Date,
     endDate: Date,
     period: HarvestCloud.TimePeriod,
+    mode: HarvestCloud.Mode,
     completion: @escaping ([String: Any]?) -> Void
   ) {
     HarvestCloud.timeGraphSessions(
@@ -29,7 +30,8 @@ enum Stat {
       ids: ids,
       period: period,
       startDate: startDate,
-      endDate: endDate) { data in
+      endDate: endDate,
+      mode: mode) { data in
         guard let json = data as? [String: Any] else {
           completion(nil)
           return
@@ -73,6 +75,7 @@ enum Stat {
     startDate: Date,
     endDate: Date,
     period: HarvestCloud.TimePeriod,
+    mode: HarvestCloud.Mode,
     completion: @escaping (BarChartData?, LineChartData?) -> Void
   ) {
     
@@ -89,7 +92,8 @@ enum Stat {
       grouping: grouping,
       startDate: startDate,
       endDate: endDate,
-      period: period) { json in
+      period: period,
+      mode: mode) { json in
         guard let json = json else {
           completion(nil, nil)
           return
@@ -123,10 +127,13 @@ enum Stat {
             ? orchard?.name
             : worker?.name) ?? "Unknown \(missingMessage)"
           
-          let fullDataSet = period.fullDataSet(
-            between: startDate,
-            and: endDate,
-            limitToDate: period == .weekly)
+          let fullDataSet = mode == .accum
+            ? period.fullDataSet(
+                between: startDate,
+                and: endDate,
+                limitToDate: period == .weekly)
+            : period.fullRunningDataSet(between: startDate, and: endDate)
+          
           for (e, x) in fullDataSet.enumerated() {
             if let y = dataSetObject[x] {
               _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
@@ -185,9 +192,9 @@ enum Stat {
         limitToDate: period == .weekly)
       for (e, x) in fullDataSet.enumerated() {
         if let y = dataSetObject[x] {
-          _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: y))
+          _ = dataSet.addEntry(ChartDataEntry(x: Double(e), y: y))
         } else {
-          _ = dataSet.addEntry(BarChartDataEntry(x: Double(e), y: 0.0))
+          _ = dataSet.addEntry(ChartDataEntry(x: Double(e), y: 0.0))
         }
       }
       

@@ -158,6 +158,7 @@ enum HarvestCloud {
     period: TimePeriod,
     startDate: Date,
     endDate: Date,
+    mode: Mode,
     completion: @escaping (Any) -> Void
     ) {
     var args = [
@@ -165,6 +166,7 @@ enum HarvestCloud {
       ("period", period.description),
       ("startDate", startDate.timeIntervalSince1970.description),
       ("endDate", endDate.timeIntervalSince1970.description),
+      ("mode", mode.description),
       ("uid", HarvestDB.Path.parent)
     ]
     
@@ -298,6 +300,66 @@ extension HarvestCloud {
         return ["2018", "2019", "2020", "2021", "2022"]
       }
     }
+    
+    func fullRunningDataSet(between startDate: Date, and endDate: Date) -> [String] {
+      let isSameYear = startDate.startOfYear() == endDate.startOfYear()
+      let isSameMonth = startDate.startOfMonth() == endDate.startOfMonth()
+      let isSameDay = startDate.startOfDay() == endDate.startOfDay()
+      
+      let fmtYear = isSameYear ? "" : "YYYY "
+      let fmtMonth = isSameMonth ? "" : "MMM "
+      let fmtDay = isSameDay ? "" : "dd"
+      let fmt = fmtYear + fmtMonth + fmtDay
+      
+      var result = [String]()
+      let formatter = DateFormatter()
+      let comp: Calendar.Component
+      let format: String
+      var start: Date
+      let end: Date
+      
+      switch self {
+      case .hourly:
+        comp = .hour
+        format = fmt + " HH:mm"
+        start = startDate.startOfDay()
+        end = endDate.startOfDay().date(byAdding: .day, value: 1)
+        
+      case .daily:
+        comp = .day
+        format = fmt == "" ? "EEE" : fmt
+        start = startDate.startOfDay()
+        end = endDate.startOfDay().date(byAdding: .day, value: 1)
+        
+      case .weekly:
+        comp = .weekOfYear
+        format = fmt == "" ? "EEE" : fmt
+        start = startDate.startOfWeek()
+        end = endDate.startOfWeek().date(byAdding: .weekOfYear, value: 1)
+        
+      case .monthly:
+        comp = .month
+        format = fmtYear + " MMM"
+        start = startDate.startOfMonth()
+        end = endDate.startOfMonth().date(byAdding: .month, value: 1)
+        
+      case .yearly:
+        comp = .year
+        format = "YYYY"
+        start = startDate.startOfYear()
+        end = endDate.startOfYear().date(byAdding: .year, value: 1)
+        
+      }
+      
+      formatter.dateFormat = format
+      
+      while start < end {
+        result.append(formatter.string(from: start))
+        start = start.date(byAdding: comp, value: 1)
+      }
+      
+      return result
+    }
   }
   
   enum GroupBy: String, CustomStringConvertible, Codable {
@@ -330,7 +392,7 @@ extension HarvestCloud {
     }
   }
   
-  enum Mode: String, CustomStringConvertible {
+  enum Mode: String, CustomStringConvertible, Codable {
     case accum, running
     
     var description: String {

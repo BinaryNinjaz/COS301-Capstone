@@ -20,6 +20,7 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
   var endDate: Date?
   var period: HarvestCloud.TimePeriod?
   var grouping: HarvestCloud.GroupBy = .worker
+  var mode: HarvestCloud.Mode?
   
   var selected: [EntityItem] = []
   
