@@ -15,6 +15,7 @@ struct StatStore {
     var endDate: Date
     var period: HarvestCloud.TimePeriod
     var grouping: HarvestCloud.GroupBy
+    var mode: HarvestCloud.Mode
   }
   
   static var shared = StatStore()

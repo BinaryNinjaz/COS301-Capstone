@@ -24,6 +24,7 @@ final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[EntityItem]>>, 
   var endDate: Date?
   var period: HarvestCloud.TimePeriod?
   var grouping: HarvestCloud.GroupBy = .worker
+  var mode: HarvestCloud.Mode?
   
   required init(tag: String?) {
     super.init(tag: tag)
@@ -40,6 +41,7 @@ final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[EntityItem]>>, 
         rowVC.endDate = self.endDate
         rowVC.period = self.period
         rowVC.grouping = self.grouping
+        rowVC.mode = self.mode
         return rowVC
       },
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })

@@ -19,6 +19,7 @@ final class StatSetupViewController: ReloadableFormViewController {
   var startDateRow: DateRow?
   var endDateRow: DateRow?
   var periodRow: PushRow<HarvestCloud.TimePeriod>?
+  var modeRow: SwitchRow?
   
   // swiftlint:disable function_body_length
   public override func viewDidLoad() {
@@ -54,9 +55,15 @@ final class StatSetupViewController: ReloadableFormViewController {
     let sd = startDateRow?.value ?? Date()
     let ed = endDateRow?.value ?? Date()
     let period = periodRow?.value ?? .daily
+    let mode = modeRow?.value == true ? HarvestCloud.Mode.accum : .running
     
     let item = StatStore.Item(
-      ids: ids, startDate: sd, endDate: ed, period: period, grouping: HarvestCloud.GroupBy(sk))
+      ids: ids,
+      startDate: sd,
+      endDate: ed,
+      period: period,
+      grouping: HarvestCloud.GroupBy(sk),
+      mode: mode)
     
     let alert = SCLAlertView(appearance: .warningAppearance)
     let statNameTextView = alert.addTextField()
@@ -134,6 +141,11 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.value = .daily
     }
     
+    modeRow = SwitchRow("ModeRow") { row in
+      row.value = false
+      row.title = "Accumulate Data"
+    }
+    
     let showStats = ButtonRow { row in
       row.title = "Display Stats"
     }.onCellSelection { _, _ in
@@ -148,6 +160,7 @@ final class StatSetupViewController: ReloadableFormViewController {
         svc.startDate = self.startDateRow?.value
         svc.endDate = self.endDateRow?.value
         svc.period = self.periodRow?.value
+        svc.mode = self.modeRow?.value == true ? .accum : .running
         
         let kind = self.statKindRow?.value ?? .workers
         switch kind {
@@ -175,7 +188,8 @@ final class StatSetupViewController: ReloadableFormViewController {
             let foremenRow = self.foremenRow,
             let periodRow = self.periodRow,
             let startDateRow = self.startDateRow,
-            let endDateRow = self.endDateRow
+            let endDateRow = self.endDateRow,
+            let modeRow = self.modeRow
       else {
           return
       }
@@ -193,6 +207,7 @@ final class StatSetupViewController: ReloadableFormViewController {
         <<< periodRow
         <<< startDateRow
         <<< endDateRow
+        <<< modeRow
         
         +++ Section()
         <<< showStats

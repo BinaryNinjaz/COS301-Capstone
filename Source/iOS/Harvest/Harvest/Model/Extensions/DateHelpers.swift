@@ -9,6 +9,42 @@
 import Foundation
 
 extension Date {
+  func startOfHour(using calendar: Calendar = .current) -> Date {
+    let components = calendar.dateComponents([.year, .month, .day, .hour], from: self)
+    let s = calendar.date(from: components)!
+    
+    return s
+  }
+  
+  func startOfDay(using calendar: Calendar = .current) -> Date {
+    return calendar.startOfDay(for: self)
+  }
+  
+  func startOfWeek(using calendar: Calendar = .current) -> Date {
+    let components = calendar.dateComponents([.weekOfYear, .yearForWeekOfYear], from: self)
+    let s = calendar.date(from: components)!
+    
+    return s
+  }
+  
+  func startOfMonth(using calendar: Calendar = .current) -> Date {
+    let components = calendar.dateComponents([.year, .month], from: self)
+    let s = calendar.date(from: components)!
+    
+    return s
+  }
+  
+  func startOfYear(using calendar: Calendar = .current) -> Date {
+    let components = calendar.dateComponents([.year], from: self)
+    let s = calendar.date(from: components)!
+    
+    return s
+  }
+  
+  func date(byAdding comp: Calendar.Component, value: Int, using calendar: Calendar = .current) -> Date {
+    return calendar.date(byAdding: comp, value: value, to: self)!
+  }
+  
   func today(using calendar: Calendar = .current) -> (Date, Date) {
     let now = Date()
     let dayAfter = calendar.date(byAdding: .day, value: 1, to: now)!
