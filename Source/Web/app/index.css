@@ -1,20 +1,4 @@
 
-@media only screen and (min-width: 700px) {
-    html {
-        font-family: Sans-Serif;	
-        background-image: url("backgrdSmaller.jpg");
-        background-repeat: no-repeat;  
-        background-size: auto;  
-    }
-}
-@media only screen and (max-width: 728px) {
-   html {
-        font-family: Sans-Serif;	
-         background-image: url("backgrdSmaller.jpg");
-        background-repeat: no-repeat;  
-        background-size: cover;  
-    }
-}
 body{
     background-color: transparent;
     
@@ -72,4 +56,26 @@ ul.ico {
 
 .card-body label{
     text-align: left;
+}
+
+@media only screen and (min-width: 700px) {
+    html {
+        font-family: Sans-Serif;	
+        background-image: url("backgrdSmaller.jpg");
+        background-repeat: no-repeat;  
+        background-size: auto;  
+    }
+}
+@media only screen and (max-width: 728px) {
+   html {
+        font-family: Sans-Serif;	
+         background-image: url("backgrdSmaller.jpg");
+        background-repeat: no-repeat;  
+        background-size: cover;  
+    }
+}
+@media only screen and (max-width: 728px){
+    #right li, h3{
+        color: white;
+    }
 }
