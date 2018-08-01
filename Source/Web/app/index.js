@@ -136,7 +136,7 @@ function checkPass(pass1, pass2) {
 	}*/ 
     //We can do this validation through html's minimum character attribute
     if (pass1 !== pass2) {
-        document.getElementById("errorSpace").innerHTML = "<p class='errmsg'>Passwords do not match</p>";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Passwords do not match</p>";
         //document.getElementById("password").value = 0;
         //document.getElementById("passwordConf").value = 0;
         return false;
