@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static String sessionKey;
     public static String farmerKey;
     private boolean isFarmer = true;
-    Boolean rejectSess = false;
 
     private FirebaseDatabase database;
     //private Query q;
@@ -683,6 +682,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     int foremanTrackerDelay = 120000; //milliseconds
     int secondsLocationIsNull = 0;
     int trackIndex = 0;
+    private boolean sessionEnded = false;
 
     @SuppressLint({"SetTextI18n", "MissingPermission"})
     public void onClickStart(View v) {
@@ -693,6 +693,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         //set initial Firebase data
         if (btnStart.getTag() == "green") {
+            sessionEnded = false;
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
             sessionKey = sessRef.push().getKey();//generate key/ID for a session
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//put key in database
@@ -805,7 +806,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     track.put("lat", currentLat);
                     track.put("lng", currentLong);
                     trackRef.updateChildren(track);
-                    if (trackIndex > 0 && btnStart.getTag() == "green") {
+                    if (sessionEnded == true || trackIndex > 0 && btnStart.getTag() == "green") {
+                        trackIndex = 0;
+                        trackRef.removeValue();
+                        sessionEnded = false;
                         return;//end tracking because session is finished
                     }
                     trackIndex++;
@@ -859,7 +863,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         }
                     });
 
-                    if (trackIndex > 0 && btnStart.getTag() == "green") {
+                    if (sessionEnded == true || trackIndex > 0 && btnStart.getTag() == "green") {
+                        sessionEnded = false;
                         return;//end tracking because session is finished
                     }
 
@@ -886,6 +891,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             btnStart.setTag("orange");
         } else {
             //session ended
+            sessionEnded = true;
+            endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
+            sessionDate.put("end_date", endSessionTime);
+            sessRef.updateChildren(sessionDate);//save data to Firebase
+
             textViewPressStart.setText(R.string.pressStart);
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
@@ -906,21 +916,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     adapter.setIncrement();
                     recyclerView.setVisibility(View.GONE);
                     dialog.dismiss();
-                    rejectSess = true;
                 }
             });
             dlgAlerter.setCancelable(false);
             dlgAlerter.create().show();
-
-            if (rejectSess == false) {
-                endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
-                sessionDate.put("end_date", endSessionTime);
-                sessRef.updateChildren(sessionDate);//save data to Firebase
-            }
-
-            if (rejectSess == true) {
-                sessRef.removeValue();
-            }
 
             stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
