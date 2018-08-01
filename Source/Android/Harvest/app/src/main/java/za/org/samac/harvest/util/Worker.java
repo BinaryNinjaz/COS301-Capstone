@@ -1,5 +1,6 @@
 package za.org.samac.harvest.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -122,6 +123,26 @@ public class Worker extends DBInfoObject {
                 return;
             }
         }
+    }
+
+    public ArrayList<SearchedItem> search(String text) {
+        ArrayList<SearchedItem> result = new ArrayList<>();
+
+        text = text.toLowerCase();
+
+        if ((getfName() + " " + getsName()).toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Name", getfName() + " " + getsName()));
+        }
+
+        if (getnID().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("ID", getnID()));
+        }
+
+        if (getPhone().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Phone Number", getPhone()));
+        }
+
+        return result;
     }
 }
 

@@ -144,9 +144,9 @@ public class SessionDetails extends AppCompatActivity {
 
     public void displayGraph() {
         pieChart = (com.github.mikephil.charting.charts.PieChart)findViewById(R.id.pieChart);
-        for(String key : Sessions.selectedItem.collections.keySet()) {
-            String workerName = key;
-            Float yield = (float)Sessions.selectedItem.collections.get(workerName).size();
+        for(String key : Sessions.selectedItem.collectionPoints.keySet()) {
+            String workerName = Sessions.selectedItem.collectionPoints.get(key).get(0).workerName;
+            Float yield = (float)Sessions.selectedItem.collectionPoints.get(key).size();
             entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
         }
 
