@@ -102,12 +102,12 @@ function showRegister(){
                                                                     +'</div>'
                                                                     +'<div class="form-group">'
                                                                             +'<label style="text-align:left">New Password</label>'
-                                                                            +'<input placeholder="******" pattern=".{6,}" type="password" class="form-control" id="password"'
+                                                                            +'<input pattern=".{6,}" type="password" class="form-control" id="password"'
                                                                                                                +'data-type="tooltip" title="Minimum 6 character password" required />'
                                                                     +'</div>'
                                                                     +'<div class="form-group">'
                                                                             +'<label style="text-align:left">Password Confirmation</label>'
-                                                                            +'<input placeholder="******" type="password" class="form-control" id="passwordConf" required />'
+                                                                            +'<input  type="password" class="form-control" id="passwordConf" required />'
                                                                     +'</div>'
                                                                     +'<div class="form-group" id="errorSpace"></div>'
                                                                     +'<button onclick="register()" class="btn btn-success">Create Account</button>'
@@ -142,19 +142,7 @@ function register() {
          document.getElementById("password").style.borderColor = "red";
         document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Minimum password length is 6</p>";   
         return false;
-    }
-    //var email = document.getElementById("email").value;
-    /*if(email===""){
-        document.getElementById("email").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
-        return false;
-    }*/
-   // var pass = document.getElementById("password").value;
-   /* if(pass===""){
-        document.getElementById("password").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
-        return false;
-    }*/
+    }    
    
     
     const email = document.getElementById("email").value;
