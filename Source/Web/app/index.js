@@ -120,11 +120,11 @@ function showRegister(){
 /* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
 function register() {
     document.getElementById("name").style.borderColor = "#A9A9A9";
-     document.getElementById("name").style.borderColor = "#A9A9A93";
-     document.getElementById("surname").style.borderColor = "#A9A9A9";
-     document.getElementById("email").style.borderColor = "#A9A9A9";
-     document.getElementById("passwordConf").style.borderColor = "#A9A9A9";
-     document.getElementById("password").style.borderColor = "#A9A9A9";
+    document.getElementById("name").style.borderColor = "#A9A9A93";
+    document.getElementById("surname").style.borderColor = "#A9A9A9";
+    document.getElementById("email").style.borderColor = "#A9A9A9";
+    document.getElementById("passwordConf").style.borderColor = "#A9A9A9";
+    document.getElementById("password").style.borderColor = "#A9A9A9";
     //need to check if other fields exist
     var fname = document.getElementById("name").value;
     if(fname===""){
