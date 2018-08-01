@@ -33,7 +33,7 @@
     background-color: #4CAF50; /*Green*/
     color: white;
 }
-.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;}
+.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;} /* This determines the height of the navbar */
 .navbar-nav > a {padding-top:10px !important; padding-bottom:10px !important;}
 h1 {
     font-family: sans-serif;
