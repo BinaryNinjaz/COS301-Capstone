@@ -3,7 +3,6 @@ let page = 0; //0 being login, 1 being sign up
 // This will add the login with google functionality
 function googleLogin(){
 	var provider = new firebase.auth.GoogleAuthProvider();
-	provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 	firebase.auth().useDeviceLanguage();
 	provider.setCustomParameters({
 	  'login_hint': 'user@example.com'
