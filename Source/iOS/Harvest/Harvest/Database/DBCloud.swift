@@ -329,4 +329,22 @@ extension HarvestCloud {
       }
     }
   }
+  
+  enum Mode: String, CustomStringConvertible {
+    case accum, running
+    
+    var description: String {
+      switch self {
+      case .accum: return "accum"
+      case .running: return "running"
+      }
+    }
+    
+    var title: String {
+      switch self {
+      case .accum: return "Accumulating"
+      case .running: return "Running"
+      }
+    }
+  }
 }
