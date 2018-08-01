@@ -36,7 +36,10 @@ h1 {
     font-family: sans-serif;
     color: black;
 }
-
+.nav 
+{
+	height: 60px; /* This reduces the height of the div which contains the navbar */
+}
 label {
     font-family: sans-serif;
     color: black;

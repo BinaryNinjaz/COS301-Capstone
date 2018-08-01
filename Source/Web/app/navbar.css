@@ -19,6 +19,10 @@
     background-color: #ddd; /*Grey*/
     color: black;
 }
+#emailInNav
+{
+	padding-top: 12px;
+}
 .nav 
 {
 	height: 50px; /* This reduces the height of the div which contains the navbar */
