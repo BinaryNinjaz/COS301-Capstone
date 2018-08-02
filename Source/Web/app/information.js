@@ -526,11 +526,11 @@ function orchSave(type, id, cultivars) {
   let d = new Date(document.getElementById("orchDate").valueAsDate);
   let seconds = d.getTime() / 1000;
   //var cult = document.getElementById("cultivars").value;
-  //var data = [];
- /* for(var i=0; i<myDataCount; i++){
+  var data = [];
+  for(var i=0; i<myDataCount; i++){
      data.push(document.getElementById("cultivars"+i).value); 
-      alert(data[i]);
-  }*/
+     alert(data[i]);
+  }
   //cult = cult.split(",");
   if (type === 0) {
       firebase.database().ref('/' + userID() +"/orchards/").push({
@@ -539,7 +539,7 @@ function orchSave(type, id, cultivars) {
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
-      //cultivars: "",
+      cultivars: data,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
@@ -557,7 +557,7 @@ function orchSave(type, id, cultivars) {
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
-     // cultivars: "";
+      cultivars: data,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
@@ -582,6 +582,9 @@ function orchMod(id) {
             myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value='"+entry+"'>";
             myDataCount++;
         }); 
+        if(myData=="")
+             myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value=''>";
+           
       document.getElementById('col3').innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -625,9 +628,12 @@ function orchMod(id) {
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
-        "<div class='col-sm-9'><div>"+ myData        
-        "</div> </div> </div> " +
-        "" +
+            "<div class='col-sm-9'>"+
+                "<div>"+
+                    myData+        
+                "</div>"+
+            "</div>"+
+        "</div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing' value='" +  snapshot.val().rowSpacing + "'></div></div> " +
