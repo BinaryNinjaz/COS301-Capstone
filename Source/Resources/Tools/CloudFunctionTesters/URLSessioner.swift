@@ -186,12 +186,14 @@ enum HarvestCloud {
     case worker
     case orchard
     case foreman
+    case farm
     
     var description: String {
       switch self {
       case .worker: return "worker"
       case .orchard: return "orchard"
       case .foreman: return "foreman"
+      case .farm: return "farm"
       }
     }
   }
@@ -258,7 +260,7 @@ func collection() {
   let s = Date(timeIntervalSince1970: 1529853470 * 0)
   let e = Date()
 
-  HarvestCloud.collections(ids: ["-LBykXujU0Igjzvq5giB"], startDate: s, endDate: e, groupBy: .worker) { f in
+  HarvestCloud.collections(ids: ["-LBl_xZiXFlcTFzkTbGd"], startDate: s, endDate: e, groupBy: .farm) { f in
     print(f)
   }
 }
