@@ -531,6 +531,8 @@ function orchSave(type, id, cultivars) {
      data.push(document.getElementById("cultivars"+i).value); 
      alert(data[i]);
   }
+  if(data==null)
+      data="";
   //cult = cult.split(",");
   if (type === 0) {
       firebase.database().ref('/' + userID() +"/orchards/").push({
@@ -551,7 +553,15 @@ function orchSave(type, id, cultivars) {
 
   }
   else if (type === 1) {
-    firebase.database().ref('/' + userID() +"/orchards/" + id).update({
+    var data = [];
+    for(var i=0; i<myDataCount; i++){
+       data.push(document.getElementById("cultivars"+i).value); 
+       alert(data[i]);
+    }
+    if(data==null)
+      data="";
+  
+      firebase.database().ref('/' + userID() +"/orchards/" + id).update({
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
       further: document.getElementById("oi").value,
@@ -576,14 +586,14 @@ function orchMod(id) {
     firebase.database().ref('/' + userID() +'/farms').once('value').then(function (farm) {
         const date = new Date(snapshot.val().date * 1000);
         var myData=""; 
-        cultivars = null;
+        //cultivars = null;
         myDataCount = 0;
         (snapshot.val().cultivars).forEach(function(entry) {
-            myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value='"+entry+"'>";
+            myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value='"+entry+"' />";
             myDataCount++;
         }); 
         if(myData=="")
-             myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value=''>";
+             myData += "<input id='cultivars0' type='text' class='form-control'  value=' ' />";
            
       document.getElementById('col3').innerHTML = "" +
         "<form class='form-horizontal'>" +
