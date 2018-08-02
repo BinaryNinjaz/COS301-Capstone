@@ -3,14 +3,3 @@
   width: 100%;
   background-color: #EFEEEC;
 }
-
-#filterbar {
-  padding: 5px;
-  margin: 5px;
-  background-color: red;
-  border-radius: 5px;
-  width: 240px;
-  position: fixed;
-  left: 16px;
-  top: 48px;
-}

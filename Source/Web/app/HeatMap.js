@@ -33,13 +33,20 @@ $(window).bind("load", () => {
     initOrchards();
     initWorkers();
     $("#selectedFilter :input").change(function() {
-      loadEntity(this.id === "workerFilter" ? "worker" : "orchard");
+      loadEntity(this.id === "workerFilter" 
+        ? "worker" 
+        : this.id === "orchardFilter"
+          ? "orchard"
+          : this.id === "foremanFilter"
+            ? "foreman"
+            : "farm");
     });
   };
   let fail = () => {
     orchardPolys = [];
     orchards = [];
     farms = [];
+    workers = [];
   };
   retryUntilTimeout(succ, fail, 1000);
 });
@@ -47,7 +54,7 @@ $(window).bind("load", () => {
 var orchards = [];
 var farms = [];
 function changeSelection(checkbox) {
-  if (selectedEntity === "isOrchard") {
+  if (selectedEntity === "orchard") {
     for(var i = 0; i < orchards.length; i++) {
       if (orchards[i].key === checkbox.value) {
         if (checkbox.checked !== orchards[i].showing) {
@@ -55,11 +62,27 @@ function changeSelection(checkbox) {
         }
       }
     }
-  } else {
+  } else if (selectedEntity === "worker") {
     for(var i = 0; i < workers.length; i++) {
-      if (workers[i].key === checkbox.value) {
+      if (workers[i].value.type === "Worker" && workers[i].key === checkbox.value) {
         if (checkbox.checked !== workers[i].showing) {
           workers[i].showing = checkbox.checked;
+        }
+      }
+    }
+  } else if (selectedEntity === "foreman") {
+    for(var i = 0; i < workers.length; i++) {
+      if (workers[i].value.type === "Foreman" && workers[i].key === checkbox.value) {
+        if (checkbox.checked !== workers[i].showing) {
+          workers[i].showing = checkbox.checked;
+        }
+      }
+    }
+  } else if (selectedEntity === "farm") {
+    for(var i = 0; i < farms.length; i++) {
+      if (farms[i].key === checkbox.value) {
+        if (checkbox.checked !== farms[i].showing) {
+          farms[i].showing = checkbox.checked;
         }
       }
     }
@@ -70,17 +93,32 @@ var selectedEntity = "orchard";
 function loadEntity(entity) {
   var entityDiv = document.getElementById("entities");
   entityDiv.innerHTML = "";
+  selectedEntity = entity;
   if (entity === "orchard") {
-    selectedEntity = "orchard";
     for (const orchardId in orchards) {
       const orchard = orchards[orchardId];
       entityDiv.innerHTML += createSelectionButton(orchard.title, orchard.key, orchard.showing);
     }
   } else if (entity === "worker") {
-    selectedEntity = "worker";
     for (const workerId in workers) {
       const worker = workers[workerId];
+      if (worker.value.type === "Foreman") {
+        continue;
+      }
       entityDiv.innerHTML += createSelectionButton(worker.value.name + " " + worker.value.surname, worker.key, worker.showing);
+    }
+  } else if (entity === "foreman") {
+    for (const workerId in workers) {
+      const worker = workers[workerId];
+      if (worker.value.type === "Worker") {
+        continue;
+      }
+      entityDiv.innerHTML += createSelectionButton(worker.value.name + " " + worker.value.surname, worker.key, worker.showing);
+    }
+  } else if (entity === "farm") {
+    for (const farmId in farms) {
+      const farm = farms[farmId];
+      entityDiv.innerHTML += createSelectionButton(farm.value.name, farm.key, farm.showing);
     }
   }
 }
@@ -132,8 +170,9 @@ function initOrchards() {
   
   getFarms((farmsSnap) => {
     farmsSnap.forEach((farm) => {
-      farms.push({key: farm.key, value: farm.val()});
+      farms.push({key: farm.key, value: farm.val(), showing: false});
     });
+    farms.sort((a, b) => { return a.value.name < b.value.name ? -1 : 1 })
     getOrchards((orchardsSnap) => {
       var entityDiv = document.getElementById("entities");
       entityDiv.innerHTML = "";
@@ -158,8 +197,12 @@ function initOrchards() {
         }
         const name = fname + " - " + o.name;
         orchards.push({key: k, value: o, showing: true, title: name});
-        entityDiv.innerHTML += createSelectionButton(name, k, true);
       });
+      orchards = orchards.sort((a, b) => { return a.title < b.title ? -1 : 1 });
+      for (const oid in orchards) {
+        const o = orchards[oid];
+        entityDiv.innerHTML += createSelectionButton(o.title, o.key, true);
+      }
       updateHeatmap();
     });
   });
@@ -172,6 +215,9 @@ function initWorkers() {
       const w = worker.val();
       const k = worker.key;
       workers.push({key: k, value: w, showing: false});
+    });
+    workers.sort((a, b) => { 
+      return (a.value.surname + a.value.name) < (b.value.surname + b.value.name) ? -1 : 1 
     });
   });
 }
@@ -192,8 +238,8 @@ function initMap() {
 
 function requestedIds() {
   var result = {};
+  var k = 0;
   if (selectedEntity === "orchard") {
-    var k = 0;
     for (var i = 0; i < orchards.length; i++) {
       if (orchards[i].showing) {
         result["id" + k] = orchards[i].key;
@@ -201,10 +247,23 @@ function requestedIds() {
       }
     }
   } else if (selectedEntity === "worker") {
-    var k = 0;
     for (var i = 0; i < workers.length; i++) {
-      if (workers[i].showing) {
+      if (workers[i].value.type === "Worker" && workers[i].showing) {
         result["id" + k] = workers[i].key;
+        k++;
+      }
+    }
+  } else if (selectedEntity === "foreman") {
+    for (var i = 0; i < workers.length; i++) {
+      if (workers[i].value.type === "Foreman" && workers[i].showing) {
+        result["id" + k] = workers[i].key;
+        k++;
+      }
+    }
+  } else if (selectedEntity === "farm") {
+    for (var i = 0; i < farms.length; i++) {
+      if (farms[i].showing) {
+        result["id" + k] = farms[i].key;
         k++;
       }
     }
@@ -226,8 +285,6 @@ function updateHeatmap() {
   keys.endDate = endTime;
   keys.uid = userID();
   keys.groupBy = selectedEntity;
-  
-  alert(JSON.stringify(keys));
   
   const url = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/collectionsWithinDate';
   
