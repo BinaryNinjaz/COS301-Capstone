@@ -406,8 +406,17 @@ function dispOrch(id) {
         "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
         "</div>" +
         "" +       
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='irrigationType'></div> </div> " +
+        "<div class='form-group'><label class='control-label col-sm-2' for='irrigationType'>Irrigation:</label>" +
+        "<div class='col-sm-9'>"+
+            "<select class='form-control' id='irrigationType'>"+
+                "<option value='Micro'>Micro</option>"+
+                "<option value='Drip'>Drip</option>"+
+                "<option value='Floppy'>Floppy</option>"+
+                "<option value='Drag Lines'>Drag Lines</option>"+
+                "<option value='Other'>Other</option>"+
+                "<option value='None (dry land)'>None (dry land)</option>"+
+            "</select>"+
+        "</div>"+
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
@@ -702,9 +711,7 @@ function dispWork(id) {
         "" +
         "<div id='emailSpace'></div>" +
         "" +
-
-        "</form>"
-      ;
+        "</form>";
 
       snapshot.forEach(function (child) {
         document.getElementById("workOrch").innerHTML += "<option><" + child.key + "> " + child.val().name + "  :  " + child.val().crop + "</option>";
