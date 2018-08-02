@@ -519,7 +519,7 @@ function dispOrch(id) {
   }
 }
 
-function orchSave(type, id) {
+function orchSave(type, id, cultivars) {
   /*0 means create, 1 means modify*/
   const farm = document.getElementById("orchFarm").value;
   const farmID = farm.substring(farm.indexOf("<") + 1, farm.indexOf(">"));
@@ -534,7 +534,7 @@ function orchSave(type, id) {
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
-      cultivars: cult,
+      cultivars: cultivars,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
@@ -563,7 +563,7 @@ function orchSave(type, id) {
    popWork();
   clear3();
 }
-
+var cultivars;
 function orchMod(id) {
   firebase.database().ref('/' + userID() +'/orchards/' + id).once('value').then(function (snapshot) {
     document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch(\"" + id + "\")'>Delete</button>";
@@ -571,9 +571,11 @@ function orchMod(id) {
     firebase.database().ref('/' + userID() +'/farms').once('value').then(function (farm) {
         const date = new Date(snapshot.val().date * 1000);
         var myData=""; 
+        cultivars = null;
         var myDataCount = 0;
         (snapshot.val().cultivars).forEach(function(entry) {
             myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value='"+entry+"'>";
+            cultivars[myDataCount] = entry;
             myDataCount++;
         }); 
       document.getElementById('col3').innerHTML = "" +
@@ -619,8 +621,7 @@ function orchMod(id) {
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
-        "<div class='col-sm-9'><div>"+ myData
-        
+        "<div class='col-sm-9'><div>"+ myData        
         "</div> </div> </div> " +
         "" +
         "" +
