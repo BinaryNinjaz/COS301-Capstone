@@ -422,7 +422,13 @@ function dispOrch(id) {
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars'></div> </div>" +
+            "<div class='col-sm-9'>"+
+                "<div id='cultivarBoxes'>"+
+                    "<input type='text' class='form-control' id='cultivars0' />"+
+                "</div>"+
+                "<button type='button' class='btn btn-primary' onclick='moreCult()'>Add More Cultivar</button>"
+            "</div>"+            
+        "</div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing'></div></div> " +
@@ -518,6 +524,15 @@ function dispOrch(id) {
 
   }
 }
+var cCount = 0;
+//var cDataField =
+function moreCult(){
+   
+    cCount++;
+    var old = document.getElementById('cultivarBoxes').innerHTML;
+    document.getElementById('cultivarBoxes').innerHTML = old +("<br> <input type='text' class='form-control' id='cultivars"+cCount+"' />");
+    alert(old);
+}
 
 function orchSave(type, id, cultivars) {
   /*0 means create, 1 means modify*/
@@ -526,13 +541,6 @@ function orchSave(type, id, cultivars) {
   let d = new Date(document.getElementById("orchDate").valueAsDate);
   let seconds = d.getTime() / 1000;
   //var cult = document.getElementById("cultivars").value;
-  var data = [];
-  for(var i=0; i<myDataCount; i++){
-     data.push(document.getElementById("cultivars"+i).value); 
-     alert(data[i]);
-  }
-  if(data==null)
-      data="";
   //cult = cult.split(",");
   if (type === 0) {
       firebase.database().ref('/' + userID() +"/orchards/").push({
