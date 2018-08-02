@@ -570,6 +570,12 @@ function orchMod(id) {
     document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name;
     firebase.database().ref('/' + userID() +'/farms').once('value').then(function (farm) {
         const date = new Date(snapshot.val().date * 1000);
+        var myData=""; 
+        var myDataCount = 0;
+        (snapshot.val().cultivars).forEach(function(entry) {
+            myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value='"+entry+"'>";
+            myDataCount++;
+        }); 
       document.getElementById('col3').innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -613,7 +619,9 @@ function orchMod(id) {
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars' value='" + snapshot.val().cultivars + "'></div> </div> " +
+        "<div class='col-sm-9'><div>"+ myData
+        
+        "</div> </div> </div> " +
         "" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
