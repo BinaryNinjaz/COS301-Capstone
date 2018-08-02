@@ -1,6 +1,14 @@
+/*!
+ * File:   Index.js
+ * Author: Teboho, Sizo, Kevin
+ *
+ * Description: Contains all functions required for successful signing in or loging in. 
+ * 
+ */
+
 let page = 0; //0 being login, 1 being sign up
 
-// This will add the login with google functionality
+/// This function will add the login with google functionality
 function googleLogin(){
 	var provider = new firebase.auth.GoogleAuthProvider();
 	firebase.auth().useDeviceLanguage();
@@ -21,6 +29,7 @@ function googleLogin(){
 	});
 	
 }
+///This function allows the user to login
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
 
