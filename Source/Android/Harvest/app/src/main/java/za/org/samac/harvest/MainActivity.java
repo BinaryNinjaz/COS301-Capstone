@@ -330,7 +330,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     int holdi;
 
     private void collectOrchards() {
-        currUserRef = database.getReference(uid);//Firebase reference
         DatabaseReference orchRef;
         orchRef = currUserRef.child("orchards");
         orchRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -704,6 +703,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         //getPolygon();
         farmLevelRef = database.getReference(farmerKey);
         workersRef = farmLevelRef.child("workers");
+        currUserRef = database.getReference(farmerKey);//Firebase reference
         collectOrchards();
         //collectWorkers();
     }
