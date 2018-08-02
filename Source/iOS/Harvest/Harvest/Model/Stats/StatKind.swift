@@ -13,16 +13,18 @@ enum StatKind: CustomStringConvertible {
   case workers
   case orchards
   case foremen
+  case farms
   
   var description: String {
     switch self {
     case .workers: return "Worker Comparisons"
     case .orchards: return "Orchard Comparisons"
     case .foremen: return "Foremen Comparisons"
+    case .farms: return "Farm Comparisons"
     }
   }
   
   static var allCases: [StatKind] {
-    return [.workers, orchards, .foremen]
+    return [.farms, .orchards, .workers, .foremen]
   }
 }

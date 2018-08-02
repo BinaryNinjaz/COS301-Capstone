@@ -80,7 +80,7 @@ final class Farm: Codable {
   }
 }
 
-extension Farm: Equatable {
+extension Farm: Hashable {
   static func == (lhs: Farm, rhs: Farm) -> Bool {
     return lhs.id == rhs.id
       && lhs.name == rhs.name
@@ -90,6 +90,10 @@ extension Farm: Equatable {
       && lhs.province == rhs.province
       && lhs.nearestTown == rhs.nearestTown
       && lhs.details == rhs.details
+  }
+  
+  var hashValue: Int {
+    return id.hashValue
   }
 }
 

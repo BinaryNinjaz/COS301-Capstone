@@ -14,6 +14,7 @@ enum Stat {
   case foremanComparison([Worker])
   case workerComparison([Worker])
   case orchardComparison([Orchard])
+  case farmComparison([Farm])
   
   // swiftlint:disable function_parameter_count
   func comparison(
@@ -54,6 +55,8 @@ enum Stat {
       entities = workers.map { .worker($0) }
     } else if grouping == .orchard, case let .orchardComparison(orchards) = self {
       entities = orchards.map { .orchard($0) }
+    } else if grouping == .farm, case let .farmComparison(farms) = self {
+      entities = farms.map {.farm($0) }
     } else {
       return nil
     }
@@ -63,6 +66,7 @@ enum Stat {
       switch entity {
       case let .worker(w): ids.append(w.id)
       case let .orchard(o): ids.append(o.id)
+      case let .farm(f): ids.append(f.id)
       default: continue
       }
     }
@@ -78,7 +82,6 @@ enum Stat {
     mode: HarvestCloud.Mode,
     completion: @escaping (BarChartData?, LineChartData?) -> Void
   ) {
-    
     guard let ids = identifiers(for: grouping) else {
       completion(nil, nil)
       return
@@ -117,15 +120,16 @@ enum Stat {
           }
           let worker = Entities.shared.worker(withId: key)
           let orchard = Entities.shared.orchards.first { $0.value.id == key }.map { $0.value }
+          let farm = Entities.shared.farms.first { $0.value.id == key }.map { $0.value }
           
           let dataSet = BarChartDataSet()
           
-          let missingMessage = grouping == .orchard
-            ? "Orchard"
-            : grouping == .worker ? "Worker" : "Foreman"
+          let missingMessage = grouping.title
           dataSet.label = (grouping == .orchard
             ? orchard?.name
-            : worker?.name) ?? "Unknown \(missingMessage)"
+            : grouping == .worker
+              ? worker?.name
+              : farm?.name) ?? "Unknown \(missingMessage)"
           
           let fullDataSet = mode == .accum
             ? period.fullDataSet(
@@ -176,15 +180,16 @@ enum Stat {
       
       let worker = Entities.shared.worker(withId: key)
       let orchard = Entities.shared.orchards.first { $0.value.id == key }.map { $0.value }
+      let farm = Entities.shared.farms.first { $0.value.id == key }.map { $0.value }
       
       let dataSet = LineChartDataSet()
       
-      let missingMessage = grouping == .orchard
-        ? "Orchard"
-        : grouping == .worker ? "Worker" : "Foreman"
+      let missingMessage = grouping.title
       dataSet.label = ((grouping == .orchard
         ? orchard?.name
-        : worker?.name) ?? "Unknown \(missingMessage)") + " (avg)"
+        : grouping == .worker
+          ? worker?.name
+          : farm?.name) ?? "Unknown \(missingMessage)") + " (avg)"
       
       let fullDataSet = period.fullDataSet(
         between: startDate,

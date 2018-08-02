@@ -47,7 +47,7 @@ extension FormViewController {
   func performanceRows(for stat: Stat) -> [ButtonRow] {
     let today = Date().today()
     let todaysPerformance = prebuiltGraph(
-      title: "Todays Performance",
+      title: "Today's Performance",
       startDate: today.0,
       endDate: today.1,
       period: .hourly,
@@ -55,7 +55,7 @@ extension FormViewController {
     
     let yesterday = Date().yesterday()
     let yesterdaysPerformance = prebuiltGraph(
-      title: "Yesterdays Performance",
+      title: "Yesterday's Performance",
       startDate: yesterday.0,
       endDate: yesterday.1,
       period: .hourly,
@@ -63,7 +63,7 @@ extension FormViewController {
     
     let thisWeek = Date().thisWeek()
     let thisWeeksPerformance = prebuiltGraph(
-      title: "This Weeks Performance",
+      title: "This Week's Performance",
       startDate: thisWeek.0,
       endDate: thisWeek.1,
       period: .daily,
@@ -71,7 +71,7 @@ extension FormViewController {
     
     let lastWeek = Date().lastWeek()
     let lastWeeksPerformance = prebuiltGraph(
-      title: "Last Weeks Performance",
+      title: "Last Week's Performance",
       startDate: lastWeek.0,
       endDate: lastWeek.1,
       period: .daily,
@@ -79,7 +79,7 @@ extension FormViewController {
     
     let thisMonth = Date().thisMonth()
     let thisMonthsPerformance = prebuiltGraph(
-      title: "This Months Performance",
+      title: "This Month's Performance",
       startDate: thisMonth.0,
       endDate: thisMonth.1,
       period: .weekly,
@@ -87,7 +87,7 @@ extension FormViewController {
     
     let lastMonth = Date().lastMonth()
     let lastMonthsPerformance = prebuiltGraph(
-      title: "Last Months Performance",
+      title: "Last Month's Performance",
       startDate: lastMonth.0,
       endDate: lastMonth.1,
       period: .weekly,
@@ -95,7 +95,7 @@ extension FormViewController {
     
     let thisYear = Date().thisMonth()
     let thisYearsPerformance = prebuiltGraph(
-      title: "This Years Performance",
+      title: "This Year's Performance",
       startDate: thisYear.0,
       endDate: thisYear.1,
       period: .monthly,
@@ -103,7 +103,7 @@ extension FormViewController {
     
     let lastYear = Date().lastMonth()
     let lastYearsPerformance = prebuiltGraph(
-      title: "Last Years Performance",
+      title: "Last Year's Performance",
       startDate: lastYear.0,
       endDate: lastYear.1,
       period: .monthly,
@@ -384,6 +384,11 @@ extension Farm {
       cell.textField.clearButtonMode = .whileEditing
     }
     
+    let performanceSection = Section("Performance")
+    for prow in formVC.performanceRows(for: .farmComparison([self])) {
+      performanceSection <<< prow
+    }
+    
     let detailsRow = TextAreaRow { row in
       row.title = "Details"
       row.value = details
@@ -444,6 +449,8 @@ extension Farm {
     
       +++ orchardsSection
       <<< orchardRow
+      
+      +++ performanceSection
       
       +++ Section("Further Information")
       <<< detailsRow

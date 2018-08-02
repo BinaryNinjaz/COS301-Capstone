@@ -77,14 +77,16 @@ class StatsViewController: UIViewController {
     }
     
     switch stat {
-    case .workerComparison: drawWorkerComparison()
-    case .foremanComparison: drawForemanComparison()
-    case .orchardComparison: drawOrchardComparison()
+    case .workerComparison: drawEntityComparison(entity: .worker)
+    case .foremanComparison: drawEntityComparison(entity: .foreman)
+    case .orchardComparison: drawEntityComparison(entity: .orchard)
+    case .farmComparison: drawEntityComparison(entity: .farm)
     case let .untyped(_, kind):
       switch kind {
-      case .worker: drawWorkerComparison()
-      case .foreman: drawForemanComparison()
-      case .orchard: drawOrchardComparison()
+      case .worker: drawEntityComparison(entity: .worker)
+      case .foreman: drawEntityComparison(entity: .foreman)
+      case .orchard: drawEntityComparison(entity: .orchard)
+      case .farm: drawEntityComparison(entity: .farm)
       }
     }
   }
@@ -138,44 +140,14 @@ class StatsViewController: UIViewController {
     }
   }
   
-  func drawForemanComparison() {
+  func drawEntityComparison(entity: HarvestCloud.GroupBy) {
     let s = startDate ?? Date(timeIntervalSince1970: 0)
     let e = endDate ?? Date()
     let p = period ?? .daily
     let m = mode ?? .accum
     
     stat?.entityComparison(
-      grouping: .foreman,
-      startDate: s,
-      endDate: e,
-      period: p,
-      mode: m,
-      completion: updateBarChart)
-  }
-  
-  func drawWorkerComparison() {
-    let s = startDate ?? Date(timeIntervalSince1970: 0)
-    let e = endDate ?? Date()
-    let p = period ?? .daily
-    let m = mode ?? .accum
-    
-    stat?.entityComparison(
-      grouping: .worker,
-      startDate: s,
-      endDate: e,
-      period: p,
-      mode: m,
-      completion: updateBarChart)
-  }
-  
-  func drawOrchardComparison() {
-    let s = startDate ?? Date(timeIntervalSince1970: 0)
-    let e = endDate ?? Date()
-    let p = period ?? .daily
-    let m = mode ?? .accum
-    
-    stat?.entityComparison(
-      grouping: .orchard,
+      grouping: entity,
       startDate: s,
       endDate: e,
       period: p,
@@ -231,7 +203,7 @@ class StatsViewController: UIViewController {
     barChart?.rightAxis.enabled = false
     barChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
     barChart?.noDataText = "No Data Available to Show"
-    setUp(lineChart?.legend)
+    setUp(barChart?.legend)
   }
   
   func setUpRadarChart() {
@@ -242,7 +214,7 @@ class StatsViewController: UIViewController {
     radarChart?.xAxis.axisMinimum = 0
     radarChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
     radarChart?.noDataText = "No Data Available to Show"
-    setUp(lineChart?.legend)
+    setUp(radarChart?.legend)
   }
   
   func setActivityPosition() {

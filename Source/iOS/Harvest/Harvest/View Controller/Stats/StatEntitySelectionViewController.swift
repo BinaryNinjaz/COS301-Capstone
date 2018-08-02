@@ -115,6 +115,14 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
               return nil
             }
           })
+        case .farm:
+          svc.stat = Stat.farmComparison(self.selected.compactMap {
+            if case let .farm(f) = $0 {
+              return f
+            } else {
+              return nil
+            }
+          })
         }
         self.navigationController?.pushViewController(svc, animated: true)
     }

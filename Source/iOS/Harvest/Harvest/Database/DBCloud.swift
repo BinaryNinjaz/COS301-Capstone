@@ -366,12 +366,14 @@ extension HarvestCloud {
     case worker
     case orchard
     case foreman
+    case farm
     
     init(_ statKind: StatKind) {
       switch statKind {
       case .workers: self = .worker
       case .orchards: self = .orchard
       case .foremen: self = .foreman
+      case .farms: self = .farm
       }
     }
     
@@ -380,6 +382,7 @@ extension HarvestCloud {
       case .worker: return "worker"
       case .orchard: return "orchard"
       case .foreman: return "foreman"
+      case .farm: return "farm"
       }
     }
     
@@ -388,6 +391,7 @@ extension HarvestCloud {
       case .worker: return "Worker"
       case .orchard: return "Orchard"
       case .foreman: return "Foreman"
+      case .farm: return "Farm"
       }
     }
   }

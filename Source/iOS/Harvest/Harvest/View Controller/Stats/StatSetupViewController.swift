@@ -15,6 +15,7 @@ final class StatSetupViewController: ReloadableFormViewController {
   var workersRow: MultipleSelectorRow<Worker>?
   var orchardsRow: MultipleSelectorRow<Orchard>?
   var foremenRow: MultipleSelectorRow<Worker>?
+  var farmsRow: MultipleSelectorRow<Farm>?
   
   var startDateRow: DateRow?
   var endDateRow: DateRow?
@@ -47,6 +48,10 @@ final class StatSetupViewController: ReloadableFormViewController {
       case .orchards:
         for orchard in orchardsRow?.value ?? [] {
           ids.append(orchard.id)
+        }
+      case .farms:
+        for farm in farmsRow?.value ?? [] {
+          ids.append(farm.id)
         }
       }
     }
@@ -93,8 +98,8 @@ final class StatSetupViewController: ReloadableFormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .workers
       }
-      }.cellUpdate { _, row in
-        row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .worker })
+    }.cellUpdate { _, row in
+      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .worker })
     }
     
     foremenRow = MultipleSelectorRow<Worker> { row in
@@ -106,9 +111,9 @@ final class StatSetupViewController: ReloadableFormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .foremen
       }
-      }.cellUpdate { _, row in
-        row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
-        row.options?.append(Worker(HarvestUser.current))
+    }.cellUpdate { _, row in
+      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
+      row.options?.append(Worker(HarvestUser.current))
     }
     
     orchardsRow = MultipleSelectorRow<Orchard> { row in
@@ -119,8 +124,20 @@ final class StatSetupViewController: ReloadableFormViewController {
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .orchards
       }
-      }.cellUpdate { _, row in
-        row.options = Entities.shared.orchards.map { $0.value }
+    }.cellUpdate { _, row in
+      row.options = Entities.shared.orchards.map { $0.value }
+    }
+    
+    farmsRow = MultipleSelectorRow<Farm> { row in
+      row.title = "Farm Selection"
+      row.options = Entities.shared.farms.map { $0.value }
+      row.value = row.options?.first != nil ? [row.options!.first!] : []
+      row.hidden = Condition.function(["Stat Kind"]) { form in
+        let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
+        return row?.value != .farms
+      }
+    }.cellUpdate { _, row in
+      row.options = Entities.shared.farms.map { $0.value }
     }
     
     startDateRow = DateRow { row in
@@ -177,6 +194,10 @@ final class StatSetupViewController: ReloadableFormViewController {
           if let os = self.orchardsRow?.value {
             svc.stat = .orchardComparison(Array(os))
           }
+        case .farms:
+          if let os = self.farmsRow?.value {
+            svc.stat = .farmComparison(Array(os))
+          }
         }
         
         self.navigationController?.pushViewController(svc, animated: true)
@@ -187,6 +208,7 @@ final class StatSetupViewController: ReloadableFormViewController {
             let workersRow = self.workersRow,
             let orchardsRow = self.orchardsRow,
             let foremenRow = self.foremenRow,
+            let farmRow = self.farmsRow,
             let periodRow = self.periodRow,
             let startDateRow = self.startDateRow,
             let endDateRow = self.endDateRow,
@@ -203,6 +225,7 @@ final class StatSetupViewController: ReloadableFormViewController {
         <<< workersRow
         <<< orchardsRow
         <<< foremenRow
+        <<< farmRow
         
         +++ Section("Details")
         <<< periodRow
