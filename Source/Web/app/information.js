@@ -525,8 +525,13 @@ function orchSave(type, id, cultivars) {
   const farmID = farm.substring(farm.indexOf("<") + 1, farm.indexOf(">"));
   let d = new Date(document.getElementById("orchDate").valueAsDate);
   let seconds = d.getTime() / 1000;
-  var cult = document.getElementById("cultivars").value;
-  cult = cult.split(",");
+  //var cult = document.getElementById("cultivars").value;
+  //var data = [];
+ /* for(var i=0; i<myDataCount; i++){
+     data.push(document.getElementById("cultivars"+i).value); 
+      alert(data[i]);
+  }*/
+  //cult = cult.split(",");
   if (type === 0) {
       firebase.database().ref('/' + userID() +"/orchards/").push({
       name: document.getElementById("orchName").value,
@@ -534,7 +539,7 @@ function orchSave(type, id, cultivars) {
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
-      cultivars: cultivars,
+      //cultivars: "",
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
@@ -542,7 +547,7 @@ function orchSave(type, id, cultivars) {
       treeSpacing: document.getElementById("treeSpacing").value
     });
 
-    //popOrch();
+    popOrch();
 
   }
   else if (type === 1) {
@@ -552,7 +557,7 @@ function orchSave(type, id, cultivars) {
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
-      cultivars: cult,
+     // cultivars: "";
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
@@ -563,7 +568,7 @@ function orchSave(type, id, cultivars) {
    popWork();
   clear3();
 }
-var cultivars;
+var myDataCount=0;
 function orchMod(id) {
   firebase.database().ref('/' + userID() +'/orchards/' + id).once('value').then(function (snapshot) {
     document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch(\"" + id + "\")'>Delete</button>";
@@ -572,10 +577,9 @@ function orchMod(id) {
         const date = new Date(snapshot.val().date * 1000);
         var myData=""; 
         cultivars = null;
-        var myDataCount = 0;
+        myDataCount = 0;
         (snapshot.val().cultivars).forEach(function(entry) {
             myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value='"+entry+"'>";
-            cultivars[myDataCount] = entry;
             myDataCount++;
         }); 
       document.getElementById('col3').innerHTML = "" +
