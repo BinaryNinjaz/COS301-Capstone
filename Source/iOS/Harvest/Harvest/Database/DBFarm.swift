@@ -29,10 +29,12 @@ extension HarvestDB {
     }
   }
   
+  static var farms = [Farm]()
+  
   static func watchFarms(_ completion: @escaping ([Farm]) -> Void) {
     let fref = ref.child(Path.farms)
     fref.observe(.value) { (snapshot) in
-      var farms = [Farm]()
+      farms.removeAll()
       for _child in snapshot.children {
         guard let child = _child as? DataSnapshot else {
           continue
@@ -46,6 +48,37 @@ extension HarvestDB {
         farms.append(f)
       }
       completion(farms)
+    }
+    fref.observe(.childAdded) { (snapshot) in
+      guard let farm = snapshot.value as? [String: Any] else {
+        return
+      }
+      let f = Farm(json: farm, id: snapshot.key)
+      if farms.index(where: { $0.id == f.id }) == nil {
+        farms.append(f)
+        completion(farms)
+      }
+    }
+    fref.observe(.childRemoved) { (snapshot) in
+      guard let farm = snapshot.value as? [String: Any] else {
+        return
+      }
+      let f = Farm(json: farm, id: snapshot.key)
+      if let idx = farms.index(where: { $0.id == f.id }) {
+        farms.remove(at: idx)
+        completion(farms)
+      }
+    }
+    fref.observe(.childChanged) { (snapshot) in
+      guard let farm = snapshot.value as? [String: Any] else {
+        return
+      }
+      let f = Farm(json: farm, id: snapshot.key)
+      if let idx = farms.index(where: { $0.id == f.id }) {
+        farms.remove(at: idx)
+        farms.insert(f, at: idx)
+        completion(farms)
+      }
     }
   }
   

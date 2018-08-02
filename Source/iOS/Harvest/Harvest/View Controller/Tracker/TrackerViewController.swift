@@ -217,8 +217,8 @@ class TrackerViewController: UIViewController {
     
     Entities.shared.getOnce(.worker) { _ in self.gotWorkers = !Entities.shared.workers.isEmpty }
     
-    HarvestDB.watchWorkers { (workers) in
-      self.updateWorkerCells(with: workers)
+    _ = Entities.shared.listen {
+      self.updateWorkerCells(with: Entities.shared.workers.map { $0.value })
     }
     
     sessionFilterManager = SessionFilterManager()

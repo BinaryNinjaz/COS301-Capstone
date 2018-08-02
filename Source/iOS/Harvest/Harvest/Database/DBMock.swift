@@ -15,8 +15,7 @@ func merge(path: String, withKey k: String) -> String {
   }
   let p: String
   if path.hasSuffix("/") {
-    p = String(path[path.startIndex..<path.index(before: path.endIndex)])
-    // p = String(path[offset: ..<-1]) imagine?
+    p = String(path.dropLast())
   } else {
     p = path
   }

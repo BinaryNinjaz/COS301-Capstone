@@ -23,8 +23,8 @@ class SessionFilterManager: NSObject, UICollectionViewDataSource, UICollectionVi
   
   override init() {
     super.init()
-    HarvestDB.watchOrchards { (orchards) in
-      self.orchards = orchards.sorted { $0.description < $1.description }
+    _ = Entities.shared.listen {
+      self.orchards = Entities.shared.orchards.map { $0.value }
     }
   }
   

@@ -28,10 +28,12 @@ extension HarvestDB {
     }
   }
   
+  static var workers = [Worker]()
+  
   static func watchWorkers(_ completion: @escaping ([Worker]) -> Void) {
     let wref = ref.child(Path.workers).queryOrdered(byChild: "surname")
-    wref.observe(.value) { (snapshot) in
-      var workers = [Worker]()
+    wref.observeSingleEvent(of: .value) { (snapshot) in
+      workers.removeAll()
       for _child in snapshot.children {
         guard let child = _child as? DataSnapshot else {
           continue
@@ -44,6 +46,37 @@ extension HarvestDB {
         workers.append(w)
       }
       completion(workers)
+    }
+    wref.observe(.childAdded) { (snapshot) in
+      guard let worker = snapshot.value as? [String: Any] else {
+        return
+      }
+      let w = Worker(json: worker, id: snapshot.key)
+      if workers.index(where: { $0.id == w.id }) == nil {
+        workers.append(w)
+        completion(workers)
+      }
+    }
+    wref.observe(.childRemoved) { (snapshot) in
+      guard let worker = snapshot.value as? [String: Any] else {
+        return
+      }
+      let w = Worker(json: worker, id: snapshot.key)
+      if let idx = workers.index(where: { $0.id == w.id }) {
+        workers.remove(at: idx)
+        completion(workers)
+      }
+    }
+    wref.observe(.childChanged) { (snapshot) in
+      guard let worker = snapshot.value as? [String: Any] else {
+        return
+      }
+      let w = Worker(json: worker, id: snapshot.key)
+      if let idx = workers.index(where: { $0.id == w.id }) {
+        workers.remove(at: idx)
+        workers.insert(w, at: idx)
+        completion(workers)
+      }
     }
   }
   

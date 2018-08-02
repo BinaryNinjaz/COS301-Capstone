@@ -42,10 +42,8 @@ class InformationEntityItemTableViewController: UITableViewController {
   }
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
-    Entities.shared.getOnce(kind) { (_) in
-      self.refreshControl?.endRefreshing()
-      self.tableView.reloadData()
-    }
+    self.refreshControl?.endRefreshing()
+    self.tableView.reloadData()
   }
   
   override func viewWillDisappear(_ animated: Bool) {

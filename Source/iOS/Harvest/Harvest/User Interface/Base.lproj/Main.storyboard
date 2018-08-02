@@ -154,7 +154,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-890.39999999999998" y="53.523238380809602"/>
+            <point key="canvasLocation" x="-539" y="54"/>
         </scene>
         <!--Log In-->
         <scene sceneID="tne-QT-ifu">
@@ -350,7 +350,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-39.200000000000003" y="53.523238380809602"/>
+            <point key="canvasLocation" x="190" y="54"/>
         </scene>
         <!--Foreman Sign In View Controller-->
         <scene sceneID="QRg-gl-2fW">
@@ -515,7 +515,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-39.200000000000003" y="771.36431784107947"/>
+            <point key="canvasLocation" x="190" y="901"/>
         </scene>
         <!--Main Tab Bar View Controller-->
         <scene sceneID="264-Fa-FqB">
@@ -643,7 +643,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2eA-wC-zae" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3084" y="-663"/>
+            <point key="canvasLocation" x="2990" y="-664"/>
         </scene>
         <!--Stat Entity Selection View Controller-->
         <scene sceneID="vwx-1A-lRy">
@@ -658,7 +658,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WUr-yq-z0K" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3799" y="-663"/>
+            <point key="canvasLocation" x="3687" y="-664"/>
         </scene>
         <!--Yield Tracker-->
         <scene sceneID="H2b-6H-xwA">
@@ -1109,7 +1109,7 @@ Expected Yield: 0</string>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-890.39999999999998" y="757.87106446776613"/>
+            <point key="canvasLocation" x="-540" y="901"/>
         </scene>
         <!--Infomation-->
         <scene sceneID="mK2-uN-hZX">
