@@ -570,7 +570,7 @@ function averageOfSessionCounter(counter, days) {
 // startDate=[Double]
 // endDate=[Double]
 // avgRange=[all, inclusive, onlybefore] default = onlybefore
-// mode=[accum, running]
+// mode=[accumTime, accumEntity, running]
 // uid=[String]
 //
 // --------- Result ------------- Mode = Accum
@@ -599,8 +599,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     }
     var mode = req.body.mode;
     if (mode === undefined) {
-      mode = "accum";
+      mode = "accumTime";
     }
+    const isAccumEntity = mode === 'accumEntity';
     const isRunningGraph = mode === 'running';
     const sd = new Date(startDate * 1000);
     const ed = new Date(endDate * 1000);
@@ -618,7 +619,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
       const ikey = "id" + i;
       if (req.body[ikey] !== undefined) {
         ids.push(req.body[ikey]);
-        result[req.body[ikey]] = {};
+        if (mode !== 'accumEntity') {
+          result[req.body[ikey]] = {};
+        }
       }
     }
     
@@ -638,10 +641,12 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
             const collection = val.collections[workerKey];
             for (const pickupKey in collection) {
               const pickup = collection[pickupKey];
-              const accum = mode === 'running'
+              const accum = mode !== 'accumTime'
                 ? roundDateToRunningPeriod(pickup.date, period, sameY, sameM, sameD)
                 : roundDateToPeriod(pickup.date, period);
-              const wkey = groupBy === "foreman" ? foremanKey : workerKey;
+              const wkey = isAccumEntity
+                ? "sum"
+                : groupBy === "foreman" ? foremanKey : workerKey;
               if (startDate <= pickup.date && pickup.date <= endDate) {
                 incrSessionCounter(result, wkey, accum);
               }
@@ -680,7 +685,7 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
               
               for (const pickupKey in collection) {
                 const pickup = collection[pickupKey];
-                const accum = mode === 'running'
+                const accum = mode !== 'accumTime'
                   ? roundDateToRunningPeriod(pickup.date, period, sameY, sameM, sameD)
                   : roundDateToPeriod(pickup.date, period);
                 const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
@@ -699,10 +704,17 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                 || orc.val.farm === undefined) {
                   continue;
                 }
-                const pkey = groupBy === "orchard" ? orc.id : orc.val.farm;
+                
+                // akey is to check if we are actually in an asked for orchard/farm
+                // but we will always use pkey to group dat based on the mode.
+                const akey = groupBy === "orchard" ? orc.id : orc.val.farm;
+                
+                const pkey = isAccumEntity
+                  ? "sum"
+                  : akey;
                 
                 if (startDate <= pickup.date && pickup.date <= endDate) {
-                  if (arrayContainsItem(ids, pkey)) {
+                  if (arrayContainsItem(ids, akey)) {
                     incrSessionCounter(result, pkey, accum);
                   }
                 }

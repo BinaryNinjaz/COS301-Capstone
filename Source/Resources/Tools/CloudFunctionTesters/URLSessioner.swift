@@ -213,12 +213,14 @@ enum HarvestCloud {
   }
   
   enum Mode : CustomStringConvertible {
-    case accum
+    case accumTime
+    case accumEntity
     case running
     
     var description: String {
       switch self {
-      case .accum: return "accum"
+      case .accumTime: return "accumTime"
+      case .accumEntity: return "accumEntity"
       case .running: return "running"
       }
     }
@@ -277,8 +279,9 @@ func timeGraphSessionsWorker() {
   
   let ids = [
     "-LBykXujU0Igjzvq5giB", // Peter Parker 3
+    "-LBykjpjTy2RrDApKGLy", // Barry Allen 7
 //    "-LBykZoPlQ2xkIMylBr2", // Tony Stark 4
-    "-LBykabv5OJNBsdv0yl7", // Clark Kent 5
+//    "-LBykabv5OJNBsdv0yl7", // Clark Kent 5
 //    "-LBykcR9o5_S_ndIYHj9", // Bruce Wayne 6
   ]
 
@@ -289,7 +292,7 @@ func timeGraphSessionsWorker() {
     startDate: s, 
     endDate: e,
     avgRange: .onlybefore,
-    mode: .running) { o in
+    mode: .accumEntity) { o in
     print(o)
   }
 }
@@ -317,7 +320,7 @@ func timeGraphSessionsOrchard() {
     startDate: s, 
     endDate: e,
     avgRange: .onlybefore,
-    mode: .running) { o in
+    mode: .accumEntity) { o in
     print(o)
   }
 }
@@ -344,7 +347,7 @@ func timeGraphSessionsFarm() {
     startDate: s, 
     endDate: e,
     avgRange: .onlybefore,
-    mode: .accum) { o in
+    mode: .accumTime) { o in
     print(o)
   }
 }
@@ -355,10 +358,29 @@ func expectedYield() {
   }
 }
 
-timeGraphSessionsFarm()
+//timeGraphSessionsFarm()
 
 //collection()
 
 //timeGraphSessionsWorker()
 
+timeGraphSessionsOrchard()
+
 RunLoop.main.run()
+
+/*
+
+{
+  "-LCEFgdMMO80LR98BzPC" =     {
+    "Jul 31" = 19;
+  };
+  "-LCEFoWPEw7ThnUaz07W" =     {
+    "Aug 02" = 418;
+    "Jul 27" = 113;
+    "Jul 30" = 628;
+  };
+  "-LCnEEUlavG3eFLCC3MI" =     {
+  };
+}
+
+*/
