@@ -160,7 +160,7 @@ enum HarvestCloud {
     endDate: Date,
     mode: Mode,
     completion: @escaping (Any) -> Void
-    ) {
+  ) {
     var args = [
       ("groupBy", grouping.description),
       ("period", period.description),
@@ -397,18 +397,20 @@ extension HarvestCloud {
   }
   
   enum Mode: String, CustomStringConvertible, Codable {
-    case accum, running
+    case accumTime, accumEntity, running
     
     var description: String {
       switch self {
-      case .accum: return "accum"
+      case .accumTime: return "accumTime"
+      case .accumEntity: return "accumEntity"
       case .running: return "running"
       }
     }
     
     var title: String {
       switch self {
-      case .accum: return "Accumulating"
+      case .accumTime: return "Accumulating Time"
+      case .accumEntity: return "Accumulating Entity"
       case .running: return "Running"
       }
     }

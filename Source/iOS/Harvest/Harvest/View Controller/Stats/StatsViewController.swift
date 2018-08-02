@@ -99,9 +99,15 @@ class StatsViewController: UIViewController {
         return
       }
       
-      if self.mode == .running {
+      if self.mode == .running || self.mode == .accumEntity {
         self.lineChart?.notifyDataSetChanged()
-        self.lineChart?.data = barData.lineChartData()
+        
+        let sumLineData = barData.lineChartData()
+        if self.mode == .accumEntity && lineData?.dataSetCount == 1 {
+          sumLineData.addDataSet(lineData?.dataSets.first!)
+        }
+        
+        self.lineChart?.data = sumLineData
         self.lineChart?.data?.setDrawValues(true)
         
         self.lineChart?.isHidden = false
@@ -144,7 +150,7 @@ class StatsViewController: UIViewController {
     let s = startDate ?? Date(timeIntervalSince1970: 0)
     let e = endDate ?? Date()
     let p = period ?? .daily
-    let m = mode ?? .accum
+    let m = mode ?? .accumTime
     
     stat?.entityComparison(
       grouping: entity,
@@ -272,12 +278,12 @@ final class PeriodValueFormatter: IAxisValueFormatter {
     self.period = period
     startDate = sd
     endDate = ed
-    self.mode = mode ?? .accum
+    self.mode = mode ?? .accumTime
   }
   
   public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
     let possibles: [String]
-    if mode == .accum {
+    if mode == .accumTime {
       possibles = period.fullPrintableDataSet(between: startDate, and: endDate, limitToDate: period == .weekly)
     } else if let s = startDate, let e = endDate {
       possibles = period.fullRunningDataSet(between: s, and: e)

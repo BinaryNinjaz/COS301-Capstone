@@ -60,7 +60,7 @@ final class StatSetupViewController: ReloadableFormViewController {
     let sd = startDateRow?.value ?? Date()
     let ed = endDateRow?.value ?? Date()
     let period = periodRow?.value ?? .daily
-    let mode = modeRow?.value == true ? HarvestCloud.Mode.accum : .running
+    let mode = modeRow?.value == true ? HarvestCloud.Mode.accumEntity : .running
     
     let alert = SCLAlertView(appearance: .warningAppearance)
     let statNameTextView = alert.addTextField()
@@ -178,7 +178,7 @@ final class StatSetupViewController: ReloadableFormViewController {
       svc.startDate = self.startDateRow?.value
       svc.endDate = self.endDateRow?.value
       svc.period = self.periodRow?.value
-      svc.mode = self.modeRow?.value == true ? .accum : .running
+      svc.mode = self.modeRow?.value == true ? .accumEntity : .running
       
       let kind = self.statKindRow?.value ?? .workers
       

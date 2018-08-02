@@ -101,7 +101,7 @@ enum Stat {
           completion(nil, nil)
           return
         }
-        print(json)
+        
         var i = 0
         let colors = ChartColorTemplates.harvest()
         for (key, _dataSetObject) in json {
@@ -111,7 +111,8 @@ enum Stat {
               grouping: grouping,
               period: period,
               startDate: startDate,
-              endDate: endDate)
+              endDate: endDate,
+              mode: mode)
             continue
           }
           
@@ -130,8 +131,9 @@ enum Stat {
             : grouping == .worker
               ? worker?.name
               : farm?.name) ?? "Unknown \(missingMessage)"
+          dataSet.label = mode == .accumEntity ? "(Sum)" : dataSet.label
           
-          let fullDataSet = mode == .accum
+          let fullDataSet = mode == .accumTime
             ? period.fullDataSet(
                 between: startDate,
                 and: endDate,
@@ -164,7 +166,8 @@ enum Stat {
     grouping: HarvestCloud.GroupBy,
     period: HarvestCloud.TimePeriod,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    mode: HarvestCloud.Mode
   ) -> LineChartData? {
     guard let avgJson = json else {
       return nil
@@ -189,7 +192,8 @@ enum Stat {
         ? orchard?.name
         : grouping == .worker
           ? worker?.name
-          : farm?.name) ?? "Unknown \(missingMessage)") + " (avg)"
+          : farm?.name) ?? "Unknown \(missingMessage)") + " (Avg.)"
+      dataSet.label = mode == .accumEntity ? "(Avg.))" : dataSet.label
       
       let fullDataSet = period.fullDataSet(
         between: startDate,
