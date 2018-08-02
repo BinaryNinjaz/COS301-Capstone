@@ -416,7 +416,7 @@ function dispOrch(id) {
                 "<option value='Other'>Other</option>"+
                 "<option value='None (dry land)'>None (dry land)</option>"+
             "</select>"+
-        "</div>"+
+        "</div></div>"+
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
