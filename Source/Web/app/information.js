@@ -298,8 +298,8 @@ function farmSave(type, id) {
       further: document.getElementById("farmFurther").value,
       contactNumber: document.getElementById("farmContact").value,
       email: document.getElementById("farmEmail").value,
-      province: document.getElementById("farmProvince").value,
-      town: document.getElementById("farmTown").value
+      province: document.getElementById("farmProvince").value
+      //town: document.getElementById("farmTown").value
     });
   }
   popFarm();
@@ -544,10 +544,7 @@ function orchSave(type, id) {
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
       cultivars: cult,
-      /*xDim: document.getElementById("orchDimX").value,
-      yDim: document.getElementById("orchDimY").value,
-      unit: document.getElementById("orchDimUnit").value,
-      */bagMass: document.getElementById("orchBagMass").value,
+      bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
       rowSpacing: document.getElementById("rowSpacing").value,
@@ -804,7 +801,7 @@ function workSave(type, id) {
       surname: document.getElementById("workSName").value,
       idNumber: document.getElementById("workID").value,
       phoneNumber: document.getElementById("workContactNo").value,
-      orchard: orchID,
+      orchards: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
       email: email
@@ -828,7 +825,7 @@ function workSave(type, id) {
       surname: document.getElementById("workSName").value,
       idNumber: document.getElementById("workID").value,
       phoneNumber: document.getElementById("workContactNo").value,
-      orchard: orchID,
+      orchards: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
       email: email
