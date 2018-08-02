@@ -322,13 +322,42 @@ func timeGraphSessionsOrchard() {
   }
 }
 
+func timeGraphSessionsFarm() {
+  let cal = Calendar.current
+  
+  let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())!.timeIntervalSince1970
+  
+  let s = Date(timeIntervalSince1970: wb)
+  let e = Date()
+  let g = HarvestCloud.GroupBy.farm
+  let p = HarvestCloud.TimePeriod.daily
+  
+  let ids = [
+    "-LBl_xZiXFlcTFzkTbGd", // Unsworthy
+    "-LC3xagNRI3KCPe7RZVL" // Mangogo
+  ]
+
+  HarvestCloud.timeGraphSessions(
+    grouping: g, 
+    ids: ids, 
+    period: p, 
+    startDate: s, 
+    endDate: e,
+    avgRange: .onlybefore,
+    mode: .accum) { o in
+    print(o)
+  }
+}
+
 func expectedYield() {
   HarvestCloud.getExpectedYield(orchardId: "-LCEFgdMMO80LR98BzPC", date: Date()) {
     print($0)
   }
 }
 
-collection()
+timeGraphSessionsFarm()
+
+//collection()
 
 //timeGraphSessionsWorker()
 

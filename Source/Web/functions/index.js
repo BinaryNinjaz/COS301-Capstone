@@ -119,8 +119,8 @@ function orchardPolygon(orchardId, uid, completion) {
   const coords = admin.database().ref('/' + uid + '/orchards/' + orchardId);
   var result = [];
   coords.once('value').then((snapshot) => {
-    const value = snapshot.val();
-    const coords = value.coords;
+    const val = snapshot.val();
+    const coords = val.coords;
     for (const k in coords) {
       result.push({x: coords[k].lng, y: coords[k].lat});
     }
@@ -138,8 +138,8 @@ function orchardPolygons(orchardIds, uid, completion) {
   coords.once('value').then((snapshot) => {
     snapshot.forEach((childSnapshot) => {
       if (orchardIds === undefined || arrayContainsItem(orchardIds, childSnapshot.key)) {
-        const value = childSnapshot.val();
-        const coords = value.coords;
+        const val = childSnapshot.val();
+        const coords = val.coords;
         var poly = [];
         for (const k in coords) {
           poly.push({x: coords[k].lng, y: coords[k].lat});
@@ -158,13 +158,13 @@ function orchardsCooked(orchardIds, uid, completion) {
   orchardsRef.once('value').then((snapshot) => {
     snapshot.forEach((childSnapshot) => {
       if (orchardIds === undefined || arrayContainsItem(orchardIds, childSnapshot.key)) {
-        const value = childSnapshot.val();
-        const coords = value.coords;
+        const val = childSnapshot.val();
+        const coords = val.coords;
         var poly = [];
         for (const k in coords) {
           poly.push({x: coords[k].lng, y: coords[k].lat});
         }
-        result.push({polygon: poly, val: value, id: childSnapshot.key});
+        result.push({polygon: poly, val: val, id: childSnapshot.key});
       }
     });
     completion(result);
@@ -565,7 +565,7 @@ function averageOfSessionCounter(counter, days) {
 // ...
 // idN=[String]
 //
-// groupBy=[worker, orchard, foreman]
+// groupBy=[worker, orchard, foreman, farm]
 // period=[hourly, daily, weekly, monthly, yearly]
 // startDate=[Double]
 // endDate=[Double]
@@ -622,7 +622,7 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
       }
     }
     
-    if (groupBy !== "orchard") {
+    if (groupBy === "worker" || groupBy === "foreman") {
       var sessionsRef = admin.database().ref('/' + uid + '/sessions');
       sessionsRef.once("value").then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
@@ -668,7 +668,7 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
         console.log(err);
       });
     } else {
-      orchardsCooked(ids, uid, (cookedOrchards) => {
+      orchardsCooked(undefined, uid, (cookedOrchards) => {
         var sessionsRef = admin.database().ref('/' + uid + '/sessions');
         sessionsRef.once("value").then((snapshot) => {
           snapshot.forEach((childSnapshot) => {
@@ -685,29 +685,37 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                   : roundDateToPeriod(pickup.date, period);
                 const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
                 
-                var orckey = undefined;
+                var orc = undefined;
                 for (const okey in cookedOrchards) {
                   if (polygonContainsPoint(cookedOrchards[okey].polygon, pnt)) {
-                    orckey = cookedOrchards[okey].id;
+                    orc = cookedOrchards[okey];
                     break;
                   }
                 }
-                if (orckey === undefined) {
+                
+                if (orc === undefined 
+                || orc.id === undefined 
+                || orc.val === undefined 
+                || orc.val.farm === undefined) {
                   continue;
                 }
+                const pkey = groupBy === "orchard" ? orc.id : orc.val.farm;
+                
                 if (startDate <= pickup.date && pickup.date <= endDate) {
-                  incrSessionCounter(result, orckey, accum);
+                  if (arrayContainsItem(ids, pkey)) {
+                    incrSessionCounter(result, pkey, accum);
+                  }
                 }
                 
                 if (avgRange === "all") {
-                  incrSessionCounter(all, orckey, accum);
-                  updateDaysCounter(days, orckey, accum, period, pickup.date);
+                  incrSessionCounter(all, pkey, accum);
+                  updateDaysCounter(days, pkey, accum, period, pickup.date);
                 } else if (avgRange === "inclusive" && pickup.date <= endDate) {
-                  incrSessionCounter(all, orckey, accum);
-                  updateDaysCounter(days, orckey, accum, period, pickup.date);
+                  incrSessionCounter(all, pkey, accum);
+                  updateDaysCounter(days, pkey, accum, period, pickup.date);
                 } else if (avgRange === "onlybefore" && pickup.date <= startDate) {
-                  incrSessionCounter(all, orckey, accum);
-                  updateDaysCounter(days, orckey, accum, period, pickup.date);
+                  incrSessionCounter(all, pkey, accum);
+                  updateDaysCounter(days, pkey, accum, period, pickup.date);
                 }
               }
             }
