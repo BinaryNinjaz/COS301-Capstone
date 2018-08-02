@@ -785,6 +785,8 @@ function workSave(type, id) {
   /*0 means create, 1 means modify*/
   const orchard = document.getElementById("workOrch").value;
   const orchID = orchard.substring(orchard.indexOf("<") + 1, orchard.indexOf(">"));
+  var pn = document.getElementById("workContactNo").value;
+  //
   let workType = "Foreman";
   if (document.getElementById("rWorker").checked) {
     workType = "Worker";
@@ -800,7 +802,7 @@ function workSave(type, id) {
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
       idNumber: document.getElementById("workID").value,
-      phoneNumber: document.getElementById("workContactNo").value,
+      phoneNumber: pn,
       orchards: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
@@ -824,7 +826,7 @@ function workSave(type, id) {
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
       idNumber: document.getElementById("workID").value,
-      phoneNumber: document.getElementById("workContactNo").value,
+      phoneNumber: pn,
       orchards: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
