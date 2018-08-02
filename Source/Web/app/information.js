@@ -786,7 +786,10 @@ function workSave(type, id) {
   const orchard = document.getElementById("workOrch").value;
   const orchID = orchard.substring(orchard.indexOf("<") + 1, orchard.indexOf(">"));
   var pn = document.getElementById("workContactNo").value;
-  //
+  if(pn.charAt(0)=="0")  
+    pn = pn.replace(pn.charAt(0), "+27");
+  //otherwise we assume it's proper
+  
   let workType = "Foreman";
   if (document.getElementById("rWorker").checked) {
     workType = "Worker";
