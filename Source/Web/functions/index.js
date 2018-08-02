@@ -94,6 +94,15 @@ function anyPolygonContainsPoint(polygons, point) {
   return false;
 }
 
+function anyOrchardContainsPoint(orchards, point) {
+  for (var orchard in orchards) {
+    if (polygonContainsPoint(orchards[orchard].polygon, point)) {
+      return orchards[orchard].val;
+    }
+  }
+  return undefined;
+}
+
 function arrayContainsItem(array, item) {
   for (var a in array) {
     if (String(array[a]) === String(item)) {
@@ -128,7 +137,7 @@ function orchardPolygons(orchardIds, uid, completion) {
   var result = [];
   coords.once('value').then((snapshot) => {
     snapshot.forEach((childSnapshot) => {
-      if (arrayContainsItem(orchardIds, childSnapshot.key)) {
+      if (orchardIds === undefined || arrayContainsItem(orchardIds, childSnapshot.key)) {
         const value = childSnapshot.val();
         const coords = value.coords;
         var poly = [];
@@ -148,7 +157,7 @@ function orchardsCooked(orchardIds, uid, completion) {
   var result = [];
   orchardsRef.once('value').then((snapshot) => {
     snapshot.forEach((childSnapshot) => {
-      if (arrayContainsItem(orchardIds, childSnapshot.key)) {
+      if (orchardIds === undefined || arrayContainsItem(orchardIds, childSnapshot.key)) {
         const value = childSnapshot.val();
         const coords = value.coords;
         var poly = [];
@@ -259,7 +268,7 @@ exports.expectedYield = functions.https.onRequest((req, res) => {
 // ...
 // idN=[String]
 //
-// groupBy=[worker, orchard]
+// groupBy=[worker, orchard, foreman, farm]
 // startDate=[Double]
 // endDate=[Double]
 // uid=[String]
@@ -304,14 +313,13 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
               }
             }
           });
-          
           res.send(result);
           return true;
         }).catch((error) => {
           console.log(error);
         });
       });
-    } else {
+    } else if (groupBy === "worker") {
       sessions.once('value').then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
           const key = childSnapshot.key;
@@ -320,7 +328,7 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
             for (var ckey in val.collections) {
               const collection = val.collections[ckey];
               if (!arrayContainsItem(ids, ckey)) {
-                continue
+                continue;
               }
               for (var pickup in collection) {
                 const geopoint = collection[pickup].coord
@@ -336,9 +344,57 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
       }).catch((error) => {
         console.log(error);
       });
+    } else if (groupBy === "foreman") {
+      sessions.once('value').then((snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          const key = childSnapshot.key;
+          const val = childSnapshot.val();
+          console.log(val.wid + " " + JSON.stringify(ids));
+          if (arrayContainsItem(ids, val.wid) && startDate <= val.start_date && val.start_date <= endDate) {
+            for (var ckey in val.collections) {
+              const collection = val.collections[ckey];
+              for (var pickup in collection) {
+                const geopoint = collection[pickup].coord
+                const point = {x: geopoint.lng, y: geopoint.lat}; 
+                result.push(geopoint);
+              }
+            }
+          }
+        });
+        
+        res.send(result);
+        return true;
+      }).catch((error) => {
+        console.log(error);
+      });
+    } else if (groupBy === "farm") {
+      orchardsCooked(undefined, uid, (orchards) => {
+        sessions.once('value').then((snapshot) => {
+          snapshot.forEach((childSnapshot) => {
+            const key = childSnapshot.key;
+            const val = childSnapshot.val();
+            if (startDate <= val.start_date && val.start_date <= endDate) {
+              for (var ckey in val.collections) {
+                const collection = val.collections[ckey];
+                for (var pickup in collection) {
+                  const geopoint = collection[pickup].coord
+                  const point = {x: geopoint.lng, y: geopoint.lat};
+                  const o = anyOrchardContainsPoint(orchards, point);
+                  if (o === undefined || !arrayContainsItem(ids, o.farm)) {
+                    continue;
+                  }
+                  result.push(geopoint);
+                }
+              }
+            }
+          });
+          res.send(result);
+          return true;
+        }).catch((error) => {
+          console.log(error);
+        });
+      });
     }
-    
-    
   });
 });
 
