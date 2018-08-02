@@ -87,7 +87,7 @@ final class StatSetupViewController: ReloadableFormViewController {
   override func setUp() {
     statKindRow = PickerRow<StatKind>("Stat Kind") { row in
       row.options = StatKind.allCases
-      row.value = .workers
+      row.value = .farms
     }
     
     workersRow = MultipleSelectorRow<Worker> { row in
@@ -167,40 +167,32 @@ final class StatSetupViewController: ReloadableFormViewController {
     let showStats = ButtonRow { row in
       row.title = "Display Stats"
     }.onCellSelection { _, _ in
-        guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
-          return
-        }
+      guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "statsViewController") else {
+        return
+      }
+      
+      guard let svc = vc as? StatsViewController else {
+        return
+      }
+      
+      svc.startDate = self.startDateRow?.value
+      svc.endDate = self.endDateRow?.value
+      svc.period = self.periodRow?.value
+      svc.mode = self.modeRow?.value == true ? .accum : .running
+      
+      let kind = self.statKindRow?.value ?? .workers
+      
+      if kind == .foremen, let fs = self.foremenRow?.value {
+        svc.stat = .foremanComparison(Array(fs))
+      } else if kind == .workers, let ws = self.workersRow?.value {
+        svc.stat = .workerComparison(Array(ws))
+      } else if kind == .orchards, let os = self.orchardsRow?.value {
+        svc.stat = .orchardComparison(Array(os))
+      } else if kind == .farms, let fs = self.farmsRow?.value {
+        svc.stat = .farmComparison(Array(fs))
+      }
         
-        guard let svc = vc as? StatsViewController else {
-          return
-        }
-        
-        svc.startDate = self.startDateRow?.value
-        svc.endDate = self.endDateRow?.value
-        svc.period = self.periodRow?.value
-        svc.mode = self.modeRow?.value == true ? .accum : .running
-        
-        let kind = self.statKindRow?.value ?? .workers
-        switch kind {
-        case .foremen:
-          if let fs = self.foremenRow?.value {
-            svc.stat = .foremanComparison(Array(fs))
-          }
-        case .workers:
-          if let ws = self.workersRow?.value {
-            svc.stat = .workerComparison(Array(ws))
-          }
-        case .orchards:
-          if let os = self.orchardsRow?.value {
-            svc.stat = .orchardComparison(Array(os))
-          }
-        case .farms:
-          if let os = self.farmsRow?.value {
-            svc.stat = .farmComparison(Array(os))
-          }
-        }
-        
-        self.navigationController?.pushViewController(svc, animated: true)
+      self.navigationController?.pushViewController(svc, animated: true)
     }
     
     Entities.shared.getMultiplesOnce([.orchard, .worker]) { (_) in
