@@ -47,14 +47,16 @@ $(window).bind("load", () => {
 var orchards = [];
 var farms = [];
 function changeSelection(checkbox) {
-  for (var i = 0; i < orchards.length; i++) {
-    if (selectedEntity === "isOrchard") {
+  if (selectedEntity === "isOrchard") {
+    for(var i = 0; i < orchards.length; i++) {
       if (orchards[i].key === checkbox.value) {
         if (checkbox.checked !== orchards[i].showing) {
           orchards[i].showing = checkbox.checked;
         }
       }
-    } else {
+    }
+  } else {
+    for(var i = 0; i < workers.length; i++) {
       if (workers[i].key === checkbox.value) {
         if (checkbox.checked !== workers[i].showing) {
           workers[i].showing = checkbox.checked;
@@ -191,15 +193,19 @@ function initMap() {
 function requestedIds() {
   var result = {};
   if (selectedEntity === "orchard") {
+    var k = 0;
     for (var i = 0; i < orchards.length; i++) {
       if (orchards[i].showing) {
-        result["id" + i] = orchards[i].key;
+        result["id" + k] = orchards[i].key;
+        k++;
       }
     }
   } else if (selectedEntity === "worker") {
-    for (var i = 0; i < orchards.length; i++) {
+    var k = 0;
+    for (var i = 0; i < workers.length; i++) {
       if (workers[i].showing) {
-        result["id" + i] = workers[i].key;
+        result["id" + k] = workers[i].key;
+        k++;
       }
     }
   }
@@ -220,6 +226,8 @@ function updateHeatmap() {
   keys.endDate = endTime;
   keys.uid = userID();
   keys.groupBy = selectedEntity;
+  
+  alert(JSON.stringify(keys));
   
   const url = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/collectionsWithinDate';
   
