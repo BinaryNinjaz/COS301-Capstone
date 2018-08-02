@@ -597,7 +597,17 @@ function orchMod(id) {
         "</div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='irrigationType' value='" + snapshot.val().irrigation + "'></div> </div> " +
+        "<div class='col-sm-9'>"+
+        "<select class='form-control' id='irrigationType'>"+
+            "<option value='"+snapshot.val().irrigation+"'>"+snapshot.val().irrigation+"</option>"+
+            "<option value='Micro'>Micro</option>"+
+            "<option value='Drip'>Drip</option>"+
+            "<option value='Floppy'>Floppy</option>"+
+            "<option value='Drag Lines'>Drag Lines</option>"+
+            "<option value='Other'>Other</option>"+
+            "<option value='None (dry land)'>None (dry land)</option>"+
+        "</select>"+
+        "</div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
