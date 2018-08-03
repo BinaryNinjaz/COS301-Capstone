@@ -519,7 +519,7 @@ function incrSessionCounter(counter, key, accum) {
   }
 }
 
-function updateDaysCounter(days, key, accum, period, pickedDate) {
+function updateDaysCounter(days, entities, key, accum, period, pickedDate) {
   const date = new Date(pickedDate * 1000);
   const grouper = period === "weekly"
     ? moment(date).startOf('week')
@@ -528,14 +528,17 @@ function updateDaysCounter(days, key, accum, period, pickedDate) {
       : period === "yearly"
         ? moment(date).startOf('year')
         : moment(date).startOf('day');
-  if (days[key] === undefined) {
-    days[key] = {};
+  if (days[accum] === undefined) {
+    days[accum] = {};
   }
-  if (days[key][accum] === undefined) {
-    days[key][accum] = {};
+  if (days[accum][grouper] === undefined) {
+    days[accum][grouper] = 1;
   }
-  if (days[key][accum][grouper] === undefined) {
-    days[key][accum][grouper] = 1;
+  if (entities[accum] === undefined) {
+    entities[accum] = {};
+  }
+  if (entities[accum][key] === undefined) {
+    entities[accum][key] = 1;
   }
 }
 
@@ -554,6 +557,23 @@ function averageOfSessionCounter(counter, days) {
       if (len === undefined || len === null) { len = 1; }
       result[key][accum] = counter[key][accum] / len;
     }
+  }
+  return result;
+}
+
+function averageOfSessionItem(item, key, days, workingOn) {
+  var result = {};
+  const accums = Object.keys(item);
+  for (const iaccum in accums) {
+    const accum = accums[iaccum];
+    if (result[accum] === undefined) {
+      result[accum] = {};
+    }
+    var len = Object.keys(days[accum]).length;
+    if (len === undefined || len === null) { len = 1; }
+    var cnt = Object.keys(workingOn[accum]).length;
+    if (cnt === undefined || cnt === null) { cnt = 1; }
+    result[accum] = (item[accum] / len) / cnt;
   }
   return result;
 }
@@ -601,8 +621,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     if (mode === undefined) {
       mode = "accumTime";
     }
+    const isAccumTime = mode === 'accumTime';
     const isAccumEntity = mode === 'accumEntity';
-    const isRunningGraph = mode === 'running';
+    const isRunning = mode === 'running';
     const sd = new Date(startDate * 1000);
     const ed = new Date(endDate * 1000);
     
@@ -611,8 +632,9 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     const sameD = isSameDay(sd, ed);
     
     var result = {};
-    var all = {};
+    var allOthers = {avg: {}};
     var days = {};
+    var workingOnDays = {};
     
     var ids = [];
     for (var i = 0; i < Object.keys(req.body).length; i++) {
@@ -634,39 +656,31 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
           
           const foremanKey = val.wid;
           for (const workerKey in val.collections) {
-            if (!(groupBy === "foreman" && arrayContainsItem(ids, foremanKey)
-            || groupBy === "worker" && arrayContainsItem(ids, workerKey))) {
-              continue;
-            }
             const collection = val.collections[workerKey];
             for (const pickupKey in collection) {
               const pickup = collection[pickupKey];
-              const accum = mode !== 'accumTime'
+              const accum = !isAccumTime
                 ? roundDateToRunningPeriod(pickup.date, period, sameY, sameM, sameD)
                 : roundDateToPeriod(pickup.date, period);
               const wkey = isAccumEntity
                 ? "sum"
                 : groupBy === "foreman" ? foremanKey : workerKey;
+                
+                
+              var contained = groupBy === "foreman" && arrayContainsItem(ids, foremanKey)
+              || groupBy === "worker" && arrayContainsItem(ids, workerKey)
+                
               if (startDate <= pickup.date && pickup.date <= endDate) {
-                incrSessionCounter(result, wkey, accum);
-              }
-              
-              if (avgRange === "all") {
-                incrSessionCounter(all, wkey, accum);
-                updateDaysCounter(days, wkey, accum, period, pickup.date);
-              } else if (avgRange === "inclusive" && pickup.date <= endDate) {
-                incrSessionCounter(all, wkey, accum);
-                updateDaysCounter(days, wkey, accum, period, pickup.date);
-              } else if (avgRange === "onlybefore" && pickup.date <= startDate) {
-                incrSessionCounter(all, wkey, accum);
-                updateDaysCounter(days, wkey, accum, period, pickup.date);
+                if (contained) {
+                  incrSessionCounter(result, wkey, accum);
+                }
+                incrSessionCounter(allOthers, "avg", accum);
+                updateDaysCounter(days, workingOnDays, wkey, accum, period, pickup.date);
               }
             }
           }
         });
-        if (!isRunningGraph) {
-          result["avg"] = averageOfSessionCounter(all, days);
-        }
+        result["avg"] = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
         res.send(result);
         return true;
       }).catch((err) => {
@@ -685,7 +699,7 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
               
               for (const pickupKey in collection) {
                 const pickup = collection[pickupKey];
-                const accum = mode !== 'accumTime'
+                const accum = !isAccumTime
                   ? roundDateToRunningPeriod(pickup.date, period, sameY, sameM, sameD)
                   : roundDateToPeriod(pickup.date, period);
                 const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
@@ -713,28 +727,19 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                   ? "sum"
                   : akey;
                 
+                const contained = arrayContainsItem(ids, akey);
+                
                 if (startDate <= pickup.date && pickup.date <= endDate) {
-                  if (arrayContainsItem(ids, akey)) {
+                  if (contained) {
                     incrSessionCounter(result, pkey, accum);
                   }
-                }
-                
-                if (avgRange === "all") {
-                  incrSessionCounter(all, pkey, accum);
-                  updateDaysCounter(days, pkey, accum, period, pickup.date);
-                } else if (avgRange === "inclusive" && pickup.date <= endDate) {
-                  incrSessionCounter(all, pkey, accum);
-                  updateDaysCounter(days, pkey, accum, period, pickup.date);
-                } else if (avgRange === "onlybefore" && pickup.date <= startDate) {
-                  incrSessionCounter(all, pkey, accum);
-                  updateDaysCounter(days, pkey, accum, period, pickup.date);
+                  incrSessionCounter(allOthers, "avg", accum);
+                  updateDaysCounter(days, workingOnDays, pkey, accum, period, pickup.date);
                 }
               }
             }
           });
-          if (!isRunningGraph) {
-            result["avg"] = averageOfSessionCounter(all, days);
-          }
+          result["avg"] = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
           res.send(result);
           return true;
         }).catch((err) => {
