@@ -80,6 +80,7 @@ public class Analytics extends AppCompatActivity {
     public static final String ORCHARD = "orchard";
     public static final String WORKER = "worker";
     public static final String FOREMAN = "foreman";
+    public static final String FARM = "farm";
     
     @SuppressWarnings("FieldCanBeLocal")
     private final double THOUSAND = 1000.0000000;
@@ -234,6 +235,9 @@ public class Analytics extends AppCompatActivity {
         analytics_selector = new Analytics_Selector();
         Category temp = Category.NOTHING;
         switch (group){
+            case FARM:
+                temp = Category.FARM;
+                break;
             case ORCHARD:
                 temp = Category.ORCHARD;
                 break;
@@ -246,6 +250,18 @@ public class Analytics extends AppCompatActivity {
         }
         analytics_selector.setDataAndCategory(this.data, temp);
         fragmentTransaction.replace(R.id.analMainPart, analytics_selector, "SELECTOR");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void showCustom(){
+        toggleUpButton(true);
+
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        analytics_creator = new Analytics_Creator();
+
+        fragmentTransaction.replace(R.id.analMainPart, analytics_creator, "CREATOR");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -406,8 +422,8 @@ public class Analytics extends AppCompatActivity {
 
             //Create Custom Graph
 
-            case R.id.anal_choose_cus_buttonInRecycler:
-                //TODO: Create custom graph
+            case R.id.anal_choose_cus_make:
+                showCustom();
                 break;
         }
     }

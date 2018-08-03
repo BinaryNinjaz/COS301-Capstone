@@ -118,20 +118,22 @@ public class Analytics_Graph extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
 
-        switch (group){
-            case Analytics.FOREMAN:
-                category = Category.WORKER;
-                description.setText(getResources().getString(R.string.anal_graph_foreman));
-                break;
-            case Analytics.ORCHARD:
-                category = Category.ORCHARD;
-                description.setText(getResources().getString(R.string.anal_graph_orchard));
-                break;
-            case Analytics.WORKER:
-                category = Category.WORKER;
-                description.setText(getResources().getString(R.string.anal_graph_worker));
-                break;
-        }
+//        switch (group){
+//            case Analytics.FOREMAN:
+//                category = Category.WORKER;
+//                description.setText(getResources().getString(R.string.anal_graph_foreman));
+//                description.en
+//                break;
+//            case Analytics.ORCHARD:
+//                category = Category.ORCHARD;
+//                description.setText(getResources().getString(R.string.anal_graph_orchard));
+//                break;
+//            case Analytics.WORKER:
+//                category = Category.WORKER;
+//                description.setText(getResources().getString(R.string.anal_graph_worker));
+//                break;
+//        }
+        description.setEnabled(false);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -489,6 +491,10 @@ public class Analytics_Graph extends AppCompatActivity {
 //                                    barChart.groupBars(0, 0.8f, 0.1f);
                                     barChart.notifyDataSetChanged();
                                     barChart.setHighlightFullBarEnabled(true);
+                                    barChart.setDragEnabled(true);
+                                    barChart.setScaleEnabled(true);
+                                    barChart.setPinchZoom(true);
+                                    barChart.getXAxis().setDrawGridLines(false);
                                 }
                             }
                         });

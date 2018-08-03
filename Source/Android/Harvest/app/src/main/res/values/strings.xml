@@ -220,14 +220,35 @@
     <!--Custom-->
     <string name="anal_cus_tit">Custom</string>
     <string name="anal_cus_make">Make Your Own Graph</string>
-
-    <!--Selector-->
+    <string name="anal_cus_farmSel">Farm Selection</string>
+    <string name="anal_cus_workSel">Worker Selection</string>
+    <string name="anal_cus_orchSel">Orchard Selection</string>
+    <string name="anal_cus_foreSel">Foreman Selection</string>
+    <string name="anal_cus_det">Details</string>
     <string name="anal_selector_selectNone">You must select at least one item to display.</string>
+    <string-array name="anal_cus_comps">
+        <item>Farm Comparisons></item>
+        <item>Worker Comparisons</item>
+        <item>Orchard Comparisons</item>
+        <item>Foreman Comparisons</item>
+    </string-array>
+    <string name="anal_cus_timeTitle">Time Interval</string>
+    <string-array name="anal_cus_timeChoose">
+        <item>Hourly</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
+    <string name="anal_cus_from">From Date</string>
+    <string name="anal_cus_upTo">Up to Date</string>
+    <string name="anal_cus_disp">Display Stats</string>
 
     <!--Graphs-->
     <string name="anal_graph_orchard">Orchard Performance</string>
     <string name="anal_graph_foreman">Foreman Performance</string>
     <string name="anal_graph_worker">Worker Performance</string>
+
 
 
 

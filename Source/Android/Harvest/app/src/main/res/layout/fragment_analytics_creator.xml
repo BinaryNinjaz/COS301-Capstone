@@ -1,6 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+    <Spinner
+        android:id="@+id/anal_create_compType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        />
+
+    <Button
+        android:id="@+id/anal_create_selection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/white"
+        android:textColor="@color/black"
+        android:onClick="anal_creator_buttonHandler"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/anal_cus_det"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/anal_cus_timeTitle"
+            android:layout_marginStart="8dp"
+            style="@style/TextAppearance.AppCompat.Menu"/>
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/anal_cus_from"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/EditText"
+        android:hint="@string/anal_cus_from"
+        android:inputType="none"
+        android:focusable="false"
+        android:clickable="true"
+        android:onClick="anal_creator_buttonHandler"/>
+
+    <EditText
+        android:id="@+id/anal_cus_upTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/EditText"
+        android:hint="@string/anal_cus_upTo"
+        android:inputType="none"
+        android:focusable="false"
+        android:clickable="true"
+        android:onClick="anal_creator_buttonHandler"/>
+
+    <Button
+        android:id="@+id/anal_cus_disp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/anal_cus_disp"
+        android:background="@color/white"
+        android:textColor="@color/blueLinks"
+        android:onClick="anal_creator_buttonHandler"/>
+
+</LinearLayout>
