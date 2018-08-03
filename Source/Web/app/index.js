@@ -1,6 +1,6 @@
 /*!
  * File:   Index.js
- * Author: Teboho, Sizo, Kevin
+ * Author: Binary Ninjaz (Teboho, Sizo, Kevin)
  *
  * Description: Contains all functions required for successful signing in or loging in. 
  * 

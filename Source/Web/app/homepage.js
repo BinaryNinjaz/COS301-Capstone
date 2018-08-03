@@ -1,5 +1,14 @@
-var markers = [];
+/*!
+*  	File:   homepage.js
+*	Author: Binary Ninjaz (Teboho, Sizo, Kevin)
+*
+*	Description: Contains all functions required for the home page interface.
+*/
 
+
+
+var markers = [];
+///This function is a get function, it returns the location of the user ID, from the database
 function locationsRef() {
   return firebase.database().ref('/' + userID() + '/locations');
 }
