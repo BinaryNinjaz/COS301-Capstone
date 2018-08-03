@@ -30,7 +30,7 @@ $(window).bind("load", () => {
 
 /* Function returns a worker pointed to by the callback parameter */
 function getFarms(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/farms');
+  const ref = database.ref('/' + userID() + '/farms');
   ref.once('value').then((snapshot) => {
     callback(snapshot);
   });
@@ -38,7 +38,7 @@ function getFarms(callback) {
 
 /* Function returns a worker pointed to by the callback parameter */
 function getWorkers(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/workers');
+  const ref = database.ref('/' + userID() + '/workers');
   ref.once('value').then((snapshot) => {
     callback(snapshot);
   });
@@ -46,7 +46,7 @@ function getWorkers(callback) {
 
 /* Function returns an orchard pointed to by the callback parameter */
 function getOrchards(_callback) {
-  const ref = firebase.database().ref('/' + userID() + '/orchards');
+  const ref = database.ref('/' + userID() + '/orchards');
   ref.once('value').then((snapshot) => {
     _callback(snapshot);
   });
