@@ -164,6 +164,10 @@ function initWorkers(){
           const k = worker.key;
           if (w.type === "Foreman") {
             foremen.push({key: k, value: w});
+            var wName = w.name + ' ' + w.surname;
+            var option = document.createElement("option");
+            option.text = wName;
+            workerSelect.options.add(option);
           } else {
             workers.push({key: k, value: w});
             var wName = w.name + ' ' + w.surname;
