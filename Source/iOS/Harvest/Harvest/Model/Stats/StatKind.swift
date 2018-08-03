@@ -24,6 +24,15 @@ enum StatKind: CustomStringConvertible {
     }
   }
   
+  var title: String {
+    switch self {
+    case .workers: return "Worker"
+    case .orchards: return "Orchard"
+    case .foremen: return "Foremen"
+    case .farms: return "Farm"
+    }
+  }
+  
   static var allCases: [StatKind] {
     return [.farms, .orchards, .workers, .foremen]
   }

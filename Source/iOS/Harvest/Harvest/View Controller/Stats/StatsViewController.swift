@@ -18,10 +18,7 @@ class StatsViewController: UIViewController {
   var endDate: Date?
   var mode: HarvestCloud.Mode?
   
-  var barChart: CombinedChartView?
-  var pieChart: PieChartView?
   var lineChart: LineChartView?
-  var radarChart: RadarChartView?
   var activityIndicator: UIActivityIndicatorView?
   
   override func viewDidLoad() {
@@ -36,38 +33,23 @@ class StatsViewController: UIViewController {
                        height: view.frame.height - navH * 2 - tabH)
     
     lineChart = LineChartView(frame: frame)
-    barChart = CombinedChartView(frame: frame)
-    pieChart = PieChartView(frame: frame)
-    radarChart = RadarChartView(frame: frame)
     activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     activityIndicator?.color = UIColor.harvestGreen
     activityIndicator?.stopAnimating()
     
     drawChart()
     
-    view.addSubview(barChart!)
-    view.addSubview(pieChart!)
     view.addSubview(lineChart!)
-    view.addSubview(radarChart!)
     view.addSubview(activityIndicator!)
     
-    barChart?.snp.makeConstraints(Snap.fillParent(on: self))
     lineChart?.snp.makeConstraints(Snap.fillParent(on: self))
-    pieChart?.snp.makeConstraints(Snap.fillParent(on: self))
-    radarChart?.snp.makeConstraints(Snap.fillParent(on: self))
     setActivityPosition()
     
     setUpLineChart()
-    setUpBarChart()
-    setUpRadarChart()
-    pieChart?.chartDescription = nil
   }
   
   func drawChart() {
     lineChart?.isHidden = true
-    barChart?.isHidden = true
-    pieChart?.isHidden = true
-    radarChart?.isHidden = true
     activityIndicator?.startAnimating()
     
     guard let stat = stat else {
@@ -91,58 +73,20 @@ class StatsViewController: UIViewController {
     }
   }
   
-  func updateBarChart(with data: BarChartData?, and lineData: LineChartData?) {
+  func updateChart(with data: LineChartData?) {
     DispatchQueue.main.async {
       self.activityIndicator?.stopAnimating()
-      guard let barData = data else {
-        self.barChart?.data = nil
+      guard let lineData = data else {
+        self.lineChart?.data = nil
         return
       }
+      self.lineChart?.notifyDataSetChanged()
       
-      if self.mode == .running || self.mode == .accumEntity {
-        self.lineChart?.notifyDataSetChanged()
-        
-        let sumLineData = barData.lineChartData()
-        if self.mode == .accumEntity && lineData?.dataSetCount == 1 {
-          sumLineData.addDataSet(lineData?.dataSets.first!)
-        }
-        
-        self.lineChart?.data = sumLineData
-        self.lineChart?.data?.setDrawValues(true)
-        
-        self.lineChart?.isHidden = false
-        self.lineChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
-      } else if self.period == .daily {
-        self.radarChart?.notifyDataSetChanged()
-        self.radarChart?.data = barData.radarChartData()
-        self.radarChart?.data?.setDrawValues(true)
-        
-        self.radarChart?.isHidden = false
-        self.radarChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
-      } else {
-        if barData.dataSetCount > 1 {
-          let groupSize = 0.2
-          let barSpace = 0.03
-          let gg = barData.groupWidth(groupSpace: groupSize, barSpace: barSpace)
-          self.barChart?.xAxis.axisMaximum = Double(barData.dataSets[0].entryCount) * gg + 0
-          
-          barData.groupBars(fromX: 0, groupSpace: groupSize, barSpace: barSpace)
-        }
-        
-        self.barChart?.notifyDataSetChanged()
-        
-        let combinedData = CombinedChartData()
-        combinedData.barData = barData
-        if let lineData = lineData, barData.dataSetCount == 1 {
-          combinedData.lineData = lineData
-        }
-        
-        self.barChart?.data = combinedData
-        self.barChart?.data?.setDrawValues(true)
-        
-        self.barChart?.isHidden = false
-        self.barChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
-      }
+      self.lineChart?.data = lineData
+      self.lineChart?.data?.setDrawValues(true)
+      
+      self.lineChart?.isHidden = false
+      self.lineChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
     }
   }
   
@@ -158,7 +102,7 @@ class StatsViewController: UIViewController {
       endDate: e,
       period: p,
       mode: m,
-      completion: updateBarChart)
+      completion: updateChart)
   }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -194,33 +138,6 @@ class StatsViewController: UIViewController {
     lineChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
     lineChart?.noDataText = "No Data Available to Show"
     setUp(lineChart?.legend)
-  }
-  
-  func setUpBarChart() {
-    barChart?.chartDescription?.enabled = false
-    barChart?.dragEnabled = true
-    barChart?.setScaleEnabled(true)
-    barChart?.pinchZoomEnabled = true
-    barChart?.xAxis.drawGridLinesEnabled = false
-    barChart?.xAxis.labelPosition = .bottom
-    barChart?.xAxis.valueFormatter = PeriodValueFormatter(period ?? .daily, startDate, endDate, mode)
-    barChart?.rightAxis.drawGridLinesEnabled = false
-    barChart?.xAxis.axisMinimum = 0
-    barChart?.rightAxis.enabled = false
-    barChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
-    barChart?.noDataText = "No Data Available to Show"
-    setUp(barChart?.legend)
-  }
-  
-  func setUpRadarChart() {
-    radarChart?.chartDescription?.enabled = false
-    radarChart?.xAxis.drawGridLinesEnabled = false
-    radarChart?.xAxis.labelPosition = .bottom
-    radarChart?.xAxis.valueFormatter = PeriodValueFormatter(period ?? .daily, startDate, endDate, mode)
-    radarChart?.xAxis.axisMinimum = 0
-    radarChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
-    radarChart?.noDataText = "No Data Available to Show"
-    setUp(radarChart?.legend)
   }
   
   func setActivityPosition() {

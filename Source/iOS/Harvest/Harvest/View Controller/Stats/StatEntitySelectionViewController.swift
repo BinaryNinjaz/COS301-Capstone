@@ -142,7 +142,7 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
       form
         +++ Section()
         <<< LabelRow { row in
-          row.title = "No \(grouping.title)'s To Compare"
+          row.title = "No \(grouping)'s To Compare"
         }
     }
   }

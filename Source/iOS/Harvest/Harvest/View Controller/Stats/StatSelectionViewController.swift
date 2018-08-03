@@ -91,8 +91,9 @@ final class StatSelectionViewController: ReloadableFormViewController {
           return
         }
         
-        svc.startDate = stat.startDate
-        svc.endDate = stat.endDate
+        let drange = stat.interval.dateRange()
+        svc.startDate = drange.0
+        svc.endDate = drange.1
         svc.period = stat.period
         svc.stat = Stat.untyped(stat.ids, stat.grouping)
         svc.mode = stat.mode
@@ -109,7 +110,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
   // swiftlint:disable function_body_length
   func performanceRows(for entities: [EntityItem]?, grouping: HarvestCloud.GroupBy) -> [StatEntitySelectionRow] {
     let yesterdaysPerformance = StatEntitySelectionRow { row in
-      row.title = "Yesterday's \(grouping.title) Performance"
+      row.title = "Yesterday's \(grouping) Performance"
       let yesterday = Date().yesterday()
       row.startDate = yesterday.0
       row.endDate = yesterday.1
@@ -119,7 +120,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
     }
     
     let todaysPerformance = StatEntitySelectionRow { row in
-      row.title = "Today's \(grouping.title) Performance"
+      row.title = "Today's \(grouping) Performance"
       let today = Date().today()
       row.startDate = today.0
       row.endDate = today.1
@@ -129,7 +130,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
     }
     
     let lastWeeksPerformance = StatEntitySelectionRow { row in
-      row.title = "Last Week's \(grouping.title) Performance"
+      row.title = "Last Week's \(grouping) Performance"
       let lastWeek = Date().lastWeek()
       row.startDate = lastWeek.0
       row.endDate = lastWeek.1
@@ -139,7 +140,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
     }
     
     let thisWeeksPerformance = StatEntitySelectionRow { row in
-      row.title = "This Week's \(grouping.title) Performance"
+      row.title = "This Week's \(grouping) Performance"
       let thisWeek = Date().thisWeek()
       row.startDate = thisWeek.0
       row.endDate = thisWeek.1
@@ -149,7 +150,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
     }
     
     let lastMonthsPerformance = StatEntitySelectionRow { row in
-      row.title = "Last Month's \(grouping.title) Performance"
+      row.title = "Last Month's \(grouping) Performance"
       let lastMonth = Date().lastMonth()
       row.startDate = lastMonth.0
       row.endDate = lastMonth.1
@@ -159,7 +160,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
     }
     
     let thisMonthsPerformance = StatEntitySelectionRow { row in
-      row.title = "This Month's \(grouping.title) Performance"
+      row.title = "This Month's \(grouping) Performance"
       let thisMonth = Date().thisMonth()
       row.startDate = thisMonth.0
       row.endDate = thisMonth.1
@@ -169,7 +170,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
     }
     
     let lastYearsPerformance = StatEntitySelectionRow { row in
-      row.title = "Last Year's \(grouping.title) Performance"
+      row.title = "Last Year's \(grouping) Performance"
       let lastYear = Date().lastYear()
       row.startDate = lastYear.0
       row.endDate = lastYear.1
@@ -179,7 +180,7 @@ final class StatSelectionViewController: ReloadableFormViewController {
     }
     
     let thisYearsPerformance = StatEntitySelectionRow { row in
-      row.title = "This Year's \(grouping.title) Performance"
+      row.title = "This Year's \(grouping) Performance"
       let thisYear = Date().thisYear()
       row.startDate = thisYear.0
       row.endDate = thisYear.1

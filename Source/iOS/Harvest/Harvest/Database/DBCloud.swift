@@ -162,11 +162,11 @@ enum HarvestCloud {
     completion: @escaping (Any) -> Void
   ) {
     var args = [
-      ("groupBy", grouping.description),
-      ("period", period.description),
+      ("groupBy", grouping.identifier),
+      ("period", period.identifier),
       ("startDate", startDate.timeIntervalSince1970.description),
       ("endDate", endDate.timeIntervalSince1970.description),
-      ("mode", mode.description),
+      ("mode", mode.identifier),
       ("uid", HarvestDB.Path.parent)
     ]
     
@@ -217,13 +217,23 @@ extension HarvestCloud {
       }
     }
     
-    var description: String {
+    var identifier: String {
       switch self {
       case .hourly: return "hourly"
       case .daily: return "daily"
       case .weekly: return "weekly"
       case .monthly: return "monthly"
       case .yearly: return "yearly"
+      }
+    }
+    
+    var description: String {
+      switch self {
+      case .hourly: return "Hourly"
+      case .daily: return "Daily"
+      case .weekly: return "Weekly"
+      case .monthly: return "Monthly"
+      case .yearly: return "Yearly"
       }
     }
     
@@ -377,7 +387,7 @@ extension HarvestCloud {
       }
     }
     
-    var description: String {
+    var identifier: String {
       switch self {
       case .worker: return "worker"
       case .orchard: return "orchard"
@@ -386,7 +396,7 @@ extension HarvestCloud {
       }
     }
     
-    var title: String {
+    var description: String {
       switch self {
       case .worker: return "Worker"
       case .orchard: return "Orchard"
@@ -399,7 +409,7 @@ extension HarvestCloud {
   enum Mode: String, CustomStringConvertible, Codable {
     case accumTime, accumEntity, running
     
-    var description: String {
+    var identifier: String {
       switch self {
       case .accumTime: return "accumTime"
       case .accumEntity: return "accumEntity"
@@ -407,11 +417,28 @@ extension HarvestCloud {
       }
     }
     
-    var title: String {
+    var description: String {
       switch self {
-      case .accumTime: return "Accumulating Time"
-      case .accumEntity: return "Accumulating Entity"
+      case .accumTime: return "Interval"
+      case .accumEntity: return "Entity"
       case .running: return "Running"
+      }
+    }
+    
+    var explanation: String {
+      switch self {
+      case .running: return """
+        No data accumulation will occur. Data for each item will be shown \
+        separately from each other.
+        """
+      case .accumEntity: return """
+        Items are grouped all together creating a sum of the combination of each \
+        item that you request.
+        """
+      case .accumTime: return """
+        Items are group into the selected interval. A sum of the combination of \
+        each item within an interval.
+        """
       }
     }
   }

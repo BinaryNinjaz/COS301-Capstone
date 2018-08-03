@@ -17,10 +17,11 @@ final class StatSetupViewController: ReloadableFormViewController {
   var foremenRow: MultipleSelectorRow<Worker>?
   var farmsRow: MultipleSelectorRow<Farm>?
   
+  var timeIntervalRow: PushRow<StatStore.TimeRange>?
   var startDateRow: DateRow?
   var endDateRow: DateRow?
   var periodRow: PushRow<HarvestCloud.TimePeriod>?
-  var modeRow: SwitchRow?
+  var modeRow: SegmentedRow<HarvestCloud.Mode>?
   
   // swiftlint:disable function_body_length
   public override func viewDidLoad() {
@@ -59,8 +60,16 @@ final class StatSetupViewController: ReloadableFormViewController {
     let sk = statKindRow?.value ?? .workers
     let sd = startDateRow?.value ?? Date()
     let ed = endDateRow?.value ?? Date()
+    let interval = timeIntervalRow?.value ?? .today
     let period = periodRow?.value ?? .daily
-    let mode = modeRow?.value == true ? HarvestCloud.Mode.accumEntity : .running
+    let mode = modeRow?.value ?? HarvestCloud.Mode.accumEntity
+    
+    let filledInterval: StatStore.TimeRange
+    if interval.wantsStartAndEndDate() {
+      filledInterval = .between(sd, ed)
+    } else {
+      filledInterval = interval
+    }
     
     let alert = SCLAlertView(appearance: .warningAppearance)
     let statNameTextView = alert.addTextField()
@@ -69,8 +78,7 @@ final class StatSetupViewController: ReloadableFormViewController {
     alert.addButton("Save") {
       let item = StatStore.Item(
         ids: ids,
-        startDate: sd,
-        endDate: ed,
+        interval: filledInterval,
         period: period,
         grouping: HarvestCloud.GroupBy(sk),
         mode: mode,
@@ -85,9 +93,14 @@ final class StatSetupViewController: ReloadableFormViewController {
   }
   
   override func setUp() {
+    let modeSection = Section(header: "Accumulation", footer: HarvestCloud.Mode.running.explanation)
+    
     statKindRow = PickerRow<StatKind>("Stat Kind") { row in
       row.options = StatKind.allCases
       row.value = .farms
+    }.onChange { (row) in
+      let ent = row.value?.title ?? "Farm"
+      self.modeRow?.cell.segmentedControl.setTitle("By \(ent)", forSegmentAt: 1)
     }
     
     workersRow = MultipleSelectorRow<Worker> { row in
@@ -140,28 +153,50 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.options = Entities.shared.farms.map { $0.value }
     }
     
+    timeIntervalRow = PushRow<StatStore.TimeRange>("Time Interval") { row in
+      row.title = "Time Interval"
+      row.options = StatStore.TimeRange.allCases
+      row.value = .today
+    }
+    
     startDateRow = DateRow { row in
       row.title = "From Date"
       
       let cal = Calendar.current
       let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())
       row.value = wb
+      
+      row.hidden = Condition.function(["Time Interval"]) { form in
+        let row = form.rowBy(tag: "Time Interval") as? PushRow<StatStore.TimeRange>
+        return !(row?.value?.wantsStartAndEndDate() ?? true)
+      }
     }
     
     endDateRow = DateRow { row in
-      row.title = "Upto Date"
+      row.title = "Up to Date"
       row.value = Date()
+      
+      row.hidden = Condition.function(["Time Interval"]) { form in
+        let row = form.rowBy(tag: "Time Interval") as? PushRow<StatStore.TimeRange>
+        return !(row?.value?.wantsStartAndEndDate() ?? true)
+      }
     }
     
     periodRow = PushRow<HarvestCloud.TimePeriod> { row in
       row.title = "Time Period"
       row.options = HarvestCloud.TimePeriod.allCases
-      row.value = .daily
+      row.value = .hourly
     }
     
-    modeRow = SwitchRow("ModeRow") { row in
-      row.value = false
-      row.title = "Accumulate Data"
+    modeRow = SegmentedRow<HarvestCloud.Mode> { row in
+      row.options = [.running, .accumEntity, .accumTime]
+      row.value = .running
+    }.cellUpdate { (cell, _) in
+      cell.segmentedControl.setTitle("None", forSegmentAt: 0)
+      let ent = self.statKindRow?.value?.title ?? "Farm"
+      self.modeRow?.cell.segmentedControl.setTitle("By \(ent)", forSegmentAt: 1)
+    }.onChange { (row) in
+      modeSection.footer?.title = (row.value ?? HarvestCloud.Mode.running).explanation
     }
     
     let showStats = ButtonRow { row in
@@ -175,10 +210,18 @@ final class StatSetupViewController: ReloadableFormViewController {
         return
       }
       
-      svc.startDate = self.startDateRow?.value
-      svc.endDate = self.endDateRow?.value
+      if let interval = self.timeIntervalRow?.value {
+        if case .between = interval {
+          svc.startDate = self.startDateRow?.value
+          svc.endDate = self.endDateRow?.value
+        } else {
+          let drange = interval.dateRange()
+          svc.startDate = drange.0
+          svc.endDate = drange.1
+        }
+      }
       svc.period = self.periodRow?.value
-      svc.mode = self.modeRow?.value == true ? .accumEntity : .running
+      svc.mode = self.modeRow?.value ?? .accumEntity
       
       let kind = self.statKindRow?.value ?? .workers
       
@@ -204,6 +247,7 @@ final class StatSetupViewController: ReloadableFormViewController {
             let periodRow = self.periodRow,
             let startDateRow = self.startDateRow,
             let endDateRow = self.endDateRow,
+            let timeIntervalRow = self.timeIntervalRow,
             let modeRow = self.modeRow
       else {
           return
@@ -221,8 +265,11 @@ final class StatSetupViewController: ReloadableFormViewController {
         
         +++ Section("Details")
         <<< periodRow
+        <<< timeIntervalRow
         <<< startDateRow
         <<< endDateRow
+        
+        +++ modeSection
         <<< modeRow
         
         +++ Section()
