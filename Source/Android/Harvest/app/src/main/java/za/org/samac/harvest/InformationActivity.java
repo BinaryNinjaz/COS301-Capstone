@@ -46,12 +46,11 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     private boolean mapLocationInformationSessionAsked = false;
     private BottomNavigationView bottomNavigationView;
     private static Data data;
-    private boolean editing = false, map = false;
+    private boolean editing = false, map = false, listing = false;
     private static boolean setDateToday = false;
     private Stack<Category> backViews = new Stack<>();
     private List<LatLng> coords;
-    private static int year, month, day;
-    Category selectedCat = NOTHING;
+    Category selectedCat = NOTHING, stackTop = NOTHING;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +102,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
 //    }
 
     private void showNavFrag(){
+        listing = false;
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -209,6 +209,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public void onCreateButtClick(View view){
         String choice = view.getTag().toString();
         editing = true;
+        listing = false;
         setDateToday = true;
         switch (choice){
             case "FARM":
@@ -273,16 +274,19 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 setTitle("Workers");
                 selectedCat = WORKER;
             }
+            stackTop = selectedCat;
             newInfoListFragment.setCat(selectedCat);
             fragmentTransaction.commit();
 //        newInfoListFragment.showList(selectedCat);
             toggleUpButton(true);
+            listing = true;
         }
     }
 
     public void showList(Category cat){
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         showNavFrag();
+        listing = true;
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         InfoListFragment newInfoListFragment = new InfoListFragment();
@@ -308,6 +312,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
 
     //If a farm, orchard, worker is selected
     public void onSelectItemButtClick(View view){
+        listing = false;
         String tags[] = view.getTag().toString().split(" ");
         if (tags.length == 2){
             switch (tags[1]) {
@@ -586,7 +591,15 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 finish();
                 return true;
             case android.R.id.home:
-                showNavFrag();
+                if (listing){
+                    showNavFrag();
+                }
+                else if (map){
+                    onBackPressed();
+                }
+                else {
+                    showList(stackTop);
+                }
                 return true;
             default:
                 super.onOptionsItemSelected(item);
@@ -653,9 +666,6 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 frag = (InfoOrchardFragment) getFragmentManager().findFragmentByTag("EDIT");
             }
             frag.biteMe(day, month + 1, year);
-            InformationActivity.year = year;
-            InformationActivity.month = month;
-            InformationActivity.day = day;
         }
     }
 
