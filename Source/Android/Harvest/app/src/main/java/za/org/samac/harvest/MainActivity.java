@@ -296,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             bottomNavigationView = findViewById(R.id.bottom_navigation);
 
             bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
+            BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
             bottomNavigationView.setOnNavigationItemSelectedListener(
                     new BottomNavigationView.OnNavigationItemSelectedListener() {
                         @Override

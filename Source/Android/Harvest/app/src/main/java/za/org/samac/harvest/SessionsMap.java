@@ -1,9 +1,13 @@
 package za.org.samac.harvest;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentActivity;
+import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -66,6 +70,33 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //bottom nav bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.actionSession);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.actionYieldTracker:
+                                Intent openMainActivity= new Intent(SessionsMap.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
+                                return true;
+                            case R.id.actionInformation:
+                                startActivity(new Intent(SessionsMap.this, InformationActivity.class));
+                                return true;
+                            case R.id.actionSession:
+                                return true;
+                            case R.id.actionStats:
+                                startActivity(new Intent(SessionsMap.this, Analytics.class));
+                                return true;
+                        }
+                        return true;
+                    }
+                });
     }
 
 
