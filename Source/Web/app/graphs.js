@@ -12,9 +12,10 @@ const userID = function() {
   }
 }
 
-var foremen = []; /* Array containing a list of Foremen names */
-var workers = []; /* Array containing a list of workers names */
-var orchards = []; /* Array containing a list of Orchard names */
+var foremen = []; /* Array containing a list of Foremen */
+var workers = []; /* Array containing a list of workers  */
+var orchards = []; /* Array containing a list of Orchards */
+var farms = []; /* Array containing a list of Farms */
 
 $(window).bind("load", () => {
   let succ = () => {
@@ -43,6 +44,14 @@ function farmsRef() {
 }
 
 /* Function returns a worker pointed to by the callback parameter */
+function getFarms(callback) {
+  const ref = firebase.database().ref('/' + userID() + '/farms');
+  ref.once('value').then((snapshot) => {
+    callback(snapshot);
+  });
+}
+
+/* Function returns a worker pointed to by the callback parameter */
 function getWorkers(callback) {
   const ref = firebase.database().ref('/' + userID() + '/workers');
   ref.once('value').then((snapshot) => {
@@ -66,6 +75,16 @@ function foremanForKey(key) {
     }
   }
   return {value: {name: "Farm", surname: "Owner"}}; //The return value is a JSON object
+}
+
+/* Function returns a farm, given a particular key */
+function farmForKey(key) {
+  for (var k in farms) {
+    if (farms[k].key === key) {
+      return farms[k];
+    }
+  }
+  return undefined;
 }
 
 /* Function returns a worker, given a particular key */
@@ -93,15 +112,15 @@ function initPage(){
                     //The labels will be the dates, from the specified start till the specified end.
                     labels: ['Sunday','Monday','Tuesday','Wednesday','Thursady','Friday','Saturday'], //This will contain the dates plotted on each point. (give me the dates)
                     datasets: [{
-                    label: "Number of Bags p/day", //These are the number of bags per day since the start date and the end date
+                        label: "Number of Bags p/day", //These are the number of bags per day since the start date and the end date
 
-                    //The following values in the data array are the number of bags collected each day. from start date to end date
-                    data: [4, 0, 5, 0, 0, 0, 4], //The size of this will also depend on the start and the end date
-                    pontBackgroundColor: '#4CAF50' //Color of the area 
-            }]
+                        //The following values in the data array are the number of bags collected each day. from start date to end date
+                        data: [4, 0, 5, 0, 0, 0, 4], //The size of this will also depend on the start and the end date
+                        pontBackgroundColor: '#4CAF50' //Color of the area 
+                    }]
             }
     });
-    
+
     google.charts.load("current", {packages:["corechart"]});
     google.charts.setOnLoadCallback(drawChart);
     function drawChart() {
@@ -110,14 +129,14 @@ function initPage(){
         ["06:00 - 07:00", 8, "#4CAF50"], //[label: which is the period of 1 hour, Number of bags, color of bar]
         ["07:00 - 08:00", 6, "#4CAF50"],
         ["08:00 - 09:00", 3, "#4CAF50"],
-		["09:00 - 10:00", 7, "#4CAF50"],
+        ["09:00 - 10:00", 7, "#4CAF50"],
         ["10:00 - 11:00", 5, "#4CAF50"],
         ["11:00 - 12:00", 9, "#4CAF50"],
-		["12:00 - 13:00", 7, "#4CAF50"],
+        ["12:00 - 13:00", 7, "#4CAF50"],
         ["13:00 - 14:00", 7, "#4CAF50"],
         ["14:00 - 15:00", 9, "#4CAF50"],
         ["15:00 - 16:00", 8, "#4CAF50"],
-		["16:00 - 17:00", 11, "#4CAF50"],
+        ["16:00 - 17:00", 11, "#4CAF50"],
         ["17:00 - 18:00", 15, "#4CAF50"]
       ]);
 
@@ -144,20 +163,28 @@ function initPage(){
 /* This function loads all available orchards in the database, for graph filtering */
 function initOrchards(){
     var orchardSelect = document.getElementById('orchardSelect');
-    getOrchards((orchardsSnap) => {
-        orchards=[];
-        orchardsSnap.forEach((orchard) => {
-          const val = orchard.val();
-          const k = orchard.key;
-          orchards.push({key: k, value: val});
-          var option = document.createElement("option");
-          var str = val.name+" - ";
-          
-          option.text = str;
-		  //console.log(option);
-          orchardSelect.options.add(option);
+    getFarms((farmsSnap) => {
+        farmsSnap.forEach((farm) => {
+          farms.push({key: farm.key, value: farm.val()});
         });
-    }); 
+        farms.sort((a, b) => { return a.value.name < b.value.name ? -1 : 1 })
+        getOrchards((orchardsSnap) => {
+            orchards=[];
+            orchardsSnap.forEach((orchard) => {
+              const val = orchard.val();
+              const k = orchard.key;
+              orchards.push({key: k, value: val});
+              var option = document.createElement("option");
+              var str = val.name+" - ";
+              var farmKey = val.farm;
+              var farm = farmForKey(farmKey);
+              str = str + farm.value.name;
+              option.text = str;
+              option.value = val.key;
+              orchardSelect.options.add(option);
+            });
+        }); 
+    });
 }
 
 /* This function loads all available workers in the database, for graph filtering */
@@ -188,12 +215,11 @@ function initWorkers(){
 
 //takes information chosen by user for orchard filter to pass to orchard performance function
 function filterOrchard(){
-    var name = document.getElementById('orchardSelect').value;
+    var id = document.getElementById('orchardSelect').value;
     var week = document.getElementById('weekSelect').value; //format e.g: 2018-W17
     if(name!== '' && week!==''){
         var start = new Date(week);
         var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
-        var id = getOrchardId(name);
         orchardPerformance(start, end, id);
     }else{
         window.alert("Some fields in the orchard filter appear to be blank. \n"
