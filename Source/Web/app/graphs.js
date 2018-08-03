@@ -37,6 +37,11 @@ function orchardsRef() {
   return database.ref('/' + userID()  + '/orchards');
 }
 
+/* Function returns a pointer to the list of farms of the particular user ID */
+function farmsRef() {
+  return database.ref('/' + userID()  + '/farms');
+}
+
 /* Function returns a worker pointed to by the callback parameter */
 function getWorkers(callback) {
   const ref = firebase.database().ref('/' + userID() + '/workers');
@@ -146,7 +151,9 @@ function initOrchards(){
           const k = orchard.key;
           orchards.push({key: k, value: val});
           var option = document.createElement("option");
-          option.text = val.name;
+          var str = val.name+" - ";
+          
+          option.text = str;
 		  //console.log(option);
           orchardSelect.options.add(option);
         });
