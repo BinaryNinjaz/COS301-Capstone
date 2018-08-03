@@ -23,3 +23,7 @@ $(window).bind("load", () => {
 function initPage(){
     
 }
+
+function deleteAccount(){
+    
+}
