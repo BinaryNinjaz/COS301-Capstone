@@ -270,7 +270,7 @@ func collection() {
 func timeGraphSessionsWorker() {
   let cal = Calendar.current
   
-  let wb = cal.date(byAdding: Calendar.Component.weekday, value: -1, to: Date())!.timeIntervalSince1970
+  let wb = cal.date(byAdding: Calendar.Component.weekday, value: -14, to: Date())!.timeIntervalSince1970
   
   let s = Date(timeIntervalSince1970: wb)
   let e = Date()
@@ -292,7 +292,7 @@ func timeGraphSessionsWorker() {
     startDate: s, 
     endDate: e,
     avgRange: .onlybefore,
-    mode: .accumEntity) { o in
+    mode: .running) { o in
     print(o)
   }
 }
@@ -300,7 +300,7 @@ func timeGraphSessionsWorker() {
 func timeGraphSessionsOrchard() {
   let cal = Calendar.current
   
-  let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())!.timeIntervalSince1970
+  let wb = cal.date(byAdding: Calendar.Component.weekday, value: -14, to: Date())!.timeIntervalSince1970
   
   let s = Date(timeIntervalSince1970: wb)
   let e = Date()
@@ -308,9 +308,10 @@ func timeGraphSessionsOrchard() {
   let p = HarvestCloud.TimePeriod.daily
   
   let ids = [
-    "-LCEFgdMMO80LR98BzPC", // Block H
+//    "-LCEFgdMMO80LR98BzPC", // Block H
     "-LCEFoWPEw7ThnUaz07W", // Block U
-    "-LCnEEUlavG3eFLCC3MI", // Maths Building
+//    "-LCnEEUlavG3eFLCC3MI", // Maths Building
+    "-LHWqdM5IgQd00XbdZYT", // Block T
   ]
 
   HarvestCloud.timeGraphSessions(
@@ -362,9 +363,9 @@ func expectedYield() {
 
 //collection()
 
-//timeGraphSessionsWorker()
+timeGraphSessionsWorker()
 
-timeGraphSessionsOrchard()
+//timeGraphSessionsOrchard()
 
 RunLoop.main.run()
 
