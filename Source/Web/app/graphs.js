@@ -12,8 +12,7 @@ const userID = function() {
   }
 }
 
-var foremen = []; /* Array containing a list of Foremen */
-var workers = []; /* Array containing a list of workers  */
+var workers = []; /* Array containing a list of workers, this includes foremen  */
 var orchards = []; /* Array containing a list of Orchards */
 var farms = []; /* Array containing a list of Farms */
 
@@ -180,7 +179,7 @@ function initOrchards(){
               var farm = farmForKey(farmKey);
               str = str + farm.value.name;
               option.text = str;
-              option.value = val.key;
+              option.value = k;
               orchardSelect.options.add(option);
             });
         }); 
@@ -194,28 +193,21 @@ function initWorkers(){
         foremen = [];
         workers = [];
         workersSnap.forEach((worker) => {
-          const w = worker.val();
-          const k = worker.key;
-          if (w.type === "Foreman") {
-            foremen.push({key: k, value: w});
-            var wName = w.name + ' ' + w.surname;
-            var option = document.createElement("option");
-            option.text = wName;
-            workerSelect.options.add(option);
-          } else {
+            const w = worker.val();
+            const k = worker.key;
             workers.push({key: k, value: w});
             var wName = w.name + ' ' + w.surname;
             var option = document.createElement("option");
             option.text = wName;
             workerSelect.options.add(option);
-          }
-        });
+          });
     });
 }
 
 //takes information chosen by user for orchard filter to pass to orchard performance function
 function filterOrchard(){
     var id = document.getElementById('orchardSelect').value;
+    console.log(id);
     var week = document.getElementById('weekSelect').value; //format e.g: 2018-W17
     if(name!== '' && week!==''){
         var start = new Date(week);
