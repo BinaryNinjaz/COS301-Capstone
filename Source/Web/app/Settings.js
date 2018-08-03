@@ -11,7 +11,7 @@ const userID = function() {
 }
 
 var email;
-var password;
+//var password;
 var organization;
 var firstname;
 var surname;
@@ -31,6 +31,20 @@ $(window).bind("load", () => {
 });
 
 function initPage(){
+    if (user() !== null) {
+        email = user().email;
+        document.getElementById("email").value = email;
+        const ref = database.ref('/' + userID() + '/admin');
+        ref.once('value').then((snapshot) => {
+            const val = snapshot.val();
+            organization = val.organization;
+            document.getElementById("org").value = organization;
+            firstname = val.firstname;
+            document.getElementById("first").value = firstname;
+            surname = val.lastname;
+            document.getElementById("sur").value = surname;
+        });
+    }
     
 }
 
