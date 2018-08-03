@@ -308,6 +308,7 @@ public class InfoOrchardFragment extends Fragment {
         ArrayAdapter sAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, tempFarms);
         Spinner spinner = getView().findViewById(R.id.info_orch_farm_spinner);
         spinner.setAdapter(sAdapter);
+        spinner.setSelection(sAdapter.getPosition(orch.getAssignedFarm()), false);
 
     }
 
