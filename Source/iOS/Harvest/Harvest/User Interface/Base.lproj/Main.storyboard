@@ -897,6 +897,7 @@ Expected Yield: 0</string>
                     </view>
                     <tabBarItem key="tabBarItem" title="Yield Tracker" image="Add" id="i4D-U6-cRY"/>
                     <connections>
+                        <outlet property="infoEffectView" destination="NUJ-f3-gPy" id="ep3-q2-pjl"/>
                         <outlet property="searchBar" destination="8FH-FL-a95" id="lAQ-ee-WXo"/>
                         <outlet property="startSessionButton" destination="nb1-AJ-Upq" id="pHu-m5-OxK"/>
                         <outlet property="workerCollectionView" destination="5MG-iq-Vf2" id="93F-FX-mKd"/>

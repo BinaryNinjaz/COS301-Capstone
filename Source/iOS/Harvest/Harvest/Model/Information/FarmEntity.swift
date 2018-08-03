@@ -163,7 +163,7 @@ final class Entities {
         }, <)
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: self.orchards.map { _, v in
-            (farms.first { $0.id == v.id }?.name ?? "" + v.name + v.id, v)
+            (farms.first { $0.id == v.assignedFarm }?.name ?? "" + v.name + v.id, v)
         }, <)
         completion(self)
       }
@@ -176,7 +176,7 @@ final class Entities {
         }, <)
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: self.orchards.map { _, v in
-            (farms.first { $0.id == v.id }?.name ?? "" + v.name + v.id, v)
+            (farms.first { $0.id == v.assignedFarm }?.name ?? "" + v.name + v.id, v)
         }, <)
         completion(self)
       }
@@ -224,7 +224,7 @@ final class Entities {
         HarvestDB.watchOrchards { (orchards) in
           self.orchards = SortedDictionary(
             uniqueKeysWithValues: orchards.map { v in
-              (farms.first { $0.id == v.id }?.name ?? "" + v.name + v.id, v)
+              return (v.description + v.id, v)
           }, <)
           self.runListners()
         }
