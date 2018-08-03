@@ -11,7 +11,6 @@ const userID = function() {
 }
 
 var email;
-//var password;
 var organization;
 var firstname;
 var surname;
@@ -30,11 +29,16 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
+/* Function returns admin */
+function adminRef() {
+  return database.ref('/' + userID() + '/admin');
+}
+
 function initPage(){
     if (user() !== null) {
         email = user().email;
         document.getElementById("email").value = email;
-        const ref = database.ref('/' + userID() + '/admin');
+        const ref = adminRef();
         ref.once('value').then((snapshot) => {
             const val = snapshot.val();
             organization = val.organization;
