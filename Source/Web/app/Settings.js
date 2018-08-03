@@ -57,5 +57,10 @@ function saveChanges(){
 }
 
 function deleteAccount(){
-    
+   var result = window.confirm("Are you sure you want to delete your account?");
+   if(result){
+       
+   }else{
+       
+   }
 }
