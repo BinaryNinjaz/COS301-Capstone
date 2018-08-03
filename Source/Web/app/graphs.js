@@ -23,6 +23,7 @@ $(window).bind("load", () => {
   let fail = () => {
     workers = [];
     orchards = [];
+    farms=[];
   };
   retryUntilTimeout(succ, fail, 1000);
 });
@@ -49,16 +50,6 @@ function getOrchards(_callback) {
   ref.once('value').then((snapshot) => {
     _callback(snapshot);
   });
-}
-
-/* Function returns a foremen, given a particular key */
-function foremanForKey(key) {
-  for (var k in foremen) {
-    if (foremen[k].key === key) {
-      return foremen[k];
-    }
-  }
-  return {value: {name: "Farm", surname: "Owner"}}; //The return value is a JSON object
 }
 
 /* Function returns a farm, given a particular key */
@@ -175,7 +166,6 @@ function initOrchards(){
 function initWorkers(){
    var workerSelect = document.getElementById('workerSelect');
    getWorkers((workersSnap) => {
-        foremen = [];
         workers = [];
         workersSnap.forEach((worker) => {
             const w = worker.val();
@@ -277,8 +267,7 @@ function workerPerformance(start, end, id){
 }
 
 //updates orchard graph based on user input
-function changeOrchardGraph(data){
-    console.log(data); // can be removed, just used to view json object
+function changeOrchardGraph(data){ // can be removed, just used to view json object
     var key = document.getElementById('orchardSelect').value;
     var values = data[key];
     var sevenDays = ["Sunday","Monday","Tuesday","Wednesday","Thursady","Friday","Saturday"];
