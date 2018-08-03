@@ -163,7 +163,7 @@ final class Entities {
         }, <)
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: self.orchards.map { _, v in
-            (farms.first { $0.id == v.assignedFarm }?.name ?? "" + v.name + v.id, v)
+            (v.description + v.id, v)
         }, <)
         completion(self)
       }
@@ -176,7 +176,7 @@ final class Entities {
         }, <)
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: self.orchards.map { _, v in
-            (farms.first { $0.id == v.assignedFarm }?.name ?? "" + v.name + v.id, v)
+            (v.description + v.id, v)
         }, <)
         completion(self)
       }

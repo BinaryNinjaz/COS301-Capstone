@@ -165,8 +165,8 @@ class TrackerViewController: UIViewController {
   
   func requestSelectedOrchard(_ completion: @escaping () -> Void) {
     let alert = UIAlertController(
-      title: "Select Orchard",
-      message: "Choose an orchard to filter in the worker you'll be working with.",
+      title: "Select An Orchard",
+      message: "Choose an orchard to filter in the workers you'll be working with.",
       preferredStyle: .actionSheet)
     
     let lastSel = sessionOrchards.first
@@ -184,6 +184,8 @@ class TrackerViewController: UIViewController {
       }
       alert.addAction(action)
     }
+    let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+    alert.addAction(cancel)
     
     present(alert, animated: true, completion: nil)
   }
@@ -249,9 +251,8 @@ class TrackerViewController: UIViewController {
                                                 borderColor: [UIColor].startSession[1])
     startSessionButton?.apply(gradient: sessionLayer)
     
-    Entities.shared.getOnce(.worker) { _ in self.gotWorkers = !Entities.shared.workers.isEmpty }
-    
     _ = Entities.shared.listen {
+      self.gotWorkers = !Entities.shared.workers.isEmpty
       self.updateWorkerCells(with: Entities.shared.workers.map { $0.value })
     }
     
