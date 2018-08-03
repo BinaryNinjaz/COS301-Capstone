@@ -125,7 +125,7 @@ extension HarvestDB {
       }
       
       HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
-      HarvestUser.current.setUser(user, nil, { _, succ in completion(succ) })
+      HarvestUser.current.setUser(user, nil, requestWorkingFor(completion))
       
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
