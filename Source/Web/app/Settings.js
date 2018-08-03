@@ -24,6 +24,10 @@ function initPage(){
     
 }
 
+function saveChanges(){
+    
+}
+
 function deleteAccount(){
     
 }
