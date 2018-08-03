@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,18 +45,13 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     private boolean mapLocationPermissionSessionAsked = false;
     private boolean mapLocationInformationSessionAsked = false;
     private BottomNavigationView bottomNavigationView;
-    private Data data;
+    private static Data data;
     private boolean editing = false, map = false;
+    private static boolean setDateToday = false;
     private Stack<Category> backViews = new Stack<>();
     private List<LatLng> coords;
-
+    private static int year, month, day;
     Category selectedCat = NOTHING;
-
-//    @Override
-//    protected void onResume(){
-//        super.onResume();
-//        bottomNavigationView.setSelectedItemId(R.id.actionInformation);
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +96,11 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
 
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
-    }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
+//    }
 
     private void showNavFrag(){
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -213,6 +209,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public void onCreateButtClick(View view){
         String choice = view.getTag().toString();
         editing = true;
+        setDateToday = true;
         switch (choice){
             case "FARM":
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -627,10 +624,25 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+            int year, month, day;
+            Calendar c;
+            if (setDateToday){
+                c = Calendar.getInstance();
+                setDateToday = false;
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                day = c.get(Calendar.DAY_OF_MONTH);
+            }
+            else {
+                InfoOrchardFragment frag = (InfoOrchardFragment) getFragmentManager().findFragmentByTag("CREATE");
+                if (frag == null){
+                    frag = (InfoOrchardFragment) getFragmentManager().findFragmentByTag("EDIT");
+                }
+                String[] dat = frag.getSetDate();
+                year = Integer.parseInt(dat[2]);
+                month = Integer.parseInt(dat[1]) - 1;
+                day = Integer.parseInt(dat[0]);
+            }
 
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
@@ -640,7 +652,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             if (frag == null){
                 frag = (InfoOrchardFragment) getFragmentManager().findFragmentByTag("EDIT");
             }
-            frag.biteMe(day, month, year);
+            frag.biteMe(day, month + 1, year);
+            InformationActivity.year = year;
+            InformationActivity.month = month;
+            InformationActivity.day = day;
         }
     }
 

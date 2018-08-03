@@ -2,6 +2,7 @@ package za.org.samac.harvest.util;
 
 import android.location.Location;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.ViewDebug;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -55,6 +56,8 @@ public class Data {
     private boolean pFarms = false;
     private boolean pOrchards = false;
     private boolean pWorkers = false;
+
+    private final String TAG = "Data";
 
     private InformationActivity infoAct = null;
 
@@ -163,10 +166,14 @@ public class Data {
                     Date date;
                     Calendar c;
                     if (tempL != null){
+                        tempL *= 1000;
                         c = Calendar.getInstance();
                         date = new Date(tempL);
                         c.setTime(date);
                         temp.setDatePlanted(c);
+                    }
+                    else {
+                        Log.i(TAG, temp.name + ": Date is null");
                     }
 
                     Farm assignedFarm = new Farm();
@@ -207,7 +214,6 @@ public class Data {
                     temp.setTree(tree);
 
                     //Cultivars
-                    Vector<String> cultivars;
                     for (DataSnapshot cultivar : dataSet.child("cultivars").getChildren()){
                         temp.addCultivar(cultivar.getValue(String.class));
                     }
@@ -356,7 +362,7 @@ public class Data {
                             }
                             objectRoot.child("irrigation").setValue(newOrchard.irrigation);
                             if (newOrchard.datePlanted != null) {
-                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime().getTime());
+                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime().getTime() / 1000);
                             }
                             if (newOrchard.getAssignedFarm() != null) {
                                 objectRoot.child("farm").setValue(newOrchard.assignedFarm.ID);
@@ -448,7 +454,7 @@ public class Data {
                             }
                             objectRoot.child("irrigation").setValue(activeOrchard.irrigation);
                             if (activeOrchard.datePlanted != null) {
-                                objectRoot.child("date").setValue(activeOrchard.datePlanted.getTime().getTime());
+                                objectRoot.child("date").setValue(activeOrchard.datePlanted.getTime().getTime() / 1000);
                             }
                             coordsRoot = objectRoot.child("cultivars");
                             coordsRoot.setValue(null);
