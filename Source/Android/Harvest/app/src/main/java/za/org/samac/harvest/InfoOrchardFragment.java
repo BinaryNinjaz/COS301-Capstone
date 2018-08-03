@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -167,7 +168,7 @@ public class InfoOrchardFragment extends Fragment {
                 dateText.setKeyListener(null);
                 if (orch.getDatePlanted() != null) {
                     if (orch.getDatePlanted().isSet(Calendar.YEAR)) {
-                        dateText.setText(Integer.toString(orch.getDatePlanted().get(Calendar.DAY_OF_MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.YEAR)));
+                        dateText.setText(Integer.toString(orch.getDatePlanted().get(Calendar.DAY_OF_MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.MONTH) + 1) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.YEAR)));
                     }
                 }
 
@@ -228,7 +229,7 @@ public class InfoOrchardFragment extends Fragment {
                 temp = getView().findViewById(R.id.info_orch_date_look);
                 if (orch.getDatePlanted() != null) {
                     if (orch.getDatePlanted().isSet(Calendar.YEAR)) {
-                        temp.setText(Integer.toString(orch.getDatePlanted().get(Calendar.DAY_OF_MONTH)) + " " + Integer.toString(orch.getDatePlanted().get(Calendar.MONTH)) + " " + Integer.toString(orch.getDatePlanted().get(Calendar.YEAR)));
+                        temp.setText(Integer.toString(orch.getDatePlanted().get(Calendar.DAY_OF_MONTH)) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.MONTH) + 1) + "/" + Integer.toString(orch.getDatePlanted().get(Calendar.YEAR)));
                     }
                 }
                 else{
@@ -308,8 +309,16 @@ public class InfoOrchardFragment extends Fragment {
         ArrayAdapter sAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, tempFarms);
         Spinner spinner = getView().findViewById(R.id.info_orch_farm_spinner);
         spinner.setAdapter(sAdapter);
-        spinner.setSelection(sAdapter.getPosition(orch.getAssignedFarm()), false);
+        if (!newCreation) {
+            spinner.setSelection(sAdapter.getPosition(orch.getAssignedFarm()), false);
+        }
 
+    }
+
+    public String[] getSetDate(){
+        EditText editText = getView().findViewById(R.id.info_orch_date_edit);
+        String[] dat = editText.getText().toString().split("/");
+        return dat;
     }
 
     public void setDataAndID(Data data, String ID){
@@ -346,7 +355,7 @@ public class InfoOrchardFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         String[] tokens = dateText.getText().toString().split("/");
         if (tokens.length == 3) {
-            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]));
             orch.setDatePlanted(c);
         }
 
@@ -384,12 +393,10 @@ public class InfoOrchardFragment extends Fragment {
         newOrch.setIrrigation(irig.getText().toString());
 
         //Date Planted
-        //TODO: Months Start at 0, obviously
-        //TODO: Set Spinner to start at correct date.
         Calendar c = Calendar.getInstance();
         String[] tokens = dateText.getText().toString().split("/");
         if (tokens.length == 3) {
-            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]));
             newOrch.setDatePlanted(c);
         }
 
