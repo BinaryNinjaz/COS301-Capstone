@@ -10,12 +10,22 @@ const userID = function() {
   }
 }
 
+var email;
+var password;
+var organization;
+var firstname;
+var surname;
+
 $(window).bind("load", () => {
   let succ = () => {
     initPage();
   };
   let fail = () => {
-    
+    email = '';
+    password = '';
+    organization = '';
+    firstname = '';
+    surname = '';
   };
   retryUntilTimeout(succ, fail, 1000);
 });
