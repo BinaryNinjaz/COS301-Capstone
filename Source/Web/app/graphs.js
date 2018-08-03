@@ -27,21 +27,6 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
-/* Function returns a pointer to the list of workers of the particular user ID */
-function workersRef() {
-  return database.ref('/' + userID()  + '/workers');
-}
-
-/* Function returns a pointer to the list of orchards of the particular user ID */
-function orchardsRef() {
-  return database.ref('/' + userID()  + '/orchards');
-}
-
-/* Function returns a pointer to the list of farms of the particular user ID */
-function farmsRef() {
-  return database.ref('/' + userID()  + '/farms');
-}
-
 /* Function returns a worker pointed to by the callback parameter */
 function getFarms(callback) {
   const ref = firebase.database().ref('/' + userID() + '/farms');
@@ -207,7 +192,6 @@ function initWorkers(){
 //takes information chosen by user for orchard filter to pass to orchard performance function
 function filterOrchard(){
     var id = document.getElementById('orchardSelect').value;
-    console.log(id);
     var week = document.getElementById('weekSelect').value; //format e.g: 2018-W17
     if(name!== '' && week!==''){
         var start = new Date(week);
@@ -217,17 +201,6 @@ function filterOrchard(){
         window.alert("Some fields in the orchard filter appear to be blank. \n"
         +"Please enter them to continue."); //Appropriate error message when loading fails
     }
-}
-
-/* This function returns the Orchard ID when given the name of the orchard */
-function getOrchardId(name){
-    var id='';
-    for (var k in orchards) {
-        if(name===orchards[k].value.name){
-            return orchards[k].key;
-        }
-    }
-    return id;
 }
 
 //takes information chosen by user for worker filter to pass to worker performance function
@@ -306,8 +279,7 @@ function workerPerformance(start, end, id){
 //updates orchard graph based on user input
 function changeOrchardGraph(data){
     console.log(data); // can be removed, just used to view json object
-    var name = document.getElementById('orchardSelect').value;
-    var key = getOrchardId(name);
+    var key = document.getElementById('orchardSelect').value;
     var values = data[key];
     var sevenDays = ["Sunday","Monday","Tuesday","Wednesday","Thursady","Friday","Saturday"];
     var data = [];
