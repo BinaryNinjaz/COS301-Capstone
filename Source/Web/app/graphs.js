@@ -174,6 +174,7 @@ function initWorkers(){
             var wName = w.name + ' ' + w.surname;
             var option = document.createElement("option");
             option.text = wName;
+            option.value = k;
             workerSelect.options.add(option);
           });
     });
@@ -183,7 +184,7 @@ function initWorkers(){
 function filterOrchard(){
     var id = document.getElementById('orchardSelect').value;
     var week = document.getElementById('weekSelect').value; //format e.g: 2018-W17
-    if(name!== '' && week!==''){
+    if(id!== '' && week!==''){
         var start = new Date(week);
         var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
         orchardPerformance(start, end, id);
@@ -196,33 +197,20 @@ function filterOrchard(){
 //takes information chosen by user for worker filter to pass to worker performance function
 //date to test function 2018/
 function filterWorker(){
-    var name = document.getElementById('workerSelect').value;
+    var id = document.getElementById('workerSelect').value;
     var date = document.getElementById('workerDateSelect').value;
-    if(name!== '' && date!== ''){
+    if(id!== '' && date!== ''){
         var start = new Date(date);
         var end=new Date(date);
         end.setHours(18);
         end.setMinutes(0);
         start.setHours(6);
         start.setMinutes(0);
-        var id = getWorkerId(name);
         workerPerformance(start, end, id);
     }else{
         window.alert("Some fields in the worker filter appear to be blank. \n"
         +"Please enter them to continue."); //Appropriate error message when loading of workers fails 
     }
-}
-
-/* This function returns the worker ID, given the name of a particular worker */
-function getWorkerId(name){
-    var id='';
-    for (var k in workers) {
-        var fullname = workers[k].value.name+' '+workers[k].value.surname;
-        if(name===fullname){
-            return workers[k].key;
-        }
-    }
-    return id;
 }
 
 //converts a date to seconds since epoch
@@ -300,8 +288,7 @@ function changeOrchardGraph(data){ // can be removed, just used to view json obj
 //updates worker graph based on user input
 function changeWorkerGraph(data){
     console.log(data); // can be removed, just used to view json object
-    var name = document.getElementById('workerSelect').value;
-    var key = getWorkerId(name);
+    var key = document.getElementById('workerSelect').value;
     var values = data[key];
     var hourly = ["6","7","8","9","10","11","12","13","14","15","16","17","18"];
     var hours = ["06:00 - 07:00",
