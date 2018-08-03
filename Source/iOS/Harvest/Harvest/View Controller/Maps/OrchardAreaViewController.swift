@@ -63,11 +63,20 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   public override func viewDidLoad() {
     super.viewDidLoad()
     
+    navigationItem.rightBarButtonItem = UIBarButtonItem(
+      title: "Hybrid",
+      style: .plain,
+      target: self,
+      action: #selector(toggleMapType))
+    
     removeAllButton.apply(gradient: .deleteAllButton)
     removeLastButton.apply(gradient: .deleteButton)
     
     mapView.isHidden = false
-    mapView.mapType = GMSMapViewType.normal
+    mapView.mapType = GMSMapViewType.hybrid
+    mapView.isMyLocationEnabled = true
+    mapView.settings.myLocationButton = true
+    mapView.settings.rotateGestures = true
     mapView.settings.compassButton = true
     mapView.delegate = self
     mapView.settings.myLocationButton = true
@@ -94,6 +103,14 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   public override func didReceiveMemoryWarning() {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
+  }
+  
+  @objc func toggleMapType() {
+    guard let mapView = mapView else {
+      return
+    }
+    
+    SCLAlertView.toggleMapType(for: mapView, from: navigationItem.rightBarButtonItem)
   }
   
   public func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {

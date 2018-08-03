@@ -57,3 +57,15 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
     return result
   }
 }
+
+extension GMSMapViewType {
+  var title: String {
+    switch self {
+    case .normal: return "Normal"
+    case .hybrid: return "Hybrid"
+    case .satellite: return "Satellite"
+    case .terrain: return "Terrain"
+    case .none: return "None"
+    }
+  }
+}

@@ -8,6 +8,7 @@
 
 import UIKit
 import SCLAlertView
+import GoogleMaps
 
 extension SCLAlertView {
   convenience init(
@@ -37,5 +38,35 @@ extension SCLAlertView.SCLAppearance {
     return SCLAlertView.SCLAppearance(
       showCloseButton: false
     )
+  }
+}
+
+extension SCLAlertView {
+  static func toggleMapType(for mapView: GMSMapView, from button: UIBarButtonItem?) {
+    let alert = SCLAlertView(appearance: .optionsAppearance)
+    
+    alert.addButton("Hybrid") {
+      mapView.mapType = .hybrid
+      button?.title = "\(mapView.mapType.title)"
+    }
+    
+    alert.addButton("Satellite") {
+      mapView.mapType = .satellite
+      button?.title = "\(mapView.mapType.title)"
+    }
+    
+    alert.addButton("Normal") {
+      mapView.mapType = .normal
+      button?.title = "\(mapView.mapType.title)"
+    }
+    
+    alert.addButton("Terrain") {
+      mapView.mapType = .terrain
+      button?.title = "\(mapView.mapType.title)"
+    }
+    
+    alert.showEdit(
+      "Map Type",
+      subTitle: "Please select the map type you wish to view this map in.")
   }
 }
