@@ -4,13 +4,13 @@
         <item
             android:id="@+id/actionYieldTracker"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_add"
+            android:icon="@android:drawable/ic_input_add"
             android:title="@string/bottomYieldTracker"
             app:showAsAction="ifRoom" />
         <item
             android:id="@+id/actionInformation"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_save"
+            android:icon="@android:drawable/ic_menu_info_details"
             android:title="@string/bottomInformation"
             app:showAsAction="ifRoom" />
         <item
