@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <!-- Vincent worked on this on 9/05/2018 -->
 <!-- Shaun made some changes 11/07/2018  -->
@@ -34,6 +35,7 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="spin.css">
 	<script src="spin.js" charset="utf-8"></script>
+	<link rel="stylesheet" type="text/css" href="loading.css">
   </head>
   <body>
 	<div class="topnav">
@@ -59,6 +61,7 @@
             <!-- top chart is the orchard historical performance graph-->
             <div class="left">
                 <canvas id="myChart" width="900px" height="500px"></canvas>
+				<div id="myChart1" width="900px" height="500px"></div>
                 <!-- below are objects the user can use to filter information-->
                 <div id="topChartFilter">
                     <label>Select an orchard:
@@ -77,6 +80,7 @@
             <!-- bottom graph can be is worker performance graph-->
             <div class="right" >
                 <div id="curve_chart" style="width: 900px; height: 500px"></div>
+				<div id="cover-spin"></div>
                 <!-- below are objects the user can use to filter information-->
                 <div id="bottomChartFilter">
                     <label>Select a worker:

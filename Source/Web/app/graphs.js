@@ -24,6 +24,9 @@ var workers = []; /* Array containing a list of workers names */
 var orchards = []; /* Array containing a list of Orchard names */
 
 $(window).bind("load", () => {
+	myFunction(); //This function starts the spinner, as soon as the page loads
+	var divHide = document.getElementById('myChart1');
+	divHide.style.visibility = "hidden";
   let succ = () => {
     initPage();
   };
@@ -157,7 +160,8 @@ function initOrchards(){
 		  //console.log(option);
           orchardSelect.options.add(option);
         });
-    }); 
+    });
+	
 }
 
 /* This function loads all available workers in the database, for graph filtering */
@@ -180,6 +184,7 @@ function initWorkers(){
           }
         });
     });
+	myFunction2();//This function stops the spinner, it is here because it is the last one called
 }
 
 //takes information chosen by user for orchard filter to pass to orchard performance function
@@ -189,7 +194,11 @@ function filterOrchard(){
     if(name!== '' && week!==''){
         var start = new Date(week);
         var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
-        var id = getOrchardId(name);
+        var id = getOrchardId(name);   
+		var canvasHide = document.getElementById('myChart');
+		var divHide = document.getElementById('myChart1');
+		canvasHide.style.visibility = "hidden";
+		divHide.style.visibility = "visible";
 		updateSpinerOrchard(true);
         orchardPerformance(start, end, id);
     }else{
@@ -212,6 +221,7 @@ function getOrchardId(name){
 //takes information chosen by user for worker filter to pass to worker performance function
 //date to test function 2018/
 function filterWorker(){
+	myFunction(); //This calls the function which shows that resources are loading
     var name = document.getElementById('workerSelect').value;
     var date = document.getElementById('workerDateSelect').value;
     if(name!== '' && date!== ''){
@@ -222,7 +232,8 @@ function filterWorker(){
         start.setHours(6);
         start.setMinutes(0);
         var id = getWorkerId(name);
-		updateSpinerWorker(true); /* This calls the spinner while resources are loading */
+		var divHide = document.getElementById('curve_chart');
+		divHide.style.visibility = "hidden";
         workerPerformance(start, end, id);
     }else{
         window.alert("Some fields in the worker filter appear to be blank. \n"
@@ -285,6 +296,10 @@ function workerPerformance(start, end, id){
 
 ///This function updates orchard graph based on user input
 function changeOrchardGraph(data){
+	var canvasHide = document.getElementById('myChart');
+	var divHide = document.getElementById('myChart1');
+	canvasHide.style.visibility = "visible";
+	divHide.style.visibility = "hidden";
 	updateSpinerOrchard(false); /* This function call stops the spinner */
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('orchardSelect').value;
@@ -319,7 +334,9 @@ function changeOrchardGraph(data){
 
 ///This function updates worker graph based on user input
 function changeWorkerGraph(data){
-	updateSpinerWorker(false); /* This function call stops the spinner */
+	myFunction2();
+	var divHide = document.getElementById('curve_chart');
+	divHide.style.visibility = "visible";
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('workerSelect').value;
     var key = getWorkerId(name);
@@ -416,7 +433,7 @@ function updateSpinerOrchard(shouldSpin) {
 	position: 'absolute' // Element positioning
   };
 
-  var target = document.getElementById('myChart');
+  var target = document.getElementById('myChart1');
   if (shouldSpin) {
 	spinnerOrchard = new Spinner(opts).spin(target);
   } else {
@@ -425,36 +442,13 @@ function updateSpinerOrchard(shouldSpin) {
   }
 }
 
-
-/* This function shows the spinner while still waiting for resources*/
-var spinnerWorker;
-function updateSpinerWorker(shouldSpin) {
-  var opts = {
-	lines: 8, // The number of lines to draw
-	length: 37, // The length of each line
-	width: 10, // The line thickness
-	radius: 45, // The radius of the inner circle
-	scale: 1, // Scales overall size of the spinner
-	corners: 1, // Corner roundness (0..1)
-	color: '#4CAF50', // CSS color or array of colors
-	fadeColor: 'transparent', // CSS color or array of colors
-	speed: 1, // Rounds per second
-	rotate: 0, // The rotation offset
-	animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
-	direction: 1, // 1: clockwise, -1: counterclockwise
-	zIndex: 2e9, // The z-index (defaults to 2000000000)
-	className: 'spinner', // The CSS class to assign to the spinner
-	top: '50%', // Top position relative to parent
-	left: '50%', // Left position relative to parent
-	shadow: '0 0 1px transparent', // Box-shadow for the lines
-	position: 'absolute' // Element positioning
-  };
-
-  var target = document.getElementById('curve_chart');
-  if (shouldSpin) {
-	spinnerWorker = new Spinner(opts).spin(target);
-  } else {
-	spinnerWorker.stop();
-	spinnerWorker = null;
-  }
+//This function is needed to display spinner
+function myFunction(){ 
+	var target = document.getElementById('cover-spin');
+	target.style.display = "inline";
+}
+//This function is needed to stop the spinner
+function myFunction2(){
+	var target = document.getElementById('cover-spin');
+	target.style.display = "none";
 }
