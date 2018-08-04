@@ -31,7 +31,7 @@
         <!-- Firebase -->
       <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
        
-        <link href="home.css" rel="stylesheet" type="text/css"/>
+        <link href="Shared.css" rel="stylesheet" type="text/css"/>
         
         <!-- Google Maps -->
         <script async defer
@@ -65,19 +65,15 @@
     
     <div class="container">
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-3 scrollView">
                 <h1>Foremen Tracking</h1>
-            </div>
-            <div class="col-sm-9">
-                <h1>Live Map Overview</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
                 <div id="foremen"></div>
+                <button type="button" class="btn btn-success" id="updateButton" onclick="requestLocations()">
+                    Update Locations
+                </button>
             </div>
             <div class="col-sm-9">
-                <div id="map"></div>
+                <div class="map" id="map"></div>
             </div>
         </div>
     </div>

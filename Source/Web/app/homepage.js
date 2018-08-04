@@ -50,7 +50,7 @@ function initForemen() {
     displayForemanLocation();
   });
   requestLocations();
-  setInterval(requestLocations, 2000);
+  setInterval(requestLocations, 1000 * 60 * 5);
 }
 
 function requestLocations() {

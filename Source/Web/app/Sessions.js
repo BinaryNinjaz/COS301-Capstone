@@ -154,9 +154,8 @@ var polypath;
 function loadSession(sessionID) {
   const ref = firebase.database().ref('/' + userID() + '/sessions/' + sessionID);
   
-  var graphData = [
-    ["Worker", "Total Bags Collected"],
-  ];
+  var gdatai = 0;
+  var graphData = {datasets: [{data: [], backgroundColor: []}], labels: []};
   
   const val = sessionForKey(sessionID).val;
   
@@ -215,7 +214,10 @@ function loadSession(sessionID) {
         wname = worker.value.name + " " + worker.value.surname;
       }
       
-      graphData.push([wname, collection.length]);
+      graphData.datasets[0].data.push(collection.length);
+      graphData.datasets[0].backgroundColor.push(harvestColorful[gdatai % 6]);
+      graphData["labels"].push(wname);
+      gdatai++;
       
       for (const pkey in collection) {
         const pickup = collection[pkey];
@@ -236,15 +238,27 @@ function loadSession(sessionID) {
   initGraph(graphData);
 }
 
+var chart;
 function initGraph(collections) {
+  if (chart !== undefined) {
+    chart.destroy();
+  }
+  
   var options = {
-    title: 'Worker Performance Summary',
-    pieHole: 0.5
+    title: {
+      display: true,
+      text: "Worker Performance Summary"
+    },
+    legend: {
+      position: 'right'
+    }
   };
+  var ctx = document.getElementById("doughnut").getContext('2d');
+  chart = null;
   
-  var data = google.visualization.arrayToDataTable(collections);
-  
-  var doc = document.getElementById('doughnut');
-  var chart = new google.visualization.PieChart(doc);
-  chart.draw(data, options);
+  chart = new Chart(ctx,{
+    type: 'doughnut',
+    data: collections,
+    options: options
+  });
 }

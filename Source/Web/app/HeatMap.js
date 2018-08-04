@@ -41,6 +41,7 @@ $(window).bind("load", () => {
             ? "foreman"
             : "farm");
     });
+    initMap();
   };
   let fail = () => {
     orchardPolys = [];
