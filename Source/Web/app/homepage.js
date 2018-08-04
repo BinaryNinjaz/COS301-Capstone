@@ -76,7 +76,9 @@ function requestLocations() {
 }
 
 var locations = []; /* This is an array of locations for the map */
-var map;
+var map; /* This variable will be used as a container for drawing on google maps */
+
+///This function initialises the points which initially appear on the map 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -25, lng: 28 },
@@ -90,6 +92,7 @@ function initMap() {
   });
 }
 
+///This function returns the name of each foreman
 function initials(name) {
   var f = name[0];
   var e = " ";

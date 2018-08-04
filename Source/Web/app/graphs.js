@@ -1,5 +1,12 @@
-/* Vincent Added comments to the following code below */
-const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions';
+/* 
+* 	File:	Graphs.js
+*	Author:	Binary Ninjaz (Vincent,Shaun,Letanyan,Ojo)
+
+*	Description:	This file contais functions for the data representation on 
+					"graphs.html". It requests and recieves data from firebase
+					databse, and uses google graph APIs 
+*/
+const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions'; //Base URL for accessing firebase
 const database = firebase.database();	/* Pointing to database on firebase cloud */
 const user = function() { return firebase.auth().currentUser }; /* Function which authenticates user */
 
@@ -91,7 +98,7 @@ function initPage(){
                     label: "Number of Bags p/day", //These are the number of bags per day since the start date and the end date
 
                     //The following values in the data array are the number of bags collected each day. from start date to end date
-                    data: [4, 0, 5, 0, 0, 0, 4], //The size of this will also depend on the start and the end date
+                    data: [0, 0, 0, 0, 0, 0, 0], //The size of this will also depend on the start and the end date
                     pontBackgroundColor: '#4CAF50' //Color of the area 
             }]
             }
@@ -102,18 +109,18 @@ function initPage(){
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ["Period", "Number of Bags", { role: "style" } ], //This line explains the format of the array object
-        ["06:00 - 07:00", 8, "#4CAF50"], //[label: which is the period of 1 hour, Number of bags, color of bar]
-        ["07:00 - 08:00", 6, "#4CAF50"],
-        ["08:00 - 09:00", 3, "#4CAF50"],
-		["09:00 - 10:00", 7, "#4CAF50"],
-        ["10:00 - 11:00", 5, "#4CAF50"],
-        ["11:00 - 12:00", 9, "#4CAF50"],
-		["12:00 - 13:00", 7, "#4CAF50"],
-        ["13:00 - 14:00", 7, "#4CAF50"],
-        ["14:00 - 15:00", 9, "#4CAF50"],
-        ["15:00 - 16:00", 8, "#4CAF50"],
-		["16:00 - 17:00", 11, "#4CAF50"],
-        ["17:00 - 18:00", 15, "#4CAF50"]
+        ["06:00 - 07:00", 0, "#4CAF50"], //[label: which is the period of 1 hour, Number of bags, color of bar]
+        ["07:00 - 08:00", 0, "#4CAF50"],
+        ["08:00 - 09:00", 0, "#4CAF50"],
+		["09:00 - 10:00", 0, "#4CAF50"],
+        ["10:00 - 11:00", 0, "#4CAF50"],
+        ["11:00 - 12:00", 0, "#4CAF50"],
+		["12:00 - 13:00", 0, "#4CAF50"],
+        ["13:00 - 14:00", 0, "#4CAF50"],
+        ["14:00 - 15:00", 0, "#4CAF50"],
+        ["15:00 - 16:00", 0, "#4CAF50"],
+		["16:00 - 17:00", 0, "#4CAF50"],
+        ["17:00 - 18:00", 0, "#4CAF50"]
       ]);
 
       var view = new google.visualization.DataView(data);
@@ -255,7 +262,7 @@ function orchardPerformance(start, end, id){
     });
 }
 
-//post request for worker
+///This function gets worker performance data to represent as graphical statistics
 function workerPerformance(start, end, id){
    const groupBy = 'worker';
    const period = 'hourly';
@@ -274,7 +281,7 @@ function workerPerformance(start, end, id){
     });
 }
 
-//updates orchard graph based on user input
+///This function updates orchard graph based on user input
 function changeOrchardGraph(data){
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('orchardSelect').value;
@@ -307,7 +314,7 @@ function changeOrchardGraph(data){
     });
 }
 
-//updates worker graph based on user input
+///This function updates worker graph based on user input
 function changeWorkerGraph(data){
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('workerSelect').value;
@@ -362,14 +369,14 @@ function changeWorkerGraph(data){
     }
 }
 
-//edits value of end date label when a starting date is picked
+///edits value of end date label when a starting date is picked
 function changeLabel(){
     var start = new Date(document.getElementById('weekSelect').value);
     var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
     document.getElementById('endDate').value = formatDate(end);
 }
 
-//formats a date to yyyy-mm-dd, used in changeLabel() function
+///formats a date to yyyy-mm-dd, used in changeLabel() function
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
