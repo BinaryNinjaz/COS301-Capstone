@@ -390,7 +390,7 @@ function formatDate(date) {
 }
 /* This function shows the spinner while still waiting for resources*/
 var spinner;
-function updateSpiner(shouldSpin) {
+function updateSpinerOrchard(shouldSpin) {
   var opts = {
 	lines: 8, // The number of lines to draw
 	length: 37, // The length of each line
@@ -412,7 +412,7 @@ function updateSpiner(shouldSpin) {
 	position: 'absolute' // Element positioning
   };
 
-  var target = document.getElementById('spinner');
+  var target = document.getElementById('myChart');
   var button = document.getElementById('updateButton');
   if (shouldSpin) {
 	spinner = new Spinner(opts).spin(target);
