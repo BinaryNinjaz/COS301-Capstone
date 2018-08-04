@@ -436,11 +436,11 @@ function updateSpinerOrchard(shouldSpin) {
 	position: 'absolute' // Element positioning
   };
 
-  var target = document.getElementById('myChart1');
+  var target = document.getElementById('myChart1'); //This is where the spinner is gonna show
   if (shouldSpin) {
-	spinnerOrchard = new Spinner(opts).spin(target);
+	spinnerOrchard = new Spinner(opts).spin(target); //The class and corresponding css are defined in spin.js and spin.css
   } else {
-	spinnerOrchard.stop();
+	spinnerOrchard.stop(); //This line stops the spinner. 
 	spinnerOrchard = null;
   }
 }
@@ -448,10 +448,10 @@ function updateSpinerOrchard(shouldSpin) {
 //This function is needed to display spinner
 function myFunction(){ 
 	var target = document.getElementById('cover-spin');
-	target.style.display = "inline";
+	target.style.display = "inline"; //This line shows the spinner
 }
 //This function is needed to stop the spinner
 function myFunction2(){
 	var target = document.getElementById('cover-spin');
-	target.style.display = "none";
+	target.style.display = "none"; //This line simply hides the spinner
 }
