@@ -25,6 +25,7 @@ var orchards = []; /* Array containing a list of Orchard names */
 
 $(window).bind("load", () => {
 	myFunction(); //This function starts the spinner, as soon as the page loads
+	/* The next two lines hide the div that displays the spinner*/
 	var divHide = document.getElementById('myChart1');
 	divHide.style.visibility = "hidden";
   let succ = () => {
@@ -184,7 +185,8 @@ function initWorkers(){
           }
         });
     });
-	myFunction2();//This function stops the spinner, it is here because it is the last one called
+	myFunction2();//This function stops the spinner, it is here because it (initWorkers) is the last function called in initPage()
+					//This means that when this line executes, resources are ready
 }
 
 //takes information chosen by user for orchard filter to pass to orchard performance function
@@ -199,7 +201,7 @@ function filterOrchard(){
 		var divHide = document.getElementById('myChart1');
 		canvasHide.style.visibility = "hidden";
 		divHide.style.visibility = "visible";
-		updateSpinerOrchard(true);
+		updateSpinerOrchard(true); //This calls the spinner when filtering the orchard for the graphs
         orchardPerformance(start, end, id);
     }else{
         window.alert("Some fields in the orchard filter appear to be blank. \n"
@@ -232,6 +234,7 @@ function filterWorker(){
         start.setHours(6);
         start.setMinutes(0);
         var id = getWorkerId(name);
+		/*The next two line are unnecessary but they show the user that they have pressed the button */
 		var divHide = document.getElementById('curve_chart');
 		divHide.style.visibility = "hidden";
         workerPerformance(start, end, id);
@@ -298,8 +301,8 @@ function workerPerformance(start, end, id){
 function changeOrchardGraph(data){
 	var canvasHide = document.getElementById('myChart');
 	var divHide = document.getElementById('myChart1');
-	canvasHide.style.visibility = "visible";
-	divHide.style.visibility = "hidden";
+	canvasHide.style.visibility = "visible"; //Shows the graph
+	divHide.style.visibility = "hidden"; //Hides the spinner div
 	updateSpinerOrchard(false); /* This function call stops the spinner */
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('orchardSelect').value;
