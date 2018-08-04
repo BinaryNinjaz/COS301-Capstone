@@ -240,7 +240,7 @@ function dispFarm(id) {
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().companyName + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().contactNumber + "</p> </div> </div> " +
+        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().contactNo + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().email + "</p> </div> </div> " +
@@ -255,7 +255,7 @@ function dispFarm(id) {
         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().province + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().town + " </p> </div> </div> " +
+        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().nearestTown + " </p> </div> </div> " +
         "" +
         "</form>"
       ;
@@ -283,10 +283,10 @@ function farmSave(type, id) {
       name: document.getElementById("farmName").value,
       companyName: document.getElementById("companyName").value,
       further: document.getElementById("farmFurther").value,
-      contactNumber: document.getElementById("farmContact").value,
+      contactNo: document.getElementById("farmContact").value,
       email: document.getElementById("farmEmail").value,
       province: document.getElementById("farmProvince").value,
-      town: (document.getElementById("farmTown").value+"")
+      nearestTown: (document.getElementById("farmTown").value+"")
     });
     id = newRef.getKey();
     popFarm();
@@ -296,10 +296,10 @@ function farmSave(type, id) {
       name: document.getElementById("farmName").value,
       companyName: document.getElementById("companyName").value,
       further: document.getElementById("farmFurther").value,
-      contactNumber: document.getElementById("farmContact").value,
+      contactNo: document.getElementById("farmContact").value,
       email: document.getElementById("farmEmail").value,
-      province: document.getElementById("farmProvince").value
-      //town: document.getElementById("farmTown").value
+      province: document.getElementById("farmProvince").value,
+      nearestTown: document.getElementById("farmTown").value
     });
   }
   popFarm();
@@ -330,7 +330,7 @@ function farmMod(id) {
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'>" + snapshot.val().further + "</textarea></div> </div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().contactNumber + "'></div> </div> " +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().phoneNumber + "'></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmEmail' value='" + snapshot.val().email + "'></div> </div> " +
@@ -339,7 +339,7 @@ function farmMod(id) {
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince' value='" + snapshot.val().province + "'></div> </div> " +
        "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown' value='" + snapshot.val().town + " '></div> </div> " +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown' value='" + snapshot.val().nearestTown + " '></div> </div> " +
       "" +
       "</form>"
     ;
@@ -383,7 +383,6 @@ function dispOrch(id) {
 
   if (id === "-1") {
     /*Create New Orchard*/
-    cCount = 0;
     firebase.database().ref('/' + userID() + '/farms').once('value').then(function (snapshot) {
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
@@ -407,29 +406,14 @@ function dispOrch(id) {
         "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
         "</div>" +
         "" +       
-        "<div class='form-group'><label class='control-label col-sm-2' for='irrigationType'>Irrigation:</label>" +
-        "<div class='col-sm-9'>"+
-            "<select class='form-control' id='irrigationType'>"+
-                "<option value='Micro'>Micro</option>"+
-                "<option value='Drip'>Drip</option>"+
-                "<option value='Floppy'>Floppy</option>"+
-                "<option value='Drag Lines'>Drag Lines</option>"+
-                "<option value='Other'>Other</option>"+
-                "<option value='None (dry land)'>None (dry land)</option>"+
-            "</select>"+
-        "</div></div>"+
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation:</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='irrigationType'></div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
         "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: </label>" +
-            "<div class='col-sm-9'>"+
-                "<div id='cultivarBoxes'>"+
-                    "<input type='text' class='form-control' id='cultivars0' />"+
-                "</div>"+
-                "<button type='button' class='btn btn-primary' onclick='moreCult()'>Add More Cultivar</button>"
-            "</div>"+            
-        "</div>" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars'></div> </div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing'></div></div> " +
@@ -481,8 +465,14 @@ function dispOrch(id) {
           "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
           "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='date'>Cultivars:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().cultivars + "</p></div></div> " +
+           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: </label>" +
+            "<div class='col-sm-9'>"+
+                "<div id='cultivarBoxes'>"+
+                    "<input type='text' class='form-control' id='cultivars0' />"+
+                "</div>"+
+                "<button type='button' class='btn btn-primary' onclick='moreCult()'>Add More Cultivar</button>"
+            "</div>"+            
+        "</div>" +
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().rowSpacing + "</p></div></div> " +
@@ -525,26 +515,15 @@ function dispOrch(id) {
 
   }
 }
-var cCount = 0;
-//var cDataField =
-function moreCult(){
-   
-    cCount++;
-    var input = document.createElement('input');
-    input.setAttribute('type','text');
-    input.setAttribute('id',('cultivars'+cCount));
-    input.setAttribute('class','form-control');
-    document.getElementById('cultivarBoxes').appendChild(input);     
-}
 
-function orchSave(type, id, cultivars) {
+function orchSave(type, id) {
   /*0 means create, 1 means modify*/
   const farm = document.getElementById("orchFarm").value;
   const farmID = farm.substring(farm.indexOf("<") + 1, farm.indexOf(">"));
   let d = new Date(document.getElementById("orchDate").valueAsDate);
   let seconds = d.getTime() / 1000;
-  //var cult = document.getElementById("cultivars").value;
-  //cult = cult.split(",");
+  var cult = document.getElementById("cultivars").value;
+  cult = cult.split(",");
   if (type === 0) {
       firebase.database().ref('/' + userID() +"/orchards/").push({
       name: document.getElementById("orchName").value,
@@ -552,7 +531,7 @@ function orchSave(type, id, cultivars) {
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
-      cultivars: data,
+      cultivars: cult,
       bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
@@ -560,26 +539,21 @@ function orchSave(type, id, cultivars) {
       treeSpacing: document.getElementById("treeSpacing").value
     });
 
-    popOrch();
+    //popOrch();
 
   }
   else if (type === 1) {
-    var data = [];
-    for(var i=0; i<myDataCount; i++){
-       data.push(document.getElementById("cultivars"+i).value); 
-       alert(data[i]);
-    }
-    if(data==null)
-      data="";
-  
-      firebase.database().ref('/' + userID() +"/orchards/" + id).update({
+    firebase.database().ref('/' + userID() +"/orchards/" + id).update({
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
       further: document.getElementById("oi").value,
       irrigation: document.getElementById("irrigationType").value,
       date: seconds,
-      cultivars: data,
-      bagMass: document.getElementById("orchBagMass").value,
+      cultivars: cult,
+      /*xDim: document.getElementById("orchDimX").value,
+      yDim: document.getElementById("orchDimY").value,
+      unit: document.getElementById("orchDimUnit").value,
+      */bagMass: document.getElementById("orchBagMass").value,
       coords: orchardCoords,
       farm: farmID,
       rowSpacing: document.getElementById("rowSpacing").value,
@@ -589,23 +563,13 @@ function orchSave(type, id, cultivars) {
    popWork();
   clear3();
 }
-var myDataCount=0;
+
 function orchMod(id) {
   firebase.database().ref('/' + userID() +'/orchards/' + id).once('value').then(function (snapshot) {
     document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch(\"" + id + "\")'>Delete</button>";
     document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name;
     firebase.database().ref('/' + userID() +'/farms').once('value').then(function (farm) {
         const date = new Date(snapshot.val().date * 1000);
-        var myData=""; 
-        //cultivars = null;
-        myDataCount = 0;
-        (snapshot.val().cultivars).forEach(function(entry) {
-            myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value='"+entry+"' />";
-            myDataCount++;
-        }); 
-        if(myData=="")
-             myData += "<input id='cultivars0' type='text' class='form-control'  value=' ' />";
-           
       document.getElementById('col3').innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -633,28 +597,14 @@ function orchMod(id) {
         "</div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'>"+
-        "<select class='form-control' id='irrigationType'>"+
-            "<option value='"+snapshot.val().irrigation+"'>"+snapshot.val().irrigation+"</option>"+
-            "<option value='Micro'>Micro</option>"+
-            "<option value='Drip'>Drip</option>"+
-            "<option value='Floppy'>Floppy</option>"+
-            "<option value='Drag Lines'>Drag Lines</option>"+
-            "<option value='Other'>Other</option>"+
-            "<option value='None (dry land)'>None (dry land)</option>"+
-        "</select>"+
-        "</div> </div> " +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='irrigationType' value='" + snapshot.val().irrigation + "'></div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
-            "<div class='col-sm-9'>"+
-                "<div>"+
-                    myData+        
-                "</div>"+
-            "</div>"+
-        "</div>" +
+        "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars' value='" + snapshot.val().cultivars + "'></div> </div> " +
+        "" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing' value='" +  snapshot.val().rowSpacing + "'></div></div> " +
@@ -761,7 +711,9 @@ function dispWork(id) {
         "" +
         "<div id='emailSpace'></div>" +
         "" +
-        "</form>";
+
+        "</form>"
+      ;
 
       snapshot.forEach(function (child) {
         document.getElementById("workOrch").innerHTML += "<option><" + child.key + "> " + child.val().name + "  :  " + child.val().crop + "</option>";
@@ -842,11 +794,6 @@ function workSave(type, id) {
   /*0 means create, 1 means modify*/
   const orchard = document.getElementById("workOrch").value;
   const orchID = orchard.substring(orchard.indexOf("<") + 1, orchard.indexOf(">"));
-  var pn = document.getElementById("workContactNo").value;
-  if(pn.charAt(0)=="0")  
-    pn = pn.replace(pn.charAt(0), "+27");
-  //otherwise we assume it's proper
-  
   let workType = "Foreman";
   if (document.getElementById("rWorker").checked) {
     workType = "Worker";
@@ -862,8 +809,8 @@ function workSave(type, id) {
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
       idNumber: document.getElementById("workID").value,
-      phoneNumber: pn,
-      orchards: orchID,
+      phoneNumber: document.getElementById("workContactNo").value,
+      orchard: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
       email: email
@@ -886,8 +833,8 @@ function workSave(type, id) {
       name: document.getElementById("workName").value,
       surname: document.getElementById("workSName").value,
       idNumber: document.getElementById("workID").value,
-      phoneNumber: pn,
-      orchards: orchID,
+      phoneNumber: document.getElementById("workContactNo").value,
+      orchard: orchID,
       type: workType,
       info: document.getElementById("workInfo").value,
       email: email
