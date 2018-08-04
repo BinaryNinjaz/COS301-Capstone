@@ -529,9 +529,13 @@ var cCount = 0;
 function moreCult(){
    
     cCount++;
-    var old = document.getElementById('cultivarBoxes').innerHTML;
-    document.getElementById('cultivarBoxes').innerHTML = old +("<br> <input type='text' class='form-control' id='cultivars"+cCount+"' />");
-    alert(old);
+    var input = document.createElement('input');
+    input.setAttribute('type','text');
+    input.setAttribute('id',('cultivars'+cCount));
+
+    //var old = document.getElementById('cultivarBoxes').innerHTML;
+    document.getElementById('cultivarBoxes').appendChild(input); //("<br> <input type='text' class='form-control' id='cultivars"+cCount+"' />");
+    //alert(old);
 }
 
 function orchSave(type, id, cultivars) {
