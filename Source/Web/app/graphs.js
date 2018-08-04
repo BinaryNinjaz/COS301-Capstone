@@ -222,6 +222,7 @@ function filterWorker(){
         start.setHours(6);
         start.setMinutes(0);
         var id = getWorkerId(name);
+		updateSpinerWorker(true); /* This calls the spinner while resources are loading */
         workerPerformance(start, end, id);
     }else{
         window.alert("Some fields in the worker filter appear to be blank. \n"
@@ -284,7 +285,7 @@ function workerPerformance(start, end, id){
 
 ///This function updates orchard graph based on user input
 function changeOrchardGraph(data){
-	updateSpinerOrchard(false);
+	updateSpinerOrchard(false); /* This function call stops the spinner */
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('orchardSelect').value;
     var key = getOrchardId(name);
@@ -318,6 +319,7 @@ function changeOrchardGraph(data){
 
 ///This function updates worker graph based on user input
 function changeWorkerGraph(data){
+	updateSpinerWorker(false); /* This function call stops the spinner */
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('workerSelect').value;
     var key = getWorkerId(name);
