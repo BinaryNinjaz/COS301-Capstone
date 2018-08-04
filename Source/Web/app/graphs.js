@@ -426,8 +426,8 @@ function updateSpinerOrchard(shouldSpin) {
 
 
 /* This function shows the spinner while still waiting for resources*/
-var spinnerOrchard;
-function updateSpinerOrchard(shouldSpin) {
+var spinnerWorker;
+function updateSpinerWorker(shouldSpin) {
   var opts = {
 	lines: 8, // The number of lines to draw
 	length: 37, // The length of each line
@@ -449,14 +449,14 @@ function updateSpinerOrchard(shouldSpin) {
 	position: 'absolute' // Element positioning
   };
 
-  var target = document.getElementById('myChart');
+  var target = document.getElementById('curve_chart');
   var button = document.getElementById('updateButton');
   if (shouldSpin) {
-	spinnerOrchard = new Spinner(opts).spin(target);
+	spinnerWorker = new Spinner(opts).spin(target);
 	button.style.visibility = "hidden";
   } else {
 	button.style.visibility = "visible";
-	spinnerOrchard.stop();
-	spinnerOrchard = null;
+	spinnerWorker.stop();
+	spinnerWorker = null;
   }
 }
