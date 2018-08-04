@@ -9,6 +9,7 @@
 import Eureka
 import SCLAlertView
 
+// swiftlint:disable type_body_length
 final class StatSetupViewController: ReloadableFormViewController {
   var statKindRow: PickerRow<StatKind>?
   
@@ -17,13 +18,12 @@ final class StatSetupViewController: ReloadableFormViewController {
   var foremenRow: MultipleSelectorRow<Worker>?
   var farmsRow: MultipleSelectorRow<Farm>?
   
-  var timeIntervalRow: PushRow<StatStore.TimeRange>?
+  var timePeriodRow: PushRow<TimePeriod>?
   var startDateRow: DateRow?
   var endDateRow: DateRow?
-  var periodRow: PushRow<HarvestCloud.TimePeriod>?
-  var modeRow: SegmentedRow<HarvestCloud.Mode>?
+  var timeStepRow: PushRow<TimeStep>?
+  var modeRow: SegmentedRow<TimedGraphMode>?
   
-  // swiftlint:disable function_body_length
   public override func viewDidLoad() {
     super.viewDidLoad()
     navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -38,37 +38,37 @@ final class StatSetupViewController: ReloadableFormViewController {
     
     if let kind = statKindRow?.value {
       switch kind {
-      case .workers:
+      case .worker:
         for worker in workersRow?.value ?? [] {
           ids.append(worker.id)
         }
-      case .foremen:
+      case .foreman:
         for foreman in foremenRow?.value ?? [] {
           ids.append(foreman.id)
         }
-      case .orchards:
+      case .orchard:
         for orchard in orchardsRow?.value ?? [] {
           ids.append(orchard.id)
         }
-      case .farms:
+      case .farm:
         for farm in farmsRow?.value ?? [] {
           ids.append(farm.id)
         }
       }
     }
     
-    let sk = statKindRow?.value ?? .workers
+    let sk = statKindRow?.value ?? .worker
     let sd = startDateRow?.value ?? Date()
     let ed = endDateRow?.value ?? Date()
-    let interval = timeIntervalRow?.value ?? .today
-    let period = periodRow?.value ?? .daily
-    let mode = modeRow?.value ?? HarvestCloud.Mode.accumEntity
+    let step = timeStepRow?.value ?? .daily
+    let period = timePeriodRow?.value ?? .today
+    let mode = modeRow?.value ?? TimedGraphMode.accumEntity
     
-    let filledInterval: StatStore.TimeRange
-    if interval.wantsStartAndEndDate() {
-      filledInterval = .between(sd, ed)
+    let filledPeriod: TimePeriod
+    if period.wantsStartAndEndDate() {
+      filledPeriod = .between(sd, ed)
     } else {
-      filledInterval = interval
+      filledPeriod = period
     }
     
     let alert = SCLAlertView(appearance: .warningAppearance)
@@ -76,11 +76,11 @@ final class StatSetupViewController: ReloadableFormViewController {
     statNameTextView.placeholder = "Graph Name"
     
     alert.addButton("Save") {
-      let item = StatStore.Item(
+      let item = Stat(
         ids: ids,
-        interval: filledInterval,
-        period: period,
-        grouping: HarvestCloud.GroupBy(sk),
+        timePeriod: filledPeriod,
+        timeStep: step,
+        grouping: sk,
         mode: mode,
         name: statNameTextView.text ?? Date().description)
       
@@ -92,14 +92,15 @@ final class StatSetupViewController: ReloadableFormViewController {
     alert.showEdit("Graph Name", subTitle: "Please enter a name to save your custom graph as.")
   }
   
+  // swiftlint:disable function_body_length
   override func setUp() {
-    let modeSection = Section(header: "Accumulation", footer: HarvestCloud.Mode.running.explanation)
+    let modeSection = Section(header: "Accumulation", footer: TimedGraphMode.running.explanation)
     
     statKindRow = PickerRow<StatKind>("Stat Kind") { row in
       row.options = StatKind.allCases
-      row.value = .farms
+      row.value = .farm
     }.onChange { (row) in
-      let ent = row.value?.title ?? "Farm"
+      let ent = row.value?.description ?? "Farm"
       self.modeRow?.cell.segmentedControl.setTitle("By \(ent)", forSegmentAt: 1)
     }
     
@@ -109,7 +110,7 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.value = row.options?.first != nil ? [row.options!.first!] : []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
-        return row?.value != .workers
+        return row?.value != .worker
       }
     }.cellUpdate { _, row in
       row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .worker })
@@ -122,7 +123,7 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.value = row.options?.first != nil ? [row.options!.first!] : []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
-        return row?.value != .foremen
+        return row?.value != .foreman
       }
     }.cellUpdate { _, row in
       row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
@@ -135,7 +136,7 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.value = row.options?.first != nil ? [row.options!.first!] : []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
-        return row?.value != .orchards
+        return row?.value != .orchard
       }
     }.cellUpdate { _, row in
       row.options = Entities.shared.orchards.map { $0.value }
@@ -147,15 +148,15 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.value = row.options?.first != nil ? [row.options!.first!] : []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
-        return row?.value != .farms
+        return row?.value != .farm
       }
     }.cellUpdate { _, row in
       row.options = Entities.shared.farms.map { $0.value }
     }
     
-    timeIntervalRow = PushRow<StatStore.TimeRange>("Time Interval") { row in
+    timePeriodRow = PushRow<TimePeriod>("Time Interval") { row in
       row.title = "Time Interval"
-      row.options = StatStore.TimeRange.allCases
+      row.options = TimePeriod.allCases
       row.value = .today
     }
     
@@ -167,7 +168,7 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.value = wb
       
       row.hidden = Condition.function(["Time Interval"]) { form in
-        let row = form.rowBy(tag: "Time Interval") as? PushRow<StatStore.TimeRange>
+        let row = form.rowBy(tag: "Time Interval") as? PushRow<TimePeriod>
         return !(row?.value?.wantsStartAndEndDate() ?? true)
       }
     }
@@ -177,26 +178,26 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.value = Date()
       
       row.hidden = Condition.function(["Time Interval"]) { form in
-        let row = form.rowBy(tag: "Time Interval") as? PushRow<StatStore.TimeRange>
+        let row = form.rowBy(tag: "Time Interval") as? PushRow<TimePeriod>
         return !(row?.value?.wantsStartAndEndDate() ?? true)
       }
     }
     
-    periodRow = PushRow<HarvestCloud.TimePeriod> { row in
+    timeStepRow = PushRow<TimeStep> { row in
       row.title = "Time Period"
-      row.options = HarvestCloud.TimePeriod.allCases
+      row.options = TimeStep.allCases
       row.value = .hourly
     }
     
-    modeRow = SegmentedRow<HarvestCloud.Mode> { row in
+    modeRow = SegmentedRow<TimedGraphMode> { row in
       row.options = [.running, .accumEntity, .accumTime]
       row.value = .running
     }.cellUpdate { (cell, _) in
       cell.segmentedControl.setTitle("None", forSegmentAt: 0)
-      let ent = self.statKindRow?.value?.title ?? "Farm"
+      let ent = self.statKindRow?.value?.description ?? "Farm"
       self.modeRow?.cell.segmentedControl.setTitle("By \(ent)", forSegmentAt: 1)
     }.onChange { (row) in
-      modeSection.footer?.title = (row.value ?? HarvestCloud.Mode.running).explanation
+      modeSection.footer?.title = (row.value ?? TimedGraphMode.running).explanation
     }
     
     let showStats = ButtonRow { row in
@@ -210,30 +211,37 @@ final class StatSetupViewController: ReloadableFormViewController {
         return
       }
       
-      if let interval = self.timeIntervalRow?.value {
-        if case .between = interval {
-          svc.startDate = self.startDateRow?.value
-          svc.endDate = self.endDateRow?.value
+      let timePeriod: TimePeriod
+      if let period = self.timePeriodRow?.value {
+        if case .between = period {
+          let sd = self.startDateRow?.value ?? Date(timeIntervalSince1970: 0)
+          let ed = self.endDateRow?.value ?? Date()
+          timePeriod = .between(sd, ed)
         } else {
-          let drange = interval.dateRange()
-          svc.startDate = drange.0
-          svc.endDate = drange.1
+          timePeriod = period
         }
+      } else {
+        timePeriod = .today
       }
-      svc.period = self.periodRow?.value
-      svc.mode = self.modeRow?.value ?? .accumEntity
+      let timeStep = self.timeStepRow?.value ?? .daily
+      let mode = self.modeRow?.value ?? .accumEntity
       
-      let kind = self.statKindRow?.value ?? .workers
+      let kind = self.statKindRow?.value ?? .worker
       
-      if kind == .foremen, let fs = self.foremenRow?.value {
-        svc.stat = .foremanComparison(Array(fs))
-      } else if kind == .workers, let ws = self.workersRow?.value {
-        svc.stat = .workerComparison(Array(ws))
-      } else if kind == .orchards, let os = self.orchardsRow?.value {
-        svc.stat = .orchardComparison(Array(os))
-      } else if kind == .farms, let fs = self.farmsRow?.value {
-        svc.stat = .farmComparison(Array(fs))
+      let ids: [String]
+      if kind == .foreman, let fs = self.foremenRow?.value {
+        ids = fs.map { $0.id }
+      } else if kind == .worker, let ws = self.workersRow?.value {
+        ids = ws.map { $0.id }
+      } else if kind == .orchard, let os = self.orchardsRow?.value {
+        ids = os.map { $0.id }
+      } else if kind == .farm, let fs = self.farmsRow?.value {
+        ids = fs.map { $0.id }
+      } else {
+        ids = []
       }
+      
+      svc.stat = Stat(ids: ids, timePeriod: timePeriod, timeStep: timeStep, grouping: kind, mode: mode, name: "")
         
       self.navigationController?.pushViewController(svc, animated: true)
     }
@@ -244,17 +252,17 @@ final class StatSetupViewController: ReloadableFormViewController {
             let orchardsRow = self.orchardsRow,
             let foremenRow = self.foremenRow,
             let farmRow = self.farmsRow,
-            let periodRow = self.periodRow,
+            let timePeriodRow = self.timePeriodRow,
             let startDateRow = self.startDateRow,
             let endDateRow = self.endDateRow,
-            let timeIntervalRow = self.timeIntervalRow,
+            let timeStepRow = self.timeStepRow,
             let modeRow = self.modeRow
       else {
           return
       }
         
       self.form
-        +++ Section()
+        +++ Section("Comparison")
         <<< statKindRow
         
         +++ Section()
@@ -264,8 +272,8 @@ final class StatSetupViewController: ReloadableFormViewController {
         <<< farmRow
         
         +++ Section("Details")
-        <<< periodRow
-        <<< timeIntervalRow
+        <<< timeStepRow
+        <<< timePeriodRow
         <<< startDateRow
         <<< endDateRow
         

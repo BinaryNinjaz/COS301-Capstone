@@ -1,102 +1,64 @@
 //
-//  Stat.swift
+//  StatStore.swift
 //  Harvest
 //
-//  Created by Letanyan Arumugam on 2018/05/07.
+//  Created by Letanyan Arumugam on 2018/07/28.
 //  Copyright © 2018 Letanyan Arumugam. All rights reserved.
 //
 
+import Disk
 import Charts
-import CoreLocation
 
-enum Stat {
-  case untyped([String], HarvestCloud.GroupBy)
-  case foremanComparison([Worker])
-  case workerComparison([Worker])
-  case orchardComparison([Orchard])
-  case farmComparison([Farm])
+struct StatStore {
+  static var shared = StatStore()
   
-  // swiftlint:disable function_parameter_count
-  func comparison(
-    ids: [String],
-    grouping: HarvestCloud.GroupBy,
-    startDate: Date,
-    endDate: Date,
-    period: HarvestCloud.TimePeriod,
-    mode: HarvestCloud.Mode,
-    completion: @escaping ([String: Any]?) -> Void
-  ) {
-    HarvestCloud.timeGraphSessions(
-      grouping: grouping,
-      ids: ids,
-      period: period,
-      startDate: startDate,
-      endDate: endDate,
-      mode: mode) { data in
-        guard let json = data as? [String: Any] else {
-          completion(nil)
-          return
-        }
-        
-        completion(json)
-      }
+  let path = "StatStore"
+  var store: [Stat]
+  
+  init() {
+    store = (try? Disk.retrieve(path, from: .applicationSupport, as: [Stat].self)) ?? []
   }
   
-  func identifiers(for grouping: HarvestCloud.GroupBy) -> [String]? {
-    if case let .untyped(ids, _) = self {
-      return ids
-    }
-    
-    var entities: [EntityItem]
-    
-    if grouping == .foreman, case let .foremanComparison(foremen) = self {
-      entities = foremen.map { .worker($0) }
-    } else if grouping == .worker, case let .workerComparison(workers) = self {
-      entities = workers.map { .worker($0) }
-    } else if grouping == .orchard, case let .orchardComparison(orchards) = self {
-      entities = orchards.map { .orchard($0) }
-    } else if grouping == .farm, case let .farmComparison(farms) = self {
-      entities = farms.map {.farm($0) }
-    } else {
-      return nil
-    }
-    
-    var ids = [String]()
-    for entity in entities {
-      switch entity {
-      case let .worker(w): ids.append(w.id)
-      case let .orchard(o): ids.append(o.id)
-      case let .farm(f): ids.append(f.id)
-      default: continue
-      }
-    }
-    
-    return ids
+  mutating func saveItem(item: Stat) {
+    try? Disk.append(item, to: path, in: .applicationSupport)
+    store.append(item)
   }
   
-  func entityComparison(
-    grouping: HarvestCloud.GroupBy,
-    startDate: Date,
-    endDate: Date,
-    period: HarvestCloud.TimePeriod,
-    mode: HarvestCloud.Mode,
-    completion: @escaping (LineChartData?) -> Void
-  ) {
-    guard let ids = identifiers(for: grouping) else {
-      completion(nil)
-      return
+  mutating func removeItem(withName name: String) {
+    if let idx = store.index(where: { $0.name == name }) {
+      store.remove(at: idx)
+      try? Disk.save(store, to: .applicationSupport, as: path)
     }
+  }
+  
+  mutating func renameItem(withName name: String, toNewName newName: String) {
+    if let idx = store.index(where: { $0.name == name }) {
+      store[idx].name = newName
+      try? Disk.save(store, to: .applicationSupport, as: path)
+    }
+  }
+  
+  func getItem(withName name: String) -> Stat? {
+    return store.first { $0.name == name }
+  }
+}
+
+struct Stat: Codable {
+  var ids: [String]
+  var timePeriod: TimePeriod
+  var timeStep: TimeStep
+  var grouping: StatKind
+  var mode: TimedGraphMode
+  var name: String
+  
+  func graphData(completion: @escaping (LineChartData?) -> Void) {
+    let (sd, ed) = timePeriod.dateRange()
     
     var dataSets = [LineChartDataSet]()
     
-    comparison(
-      ids: ids,
-      grouping: grouping,
-      startDate: startDate,
-      endDate: endDate,
-      period: period,
-      mode: mode) { json in
-        guard let json = json else {
+    HarvestCloud.timeGraphSessions(
+      grouping: grouping, ids: ids, period: timeStep, startDate: sd, endDate: ed, mode: mode) { data in
+        guard let json = data as? [String: Any] else {
           completion(nil)
           return
         }
@@ -113,21 +75,18 @@ enum Stat {
           
           let dataSet = LineChartDataSet()
           
-          let missingMessage = grouping.description
-          dataSet.label = (grouping == .orchard
+          let missingMessage = self.grouping.description
+          dataSet.label = (self.grouping == .orchard
             ? orchard?.name
-            : grouping == .worker
-              ? worker?.name
-              : farm?.name) ?? "Unknown \(missingMessage)"
-          dataSet.label = mode == .accumEntity ? "(Sum)" : dataSet.label
+            : self.grouping == .worker
+            ? worker?.name
+            : farm?.name) ?? "Unknown \(missingMessage)"
+          dataSet.label = self.mode == .accumEntity ? "(Sum)" : dataSet.label
           dataSet.label = key == "avg" ? "Overall Average" : dataSet.label
           
-          let fullDataSet = mode == .accumTime
-            ? period.fullDataSet(
-                between: startDate,
-                and: endDate,
-                limitToDate: period == .weekly)
-            : period.fullRunningDataSet(between: startDate, and: endDate)
+          let fullDataSet = self.mode == .accumTime
+            ? self.timeStep.fullDataSet(between: sd, and: ed, limitToDate: self.timeStep == .weekly)
+            : self.timeStep.fullRunningDataSet(between: sd, and: ed)
           
           for (e, x) in fullDataSet.enumerated() {
             if let y = dataSetObject[x] {
@@ -155,7 +114,7 @@ enum Stat {
         let data = LineChartData(dataSets: dataSets)
         
         completion(data)
-      }
+    }
   }
 }
 
@@ -165,7 +124,7 @@ final class DataValueFormatter: IValueFormatter {
     entry: ChartDataEntry,
     dataSetIndex: Int,
     viewPortHandler: ViewPortHandler?
-  ) -> String {
+    ) -> String {
     if value.isZero {
       return ""
     } else if trunc(value) == value {
@@ -225,5 +184,79 @@ extension ChartColorTemplates {
   
   static func harvest() -> [UIColor] {
     return harvestColorful()
+  }
+}
+
+infix operator ++=
+extension Array {
+  static func ++= (lhs: inout [Element], rhs: Element) {
+    lhs.append(rhs)
+  }
+}
+
+extension StatStore {
+  // swiftlint:disable function_body_length
+  func setUpPredefinedGraphs() {
+    var stats = [Stat]()
+    
+    stats ++= Stat(
+      ids: [],
+      timePeriod: .today,
+      timeStep: .hourly,
+      grouping: .worker,
+      mode: .running,
+      name: "Today's Worker Performance")
+    
+    stats ++= Stat(
+      ids: [],
+      timePeriod: .yesterday,
+      timeStep: .hourly,
+      grouping: .worker,
+      mode: .running,
+      name: "Yesterday's Worker Performance")
+    
+    stats ++= Stat(
+      ids: [],
+      timePeriod: .between(Date(), Date()),
+      timeStep: .daily,
+      grouping: .worker,
+      mode: .running,
+      name: "Worker Performance")
+    
+    stats ++= Stat(
+      ids: [],
+      timePeriod: .thisMonth,
+      timeStep: .weekly,
+      grouping: .orchard,
+      mode: .running,
+      name: "This Month's Orchard Performance")
+    
+    stats ++= Stat(
+      ids: [],
+      timePeriod: .between(Date(), Date()),
+      timeStep: .weekly,
+      grouping: .orchard,
+      mode: .running,
+      name: "Orchard Performance")
+    
+    stats ++= Stat(
+      ids: [],
+      timePeriod: .thisMonth,
+      timeStep: .weekly,
+      grouping: .farm,
+      mode: .running,
+      name: "This Month's Farm Performance")
+    
+    stats ++= Stat(
+      ids: [],
+      timePeriod: .between(Date(), Date()),
+      timeStep: .weekly,
+      grouping: .farm,
+      mode: .running,
+      name: "Farm Performance")
+    
+    for stat in stats {
+      StatStore.shared.saveItem(item: stat)
+    }
   }
 }

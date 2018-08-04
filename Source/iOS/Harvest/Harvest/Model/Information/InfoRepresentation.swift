@@ -14,9 +14,6 @@ import Firebase
 extension UIViewController {
   func prebuiltGraph(
     title: String,
-    startDate: Date,
-    endDate: Date,
-    period: HarvestCloud.TimePeriod,
     stat: Stat
   ) -> ButtonRow {
     return ButtonRow { row in
@@ -33,92 +30,10 @@ extension UIViewController {
         return
       }
       
-      svc.startDate = startDate
-      svc.endDate = endDate
-      svc.period = period
       svc.stat = stat
       
       self.navigationController?.pushViewController(svc, animated: true)
     }
-  }
-}
-
-extension FormViewController {
-  func performanceRows(for stat: Stat) -> [ButtonRow] {
-    let today = Date().today()
-    let todaysPerformance = prebuiltGraph(
-      title: "Today's Performance",
-      startDate: today.0,
-      endDate: today.1,
-      period: .hourly,
-      stat: stat)
-    
-    let yesterday = Date().yesterday()
-    let yesterdaysPerformance = prebuiltGraph(
-      title: "Yesterday's Performance",
-      startDate: yesterday.0,
-      endDate: yesterday.1,
-      period: .hourly,
-      stat: stat)
-    
-    let thisWeek = Date().thisWeek()
-    let thisWeeksPerformance = prebuiltGraph(
-      title: "This Week's Performance",
-      startDate: thisWeek.0,
-      endDate: thisWeek.1,
-      period: .daily,
-      stat: stat)
-    
-    let lastWeek = Date().lastWeek()
-    let lastWeeksPerformance = prebuiltGraph(
-      title: "Last Week's Performance",
-      startDate: lastWeek.0,
-      endDate: lastWeek.1,
-      period: .daily,
-      stat: stat)
-    
-    let thisMonth = Date().thisMonth()
-    let thisMonthsPerformance = prebuiltGraph(
-      title: "This Month's Performance",
-      startDate: thisMonth.0,
-      endDate: thisMonth.1,
-      period: .weekly,
-      stat: stat)
-    
-    let lastMonth = Date().lastMonth()
-    let lastMonthsPerformance = prebuiltGraph(
-      title: "Last Month's Performance",
-      startDate: lastMonth.0,
-      endDate: lastMonth.1,
-      period: .weekly,
-      stat: stat)
-    
-    let thisYear = Date().thisMonth()
-    let thisYearsPerformance = prebuiltGraph(
-      title: "This Year's Performance",
-      startDate: thisYear.0,
-      endDate: thisYear.1,
-      period: .monthly,
-      stat: stat)
-    
-    let lastYear = Date().lastMonth()
-    let lastYearsPerformance = prebuiltGraph(
-      title: "Last Year's Performance",
-      startDate: lastYear.0,
-      endDate: lastYear.1,
-      period: .monthly,
-      stat: stat)
-    
-    return [
-      todaysPerformance,
-      yesterdaysPerformance,
-      thisWeeksPerformance,
-      lastWeeksPerformance,
-      thisMonthsPerformance,
-      lastMonthsPerformance,
-      thisYearsPerformance,
-      lastYearsPerformance
-    ]
   }
 }
 
@@ -267,12 +182,16 @@ extension Worker {
     
     let performanceSection = Section("Performance")
     if kind == .worker {
-      for prow in formVC.performanceRows(for: .workerComparison([self])) {
-        performanceSection <<< prow
+      for stat in StatStore.shared.store where stat.grouping == .worker {
+        var newStat = stat
+        newStat.ids = [self.id]
+        performanceSection <<< formVC.prebuiltGraph(title: stat.name, stat: newStat)
       }
     } else {
-      for prow in formVC.performanceRows(for: .foremanComparison([self])) {
-        performanceSection <<< prow
+      for stat in StatStore.shared.store where stat.grouping == .foreman {
+        var newStat = stat
+        newStat.ids = [self.id]
+        performanceSection <<< formVC.prebuiltGraph(title: stat.name, stat: newStat)
       }
     }
     
@@ -385,8 +304,10 @@ extension Farm {
     }
     
     let performanceSection = Section("Performance")
-    for prow in formVC.performanceRows(for: .farmComparison([self])) {
-      performanceSection <<< prow
+    for stat in StatStore.shared.store where stat.grouping == .farm {
+      var newStat = stat
+      newStat.ids = [self.id]
+      performanceSection <<< formVC.prebuiltGraph(title: stat.name, stat: newStat)
     }
     
     let detailsRow = TextAreaRow { row in
@@ -670,8 +591,10 @@ extension Orchard {
     }
     
     let performanceSection = Section("Performance")
-    for prow in formVC.performanceRows(for: .orchardComparison([self])) {
-      performanceSection <<< prow
+    for stat in StatStore.shared.store where stat.grouping == .orchard {
+      var newStat = stat
+      newStat.ids = [self.id]
+      performanceSection <<< formVC.prebuiltGraph(title: stat.name, stat: newStat)
     }
     
     let deleteOrchardRow = ButtonRow { row in

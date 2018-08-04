@@ -129,7 +129,6 @@ class SignUpViewController: UIViewController {
     }
     
   }
-  // swiftlint:enable function_body_length
   
   @IBAction func cancelTouchUp(_ sender: Any) {
     dismiss(animated: true, completion: nil)

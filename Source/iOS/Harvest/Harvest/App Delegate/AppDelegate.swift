@@ -27,6 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
     
+    if !UserDefaults.standard.bool(forKey: "Launched") {
+      UserDefaults.standard.set(true, forKey: "Launched")
+      StatStore.shared.setUpPredefinedGraphs()
+    }
+    
     return true
   }
   

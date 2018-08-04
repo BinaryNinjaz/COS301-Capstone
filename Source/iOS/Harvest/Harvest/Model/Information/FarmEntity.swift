@@ -260,6 +260,15 @@ final class Entities {
     
     return worker
   }
+  
+  func entities(for kind: StatKind) -> [EntityItem] {
+    switch kind {
+    case .farm: return farms.map { .farm($0.value) }
+    case .worker: return workers.compactMap { $0.value.kind == .worker ? .worker($0.value) : nil }
+    case .foreman: return workers.compactMap { $0.value.kind == .foreman ? .worker($0.value) : nil }
+    case .orchard: return orchards.map { .orchard($0.value) }
+    }
+  }
 }
 
 extension SortedDictionary where Value == EntityItem {

@@ -28,7 +28,6 @@ struct OrganizationInfo: CustomStringConvertible, Equatable {
 }
 
 class SettingsEurekaViewController: ReloadableFormViewController {
-  /// swiftlint:disable function_body_length
   override func viewDidLoad() {
     super.viewDidLoad()
   }

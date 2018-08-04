@@ -13,10 +13,6 @@ import SCLAlertView
 
 class StatsViewController: UIViewController {
   var stat: Stat?
-  var period: HarvestCloud.TimePeriod?
-  var startDate: Date?
-  var endDate: Date?
-  var mode: HarvestCloud.Mode?
   
   var lineChart: LineChartView?
   var activityIndicator: UIActivityIndicatorView?
@@ -58,19 +54,7 @@ class StatsViewController: UIViewController {
       return
     }
     
-    switch stat {
-    case .workerComparison: drawEntityComparison(entity: .worker)
-    case .foremanComparison: drawEntityComparison(entity: .foreman)
-    case .orchardComparison: drawEntityComparison(entity: .orchard)
-    case .farmComparison: drawEntityComparison(entity: .farm)
-    case let .untyped(_, kind):
-      switch kind {
-      case .worker: drawEntityComparison(entity: .worker)
-      case .foreman: drawEntityComparison(entity: .foreman)
-      case .orchard: drawEntityComparison(entity: .orchard)
-      case .farm: drawEntityComparison(entity: .farm)
-      }
-    }
+    stat.graphData(completion: updateChart)
   }
   
   func updateChart(with data: LineChartData?) {
@@ -88,21 +72,6 @@ class StatsViewController: UIViewController {
       self.lineChart?.isHidden = false
       self.lineChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
     }
-  }
-  
-  func drawEntityComparison(entity: HarvestCloud.GroupBy) {
-    let s = startDate ?? Date(timeIntervalSince1970: 0)
-    let e = endDate ?? Date()
-    let p = period ?? .daily
-    let m = mode ?? .accumTime
-    
-    stat?.entityComparison(
-      grouping: entity,
-      startDate: s,
-      endDate: e,
-      period: p,
-      mode: m,
-      completion: updateChart)
   }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -131,7 +100,10 @@ class StatsViewController: UIViewController {
     lineChart?.pinchZoomEnabled = true
     lineChart?.xAxis.drawGridLinesEnabled = false
     lineChart?.xAxis.labelPosition = .bottom
-    lineChart?.xAxis.valueFormatter = PeriodValueFormatter(period ?? .daily, startDate, endDate, mode)
+    lineChart?.xAxis.valueFormatter = PeriodValueFormatter(
+      stat?.timeStep ?? .daily,
+      stat?.timePeriod ?? .today,
+      stat?.mode ?? .accumTime)
     lineChart?.rightAxis.drawGridLinesEnabled = false
     lineChart?.xAxis.axisMinimum = 0
     lineChart?.rightAxis.enabled = false
@@ -186,26 +158,23 @@ final class OrchardDateFormatter: IAxisValueFormatter {
 }
 
 final class PeriodValueFormatter: IAxisValueFormatter {
-  let period: HarvestCloud.TimePeriod
-  let startDate: Date?
-  let endDate: Date?
-  let mode: HarvestCloud.Mode?
+  let step: TimeStep
+  let period: TimePeriod
+  let mode: TimedGraphMode?
   
-  init(_ period: HarvestCloud.TimePeriod, _ sd: Date?, _ ed: Date?, _ mode: HarvestCloud.Mode?) {
+  init(_ step: TimeStep, _ period: TimePeriod, _ mode: TimedGraphMode?) {
+    self.step = step
     self.period = period
-    startDate = sd
-    endDate = ed
     self.mode = mode ?? .accumTime
   }
   
   public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
     let possibles: [String]
+    let drange = period.dateRange()
     if mode == .accumTime {
-      possibles = period.fullPrintableDataSet(between: startDate, and: endDate, limitToDate: period == .weekly)
-    } else if let s = startDate, let e = endDate {
-      possibles = period.fullRunningDataSet(between: s, and: e)
+      possibles = step.fullPrintableDataSet(between: drange.0, and: drange.1, limitToDate: step == .weekly)
     } else {
-      possibles = []
+      possibles = step.fullRunningDataSet(between: drange.0, and: drange.1)
     }
     
     let pc = Double(possibles.count)

@@ -20,11 +20,10 @@
 		16420FC920696B8F00E1A292 /* QuickAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FC820696B8F00E1A292 /* QuickAlert.swift */; };
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
+		164DC2AC2115C84B008A8523 /* StatParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164DC2AB2115C84B008A8523 /* StatParameters.swift */; };
 		164F30A720D4745900E7772A /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164F30A620D4745900E7772A /* Verification.swift */; };
 		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
 		1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */; };
-		1657B73E20A0E17300F5F478 /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73D20A0E17300F5F478 /* Stat.swift */; };
-		1657B74020A0E18600F5F478 /* StatKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73F20A0E18600F5F478 /* StatKind.swift */; };
 		1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B74120A0E53800F5F478 /* StatsViewController.swift */; };
 		165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */; };
 		165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */; };
@@ -71,7 +70,7 @@
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
 		16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */; };
-		16ADA5EC210CAB8A00EE369E /* StatStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ADA5EB210CAB8A00EE369E /* StatStore.swift */; };
+		16ADA5EC210CAB8A00EE369E /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ADA5EB210CAB8A00EE369E /* Stat.swift */; };
 		16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */; };
 		16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */; };
 		16BF89952108BD4D00B023A7 /* Collections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF89942108BD4D00B023A7 /* Collections.swift */; };
@@ -140,12 +139,11 @@
 		16420FC820696B8F00E1A292 /* QuickAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAlert.swift; sourceTree = "<group>"; };
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		164DC2AB2115C84B008A8523 /* StatParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatParameters.swift; sourceTree = "<group>"; };
 		164F30A520D46DAA00E7772A /* Harvest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Harvest.entitlements; sourceTree = "<group>"; };
 		164F30A620D4745900E7772A /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
 		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
 		1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatSetupViewController.swift; sourceTree = "<group>"; };
-		1657B73D20A0E17300F5F478 /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
-		1657B73F20A0E18600F5F478 /* StatKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatKind.swift; sourceTree = "<group>"; };
 		1657B74120A0E53800F5F478 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 		165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityCreationUITests.swift; sourceTree = "<group>"; };
 		165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityDeletionUITests.swift; sourceTree = "<group>"; };
@@ -192,7 +190,7 @@
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		16A038E620F673B1007B549F /* StatEntitySelectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatEntitySelectionRow.swift; sourceTree = "<group>"; };
-		16ADA5EB210CAB8A00EE369E /* StatStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatStore.swift; sourceTree = "<group>"; };
+		16ADA5EB210CAB8A00EE369E /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
 		16B3F1CD207E9E9200FC1F77 /* SessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewController.swift; sourceTree = "<group>"; };
 		16B9D74720F66D2800EB2082 /* StatEntitySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatEntitySelectionViewController.swift; sourceTree = "<group>"; };
 		16BF89942108BD4D00B023A7 /* Collections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collections.swift; sourceTree = "<group>"; };
@@ -417,9 +415,8 @@
 		1657B73C20A0E16300F5F478 /* Stats */ = {
 			isa = PBXGroup;
 			children = (
-				1657B73D20A0E17300F5F478 /* Stat.swift */,
-				1657B73F20A0E18600F5F478 /* StatKind.swift */,
-				16ADA5EB210CAB8A00EE369E /* StatStore.swift */,
+				16ADA5EB210CAB8A00EE369E /* Stat.swift */,
+				164DC2AB2115C84B008A8523 /* StatParameters.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -929,13 +926,13 @@
 				16420FCC2069718400E1A292 /* Database.swift in Sources */,
 				167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */,
 				1684F7A020F45B8700BC59EB /* DBMock.swift in Sources */,
+				164DC2AC2115C84B008A8523 /* StatParameters.swift in Sources */,
 				167448C420893B8200FA605C /* SortedDictionary.swift in Sources */,
 				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
 				164F30A720D4745900E7772A /* Verification.swift in Sources */,
 				16E3750F20F0E4220023AD2C /* StatSelectionViewController.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
-				1657B73E20A0E17300F5F478 /* Stat.swift in Sources */,
 				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
 				1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */,
 				167448E6208B9AAA00FA605C /* SettingsEurekaViewController.swift in Sources */,
@@ -972,8 +969,7 @@
 				167448DC208A897C00FA605C /* DBSession.swift in Sources */,
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
 				16F5796721000CB50086325B /* PhoneyFormatter.swift in Sources */,
-				1657B74020A0E18600F5F478 /* StatKind.swift in Sources */,
-				16ADA5EC210CAB8A00EE369E /* StatStore.swift in Sources */,
+				16ADA5EC210CAB8A00EE369E /* Stat.swift in Sources */,
 				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
 				16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */,
 				160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */,
