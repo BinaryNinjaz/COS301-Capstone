@@ -1,10 +1,10 @@
 /* 
 * 	File:	Graphs.js
 *	Author:	Binary Ninjaz (Vincent,Shaun,Letanyan,Ojo)
-
+*
 *	Description:	This file contais functions for the data representation on 
-					"graphs.html". It requests and recieves data from firebase
-					databse, and uses google graph APIs 
+*					"graphs.html". It requests and recieves data from firebase
+*					databse, and uses google graph APIs 
 */
 const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions'; //Base URL for accessing firebase
 const database = firebase.database();	/* Pointing to database on firebase cloud */
@@ -387,4 +387,39 @@ function formatDate(date) {
     if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
+}
+/* This function shows the spinner while still waiting for resources*/
+var spinner;
+function updateSpiner(shouldSpin) {
+  var opts = {
+	lines: 8, // The number of lines to draw
+	length: 37, // The length of each line
+	width: 10, // The line thickness
+	radius: 45, // The radius of the inner circle
+	scale: 1, // Scales overall size of the spinner
+	corners: 1, // Corner roundness (0..1)
+	color: '#4CAF50', // CSS color or array of colors
+	fadeColor: 'transparent', // CSS color or array of colors
+	speed: 1, // Rounds per second
+	rotate: 0, // The rotation offset
+	animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+	direction: 1, // 1: clockwise, -1: counterclockwise
+	zIndex: 2e9, // The z-index (defaults to 2000000000)
+	className: 'spinner', // The CSS class to assign to the spinner
+	top: '50%', // Top position relative to parent
+	left: '50%', // Left position relative to parent
+	shadow: '0 0 1px transparent', // Box-shadow for the lines
+	position: 'absolute' // Element positioning
+  };
+
+  var target = document.getElementById('spinner');
+  var button = document.getElementById('updateButton');
+  if (shouldSpin) {
+	spinner = new Spinner(opts).spin(target);
+	button.style.visibility = "hidden";
+  } else {
+	button.style.visibility = "visible";
+	spinner.stop();
+	spinner = null;
+  }
 }
