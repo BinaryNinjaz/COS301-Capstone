@@ -190,6 +190,7 @@ function filterOrchard(){
         var start = new Date(week);
         var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
         var id = getOrchardId(name);
+		updateSpinerOrchard(true);
         orchardPerformance(start, end, id);
     }else{
         window.alert("Some fields in the orchard filter appear to be blank. \n"
@@ -283,6 +284,7 @@ function workerPerformance(start, end, id){
 
 ///This function updates orchard graph based on user input
 function changeOrchardGraph(data){
+	updateSpinerOrchard(false);
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('orchardSelect').value;
     var key = getOrchardId(name);
@@ -413,12 +415,9 @@ function updateSpinerOrchard(shouldSpin) {
   };
 
   var target = document.getElementById('myChart');
-  var button = document.getElementById('updateButton');
   if (shouldSpin) {
 	spinnerOrchard = new Spinner(opts).spin(target);
-	button.style.visibility = "hidden";
   } else {
-	button.style.visibility = "visible";
 	spinnerOrchard.stop();
 	spinnerOrchard = null;
   }
@@ -450,12 +449,9 @@ function updateSpinerWorker(shouldSpin) {
   };
 
   var target = document.getElementById('curve_chart');
-  var button = document.getElementById('updateButton');
   if (shouldSpin) {
 	spinnerWorker = new Spinner(opts).spin(target);
-	button.style.visibility = "hidden";
   } else {
-	button.style.visibility = "visible";
 	spinnerWorker.stop();
 	spinnerWorker = null;
   }
