@@ -383,6 +383,7 @@ function dispOrch(id) {
 
   if (id === "-1") {
     /*Create New Orchard*/
+    cCount = 0;
     firebase.database().ref('/' + userID() + '/farms').once('value').then(function (snapshot) {
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
@@ -421,7 +422,7 @@ function dispOrch(id) {
         "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
         "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
         "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: </label>" +
             "<div class='col-sm-9'>"+
                 "<div id='cultivarBoxes'>"+
                     "<input type='text' class='form-control' id='cultivars0' />"+
@@ -532,10 +533,8 @@ function moreCult(){
     var input = document.createElement('input');
     input.setAttribute('type','text');
     input.setAttribute('id',('cultivars'+cCount));
-
-    //var old = document.getElementById('cultivarBoxes').innerHTML;
-    document.getElementById('cultivarBoxes').appendChild(input); //("<br> <input type='text' class='form-control' id='cultivars"+cCount+"' />");
-    //alert(old);
+    input.setAttribute('class','form-control');
+    document.getElementById('cultivarBoxes').appendChild(input);     
 }
 
 function orchSave(type, id, cultivars) {
