@@ -1,4 +1,14 @@
+/*
+*	File:	HeatMap.js
+*	Authour:	Binary Ninjaz (Letanyan, John, Vincent)
+*
+*	Description: 	This file requests and receives data from firebase database
+*					To display a heat map on >HeatMap.html". It shows heat where 
+*					bags were collected.
+*/
+/* This function returns the authentication details of the current user from the database*/
 const user = function() { return firebase.auth().currentUser };
+/* This function checks whether the user shoukd have access or not*/
 const userID = function() {
   if (user() !== null) {
     return user().uid 
@@ -6,28 +16,28 @@ const userID = function() {
     return ""
   }
 }
-
+/* This function gets a "snapshot" of the ochards (given the particular userID) from firebase*/
 function getOrchards(callback) {
   const ref = firebase.database().ref('/' + userID() + '/orchards');
   ref.once('value').then((snapshot) => {
     callback(snapshot);
   });
 }
-
+/* This function returns a snapshot of the particular worker from the database */
 function getWorkers(callback) {
   const ref = firebase.database().ref('/' + userID() + '/workers');
   ref.once('value').then((snapshot) => {
     callback(snapshot);
   });
 }
-
+/* This function gets a snapshot of the farms (given the particular user id) from the database*/
 function getFarms(callback) {
   const ref = firebase.database().ref('/' + userID() + '/farms');
   ref.once('value').then((snapshot) => {
     callback(snapshot);
   });
 }
-
+/* This function initializes the Orchards and workers seen on HeatMap.html and it allows filtering functionality*/
 $(window).bind("load", () => {
   let succ = () => {
     initOrchards();
@@ -51,10 +61,12 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
-var orchards = [];
-var farms = [];
+var orchards = []; //An array of available orchards 
+var farms = []; //An array of available farms 
+
+/* This functions allows the user to filter out orchards, workers,farms, or forman*/
 function changeSelection(checkbox) {
-  if (selectedEntity === "orchard") {
+  if (selectedEntity === "orchard") { /* Checks if selected entity is an orchard*/
     for(var i = 0; i < orchards.length; i++) {
       if (orchards[i].key === checkbox.value) {
         if (checkbox.checked !== orchards[i].showing) {
@@ -62,7 +74,7 @@ function changeSelection(checkbox) {
         }
       }
     }
-  } else if (selectedEntity === "worker") {
+  } else if (selectedEntity === "worker") { /* Checks if selected entity is a worker*/
     for(var i = 0; i < workers.length; i++) {
       if (workers[i].value.type === "Worker" && workers[i].key === checkbox.value) {
         if (checkbox.checked !== workers[i].showing) {
@@ -70,7 +82,7 @@ function changeSelection(checkbox) {
         }
       }
     }
-  } else if (selectedEntity === "foreman") {
+  } else if (selectedEntity === "foreman") { /* Checks if selected entity is a forman*/
     for(var i = 0; i < workers.length; i++) {
       if (workers[i].value.type === "Foreman" && workers[i].key === checkbox.value) {
         if (checkbox.checked !== workers[i].showing) {
@@ -78,7 +90,7 @@ function changeSelection(checkbox) {
         }
       }
     }
-  } else if (selectedEntity === "farm") {
+  } else if (selectedEntity === "farm") { /* Checks if selected entity is a farm */
     for(var i = 0; i < farms.length; i++) {
       if (farms[i].key === checkbox.value) {
         if (checkbox.checked !== farms[i].showing) {
@@ -89,7 +101,9 @@ function changeSelection(checkbox) {
   }
 }
 
-var selectedEntity = "orchard";
+var selectedEntity = "orchard"; //initializes the selected entity
+
+/* This function loads entities of interest (Farm, Foreman, Orchard, Worker)*/
 function loadEntity(entity) {
   var entityDiv = document.getElementById("entities");
   entityDiv.innerHTML = "";
@@ -123,6 +137,7 @@ function loadEntity(entity) {
   }
 }
 
+/* This function creates a selction button, returns the output as a string*/
 function createSelectionButton(name, key, checked) {
   const isChecked = checked ? 'checked' : '';
   result = '';
@@ -133,6 +148,7 @@ function createSelectionButton(name, key, checked) {
   return result;
 }
 
+/* This function checks (loops through) the farm ID compared to the ID received as a parameter*/
 function farmForId(id) {
   for (var farm in farms) {
     if (farms[farm].key === id) {
@@ -153,6 +169,7 @@ function orchardCoords(orchardVal) {
   return result;
 }
 
+/* This function initialises the orchards */
 function initOrchards() {
   var today = new Date();
   var dd = ("0" + today.getDate()).slice(-2);
@@ -208,6 +225,7 @@ function initOrchards() {
   });
 }
 
+/* The workers array annd initWorkers initialises the workers on Heatmap.html*/
 var workers = [];
 function initWorkers() {
   getWorkers((workersSnap) => {
@@ -222,6 +240,7 @@ function initWorkers() {
   });
 }
 
+/* The map variable and the initMap initialize the coordinates of the area of farming*/
 var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -236,31 +255,32 @@ function initMap() {
   });
 }
 
+/* This function requests the IDs of entities of interest (Farm, Foreman, Orchard, Worker)*/
 function requestedIds() {
   var result = {};
   var k = 0;
-  if (selectedEntity === "orchard") {
+  if (selectedEntity === "orchard") { /* Requesting IDs for orchards */
     for (var i = 0; i < orchards.length; i++) {
       if (orchards[i].showing) {
         result["id" + k] = orchards[i].key;
         k++;
       }
     }
-  } else if (selectedEntity === "worker") {
+  } else if (selectedEntity === "worker") { /* Requesting IDs for workers */
     for (var i = 0; i < workers.length; i++) {
       if (workers[i].value.type === "Worker" && workers[i].showing) {
         result["id" + k] = workers[i].key;
         k++;
       }
     }
-  } else if (selectedEntity === "foreman") {
+  } else if (selectedEntity === "foreman") { /* Requesting IDs for foreman */
     for (var i = 0; i < workers.length; i++) {
       if (workers[i].value.type === "Foreman" && workers[i].showing) {
         result["id" + k] = workers[i].key;
         k++;
       }
     }
-  } else if (selectedEntity === "farm") {
+  } else if (selectedEntity === "farm") { /* Requesting IDs for farms */
     for (var i = 0; i < farms.length; i++) {
       if (farms[i].showing) {
         result["id" + k] = farms[i].key;
@@ -269,11 +289,12 @@ function requestedIds() {
     }
   }
   
-  return result;
+  return result; /* Returns the IDs of interest */
 }
 
-var first = true;
-var heatmap;
+var first = true; /* Setting the first variable true for the if statement inside*/
+var heatmap; /* Varaible for the heatmap*/
+/* This function updates the to show heat where the most number of bags were collected*/
 function updateHeatmap() {
   var keys = requestedIds();
   const startDate = new Date(document.getElementById("startDate").value);
@@ -312,6 +333,7 @@ function updateHeatmap() {
   });
 }
 
+/* This function shows the spinner while still waiting for resources*/
 var spinner;
 function updateSpiner(shouldSpin) {
   var opts = {
