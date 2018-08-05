@@ -589,6 +589,7 @@ function averageOfSessionItem(item, key, days, workingOn) {
 // period=[hourly, daily, weekly, monthly, yearly]
 // startDate=[Double]
 // endDate=[Double]
+// offset=[(+|-)HH:mm]
 // mode=[accumTime, accumEntity, running]
 // uid=[String]
 //
@@ -615,8 +616,12 @@ function averageOfSessionItem(item, key, days, workingOn) {
 // weekly = YYYY-MM-dd, monthly = YYYY-MM, yearly = YYYY
 // # is total number of bags collected
 //
-// ------------------------------ [NOTE: avg is always the average of all entities]
-//
+// ------------------------------ NOTE:
+// + avg is always the average of all entities
+// + running and accumEntity * are truncated if time doesnt overlap into different bases.
+//   example: for daily if your startDate and endDate are within the same month then YYYY
+//   and MM are discarded. If your startDate and endDate go into different months but are in
+//   the same year then only YYYY is dropped. This applies for all dates in running and accumEntity.
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const startDate = req.body.startDate;
@@ -628,11 +633,15 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     if (mode === undefined) {
       mode = "accumTime";
     }
+    var offset = req.body.offset;
+    if (offset === undefined) {
+      offset = "+00:00";
+    }
     const isAccumTime = mode === 'accumTime';
     const isAccumEntity = mode === 'accumEntity';
     const isRunning = mode === 'running';
-    const sd = new Date(startDate * 1000);
-    const ed = new Date(endDate * 1000);
+    const sd = moment(new Date(startDate * 1000)).utcOffset(offset).toDate();
+    const ed = moment(new Date(endDate * 1000)).utcOffset(offset).toDate();
     
     const sameY = isSameYear(sd, ed);
     const sameM = isSameMonth(sd, ed);
