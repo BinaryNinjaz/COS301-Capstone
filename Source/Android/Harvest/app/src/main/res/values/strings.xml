@@ -217,20 +217,24 @@
     <string name="anal_fore_tYear">This Year\'s Foreman Performance</string>
     <string name="anal_fore_lYear">Last Year\'s Foreman Performance</string>
 
+    <!--Farm Defaults-->
+    <string name="anal_farm_tit">Farm Comparison</string>
+
     <!--Custom-->
     <string name="anal_cus_tit">Custom</string>
-    <string name="anal_cus_make">Make Your Own Graph</string>
+    <string name="anal_cus_make">Make New Graph</string>
     <string name="anal_cus_farmSel">Farm Selection</string>
     <string name="anal_cus_workSel">Worker Selection</string>
     <string name="anal_cus_orchSel">Orchard Selection</string>
     <string name="anal_cus_foreSel">Foreman Selection</string>
     <string name="anal_cus_det">Details</string>
     <string name="anal_selector_selectNone">You must select at least one item to display.</string>
+    <string name="anal_cus_compsTitle">Select what to compare</string>
     <string-array name="anal_cus_comps">
-        <item>Farm Comparisons></item>
-        <item>Worker Comparisons</item>
-        <item>Orchard Comparisons</item>
-        <item>Foreman Comparisons</item>
+        <item>Farm</item>
+        <item>Worker</item>
+        <item>Orchard</item>
+        <item>Foreman</item>
     </string-array>
     <string name="anal_cus_timeTitle">Time Interval</string>
     <string-array name="anal_cus_timeChoose">

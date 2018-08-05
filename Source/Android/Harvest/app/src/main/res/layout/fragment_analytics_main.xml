@@ -18,13 +18,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                style="@style/TextAppearance.AppCompat.Menu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/anal_cus_tit" />
+            <!--<TextView-->
+                <!--style="@style/TextAppearance.AppCompat.Menu"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:text="@string/anal_cus_tit" />-->
 
             <!--<android.support.v7.widget.RecyclerView-->
                 <!--android:id="@+id/anal_choose_cus_recycler"-->
@@ -39,7 +39,24 @@
                 android:background="@color/white"
                 android:onClick="anal_main_buttonHandler"
                 android:text="@string/anal_cus_make"
-                android:textColor="@color/blueLinks" />
+                android:textColor="@color/blueLinks"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/anal_farm_tit" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/anal_choose_farmRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="4dp"/>
 
             <TextView
                 style="@style/TextAppearance.AppCompat.Menu"
@@ -49,69 +66,13 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/anal_orch_tit" />
 
-            <Button
-                android:id="@+id/anal_choose_orch_tod"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_orch_tod"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_orch_yes"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_orch_yes"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_orch_tWeek"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_orch_tWeek"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_orch_lWeek"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_orch_lWeek"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_orch_tMonth"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_orch_tMonth"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_orch_lMonth"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_orch_lMonth"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_orch_tYear"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_orch_tYear"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_orch_lYear"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_orch_lYear"
-                android:textColor="@color/black" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/anal_choose_orchardRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="4dp"/>
 
             <TextView
                 style="@style/TextAppearance.AppCompat.Menu"
@@ -121,69 +82,13 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/anal_work_tit" />
 
-            <Button
-                android:id="@+id/anal_choose_work_tod"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_work_tod"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_work_yes"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_work_yes"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_work_tWeek"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_work_tWeek"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_work_lWeek"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_work_lWeek"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_work_tMonth"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_work_tMonth"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_work_lMonth"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_work_lMonth"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_work_tYear"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_work_tYear"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_work_lYear"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_work_lYear"
-                android:textColor="@color/black" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/anal_choose_workerRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="4dp"/>
 
             <TextView
                 style="@style/TextAppearance.AppCompat.Menu"
@@ -193,69 +98,13 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/anal_fore_tit" />
 
-            <Button
-                android:id="@+id/anal_choose_fore_tod"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_fore_tod"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_fore_yes"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_fore_yes"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_fore_tWeek"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_fore_tWeek"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_fore_lWeek"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_fore_lWeek"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_fore_tMonth"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_fore_tMonth"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_fore_lMonth"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_fore_lMonth"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_fore_tYear"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_fore_tYear"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/anal_choose_fore_lYear"
-                style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_fore_lYear"
-                android:textColor="@color/black" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/anal_choose_foremanRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="4dp"/>
 
         </LinearLayout>
     </ScrollView>
