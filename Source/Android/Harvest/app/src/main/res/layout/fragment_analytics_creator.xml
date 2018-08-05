@@ -14,7 +14,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/anal_cus_compsTitle"
+            android:text="@string/anal_create_compsTitle"
             android:layout_marginStart="8dp"
             style="@style/TextAppearance.AppCompat.Body1"/>
 
@@ -32,8 +32,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textColor="@color/blueLinks"
+        android:background="@color/white"
         android:text="Select Things to Compare"
-        style="@style/Widget.AppCompat.ButtonBar"
+        android:textAllCaps="true"
         android:onClick="anal_creator_buttonHandler" />
 
     <TextView
@@ -47,7 +48,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/anal_cus_det"
+        android:text="@string/anal_create_det"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:textColor="@color/colorPrimary"
@@ -63,14 +64,46 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/anal_cus_periodTitle"
+            android:text="@string/anal_create_periodTitle"
             android:layout_marginStart="8dp"
             style="@style/TextAppearance.AppCompat.Body1"/>
 
         <Spinner
+            android:id="@+id/anal_create_periodSpinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
+
+        <EditText
+            android:id="@+id/anal_create_from"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/EditText2"
+            android:hint="@string/anal_create_from"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true" />
+
+        <EditText
+            android:id="@+id/anal_create_upTo"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/EditText2"
+            android:hint="@string/anal_create_upTo"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true" />
 
     </LinearLayout>
 
@@ -84,61 +117,29 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/anal_cus_intervalTitle"
+            android:text="@string/anal_create_intervalTitle"
             android:layout_marginStart="8dp"
             style="@style/TextAppearance.AppCompat.Body1"/>
 
         <Spinner
+            android:id="@+id/anal_create_interval_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
     </LinearLayout>
 
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
-
-        <EditText
-            android:id="@+id/anal_cus_from"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            style="@style/EditText2"
-            android:hint="@string/anal_cus_from"
-            android:inputType="none"
-            android:focusable="false"
-            android:clickable="true"
-            android:onClick="anal_creator_buttonHandler"/>
-
-        <EditText
-            android:id="@+id/anal_cus_upTo"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            style="@style/EditText2"
-            android:hint="@string/anal_cus_upTo"
-            android:inputType="none"
-            android:focusable="false"
-            android:clickable="true"
-            android:onClick="anal_creator_buttonHandler"/>
-
-    </LinearLayout>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/anal_cus_accumulation"
+        android:text="@string/anal_create_accumulation"
         android:layout_marginTop="16dp"
         android:layout_marginStart="8dp"
         style="@style/TextAppearance.AppCompat.Menu"
         android:textColor="@color/colorPrimary"/>
     
     <RadioGroup
+        android:id="@+id/anal_create_accumulator_radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -146,48 +147,67 @@
         android:layout_marginEnd="8dp">
         
         <RadioButton
-            android:id="@+id/anal_cus_accumulator_radio_none"
+            android:id="@+id/anal_create_accumulator_radio_none"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/anal_cus_accumulation_none"
-            android:onClick="anal_creator_buttonHandler" />
+            android:text="@string/anal_create_accumulation_none" />
 
         <RadioButton
-            android:id="@+id/anal_cus_accumulator_radio_entity"
+            android:id="@+id/anal_create_accumulator_radio_entity"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="By Entity"
-            android:onClick="anal_creator_buttonHandler"/>
+            android:text="By Entity" />
 
         <RadioButton
-            android:id="@+id/anal_cus_accumulator_radio_interval"
+            android:id="@+id/anal_create_accumulator_radio_interval"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/anal_cus_accumulation_interval"
-            android:onClick="anal_creator_buttonHandler"/>
+            android:text="@string/anal_create_accumulation_interval" />
         
     </RadioGroup>
 
     <TextView
-        android:id="@+id/anal_cus_accumulator_description"
+        android:id="@+id/anal_create_accumulator_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/anal_cus_accumulation_desc_none"
+        android:text="@string/anal_create_accumulation_desc_none"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         style="@style/TextAppearance.AppCompat.Caption"/>
 
-    <Button
-        android:id="@+id/anal_cus_disp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/anal_cus_disp"
-        android:background="@color/white"
-        android:textColor="@color/blueLinks"
-        android:onClick="anal_creator_buttonHandler"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24dp"
+        android:background="@color/white">
+
+        <Button
+            android:id="@+id/anal_create_disp"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text="@string/anal_create_disp"
+            android:textAllCaps="true"
+            style="@style/Widget.AppCompat.ButtonBar"
+            android:textColor="@color/blueLinks"
+            android:onClick="anal_creator_buttonHandler" />
+
+        <Button
+            android:id="@+id/anal_create_save"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/anal_create_save"
+            android:textAllCaps="true"
+            style="@style/Base.Widget.AppCompat.ButtonBar"
+            android:textColor="@color/blueLinks"
+            android:onClick="anal_creator_buttonHandler"
+            />
+
+
+    </LinearLayout>
 
 </LinearLayout>

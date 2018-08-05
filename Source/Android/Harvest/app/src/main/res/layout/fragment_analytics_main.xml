@@ -18,27 +18,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--<TextView-->
-                <!--style="@style/TextAppearance.AppCompat.Menu"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginStart="8dp"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:text="@string/anal_cus_tit" />-->
-
-            <!--<android.support.v7.widget.RecyclerView-->
-                <!--android:id="@+id/anal_choose_cus_recycler"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-
-            <!--</android.support.v7.widget.RecyclerView>-->
-
             <Button
                 android:id="@+id/anal_choose_cus_make"
                 style="@style/Button"
                 android:background="@color/white"
                 android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_cus_make"
+                android:text="@string/anal_create_make"
                 android:textColor="@color/blueLinks"
                 android:layout_marginTop="8dp"/>
 
