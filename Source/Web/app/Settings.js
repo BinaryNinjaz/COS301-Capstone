@@ -18,10 +18,6 @@ $(window).bind("load", () => {
   };
   let fail = () => {
     email = '';
-    password = '';
-    organization = '';
-    firstname = '';
-    surname = '';
   };
   retryUntilTimeout(succ, fail, 1000);
 });
@@ -36,6 +32,7 @@ function initPage(){
         email = user().email;
         const ref = adminRef();
         ref.once('value').then((snapshot) => {
+            const val = snapshot.val();
             document.getElementById("email").value = email;
             document.getElementById("org").value = val.organization;
             document.getElementById("first").value = val.firstname;
@@ -47,7 +44,7 @@ function initPage(){
 
 function saveChanges(){
    if(confirm("Are you sure you want to save your account changes?")){
-        firebase.database().ref('/' + userID() +"/admin/" + id).update({   
+        firebase.database().ref('/' + userID() +'/admin').update({   
           firstname: document.getElementById("first").value,
           lastname: document.getElementById("sur").value,
           organization: document.getElementById("org").value
