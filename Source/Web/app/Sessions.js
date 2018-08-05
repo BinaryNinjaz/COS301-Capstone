@@ -1,7 +1,17 @@
+/* 
+* 	File:	Sessions.js
+*	Author:	Binary Ninjaz (Letanyan,Ojo)
+*
+*	Description:	This file contais functions for the data representation on 
+*					"Sessions.html". It requests and recieves data from firebase
+*					databse, and uses google graph APIs 
+*/
 const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/flattendSessions?';
 var pageIndex = null;
 var pageSize = 21;
-const user = function() { return firebase.auth().currentUser };
+const user = function() { return firebase.auth().currentUser };/* Function which authenticates user */
+
+/* Function returns the user ID of the selected user */
 const userID = function() {
   if (user() !== null) {
     return user().uid 
@@ -10,6 +20,7 @@ const userID = function() {
   }
 }
 
+/* Function returns a worker pointed to by the callback parameter */
 function getWorkers(callback) {
   const ref = firebase.database().ref('/' + userID() + '/workers');
   ref.once('value').then((snapshot) => {
@@ -17,10 +28,12 @@ function getWorkers(callback) {
   });
 }
 
+/* Function returns a reference to the sessions on the database */
 function yieldsRef() {
   return firebase.database().ref('/' + userID() + '/sessions');
 }
 
+/* This executes when the page loades */
 $(window).bind("load", () => {
   let succ = () => {
     initPage();
@@ -33,6 +46,7 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
+/* This function initiates the coordinates on the map*/
 var map;
 function initMap() {
   locationLookup((data, response) => {
@@ -47,6 +61,7 @@ function initMap() {
   });
 }
 
+/* Function returns a foremen, given a particular key */
 function foremanForKey(key) {
   for (var k in foremen) {
     if (foremen[k].key === key) {
@@ -56,6 +71,7 @@ function foremanForKey(key) {
   return {value: {name: "Farm", surname: "Owner"}};
 }
 
+/* Function returns a worker, given a particular key */
 function workerForKey(key) {
   for (var k in workers) {
     if (workers[k].key === key) {
@@ -65,6 +81,7 @@ function workerForKey(key) {
   return undefined;
 }
 
+/* Function returns a session, given a particular key */
 function sessionForKey(key) {
   for (var k in sessions) {
     if (sessions[k].key === key) {
@@ -74,6 +91,7 @@ function sessionForKey(key) {
   return undefined;
 }
 
+/* Function loads a list of sessions on the side of the screen */
 function sessionsListLoader(loading) {
   var sessionsListHolder = document.getElementById("sessionsListLoader");
   if (!loading) {
@@ -83,8 +101,11 @@ function sessionsListLoader(loading) {
   }
 }
 
-var foremen = [];
-var workers = []
+
+var foremen = []; /* An array of foreman */
+var workers = []; /* An array of workers */
+
+/* This function displays the list of sessions by each foreman on "Session.html" */
 function initPage() {
   var sessionsList = document.getElementById("sessionsList");
   sessionsListLoader(true);
@@ -104,7 +125,9 @@ function initPage() {
   });
 }
 
-var sessions = [];
+var sessions = []; /* An array of sessions */
+
+/* This function appends more sessions to the list of initial sessions on "Sessions.html" */
 function newPage() {
   var ref;
   sessionsListLoader(true);
@@ -149,8 +172,10 @@ function newPage() {
   });
 }
 
-var markers = [];
-var polypath;
+var markers = []; /* An array of markers for the map */
+var polypath; /* Variable for storing the path of the polygon */
+
+/* This functions plots the graph of a choosen session by a particular foreman */
 function loadSession(sessionID) {
   const ref = firebase.database().ref('/' + userID() + '/sessions/' + sessionID);
   
@@ -236,6 +261,7 @@ function loadSession(sessionID) {
   initGraph(graphData);
 }
 
+/* This function (is a subfunction) simply displays the doughnut graph */
 function initGraph(collections) {
   var options = {
     title: 'Worker Performance Summary',
