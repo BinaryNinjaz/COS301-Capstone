@@ -40,6 +40,20 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+
+    <style name="cardPictureButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+    <style name="cardPictureButtonLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">143dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <style name="TextView.body">
         <item name="android:textColor">@color/black</item>
     </style>

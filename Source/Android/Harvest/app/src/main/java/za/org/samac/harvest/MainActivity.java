@@ -296,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             bottomNavigationView = findViewById(R.id.bottom_navigation);
 
             bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
+            BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
             bottomNavigationView.setOnNavigationItemSelectedListener(
                     new BottomNavigationView.OnNavigationItemSelectedListener() {
                         @Override
@@ -329,8 +330,38 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     String correctOrchard = "";
     int holdi;
 
+    private void getForemenId() {
+        DatabaseReference foremanRef;
+        foremanRef = currUserRef.child("workers");
+        foremanRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                    if (zoneSnapshot.child("phoneNumber").getValue(String.class) != null) {
+                        if (zoneSnapshot.child("phoneNumber").getValue(String.class).equals(currentUserNumber)) {
+                            foremanID = zoneSnapshot.getKey();
+                            foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                        }
+                    }
+                }
+
+                progressBar.setVisibility(View.GONE);//remove progress bar
+                constraintLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                //user pressed start and all went well with retrieving data
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+                progressBar.setVisibility(View.GONE);
+                constraintLayout.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
     private void collectOrchards() {
-        currUserRef = database.getReference(uid);//Firebase reference
         DatabaseReference orchRef;
         orchRef = currUserRef.child("orchards");
         orchRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -343,10 +374,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     orchards.add(zoneSnapshot.child("name").getValue(String.class));
                 }
 
-                progressBar.setVisibility(View.GONE);//remove progress bar
-                constraintLayout.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-                //user pressed start and all went well with retrieving data
+                getForemenId();
             }
 
             @Override
@@ -656,13 +684,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             workerObj.setValue(0);
                             workerObj.setID(zoneSnapshot.getKey());
                             foremen.add(workerObj);
-
-                            if (zoneSnapshot.child("phoneNumber").getValue(String.class) != null) {
-                                if (zoneSnapshot.child("phoneNumber").getValue(String.class).equals(currentUserNumber)) {
-                                    foremanID = zoneSnapshot.getKey();
-                                    foremanName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
-                                }
-                            }
                         }
                     }
                 }
@@ -704,6 +725,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         //getPolygon();
         farmLevelRef = database.getReference(farmerKey);
         workersRef = farmLevelRef.child("workers");
+        currUserRef = database.getReference(farmerKey);//Firebase reference
         collectOrchards();
         //collectWorkers();
     }
@@ -878,6 +900,47 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }, trackDelay);
 
             //************************************************** foreman tracking
+            final DatabaseReference myRef;
+            final DatabaseReference myRefDel;
+            myRef = database.getReference(farmerKey + "/requestedLocations");//path to sessions increment in Firebase
+            myRefDel = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Boolean locationWanted = false;
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if (child.getKey().toString().equals(foremanID)) {
+                            myRefDel.removeValue();
+                            locationWanted = true;
+                        }
+                    }
+
+                    if (locationWanted == true) {
+                        DatabaseReference myRef2;
+                        myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
+
+                        Map<String, Object> coordinates = new HashMap<>();
+                        coordinates.put("lat", location.getLatitude());
+                        coordinates.put("lng", location.getLongitude());
+
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("coord", coordinates);
+                        childUpdates.put("display", foremanName);
+                        double currentTime;
+                        currentTime = (System.currentTimeMillis()/divideBy1000Var);
+                        childUpdates.put("date", currentTime);
+
+                        locationWanted = false;
+                        myRef2.updateChildren(childUpdates);//store location
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
             handlerForemanTracker.postDelayed(new Runnable() {
                 public void run() {
                     //tracks every 2 minutes
