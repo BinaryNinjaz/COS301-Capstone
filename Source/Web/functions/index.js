@@ -589,23 +589,34 @@ function averageOfSessionItem(item, key, days, workingOn) {
 // period=[hourly, daily, weekly, monthly, yearly]
 // startDate=[Double]
 // endDate=[Double]
-// avgRange=[all, inclusive, onlybefore] default = onlybefore
 // mode=[accumTime, accumEntity, running]
 // uid=[String]
 //
-// --------- Result ------------- Mode = Accum
-// let p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
+// --------- Result ------------- Mode = accumTime
+// result = {avg: {*: #}, p}
+//
+// where p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
 // where * is some values determined by period hourly = [0, 23], daily=[Sunday, ..., Saturday]
 // weekly = [0, 52], monthly = [January, ..., December], yearly = [0, Int.max)
 // # is total number of bags collected
 //
-// result = {avg: p, p}
+// --------- Result ------------- Mode = accumEntity
+// result = {avg: {*: #, ...}, sum: {*: #, ...}}
 //
-// --------- Result ------------- Mode = Running
-// let result = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
 // where * is some values determined by period hourly = YYYY-MM-dd hh, daily= YYYY-MM-dd
 // weekly = YYYY-MM-dd, monthly = YYYY-MM, yearly = YYYY
 // # is total number of bags collected
+// sum is the sum of id0 + id1 + ... + idN at date points determined by period.
+//
+// --------- Result ------------- Mode = running
+// let result = {avg: {*: #, ...}, id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
+//
+// where * is some values determined by period hourly = YYYY-MM-dd hh, daily= YYYY-MM-dd
+// weekly = YYYY-MM-dd, monthly = YYYY-MM, yearly = YYYY
+// # is total number of bags collected
+//
+// ------------------------------ [NOTE: avg is always the average of all entities]
+//
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const startDate = req.body.startDate;
@@ -613,10 +624,6 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     const uid = req.body.uid;
     const groupBy = req.body.groupBy;
     const period = req.body.period;
-    var avgRange = req.body.avgRange;
-    if (avgRange === undefined) {
-      avgRange = "onlybefore";
-    }
     var mode = req.body.mode;
     if (mode === undefined) {
       mode = "accumTime";
