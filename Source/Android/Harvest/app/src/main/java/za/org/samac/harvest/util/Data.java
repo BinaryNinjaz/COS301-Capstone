@@ -618,6 +618,14 @@ public class Data {
         }
     }
 
+    public String getNamedCategory(Category cat){
+        Category temp = category;
+        category = cat;
+        String result = getNamedCategory();
+        category = temp;
+        return result;
+    }
+
     public String[] toNamesAsStringArray(Category cat){
         Category temp = category;
         this.category = cat;

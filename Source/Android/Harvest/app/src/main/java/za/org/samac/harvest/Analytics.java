@@ -1,11 +1,13 @@
 package za.org.samac.harvest;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.text.style.TtsSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
@@ -84,7 +87,7 @@ public class Analytics extends AppCompatActivity {
     public static final double THOUSAND = 1000.0000000;
 
     private String interval = NOTHING;
-    private String accumulator = NOTHING;
+    private String accumulation = NOTHING;
     private String period = NOTHING;
 
     private enum State{
@@ -355,19 +358,35 @@ public class Analytics extends AppCompatActivity {
 
             case R.id.anal_create_dispButton:
 
-                if (!data.getNamedCategory().toLowerCase().equals(analytics_creator.getGroup())){
-                    ids.clear();
-                }
-
                 //Get the bundle of joy.
+                Bundle bundle = analytics_creator.getConfigurations();
+                if (bundle != null){
+                    group = bundle.getString(KEY_GROUP);
+                    if (!group.equals(data.getNamedCategory(lastCategory))){
+                        ids.clear();
+                    }
+                    period = bundle.getString(KEY_PERIOD);
+                    interval = bundle.getString(KEY_INTERVAL);
+                    accumulation = bundle.getString(KEY_ACCUMULATION);
+
+                    //handle dates
+                    if (!period.equals(BETWEEN_DATES)){
+                        DateBundle dateBundle = determineDates(period);
+                        assert dateBundle != null;
+                        start = dateBundle.startDate;
+                        end = dateBundle.endDate;
+                    }
+                    else {
+
+                    }
+
+                    displayGraph();
+                }
 
                 return;
 
             case R.id.anal_create_saveButton:
 
-                if (!data.getNamedCategory().toLowerCase().equals(analytics_creator.getGroup())){
-                    ids.clear();
-                }
         }
     }
 
@@ -403,6 +422,8 @@ public class Analytics extends AppCompatActivity {
         extras.putDouble(KEY_END, end);
         extras.putString(KEY_INTERVAL, interval);
         extras.putString(KEY_GROUP, group);
+        extras.putString(KEY_PERIOD, period);
+        extras.putString(KEY_ACCUMULATION, accumulation);
         Intent intent = new Intent(this, Analytics_Graph.class).putExtras(extras);
         startActivity(intent);
     }
@@ -412,7 +433,7 @@ public class Analytics extends AppCompatActivity {
      * @param period represents the time period, must be lower case string that matches one of the finals in the analytics class
      * @return dateBundle that holds two doubles, one for start date, and the other for the end date.
      */
-    public static dateBundle determineDates(String period){
+    public static DateBundle determineDates(String period){
         final String TAG = "Analytics_Creator-dates";
 
         period = period.toLowerCase();
@@ -580,7 +601,7 @@ public class Analytics extends AppCompatActivity {
         Log.i(TAG, "START: " + startCal.getTime().toString());
         Log.i(TAG, "END: " + endCal.getTime().toString());
 
-        dateBundle result = new dateBundle();
+        DateBundle result = new DateBundle();
 
         result.startDate = (double) startCal.getTimeInMillis();
         result.endDate = (double) endCal.getTimeInMillis();
@@ -591,7 +612,7 @@ public class Analytics extends AppCompatActivity {
         return result;
     }
 
-    public static class dateBundle{
+    public static class DateBundle{
         double startDate, endDate;
     }
 

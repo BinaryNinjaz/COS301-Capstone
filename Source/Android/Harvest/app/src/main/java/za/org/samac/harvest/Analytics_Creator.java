@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import static za.org.samac.harvest.Analytics.THOUSAND;
+
 @SuppressWarnings("FieldCanBeLocal")
 public class Analytics_Creator extends Fragment{
 
@@ -38,7 +40,6 @@ public class Analytics_Creator extends Fragment{
 
     //Others
     private String accumulationSelection = Analytics.NOTHING;
-    private String entitySelection = Analytics.NOTHING;
 
     private String selectedItemsText;
 
@@ -236,29 +237,43 @@ public class Analytics_Creator extends Fragment{
     /**
      * Get a bundle consisting of all of the configurations that have been selected by the user, the keys match the strings in the Analytics class.
      * The bundle is constructed as follows (Key : Data Type : Description):
-     *  KEY_GROUP : String : Matches a static from Analytics class. THIS WILL BE "" IF THERE WAS AN ERROR. It may be set retroactively, so other
-     *   pairs will be set, check it first!
+     *  KEY_GROUP : String : Matches a static from Analytics class.
      *  KEY_PERIOD : String : Matches a static from Analytics class
-     *  KEY_START : String : The selected start date, only occurs if the period is set to BETWEEN_DATES, its format is DD/MM/YYYY
-     *  KEY_END : String : The selected end date, only occurs if the period is set to BETWEEN_DATES, its format is DD/MM/YYYY
+     *  KEY_START : double : The selected start date divided by 1 000
+     *  KEY_END : double : The selected end date, divided by 1 000
      *  KEY_INTERVAL : String : Matches a static from Analytics class
      *  KEY_ACCUMULATION : String : Matches a static from Analytics class
-     * @return Bundle of all the configurations.
+     * @return Bundle of all the configurations. NULL if error, such as a field not set.
      */
     public Bundle getConfigurations(){
         Bundle bundle = new Bundle();
         bundle.putString(Analytics.KEY_GROUP, getGroup());
 
         String period = periodSpinner.getSelectedItem().toString().toLowerCase();
-        bundle.putString(Analytics.KEY_PERIOD, period);
+        bundle.putString(Analytics.KEY_PERIOD, period.toLowerCase());
 
         if (period.equals(Analytics.BETWEEN_DATES)){
             if (fromDateEditText.getText().toString().equals("")){
                 fromDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
+                return null;
             }
+            else fromDateEditText.setError("");
             if (upToDateEditText.getText().toString().equals("")){
                 upToDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
+                return null;
             }
+            else fromDateEditText.setError("");
+            //noinspection ConstantConditions
+            String[] tokens = fromDateEditText.getText().toString().split("/");
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+            bundle.putDouble(Analytics.KEY_START,calendar.getTimeInMillis() / THOUSAND);
+
+            //noinspection ConstantConditions
+            tokens = upToDateEditText.getText().toString().split("/");
+            calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+            bundle.putDouble(Analytics.KEY_END, calendar.getTimeInMillis() / THOUSAND);
+
             bundle.putString(Analytics.KEY_START, fromDateEditText.getText().toString());
             bundle.putString(Analytics.KEY_END, upToDateEditText.getText().toString());
         }
