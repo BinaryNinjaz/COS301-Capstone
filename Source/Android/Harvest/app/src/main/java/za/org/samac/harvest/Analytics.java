@@ -61,29 +61,48 @@ public class Analytics extends AppCompatActivity {
     private Analytics_Selector analytics_selector;
     private Analytics_Creator analytics_creator;
 
-    //Keys for the bundle
+    //Keys for Bundles
     public static final String KEY_IDS = "KEY_IDS";
     public static final String KEY_START = "KEY_START";
     public static final String KEY_END = "KEY_END";
     public static final String KEY_INTERVAL = "KEY_INTERVAL";
+    public static final String KEY_PERIOD = "KEY_PERIOD";
     public static final String KEY_GROUP = "KEY_GROUP";
+    public static final String KEY_ACCUMULATION = "KEY_ACCUMULATION";
     
-    //Intervals
     public static final String NOTHING = "";
+
+    //Intervals
     public static final String HOURLY = "hourly";
     public static final String DAILY = "daily";
     public static final String WEEKLY = "weekly";
     public static final String MONTHLY = "monthly";
     public static final String YEARLY = "yearly";
 
+    //Periods
+    public static final String BETWEEN_DATES = "between dates";
+    public static final String YESTERDAY = "yesterday";
+    public static final String TODAY = "today";
+    public static final String THIS_WEEK = "this week";
+    public static final String LAST_WEEK = "last week";
+    public static final String THIS_MONTH = "this month";
+    public static final String LAST_MONTH = "last month";
+    public static final String THIS_YEAR = "this year";
+    public static final String LAST_YEAR = "last year";
+
     //Groups
     public static final String ORCHARD = "orchard";
     public static final String WORKER = "worker";
     public static final String FOREMAN = "foreman";
     public static final String FARM = "farm";
+
+    //Accumulation
+    public static final String ACCUMULATION_NONE = "running";
+    public static final String ACCUMULATION_ENTITY = "accumEntity";
+    public static final String ACCUMULATION_INTERVAL = "accumTime";
     
     @SuppressWarnings("FieldCanBeLocal")
-    private final double THOUSAND = 1000.0000000;
+    public static final double THOUSAND = 1000.0000000;
 
     private String interval = NOTHING;
 
@@ -95,19 +114,7 @@ public class Analytics extends AppCompatActivity {
     Double start, end;
 
     // Needed to determine the correct graph
-    String group = ""; 
-
-    enum Period{ // The time period, not to be confused with the interval, which is called period on Firebase.
-        TODAY,
-        YESTERDAY,
-        THIS_WEEK,
-        LAST_WEEK,
-        THIS_MONTH,
-        LAST_MONTH,
-        THIS_YEAR,
-        LAST_YEAR,
-        NOTHING
-    }
+    String group = "";
 
     //Activity related
 
@@ -319,12 +326,41 @@ public class Analytics extends AppCompatActivity {
 
     //Support functions
 
-    private void determineDates(Period period){
+    public void pullDone(){
+        Analytics_Selector analytics_selector = (Analytics_Selector) getSupportFragmentManager().findFragmentByTag("SELECTOR");
+        if (analytics_selector != null){
+            analytics_selector.endRefresh();
+        }
+    }
+
+    private void displayGraph(){
+        Bundle extras = new Bundle();
+        extras.putStringArrayList(KEY_IDS, ids);
+        extras.putDouble(KEY_START, start);
+        extras.putDouble(KEY_END, end);
+        extras.putString(KEY_INTERVAL, interval);
+        extras.putString(KEY_GROUP, group);
+        Intent intent = new Intent(this, Analytics_Graph.class).putExtras(extras);
+        startActivity(intent);
+    }
+
+    /**
+     * Using the selected configurations, determine the dates.
+     * @param period represents the time period, must be lower case string that matches one of the finals in the analytics class
+     * @return dateBundle that holds two doubles, one for start date, and the other for the end date.
+     */
+    public static dateBundle determineDates(String period){
+        final String TAG = "Analytics_Creator-dates";
+
+        period = period.toLowerCase();
+
         Calendar startCal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
 
         switch (period){
-            case TODAY:
+            case Analytics.TODAY:
+                Log.i(TAG, "Period is today");
+
                 startCal.set(Calendar.HOUR, startCal.getActualMinimum(Calendar.HOUR));
                 startCal.set(Calendar.MINUTE, startCal.getActualMinimum(Calendar.MINUTE));
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
@@ -335,11 +371,11 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
-                interval = HOURLY;
-
                 break;
 
-            case YESTERDAY:
+            case Analytics.YESTERDAY:
+                Log.i(TAG, "Period is yesterday");
+
                 startCal.roll(Calendar.DATE, -1);
                 startCal.set(Calendar.HOUR, startCal.getActualMinimum(Calendar.HOUR));
                 startCal.set(Calendar.MINUTE, startCal.getActualMinimum(Calendar.MINUTE));
@@ -352,11 +388,11 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
-                interval = HOURLY;
-
                 break;
 
-            case THIS_WEEK:
+            case Analytics.THIS_WEEK:
+                Log.i(TAG, "Period is this week");
+
                 //No accounting for locale I see...
 //                startCal.set(Calendar.DAY_OF_WEEK, startCal.getActualMinimum(Calendar.DAY_OF_WEEK));
                 startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -374,11 +410,11 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
-                interval = DAILY;
-
                 break;
 
-            case LAST_WEEK:
+            case Analytics.LAST_WEEK:
+                Log.i(TAG, "Period is last week");
+
                 startCal.roll(Calendar.WEEK_OF_YEAR, -1);
 //                startCal.set(Calendar.DAY_OF_WEEK, startCal.getActualMinimum(Calendar.DAY_OF_WEEK);
                 startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -395,11 +431,11 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
-                interval = DAILY;
-
                 break;
 
-            case THIS_MONTH:
+            case Analytics.THIS_MONTH:
+                Log.i(TAG, "Period is this month");
+
                 startCal.set(Calendar.WEEK_OF_MONTH, startCal.getActualMinimum(Calendar.WEEK_OF_MONTH));
                 startCal.set(Calendar.HOUR, startCal.getActualMinimum(Calendar.HOUR));
                 startCal.set(Calendar.MINUTE, startCal.getActualMinimum(Calendar.MINUTE));
@@ -412,11 +448,11 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
-                interval = WEEKLY;
-
                 break;
 
-            case LAST_MONTH:
+            case Analytics.LAST_MONTH:
+                Log.i(TAG, "Period is last month");
+
                 startCal.roll(Calendar.MONTH, -1);
                 startCal.set(Calendar.WEEK_OF_MONTH, startCal.getActualMinimum(Calendar.WEEK_OF_MONTH));
                 startCal.set(Calendar.HOUR, startCal.getActualMinimum(Calendar.HOUR));
@@ -431,11 +467,11 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
-                interval = WEEKLY;
-
                 break;
 
-            case THIS_YEAR:
+            case Analytics.THIS_YEAR:
+                Log.i(TAG, "Period is this year");
+
                 startCal.set(Calendar.MONTH, startCal.getActualMinimum(Calendar.MONTH));
                 startCal.set(Calendar.DAY_OF_MONTH, startCal.getActualMinimum(Calendar.DAY_OF_MONTH));
                 startCal.set(Calendar.HOUR, startCal.getActualMinimum(Calendar.HOUR));
@@ -451,11 +487,11 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMinimum(Calendar.MILLISECOND));
                 endCal.roll(Calendar.YEAR, 1);
 
-                interval = MONTHLY;
-
                 break;
 
-            case LAST_YEAR:
+            case Analytics.LAST_YEAR:
+                Log.i(TAG, "Period is last year");
+
                 startCal.roll(Calendar.YEAR, -1);
                 startCal.set(Calendar.MONTH, startCal.getActualMinimum(Calendar.MONTH));
                 startCal.set(Calendar.DAY_OF_MONTH, startCal.getActualMinimum(Calendar.DAY_OF_MONTH));
@@ -471,40 +507,118 @@ public class Analytics extends AppCompatActivity {
                 endCal.set(Calendar.SECOND, endCal.getActualMinimum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMinimum(Calendar.MILLISECOND));
 
-                interval = MONTHLY;
-
                 break;
 
-            case NOTHING:
+            case Analytics.NOTHING:
                 Log.w(TAG, "Period is nothing.");
-                return;
+                return null;
         }
 
         Log.i(TAG, "START: " + startCal.getTime().toString());
         Log.i(TAG, "END: " + endCal.getTime().toString());
 
-        start = (double) startCal.getTimeInMillis();
-        end = (double) endCal.getTimeInMillis();
+        dateBundle result = new dateBundle();
 
-        start /= THOUSAND;
-        end /= THOUSAND;
+        result.startDate = (double) startCal.getTimeInMillis();
+        result.endDate = (double) endCal.getTimeInMillis();
+
+        result.startDate /= Analytics.THOUSAND;
+        result.endDate /= Analytics.THOUSAND;
+
+        return result;
     }
 
-    public void pullDone(){
-        Analytics_Selector analytics_selector = (Analytics_Selector) getSupportFragmentManager().findFragmentByTag("SELECTOR");
-        if (analytics_selector != null){
-            analytics_selector.endRefresh();
+    public static class dateBundle{
+        double startDate, endDate;
+    }
+
+    /**
+     * Takes an entity to make plural or singular
+     * @param plurilizeMe the entity to be worked on.
+     * @param plural true to return a plural, false to return the singular
+     * @return the descriptor as requested.
+     */
+    public static String pluralizor(String plurilizeMe, boolean plural){
+        plurilizeMe = plurilizeMe.toLowerCase();
+        if (plurilizeMe.equals("farm") || plurilizeMe.equals("farms")){
+            if (plural) {
+                return "Farms";
+            } else {
+                return "Farm";
+            }
         }
+        if (plurilizeMe.equals("orchard") || plurilizeMe.equals("orchards")) {
+            if (plural) {
+                return "Orchards";
+            } else {
+                return "Orchard";
+            }
+        }
+        if (plurilizeMe.equals("worker") || plurilizeMe.equals("workers")) {
+            if (plural) {
+                return "Workers";
+            } else {
+                return "Worker";
+            }
+        }
+        if (plurilizeMe.equals("foreman") || plurilizeMe.equals("foremen")) {
+            if (plural) {
+                return "Foremen";
+            } else {
+                return "Foreman";
+            }
+        }
+        return "";
     }
 
-    private void displayGraph(){
-        Bundle extras = new Bundle();
-        extras.putStringArrayList(KEY_IDS, ids);
-        extras.putDouble(KEY_START, start);
-        extras.putDouble(KEY_END, end);
-        extras.putString(KEY_INTERVAL, interval);
-        extras.putString(KEY_GROUP, group);
-        Intent intent = new Intent(this, Analytics_Graph.class).putExtras(extras);
-        startActivity(intent);
+    /**
+     * Turns hourly to hour, or hour to hourly.
+     * @param time hour(ly), week(ly), etc.
+     * @param ly true for hourly, false for hour.
+     * @return hour(ly).
+     */
+    public static String timeConverter(String time, boolean ly){
+        time = time.toLowerCase();
+        if (time.equals("hourly") || time.equals("hour")){
+            if (ly){
+                return "Hourly";
+            }
+            else {
+                return "Hour";
+            }
+        }
+        else if (time.equals("daily") || time.equals("day")){
+            if (ly){
+                return "Daily";
+            }
+            else {
+                return "Day";
+            }
+        }
+        else if (time.equals("weekly") || time.equals("week")){
+            if(ly){
+                return "Weekly";
+            }
+            else{
+                return "Week";
+            }
+        }
+        else if (time.equals("monthly") || time.equals("month")){
+            if (ly){
+                return "Monthly";
+            }
+            else {
+                return "Month";
+            }
+        }
+        else if (time.equals("yearly") || time.equals("year")){
+            if (ly){
+                return "Yearly";
+            }
+            else {
+                return "Year";
+            }
+        }
+        return "";
     }
 }
