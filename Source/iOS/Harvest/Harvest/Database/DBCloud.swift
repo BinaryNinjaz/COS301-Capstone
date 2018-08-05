@@ -166,6 +166,7 @@ enum HarvestCloud {
       ("period", period.identifier),
       ("startDate", startDate.timeIntervalSince1970.description),
       ("endDate", endDate.timeIntervalSince1970.description),
+      ("offset", Calendar.current.timeZone.offset()),
       ("mode", mode.identifier),
       ("uid", HarvestDB.Path.parent)
     ]
