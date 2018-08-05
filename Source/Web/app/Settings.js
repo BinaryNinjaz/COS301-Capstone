@@ -11,9 +11,6 @@ const userID = function() {
 }
 
 var email;
-var organization;
-var firstname;
-var surname;
 
 $(window).bind("load", () => {
   let succ = () => {
@@ -55,16 +52,11 @@ function saveChanges(){
           lastname: document.getElementById("sur").value,
           organization: document.getElementById("org").value
         });  
-   }else{
-       
    }
-    
 }
 
 function deleteAccount(){
    if(confirm("Are you sure you want to delete your account?")){
-       
-   }else{
-       
+       firebase.database().ref('/' + userID()).remove();
    }
 }
