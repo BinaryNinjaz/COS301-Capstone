@@ -589,7 +589,7 @@ function averageOfSessionItem(item, key, days, workingOn) {
 // period=[hourly, daily, weekly, monthly, yearly]
 // startDate=[Double]
 // endDate=[Double]
-// offset=[(+|-)HH:mm]
+// offset=[minutes from GMT]
 // mode=[accumTime, accumEntity, running]
 // uid=[String]
 //
@@ -635,13 +635,13 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     }
     var offset = req.body.offset;
     if (offset === undefined) {
-      offset = "+00:00";
+      offset = "0";
     }
     const isAccumTime = mode === 'accumTime';
     const isAccumEntity = mode === 'accumEntity';
     const isRunning = mode === 'running';
-    const sd = moment(new Date(startDate * 1000)).utcOffset(offset).toDate();
-    const ed = moment(new Date(endDate * 1000)).utcOffset(offset).toDate();
+    const sd = moment(new Date(startDate * 1000)).add(+offset, 'm').toDate();
+    const ed = moment(new Date(endDate * 1000)).add(+offset, 'm').toDate();
     
     const sameY = isSameYear(sd, ed);
     const sameM = isSameMonth(sd, ed);

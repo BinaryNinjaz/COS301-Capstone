@@ -251,7 +251,7 @@ enum HarvestCloud {
     mode: Mode,
     completion: @escaping (Any) -> Void
   ) {
-    let timeZone = Calendar.current.timeZone.offset()
+    let timeZone = "120" // Calendar.current.timeZone.offset()
     
     var args = [
       ("groupBy", grouping.description),
@@ -293,7 +293,7 @@ func timeGraphSessionsWorker() {
   let e = Date().thisMonth().1
   let g = HarvestCloud.GroupBy.worker
   let p = HarvestCloud.TimePeriod.daily
-  
+  print(s, e)
   let ids = [
     "-LBykXujU0Igjzvq5giB", // Peter Parker 3
     "-LBykjpjTy2RrDApKGLy", // Barry Allen 7
