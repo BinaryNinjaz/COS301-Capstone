@@ -273,9 +273,6 @@ public class Analytics_Creator extends Fragment{
             tokens = upToDateEditText.getText().toString().split("/");
             calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
             bundle.putDouble(Analytics.KEY_END, calendar.getTimeInMillis() / THOUSAND);
-
-            bundle.putString(Analytics.KEY_START, fromDateEditText.getText().toString());
-            bundle.putString(Analytics.KEY_END, upToDateEditText.getText().toString());
         }
 
         bundle.putString(Analytics.KEY_INTERVAL, intervalSpinner.getSelectedItem().toString().toLowerCase());

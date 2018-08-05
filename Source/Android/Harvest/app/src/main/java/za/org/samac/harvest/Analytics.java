@@ -2,6 +2,7 @@ package za.org.samac.harvest;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.icu.util.ULocale;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -245,8 +246,8 @@ public class Analytics extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(on);
     }
 
-    //Fragment display
 
+    //Fragment display
     private void showMain(){
         //Ask the user to pick a time and group filter
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -325,8 +326,8 @@ public class Analytics extends AppCompatActivity {
         state = State.CREATE;
     }
 
-    //Button handling
 
+    //Button handling
     public void anal_main_buttonHandler(View v){
         switch (v.getId()){
             //Create Custom Graph
@@ -362,7 +363,8 @@ public class Analytics extends AppCompatActivity {
                 Bundle bundle = analytics_creator.getConfigurations();
                 if (bundle != null){
                     group = bundle.getString(KEY_GROUP);
-                    if (!group.equals(data.getNamedCategory(lastCategory))){
+                    //noinspection ConstantConditions
+                    if (!group.equals(getGroupFromCategory(lastCategory))){
                         ids.clear();
                     }
                     period = bundle.getString(KEY_PERIOD);
@@ -377,7 +379,8 @@ public class Analytics extends AppCompatActivity {
                         end = dateBundle.endDate;
                     }
                     else {
-
+                        start = bundle.getDouble(KEY_START);
+                        end = bundle.getDouble(KEY_END);
                     }
 
                     displayGraph();
@@ -390,8 +393,8 @@ public class Analytics extends AppCompatActivity {
         }
     }
 
-    //Fragment support
 
+    //Fragment support
     public void anal_checkEvent(View v){
         CheckBox box = (CheckBox) v;
         if (box.isChecked()){
@@ -406,8 +409,8 @@ public class Analytics extends AppCompatActivity {
         }
     }
 
-    //Support functions
 
+    //Support functions
     public void pullDone(){
         Analytics_Selector analytics_selector = (Analytics_Selector) getSupportFragmentManager().findFragmentByTag("SELECTOR");
         if (analytics_selector != null){
@@ -486,9 +489,7 @@ public class Analytics extends AppCompatActivity {
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
-//                endCal.set(Calendar.DAY_OF_WEEK, endCal.getActualMaximum(Calendar.DAY_OF_WEEK));
                 endCal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-//                endCal.roll(Calendar.WEEK_OF_YEAR, 1);
                 endCal.set(Calendar.HOUR, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
@@ -500,15 +501,12 @@ public class Analytics extends AppCompatActivity {
                 Log.i(TAG, "Period is last week");
 
                 startCal.roll(Calendar.WEEK_OF_YEAR, -1);
-//                startCal.set(Calendar.DAY_OF_WEEK, startCal.getActualMinimum(Calendar.DAY_OF_WEEK);
                 startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                 startCal.set(Calendar.HOUR, startCal.getActualMinimum(Calendar.HOUR));
                 startCal.set(Calendar.MINUTE, startCal.getActualMinimum(Calendar.MINUTE));
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
-                endCal.roll(Calendar.WEEK_OF_YEAR, -2);
-//                endCal.set(Calendar.DAY_OF_WEEK, endCal.getActualMaximum(Calendar.DAY_OF_WEEK));
                 endCal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
                 endCal.set(Calendar.HOUR, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
@@ -613,9 +611,9 @@ public class Analytics extends AppCompatActivity {
     }
 
     public static class DateBundle{
+
         double startDate, endDate;
     }
-
     /**
      * Takes an entity to make plural or singular
      * @param plurilizeMe the entity to be worked on.
@@ -702,6 +700,20 @@ public class Analytics extends AppCompatActivity {
             else {
                 return "Year";
             }
+        }
+        return "";
+    }
+
+    private String getGroupFromCategory(Category category){
+        switch (category){
+            case WORKER:
+                return WORKER;
+            case FOREMAN:
+                return FOREMAN;
+            case ORCHARD:
+                return ORCHARD;
+            case FARM:
+                return FARM;
         }
         return "";
     }
