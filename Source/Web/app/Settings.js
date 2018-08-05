@@ -37,18 +37,12 @@ function adminRef() {
 function initPage(){
     if (user() !== null) {
         email = user().email;
-        document.getElementById("email").value = email;
         const ref = adminRef();
         ref.once('value').then((snapshot) => {
-            const val = snapshot.val();
-            //console.log(snapshot);
-            //console.log(snapshot.val());
-            organization = val.organization;
-            document.getElementById("org").value = organization;
-            firstname = val.firstname;
-            document.getElementById("first").value = firstname;
-            surname = val.lastname;
-            document.getElementById("sur").value = surname;
+            document.getElementById("email").value = email;
+            document.getElementById("org").value = val.organization;
+            document.getElementById("first").value = val.firstname;
+            document.getElementById("sur").value = val.lastname;
         });
     }
     
@@ -56,9 +50,11 @@ function initPage(){
 
 function saveChanges(){
    if(confirm("Are you sure you want to save your account changes?")){
-    firebase.database().ref('/' + userID() +"/admin/" + id).update({   
-        
-    });  
+        firebase.database().ref('/' + userID() +"/admin/" + id).update({   
+          firstname: document.getElementById("first").value,
+          lastname: document.getElementById("sur").value,
+          organization: document.getElementById("org").value
+        });  
    }else{
        
    }
