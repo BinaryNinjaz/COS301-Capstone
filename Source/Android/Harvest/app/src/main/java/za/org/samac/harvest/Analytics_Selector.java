@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +38,9 @@ public class Analytics_Selector extends Fragment{
     private Data data;
     private Category category;
 
+    private Boolean showProceed;
+    private List<String> ids;
+
     public Analytics_Selector(){
         //Required empty public constructor
     }
@@ -57,6 +61,10 @@ public class Analytics_Selector extends Fragment{
             }
         });
 
+        if (!showProceed){
+            view.findViewById(R.id.anal_select_proceed).setVisibility(View.GONE);
+        }
+
         recyclerView = getView().findViewById(R.id.anal_select_recycler);
 
         recyclerView.setHasFixedSize(true);
@@ -68,9 +76,15 @@ public class Analytics_Selector extends Fragment{
             swipeRefreshLayout.setRefreshing(true);
         }
         else {
-            adapter = new Analytics_Selector_Adapter(data, category);
+            adapter = new Analytics_Selector_Adapter(data, category, ids);
             recyclerView.setAdapter(adapter);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        showProceed = null;
+        super.onDestroyView();
     }
 
     public void setDataAndCategory(Data data, Category category){
@@ -84,13 +98,16 @@ public class Analytics_Selector extends Fragment{
 
     public void endRefresh(){
         swipeRefreshLayout.setRefreshing(false);
-        adapter = new Analytics_Selector_Adapter(data, category);
+        adapter = new Analytics_Selector_Adapter(data, category, ids);
         recyclerView.setAdapter(adapter);
     }
 
-    public void selectNoneError(){
-        Snackbar snackbar = Snackbar.make(recyclerView, getResources().getText(R.string.anal_selector_selectNone), 2000);
-        snackbar.show();
+    public void showProceed(boolean show){
+        showProceed = show;
+    }
+
+    public void setIDs(List<String> ids){
+        this.ids = ids;
     }
 }
 
@@ -136,20 +153,30 @@ class Analytics_Selector_Adapter extends RecyclerView.Adapter<Analytics_Selector
         }
     }
 
-    public Analytics_Selector_Adapter(Data data, Category category){
+    public Analytics_Selector_Adapter(Data data, Category category, List<String> ids){
         items = new Vector<>();
         if (category == Category.ORCHARD){
             items.addAll(data.getOrchards());
         }
+        else if (category == Category.FARM){
+            items.addAll(data.getFarms());
+        }
         else {
-            items.addAll(data.getWorkers());
-            for(int i = 0; i < items.size(); i++){
-                Worker worker = (Worker) items.get(i);
-                if (category == Category.FOREMAN && worker.getWorkerType() == WorkerType.WORKER){
-                    items.remove(i);
+            List<Worker> workers = data.getWorkers();
+            for (Worker worker : workers){
+                if (worker.getWorkerType() == WorkerType.FOREMAN && category == Category.FOREMAN){
+                    items.add(worker);
                 }
-                else if (category == Category.WORKER && worker.getWorkerType() == WorkerType.FOREMAN){
-                    items.remove(i);
+                else if(worker.getWorkerType() == WorkerType.WORKER && category == Category.WORKER){
+                    items.add(worker);
+                }
+            }
+        }
+        for (DBInfoObject object : items){
+            for (String id : ids){
+                if (id.equals(object.ID)){
+                    object.checked = true;
+                    break;
                 }
             }
         }
@@ -165,6 +192,9 @@ class Analytics_Selector_Adapter extends RecyclerView.Adapter<Analytics_Selector
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.checkBox.setTag(items.get(position).getId());
         holder.checkBox.setText(items.get(position).toString());
+        if (items.get(position).checked){
+            holder.checkBox.setChecked(true);
+        }
     }
 
     @Override

@@ -27,36 +27,16 @@ import za.org.samac.harvest.util.Data;
 /**
  * This activity handles all of the setup of getting information before calling on the appropriate graph.
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class Analytics extends AppCompatActivity {
-    /*
-     The process is to show the initial monstrosity
-     Once a time period has been selected, set the content view to the selector.
-     Once the selector indicates that a selection has been made, call on the appropriate graph, and communicate the choices there.
-
-     If a saved graph is chosen, then use the tag to read its content from SharedPreferences, and use that to call and communicate with the appropriate graph.
-
-     If a new graph is to be created, then call the new graph activity, and let that handle everything.
-     */
-
-    /*
-     The work flows are as follows:
-      main -> selector -> graph
-      main -> creator -> graph
-      main (chooses saved graph) -> graph
-
-     That means:
-      no circular navigation
-     */
 
     private final android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
     private BottomNavigationView bottomNavigationView;
 
-    @SuppressWarnings("FieldCanBeLocal")
     private final String TAG = "Analytics";
 
     //Various Fragments
-    @SuppressWarnings("FieldCanBeLocal")
     private Analytics_Main analytics_main;
     private Analytics_Selector analytics_selector;
     private Analytics_Creator analytics_creator;
@@ -100,11 +80,21 @@ public class Analytics extends AppCompatActivity {
     public static final String ACCUMULATION_NONE = "running";
     public static final String ACCUMULATION_ENTITY = "accumEntity";
     public static final String ACCUMULATION_INTERVAL = "accumTime";
-    
-    @SuppressWarnings("FieldCanBeLocal")
+
     public static final double THOUSAND = 1000.0000000;
 
     private String interval = NOTHING;
+    private String accumulator = NOTHING;
+    private String period = NOTHING;
+
+    private enum State{
+        MAIN,
+        CREATE,
+        GRAPH,
+        SELECTOR_THROUGH_MAIN,
+        SELECTOR_THROUGH_CREATE
+    };
+    private State state;
 
     // For the selector.
     private Data data;
@@ -114,7 +104,9 @@ public class Analytics extends AppCompatActivity {
     Double start, end;
 
     // Needed to determine the correct graph
-    String group = "";
+    String group = NOTHING;
+
+    Category lastCategory = Category.NOTHING;
 
     //Activity related
 
@@ -200,11 +192,49 @@ public class Analytics extends AppCompatActivity {
                 finish();
                 return true;
             case android.R.id.home:
-                showMain();
+                if (state == State.SELECTOR_THROUGH_CREATE){
+                    captureSelections();
+                }
+                else {
+                    showMain();
+                }
                 return true;
             default:
                 super.onOptionsItemSelected(item);
                 return true;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        captureSelections();
+        super.onBackPressed();
+    }
+
+    private void captureSelections(){
+        if (state == State.SELECTOR_THROUGH_CREATE){
+            Category category;
+            switch (group){
+                case FARM:
+                    category = Category.FARM;
+                    break;
+                case ORCHARD:
+                    category = Category.ORCHARD;
+                    break;
+                default:
+                    category = Category.WORKER;
+                    break;
+            }
+            StringBuilder builder = new StringBuilder();
+            for (String id : ids){
+                builder.append(data.toStringID(id, category)).append(", ");
+            }
+            if (builder.length() > 2) {
+                builder.delete(builder.length() - 2, builder.length()).append(".");
+            }
+            getSupportFragmentManager().popBackStack();
+            analytics_creator.setSelectedItemsText(builder.toString());
+            state = State.CREATE;
         }
     }
 
@@ -216,8 +246,6 @@ public class Analytics extends AppCompatActivity {
 
     private void showMain(){
         //Ask the user to pick a time and group filter
-        toggleUpButton(false);
-
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         //empty the back stack
@@ -231,11 +259,12 @@ public class Analytics extends AppCompatActivity {
         fragmentTransaction.replace(R.id.analMainPart, analytics_main, "MAIN");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        toggleUpButton(false);
+        state = State.MAIN;
     }
 
     private void showSelector(){
         //Ask the user to select which things want to be displayed in the graph
-        toggleUpButton(true);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -255,13 +284,31 @@ public class Analytics extends AppCompatActivity {
                 temp = Category.FOREMAN;
                 break;
         }
+        if (temp != lastCategory){
+            ids.clear();
+            lastCategory = temp;
+        }
         analytics_selector.setDataAndCategory(this.data, temp);
+        analytics_selector.setIDs(ids);
         fragmentTransaction.replace(R.id.analMainPart, analytics_selector, "SELECTOR");
+        if (state == State.CREATE) {
+            analytics_selector.showProceed(false);
+        }
+        else {
+            analytics_selector.showProceed(true);
+        }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        toggleUpButton(true);
+        if (state == State.MAIN){
+            state = State.SELECTOR_THROUGH_MAIN;
+        }
+        else {
+            state = State.SELECTOR_THROUGH_CREATE;
+        }
     }
 
-    private void showCustom(){
+    private void showCreate(){
         toggleUpButton(true);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -271,6 +318,8 @@ public class Analytics extends AppCompatActivity {
         fragmentTransaction.replace(R.id.analMainPart, analytics_creator, "CREATOR");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+        state = State.CREATE;
     }
 
     //Button handling
@@ -280,27 +329,46 @@ public class Analytics extends AppCompatActivity {
             //Create Custom Graph
 
             case R.id.anal_choose_cus_make:
-                showCustom();
+                showCreate();
                 break;
         }
     }
 
     public void anal_selector_buttonHandler(View v){
-        //At this point, we have everything we need: group, start date, end date, and ids to show.
         switch (v.getId()){
             case R.id.anal_select_proceed:
-                if (ids.size() < 1){
-                    analytics_selector.selectNoneError();
-                }
-                else {
-                    displayGraph();
-                }
+                displayGraph();
                 break;
         }
     }
 
     public void anal_creator_buttonHandler(View v){
+        switch (v.getId()){
+            case R.id.anal_create_selectionButton:
 
+                //They want to select things.
+                group = analytics_creator.getGroup();
+                showSelector();
+                analytics_creator.notifySelectionMade();
+
+                return;
+
+            case R.id.anal_create_dispButton:
+
+                if (!data.getNamedCategory().toLowerCase().equals(analytics_creator.getGroup())){
+                    ids.clear();
+                }
+
+                //Get the bundle of joy.
+
+                return;
+
+            case R.id.anal_create_saveButton:
+
+                if (!data.getNamedCategory().toLowerCase().equals(analytics_creator.getGroup())){
+                    ids.clear();
+                }
+        }
     }
 
     //Fragment support
@@ -311,11 +379,6 @@ public class Analytics extends AppCompatActivity {
             ids.add(box.getTag().toString());
         }
         else {
-//            for (String id: ids){
-//                if (id.equals(box.getTag().toString())){
-//                    ids.remove(id);
-//                }
-//            }
             for (int i = 0; i < ids.size(); i++){
                 if (ids.get(i).equals(box.getTag().toString())){
                     ids.remove(i);

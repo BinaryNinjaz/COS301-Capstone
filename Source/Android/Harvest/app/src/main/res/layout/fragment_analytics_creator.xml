@@ -88,7 +88,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            style="@style/EditText2"
             android:hint="@string/anal_create_from"
             android:inputType="none"
             android:focusable="false"
@@ -99,7 +98,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            style="@style/EditText2"
             android:hint="@string/anal_create_upTo"
             android:inputType="none"
             android:focusable="false"
@@ -185,7 +183,7 @@
         android:background="@color/white">
 
         <Button
-            android:id="@+id/anal_create_disp"
+            android:id="@+id/anal_create_dispButton"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="wrap_content"
@@ -196,7 +194,7 @@
             android:onClick="anal_creator_buttonHandler" />
 
         <Button
-            android:id="@+id/anal_create_save"
+            android:id="@+id/anal_create_saveButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"

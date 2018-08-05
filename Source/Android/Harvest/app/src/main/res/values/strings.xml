@@ -221,7 +221,6 @@
     <string name="anal_farm_tit">Farm Comparison</string>
 
     <!--Selector-->
-    <string name="anal_selector_selectNone">You must select at least one item to display.</string>
 
     <!--Custom-->
     <string name="anal_create_make">Make New Graph</string>
@@ -256,10 +255,11 @@
     </string-array>
     <string name="anal_create_from">From Date</string>
     <string name="anal_create_upTo">Up To Date</string>
+    <string name="anal_create_dateError">Set this, or change the time period.</string>
     <string name="anal_create_accumulation">Accumulation</string>
     <string name="anal_create_accumulation_none">None</string>
     <string name="anal_create_accumulation_entity">By %1$s</string>
-    <string name="anal_create_accumulation_interval">Interval</string>
+    <string name="anal_create_accumulation_interval">By %1$s</string>
 
     <!--1: entity, lowercase, singular.-->
     <string name="anal_create_accumulation_desc_none">No accumulation will take place, a regular graph will be displayed whereby each %1$s will have its own line.</string>

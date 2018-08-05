@@ -1,7 +1,12 @@
 package za.org.samac.harvest;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +14,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.Calendar;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class Analytics_Creator extends Fragment{
@@ -31,6 +39,11 @@ public class Analytics_Creator extends Fragment{
     //Others
     private String accumulationSelection = Analytics.NOTHING;
     private String entitySelection = Analytics.NOTHING;
+
+    private String selectedItemsText;
+
+    private int lastSelection, lastAcceptanceSelection;
+
 
     public Analytics_Creator(){
         //Required empty public constructor
@@ -52,6 +65,7 @@ public class Analytics_Creator extends Fragment{
         selectorButton = view.findViewById(R.id.anal_create_selectionButton);
 
         compareSelectionTextView = view.findViewById(R.id.anal_create_selectionDisplayTextView);
+        compareSelectionTextView.setVisibility(View.VISIBLE);
         accumulatorDescriptionTextView = view.findViewById(R.id.anal_create_accumulator_description);
 
         fromDateEditText = view.findViewById(R.id.anal_create_from);
@@ -75,9 +89,6 @@ public class Analytics_Creator extends Fragment{
         //Set selector button text
         setSelectorButtonTitle("farm");
 
-        //Set selected items text
-        setSelectedItemsText("");
-
         //Set default accumulator selection
         accumulatorRadioGroup.check(R.id.anal_create_accumulator_radio_none);
         accumulationSelection = Analytics.ACCUMULATION_NONE;
@@ -91,8 +102,15 @@ public class Analytics_Creator extends Fragment{
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 @SuppressWarnings("ConstantConditions") String entity = Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase();
                 setSelectorButtonTitle(entity);
-                setEntityAccumulationTitle(entity);
+                updateAccumulatorTitles();
                 updateAccumulatorHint();
+                lastSelection = position;
+                if (lastAcceptanceSelection == lastSelection){
+                    compareSelectionTextView.setVisibility(View.VISIBLE);
+                }
+                else {
+                    compareSelectionTextView.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -117,6 +135,7 @@ public class Analytics_Creator extends Fragment{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 updateAccumulatorHint();
+                updateAccumulatorTitles();
             }
 
             @Override
@@ -156,10 +175,17 @@ public class Analytics_Creator extends Fragment{
                 updateAccumulatorHint();
             }
         });
+
+        compareSelectionTextView.setText(selectedItemsText);
+    }
+
+    @Override
+    public void onDestroyView() {
+        selectedItemsText = "";
+        super.onDestroyView();
     }
 
     //UI
-
     private void setSelectorButtonTitle(String entity){
         selectorButton.setText(getString(R.string.anal_create_selectorButton, Analytics.pluralizor(entity, true)));
     }
@@ -169,7 +195,7 @@ public class Analytics_Creator extends Fragment{
      * @param text The text itself, so must be formatted already.
      */
     public void setSelectedItemsText(String text){
-        compareSelectionTextView.setText(text);
+        selectedItemsText = text;
     }
 
     private void updateAccumulatorHint(){
@@ -185,8 +211,9 @@ public class Analytics_Creator extends Fragment{
         }
     }
 
-    private void setEntityAccumulationTitle(String entity){
-        ((RadioButton) getView().findViewById(R.id.anal_create_accumulator_radio_entity)).setText(getString(R.string.anal_create_accumulation_entity, Analytics.pluralizor(entity, false)));
+    private void updateAccumulatorTitles(){
+        ((RadioButton) getView().findViewById(R.id.anal_create_accumulator_radio_entity)).setText(getString(R.string.anal_create_accumulation_entity, Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), false)));
+        ((RadioButton) getView().findViewById(R.id.anal_create_accumulator_radio_interval)).setText(getString(R.string.anal_create_accumulation_interval, Analytics.timeConverter(intervalSpinner.getSelectedItem().toString(), false)));
     }
 
     public void toggleDates(boolean on){
@@ -203,13 +230,14 @@ public class Analytics_Creator extends Fragment{
     //Fragment > Activity Communication
 
     public String getGroup(){
-        return compareSpinner.getSelectedItem().toString();
+        return Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase();
     }
 
     /**
      * Get a bundle consisting of all of the configurations that have been selected by the user, the keys match the strings in the Analytics class.
      * The bundle is constructed as follows (Key : Data Type : Description):
-     *  KEY_GROUP : String : Matches a static from Analytics class
+     *  KEY_GROUP : String : Matches a static from Analytics class. THIS WILL BE "" IF THERE WAS AN ERROR. It may be set retroactively, so other
+     *   pairs will be set, check it first!
      *  KEY_PERIOD : String : Matches a static from Analytics class
      *  KEY_START : String : The selected start date, only occurs if the period is set to BETWEEN_DATES, its format is DD/MM/YYYY
      *  KEY_END : String : The selected end date, only occurs if the period is set to BETWEEN_DATES, its format is DD/MM/YYYY
@@ -219,12 +247,18 @@ public class Analytics_Creator extends Fragment{
      */
     public Bundle getConfigurations(){
         Bundle bundle = new Bundle();
-        bundle.putString(Analytics.KEY_GROUP, compareSpinner.getSelectedItem().toString().toLowerCase());
+        bundle.putString(Analytics.KEY_GROUP, getGroup());
 
         String period = periodSpinner.getSelectedItem().toString().toLowerCase();
         bundle.putString(Analytics.KEY_PERIOD, period);
 
         if (period.equals(Analytics.BETWEEN_DATES)){
+            if (fromDateEditText.getText().toString().equals("")){
+                fromDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
+            }
+            if (upToDateEditText.getText().toString().equals("")){
+                upToDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
+            }
             bundle.putString(Analytics.KEY_START, fromDateEditText.getText().toString());
             bundle.putString(Analytics.KEY_END, upToDateEditText.getText().toString());
         }
@@ -235,12 +269,55 @@ public class Analytics_Creator extends Fragment{
         return bundle;
     }
 
+    //Activity > Fragment Communication
+
+    public void notifySelectionMade(){
+        lastAcceptanceSelection = lastSelection;
+    }
+
     //Support Functions
 
-    private void showDateSpinner(View v){
-        EditText editText = (EditText) v;
-        String text = editText.getText().toString();
+    public static class AnalDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+        EditText editText;
 
-        if (text)
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            int year, month, day;
+            String text = editText.getText().toString();
+
+            if (text.equals("")){
+                //No date set, so set for today
+                Calendar calendar = Calendar.getInstance();
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+            }
+            else {
+                String[] tokens = text.split("/");
+                day = Integer.parseInt(tokens[0]);
+                month = Integer.parseInt(tokens[1]) - 1;
+                year = Integer.parseInt(tokens[2]);
+            }
+
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        @SuppressLint("SetTextI18n")
+        public void onDateSet(DatePicker view, int year, int month, int day){
+            int betterMonth = month + 1;
+            editText.setText(day + "/" + betterMonth + "/" + year);
+        }
+
+        public void setEditText(EditText editText){
+            this.editText = editText;
+        }
+    }
+
+    public void showDateSpinner(View v){
+        EditText editText = (EditText) v;
+        AnalDatePickerFragment analDatePickerFragment = new AnalDatePickerFragment();
+        analDatePickerFragment.setEditText(editText);
+        analDatePickerFragment.show(getFragmentManager(), "DATEPICKER");
     }
 }
