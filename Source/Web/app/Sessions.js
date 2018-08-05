@@ -35,6 +35,8 @@ function yieldsRef() {
 
 /* This executes when the page loades */
 $(window).bind("load", () => {
+	var divHide = document.getElementById('loader');
+	divHide.style.visibility = "hidden";
   let succ = () => {
     initPage();
     initMap();
@@ -95,9 +97,13 @@ function sessionForKey(key) {
 function sessionsListLoader(loading) {
   var sessionsListHolder = document.getElementById("sessionsListLoader");
   if (!loading) {
+	var divHide = document.getElementById('loader');
+	divHide.style.visibility = "hidden";
 	updateSpiner(false);
     sessionsListHolder.innerHTML = "<button type='button' class='btn btn-secoundary' style='margin: 4px' onclick='newPage()'>Load More Sessions</button>";
   } else {
+	var divHide = document.getElementById('loader');
+	divHide.style.visibility = "visible";
 	updateSpiner(true);
     /*sessionsListHolder.innerHTML = "<h2>Loading Sessions...</h2>";*/
   }
@@ -284,7 +290,7 @@ function updateSpiner(shouldSpin) {
 	lines: 8, // The number of lines to draw
 	length: 37, // The length of each line
 	width: 10, // The line thickness
-	radius: 35, // The radius of the inner circle
+	radius: 20, // The radius of the inner circle
 	scale: 1, // Scales overall size of the spinner
 	corners: 1, // Corner roundness (0..1)
 	color: '#4CAF50', // CSS color or array of colors
@@ -301,10 +307,14 @@ function updateSpiner(shouldSpin) {
 	position: 'absolute' // Element positioning
   };
   
-  var target = document.getElementById("sessionsListLoader"); //This is where the spinner is gonna show
+  var target = document.getElementById("loader"); //This is where the spinner is gonna show
   if (shouldSpin) {
+	  target.style.position = "absolute";
+	  target.style.top = "100px";
+	  target.style.left = "100px";
 	spinner = new Spinner(opts).spin(target); //The class and corresponding css are defined in spin.js and spin.css
   } else {
+	  //target.style.top = "0px";
 	spinner.stop(); //This line stops the spinner. 
 	spinner = null;
   }
