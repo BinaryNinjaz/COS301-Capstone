@@ -4,28 +4,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/anal_create_compType"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        />
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/anal_cus_compsTitle"
+            android:layout_marginStart="8dp"
+            style="@style/TextAppearance.AppCompat.Body1"/>
+
+        <Spinner
+            android:id="@+id/anal_create_compSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/anal_create_selection"
+        android:id="@+id/anal_create_selectionButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@color/white"
-        android:textColor="@color/black"
-        android:onClick="anal_creator_buttonHandler"/>
+        android:textColor="@color/blueLinks"
+        android:text="Select Things to Compare"
+        style="@style/Widget.AppCompat.ButtonBar"
+        android:onClick="anal_creator_buttonHandler" />
+
+    <TextView
+        android:id="@+id/anal_create_selectionDisplayTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Apple Farm, Sushi Farm, Swords Farm, Pointless Farm, Deadly Farm, Power Farm." />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/anal_cus_det"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/colorPrimary"
+        style="@style/TextAppearance.AppCompat.Menu"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -37,9 +63,30 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/anal_cus_timeTitle"
+            android:text="@string/anal_cus_periodTitle"
             android:layout_marginStart="8dp"
-            style="@style/TextAppearance.AppCompat.Menu"/>
+            style="@style/TextAppearance.AppCompat.Body1"/>
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/anal_cus_intervalTitle"
+            android:layout_marginStart="8dp"
+            style="@style/TextAppearance.AppCompat.Body1"/>
 
         <Spinner
             android:layout_width="0dp"
@@ -49,27 +96,89 @@
     </LinearLayout>
 
 
-    <EditText
-        android:id="@+id/anal_cus_from"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/EditText"
-        android:hint="@string/anal_cus_from"
-        android:inputType="none"
-        android:focusable="false"
-        android:clickable="true"
-        android:onClick="anal_creator_buttonHandler"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
 
-    <EditText
-        android:id="@+id/anal_cus_upTo"
+        <EditText
+            android:id="@+id/anal_cus_from"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/EditText2"
+            android:hint="@string/anal_cus_from"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:onClick="anal_creator_buttonHandler"/>
+
+        <EditText
+            android:id="@+id/anal_cus_upTo"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/EditText2"
+            android:hint="@string/anal_cus_upTo"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:onClick="anal_creator_buttonHandler"/>
+
+    </LinearLayout>
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/EditText"
-        android:hint="@string/anal_cus_upTo"
-        android:inputType="none"
-        android:focusable="false"
-        android:clickable="true"
-        android:onClick="anal_creator_buttonHandler"/>
+        android:text="@string/anal_cus_accumulation"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        style="@style/TextAppearance.AppCompat.Menu"
+        android:textColor="@color/colorPrimary"/>
+    
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
+        
+        <RadioButton
+            android:id="@+id/anal_cus_accumulator_radio_none"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/anal_cus_accumulation_none"
+            android:onClick="anal_creator_buttonHandler" />
+
+        <RadioButton
+            android:id="@+id/anal_cus_accumulator_radio_entity"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="By Entity"
+            android:onClick="anal_creator_buttonHandler"/>
+
+        <RadioButton
+            android:id="@+id/anal_cus_accumulator_radio_interval"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/anal_cus_accumulation_interval"
+            android:onClick="anal_creator_buttonHandler"/>
+        
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/anal_cus_accumulator_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/anal_cus_accumulation_desc_none"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        style="@style/TextAppearance.AppCompat.Caption"/>
 
     <Button
         android:id="@+id/anal_cus_disp"
@@ -78,6 +187,7 @@
         android:text="@string/anal_cus_disp"
         android:background="@color/white"
         android:textColor="@color/blueLinks"
-        android:onClick="anal_creator_buttonHandler"/>
+        android:onClick="anal_creator_buttonHandler"
+        android:layout_marginTop="24dp"/>
 
 </LinearLayout>

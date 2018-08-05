@@ -229,15 +229,27 @@
     <string name="anal_cus_foreSel">Foreman Selection</string>
     <string name="anal_cus_det">Details</string>
     <string name="anal_selector_selectNone">You must select at least one item to display.</string>
-    <string name="anal_cus_compsTitle">Select what to compare</string>
+    <string name="anal_cus_compsTitle">Compare</string>
     <string-array name="anal_cus_comps">
-        <item>Farm</item>
-        <item>Worker</item>
-        <item>Orchard</item>
-        <item>Foreman</item>
+        <item>Farms</item>
+        <item>Workers</item>
+        <item>Orchards</item>
+        <item>Foremen</item>
     </string-array>
-    <string name="anal_cus_timeTitle">Time Interval</string>
-    <string-array name="anal_cus_timeChoose">
+    <string name="anal_cus_periodTitle">Time Period</string>
+    <string-array name="anal_cus_periodChoose">
+        <item>Between Dates</item>
+        <item>Yesterday</item>
+        <item>Today</item>
+        <item>This Week</item>
+        <item>Last Week</item>
+        <item>This Month</item>
+        <item>Last Month</item>
+        <item>This Year</item>
+        <item>Last Year</item>
+    </string-array>
+    <string name="anal_cus_intervalTitle">Time Interval</string>
+    <string-array name="anal_cus_intervalChoose">
         <item>Hourly</item>
         <item>Daily</item>
         <item>Weekly</item>
@@ -245,7 +257,17 @@
         <item>Yearly</item>
     </string-array>
     <string name="anal_cus_from">From Date</string>
-    <string name="anal_cus_upTo">Up to Date</string>
+    <string name="anal_cus_upTo">Up To Date</string>
+    <string name="anal_cus_accumulation">Accumulation</string>
+    <string name="anal_cus_accumulation_none">None</string>
+    <string name="anal_cus_accumulation_farm">By Farm</string>
+    <string name="anal_cus_accumulation_orchard">By Orchard</string>
+    <string name="anal_cus_accumulation_worker">By Worker</string>
+    <string name="anal_cus_accumulation_foreman">By Foreman</string>
+    <string name="anal_cus_accumulation_interval">Interval</string>
+    <string name="anal_cus_accumulation_desc_none">Boo</string>
+    <string name="anal_cus_accumulation_desc_entity">Fucking</string>
+    <string name="anal_cus_accumulation_desc_interval">Hoo</string>
     <string name="anal_cus_disp">Display Stats</string>
 
     <!--Graphs-->
