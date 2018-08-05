@@ -20,6 +20,7 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
   var endDate: Date?
   var period: HarvestCloud.TimePeriod?
   var grouping: HarvestCloud.GroupBy = .worker
+  var mode: HarvestCloud.Mode?
   
   var selected: [EntityItem] = []
   
@@ -39,19 +40,19 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
         row.title = entity.description
         row.selectableValue = entity
         row.value = nil
-        }.onChange { row in
-          if let sel = row.value {
-            guard let idx = self.selected.index(of: entity) else {
-              self.selected.append(entity)
-              return
-            }
-            self.selected[idx] = sel
-          } else {
-            guard let idx = self.selected.index(of: entity) else {
-              return
-            }
-            self.selected.remove(at: idx)
+      }.onChange { row in
+        if let sel = row.value {
+          guard let idx = self.selected.index(of: entity) else {
+            self.selected.append(entity)
+            return
           }
+          self.selected[idx] = sel
+        } else {
+          guard let idx = self.selected.index(of: entity) else {
+            return
+          }
+          self.selected.remove(at: idx)
+        }
       }
     }
     
@@ -115,20 +116,27 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
             }
           })
         }
-        print(svc.stat as Any)
         self.navigationController?.pushViewController(svc, animated: true)
     }
     
-    form
-      +++ selectionSection
-    
-    if drange.count > 1 {
-      form +++ Section("Time Period") <<< periodSelection
+    if selectionSection.count > 0 {
+      form
+        +++ selectionSection
+      
+      if drange.count > 1 {
+        form +++ Section("Time Period") <<< periodSelection
+      }
+      
+      form
+        +++ Section()
+        <<< showStats
+    } else {
+      form
+        +++ Section()
+        <<< LabelRow { row in
+          row.title = "No \(grouping.title)'s To Compare"
+        }
     }
-    
-    form
-      +++ Section()
-      <<< showStats
   }
   
   override func tearDown() {

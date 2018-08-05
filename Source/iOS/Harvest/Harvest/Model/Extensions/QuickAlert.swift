@@ -13,13 +13,13 @@ extension SCLAlertView {
   convenience init(
     appearance: SCLAppearance,
     options: [(display: String, uid: String)],
-    completion: @escaping (String) -> Void
+    completion: @escaping (String, String) -> Void
   ) {
     self.init(appearance: appearance)
     
     for option in options {
       addButton(option.display) {
-        completion(option.uid)
+        completion(option.uid, option.display)
       }
     }
   }

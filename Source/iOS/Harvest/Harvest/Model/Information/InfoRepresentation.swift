@@ -9,6 +9,7 @@
 // swiftlint:disable function_body_length
 import Eureka
 import SCLAlertView
+import Firebase
 
 extension UIViewController {
   func prebuiltGraph(
@@ -281,11 +282,7 @@ extension Worker {
       <<< lastnameRow
       <<< idRow
       
-      +++ Section.init(
-        header: "Role",
-        footer: """
-        Any foreman phone number must include its area code. Example \(Phoney.formatted(number: "0123456789") ?? "")
-        """)
+      +++ Section("Role")
       <<< isForemanRow
       <<< phoneRow
 //      <<< emailRow
@@ -799,6 +796,25 @@ extension Session {
       }
     }
     
+    let deleteSessionRow = ButtonRow { row in
+      row.title = "Delete Session"
+    }.onCellSelection { (_, _) in
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Delete") {
+        HarvestDB.delete(session: self) { (_, _) in
+          formVC.navigationController?.popViewController(animated: true)
+        }
+      }
+      
+      alert.showWarning("Are You Sure You Want to Delete this Session?", subTitle: """
+      You will not be able to get back any information about this session.
+      """)
+    }.cellUpdate { (cell, _) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
+    }
+    
     form
       +++ Section("Foreman")
       <<< displayRow
@@ -812,6 +828,9 @@ extension Session {
     
       +++ Section("Worker Performance Summary")
       <<< chartRow
+    
+      +++ Section()
+      <<< deleteSessionRow
   }
 }
 
@@ -822,7 +841,7 @@ extension HarvestUser {
     
     let organisationNameRow = TextRow { row in
       row.title = "Organisation Name"
-      row.value = HarvestUser.current.organisationName
+      row.value = self.organisationName
       row.placeholder = "Name of the Organisation"
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
@@ -831,9 +850,20 @@ extension HarvestUser {
       onChange()
     }
     
+    let emailRow = EmailRow { row in
+      row.title = "Email"
+      row.value = self.accountIdentifier
+      row.placeholder = "Your Account Email Address"
+    }.onChange { row in
+      self.temporary?.accountIdentifier = row.value ?? self.accountIdentifier
+      onChange()
+    }.cellUpdate { (cell, _) in
+      cell.textField.clearButtonMode = .whileEditing
+    }
+    
     let firstnameRow = TextRow { row in
       row.title = "First Name"
-      row.value = HarvestUser.current.firstname
+      row.value = self.firstname
       row.placeholder = ""
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
@@ -844,7 +874,7 @@ extension HarvestUser {
     
     let lastnameRow = TextRow { row in
       row.title = "Last Name"
-      row.value = HarvestUser.current.lastname
+      row.value = self.lastname
       row.placeholder = ""
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
@@ -853,13 +883,115 @@ extension HarvestUser {
       onChange()
     }
     
+    let deleteAccountRow = ButtonRow { row in
+      row.title = "Delete Account"
+    }.onCellSelection { _, _ in
+      let confirmationAlert = SCLAlertView(appearance: .warningAppearance)
+      confirmationAlert.addButton("Cancel", action: {})
+      confirmationAlert.addButton("Resgin") {
+        guard let user = Auth.auth().currentUser else {
+          SCLAlertView().showError("An Error Occurred", subTitle: "User is not currently signed in")
+          return
+        }
+        HarvestDB.delete(harvestUser: self) { succ in
+          if succ {
+            user.delete { (error) in
+              guard error == nil else {
+                SCLAlertView().showError("An Error Occurred", subTitle: error!.localizedDescription)
+                return
+              }
+            }
+            HarvestDB.signOut()
+            if let vc = formVC
+              .storyboard?
+              .instantiateViewController(withIdentifier: "signInOptionViewController") {
+              formVC.present(vc, animated: true, completion: nil)
+            }
+          }
+        }
+      }
+      confirmationAlert.showWarning("Are You Sure?", subTitle: "Are you sure you want to delete your account")
+      
+    }.cellUpdate { (cell, _) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
+    }
+    
+    let newPasswordRow = ButtonRow { row in
+      row.title = "Update Password"
+    }.onCellSelection { _, _ in
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      
+      let newPasswordTextField = alert.addTextField("New Password")
+      let confirmPasswordTextField = alert.addTextField("Confirm New Password")
+      
+      newPasswordTextField.placeholder = "New Password"
+      confirmPasswordTextField.placeholder = "Confirm New Password"
+      newPasswordTextField.isSecureTextEntry = true
+      confirmPasswordTextField.isSecureTextEntry = true
+      
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Update") {
+        guard let newPassword = newPasswordTextField.text,
+          let confirmPassword = confirmPasswordTextField.text,
+          newPassword.count >= 6 && confirmPassword.count >= 6 else {
+            SCLAlertView().showError(
+              "Password Not Long Enough",
+              subTitle: "Password length must be at least 6 characters long")
+            return
+        }
+        
+        guard newPassword == confirmPassword else {
+          SCLAlertView().showError(
+            "Mismatching passwords",
+            subTitle: """
+          Your passwords are not matching. Please provide the same password in both \
+          password prompts
+          """)
+          return
+        }
+        
+        guard let user = Auth.auth().currentUser else {
+          SCLAlertView().showError(
+            "An Error Occurred",
+            subTitle: "User is not signed in")
+          return
+        }
+        
+        user.updatePassword(to: newPassword) { (error) in
+          if let err = error {
+            SCLAlertView().showError("An Error Occurred", subTitle: err.localizedDescription)
+            return
+          }
+        }
+      }
+      
+      alert.showEdit(
+        "Update Password",
+        subTitle: "Enter the new password you want to change to.")
+      
+    }.cellUpdate { cell, _ in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .addOrchard
+    }
+    
     form
-      +++ Section("Organisation Name")
+      +++ Section("Organisation Information")
       <<< organisationNameRow
       
-      +++ Section("Farmer Name")
+      +++ Section("Account Details")
+      <<< emailRow
       <<< firstnameRow
       <<< lastnameRow
+    
+    if Auth.auth().currentUser?.providerID == "Firebase" {
+      form +++ Section()
+        <<< newPasswordRow
+    }
+    
+    form
+      +++ Section()
+      <<< deleteAccountRow
   }
 }
 
@@ -870,7 +1002,6 @@ extension EntityItem {
     case let .orchard(o): o.information(for: formVC, onChange: onChange)
     case let .farm(f): f.information(for: formVC, onChange: onChange)
     case let .session(s): s.information(for: formVC, onChange: onChange)
-    case .shallowSession: break
     case let .user(u): u.information(for: formVC, onChange: onChange)
     }
   }
