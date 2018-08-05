@@ -44,6 +44,10 @@ public class ReloadableFormViewController: FormViewController, ReloadableViewCon
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
     refreshControl.endRefreshing()
+    reloadFormVC()
+  }
+  
+  func reloadFormVC() {
     UIView.performWithoutAnimation {
       tearDown()
       setUp()

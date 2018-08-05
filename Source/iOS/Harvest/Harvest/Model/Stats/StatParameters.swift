@@ -85,9 +85,10 @@ enum TimePeriod: Codable, Equatable, CustomStringConvertible {
       if let s = try container.decodeIfPresent(Date.self, forKey: .betweenStart),
         let e = try container.decodeIfPresent(Date.self, forKey: .betweenEnd) {
         self = .between(s, e)
+      } else {
+        self = .today
       }
     }
-    self = .today
   }
   
   static func == (lhs: TimePeriod, rhs: TimePeriod) -> Bool {

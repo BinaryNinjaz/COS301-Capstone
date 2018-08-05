@@ -50,11 +50,14 @@ final class StatSelectionViewController: ReloadableFormViewController {
       
       infoAlert.showEdit("New Name", subTitle: "Please enter a new name for '\(name)'.")
       
+      self.reloadFormVC()
+      
       self.showingAlert = false
     }
     
     alert.addButton("Delete") {
       StatStore.shared.removeItem(withName: name)
+      self.reloadFormVC()
       self.showingAlert = false
     }
     

@@ -70,3 +70,16 @@ extension SCLAlertView {
       subTitle: "Please select the map type you wish to view this map in.")
   }
 }
+
+extension SCLAlertView {
+  static func showSuccessToast(message: String) {
+    let appearance = SCLAlertView.SCLAppearance(
+      showCloseButton: false
+    )
+    let notice = SCLAlertView(appearance: appearance)
+    notice.showSuccess(message, subTitle: "", closeButtonTitle: nil)
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+      notice.hideView()
+    }
+  }
+}

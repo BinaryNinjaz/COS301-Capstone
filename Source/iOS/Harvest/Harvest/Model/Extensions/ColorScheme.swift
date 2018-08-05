@@ -144,4 +144,12 @@ extension UIColor {
   static var titleLabel: UIColor {
     return UIColor(white: 0.85, alpha: 1)
   }
+  
+  static func randomColor() -> UIColor {
+    let h = CGFloat(arc4random()) / CGFloat(UInt32.max)
+    let s = (CGFloat(arc4random()) / CGFloat(UInt32.max)) * 0.5 + 0.5
+    let b = (CGFloat(arc4random()) / CGFloat(UInt32.max)) * 0.33 + 0.66
+    print(h, s, b)
+    return UIColor(hue: h, saturation: s, brightness: b, alpha: 1.0)
+  }
 }

@@ -105,7 +105,7 @@ class StatsViewController: UIViewController {
       stat?.timePeriod ?? .today,
       stat?.mode ?? .accumTime)
     lineChart?.rightAxis.drawGridLinesEnabled = false
-    lineChart?.xAxis.axisMinimum = 0
+    lineChart?.leftAxis.axisMinimum = 0
     lineChart?.rightAxis.enabled = false
     lineChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
     lineChart?.noDataText = "No Data Available to Show"
@@ -186,59 +186,5 @@ final class PeriodValueFormatter: IAxisValueFormatter {
     } else {
       return ""
     }
-  }
-}
-
-extension BarChartData {
-  func radarChartData() -> RadarChartData {
-    let result = RadarChartData()
-    
-    for dataSet in dataSets {
-      let chartData = RadarChartDataSet()
-      for i in 0..<dataSet.entryCount {
-        guard let bentry = dataSet.entryForIndex(i) as? BarChartDataEntry else {
-          continue
-        }
-        _ = chartData.addEntry(RadarChartDataEntry(value: bentry.y))
-      }
-      chartData.setColor(dataSet.colors[0])
-      chartData.fillColor = dataSet.colors[0]
-      chartData.fillAlpha = 0.7
-      chartData.lineWidth = 2
-      chartData.drawFilledEnabled = true
-      chartData.drawValuesEnabled = true
-      chartData.label = dataSet.label
-      chartData.valueFormatter = DataValueFormatter()
-      result.addDataSet(chartData)
-    }
-    
-    return result
-  }
-  
-  func lineChartData() -> LineChartData {
-    let result = LineChartData()
-    
-    for dataSet in dataSets {
-      let chartData = LineChartDataSet()
-      for i in 0..<dataSet.entryCount {
-        guard let bentry = dataSet.entryForIndex(i) as? BarChartDataEntry else {
-          continue
-        }
-        _ = chartData.addEntry(ChartDataEntry(x: bentry.x, y: bentry.y))
-      }
-      chartData.setColor(dataSet.colors[0])
-      chartData.fillColor = dataSet.colors[0]
-      chartData.fillAlpha = 0.7
-      chartData.lineWidth = 2
-      chartData.drawFilledEnabled = false
-      chartData.drawValuesEnabled = true
-      chartData.label = dataSet.label
-      chartData.valueFormatter = DataValueFormatter()
-      chartData.drawCirclesEnabled = false
-      chartData.mode = .horizontalBezier
-      result.addDataSet(chartData)
-    }
-    
-    return result
   }
 }

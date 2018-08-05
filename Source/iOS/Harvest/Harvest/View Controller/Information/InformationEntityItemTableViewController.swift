@@ -35,15 +35,31 @@ class InformationEntityItemTableViewController: UITableViewController {
     tableView.addSubview(refreshControl!)
     
     if listnerId == nil {
-      listnerId = Entities.shared.listen { self.tableView.reloadData() }
+      listnerId = Entities.shared.listen { self.reloadTableData() }
     }
     
     searchBar?.delegate = self
   }
   
+  func reloadTableData() {
+    DispatchQueue.main.async {
+      if (self.items?.count ?? 0) == 0 {
+        let label = UILabel(frame: self.tableView.frame)
+        label.text = "Press 'New' at the top right to create new \(self.navigationItem.title ?? "Item")"
+        label.numberOfLines = -1
+        label.textColor = UIColor.black.withAlphaComponent(0.3)
+        label.textAlignment = .center
+        self.tableView.backgroundView = label
+      } else {
+        self.tableView.backgroundView = nil
+      }
+      self.tableView.reloadData()
+    }
+  }
+  
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
     self.refreshControl?.endRefreshing()
-    self.tableView.reloadData()
+    reloadTableData()
   }
   
   override func viewWillDisappear(_ animated: Bool) {
@@ -59,9 +75,9 @@ class InformationEntityItemTableViewController: UITableViewController {
       tableView.deselectRow(at: sel, animated: false)
     }
     if listnerId == nil {
-      listnerId = Entities.shared.listen { self.tableView.reloadData() }
+      listnerId = Entities.shared.listen { self.reloadTableData() }
     }
-    tableView.reloadData()
+    reloadTableData()
   }
 
   override func didReceiveMemoryWarning() {
@@ -190,6 +206,6 @@ extension InformationEntityItemTableViewController: UISearchBarDelegate {
     } else {
       filteredItems = items?.search(for: searchText)
     }
-    tableView.reloadData()
+    reloadTableData()
   }
 }

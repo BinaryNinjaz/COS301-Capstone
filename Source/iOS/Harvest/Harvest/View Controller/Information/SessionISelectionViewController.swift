@@ -39,6 +39,17 @@ class SessionSelectionViewController: UITableViewController {
   }
   
   func loadNewPage() {
+    guard sessions.count > 0 else {
+      let label = UILabel(frame: tableView.frame)
+      label.textAlignment = .center
+      label.textColor = UIColor.black.withAlphaComponent(0.3)
+      label.numberOfLines = -1
+      label.text = "Session are created when work is done from the 'Yield Tracker' Tab."
+      tableView.backgroundView = label
+      return
+    }
+    tableView.backgroundView = nil
+    
     guard !isLoading else {
       return
     }

@@ -12,15 +12,9 @@ extension TimeZone {
   func offset() -> String {
     let secs = abs(secondsFromGMT())
     let sign = secondsFromGMT() < 0 ? "-" : "+"
-    let h = secs / 3600
-    let m = secs % 3600
+    let h = secs / 60
     
-    let formatter = NumberFormatter()
-    formatter.positiveFormat = "00"
-    let sh = formatter.string(from: NSNumber(value: h)) ?? "00"
-    let sm = formatter.string(from: NSNumber(value: m)) ?? "00"
-    
-    return sign + sh + ":" + sm
+    return sign + h.description
   }
 }
 

@@ -62,8 +62,7 @@ struct Stat: Codable {
           completion(nil)
           return
         }
-        print(sd, ed, self.ids, self.timeStep, self.mode.identifier)
-        print(json)
+        
         var i = 0
         let colors = ChartColorTemplates.harvest()
         for (key, _dataSetObject) in json {
@@ -97,7 +96,12 @@ struct Stat: Codable {
             }
           }
           
-          dataSet.setColor(colors[i % colors.count])
+          if i < colors.count {
+            dataSet.setColor(colors[i])
+          } else {
+            dataSet.setColor(UIColor.randomColor())
+          }
+          
           dataSet.drawValuesEnabled = false
           dataSet.valueFormatter = DataValueFormatter()
           dataSet.mode = .horizontalBezier
@@ -227,7 +231,7 @@ extension StatStore {
     stats ++= Stat(
       ids: [],
       timePeriod: .thisMonth,
-      timeStep: .weekly,
+      timeStep: .daily,
       grouping: .orchard,
       mode: .running,
       name: "This Month's Orchard Performance")
@@ -235,7 +239,7 @@ extension StatStore {
     stats ++= Stat(
       ids: [],
       timePeriod: .between(Date(), Date()),
-      timeStep: .weekly,
+      timeStep: .daily,
       grouping: .orchard,
       mode: .running,
       name: "Orchard Performance")
@@ -243,7 +247,7 @@ extension StatStore {
     stats ++= Stat(
       ids: [],
       timePeriod: .thisMonth,
-      timeStep: .weekly,
+      timeStep: .daily,
       grouping: .farm,
       mode: .running,
       name: "This Month's Farm Performance")
@@ -251,7 +255,7 @@ extension StatStore {
     stats ++= Stat(
       ids: [],
       timePeriod: .between(Date(), Date()),
-      timeStep: .weekly,
+      timeStep: .daily,
       grouping: .farm,
       mode: .running,
       name: "Farm Performance")

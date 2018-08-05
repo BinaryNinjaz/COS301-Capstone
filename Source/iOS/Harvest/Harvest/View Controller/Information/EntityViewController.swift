@@ -23,9 +23,6 @@ public final class EntityViewController: ReloadableFormViewController, TypedRowC
   
   override public func viewDidLoad() {
     super.viewDidLoad()
-    entity?.information(for: self) {
-      self.navigationItem.rightBarButtonItem?.isEnabled = true
-    }
   }
   
   override public func viewDidAppear(_ animated: Bool) {
@@ -62,24 +59,29 @@ public final class EntityViewController: ReloadableFormViewController, TypedRowC
     switch entity {
     case let .farm(f) where f.tempory != nil:
       HarvestDB.save(farm: f.tempory!)
+      SCLAlertView.showSuccessToast(message: "Farm Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .orchard(o) where o.tempory != nil:
       HarvestDB.save(orchard: o.tempory!)
+      SCLAlertView.showSuccessToast(message: "Orchard Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .worker(w) where w.tempory != nil:
       HarvestDB.save(worker: w.tempory!, oldNumber: w.phoneNumber)
       w.phoneNumber = w.tempory!.phoneNumber
+      SCLAlertView.showSuccessToast(message: "Worker Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .session(s) where s.tempory != nil:
       HarvestDB.save(session: s.tempory!)
+      SCLAlertView.showSuccessToast(message: "Session Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .user(u) where u.temporary != nil:
       HarvestDB.save(harvestUser: u.temporary!, oldEmail: u.accountIdentifier)
       HarvestUser.current = HarvestUser(json: u.temporary!.json())
+      SCLAlertView.showSuccessToast(message: "User Details Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     default:

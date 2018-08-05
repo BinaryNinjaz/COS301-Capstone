@@ -59,6 +59,9 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
   // swiftlint:disable function_body_length
   override func setUp() {
     let selectionSection = selectableEntitiesSection()
+    for id in self.row?.value ?? [] {
+      selected.append(id)
+    }
     
     let b = Date(timeIntervalSince1970: 0)
     let n = Date()

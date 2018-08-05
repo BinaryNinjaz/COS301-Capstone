@@ -186,6 +186,7 @@ class TrackerViewController: UIViewController {
     }
     let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
     alert.addAction(cancel)
+    alert.popoverPresentationController?.sourceView = yieldLabel
     
     present(alert, animated: true, completion: nil)
   }

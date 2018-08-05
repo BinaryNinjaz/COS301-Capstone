@@ -85,6 +85,8 @@ final class StatSetupViewController: ReloadableFormViewController {
         name: statNameTextView.text ?? Date().description)
       
       StatStore.shared.saveItem(item: item)
+      
+      SCLAlertView.showSuccessToast(message: "Graph Saved")
     }
     
     alert.addButton("Cancel") {}
