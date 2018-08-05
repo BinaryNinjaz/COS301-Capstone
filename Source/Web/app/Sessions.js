@@ -35,8 +35,8 @@ function yieldsRef() {
 
 /* This executes when the page loades */
 $(window).bind("load", () => {
-	var divHide = document.getElementById('loader');
-	divHide.style.visibility = "hidden";
+	var divHide = document.getElementById('loader'); /* When the page loads, the error div should be hidden */
+	divHide.style.visibility = "hidden"; /* When the page loads, the error div should be hidden, do not remove */
   let succ = () => {
     initPage();
     initMap();
@@ -309,9 +309,9 @@ function updateSpiner(shouldSpin) {
   
   var target = document.getElementById("loader"); //This is where the spinner is gonna show
   if (shouldSpin) {
-	  target.style.position = "absolute";
-	  target.style.top = "100px";
-	  target.style.left = "100px";
+	  target.style.position = "absolute"; //This is for proper alignment
+	  target.style.top = "100px"; //This is for proper alignment
+	  target.style.left = "100px"; //This is for proper alignment
 	spinner = new Spinner(opts).spin(target); //The class and corresponding css are defined in spin.js and spin.css
   } else {
 	  //target.style.top = "0px";
