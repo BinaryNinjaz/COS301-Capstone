@@ -54,15 +54,15 @@ public final class Orchard {
   
   init(json: [String: Any], id: String) {
     self.id = id
-    bagMass = json["bagMass"] as? Double ?? .nan
+    bagMass = json["bagMass"] as? Double ?? 0.0
     crop = json["crop"] as? String ?? ""
     cultivars = json["cultivars"] as? [String] ?? []
     date = Date(timeIntervalSince1970: json["date"] as? Double ?? 0.0)
     assignedFarm = json["farm"] as? String ?? ""
     details = json["further"] as? String ?? ""
     name = json["name"] as? String ?? ""
-    treeSpacing = json["treeSpacing"] as? Double ?? .nan
-    rowSpacing = json["rowSpacing"] as? Double ?? .nan
+    treeSpacing = json["treeSpacing"] as? Double ?? 0.0
+    rowSpacing = json["rowSpacing"] as? Double ?? 0.0
     irrigationKind = IrrigationKind(rawValue:
       json["irrigation"] as? String ?? ""
     ) ?? .none
@@ -168,18 +168,20 @@ public final class Orchard {
 
 extension Orchard: Equatable {
   static public func == (lhs: Orchard, rhs: Orchard) -> Bool {
-    return lhs.id == rhs.id
-      && lhs.bagMass == rhs.bagMass
-      && lhs.crop == rhs.crop
-      && lhs.date == rhs.date
-      && lhs.assignedFarm == rhs.assignedFarm
-      && lhs.details == rhs.details
-      && lhs.name == rhs.name
-      && lhs.treeSpacing == rhs.treeSpacing
-      && lhs.rowSpacing == rhs.rowSpacing
-      && lhs.coords == rhs.coords
-      && lhs.cultivars == rhs.cultivars
-      && lhs.irrigationKind == rhs.irrigationKind
+    let _id = lhs.id == rhs.id
+    let _bm = lhs.bagMass == rhs.bagMass || lhs.bagMass.isNaN && rhs.bagMass.isNaN
+    let _cr = lhs.crop == rhs.crop
+    let _dt = lhs.date == rhs.date
+    let _af = lhs.assignedFarm == rhs.assignedFarm
+    let _de = lhs.details == rhs.details
+    let _nm = lhs.name == rhs.name
+    let _ts = lhs.treeSpacing == rhs.treeSpacing || lhs.treeSpacing.isNaN && rhs.treeSpacing.isNaN
+    let _rs = lhs.rowSpacing == rhs.rowSpacing || lhs.rowSpacing.isNaN && rhs.rowSpacing.isNaN
+    let _cs = lhs.coords == rhs.coords
+    let _cu = lhs.cultivars == rhs.cultivars
+    let _ir = lhs.irrigationKind == rhs.irrigationKind
+    
+    return _id && _bm && _cr && _dt && _af && _de && _nm && _ts && _rs && _cs && _cu && _ir
   }
 }
 

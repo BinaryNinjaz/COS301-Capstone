@@ -62,7 +62,8 @@ struct Stat: Codable {
           completion(nil)
           return
         }
-        
+        print(sd, ed, self.ids, self.timeStep, self.mode.identifier)
+        print(json)
         var i = 0
         let colors = ChartColorTemplates.harvest()
         for (key, _dataSetObject) in json {

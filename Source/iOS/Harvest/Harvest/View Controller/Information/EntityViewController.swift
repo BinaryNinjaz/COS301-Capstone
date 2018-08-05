@@ -12,7 +12,7 @@ import SCLAlertView
 public struct Box: Equatable {
 }
 
-public final class EntityViewController: FormViewController, TypedRowControllerType {
+public final class EntityViewController: ReloadableFormViewController, TypedRowControllerType {
   public var row: RowOf<Box>!
   public typealias RowValue = Box
   public var onDismissCallback: ((UIViewController) -> Void)?
@@ -30,6 +30,16 @@ public final class EntityViewController: FormViewController, TypedRowControllerT
   
   override public func viewDidAppear(_ animated: Bool) {
     
+  }
+  
+  override public func tearDown() {
+    form.removeAll()
+  }
+  
+  override public func setUp() {
+    entity?.information(for: self) {
+      self.navigationItem.rightBarButtonItem?.isEnabled = true
+    }
   }
 
   override public func didReceiveMemoryWarning() {

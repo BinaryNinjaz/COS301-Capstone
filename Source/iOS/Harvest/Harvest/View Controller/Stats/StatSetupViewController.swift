@@ -94,14 +94,23 @@ final class StatSetupViewController: ReloadableFormViewController {
   
   // swiftlint:disable function_body_length
   override func setUp() {
-    let modeSection = Section(header: "Accumulation", footer: TimedGraphMode.running.explanation)
+    let modeSection = Section(
+      header: "Accumulation",
+      footer: (self.modeRow?.value ?? TimedGraphMode.running)
+        .explanation(for: self.statKindRow?.value ?? .farm, by: self.timeStepRow?.value ?? .hourly))
+    modeSection.footer?.height = { 80 }
     
     statKindRow = PickerRow<StatKind>("Stat Kind") { row in
       row.options = StatKind.allCases
       row.value = .farm
     }.onChange { (row) in
-      let ent = row.value?.description ?? "Farm"
-      self.modeRow?.cell.segmentedControl.setTitle("By \(ent)", forSegmentAt: 1)
+      UIView.performWithoutAnimation {
+        let ent = row.value?.description ?? "Farm"
+        self.modeRow?.cell.segmentedControl.setTitle("By \(ent)", forSegmentAt: 1)
+        modeSection.footer?.title = (self.modeRow?.value ?? TimedGraphMode.running)
+          .explanation(for: row.value ?? .farm, by: self.timeStepRow?.value ?? .hourly)
+        modeSection.reload()
+      }
     }
     
     workersRow = MultipleSelectorRow<Worker> { row in
@@ -163,8 +172,7 @@ final class StatSetupViewController: ReloadableFormViewController {
     startDateRow = DateRow { row in
       row.title = "From Date"
       
-      let cal = Calendar.current
-      let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())
+      let wb = Date().thisWeek().0
       row.value = wb
       
       row.hidden = Condition.function(["Time Interval"]) { form in
@@ -175,7 +183,8 @@ final class StatSetupViewController: ReloadableFormViewController {
     
     endDateRow = DateRow { row in
       row.title = "Up to Date"
-      row.value = Date()
+      let wb = Date().thisWeek().1
+      row.value = wb
       
       row.hidden = Condition.function(["Time Interval"]) { form in
         let row = form.rowBy(tag: "Time Interval") as? PushRow<TimePeriod>
@@ -187,6 +196,12 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.title = "Time Period"
       row.options = TimeStep.allCases
       row.value = .hourly
+    }.onChange { row in
+      UIView.performWithoutAnimation {
+        modeSection.footer?.title = (self.modeRow?.value ?? TimedGraphMode.running)
+          .explanation(for: self.statKindRow?.value ?? .farm, by: row.value ?? .hourly)
+        modeSection.reload()
+      }
     }
     
     modeRow = SegmentedRow<TimedGraphMode> { row in
@@ -197,7 +212,11 @@ final class StatSetupViewController: ReloadableFormViewController {
       let ent = self.statKindRow?.value?.description ?? "Farm"
       self.modeRow?.cell.segmentedControl.setTitle("By \(ent)", forSegmentAt: 1)
     }.onChange { (row) in
-      modeSection.footer?.title = (row.value ?? TimedGraphMode.running).explanation
+      UIView.performWithoutAnimation {
+        modeSection.footer?.title = (row.value ?? TimedGraphMode.running)
+          .explanation(for: self.statKindRow?.value ?? .farm, by: self.timeStepRow?.value ?? .hourly)
+        modeSection.reload()
+      }
     }
     
     let showStats = ButtonRow { row in

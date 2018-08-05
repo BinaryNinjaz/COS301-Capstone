@@ -123,7 +123,7 @@ enum TimePeriod: Codable, Equatable, CustomStringConvertible {
     case .lastMonth: return "Last Month"
     case .thisYear: return "This Year"
     case .lastYear: return "Last Year"
-    case .between: return "Between Dates"
+    case .between: return "Between Exact Dates"
     }
   }
 }
@@ -147,19 +147,22 @@ enum TimedGraphMode: String, CustomStringConvertible, Codable {
     }
   }
   
-  var explanation: String {
+  func explanation(for kind: StatKind, by step: TimeStep) -> String {
     switch self {
     case .running: return """
-      No data accumulation will occur. Data for each item will be shown \
-      separately from each other.
+      No data accumulation will take place, a regular graph will be displayed whereby \
+      each \(kind.identifier) will have its own line.
       """
+      
     case .accumEntity: return """
-      Items are grouped all together creating a sum of the combination of each \
-      item that you request.
+      The selected \(kind.identifier)s will have their values for each \(step.itemizedDescription) \
+      summed up, so that the sum of each individual \(kind.identifier)'s collections accross the selected \
+      time period. for that \(step.itemizedDescription) will be shown, for each \(step.itemizedDescription).
       """
+      
     case .accumTime: return """
-      Items are group into the selected interval. A sum of the combination of \
-      each item within an interval.
+      The sum accross each \(step.itemizedDescription) will be shown, so that the total bags collected \
+      each week by each of the selected \(kind.identifier)s will be shown.
       """
     }
   }
@@ -237,6 +240,16 @@ enum TimeStep: String, CustomStringConvertible, Codable {
     case .weekly: return "Weekly"
     case .monthly: return "Monthly"
     case .yearly: return "Yearly"
+    }
+  }
+  
+  var itemizedDescription: String {
+    switch self {
+    case .hourly: return "hour"
+    case .daily: return "day"
+    case .weekly: return "week"
+    case .monthly: return "month"
+    case .yearly: return "year"
     }
   }
   

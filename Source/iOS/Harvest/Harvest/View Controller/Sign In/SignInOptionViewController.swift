@@ -44,7 +44,7 @@ class SignInOptionViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    guard !UserDefaults.standard.bool(forKey: "Launched") else {
+    guard UserDefaults.standard.bool(forKey: "Launched") else {
       return
     }
     
