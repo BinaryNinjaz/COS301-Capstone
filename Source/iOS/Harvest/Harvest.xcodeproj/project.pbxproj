@@ -672,7 +672,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0930;
-				ORGANIZATIONNAME = "Letanyan Arumugam";
+				ORGANIZATIONNAME = "University of Pretoria";
 				TargetAttributes = {
 					1604E49E206958E800E9BA15 = {
 						CreatedOnToolsVersion = 9.2;

@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/03/29.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -226,7 +226,7 @@ class TrackerViewController: UIViewController {
       } else {
         presentNoYieldCollection()
       }
-      
+      locationManager?.stopUpdatingLocation()
     }
   }
   

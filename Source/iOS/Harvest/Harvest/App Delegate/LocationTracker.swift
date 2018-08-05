@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/06/27.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import CoreLocation
@@ -19,7 +19,7 @@ final class LocationTracker: NSObject, CLLocationManagerDelegate {
       if locationManager == nil {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
-        locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager?.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
       }
       if !CLLocationManager.locationServicesEnabled() {
         locationManager?.requestAlwaysAuthorization()
