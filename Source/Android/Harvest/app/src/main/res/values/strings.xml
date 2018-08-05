@@ -266,7 +266,7 @@
     <!--1: entity, lowercase, singular. 2: entity, lowercase, plural. 3: interval, lowercase, notly.-->
     <string name="anal_create_accumulation_desc_entity">The selected %2$s will have their values for each %3$s summed up, so that the sum of each individual %1$s\'s collections across the selected time period, for that %3$s will be shown, for each %3$s.</string>
     <!--1: interval, lowercase, notly. 2: entity, lowercase, plural.-->
-    <string name="anal_create_accumulation_desc_time">The sum across each %1$s will be shown, so that the total bags collected each %1s by all of the selected %2$s will be shown.</string>
+    <string name="anal_create_accumulation_desc_time">The sum across each %1$s will be shown, so that the total bags collected each %1s by each of the selected %2$s will be shown.</string>
 
     <string name="anal_create_disp">Display</string>
     <string name="anal_create_save">Save</string>
