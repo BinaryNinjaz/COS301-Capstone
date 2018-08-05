@@ -95,9 +95,11 @@ function sessionForKey(key) {
 function sessionsListLoader(loading) {
   var sessionsListHolder = document.getElementById("sessionsListLoader");
   if (!loading) {
+	updateSpiner(false);
     sessionsListHolder.innerHTML = "<button type='button' class='btn btn-secoundary' style='margin: 4px' onclick='newPage()'>Load More Sessions</button>";
   } else {
-    sessionsListHolder.innerHTML = "<h2>Loading Sessions...</h2>";
+	updateSpiner(true);
+    /*sessionsListHolder.innerHTML = "<h2>Loading Sessions...</h2>";*/
   }
 }
 
@@ -273,4 +275,37 @@ function initGraph(collections) {
   var doc = document.getElementById('doughnut');
   var chart = new google.visualization.PieChart(doc);
   chart.draw(data, options);
+}
+
+/* This function shows the spinner while still waiting for resources*/
+var spinner;
+function updateSpiner(shouldSpin) {
+  var opts = {
+	lines: 8, // The number of lines to draw
+	length: 37, // The length of each line
+	width: 10, // The line thickness
+	radius: 35, // The radius of the inner circle
+	scale: 1, // Scales overall size of the spinner
+	corners: 1, // Corner roundness (0..1)
+	color: '#4CAF50', // CSS color or array of colors
+	fadeColor: 'transparent', // CSS color or array of colors
+	speed: 1, // Rounds per second
+	rotate: 0, // The rotation offset
+	animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+	direction: 1, // 1: clockwise, -1: counterclockwise
+	zIndex: 2e9, // The z-index (defaults to 2000000000)
+	className: 'spinner', // The CSS class to assign to the spinner
+	top: '50%', // Top position relative to parent
+	left: '50%', // Left position relative to parent
+	shadow: '0 0 1px transparent', // Box-shadow for the lines
+	position: 'absolute' // Element positioning
+  };
+  
+  var target = document.getElementById("sessionsListLoader"); //This is where the spinner is gonna show
+  if (shouldSpin) {
+	spinner = new Spinner(opts).spin(target); //The class and corresponding css are defined in spin.js and spin.css
+  } else {
+	spinner.stop(); //This line stops the spinner. 
+	spinner = null;
+  }
 }
