@@ -32,8 +32,22 @@ class SignInOptionViewController: UIViewController {
     return result
   }
   
+  override func viewDidAppear(_ animated: Bool) {
+    guard UserDefaults.standard.bool(forKey: "Launched") else {
+      if let pvc = storyboard?.instantiateViewController(withIdentifier: "appIntroViewController") {
+        present(pvc, animated: true, completion: nil)
+      }
+      return
+    }
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    guard !UserDefaults.standard.bool(forKey: "Launched") else {
+      return
+    }
+    
     signUpButton.apply(gradient: .signUpButton)
     
     if let user = Auth.auth().currentUser {
