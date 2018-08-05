@@ -49,7 +49,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private ArrayList<Button> plus;
     private ArrayList<Button> minus;
     private ArrayList<TextView> incrementViews;
-    private Location location;
+    //private Location location;
     public int totalBagsCollected;
     private collections collectionObj;
     private FirebaseDatabase database;
@@ -68,8 +68,12 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private boolean gotCorrectFarmerKey;
     private DatabaseReference workersRef;
     private static final String TAG = "Button";
+    private double lat = 0.0;
+    private double lng = 0.0;
 
-    public WorkerRecyclerViewAdapter(Context context, ArrayList<Worker> workers) {
+    private OnItemClickListener onItemClickListener;
+
+    public WorkerRecyclerViewAdapter(Context context, ArrayList<Worker> workers, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.workers = workers;
         this.totalBagsCollected = 0;
@@ -82,6 +86,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
             email = user.getEmail();
         }
         collectionObj = new collections(email);
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -116,8 +121,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 holder.increment.setText(String.format("%d", value));
 
                 //get coordinates
-                currentLat = location.getLatitude();
-                currentLong = location.getLongitude();
+                currentLat = lat;
+                currentLong = lng;
 
                 //get time
                 currentTime = (System.currentTimeMillis()/divideBy1000Var);//seconds since January 1, 1970 00:00:00 UTC
@@ -147,26 +152,12 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 sessRef.updateChildren(sessionDate);//save data to Firebase
                 myRef.updateChildren(childUpdates);//store plus button info in Firebase
 
-                collectionObj.addCollection(personName, location);
+                collectionObj.addCollection(personName, lat, lng);
                 ++totalBagsCollected;
 
                 //display incremented current yield
-                try {
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                MainActivity.textView.setText("Current Yield: " + totalBagsCollected);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-                    thread.start();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(onItemClickListener != null) {
+                    onItemClickListener.onClick(totalBagsCollected);
                 }
                 worker.setValue(value);
             }
@@ -272,12 +263,21 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         }
     }
 
-    public void setLocation(Location location) {
+    /*public void setLocation(Location location) {
         this.location = location;
+    }*/
+
+    public void setLatLng(Double lat, Double lng) {
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public collections getCollectionObj() {
         return collectionObj;
+    }
+
+    public interface OnItemClickListener {
+        public void onClick(int value);
     }
 
 
