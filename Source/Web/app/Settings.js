@@ -31,7 +31,7 @@ $(window).bind("load", () => {
 
 /* Function returns admin */
 function adminRef() {
-  return database.ref('/' + userID() + '/admin');
+  return database.ref('/' +  userID() + '/admin');
 }
 
 function initPage(){
@@ -41,6 +41,8 @@ function initPage(){
         const ref = adminRef();
         ref.once('value').then((snapshot) => {
             const val = snapshot.val();
+            //console.log(snapshot);
+            //console.log(snapshot.val());
             organization = val.organization;
             document.getElementById("org").value = organization;
             firstname = val.firstname;
@@ -53,6 +55,13 @@ function initPage(){
 }
 
 function saveChanges(){
+   if(confirm("Are you sure you want to save your account changes?")){
+    firebase.database().ref('/' + userID() +"/admin/" + id).update({   
+        
+    });  
+   }else{
+       
+   }
     
 }
 
