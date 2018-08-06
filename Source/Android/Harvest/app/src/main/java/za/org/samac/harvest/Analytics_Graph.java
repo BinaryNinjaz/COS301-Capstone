@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -54,6 +55,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -235,6 +237,9 @@ public class Analytics_Graph extends AppCompatActivity {
         //Period
         base.append("&startDate=").append(start);
         base.append("&endDate=").append(end);
+        //Minutes from GMT
+        int minutes = (TimeZone.getDefault().getRawOffset() * 1000);
+        base.append("&offset=").append(minutes);
         //Accumulation
         base.append("&mode=").append(mode);
         //UID
