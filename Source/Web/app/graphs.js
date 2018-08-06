@@ -197,11 +197,10 @@ function filterOrchard(){
         var start = new Date(week);
         var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
         var id = getOrchardId(name);  
-		myFunction();
+		myFunction(); //This function activates the spinner to signify fetching of resources
 		var canvasHide = document.getElementById('myChart');
-		//var divHide = document.getElementById('myChart1');
 		canvasHide.style.visibility = "hidden";
-		//divHide.style.visibility = "visible";
+		/* updateSpinerOrchard is no longer active because the div is not visible*/
 		updateSpinerOrchard(true); //This calls the spinner when filtering the orchard for the graphs
         orchardPerformance(start, end, id);
     }else{
@@ -339,7 +338,7 @@ function changeOrchardGraph(data){
 
 ///This function updates worker graph based on user input
 function changeWorkerGraph(data){
-	myFunction2();
+	myFunction2(); //This function de-activates the spinner to signify that resources have arrived
 	var divHide = document.getElementById('curve_chart');
 	divHide.style.visibility = "visible";
     console.log(data); // can be removed, just used to view json object
