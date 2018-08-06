@@ -7,12 +7,14 @@
         border-radius: 0px;
         border: 0px;
         padding: 0px;
+        visibility: hidden;
 } 
 #col3:not(:empty){    
         background-color: white;
         border-radius: 10px;
         border: 2px solid green;
         padding: 10px;
+        visibility: visible;
 }  
 #map {
     height: 500px;
@@ -22,6 +24,7 @@
 
 #col1 {
     padding: 8px;
+    padding-left: 0px;
     margin-bottom: 8px;
     margin-top: 8px;
     background-color: #333;
