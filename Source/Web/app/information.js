@@ -167,6 +167,7 @@ function clearOrchardCoord() {
 
 /*Populates the list of farms in col2*/
 function popFarm() {
+    document.getElementById("col3").innerHTML = "";
   findables = [];
   const add = document.getElementById("AddButt");
   add.innerHTML = "<h2>Loading Farm List...</h2>";
@@ -291,7 +292,7 @@ function farmSave(type, id) {
     popFarm();
   }
   else if (type === 1) {
-      alert("we are modifying");
+      //alert("we are modifying");
     firebase.database().ref('/' + userID() + "/farms/" + id).update({
        name: document.getElementById("farmName").value,
        companyName: document.getElementById("companyName3").value,
@@ -302,7 +303,7 @@ function farmSave(type, id) {
       //companyName: (document.getElementById("companyName2").value+""),
        town: (document.getElementById("farmTown").value+"")
     });
-     alert("modified");
+     //alert("modified");
   }
   popFarm();
   dispFarm(id);
@@ -343,8 +344,7 @@ function farmMod(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown' value='" + snapshot.val().town + " '></div> </div> " +
       "" +
-      "</form>"
-    ;
+      "</form>";
   });
 }
 
@@ -352,13 +352,15 @@ function farmMod(id) {
 function delFarm(id) {
   firebase.database().ref('/' + userID() + '/farms/' + id).remove();
   popFarm();
-  clear3();
+  //clear3();
+  document.getElementById("col3").innerHTML = "";
 }
 
 /*From here, all the functions are similar to that of above.*/
 
 
 function popOrch() {
+  document.getElementById("col3").innerHTML = "";
   findables = [];
   const add = document.getElementById("AddButt");
   add.innerHTML = "<h2>Loading Orchard List...</h2>";
@@ -584,8 +586,11 @@ function orchSave(type, id, cultivars) {
       treeSpacing: document.getElementById("treeSpacing").value
     });
 
-    popOrch();
-
+    
+    document.getElementById("col3").innerHTML = "";
+     popOrch();
+    //dispOrch(id);      
+    clear3();
   }
   else if (type === 1) {
     /*var data = [];
@@ -609,9 +614,11 @@ function orchSave(type, id, cultivars) {
       rowSpacing: document.getElementById("rowSpacing").value,
       treeSpacing: document.getElementById("treeSpacing").value
     });
-  }
-   popWork();
+    popOrch();
+    dispOrch(id);      
   clear3();
+  }
+ 
 }
 var myDataCount=0;
 function orchMod(id) {
@@ -621,10 +628,10 @@ function orchMod(id) {
     firebase.database().ref('/' + userID() +'/farms').once('value').then(function (farm) {
         const date = new Date(snapshot.val().date * 1000);
         var myData=""; 
-        alert("formation78");
+        //alert("formation78");
         myDataCount = 0;
         try{
-            alert("f8");
+          //  alert("f8");
             (snapshot.val().cultivars).forEach(function(entry) {
                 myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value='"+entry+"' />";
                 myDataCount++;
@@ -642,7 +649,7 @@ function orchMod(id) {
              myData += "<input id='cultivars0' type='text' class='form-control'  value='' />";
              
         }
-        alert("formation");
+        //alert("formation");
       document.getElementById('col3').innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
@@ -739,11 +746,13 @@ function delOrch(id) {
   firebase.database().ref('/' + userID() +'/orchards/' + id).remove();
   popOrch();
   //dispOrch();
-  clear3();
+ // clear3();
+  document.getElementById("col3").innerHTML = "";
 }
 
 
 function popWork() {
+    document.getElementById("col3").innerHTML = "";
   findables = [];
   const add = document.getElementById("AddButt");
   add.innerHTML = "<h2>Loading Worker List...</h2>";
@@ -1087,4 +1096,5 @@ function clear3() {
   document.getElementById("AddButt").innerHTML = "";
   document.getElementById("SearchBar").innerHTML = "";
   document.getElementById("DispButt").innerHTML = "";
+  col3 = document.getElementById("col3").innerHTML = "";
 }
