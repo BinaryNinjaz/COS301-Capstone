@@ -6,6 +6,36 @@ enum HarvestDB {
   }
 }
 
+extension TimeZone {
+  func offset() -> String {
+    let secs = abs(secondsFromGMT())
+    let sign = secondsFromGMT() < 0 ? "-" : "+"
+    let h = secs / 3600
+    let m = secs % 3600
+    
+    let formatter = NumberFormatter()
+    formatter.positiveFormat = "00"
+    let sh = formatter.string(from: NSNumber(value: h)) ?? "00"
+    let sm = formatter.string(from: NSNumber(value: m)) ?? "00"
+    
+    return sign + sh + ":" + sm
+  }
+}
+
+extension Date {
+  func thisMonth(using calendar: Calendar = .current) -> (Date, Date) {
+    let components = calendar.dateComponents([.year, .month], from: self)
+    let s = calendar.date(from: components)!
+    
+    var nextMonthComps = DateComponents()
+    nextMonthComps.month = 1
+    nextMonthComps.day = -1
+    let e = calendar.date(byAdding: nextMonthComps, to: s)!
+    
+    return (s, e)
+  }
+}
+
 enum HarvestCloud {
   static let baseURL = "http://localhost:5000/harvest-ios-1522082524457/us-central1/"
 //  static let baseURL = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/"
@@ -198,20 +228,6 @@ enum HarvestCloud {
     }
   }
   
-  enum AvgRange : CustomStringConvertible {
-    case inclusive
-    case onlybefore
-    case all
-    
-    var description: String {
-      switch self {
-      case .inclusive: return "inclusive"
-      case .onlybefore: return "onlybefore"
-      case .all: return "all"
-      }
-    }
-  }
-  
   enum Mode : CustomStringConvertible {
     case accumTime
     case accumEntity
@@ -232,16 +248,17 @@ enum HarvestCloud {
     period: TimePeriod,
     startDate: Date,
     endDate: Date,
-    avgRange: AvgRange,
     mode: Mode,
     completion: @escaping (Any) -> Void
   ) {
+    let timeZone = "120" // Calendar.current.timeZone.offset()
+    
     var args = [
       ("groupBy", grouping.description),
       ("period", period.description),
       ("startDate", startDate.timeIntervalSince1970.description),
       ("endDate", endDate.timeIntervalSince1970.description),
-      ("avgRange", avgRange.description),
+      ("offset", timeZone),
       ("mode", mode.description),
       ("uid", HarvestDB.Path.parent)
     ]
@@ -272,11 +289,11 @@ func timeGraphSessionsWorker() {
   
   let wb = cal.date(byAdding: Calendar.Component.weekday, value: -14, to: Date())!.timeIntervalSince1970
   
-  let s = Date(timeIntervalSince1970: wb)
-  let e = Date()
+  let s = Date().thisMonth().0
+  let e = Date().thisMonth().1
   let g = HarvestCloud.GroupBy.worker
-  let p = HarvestCloud.TimePeriod.hourly
-  
+  let p = HarvestCloud.TimePeriod.daily
+  print(s, e)
   let ids = [
     "-LBykXujU0Igjzvq5giB", // Peter Parker 3
     "-LBykjpjTy2RrDApKGLy", // Barry Allen 7
@@ -291,7 +308,6 @@ func timeGraphSessionsWorker() {
     period: p, 
     startDate: s, 
     endDate: e,
-    avgRange: .onlybefore,
     mode: .running) { o in
     print(o)
   }
@@ -320,7 +336,6 @@ func timeGraphSessionsOrchard() {
     period: p, 
     startDate: s, 
     endDate: e,
-    avgRange: .onlybefore,
     mode: .accumEntity) { o in
     print(o)
   }
@@ -347,7 +362,6 @@ func timeGraphSessionsFarm() {
     period: p, 
     startDate: s, 
     endDate: e,
-    avgRange: .onlybefore,
     mode: .accumTime) { o in
     print(o)
   }
