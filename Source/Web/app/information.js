@@ -566,8 +566,6 @@ function orchSave(type, id, cultivars) {
     let seconds = d.getTime() / 1000;
   var data = getCultivars();
   if (type === 0) {
-      
-      //alert("got Cultivar");
       firebase.database().ref('/' + userID() +"/orchards/").push({
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
@@ -584,19 +582,10 @@ function orchSave(type, id, cultivars) {
 
     
     document.getElementById("col3").innerHTML = "";
-     popOrch();
-    //dispOrch(id);      
+     popOrch(); 
     clear3();
   }
-  else if (type === 1) {
-    /*var data = [];
-    for(var i=0; i<myDataCount; i++){
-       data.push(document.getElementById("cultivars"+i).value); 
-       alert(data[i]);
-    }
-    if(data==null)
-      data="";
-  */
+  else if (type === 1) {    
       firebase.database().ref('/' + userID() +"/orchards/" + id).update({
       name: document.getElementById("orchName").value,
       crop: document.getElementById("orchCrop").value,
@@ -623,29 +612,22 @@ function orchMod(id) {
     document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name;
     firebase.database().ref('/' + userID() +'/farms').once('value').then(function (farm) {
         const date = new Date(snapshot.val().date * 1000);
-        var myData=""; 
-        //alert("formation78");
+        var myData="";         
         myDataCount = 0;
-        try{
-          //  alert("f8");
+        try{        
             (snapshot.val().cultivars).forEach(function(entry) {
                 myData += "<input id='cultivars"+myDataCount+"' type='text' class='form-control'  value='"+entry+"' />";
                 myDataCount++;
             }); 
-            
-            
         }
         catch(err){
             myData += "<input id='cultivars0' type='text' class='form-control'  value='' />";
-              //cCount = -1;
-             // alert("caught");
         }
         cCount = 0;
         if(myData==""){
              myData += "<input id='cultivars0' type='text' class='form-control'  value='' />";
              
-        }
-        //alert("formation");
+        }       
       document.getElementById('col3').innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
