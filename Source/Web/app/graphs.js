@@ -196,11 +196,12 @@ function filterOrchard(){
     if(name!== '' && week!==''){
         var start = new Date(week);
         var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
-        var id = getOrchardId(name);   
+        var id = getOrchardId(name);  
+		myFunction();
 		var canvasHide = document.getElementById('myChart');
-		var divHide = document.getElementById('myChart1');
+		//var divHide = document.getElementById('myChart1');
 		canvasHide.style.visibility = "hidden";
-		divHide.style.visibility = "visible";
+		//divHide.style.visibility = "visible";
 		updateSpinerOrchard(true); //This calls the spinner when filtering the orchard for the graphs
         orchardPerformance(start, end, id);
     }else{
@@ -299,6 +300,7 @@ function workerPerformance(start, end, id){
 
 ///This function updates orchard graph based on user input
 function changeOrchardGraph(data){
+	myFunction2();
 	var canvasHide = document.getElementById('myChart');
 	var divHide = document.getElementById('myChart1');
 	canvasHide.style.visibility = "visible"; //Shows the graph
