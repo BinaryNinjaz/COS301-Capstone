@@ -494,7 +494,7 @@ function roundDateToRunningPeriod(timeinterval, period, sameYear, sameMonth, sam
   } else if (period === "weekly") {
     return moment(date).startOf('week').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "monthly") {
-    return moment(date).startOf('month').format(fmtYear + ' MMM');
+    return moment(date).startOf('month').format(fmtYear + 'MMM');
   } else if (period === "yearly") {
     return moment(date).startOf('day').format('YYYY');
   } else {
@@ -604,16 +604,16 @@ function averageOfSessionItem(item, key, days, workingOn) {
 // --------- Result ------------- Mode = accumEntity
 // result = {avg: {*: #, ...}, sum: {*: #, ...}}
 //
-// where * is some values determined by period hourly = YYYY-MM-dd hh, daily= YYYY-MM-dd
-// weekly = YYYY-MM-dd, monthly = YYYY-MM, yearly = YYYY
+// where * is some values determined by period hourly = YYYY MMM dd HH:mm, daily= YYYY MMM DD
+// weekly = YYYY MMM DD, monthly = YYYY MMM, yearly = YYYY
 // # is total number of bags collected
 // sum is the sum of id0 + id1 + ... + idN at date points determined by period.
 //
 // --------- Result ------------- Mode = running
 // let result = {avg: {*: #, ...}, id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
 //
-// where * is some values determined by period hourly = YYYY-MM-dd hh, daily= YYYY-MM-dd
-// weekly = YYYY-MM-dd, monthly = YYYY-MM, yearly = YYYY
+// where * is some values determined by period hourly = YYYY MMM dd HH:mm, daily= YYYY MMM DD
+// weekly = YYYY MMM DD, monthly = YYYY MMM, yearly = YYYY
 // # is total number of bags collected
 //
 // ------------------------------ NOTE:
@@ -622,6 +622,7 @@ function averageOfSessionItem(item, key, days, workingOn) {
 //   example: for daily if your startDate and endDate are within the same month then YYYY
 //   and MM are discarded. If your startDate and endDate go into different months but are in
 //   the same year then only YYYY is dropped. This applies for all dates in running and accumEntity.
+// + for running and accumEntity when the same YYYY MM and DD is asked for it returns ddd
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const startDate = req.body.startDate;
