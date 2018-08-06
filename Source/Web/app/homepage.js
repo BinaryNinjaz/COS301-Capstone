@@ -7,6 +7,7 @@ function locationsRef() {
 $(window).bind("load", function() {
   let succ = () => {
     initForemen();
+    initMap();
   };
   let fail = () => {
   };
@@ -115,31 +116,20 @@ function updateMarkers() {
 }
 
 function displayDate(timestamp) {
-  let date = new Date(timestamp * 1000);
-  let today = new Date();
+  let date = moment(new Date(timestamp * 1000));
+  let today = moment(new Date());
   
-  let Y = date.getYear();
-  let M = date.getMonth();
-  let D = date.getDate();
+  const fmtYear = date.format('YYYY') === today.format('YYYY') ? "" : "YYYY ";
+  const fmtMonth = date.format('YYYY-MM') === today.format('YYYY-MM') ? "" : "MMM ";
+  var fmtWeek = date.format('YYYY W') === today.format('YYYY W') ? "" : "ddd ";
+  var fmtDay = date.format('YYYY-MM-DD') === today.format('YYYY-MM-DD') ? "" : "DD ";
   
-  let dw = date.getDay();
+  fmtWeek = (fmtMonth === "" ? fmtWeek : "");
+  fmtDay = (fmtWeek === "" ? fmtDay : "");
   
-  let h = date.getHours();
-  let m = date.getMinutes();
+  const fmt = fmtYear + fmtMonth + fmtWeek + fmtDay + "HH:mm";
   
-  var t = h + ":" + m;
-  
-  // FIXME doesn't work must research js date stuff >:(
-  // Must show more date info progressivly as needed
-  /*
-  if (Y < today.getYear()) {
-    t = Y + "/" + M + "/" + D + " " + t;
-  } else if (M < today.getMonth() || D < today.getDate()) {
-    t = M + "/" + D + " " + t;
-  }
-  */
-  
-  return t;
+  return date.format(fmt);
 }
 
 function shouldShowForeman(fID) {
