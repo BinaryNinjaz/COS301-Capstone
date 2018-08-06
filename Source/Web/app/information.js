@@ -1060,8 +1060,7 @@ function popResults() {
   const buttons = document.getElementById("DispButt");
   buttons.innerHTML = "";
   findables.forEach(function (item, index) {
-    if (isValid(searchText, item.Name)){
-        //item.Button.setAttribute("class","btn btn-info");
+    if (isValid(searchText, item.Name)){        
       buttons.innerHTML += item.Button;
     }
   });
