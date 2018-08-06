@@ -68,10 +68,10 @@ body{
         float: left;
     }
     
-  /*  #right, #col2, #col1{
+    #right, #col2, #col1{
         transform: translate(150px);// rotate(90deg); 
         transition-duration: 1s;
-    }*/
+    }
 }
 @media (max-width: 578px){
     #col2{
@@ -81,10 +81,10 @@ body{
         width: 345px;
         
     }
-    /*#right, #col2, #col1{
+    #right, #col2, #col1{
         transform: translate(0px);// rotate(90deg); 
         transition-duration: 1s;
-    }*/
+    }
 }
 [class*="btn"]{
     border: 1px solid black;
