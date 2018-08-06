@@ -60,8 +60,8 @@
 	</div>
 	<div class="container">
             <!-- top chart is the orchard historical performance graph-->
-			<div class="card" style="top: 20px;">
-				<div class="card-header" style="text-align: center;">Orchard Performance Graph</div>
+			<div class="card border-success" style="top: 20px;">
+				<div class="card-header bg-transparent border-success" style="text-align: center;">Orchard Performance Graph</div>
 				<div class="card-body">
 					<div class="left">
 						<canvas id="myChart" width="900px" height="500px"></canvas>
@@ -77,18 +77,18 @@
 							<label>Ending Date:
 								<input type="input" id="endDate" readonly="true" />
 							</label>
-							<button type = "button" id='orchardFilter' onclick='filterOrchard()'>
+							<button type = "button" class="btn" id='orchardFilter' onclick='filterOrchard()'>
 								Filter Orchard Graph</button>
 						</div>
 					</div>
 				</div>
 			</div>
             <!-- bottom graph can be is worker performance graph-->
-			<div class="card" style="top: 10px;">
-				<div class="card-header" style="text-align: center;">Worker Performance Graph</div>
+			<div class="card border-success" style="top: 50px;">
+				<div class="card-header bg-transparent border-success" style="text-align: center;">Worker Performance Graph</div>
 				<div class="card-body">
 					<div class="right" >
-						<div id="curve_chart" style="width: 800px; height: 500px"></div>
+						<div id="curve_chart" style="width: 600px; height: 500px"></div>
 						<div id="cover-spin"></div>
 						<!-- below are objects the user can use to filter information-->
 						<div id="bottomChartFilter">
@@ -98,7 +98,7 @@
 							<label>Select date:
 								<input type="date" id="workerDateSelect" />
 							</label>
-							<button type = "button" id='workerFilter' onclick='filterWorker()'>
+							<button type = "button" class="btn" id='workerFilter' onclick='filterWorker()'>
 								Filter Worker Performance Graph </button>
 						</div>
 					</div>
