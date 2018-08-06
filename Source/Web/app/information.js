@@ -208,7 +208,7 @@ function dispFarm(id) {
     col3.innerHTML = "" +
       "<form class='form-horizontal'>" +
       "" +
-      "<div class='form-group'><div class='col-sm-9 col-sm-offset-1'><button onclick='farmSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
+      "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='farmSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='farmName'></div> </div> " +
@@ -241,7 +241,7 @@ function dispFarm(id) {
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
-        "<div class='form-group'><div class='col-sm-9 col-sm-offset-1'><button onclick='farmMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
+        "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='farmMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
         "<div class='col-sm-9'><p class='form-control-static' id='farmFurther'>" + snapshot.val().name + "</p> </div> </div> " +
@@ -327,7 +327,7 @@ function farmMod(id) {
       "<form class='form-horizontal'>" +
       "" +
       "<div class='form-group'>" +
-      "<div class='col-sm-3 col-sm-offset-1'><button onclick='farmSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
+      "<div class='col-sm-3 col-sm-offset-2'><button onclick='farmSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
       "<div class='col-sm-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
       "<div class='col-sm-3'><button onclick='dispFarm(\"" + id + "\")' type='button' class='btn btn-default'>Cancel</button></div>" +
       "</div> " +
@@ -401,7 +401,7 @@ function dispOrch(id) {
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
-        "<div class='form-group'><div class='col-sm-9 col-sm-offset-1'><button onclick='orchSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
+        "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='orchSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='orchName'></div> </div> " +
@@ -474,7 +474,7 @@ function dispOrch(id) {
         col3.innerHTML = "" +
           "<form class='form-horizontal'>" +
           "" +
-          "<div class='form-group'><div class='col-sm-9 col-sm-offset-1'><button onclick='orchMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
+          "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='orchMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
           "" +
           "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
           "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().name + "</p> </div> </div> " +
@@ -641,7 +641,7 @@ function orchMod(id) {
         "<form class='form-horizontal'>" +
         "" +
         "<div class='form-group'>" +
-        "<div class='col-sm-3 col-sm-offset-1'><button onclick='orchSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
+        "<div class='col-sm-3 col-sm-offset-2'><button onclick='orchSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
         "<div class='col-sm-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
         "<div class='col-sm-3'><button onclick='dispOrch(\"" + id + "\")' type='button' class='btn btn-default'>Cancel</button></div>" +
         "</div> " +
@@ -771,7 +771,7 @@ function dispWork(id) {
       col3.innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
-        "<div class='form-group'><div class='col-sm-9 col-sm-offset-1'><button onclick='workSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
+        "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='workSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Name:</label>" +
         "<div class='col-sm-9'><input type='text' class='form-control' id='workName'></div> </div> " +
@@ -790,7 +790,7 @@ function dispWork(id) {
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' id='workType'>Worker Type:</label>" +
         "<label class='radio-inline'><input type='radio' name='optradio' onclick='dispWorkEmail(false)' id='rWorker' checked>Worker</label>" +
-        "<label class='radio-inline'><input type='radio' name='optradio' onclick='dispWorkEmail(true)' id='rForeman'>Foreman</label>" +
+        "<label class='radio-inline'><input type='radio' name='optradio' onclick='document.getElementById('\'workContactNo\'').required=true' id='rForeman'>Foreman</label>" +
         "</div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
@@ -813,7 +813,7 @@ function dispWork(id) {
                 col3.innerHTML = "" +
                     "<form class='form-horizontal'>" +
                     "" +
-                    "<div class='form-group'><div class='col-sm-9 col-sm-offset-1'><button onclick='workMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
+                    "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='workMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
                     "" +
                     "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Name:</label>" +
                     "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().name + "</p> </div> </div> " +
@@ -850,12 +850,12 @@ function dispWork(id) {
                     }
                 });
 
-                if (snapshot.val().type === "Foreman") {
+                /*if (snapshot.val().type === "Foreman") {
                     document.getElementById("emailDispSpace").innerHTML = "" +
                         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Foreman Email:</label>" +
                         "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().email + "</p> </div></div>"
                     ;
-                }
+                }*/
             });
         });
     // });
@@ -863,15 +863,18 @@ function dispWork(id) {
 }
 
 function dispWorkEmail(disp) {
+     
+    
   if (disp) {
-    document.getElementById("emailSpace").innerHTML = "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='email'>Foreman Email:</label>" +
-      "<div class='col-sm-9'><input type='email' class='form-control' id='workEmail' data-toggle='tooltip' title='We will send the foreman an email so they can create, or link their account on the app to yours.'>" +
-      "</div></div>"
-    ;
+    try{
+        document.getElementById("workContactNo").required=true;
+        }catch(err){}
   }
   else {
-    document.getElementById("emailSpace").innerHTML = "";
+    //document.getElementById("emailSpace").innerHTML = "";
+     try{
+         document.getElementById("workContactNo").required=false;
+        }catch(err){}
   }
 }
 
@@ -890,7 +893,7 @@ function workSave(type, id) {
   }
   let email = "";
   if (workType === "Foreman") {
-    email = document.getElementById("workEmail").value;
+    email = "";//document.getElementById("workEmail").value;
   }
   let newRef;
   if (type === 0) {
@@ -952,7 +955,7 @@ function workMod(id) {
         "<form class='form-horizontal'>" +
         "" +
         "<div class='form-group'>" +
-        "<div class='col-sm-3 col-sm-offset-1'><button onclick='workSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
+        "<div class='col-sm-3 col-sm-offset-2'><button onclick='workSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
         "<div class='col-sm-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
         "<div class='col-sm-3'><button onclick='dispWork(\"" + id + "\")' type='button' class='btn btn-default'>Cancel</button></div>" +
         "</div>" +
