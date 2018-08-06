@@ -49,8 +49,12 @@ body{
     
  
 @media (max-width: 768px){
-    #col2{
-        width: 300px;
+    #col2, #col3{
+        width: 265px;
+        
+    }
+    #right #col2{
+        float: left;
     }
 }/*
 @media (min-width: 768px){
