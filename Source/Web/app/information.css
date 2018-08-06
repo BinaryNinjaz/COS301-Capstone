@@ -35,6 +35,8 @@ body{
     
 #col3{
     
-        background-color: whitesmoke;
-        
-}
+        background-color: white;
+        border-radius: 10px;
+        border: 2px solid green;
+        padding: 10px;
+}   
