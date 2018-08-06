@@ -18,21 +18,23 @@
 }
 
 body{
-    //background-color: transparent;
-    overflow: auto;
     font-family: Sans-Serif;	
-        background-image: url("back2smaller.jpg");
-        background-repeat: no-repeat;  
-        background-size: cover;  
+    background-image: url("back2smaller.jpg");
+    background-repeat: no-repeat;  
+    background-size: cover;  
+    display: block;
+    overflow: auto;
    
 }
 
- html {
-        
- }
+.row{
+    display: block;
+    overflow: auto;
+}
     
     
 #col3{
+    
         background-color: whitesmoke;
         
 }

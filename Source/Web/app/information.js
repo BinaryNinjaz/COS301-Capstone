@@ -29,10 +29,6 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
-popOrch();
-popWork();
-popFarm();
-clear3();
 
 var editingOrchard = false;
 var orchardCoords = [];
@@ -1062,6 +1058,7 @@ function searchDisp(){
     buttons.innerHTML += item.Button;
   });
 
+  document.getElementById("selectedEntity").style.visibility = "visible";
 }
 
 /*This populates the found results.*/
@@ -1093,7 +1090,7 @@ function isValid(search, name) {
 
 function clear3() {
   document.getElementById("AddButt").innerHTML = "";
-  document.getElementById("SearchBar").innerHTML = "";
+  document.getElementById("SearchSpace").innerHTML = "";
   document.getElementById("DispButt").innerHTML = "";
   col3 = document.getElementById("col3").innerHTML = "";
 }
