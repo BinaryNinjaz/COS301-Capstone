@@ -40,15 +40,15 @@
   </head>
   <body>
 	<div class="topnav">
-            <div class="nav navbar-nav">
-                <li><a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+            <ul class="nav navbar-nav">
+                <li style="height: 10px;"><a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
                 <a href="Information.html">Information</a>
                 <a href="Sessions.html">Sessions</a>
                 <a href="HeatMap.html">Heatmap</a>
                 <a class="active" href="graphs.html">Analytics</a></li>
-            </div>
+            </ul>
             
-            <div class="pull-right nav navbar-nav">
+            <ul class="pull-right nav navbar-nav">
                 <li><a href="Settings.html" id="emailInNav"></a>
                 <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -56,11 +56,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-            </div>
+            </ul>
 	</div>
 	<div class="container">
             <!-- top chart is the orchard historical performance graph-->
-			<div class="card">
+			<div class="card" style="top: 20px;">
 				<div class="card-header">Orchard Performance Graph</div>
 				<div class="card-body">
 					<div class="left">
@@ -84,11 +84,11 @@
 				</div>
 			</div>
             <!-- bottom graph can be is worker performance graph-->
-			<div class="card">
+			<div class="card" style="top: 10px;">
 				<div class="card-header">Worker Performance Graph</div>
 				<div class="card-body">
 					<div class="right" >
-						<div id="curve_chart" style="width: 900px; height: 500px"></div>
+						<div id="curve_chart" style="width: 800px; height: 500px"></div>
 						<div id="cover-spin"></div>
 						<!-- below are objects the user can use to filter information-->
 						<div id="bottomChartFilter">
