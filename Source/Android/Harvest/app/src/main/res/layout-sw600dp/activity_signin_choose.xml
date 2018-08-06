@@ -3,14 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/harvestbackground">
 
     <ScrollView
         android:id="@+id/login_form"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="@dimen/tablet_form_width"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,7 +50,8 @@
                             android:layout_weight="8"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:contentDescription="@string/farmer_sign_in" />
+                            android:contentDescription="@string/farmer_sign_in"
+                            android:adjustViewBounds="true"/>
 
                         <TextView
                             android:background="#07000000"
@@ -83,7 +85,8 @@
                             android:layout_weight="8"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:contentDescription="@string/foreman_sign_in" />
+                            android:contentDescription="@string/foreman_sign_in"
+                            android:adjustViewBounds="true"/>
 
                         <TextView
                             android:background="#07000000"
@@ -108,7 +111,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"/>
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

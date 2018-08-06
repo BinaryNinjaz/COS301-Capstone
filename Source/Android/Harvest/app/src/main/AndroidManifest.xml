@@ -20,9 +20,8 @@
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop" />
-
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity android:name=".SignIn_Choose" />
         <activity
             android:name=".SignIn_Farmer"
@@ -46,7 +45,6 @@
             android:name=".SignIn_SignUp"
             android:label="@string/title_activity_sign_up"
             android:parentActivityName=".SignIn_Choose" />
-
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
@@ -61,19 +59,15 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity" />
-
         <activity
             android:name=".InformationActivity"
             android:label="@string/titleInformation" />
-
         <activity
             android:name=".Analytics"
             android:label="@string/title_stats" />
-
         <activity
             android:name=".PieChart"
             android:label="@string/title_stats" />
-
         <activity
             android:name=".SpiralGraph"
             android:label="@string/title_stats"
@@ -83,14 +77,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".OrchardsForGraph" />
         </activity>
-
         <activity
             android:name=".ForemenPerSession"
             android:label="@string/title_activity_sessions" />
-
         <activity
             android:name=".Sessions"
-            android:label="@string/title_activity_sessions"/>
+            android:label="@string/title_activity_sessions" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -106,7 +98,6 @@
         <activity
             android:name=".SessionsMap"
             android:label="@string/title_activity_sessions_map" />
-
         <activity
             android:name=".adapter.SessionDetails"
             android:label="@string/title_activity_sessions"
@@ -116,7 +107,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Sessions" />
         </activity>
-
         <activity
             android:name=".OrchardsForGraph"
             android:label="@string/title_stats"
@@ -126,7 +116,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Analytics" />
         </activity>
-
         <activity
             android:name=".WorkerOrForeman"
             android:label="@string/title_stats"
@@ -136,7 +125,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Analytics" />
         </activity>
-
         <activity
             android:name=".ForemenForBarGraph"
             android:label="@string/title_stats"
@@ -146,7 +134,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".WorkerOrForeman" />
         </activity>
-
         <activity
             android:name=".WorkersForBarGraph"
             android:label="@string/title_stats"
@@ -156,26 +143,30 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".WorkerOrForeman" />
         </activity>
-
         <activity
             android:name=".BarGraph"
-            android:launchMode="singleTop"
             android:label="@string/title_stats"
+            android:launchMode="singleTop"
             android:parentActivityName=".WorkersForBarGraph">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".WorkersForBarGraph" />
         </activity>
-
         <activity
             android:name=".BarGraphForemen"
-            android:launchMode="singleTop"
             android:label="@string/title_stats"
+            android:launchMode="singleTop"
             android:parentActivityName=".ForemenForBarGraph">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ForemenForBarGraph" />
         </activity>
+
+        <service
+            android:name=".service.BackgroundService"
+            android:exported="false"
+            android:enabled="true"/>
+
     </application>
 
 </manifest>
