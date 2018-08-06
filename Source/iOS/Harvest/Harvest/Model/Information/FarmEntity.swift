@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/20.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Foundation
@@ -121,6 +121,7 @@ final class Entities {
   }
   
   func listen(with f: @escaping () -> Void) -> Int {
+    f()
     listners[listners.count] = f
     return listners.count - 1
   }
@@ -155,11 +156,14 @@ final class Entities {
       }
       
     case .orchard:
-      HarvestDB.getOrchards { (orchards) in
+      HarvestDB.getFarms { (farms) in
+        self.farms = SortedDictionary(
+          uniqueKeysWithValues: farms.map { farm in
+            return (farm.name + farm.id, farm)
+        }, <)
         self.orchards = SortedDictionary(
-          uniqueKeysWithValues: orchards.map { orchard in
-            let fn = Entities.shared.farms.first { $1.id == orchard.assignedFarm }?.value.name ?? ""
-            return (fn + orchard.name + orchard.id + orchard.assignedFarm, orchard)
+          uniqueKeysWithValues: self.orchards.map { _, v in
+            (v.description + v.id, v)
         }, <)
         completion(self)
       }
@@ -172,7 +176,7 @@ final class Entities {
         }, <)
         self.orchards = SortedDictionary(
           uniqueKeysWithValues: self.orchards.map { _, v in
-            (farms.first { $0.id == v.id }?.name ?? "" + v.name + v.id, v)
+            (v.description + v.id, v)
         }, <)
         completion(self)
       }
@@ -207,21 +211,23 @@ final class Entities {
         }, <)
         self.runListners()
       }
+      
     case .orchard:
-      HarvestDB.watchOrchards { (orchards) in
-        self.orchards = SortedDictionary(
-          uniqueKeysWithValues: orchards.map { orchard in
-            return (orchard.description, orchard)
-        }, <)
-        self.runListners()
-      }
+      break
+      
     case .farm:
       HarvestDB.watchFarms { (farms) in
         self.farms = SortedDictionary(
           uniqueKeysWithValues: farms.map { farm in
             return (farm.name + farm.id, farm)
         }, <)
-        self.runListners()
+        HarvestDB.watchOrchards { (orchards) in
+          self.orchards = SortedDictionary(
+            uniqueKeysWithValues: orchards.map { v in
+              return (v.description + v.id, v)
+          }, <)
+          self.runListners()
+        }
       }
       
     case .session: fatalError("Watching sessions is too expensive and should not be done")
@@ -253,6 +259,15 @@ final class Entities {
     }
     
     return worker
+  }
+  
+  func entities(for kind: StatKind) -> [EntityItem] {
+    switch kind {
+    case .farm: return farms.map { .farm($0.value) }
+    case .worker: return workers.compactMap { $0.value.kind == .worker ? .worker($0.value) : nil }
+    case .foreman: return workers.compactMap { $0.value.kind == .foreman ? .worker($0.value) : nil }
+    case .orchard: return orchards.map { .orchard($0.value) }
+    }
   }
 }
 

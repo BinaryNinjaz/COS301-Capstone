@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/07/31.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -23,8 +23,8 @@ class SessionFilterManager: NSObject, UICollectionViewDataSource, UICollectionVi
   
   override init() {
     super.init()
-    HarvestDB.watchOrchards { (orchards) in
-      self.orchards = orchards.sorted { $0.description < $1.description }
+    _ = Entities.shared.listen {
+      self.orchards = Entities.shared.orchards.map { $0.value }
     }
   }
   

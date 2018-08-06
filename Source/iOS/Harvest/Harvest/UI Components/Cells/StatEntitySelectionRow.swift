@@ -3,12 +3,12 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/07/11.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Eureka
 
-final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[EntityItem]>>, PresenterRowType, RowType {
+final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[String]>>, PresenterRowType, RowType {
   
   typealias PresenterRow = StatEntitySelectionViewController
   
@@ -20,11 +20,10 @@ final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[EntityItem]>>, 
   
   var actuallyChanged: ((RowOf<Orchard>) -> Void)?
   
-  var startDate: Date?
-  var endDate: Date?
-  var period: HarvestCloud.TimePeriod?
-  var grouping: HarvestCloud.GroupBy = .worker
-  var mode: HarvestCloud.Mode?
+  var timePeriod: TimePeriod?
+  var timeStep: TimeStep?
+  var grouping: StatKind = .worker
+  var mode: TimedGraphMode?
   
   required init(tag: String?) {
     super.init(tag: tag)
@@ -37,9 +36,8 @@ final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[EntityItem]>>, 
           fatalError("We should never get here. We instantiated from statEntitySelectionViewController")
         }
 //        rowVC.actuallyChanged = self.actuallyChanged
-        rowVC.startDate = self.startDate
-        rowVC.endDate = self.endDate
-        rowVC.period = self.period
+        rowVC.timePeriod = self.timePeriod
+        rowVC.timeStep = self.timeStep
         rowVC.grouping = self.grouping
         rowVC.mode = self.mode
         return rowVC

@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/03/26.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -129,7 +129,6 @@ class SignUpViewController: UIViewController {
     }
     
   }
-  // swiftlint:enable function_body_length
   
   @IBAction func cancelTouchUp(_ sender: Any) {
     dismiss(animated: true, completion: nil)

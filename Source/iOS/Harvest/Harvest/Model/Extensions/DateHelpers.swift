@@ -3,10 +3,20 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/07/07.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Foundation
+
+extension TimeZone {
+  func offset() -> String {
+    let secs = abs(secondsFromGMT())
+    let sign = secondsFromGMT() < 0 ? "-" : "+"
+    let h = secs / 60
+    
+    return sign + h.description
+  }
+}
 
 extension Date {
   func startOfHour(using calendar: Calendar = .current) -> Date {

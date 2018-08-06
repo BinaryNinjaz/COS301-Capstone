@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/21.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Eureka
@@ -28,7 +28,6 @@ struct OrganizationInfo: CustomStringConvertible, Equatable {
 }
 
 class SettingsEurekaViewController: ReloadableFormViewController {
-  /// swiftlint:disable function_body_length
   override func viewDidLoad() {
     super.viewDidLoad()
   }

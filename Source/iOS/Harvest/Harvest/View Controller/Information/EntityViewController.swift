@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/19.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Eureka
@@ -12,7 +12,7 @@ import SCLAlertView
 public struct Box: Equatable {
 }
 
-public final class EntityViewController: FormViewController, TypedRowControllerType {
+public final class EntityViewController: ReloadableFormViewController, TypedRowControllerType {
   public var row: RowOf<Box>!
   public typealias RowValue = Box
   public var onDismissCallback: ((UIViewController) -> Void)?
@@ -23,13 +23,20 @@ public final class EntityViewController: FormViewController, TypedRowControllerT
   
   override public func viewDidLoad() {
     super.viewDidLoad()
-    entity?.information(for: self) {
-      self.navigationItem.rightBarButtonItem?.isEnabled = true
-    }
   }
   
   override public func viewDidAppear(_ animated: Bool) {
     
+  }
+  
+  override public func tearDown() {
+    form.removeAll()
+  }
+  
+  override public func setUp() {
+    entity?.information(for: self) {
+      self.navigationItem.rightBarButtonItem?.isEnabled = true
+    }
   }
 
   override public func didReceiveMemoryWarning() {
@@ -52,24 +59,29 @@ public final class EntityViewController: FormViewController, TypedRowControllerT
     switch entity {
     case let .farm(f) where f.tempory != nil:
       HarvestDB.save(farm: f.tempory!)
+      SCLAlertView.showSuccessToast(message: "Farm Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .orchard(o) where o.tempory != nil:
       HarvestDB.save(orchard: o.tempory!)
+      SCLAlertView.showSuccessToast(message: "Orchard Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .worker(w) where w.tempory != nil:
       HarvestDB.save(worker: w.tempory!, oldNumber: w.phoneNumber)
       w.phoneNumber = w.tempory!.phoneNumber
+      SCLAlertView.showSuccessToast(message: "Worker Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .session(s) where s.tempory != nil:
       HarvestDB.save(session: s.tempory!)
+      SCLAlertView.showSuccessToast(message: "Session Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .user(u) where u.temporary != nil:
       HarvestDB.save(harvestUser: u.temporary!, oldEmail: u.accountIdentifier)
       HarvestUser.current = HarvestUser(json: u.temporary!.json())
+      SCLAlertView.showSuccessToast(message: "User Details Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     default:
