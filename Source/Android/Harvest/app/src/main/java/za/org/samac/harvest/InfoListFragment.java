@@ -20,7 +20,7 @@ import za.org.samac.harvest.util.Data;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoListFragment extends Fragment {
+public class InfoListFragment extends Fragment{
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -76,8 +76,14 @@ public class InfoListFragment extends Fragment {
 
         data.setCategory(cat);
 
-        mAdapter = new infoAdapter(data);
-        mRecyclerView.setAdapter(mAdapter);
+        if(Data.isPulling()) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+        else {
+            mAdapter = new infoAdapter(data);
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
     }
 
     public void setData(Data data){
@@ -89,15 +95,14 @@ public class InfoListFragment extends Fragment {
     }
 
     private void refresh() {
-        data.pull(this);
+        data.pull((InformationActivity) getActivity());
     }
 
     public void endRefresh(){
+        mSwipeRefreshLayout.setRefreshing(false);
         mAdapter = new infoAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
-        mSwipeRefreshLayout.setRefreshing(false);
     }
-
 }
 
 class infoAdapter extends RecyclerView.Adapter<infoAdapter.ViewHolder>{

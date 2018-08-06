@@ -3,19 +3,17 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/19.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 // swiftlint:disable function_body_length
 import Eureka
 import SCLAlertView
+import Firebase
 
 extension UIViewController {
   func prebuiltGraph(
     title: String,
-    startDate: Date,
-    endDate: Date,
-    period: HarvestCloud.TimePeriod,
     stat: Stat
   ) -> ButtonRow {
     return ButtonRow { row in
@@ -32,92 +30,10 @@ extension UIViewController {
         return
       }
       
-      svc.startDate = startDate
-      svc.endDate = endDate
-      svc.period = period
       svc.stat = stat
       
       self.navigationController?.pushViewController(svc, animated: true)
     }
-  }
-}
-
-extension FormViewController {
-  func performanceRows(for stat: Stat) -> [ButtonRow] {
-    let today = Date().today()
-    let todaysPerformance = prebuiltGraph(
-      title: "Todays Performance",
-      startDate: today.0,
-      endDate: today.1,
-      period: .hourly,
-      stat: stat)
-    
-    let yesterday = Date().yesterday()
-    let yesterdaysPerformance = prebuiltGraph(
-      title: "Yesterdays Performance",
-      startDate: yesterday.0,
-      endDate: yesterday.1,
-      period: .hourly,
-      stat: stat)
-    
-    let thisWeek = Date().thisWeek()
-    let thisWeeksPerformance = prebuiltGraph(
-      title: "This Weeks Performance",
-      startDate: thisWeek.0,
-      endDate: thisWeek.1,
-      period: .daily,
-      stat: stat)
-    
-    let lastWeek = Date().lastWeek()
-    let lastWeeksPerformance = prebuiltGraph(
-      title: "Last Weeks Performance",
-      startDate: lastWeek.0,
-      endDate: lastWeek.1,
-      period: .daily,
-      stat: stat)
-    
-    let thisMonth = Date().thisMonth()
-    let thisMonthsPerformance = prebuiltGraph(
-      title: "This Months Performance",
-      startDate: thisMonth.0,
-      endDate: thisMonth.1,
-      period: .weekly,
-      stat: stat)
-    
-    let lastMonth = Date().lastMonth()
-    let lastMonthsPerformance = prebuiltGraph(
-      title: "Last Months Performance",
-      startDate: lastMonth.0,
-      endDate: lastMonth.1,
-      period: .weekly,
-      stat: stat)
-    
-    let thisYear = Date().thisMonth()
-    let thisYearsPerformance = prebuiltGraph(
-      title: "This Years Performance",
-      startDate: thisYear.0,
-      endDate: thisYear.1,
-      period: .monthly,
-      stat: stat)
-    
-    let lastYear = Date().lastMonth()
-    let lastYearsPerformance = prebuiltGraph(
-      title: "Last Years Performance",
-      startDate: lastYear.0,
-      endDate: lastYear.1,
-      period: .monthly,
-      stat: stat)
-    
-    return [
-      todaysPerformance,
-      yesterdaysPerformance,
-      thisWeeksPerformance,
-      lastWeeksPerformance,
-      thisMonthsPerformance,
-      lastMonthsPerformance,
-      thisYearsPerformance,
-      lastYearsPerformance
-    ]
   }
 }
 
@@ -266,12 +182,16 @@ extension Worker {
     
     let performanceSection = Section("Performance")
     if kind == .worker {
-      for prow in formVC.performanceRows(for: .workerComparison([self])) {
-        performanceSection <<< prow
+      for stat in StatStore.shared.store where stat.grouping == .worker {
+        var newStat = stat
+        newStat.ids = [self.id]
+        performanceSection <<< formVC.prebuiltGraph(title: stat.name, stat: newStat)
       }
     } else {
-      for prow in formVC.performanceRows(for: .foremanComparison([self])) {
-        performanceSection <<< prow
+      for stat in StatStore.shared.store where stat.grouping == .foreman {
+        var newStat = stat
+        newStat.ids = [self.id]
+        performanceSection <<< formVC.prebuiltGraph(title: stat.name, stat: newStat)
       }
     }
     
@@ -281,11 +201,7 @@ extension Worker {
       <<< lastnameRow
       <<< idRow
       
-      +++ Section.init(
-        header: "Role",
-        footer: """
-        Any foreman phone number must include its area code. Example \(Phoney.formatted(number: "0123456789") ?? "")
-        """)
+      +++ Section("Role")
       <<< isForemanRow
       <<< phoneRow
 //      <<< emailRow
@@ -387,6 +303,13 @@ extension Farm {
       cell.textField.clearButtonMode = .whileEditing
     }
     
+    let performanceSection = Section("Performance")
+    for stat in StatStore.shared.store where stat.grouping == .farm {
+      var newStat = stat
+      newStat.ids = [self.id]
+      performanceSection <<< formVC.prebuiltGraph(title: stat.name, stat: newStat)
+    }
+    
     let detailsRow = TextAreaRow { row in
       row.title = "Details"
       row.value = details
@@ -447,6 +370,8 @@ extension Farm {
     
       +++ orchardsSection
       <<< orchardRow
+      
+      +++ performanceSection
       
       +++ Section("Further Information")
       <<< detailsRow
@@ -666,8 +591,10 @@ extension Orchard {
     }
     
     let performanceSection = Section("Performance")
-    for prow in formVC.performanceRows(for: .orchardComparison([self])) {
-      performanceSection <<< prow
+    for stat in StatStore.shared.store where stat.grouping == .orchard {
+      var newStat = stat
+      newStat.ids = [self.id]
+      performanceSection <<< formVC.prebuiltGraph(title: stat.name, stat: newStat)
     }
     
     let deleteOrchardRow = ButtonRow { row in
@@ -799,6 +726,25 @@ extension Session {
       }
     }
     
+    let deleteSessionRow = ButtonRow { row in
+      row.title = "Delete Session"
+    }.onCellSelection { (_, _) in
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Delete") {
+        HarvestDB.delete(session: self) { (_, _) in
+          formVC.navigationController?.popViewController(animated: true)
+        }
+      }
+      
+      alert.showWarning("Are You Sure You Want to Delete this Session?", subTitle: """
+      You will not be able to get back any information about this session.
+      """)
+    }.cellUpdate { (cell, _) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
+    }
+    
     form
       +++ Section("Foreman")
       <<< displayRow
@@ -812,6 +758,9 @@ extension Session {
     
       +++ Section("Worker Performance Summary")
       <<< chartRow
+    
+      +++ Section()
+      <<< deleteSessionRow
   }
 }
 
@@ -822,7 +771,7 @@ extension HarvestUser {
     
     let organisationNameRow = TextRow { row in
       row.title = "Organisation Name"
-      row.value = HarvestUser.current.organisationName
+      row.value = self.organisationName
       row.placeholder = "Name of the Organisation"
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
@@ -831,9 +780,20 @@ extension HarvestUser {
       onChange()
     }
     
+    let emailRow = EmailRow { row in
+      row.title = "Email"
+      row.value = self.accountIdentifier
+      row.placeholder = "Your Account Email Address"
+    }.onChange { row in
+      self.temporary?.accountIdentifier = row.value ?? self.accountIdentifier
+      onChange()
+    }.cellUpdate { (cell, _) in
+      cell.textField.clearButtonMode = .whileEditing
+    }
+    
     let firstnameRow = TextRow { row in
       row.title = "First Name"
-      row.value = HarvestUser.current.firstname
+      row.value = self.firstname
       row.placeholder = ""
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
@@ -844,7 +804,7 @@ extension HarvestUser {
     
     let lastnameRow = TextRow { row in
       row.title = "Last Name"
-      row.value = HarvestUser.current.lastname
+      row.value = self.lastname
       row.placeholder = ""
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
@@ -853,13 +813,115 @@ extension HarvestUser {
       onChange()
     }
     
+    let deleteAccountRow = ButtonRow { row in
+      row.title = "Delete Account"
+    }.onCellSelection { _, _ in
+      let confirmationAlert = SCLAlertView(appearance: .warningAppearance)
+      confirmationAlert.addButton("Cancel", action: {})
+      confirmationAlert.addButton("Resgin") {
+        guard let user = Auth.auth().currentUser else {
+          SCLAlertView().showError("An Error Occurred", subTitle: "User is not currently signed in")
+          return
+        }
+        HarvestDB.delete(harvestUser: self) { succ in
+          if succ {
+            user.delete { (error) in
+              guard error == nil else {
+                SCLAlertView().showError("An Error Occurred", subTitle: error!.localizedDescription)
+                return
+              }
+            }
+            HarvestDB.signOut()
+            if let vc = formVC
+              .storyboard?
+              .instantiateViewController(withIdentifier: "signInOptionViewController") {
+              formVC.present(vc, animated: true, completion: nil)
+            }
+          }
+        }
+      }
+      confirmationAlert.showWarning("Are You Sure?", subTitle: "Are you sure you want to delete your account")
+      
+    }.cellUpdate { (cell, _) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
+    }
+    
+    let newPasswordRow = ButtonRow { row in
+      row.title = "Update Password"
+    }.onCellSelection { _, _ in
+      let alert = SCLAlertView(appearance: .warningAppearance)
+      
+      let newPasswordTextField = alert.addTextField("New Password")
+      let confirmPasswordTextField = alert.addTextField("Confirm New Password")
+      
+      newPasswordTextField.placeholder = "New Password"
+      confirmPasswordTextField.placeholder = "Confirm New Password"
+      newPasswordTextField.isSecureTextEntry = true
+      confirmPasswordTextField.isSecureTextEntry = true
+      
+      alert.addButton("Cancel", action: {})
+      alert.addButton("Update") {
+        guard let newPassword = newPasswordTextField.text,
+          let confirmPassword = confirmPasswordTextField.text,
+          newPassword.count >= 6 && confirmPassword.count >= 6 else {
+            SCLAlertView().showError(
+              "Password Not Long Enough",
+              subTitle: "Password length must be at least 6 characters long")
+            return
+        }
+        
+        guard newPassword == confirmPassword else {
+          SCLAlertView().showError(
+            "Mismatching passwords",
+            subTitle: """
+          Your passwords are not matching. Please provide the same password in both \
+          password prompts
+          """)
+          return
+        }
+        
+        guard let user = Auth.auth().currentUser else {
+          SCLAlertView().showError(
+            "An Error Occurred",
+            subTitle: "User is not signed in")
+          return
+        }
+        
+        user.updatePassword(to: newPassword) { (error) in
+          if let err = error {
+            SCLAlertView().showError("An Error Occurred", subTitle: err.localizedDescription)
+            return
+          }
+        }
+      }
+      
+      alert.showEdit(
+        "Update Password",
+        subTitle: "Enter the new password you want to change to.")
+      
+    }.cellUpdate { cell, _ in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .addOrchard
+    }
+    
     form
-      +++ Section("Organisation Name")
+      +++ Section("Organisation Information")
       <<< organisationNameRow
       
-      +++ Section("Farmer Name")
+      +++ Section("Account Details")
+      <<< emailRow
       <<< firstnameRow
       <<< lastnameRow
+    
+    if Auth.auth().currentUser?.providerID == "Firebase" {
+      form +++ Section()
+        <<< newPasswordRow
+    }
+    
+    form
+      +++ Section()
+      <<< deleteAccountRow
   }
 }
 
@@ -870,7 +932,6 @@ extension EntityItem {
     case let .orchard(o): o.information(for: formVC, onChange: onChange)
     case let .farm(f): f.information(for: formVC, onChange: onChange)
     case let .session(s): s.information(for: formVC, onChange: onChange)
-    case .shallowSession: break
     case let .user(u): u.information(for: formVC, onChange: onChange)
     }
   }

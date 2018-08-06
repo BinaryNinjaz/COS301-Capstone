@@ -1,0 +1,81 @@
+
+body{
+    background-color: transparent;
+    
+}
+
+/* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
+.inputBlock {
+	position: relative;
+
+    border: 4px solid green;
+    border-radius: 10px;
+    padding: 7px;
+    text-align: center;
+    background-color: whitesmoke;
+    width: 300px;
+}
+/* The left class should be left aligned with a width of 40 , floated left */
+.left{
+    text-align: left; 
+    width: 400px;      
+    float: left;
+}
+/* The right class should not be aligned, left margin should be 40%, color should be black , front size should be set to 30pxs*/
+#right{  
+          
+    color: black;
+    outline-color: #006633;
+    outline-width: 2px;
+    letter-spacing: 2px;
+    font-size: 24px;
+   
+}
+.list-heading {
+    font-weight: bolder;
+    font-size: 35px;
+    position: relative;
+}
+.center {
+    position: relative;  
+    text-align: center;
+    margin-right: auto;
+}
+.sec {
+    text-align: auto;
+    padding: 40px;
+	position:relative
+}
+ul {
+    list-style-type: ico;
+}
+
+ul.ico {
+    list-style-image: url('leaf2.png');// no-repeat left top;
+}
+
+.card-body label{
+    text-align: left;
+}
+
+@media only screen and (min-width: 700px) {
+    html {
+        font-family: Sans-Serif;	
+        background-image: url("backgrdSmaller.jpg");
+        background-repeat: no-repeat;  
+        background-size: auto;  
+    }
+}
+@media only screen and (max-width: 728px) {
+   html {
+        font-family: Sans-Serif;	
+         background-image: url("backgrdSmaller.jpg");
+        background-repeat: no-repeat;  
+        background-size: cover;  
+    }
+}
+@media only screen and (max-width: 728px){
+    #right li, h3{
+        color: white;
+    }
+}

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/harvestbackground">
+
+    <ScrollView
+        android:id="@+id/login_form"
+        android:layout_width="@dimen/tablet_form_width"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="@string/app_name"
+                style="@style/TextView.Heading" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    app:elevation="3dp"
+                    style="@style/cardPictureButton"
+                    android:onClick="choseFarmer">
+
+                    <LinearLayout
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:focusable="false"
+                        style="@style/cardPictureButtonLayout">
+
+                        <ImageView
+                            android:id="@+id/farmerPic"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:src="@drawable/nutsinhands"
+                            android:scaleType="centerCrop"
+                            android:layout_weight="8"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:contentDescription="@string/farmer_sign_in"
+                            android:adjustViewBounds="true"/>
+
+                        <TextView
+                            android:background="#07000000"
+                            android:gravity="center"
+                            android:text="@string/farmer_sign_in"
+                            android:layout_weight="2"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp" />
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    app:cardCornerRadius="10dp"
+                    app:elevation="3dp"
+                    style="@style/cardPictureButton"
+                    android:onClick="choseForeman">
+
+                    <LinearLayout
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:focusable="false"
+                        style="@style/cardPictureButtonLayout">
+
+                        <ImageView
+                            android:id="@+id/foremanPic"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:src="@drawable/bookcheckedhand"
+                            android:scaleType="centerCrop"
+                            android:layout_weight="8"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:contentDescription="@string/foreman_sign_in"
+                            android:adjustViewBounds="true"/>
+
+                        <TextView
+                            android:background="#07000000"
+                            android:gravity="center"
+                            android:text="@string/foreman_sign_in"
+                            android:layout_weight="2"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp" />
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <Button
+                    android:id="@+id/signIn_choose_create"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signIn_choose_create"
+                    android:background="@color/colorAccent"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:onClick="choseNew"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

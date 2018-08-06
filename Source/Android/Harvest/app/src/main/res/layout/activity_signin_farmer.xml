@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/backgrdsmallerblurlight"
+    android:background="@drawable/harvestbackground"
     tools:context=".SignIn_Farmer">
 
     <!-- Login progress -->
@@ -33,8 +33,8 @@
             android:orientation="vertical">
 
             <TextView
-            android:text="@string/app_name"
-            style="@style/TextView.Heading"/>
+                android:text="@string/app_name"
+                style="@style/TextView.Heading"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,27 +42,46 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <android.support.design.widget.TextInputLayout
-                    style="@style/TextInputLayout">
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_title"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/white"
+                    android:elevation="4dp"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="0dp">
 
-                    <EditText
-                        android:id="@+id/edtEmail"
-                        android:hint="@string/prompt_email"
-                        style="@style/EditText"
-                        android:inputType="textEmailAddress" />
+                        <android.support.design.widget.TextInputLayout
+                            style="@style/TextInputLayout">
 
-                </android.support.design.widget.TextInputLayout>
+                            <EditText
+                                android:id="@+id/edtEmail"
+                                android:hint="@string/prompt_email"
+                                style="@style/EditText"
+                                android:inputType="textEmailAddress" />
 
-                <android.support.design.widget.TextInputLayout
-                    style="@style/TextInputLayout">
+                        </android.support.design.widget.TextInputLayout>
 
-                    <EditText
-                        android:id="@+id/edtPassword"
-                        android:hint="@string/prompt_enter_password"
-                        style="@style/EditText"
-                        android:inputType="textPassword" />
+                        <android.support.design.widget.TextInputLayout
+                            style="@style/TextInputLayout">
 
-                </android.support.design.widget.TextInputLayout>
+                            <EditText
+                                android:id="@+id/edtPassword"
+                                android:hint="@string/prompt_enter_password"
+                                style="@style/EditText"
+                                android:inputType="textPassword" />
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+                </RelativeLayout>
 
                 <Button
                     android:id="@+id/btnLogin"
@@ -75,15 +94,15 @@
                     android:background="@color/colorGoogleRed"
                     android:text="@string/loginWithGoogle" />
 
-                <TextView
-                    android:id="@+id/linkForgotAccountDetails"
-                    android:text="@string/forgotAccountDetails"
-                    style="@style/TextView.links"
-                    android:gravity="bottom|center"
-                    android:layout_gravity="bottom|center"
-                    android:layout_marginTop="10dp"/>
-
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/linkForgotAccountDetails"
+                android:text="@string/forgotAccountDetails"
+                style="@style/TextView.links"
+                android:gravity="bottom|center"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="10dp"/>
 
         </LinearLayout>
     </ScrollView>

@@ -28,6 +28,8 @@ import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -80,6 +82,7 @@ public class SpiralGraph extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spiral_graph);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
         spiralGraphView = findViewById(R.id.spiralChart);
@@ -116,7 +119,6 @@ public class SpiralGraph extends AppCompatActivity {
                 });
 
         //Start the first fragment
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         database = FirebaseDatabase.getInstance();
         userUid = user.getUid();//ID or key of the current user
         orchardKey = getIntent().getStringExtra("key");
@@ -307,15 +309,19 @@ public class SpiralGraph extends AppCompatActivity {
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(SpiralGraph.this, SignIn_Choose.class));
+                                }
+                            });
+                }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-//        return false;
     }
 }

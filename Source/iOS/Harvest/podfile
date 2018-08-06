@@ -14,6 +14,7 @@ target 'Harvest' do
   pod 'SnapKit', '~> 4.0.0'
   pod 'SCLAlertView'
   pod 'PhoneNumberKit', '~> 2.1'
+  pod 'FSPagerView'
   
   target 'HarvestTests' do
     inherit! :search_paths

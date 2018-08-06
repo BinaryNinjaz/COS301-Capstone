@@ -87,7 +87,7 @@ public class WorkerGridAdapter extends BaseAdapter {
                 increment.setText(String.format("%d", value));
 
                 //make changes on firebase
-                collectionObj.addCollection(personName, location);
+                //collectionObj.addCollection(personName, );
                 ++totalBagsCollected;
             }
         });

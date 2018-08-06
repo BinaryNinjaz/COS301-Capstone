@@ -4,27 +4,27 @@
         <item
             android:id="@+id/actionYieldTracker"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_add"
+            android:icon="@drawable/icons8_plus_50"
             android:title="@string/bottomYieldTracker"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="always|withText" />
         <item
             android:id="@+id/actionInformation"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_save"
+            android:icon="@drawable/icons8_create_30"
             android:title="@string/bottomInformation"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="always|withText" />
         <item
             android:id="@+id/actionSession"
             android:enabled="true"
-            android:icon="@android:drawable/ic_menu_view"
+            android:icon="@drawable/icons8_place_marker_30"
             android:title="@string/title_activity_sessions"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="always|withText" />
         <item
             android:id="@+id/actionStats"
             android:enabled="true"
-            android:icon="@drawable/baseline_bar_chart_black_18dp"
+            android:icon="@drawable/icons8_combo_chart_30"
             android:iconTint="@color/grey"
             android:iconTintMode="add"
             android:title="@string/title_stats"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="always|withText"/>
 </menu>

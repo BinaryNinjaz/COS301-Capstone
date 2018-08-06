@@ -35,27 +35,30 @@ public class ForemenForBarGraph extends AppCompatActivity {
     private ForemanRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foremen_for_bar_graph);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
 
-        bottomNavigationView.setSelectedItemId(R.id.actionSession);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(ForemenForBarGraph.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(ForemenForBarGraph.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
                                 Intent openInformation= new Intent(ForemenForBarGraph.this, InformationActivity.class);
@@ -82,6 +85,18 @@ public class ForemenForBarGraph extends AppCompatActivity {
         this.foremen = new ArrayList<>();
         this.foremenKeys = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(ForemenForBarGraph.this, WorkerOrForeman.class));
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);//set correct item to pop out on the nav bar
     }
 
     public void collectOrchards() {
@@ -149,13 +164,8 @@ public class ForemenForBarGraph extends AppCompatActivity {
                 }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-//        return false;
     }
 }
