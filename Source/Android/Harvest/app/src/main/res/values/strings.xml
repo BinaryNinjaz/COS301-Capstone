@@ -204,6 +204,12 @@
     <string name="pressStart">Press \'Start\' to begin tracking worker collections</string>
     <string name="farmer_sign_in">Farmer Sign In</string>
     <string name="foreman_sign_in">Foreman Sign In</string>
+    <string name="sessionDetailForemanLabelText">Foreman</string>
+    <string name="sessionDetailDurationLabelText">DURATION</string>
+    <string name="sessionDetailTimeStartedLabelText">Time Started</string>
+    <string name="sessionDetailTimeEndedLabelText">Time Ended</string>
+    <string name="sessionDetailTrackingLabelText">TRACKING</string>
+    <string name="sessionDetailPerformanceLabelText">WORKER PERFORMANCE SUMMARY</string>
 
     <!--Country codes for formatting telephone numbers-->
     <string-array name="CountryCodes" >
