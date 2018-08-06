@@ -170,7 +170,7 @@ public class Analytics_Creator extends Fragment{
                         accumulationSelection = Analytics.ACCUMULATION_ENTITY;
                         break;
                     case R.id.anal_create_accumulator_radio_interval:
-                        accumulationSelection = Analytics.ACCUMULATION_INTERVAL;
+                        accumulationSelection = Analytics.ACCUMULATION_TIME;
                         break;
                 }
                 updateAccumulatorHint();
@@ -207,7 +207,7 @@ public class Analytics_Creator extends Fragment{
             case Analytics.ACCUMULATION_ENTITY:
                 accumulatorDescriptionTextView.setText(getString(R.string.anal_create_accumulation_desc_entity, Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase(), Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), true).toLowerCase(), Analytics.timeConverter(intervalSpinner.getSelectedItem().toString(), false).toLowerCase()));
                 break;
-            case Analytics.ACCUMULATION_INTERVAL:
+            case Analytics.ACCUMULATION_TIME:
                 accumulatorDescriptionTextView.setText(getString(R.string.anal_create_accumulation_desc_time, Analytics.timeConverter(intervalSpinner.getSelectedItem().toString(), false).toLowerCase(), Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), true).toLowerCase()));
         }
     }

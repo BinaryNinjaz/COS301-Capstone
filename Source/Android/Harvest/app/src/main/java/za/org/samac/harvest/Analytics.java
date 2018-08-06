@@ -83,7 +83,7 @@ public class Analytics extends AppCompatActivity {
     //Accumulation
     public static final String ACCUMULATION_NONE = "running";
     public static final String ACCUMULATION_ENTITY = "accumEntity";
-    public static final String ACCUMULATION_INTERVAL = "accumTime";
+    public static final String ACCUMULATION_TIME = "accumTime";
 
     public static final double THOUSAND = 1000.0000000;
 

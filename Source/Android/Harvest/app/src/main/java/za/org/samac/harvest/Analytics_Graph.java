@@ -1,15 +1,13 @@
 package za.org.samac.harvest;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,22 +15,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.RadarData;
-import com.github.mikephil.charting.data.RadarDataSet;
-import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -40,7 +27,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,12 +35,12 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -94,10 +80,11 @@ public class Analytics_Graph extends AppCompatActivity {
 
     private Data data = new Data();
 
-    static int minTime = Integer.MAX_VALUE, maxTime = Integer.MIN_VALUE;
+    static double minTime = Double.MAX_VALUE, maxTime = Double.MIN_VALUE;
 
     private Category category;
     private Context context;
+    private SimpleDateFormat dateFormat;
 
     //Startup
     @SuppressWarnings("ConstantConditions")
@@ -289,6 +276,10 @@ public class Analytics_Graph extends AppCompatActivity {
                 public void run() {
                     try {
 
+                        if (!mode.equals(Analytics.ACCUMULATION_TIME)) {
+                            setDateFormat();
+                        }
+
                         //Get the result of the function
                         String response = sendPost(urlTotalBagsPerDay(), urlParameters());
                         Log.i(TAG, response);
@@ -296,9 +287,23 @@ public class Analytics_Graph extends AppCompatActivity {
 
                         int colour = 0;
 
+                        //Determine max and min values
+                        JSONArray entityNames = functionResult.names(); //to iterate through the top level entities
+                        if (entityNames != null){
+                            for (int i = 0; i < entityNames.length(); i++){
+                                JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
+                                JSONArray entryNames = object.names(); //Keys of the entries, for iteration
+                                if (entryNames != null) {
+                                    for (int j = 0; j < entryNames.length(); j++) {
+                                       getDoubleFromKey(entryNames.get(j).toString(), false);
+                                    }
+                                }
+                            }
+                        }
+
                         //Line always
                         List<ILineDataSet> dataSets = new ArrayList<>(); //Holds all the data sets, so one for each entity
-                        JSONArray entityNames = functionResult.names(); //to iterate through the top level entities
+                        entityNames = functionResult.names(); //to iterate through the top level entities
                         if (entityNames != null){
                             for (int i = 0; i < entityNames.length(); i++){
                                 JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
@@ -308,15 +313,15 @@ public class Analytics_Graph extends AppCompatActivity {
                                     LineDataSet lineDataSet;
                                     for (int j = 0; j < entryNames.length(); j++) {
                                         //Get all of the entries, buy turning the key into an int (x axis), and the value to, erm, the value (y axis)
-                                        Entry entry = new Entry(getIntegerFromKey(entryNames.get(j).toString()), (float) object.getDouble(entryNames.get(j).toString()));
+                                        Entry entry = new Entry((float) (getDoubleFromKey(entryNames.get(j).toString(), true)), (float) object.getDouble(entryNames.get(j).toString()));
                                         entries.add(entry);
                                     }
-                                    if (!entityNames.get(i).toString().equals("avg")) {
+                                    if (!entityNames.get(i).toString().equals("avg")) {;
                                         lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
                                     } else {
                                         lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_gragh_averageLabel));
                                     }
-                                    lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour]);
+                                    lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
                                     dataSets.add(lineDataSet);
                                 }
                             }
@@ -346,17 +351,19 @@ public class Analytics_Graph extends AppCompatActivity {
                             @Override
                             public String getFormattedValue(float value, AxisBase axis) {
 //                                int position = ((int)value - minTime);
-                                double fpos = value / maxTime;
-                                fpos *= labels.length;
-                                fpos = Math.floor(fpos);
-                                int position = (int) fpos;
-                                if (position >= labels.length){
-                                    Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is greater than array of size " + labels.length + ".");
-                                }
-                                else if (position < 0){
-                                    Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is less than zero.");
-                                }
-                                return labels[Math.abs(position % labels.length)];
+//                                double fpos = value / maxTime;
+//                                fpos *= labels.length;
+//                                fpos = Math.floor(fpos);
+//                                int position = (int) fpos;
+//                                if (position >= labels.length){
+//                                    Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is greater than array of size " + labels.length + ".");
+//                                }
+//                                else if (position < 0){
+//                                    Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is less than zero.");
+//                                }
+//                                return labels[Math.abs(position % labels.length)];
+                                int position = (int) Math.floor((double) value);
+                                return labels[position];
                             }
                         });
 
@@ -383,154 +390,259 @@ public class Analytics_Graph extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("UnnecessaryReturnStatement")
+    @SuppressLint("SimpleDateFormat")
+    private void setDateFormat(){
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTimeInMillis((long) (start * Analytics.THOUSAND));
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTimeInMillis((long) (end * Analytics.THOUSAND));
+        final String fmtYear = isSameYear(startCal, endCal) ? "" : "YYYY ";
+        final String fmtMonth = isSameMonth(startCal, endCal) ? "" : "MMM ";
+        final String fmtDay = isSameDay(startCal, endCal) ? "" : "DD ";
+        final String fmt = fmtYear + fmtMonth + fmtDay;
+        switch (interval){
+            case Analytics.HOURLY:
+                dateFormat = new SimpleDateFormat(fmt + "HH:mm");
+                return;
+            case Analytics.DAILY:
+                dateFormat = new SimpleDateFormat(fmt.equals("") ? "ddd" : fmt);
+                return;
+            case Analytics.WEEKLY:
+                dateFormat = new SimpleDateFormat(fmt.equals("") ? "ddd" : fmt);
+                return;
+            case Analytics.MONTHLY:
+                dateFormat = new SimpleDateFormat(fmtYear + "MMM");
+                return;
+            case Analytics.YEARLY:
+                dateFormat = new SimpleDateFormat("YYYY");
+                return;
+        }
+    }
+
+    private boolean isSameYear(Calendar startCal, Calendar endCal){
+        return startCal.get(Calendar.YEAR) == endCal.get(Calendar.YEAR);
+    }
+
+    private boolean isSameMonth(Calendar startCal, Calendar endCal){
+        return startCal.get(Calendar.YEAR) == endCal.get(Calendar.YEAR) && startCal.get(Calendar.MONTH) == endCal.get(Calendar.MONTH);
+    }
+
+    private boolean isSameDay(Calendar startCal, Calendar endCal){
+        return startCal.get(Calendar.YEAR) == endCal.get(Calendar.YEAR) && startCal.get(Calendar.MONTH) == endCal.get(Calendar.MONTH) && startCal.get(Calendar.DAY_OF_MONTH) == endCal.get(Calendar.DAY_OF_MONTH);
+    }
+
     /**
      * Depending on the interval, create a string array, so that the integers on the x axis can access the array to get what label they actually represent.
      */
     private void populateLabels(){
-        switch (interval) {
-            case Analytics.HOURLY:
-                labels = new String[maxTime - minTime + 1];
-                for (int i = 0; i <= maxTime - minTime; i++) {
-                     labels[i] = String.valueOf(minTime + i) + ":00";
+        final int diffPOne = (int) (maxTime - minTime) + 1, diff = (int) (maxTime - minTime);
+        if (diff < 0){
+            return;
+        }
+        if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+            switch (interval) {
+                case Analytics.HOURLY:
+                    labels = new String[diffPOne];
+                    for (int i = 0; i <= diff; i++) {
+                        labels[i] = String.valueOf((int) (minTime) + i) + ":00";
+                    }
+                    break;
+                case Analytics.WEEKLY:
+                    labels = new String[diffPOne];
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis((long) (start * Analytics.THOUSAND));
+                    Calendar endCal = Calendar.getInstance();
+                    endCal.setTimeInMillis((long) (end * Analytics.THOUSAND));
+                    if (!isSameYear(cal, endCal)) {
+                        for (int i = 0; i < diff; i++){
+                            labels[i] = String.valueOf(i + minTime);
+                        }
+                    }
+                    else {
+                        cal.set(Calendar.DAY_OF_WEEK,
+                                Calendar.SUNDAY //This here is the first day of week.
+                        );
+
+                        for (int i = 0; i <= diff; i++) {
+                            cal.set(Calendar.WEEK_OF_YEAR, (int) (i + minTime));
+                            String builder = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) +
+                                    "/" +
+                                    cal.get(Calendar.MONTH); // +
+//                                "/" +
+//                                cal.get(Calendar.YEAR);
+                            labels[i] = builder;
+                        }
+                    }
+                    break;
+                case Analytics.DAILY:
+                    labels = new String[]{
+                            "Sunday",
+                            "Monday",
+                            "Tuesday",
+                            "Wednesday",
+                            "Thursday",
+                            "Friday",
+                            "Saturday",
+                    };
+                    break;
+                case Analytics.MONTHLY:
+                    labels = new String[]{
+                            "January",
+                            "February",
+                            "March",
+                            "April",
+                            "May",
+                            "June",
+                            "July",
+                            "August",
+                            "September",
+                            "October",
+                            "November",
+                            "December",
+                    };
+                    break;
+                case Analytics.YEARLY:
+                    labels = new String[diffPOne];
+                    for (int i = 0; i <= diff; i++) {
+                        labels[i] = Integer.toString((int) (minTime + i));
+                    }
+                    break;
+            }
+        }
+        else {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis((long) (start * Analytics.THOUSAND));
+
+            labels = new String[diffPOne];
+            Date date = cal.getTime();
+            int i = 0;
+            while (i < diff){
+                labels[i] = dateFormat.format(date);
+                switch (interval){
+                    case Analytics.HOURLY:
+                        cal.roll(Calendar.HOUR, 1);
+                        break;
+                    case Analytics.DAILY:
+                        cal.roll(Calendar.DAY_OF_MONTH, 1);
+                        break;
+                    case Analytics.WEEKLY:
+                        cal.roll(Calendar.WEEK_OF_YEAR, 1);
+                        break;
+                    case Analytics.MONTHLY:
+                        cal.roll(Calendar.MONTH, 1);
+                        break;
+                    case Analytics.YEARLY:
+                        cal.roll(Calendar.YEAR, 1);
+                        break;
                 }
-                break;
-            case Analytics.WEEKLY:
-                labels = new String[maxTime - minTime + 1];
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                for (int i = minTime; i <= maxTime; i++){
-                    cal.set(Calendar.WEEK_OF_YEAR, i);
-                    String builder = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) +
-                            "/" +
-                            cal.get(Calendar.MONTH) +
-                            "/" +
-                            cal.get(Calendar.YEAR);
-                    labels[i] = builder;
-                }
-                break;
-            case Analytics.DAILY:
-                labels = new String[]{
-                        "Sunday",
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                };
-                break;
-            case Analytics.MONTHLY:
-                labels = new String[]{
-                        "January",
-                        "February",
-                        "March",
-                        "April",
-                        "May",
-                        "June",
-                        "July",
-                        "August",
-                        "September",
-                        "October",
-                        "November",
-                        "December",
-                };
-                break;
-            case Analytics.YEARLY:
-                labels = new String[maxTime - minTime + 1];
-                for (int i = 0; i <= maxTime - minTime; i++){
-                    labels[i] = Integer.toString(minTime + i);
-                }
-                break;
+                date = cal.getTime();
+            }
         }
     }
 
     /**
-     * Take any key, most notably a string key, and turn it into an integer.
+     * Take any key, most notably a string key, and turn it into an double.
      * @param key the key to be converted.
-     * @return the integer representing the key.
+     * @return the double representing the key.
      */
-    private int getIntegerFromKey(String key){
-        int result = 0;
-        switch (interval){
-            case Analytics.HOURLY:
-//                return Integer.parseInt(key);
-                String[] tokens = key.split(" ");
-                result = Integer.parseInt(tokens[0]);
-                break;
-            case Analytics.DAILY:
-                break;
-            case Analytics.WEEKLY:
-                switch (key){
-                    case "Sunday":
-                        result =  0;
-                        break;
-                    case "Monday":
-                        result =  1;
-                        break;
-                    case "Tuesday":
-                        result =  2;
-                        break;
-                    case "Wednesday":
-                        result =  3;
-                        break;
-                    case "Thursday":
-                        result =  4;
-                        break;
-                    case "Friday":
-                        result =  5;
-                        break;
-                    case "Saturday":
-                        result =  6;
-                }
-                break;
-            case Analytics.MONTHLY:
-                switch (key){
-                    case "January":
-                        result =  0;
-                        break;
-                    case "February":
-                        result =  1;
-                        break;
-                    case "March":
-                        result =  2;
-                        break;
-                    case "April":
-                        result =  3;
-                        break;
-                    case "May":
-                        result =  4;
-                        break;
-                    case "June":
-                        result =  5;
-                        break;
-                    case "July":
-                        result =  6;
-                        break;
-                    case "August":
-                        result =  7;
-                        break;
-                    case "September":
-                        result =  8;
-                        break;
-                    case "October":
-                        result =  9;
-                        break;
-                    case "November":
-                        result =  10;
-                        break;
-                    case "December":
-                        result =  11;
-                }
-                break;
-            case Analytics.YEARLY:
-                result =  Integer.parseInt(key);
-                break;
+    private double getDoubleFromKey(String key, boolean subMin){
+        double result = 0;
+        if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+            switch (interval) {
+                case Analytics.HOURLY:
+                    String tokens[] = key.split(":");
+                    result = Double.parseDouble(tokens[0]);
+                    break;
+                case Analytics.DAILY:
+                    switch (key) {
+                        case "Sunday":
+                            result = 0.0;
+                            break;
+                        case "Monday":
+                            result = 1.0;
+                            break;
+                        case "Tuesday":
+                            result = 2.0;
+                            break;
+                        case "Wednesday":
+                            result = 3.0;
+                            break;
+                        case "Thursday":
+                            result = 4.0;
+                            break;
+                        case "Friday":
+                            result = 5.0;
+                            break;
+                        case "Saturday":
+                            result = 6.0;
+                    }
+                    break;
+                case Analytics.WEEKLY:
+                    result = Double.parseDouble(key);
+                    break;
+                case Analytics.MONTHLY:
+                    switch (key) {
+                        case "January":
+                            result = 0.0;
+                            break;
+                        case "February":
+                            result = 1.0;
+                            break;
+                        case "March":
+                            result = 2.0;
+                            break;
+                        case "April":
+                            result = 3.0;
+                            break;
+                        case "May":
+                            result = 4.0;
+                            break;
+                        case "June":
+                            result = 5.0;
+                            break;
+                        case "July":
+                            result = 6.0;
+                            break;
+                        case "August":
+                            result = 7.0;
+                            break;
+                        case "September":
+                            result = 8.0;
+                            break;
+                        case "October":
+                            result = 9.0;
+                            break;
+                        case "November":
+                            result = 10.0;
+                            break;
+                        case "December":
+                            result = 11.0;
+                    }
+                    break;
+                case Analytics.YEARLY:
+                    result = Double.parseDouble(key);
+                    break;
+            }
         }
-        if (result < minTime){
-            minTime = result;
+        else {
+            try {
+                result = (double) (dateFormat.parse(key).getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-        if (result > maxTime){
-            maxTime = result;
+        if (! subMin) {
+            if (result < minTime) {
+                minTime = result;
+            }
+            if (result > maxTime) {
+                maxTime = result;
+            }
+        }
+        else {
+            result -= minTime;
         }
         return result;
     }
