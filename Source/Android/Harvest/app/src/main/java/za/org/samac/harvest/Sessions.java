@@ -28,11 +28,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -156,13 +160,40 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         return flattenDataSource();
     }
 
+    static class DescOrder implements Comparator<String> {
+
+        @Override
+        public int compare(String o1, String o2) {
+            return o2.compareTo(o1);
+        }
+    }
+
     private Boolean flattenDataSource() {
         int oldCount = adapterSource != null ? adapterSource.size() : 0;
         adapterSource.clear();
         if (filteredSessions == null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy MMM dd, EEEE", Locale.getDefault());
+            formatter.setCalendar(Calendar.getInstance());
+
+            TreeMap<String, ArrayList<SearchedItem.Session>> compacted = new TreeMap<>(new DescOrder());
             for (String key : sessions.keySet()) {
                 SessionItem item = sessions.get(key);
-                adapterSource.add(0, new SearchedItem.Session(item, ""));
+                String date = formatter.format(item.startDate);
+
+                if (compacted.get(date) == null) {
+                    compacted.put(date, new ArrayList<SearchedItem.Session>());
+                }
+                compacted.get(date).add(new SearchedItem.Session(item, null));
+            }
+
+            Integer section = 1;
+            for (String key : compacted.keySet()) {
+                ArrayList<SearchedItem.Session> items = compacted.get(key);
+                adapterSource.add(new SearchedItem.Session(null, key));
+                for (SearchedItem.Session item : items) {
+                    adapterSource.add(section, item);
+                }
+                section = adapterSource.size() + 1;
             }
         } else {
             Integer section = 1;
@@ -281,7 +312,6 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                     reload = filterSessions();
                 }
                 if (flattenDataSource() || reload) {
-                    System.out.println("**********************");
                     adapter.notifyItemInserted(adapterSource.size() - 1);
                 }
             }
