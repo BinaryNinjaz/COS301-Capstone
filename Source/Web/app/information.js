@@ -965,7 +965,7 @@ function workSave(type, id) {
 
 function workMod(id) {
   firebase.database().ref('/' + userID() +'/workers/' + id).once('value').then(function (snapshot) {
-    document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delWork(\"" + id + "\")'>Delete</button>";
+    document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delWork(\""+id+"\")'>Delete</button>";
     document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name + " " + snapshot.val().surname;
     firebase.database().ref('/' + userID() +'/orchards').once('value').then(function (orchard) {
       document.getElementById('col3').innerHTML = "" +
@@ -1032,14 +1032,22 @@ function workMod(id) {
 }
 
 function delWork(id) {
+ 
+    
   const ref = firebase.database().ref('/' + userID() + '/workers/' + id);
   let email;
   ref.once('value').then(function (snapshot) {
       email = snapshot.val().email;
   });
   ref.remove();
-  email = email.replace(/\./g, ",");
-  firebase.database().ref('/WorkingFor/' + email).remove();
+ 
+  try{
+    email = email.replace(/\./g, ",");
+    firebase.database().ref('/WorkingFor/' + email).remove();
+  }catch(err){
+      
+  }
+  document.getElementById("col3").innerHTML = "";
   popWork();
   clear3();
 }
