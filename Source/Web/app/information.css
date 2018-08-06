@@ -48,5 +48,13 @@ body{
     
     
  
-
- 
+@media (max-width: 768px){
+    #col2{
+        width: 300px;
+    }
+}/*
+@media (min-width: 768px){
+    #col2{
+        width: 300px;
+    }
+}*/
