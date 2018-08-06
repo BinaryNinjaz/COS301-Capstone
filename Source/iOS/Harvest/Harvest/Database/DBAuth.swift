@@ -231,8 +231,7 @@ extension HarvestDB {
   static func getWorkingFor(
     completion: @escaping ([(uid: String, wid: String)]) -> Void
   ) {
-    let wfref = ref.child(
-      Path.workingFor
+    let wfref = ref.child(Path.workingFor
         + "/"
         + HarvestUser.current.accountIdentifier.removedFirebaseInvalids())
     wfref.observeSingleEvent(of: .value) { (snapshot) in

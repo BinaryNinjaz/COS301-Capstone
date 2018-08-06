@@ -284,10 +284,10 @@
 			isa = PBXGroup;
 			children = (
 				164F30A520D46DAA00E7772A /* Harvest.entitlements */,
+				1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */,
 				169E5195206C62D6006B923E /* Model */,
 				16420FCA2069717200E1A292 /* Database */,
 				16420FC720696B6500E1A292 /* UI Components */,
-				1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */,
 				1604E4D02069597200E9BA15 /* App Delegate */,
 				1604E4D12069597D00E9BA15 /* View Controller */,
 				1604E4D3206959B300E9BA15 /* User Interface */,
@@ -507,17 +507,9 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		167448E7208BD6D500FA605C /* Codable */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Codable;
-			sourceTree = "<group>";
-		};
 		169E5195206C62D6006B923E /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				167448E7208BD6D500FA605C /* Codable */,
 				167448DF208B2E1200FA605C /* Extensions */,
 				167448BD20893B4F00FA605C /* SortedCollections */,
 				167448AD208926E000FA605C /* Information */,

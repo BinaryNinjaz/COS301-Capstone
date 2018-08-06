@@ -28,7 +28,7 @@ class SessionSelectionViewController: UITableViewController {
     
     searchBar?.delegate = self
     
-    loadNewPage()
+    loadNewPage(forcefully: true)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -38,8 +38,8 @@ class SessionSelectionViewController: UITableViewController {
     }
   }
   
-  func loadNewPage() {
-    guard sessions.count > 0 else {
+  func loadNewPage(forcefully: Bool = false) {
+    guard sessions.count > 0 || forcefully else {
       let label = UILabel(frame: tableView.frame)
       label.textAlignment = .center
       label.textColor = UIColor.black.withAlphaComponent(0.3)
