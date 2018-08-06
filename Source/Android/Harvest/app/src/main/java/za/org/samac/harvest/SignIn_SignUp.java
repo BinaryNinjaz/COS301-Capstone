@@ -92,27 +92,14 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_signin_signup);
         // Set up the sign up form.
         edtFirstName = findViewById(R.id.edtFirstName);
-        //populateAutoComplete();
 
         edtSurname = findViewById(R.id.edtSurname);
-        //populateAutoComplete();
 
         edtEmail = findViewById(R.id.edtEmail);
-        //populateAutoComplete();
 
         edtOrganization = findViewById(R.id.edtOrganization);
 
         edtPassword = findViewById(R.id.edtPassword);
-        /*edtPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    createAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });*/
 
         edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
         edtConfirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -159,19 +146,19 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
         mAuth = FirebaseAuth.getInstance();//initialisation the FirebaseAuth instance
 
         //Set organization to email
-        edtEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus){
-                    String email = edtEmail.getText().toString();
-                    String org = edtOrganization.getText().toString();
-                    if (org.equals("") || org.equals(oldEmail)){
-                        edtOrganization.setText(email);
-                    }
-                    oldEmail = email;
-                }
-            }
-        });
+//        edtEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus){
+//                    String email = edtEmail.getText().toString();
+//                    String org = edtOrganization.getText().toString();
+//                    if (org.equals("") || org.equals(oldEmail)){
+//                        edtOrganization.setText(email);
+//                    }
+//                    oldEmail = email;
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -201,15 +188,6 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
 
         signUp_form.setVisibility(View.INVISIBLE);
         signUp_progress.setVisibility(View.VISIBLE);
-        if (password.length() < 6) {
-            /*int paddingCount = 6 - password.length();
-
-            for(int i = 0; i < paddingCount; i++) {
-                password += '#';
-            }*/
-
-            password += "s3cr3ts4uc3";
-        }
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -254,9 +232,6 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
 
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            /*Toast.makeText(SignIn_SignUp.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);*/
 
                             signUp_form.setVisibility(View.VISIBLE);
                             signUp_progress.setVisibility(View.GONE);
@@ -299,14 +274,27 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             edtPassword.setError(null);
         }
 
+        if (!isPasswordValid(password)) {
+            edtPassword.setError("Password must be at least 6 characters.");
+            focusView = edtPassword;
+            valid = false;
+        } else {
+            edtPassword.setError(null);
+        }
+
+
+
         //check if two passwords entered match
         if (!confirmPassword.equals(password)) {
+            edtConfirmPassword.setError("Passwords do not match");
+            focusView = edtConfirmPassword;
             valid = false;
+        } else {
+            edtConfirmPassword.setError(null);
         }
 
         String email = edtEmail.getText().toString();
         if (isEmailValid(email) == false) {
-            //edtEmail.setError("Invalid email.");//this isn't working
             edtEmail.setError(getString(R.string.error_invalid_email));
             focusView = edtEmail;
             focusView.requestFocus();
@@ -315,144 +303,39 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             edtEmail.setError(null);
         }
 
-        //TODO: Should this really be necessary?
-//        String surname = edtSurname.getText().toString();
-//        if (TextUtils.isEmpty(surname)) {
-//            edtSurname.setError("Required.");
-//            focusView = edtSurname;
-//            valid = false;
-//        } else {
-//            edtSurname.setError(null);
-//        }
-//
-//        String firstName = edtFirstName.getText().toString();
-//        if (TextUtils.isEmpty(firstName)) {
-//            edtFirstName.setError("Required.");
-//            focusView = edtFirstName;
-//            valid = false;
-//        } else {
-//            edtFirstName.setError(null);
-//        }
+        String surname = edtSurname.getText().toString();
+        if (TextUtils.isEmpty(surname)) {
+            edtSurname.setError("Required.");
+            focusView = edtSurname;
+            valid = false;
+        } else {
+            edtSurname.setError(null);
+        }
+
+        String firstName = edtFirstName.getText().toString();
+        if (TextUtils.isEmpty(firstName)) {
+            edtFirstName.setError("Required.");
+            focusView = edtFirstName;
+            valid = false;
+        } else {
+            edtFirstName.setError(null);
+        }
 
         if (valid == false) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } /*else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }*/
+        }
 
         return valid;
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(edtEmail, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }*/
-
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    /*private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        edtEmail.setError(null);
-        edtPassword.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = edtEmail.getText().toString();
-        String password = edtPassword.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            edtPassword.setError(getString(R.string.error_invalid_password));
-            focusView = edtPassword;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            edtEmail.setError(getString(R.string.error_field_required));
-            focusView = edtEmail;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            edtEmail.setError(getString(R.string.error_invalid_email));
-            focusView = edtEmail;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
-    }*/
-
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: we are still debating on what value to use
-        return password.length() > 0;
+        return password.length() > 5;
     }
 
     /**

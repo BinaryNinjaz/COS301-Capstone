@@ -1,9 +1,13 @@
 package za.org.samac.harvest;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentActivity;
+import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -14,6 +18,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +37,7 @@ import java.util.Map;
 import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.SessionDetails;
 import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.Orchard;
 
 import static za.org.samac.harvest.MainActivity.getWorkers;
 
@@ -52,7 +58,8 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
     private boolean isHere = false;
     private boolean isThere = false;
     private LatLng moveMapHere ; // just used to find where to move map to
-
+    private PolylineOptions polyline;
+    private ArrayList<MarkerOptions> pickups;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,33 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //bottom nav bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.actionSession);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.actionYieldTracker:
+                                Intent openMainActivity= new Intent(SessionsMap.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
+                                return true;
+                            case R.id.actionInformation:
+                                startActivity(new Intent(SessionsMap.this, InformationActivity.class));
+                                return true;
+                            case R.id.actionSession:
+                                return true;
+                            case R.id.actionStats:
+                                startActivity(new Intent(SessionsMap.this, Analytics.class));
+                                return true;
+                        }
+                        return true;
+                    }
+                });
     }
 
 
@@ -81,10 +115,12 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         isFirstCollection = true; // just used to find where to move map to
         uid = user.getUid();
 
+        mMap.clear();
+
         PolylineOptions polyline = new PolylineOptions();
         polyline.color(Color.BLUE);
         boolean first = true;
-        for (Location loc : SessionDetails.collected.getTrack()) {
+        for (Location loc : Sessions.selectedItem.track) {
             LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
             if (first) {
                 moveMapHere = ll;
@@ -94,17 +130,32 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         }
         mMap.addPolyline(polyline);
 
-        HashMap<String, MyData> cols = (HashMap<String, MyData>) SessionDetails.collected.getIndividualCollections();
+        HashMap<String, ArrayList<Pickup>> cols = (HashMap<String, ArrayList<Pickup>>) Sessions.selectedItem.collectionPoints;
         for (String key : cols.keySet()) {
-            MyData data = cols.get(key);
+            ArrayList<Pickup> data = cols.get(key);
 
-            for (int i = 0; i < data.size; i++) {
-                LatLng ll = new LatLng(data.latitude.get(i), data.longitude.get(i));
+            for (int i = 0; i < data.size(); i++) {
+                LatLng ll = new LatLng(data.get(i).lat, data.get(i).lng);
                 if (first) {
                     moveMapHere = ll;
                     first = false;
                 }
-                mMap.addMarker(new MarkerOptions().position(ll).title(key));
+                mMap.addMarker(new MarkerOptions().position(ll).title(data.get(i).workerName));
+            }
+        }
+
+        for (Orchard orchard : Sessions.orchards) {
+            if (!orchard.getCoordinates().isEmpty()) {
+                PolygonOptions polygon = new PolygonOptions();
+                polygon.fillColor(0x110000FF);
+                polygon.strokeColor(0x550000FF);
+                polygon.strokeWidth(3);
+
+                for (LatLng coord : orchard.getCoordinates()) {
+                    polygon.add(coord);
+                }
+
+                mMap.addPolygon(polygon);
             }
         }
 

@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -28,11 +30,11 @@ public class WorkerOrForeman extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_worker_or_foreman);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -40,7 +42,9 @@ public class WorkerOrForeman extends AppCompatActivity{
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(WorkerOrForeman.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(WorkerOrForeman.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
                                 Intent openInformation= new Intent(WorkerOrForeman.this, InformationActivity.class);
@@ -60,8 +64,6 @@ public class WorkerOrForeman extends AppCompatActivity{
                     }
                 });
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
         //user selects to see pie chart
         perSesWorkerComparison = findViewById(R.id.btnWorkers);
         perSesWorkerComparison.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +71,7 @@ public class WorkerOrForeman extends AppCompatActivity{
             public void onClick(View view) {
                 Intent intent = new Intent(WorkerOrForeman.this, WorkersForBarGraph.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -79,8 +82,21 @@ public class WorkerOrForeman extends AppCompatActivity{
             public void onClick(View view) {
                 Intent intent = new Intent(WorkerOrForeman.this, ForemenForBarGraph.class);
                 startActivity(intent);
+                finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(WorkerOrForeman.this, Analytics.class));
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);//set correct item to pop out on the nav bar
     }
 
     //Handle the menu
@@ -107,16 +123,20 @@ public class WorkerOrForeman extends AppCompatActivity{
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(WorkerOrForeman.this, SignIn_Choose.class));
+                                }
+                            });
+                }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-//        return false;
     }
 
 }
