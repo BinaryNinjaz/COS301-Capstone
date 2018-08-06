@@ -71,7 +71,7 @@ public class Analytics_Graph extends AppCompatActivity {
     //Views
     private BottomNavigationView bottomNavigationView;
     private ProgressBar progressBar;
-    private View graph;
+    private LineChart lineChart;
 
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -107,7 +107,7 @@ public class Analytics_Graph extends AppCompatActivity {
         context = this;
 
         progressBar = findViewById(R.id.progressBar);
-        graph = findViewById(R.id.anal_graph);
+        lineChart = findViewById(R.id.anal_graph);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -291,8 +291,6 @@ public class Analytics_Graph extends AppCompatActivity {
 
                         int colour = 0;
 
-                        final LineChart lineChart = new LineChart(context);
-
                         //Line always
                         List<ILineDataSet> dataSets = new ArrayList<>(); //Holds all the data sets, so one for each entity
                         JSONArray entityNames = functionResult.names(); //to iterate through the top level entities
@@ -359,16 +357,14 @@ public class Analytics_Graph extends AppCompatActivity {
 
                         LineData lineData = new LineData(dataSets);
 
-                        lineChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
-
                         lineChart.setData(lineData);
-
-                        lineChart.invalidate();
 
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from FireBase
-                                graph.setVisibility(View.VISIBLE);
+                                lineChart.setVisibility(View.VISIBLE);
+                                lineChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
+                                lineChart.invalidate();
                             }
                         });
                     } catch (Exception e) {
@@ -390,7 +386,7 @@ public class Analytics_Graph extends AppCompatActivity {
             case Analytics.HOURLY:
                 labels = new String[maxTime - minTime + 1];
                 for (int i = 0; i <= maxTime - minTime; i++) {
-                    labels[i] = String.valueOf(minTime + i) + ":00";
+                     labels[i] = String.valueOf(minTime + i) + ":00";
                 }
                 break;
             case Analytics.WEEKLY:
@@ -453,7 +449,7 @@ public class Analytics_Graph extends AppCompatActivity {
         switch (interval){
             case Analytics.HOURLY:
 //                return Integer.parseInt(key);
-                String[] tokens = key.replaceAll(" ", "").split(":");
+                String[] tokens = key.split(" ");
                 result = Integer.parseInt(tokens[0]);
                 break;
             case Analytics.DAILY:
