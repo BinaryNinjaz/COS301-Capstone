@@ -440,7 +440,7 @@ function dispOrch(id) {
                 "<div id='cultivarBoxes'>"+
                     "<input type='text' class='form-control' id='cultivars0' />"+
                 "</div>"+
-                "<button type='button' class='btn btn-primary' onclick='moreCult()'>Add More Cultivar</button>"+
+                "<button type='button' class='btn btn-info' onclick='moreCult()'>Add More Cultivar</button>"+
             "</div>"+            
         "</div>" +
         "" +
@@ -684,18 +684,11 @@ function orchMod(id) {
                 "<div id='cultivarBoxes'>"+
                     myData+        
                 "</div>"+
-                "<button type='button' class='btn btn-primary' onclick='moreCult()'>Add More Cultivar</button>"+
+                "<button type='button' class='btn btn-info' onclick='moreCult()'>Add More Cultivar</button>"+
             "</div>"+
         "</div>" +
         
-       /* "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: </label>" +
-            "<div class='col-sm-9'>"+
-                "<div id='cultivarBoxes'>"+
-                    "<input type='text' class='form-control' id='cultivars0' />"+
-                "</div>"+
-                "<button type='button' class='btn btn-primary' onclick='moreCult()'>Add More Cultivar</button>"+
-            "</div>"+            
-        "</div>" +*/
+       
         
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
@@ -1068,6 +1061,7 @@ function popResults() {
   buttons.innerHTML = "";
   findables.forEach(function (item, index) {
     if (isValid(searchText, item.Name)){
+        //item.Button.setAttribute("class","btn btn-info");
       buttons.innerHTML += item.Button;
     }
   });
