@@ -279,7 +279,7 @@ public class Analytics_Graph extends AppCompatActivity {
     //Graph
     public void generateAndDisplayGraph() {
         try {
-            final Thread thread = new Thread(new Runnable() {
+            Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -319,7 +319,6 @@ public class Analytics_Graph extends AppCompatActivity {
                             }
                         }
                         //No idea what I'm doing here, or more specifically, why. I'm just following the documentation.
-                        final LineData lineData = new LineData(dataSets);
 
                         //Following settings come from Letanyan.
                         lineChart.getDescription().setEnabled(false);
@@ -358,15 +357,18 @@ public class Analytics_Graph extends AppCompatActivity {
                             }
                         });
 
+                        LineData lineData = new LineData(dataSets);
+
+                        lineChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
+
+                        lineChart.setData(lineData);
+
+                        lineChart.invalidate();
+
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from FireBase
                                 graph.setVisibility(View.VISIBLE);
-
-                                lineChart.animateY(1500, Easing.getEasingFunctionFromOption(Easing.EasingOption.EaseInOutCubic));
-
-                                lineChart.setData(lineData);
-                                lineChart.invalidate();
                             }
                         });
                     } catch (Exception e) {
