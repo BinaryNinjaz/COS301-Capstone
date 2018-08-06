@@ -1,0 +1,12 @@
+#map {
+  height: 93%;
+  width: 100%;
+  background-color: #EFEEEC;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.scrollView {
+  height: 95%;
+  overflow-y: scroll;
+}
