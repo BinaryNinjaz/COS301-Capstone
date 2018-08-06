@@ -14,6 +14,13 @@ function getOrchards(callback) {
   });
 }
 
+function getWorkers(callback) {
+  const ref = firebase.database().ref('/' + userID() + '/workers');
+  ref.once('value').then((snapshot) => {
+    callback(snapshot);
+  });
+}
+
 function getFarms(callback) {
   const ref = firebase.database().ref('/' + userID() + '/farms');
   ref.once('value').then((snapshot) => {
@@ -21,18 +28,26 @@ function getFarms(callback) {
   });
 }
 
-function yieldsRef() {
-  return firebase.database().ref('/' + userID() + '/sessions');
-}
-
 $(window).bind("load", () => {
   let succ = () => {
     initOrchards();
+    initWorkers();
+    $("#selectedFilter :input").change(function() {
+      loadEntity(this.id === "workerFilter" 
+        ? "worker" 
+        : this.id === "orchardFilter"
+          ? "orchard"
+          : this.id === "foremanFilter"
+            ? "foreman"
+            : "farm");
+    });
+    initMap();
   };
   let fail = () => {
     orchardPolys = [];
     orchards = [];
     farms = [];
+    workers = [];
   };
   retryUntilTimeout(succ, fail, 1000);
 });
@@ -40,20 +55,80 @@ $(window).bind("load", () => {
 var orchards = [];
 var farms = [];
 function changeSelection(checkbox) {
-  for (var i = 0; i < orchards.length; i++) {
-    if (orchards[i].key === checkbox.value) {
-      if (checkbox.checked !== orchards[i].showing) {
-        orchards[i].showing = checkbox.checked;
-        updateHeatmap();
+  if (selectedEntity === "orchard") {
+    for(var i = 0; i < orchards.length; i++) {
+      if (orchards[i].key === checkbox.value) {
+        if (checkbox.checked !== orchards[i].showing) {
+          orchards[i].showing = checkbox.checked;
+        }
+      }
+    }
+  } else if (selectedEntity === "worker") {
+    for(var i = 0; i < workers.length; i++) {
+      if (workers[i].value.type === "Worker" && workers[i].key === checkbox.value) {
+        if (checkbox.checked !== workers[i].showing) {
+          workers[i].showing = checkbox.checked;
+        }
+      }
+    }
+  } else if (selectedEntity === "foreman") {
+    for(var i = 0; i < workers.length; i++) {
+      if (workers[i].value.type === "Foreman" && workers[i].key === checkbox.value) {
+        if (checkbox.checked !== workers[i].showing) {
+          workers[i].showing = checkbox.checked;
+        }
+      }
+    }
+  } else if (selectedEntity === "farm") {
+    for(var i = 0; i < farms.length; i++) {
+      if (farms[i].key === checkbox.value) {
+        if (checkbox.checked !== farms[i].showing) {
+          farms[i].showing = checkbox.checked;
+        }
       }
     }
   }
 }
 
-function createOrchardSelectionButton(name, key) {
+var selectedEntity = "orchard";
+function loadEntity(entity) {
+  var entityDiv = document.getElementById("entities");
+  entityDiv.innerHTML = "";
+  selectedEntity = entity;
+  if (entity === "orchard") {
+    for (const orchardId in orchards) {
+      const orchard = orchards[orchardId];
+      entityDiv.innerHTML += createSelectionButton(orchard.title, orchard.key, orchard.showing);
+    }
+  } else if (entity === "worker") {
+    for (const workerId in workers) {
+      const worker = workers[workerId];
+      if (worker.value.type === "Foreman") {
+        continue;
+      }
+      entityDiv.innerHTML += createSelectionButton(worker.value.name + " " + worker.value.surname, worker.key, worker.showing);
+    }
+  } else if (entity === "foreman") {
+    for (const workerId in workers) {
+      const worker = workers[workerId];
+      if (worker.value.type === "Worker") {
+        continue;
+      }
+      entityDiv.innerHTML += createSelectionButton(worker.value.name + " " + worker.value.surname, worker.key, worker.showing);
+    }
+  } else if (entity === "farm") {
+    for (const farmId in farms) {
+      const farm = farms[farmId];
+      entityDiv.innerHTML += createSelectionButton(farm.value.name, farm.key, farm.showing);
+    }
+  }
+}
+
+function createSelectionButton(name, key, checked) {
+  const isChecked = checked ? 'checked' : '';
   result = '';
   result += '<div class="checkbox">';
-  result += '<label><input type="checkbox" onchange="changeSelection(this)" checked value="' + key + '">' + name + '</label>';
+  result += '<label><input type="checkbox" onchange="changeSelection(this)" ' + isChecked + ' value="' + key + '">' + name + '</label>';
   result += '</div>';
   
   return result;
@@ -96,16 +171,16 @@ function initOrchards() {
   
   getFarms((farmsSnap) => {
     farmsSnap.forEach((farm) => {
-      farms.push({key: farm.key, value: farm.val()});
+      farms.push({key: farm.key, value: farm.val(), showing: false});
     });
+    farms.sort((a, b) => { return a.value.name < b.value.name ? -1 : 1 })
     getOrchards((orchardsSnap) => {
-      var orchardsDiv = document.getElementById("orchards");
-      orchardsDiv.innerHTML = "";
+      var entityDiv = document.getElementById("entities");
+      entityDiv.innerHTML = "";
       orchards = [];
       orchardsSnap.forEach((orchard) => {
         const o = orchard.val();
         const k = orchard.key;
-        orchards.push({key: k, value: o, showing: true});
         var orchardPoly = new google.maps.Polygon({
           paths: orchardCoords(o),
           strokeColor: '#0000BB',
@@ -122,9 +197,28 @@ function initOrchards() {
           fname = fval.name;
         }
         const name = fname + " - " + o.name;
-        orchardsDiv.innerHTML += createOrchardSelectionButton(name, k);
+        orchards.push({key: k, value: o, showing: true, title: name});
       });
+      orchards = orchards.sort((a, b) => { return a.title < b.title ? -1 : 1 });
+      for (const oid in orchards) {
+        const o = orchards[oid];
+        entityDiv.innerHTML += createSelectionButton(o.title, o.key, true);
+      }
       updateHeatmap();
+    });
+  });
+}
+
+var workers = [];
+function initWorkers() {
+  getWorkers((workersSnap) => {
+    workersSnap.forEach((worker) => {
+      const w = worker.val();
+      const k = worker.key;
+      workers.push({key: k, value: w, showing: false});
+    });
+    workers.sort((a, b) => { 
+      return (a.value.surname + a.value.name) < (b.value.surname + b.value.name) ? -1 : 1 
     });
   });
 }
@@ -143,20 +237,46 @@ function initMap() {
   });
 }
 
-function requestedOrchardIds() {
+function requestedIds() {
   var result = {};
-  for (var i = 0; i < orchards.length; i++) {
-    if (orchards[i].showing) {
-      result["orchardId" + i] = orchards[i].key;
+  var k = 0;
+  if (selectedEntity === "orchard") {
+    for (var i = 0; i < orchards.length; i++) {
+      if (orchards[i].showing) {
+        result["id" + k] = orchards[i].key;
+        k++;
+      }
+    }
+  } else if (selectedEntity === "worker") {
+    for (var i = 0; i < workers.length; i++) {
+      if (workers[i].value.type === "Worker" && workers[i].showing) {
+        result["id" + k] = workers[i].key;
+        k++;
+      }
+    }
+  } else if (selectedEntity === "foreman") {
+    for (var i = 0; i < workers.length; i++) {
+      if (workers[i].value.type === "Foreman" && workers[i].showing) {
+        result["id" + k] = workers[i].key;
+        k++;
+      }
+    }
+  } else if (selectedEntity === "farm") {
+    for (var i = 0; i < farms.length; i++) {
+      if (farms[i].showing) {
+        result["id" + k] = farms[i].key;
+        k++;
+      }
     }
   }
+  
   return result;
 }
 
 var first = true;
 var heatmap;
 function updateHeatmap() {
-  var keys = requestedOrchardIds();
+  var keys = requestedIds();
   const startDate = new Date(document.getElementById("startDate").value);
   const endDate = new Date(document.getElementById("endDate").value);
   const startTime = startDate.getTime() / 1000;
@@ -165,8 +285,9 @@ function updateHeatmap() {
   keys.startDate = startTime;
   keys.endDate = endTime;
   keys.uid = userID();
+  keys.groupBy = selectedEntity;
   
-  const url = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/orchardCollectionsWithinDate';
+  const url = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/collectionsWithinDate';
   
   updateSpiner(true);
   $.post(url, keys, (data, status) => {
@@ -216,9 +337,12 @@ function updateSpiner(shouldSpin) {
   };
 
   var target = document.getElementById('spinner');
+  var button = document.getElementById('updateButton');
   if (shouldSpin) {
     spinner = new Spinner(opts).spin(target);
+    button.style.visibility = "hidden";
   } else {
+    button.style.visibility = "visible";
     spinner.stop();
     spinner = null;
   }

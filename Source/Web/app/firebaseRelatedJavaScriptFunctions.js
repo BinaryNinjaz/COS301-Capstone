@@ -34,7 +34,7 @@ if (title !== "Harvest | Login and Register") {
       // window.location.href = "HomePage.html";
     } else {
       // user logged out
-      window.location.href = "DynamicLoginRegister.html";
+      window.location.href = "index.html";
     }
   });
 }
@@ -98,7 +98,7 @@ function firebaseLogin() {
 
 function signOut() {
     firebase.auth().signOut().then(function () {
-        document.location.href = "DynamicLoginRegister.html";
+        document.location.href = "index.html";
     });
 }
 

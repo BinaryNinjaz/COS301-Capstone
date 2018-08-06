@@ -36,7 +36,6 @@ h1 {
     font-family: sans-serif;
     color: black;
 }
-
 label {
     font-family: sans-serif;
     color: black;
@@ -45,7 +44,8 @@ label {
 .form-control {
     border-color: grey;
 }
-
+.navbar-nav > li > a {padding-top:10px !important; padding-bottom:10px !important;} /* This determines the height of the navbar */
+.navbar-nav > a {padding-top:10px !important; padding-bottom:10px !important;} /* This is for consistency with the height of the navbar */
 button {
     background-color: #4CAF50; /*Green*/
     color: white;

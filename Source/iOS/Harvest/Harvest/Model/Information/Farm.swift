@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/19.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Swift
@@ -38,13 +38,49 @@ final class Farm: Codable {
       "email": email,
       "contactNumber": contactNumber,
       "province": province,
-      "neartestTown": nearestTown,
+      "town": nearestTown,
       "further": details
     ]]
   }
+  
+  func search(for text: String) -> [(String, String)] {
+    var result = [(String, String)]()
+    
+    let text = text.lowercased()
+    
+    if name.lowercased().contains(text) {
+      result.append(("Name", name))
+    }
+    
+    if companyName.lowercased().contains(text) {
+      result.append(("Company Name", companyName))
+    }
+    
+    if email.lowercased().contains(text) {
+      result.append(("Email", email))
+    }
+    
+    if contactNumber.lowercased().contains(text) {
+      result.append(("Contact Number", contactNumber))
+    }
+    
+    if province.lowercased().contains(text) {
+      result.append(("Province", province))
+    }
+    
+    if nearestTown.lowercased().contains(text) {
+      result.append(("Nearest Town", nearestTown))
+    }
+    
+    if details.lowercased().contains(text) {
+      result.append(("Details", ""))
+    }
+    
+    return result
+  }
 }
 
-extension Farm: Equatable {
+extension Farm: Hashable {
   static func == (lhs: Farm, rhs: Farm) -> Bool {
     return lhs.id == rhs.id
       && lhs.name == rhs.name
@@ -54,6 +90,10 @@ extension Farm: Equatable {
       && lhs.province == rhs.province
       && lhs.nearestTown == rhs.nearestTown
       && lhs.details == rhs.details
+  }
+  
+  var hashValue: Int {
+    return id.hashValue
   }
 }
 
