@@ -2,7 +2,18 @@
     white-space: normal;
 }
 
-
+ #col3:empty{    
+        background-color: transparent;
+        border-radius: 0px;
+        border: 0px;
+        padding: 0px;
+} 
+#col3:not(:empty){    
+        background-color: white;
+        border-radius: 10px;
+        border: 2px solid green;
+        padding: 10px;
+}  
 #map {
     height: 500px;
     width: 100%;
@@ -33,10 +44,6 @@ body{
 }
     
     
-#col3{
-    
-        background-color: white;
-        border-radius: 10px;
-        border: 2px solid green;
-        padding: 10px;
-}   
+ 
+
+ 
