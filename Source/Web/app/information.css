@@ -2,8 +2,37 @@
     white-space: normal;
 }
 
+
 #map {
     height: 500px;
     width: 100%;
     background-color: #EFEEEC;
+}
+
+#col1 {
+    padding: 8px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    background-color: #333;
+    border-radius: 16px;
+}
+
+body{
+    //background-color: transparent;
+    overflow: auto;
+    font-family: Sans-Serif;	
+        background-image: url("back2smaller.jpg");
+        background-repeat: no-repeat;  
+        background-size: cover;  
+   
+}
+
+ html {
+        
+ }
+    
+    
+#col3{
+        background-color: whitesmoke;
+        
 }
