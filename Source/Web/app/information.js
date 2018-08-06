@@ -559,15 +559,11 @@ function getCultivars(){
     return data;
 }
 function orchSave(type, id, cultivars) {
-    //alert("In function");
   /*0 means create, 1 means modify*/
     const farm = document.getElementById("orchFarm").value;
     const farmID = farm.substring(farm.indexOf("<") + 1, farm.indexOf(">"));
     let d = new Date(document.getElementById("orchDate").valueAsDate);
     let seconds = d.getTime() / 1000;
-    //var cult = document.getElementById("cultivars").value;
-    //cult = cult.split(",");
-  //alert("In function2");
   var data = getCultivars();
   if (type === 0) {
       
