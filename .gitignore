@@ -18,3 +18,4 @@ Source/Web/functions/node_modules
 Source/Resources/Tools/CloudFunctionTesters/Untitled.class
 Source/Resources/Tools/CloudFunctionTesters/Untitled$1.class
 *.log
+/Source/Resources/Tools/CloudFunctionTesters/URLSessioner
