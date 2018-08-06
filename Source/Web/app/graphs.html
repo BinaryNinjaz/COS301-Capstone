@@ -84,21 +84,26 @@
 				</div>
 			</div>
             <!-- bottom graph can be is worker performance graph-->
-            <div class="right" >
-                <div id="curve_chart" style="width: 900px; height: 500px"></div>
-				<div id="cover-spin"></div>
-                <!-- below are objects the user can use to filter information-->
-                <div id="bottomChartFilter">
-                    <label>Select a worker:
-                        <select id="workerSelect"></select>
-                    </label> 
-                    <label>Select date:
-                        <input type="date" id="workerDateSelect" />
-                    </label>
-                    <button type = "button" id='workerFilter' onclick='filterWorker()'>
-                        Filter Worker Performance Graph </button>
-                </div>
-            </div>
+			<div class="card">
+				<div class="card-header">Worker Performance Graph</div>
+				<div class="card-body">
+					<div class="right" >
+						<div id="curve_chart" style="width: 900px; height: 500px"></div>
+						<div id="cover-spin"></div>
+						<!-- below are objects the user can use to filter information-->
+						<div id="bottomChartFilter">
+							<label>Select a worker:
+								<select id="workerSelect"></select>
+							</label> 
+							<label>Select date:
+								<input type="date" id="workerDateSelect" />
+							</label>
+							<button type = "button" id='workerFilter' onclick='filterWorker()'>
+								Filter Worker Performance Graph </button>
+						</div>
+					</div>
+				</div>
+			</div>
 	</div>
       <script type="text/javascript">
          /* Below are examples that can be used to filter
