@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/07/10.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Firebase
@@ -15,8 +15,7 @@ func merge(path: String, withKey k: String) -> String {
   }
   let p: String
   if path.hasSuffix("/") {
-    p = String(path[path.startIndex..<path.index(before: path.endIndex)])
-    // p = String(path[offset: ..<-1]) imagine?
+    p = String(path.dropLast())
   } else {
     p = path
   }

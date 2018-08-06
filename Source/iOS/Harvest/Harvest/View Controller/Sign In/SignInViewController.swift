@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/03/26.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -72,8 +72,8 @@ class SignInViewController: UIViewController {
   
   func attempSignIn(username: String, password: String) {
     isLoading = true
-    HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
-      if w, let vc = self.mainViewToPresent() {
+    HarvestDB.signIn(withEmail: username, andPassword: password, on: self) { success in
+      if success, let vc = self.mainViewToPresent() {
         self.present(vc, animated: true, completion: nil)
       }
       self.isLoading = false
@@ -91,7 +91,7 @@ class SignInViewController: UIViewController {
     guard let password = passwordTextField.text, password != "" else {
       SCLAlertView().showError(
         "Password Not Long Enough",
-        subTitle: "Password length must be at least 6 characters long")
+        subTitle: "Password length must be at least 6 characters.")
       return
     }
     

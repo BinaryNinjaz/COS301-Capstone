@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/03/29.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -13,6 +13,14 @@ import Disk
 struct CollectionPoint {
   var location: CLLocationCoordinate2D
   var date: Date
+  var orchard: Orchard?
+  
+  init(location: CLLocationCoordinate2D, date: Date) {
+    self.location = location
+    self.date = date
+    
+    orchard = Entities.shared.orchards.first { $0.value.contains(location) }?.value
+  }
 }
 
 struct Tracker: Codable {
@@ -55,8 +63,7 @@ struct Tracker: Codable {
   }
   
   mutating func pop(for worker: Worker) {
-    guard var collection = collections[worker],
-      !collection.isEmpty else {
+    guard var collection = collections[worker], !collection.isEmpty else {
       return
     }
     
@@ -67,24 +74,23 @@ struct Tracker: Codable {
     saveState()
   }
   
-  /// returns the new orchard id only if it is different from the last known orchard id
-  mutating func track(location: CLLocation) -> String? {
-    var result: String? = nil
+  mutating func track(location: CLLocation) {
+    currentOrchard = nil
     if let o = Entities.shared.orchards.first(where: { $0.value.contains(location.coordinate) }) {
-      if o.value.id != currentOrchard {
-        currentOrchard = o.value.id
-        result = o.value.id
-      }
+      currentOrchard = o.value.id
     }
     UserDefaults.standard.track(location: location, index: trackCount)
     trackCount += 1
     saveState()
-    return result
   }
   
-  func updateExpectedYield(orchardId: String, completion: @escaping (Double) -> Void) {
-    HarvestCloud.getExpectedYield(orchardId: orchardId, date: Date()) { (expected) in
-      completion(expected)
+  @available(*, deprecated, message: "Expected yield is show directly to the user anymore.")
+  mutating func updateExpectedYield(orchardId: String, completion: @escaping (Double) -> Void) {
+    if orchardId != currentOrchard {
+      currentOrchard = orchardId
+      HarvestCloud.getExpectedYield(orchardId: orchardId, date: Date()) { (expected) in
+        completion(expected)
+      }
     }
   }
   

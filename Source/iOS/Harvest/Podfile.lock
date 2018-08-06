@@ -39,6 +39,7 @@ PODS:
     - GTMSessionFetcher/Core (~> 1.1)
   - FirebaseInstanceID (2.0.10):
     - FirebaseCore (~> 4.0)
+  - FSPagerView (0.7.1)
   - GoogleMaps (2.6.0):
     - GoogleMaps/Maps (= 2.6.0)
   - GoogleMaps/Base (2.6.0)
@@ -90,6 +91,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Database
   - Firebase/Functions
+  - FSPagerView
   - GoogleMaps
   - GoogleSignIn
   - PhoneNumberKit (~> 2.1)
@@ -107,6 +109,7 @@ SPEC CHECKSUMS:
   FirebaseDatabase: 5f0bc6134c5c237cf55f9e1249d406770a75eafd
   FirebaseFunctions: 3745fada03bd706a9b5c0b9ae7b2d490fa594d21
   FirebaseInstanceID: 8d20d890d65c917f9f7d9950b6e10a760ad34321
+  FSPagerView: 958aba39684e1573755ddcfcc29f7eebb8413cee
   GoogleMaps: 42f91c68b7fa2f84d5c86597b18ceb99f5414c7f
   GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
@@ -118,6 +121,6 @@ SPEC CHECKSUMS:
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
-PODFILE CHECKSUM: 155152a26213d8d8cb6d78632eb6a9e391c10196
+PODFILE CHECKSUM: fa342323ad047dda014a903a152f0088abbbbde1
 
 COCOAPODS: 1.4.0

@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/23.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Eureka
@@ -44,13 +44,21 @@ public class ReloadableFormViewController: FormViewController, ReloadableViewCon
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
     refreshControl.endRefreshing()
-    tearDown()
-    setUp()
+    reloadFormVC()
+  }
+  
+  func reloadFormVC() {
+    UIView.performWithoutAnimation {
+      tearDown()
+      setUp()
+    }
   }
   
   public override func viewDidLoad() {
     super.viewDidLoad()
     addRefreshControl()
-    setUp()
+    UIView.performWithoutAnimation {
+      setUp()
+    }
   }
 }

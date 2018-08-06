@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/05/07.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -13,14 +13,8 @@ import SCLAlertView
 
 class StatsViewController: UIViewController {
   var stat: Stat?
-  var period: HarvestCloud.TimePeriod?
-  var startDate: Date?
-  var endDate: Date?
   
-  var barChart: BarChartView?
-  var pieChart: PieChartView?
   var lineChart: LineChartView?
-  var radarChart: RadarChartView?
   var activityIndicator: UIActivityIndicatorView?
   
   override func viewDidLoad() {
@@ -35,40 +29,24 @@ class StatsViewController: UIViewController {
                        height: view.frame.height - navH * 2 - tabH)
     
     lineChart = LineChartView(frame: frame)
-    barChart = BarChartView(frame: frame)
-    pieChart = PieChartView(frame: frame)
-    radarChart = RadarChartView(frame: frame)
     activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     activityIndicator?.color = UIColor.harvestGreen
     activityIndicator?.stopAnimating()
     
     drawChart()
     
-    view.addSubview(barChart!)
-    view.addSubview(pieChart!)
     view.addSubview(lineChart!)
-    view.addSubview(radarChart!)
     view.addSubview(activityIndicator!)
     
-    barChart?.snp.makeConstraints(Snap.fillParent(on: self))
     lineChart?.snp.makeConstraints(Snap.fillParent(on: self))
-    pieChart?.snp.makeConstraints(Snap.fillParent(on: self))
-    radarChart?.snp.makeConstraints(Snap.fillParent(on: self))
     setActivityPosition()
     
     setUpLineChart()
-    setUpBarChart()
-    setUpRadarChart()
-    pieChart?.chartDescription = nil
   }
   
   func drawChart() {
     lineChart?.isHidden = true
-    barChart?.isHidden = true
-    pieChart?.isHidden = true
-    radarChart?.isHidden = true
     activityIndicator?.startAnimating()
-    print(activityIndicator?.frame as Any, activityIndicator?.isAnimating as Any)
     
     guard let stat = stat else {
       SCLAlertView().showWarning("No Data", subTitle: "There is no data available to show")
@@ -76,135 +54,62 @@ class StatsViewController: UIViewController {
       return
     }
     
-    switch stat {
-    case .workerComparison: drawWorkerComparison()
-    case .foremanComparison: drawForemanComparison()
-    case .orchardComparison: drawOrchardComparison()
-    }
+    stat.graphData(completion: updateChart)
   }
   
-  func updateBarChart(with data: BarChartData?) {
+  func updateChart(with data: LineChartData?) {
     DispatchQueue.main.async {
       self.activityIndicator?.stopAnimating()
-      guard let barData = data else {
-        self.barChart?.data = nil
+      guard let lineData = data else {
+        self.lineChart?.data = nil
         return
       }
-      if barData.dataSetCount > 1 {
-        let groupSize = 0.2
-        let barSpace = 0.03
-        let gg = barData.groupWidth(groupSpace: groupSize, barSpace: barSpace)
-        self.barChart?.xAxis.axisMaximum = Double(barData.dataSets[0].entryCount) * gg + 0
-        
-        barData.groupBars(fromX: 0, groupSpace: groupSize, barSpace: barSpace)
-      }
+      self.lineChart?.notifyDataSetChanged()
       
-      if self.period == .daily {
-        self.radarChart?.notifyDataSetChanged()
-        self.radarChart?.data = barData.radarChartData()
-        
-        self.radarChart?.isHidden = false
-        self.radarChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
-      } else {
-        self.barChart?.notifyDataSetChanged()
-        self.barChart?.data = barData
-        
-        self.barChart?.isHidden = false
-        self.barChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
-      }
+      self.lineChart?.data = lineData
+      self.lineChart?.data?.setDrawValues(true)
+      
+      self.lineChart?.isHidden = false
+      self.lineChart?.animate(yAxisDuration: 1.5, easingOption: .easeOutCubic)
     }
-  }
-  
-  func drawForemanComparison() {
-    let s = startDate ?? Date(timeIntervalSince1970: 0)
-    let e = endDate ?? Date()
-    let p = period ?? .daily
-    
-    stat?.entityComparison(grouping: .foreman, startDate: s, endDate: e, period: p, completion: updateBarChart)
-  }
-  
-  func drawWorkerComparison() {
-    let s = startDate ?? Date(timeIntervalSince1970: 0)
-    let e = endDate ?? Date()
-    let p = period ?? .daily
-    
-    stat?.entityComparison(grouping: .worker, startDate: s, endDate: e, period: p, completion: updateBarChart)
-  }
-  
-  func drawOrchardComparison() {
-    let s = startDate ?? Date(timeIntervalSince1970: 0)
-    let e = endDate ?? Date()
-    let p = period ?? .daily
-    
-    stat?.entityComparison(grouping: .orchard, startDate: s, endDate: e, period: p, completion: updateBarChart)
   }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
     return .allButUpsideDown
   }
   
+  func setUp(_ legend: Legend?) {
+    if let l = legend {
+      l.enabled = true
+      l.drawInside = true
+      l.horizontalAlignment = .right
+      l.verticalAlignment = .top
+      l.orientation = .vertical
+      l.drawInside = true
+      l.font = .systemFont(ofSize: 8, weight: .light)
+      l.yOffset = 10
+      l.xOffset = 10
+      l.yEntrySpace = 0
+    }
+  }
+  
   func setUpLineChart() {
-    lineChart?.drawGridBackgroundEnabled = false
-    lineChart?.gridBackgroundColor = NSUIColor.clear
-    lineChart?.xAxis.valueFormatter = DateFormatter.with(format: "dd MMM")
     lineChart?.chartDescription?.enabled = false
     lineChart?.dragEnabled = true
     lineChart?.setScaleEnabled(true)
     lineChart?.pinchZoomEnabled = true
     lineChart?.xAxis.drawGridLinesEnabled = false
     lineChart?.xAxis.labelPosition = .bottom
+    lineChart?.xAxis.valueFormatter = PeriodValueFormatter(
+      stat?.timeStep ?? .daily,
+      stat?.timePeriod ?? .today,
+      stat?.mode ?? .accumTime)
     lineChart?.rightAxis.drawGridLinesEnabled = false
-  }
-  
-  func setUpBarChart() {
-    barChart?.chartDescription?.enabled = false
-    barChart?.dragEnabled = true
-    barChart?.setScaleEnabled(true)
-    barChart?.pinchZoomEnabled = true
-    barChart?.xAxis.drawGridLinesEnabled = false
-    barChart?.xAxis.labelPosition = .bottom
-    barChart?.xAxis.valueFormatter = PeriodValueFormatter(period ?? .daily, startDate, endDate)
-    barChart?.rightAxis.drawGridLinesEnabled = false
-    barChart?.xAxis.axisMinimum = 0
-    barChart?.rightAxis.enabled = false
-    barChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
-    barChart?.noDataText = "No Data Available to Show"
-    
-    if let l = barChart?.legend {
-      l.enabled = true
-      l.drawInside = true
-      l.horizontalAlignment = .right
-      l.verticalAlignment = .top
-      l.orientation = .vertical
-      l.drawInside = true
-      l.font = .systemFont(ofSize: 8, weight: .light)
-      l.yOffset = 10
-      l.xOffset = 10
-      l.yEntrySpace = 0
-    }
-  }
-  
-  func setUpRadarChart() {
-    radarChart?.chartDescription?.enabled = false
-    radarChart?.xAxis.drawGridLinesEnabled = false
-    radarChart?.xAxis.labelPosition = .bottom
-    radarChart?.xAxis.valueFormatter = PeriodValueFormatter(period ?? .daily, startDate, endDate)
-    radarChart?.xAxis.axisMinimum = 0
-    radarChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
-    radarChart?.noDataText = "No Data Available to Show"
-    
-    if let l = radarChart?.legend {
-      l.enabled = true
-      l.drawInside = true
-      l.horizontalAlignment = .right
-      l.verticalAlignment = .top
-      l.orientation = .vertical
-      l.drawInside = true
-      l.font = .systemFont(ofSize: 8, weight: .light)
-      l.yOffset = 10
-      l.xOffset = 10
-      l.yEntrySpace = 0
-    }
+    lineChart?.leftAxis.axisMinimum = 0
+    lineChart?.rightAxis.enabled = false
+    lineChart?.noDataFont = UIFont.systemFont(ofSize: 22, weight: .heavy)
+    lineChart?.noDataText = "No Data Available to Show"
+    setUp(lineChart?.legend)
   }
   
   func setActivityPosition() {
@@ -253,51 +158,33 @@ final class OrchardDateFormatter: IAxisValueFormatter {
 }
 
 final class PeriodValueFormatter: IAxisValueFormatter {
-  let period: HarvestCloud.TimePeriod
-  let startDate: Date?
-  let endDate: Date?
+  let step: TimeStep
+  let period: TimePeriod
+  let mode: TimedGraphMode?
   
-  init(_ period: HarvestCloud.TimePeriod, _ sd: Date?, _ ed: Date?) {
+  init(_ step: TimeStep, _ period: TimePeriod, _ mode: TimedGraphMode?) {
+    self.step = step
     self.period = period
-    startDate = sd
-    endDate = ed
+    self.mode = mode ?? .accumTime
   }
   
   public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-    let possibles = period.fullPrintableDataSet(between: startDate, and: endDate, limitToDate: period == .weekly)
+    let possibles: [String]
+    let drange = period.dateRange()
+    if mode == .accumTime {
+      possibles = step.fullPrintableDataSet(between: drange.0, and: drange.1, limitToDate: step == .weekly)
+    } else {
+      possibles = step.fullRunningDataSet(between: drange.0, and: drange.1)
+    }
+    
     let pc = Double(possibles.count)
-    let i = Int(value / (axis?.axisMaximum ?? pc) * pc)
+    let max = axis?.axisMaximum == 0 ? pc : (axis?.axisMaximum ?? pc)
+    let i = Int(value / max * pc)
     
     if i >= 0 && i < possibles.count {
       return possibles[i]
     } else {
       return ""
     }
-  }
-}
-
-extension BarChartData {
-  func radarChartData() -> RadarChartData {
-    let result = RadarChartData()
-    
-    for dataSet in dataSets {
-      let chartData = RadarChartDataSet()
-      for i in 0..<dataSet.entryCount {
-        guard let bentry = dataSet.entryForIndex(i) as? BarChartDataEntry else {
-          continue
-        }
-        _ = chartData.addEntry(RadarChartDataEntry(value: bentry.y))
-      }
-      chartData.setColor(dataSet.colors[0])
-      chartData.fillColor = dataSet.colors[0]
-      chartData.fillAlpha = 0.7
-      chartData.lineWidth = 2
-      chartData.drawFilledEnabled = true
-      chartData.drawValuesEnabled = false
-      chartData.label = dataSet.label
-      result.addDataSet(chartData)
-    }
-    
-    return result
   }
 }
