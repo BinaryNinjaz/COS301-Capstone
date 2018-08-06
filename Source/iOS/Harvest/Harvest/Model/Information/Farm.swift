@@ -42,6 +42,42 @@ final class Farm: Codable {
       "further": details
     ]]
   }
+  
+  func search(for text: String) -> [(String, String)] {
+    var result = [(String, String)]()
+    
+    let text = text.lowercased()
+    
+    if name.lowercased().contains(text) {
+      result.append(("Name", name))
+    }
+    
+    if companyName.lowercased().contains(text) {
+      result.append(("Company Name", companyName))
+    }
+    
+    if email.lowercased().contains(text) {
+      result.append(("Email", email))
+    }
+    
+    if contactNumber.lowercased().contains(text) {
+      result.append(("Contact Number", contactNumber))
+    }
+    
+    if province.lowercased().contains(text) {
+      result.append(("Province", province))
+    }
+    
+    if nearestTown.lowercased().contains(text) {
+      result.append(("Nearest Town", nearestTown))
+    }
+    
+    if details.lowercased().contains(text) {
+      result.append(("Details", ""))
+    }
+    
+    return result
+  }
 }
 
 extension Farm: Equatable {

@@ -96,7 +96,7 @@ extension Array where Element == UIColor {
 
 extension UIColor {
   static var harvestGreen: UIColor {
-    return #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
+    return #colorLiteral(red: 0, green: 0.71, blue: 0.1775, alpha: 1)
   }
   static var addOrchard: UIColor {
     return #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1)

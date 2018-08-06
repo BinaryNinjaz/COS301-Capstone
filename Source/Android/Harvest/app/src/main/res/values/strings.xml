@@ -184,41 +184,18 @@
 
 
     <!--Strings related to analytics-->
-    <!--Orchard Defaults-->
-    <string name="anal_orch_tit">Orchard Comparison</string>
-    <string name="anal_orch_tod">Today\'s Orchard Performance</string>
-    <string name="anal_orch_yes">Yesterday\'s Orchard Performance</string>
-    <string name="anal_orch_tWeek">This Week\'s Orchard Performance</string>
-    <string name="anal_orch_lWeek">Last Week\'s Orchard Performance</string>
-    <string name="anal_orch_tMonth">This Month\'s Orchard Performance</string>
-    <string name="anal_orch_lMonth">Last Month\'s Orchard Performance</string>
-    <string name="anal_orch_tYear">This Year\'s Orchard Performance</string>
-    <string name="anal_orch_lYear">Last Year\'s Orchard Performance</string>
-
-    <!--Worker Defaults-->
-    <string name="anal_work_tit">Worker Comparison</string>
-    <string name="anal_work_tod">Today\'s Worker Performance</string>
-    <string name="anal_work_yes">Yesterday\'s Worker Performance</string>
-    <string name="anal_work_tWeek">This Week\'s Worker Performance</string>
-    <string name="anal_work_lWeek">Last Week\'s Worker Performance</string>
-    <string name="anal_work_tMonth">This Month\'s Worker Performance</string>
-    <string name="anal_work_lMonth">Last Month\'s Worker Performance</string>
-    <string name="anal_work_tYear">This Year\'s Worker Performance</string>
-    <string name="anal_work_lYear">Last Year\'s Worker Performance</string>
-    
-    <!--Foreman Defaults-->
-    <string name="anal_fore_tit">Foreman Comparison</string>
-    <string name="anal_fore_tod">Today\'s Foreman Performance</string>
-    <string name="anal_fore_yes">Yesterday\'s Foreman Performance</string>
-    <string name="anal_fore_tWeek">This Week\'s Foreman Performance</string>
-    <string name="anal_fore_lWeek">Last Week\'s Foreman Performance</string>
-    <string name="anal_fore_tMonth">This Month\'s Foreman Performance</string>
-    <string name="anal_fore_lMonth">Last Month\'s Foreman Performance</string>
-    <string name="anal_fore_tYear">This Year\'s Foreman Performance</string>
-    <string name="anal_fore_lYear">Last Year\'s Foreman Performance</string>
 
     <!--Farm Defaults-->
     <string name="anal_farm_tit">Farm Comparison</string>
+
+    <!--Orchard Defaults-->
+    <string name="anal_orch_tit">Orchard Comparison</string>
+
+    <!--Worker Defaults-->
+    <string name="anal_work_tit">Worker Comparison</string>
+
+    <!--Foreman Defaults-->
+    <string name="anal_fore_tit">Foreman Comparison</string>
 
     <!--Selector-->
 
@@ -272,9 +249,8 @@
     <string name="anal_create_save">Save</string>
 
     <!--Graphs-->
-    <string name="anal_graph_orchard">Orchard Performance</string>
-    <string name="anal_graph_foreman">Foreman Performance</string>
-    <string name="anal_graph_worker">Worker Performance</string>
+    <string name="anal_graph_noData">No Data Available to Show</string>
+    <string name="anal_gragh_averageLabel">Overall Average</string>
 
 
 

@@ -39,8 +39,7 @@ class ForemanSignInViewController: UIViewController {
       switch state {
       case .wantsPhoneNumber:
         instructionLabel.text = """
-          Please enter your phone number to receive a SMS with a verification code. Ensure you add \
-          your area code. Example \(Phoney.formatted(number: "0123456789") ?? "")
+          Please enter your phone number to receive a SMS with a verification code.
           """
         numberInputTextField.addLeftImage(#imageLiteral(resourceName: "Phone"))
         numberInputTextField.placeholder = "Phone Number"

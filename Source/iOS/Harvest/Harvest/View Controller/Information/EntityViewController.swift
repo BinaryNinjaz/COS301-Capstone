@@ -68,7 +68,7 @@ public final class EntityViewController: FormViewController, TypedRowControllerT
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .user(u) where u.temporary != nil:
-      HarvestDB.save(harvestUser: u.temporary!)
+      HarvestDB.save(harvestUser: u.temporary!, oldEmail: u.accountIdentifier)
       HarvestUser.current = HarvestUser(json: u.temporary!.json())
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       

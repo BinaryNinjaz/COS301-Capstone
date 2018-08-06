@@ -9,9 +9,26 @@
 import Firebase
 
 extension HarvestDB {
-  static func getSessions(_ completion: @escaping ([Session]) -> Void) {
-    let sref = ref.child(Path.sessions)
-    sref.observeSingleEvent(of: .value) { (snapshot) in
+  private static var sessionListners = [UInt]()
+  private static var sessionEndKey: String?
+  
+  static func getSessions(
+    limitedToLast n: UInt,
+    _ completion: @escaping ([Session]) -> Void
+  ) {
+    let sref: DatabaseQuery
+    if let end = sessionEndKey {
+      sref = ref.child(Path.sessions)
+        .queryOrderedByKey()
+        .queryEnding(atValue: end)
+        .queryLimited(toLast: n)
+    } else {
+      sref = ref.child(Path.sessions)
+        .queryOrderedByKey()
+        .queryLimited(toLast: n)
+    }
+    
+    let reader: (DataSnapshot) -> Void = { snapshot in
       var sessions = [Session]()
       for _child in snapshot.children {
         guard let child = _child as? DataSnapshot else {
@@ -21,12 +38,26 @@ extension HarvestDB {
         guard let session = child.value as? [String: Any] else {
           continue
         }
-        
-        let s = Session(json: session, id: child.key)
-        sessions.append(s)
+        let w = Session(json: session, id: child.key)
+        sessions.insert(w, at: 0)
+      }
+      sessionEndKey = sessions.last?.id
+      if !sessions.isEmpty {
+        sessions.removeLast()
       }
       completion(sessions)
     }
+    
+    sessionListners += [sref.observe(.value, with: reader)]
+  }
+  
+  static func getRefreshedSessions(
+    limitedToLast n: UInt,
+    _ completion: @escaping ([Session]) -> Void
+  ) {
+    sessionListners.forEach { ref.removeObserver(withHandle: $0) }
+    sessionEndKey = nil
+    getSessions(limitedToLast: n, completion)
   }
   
   static func getSession(id: String, _ completion: @escaping (Session) -> Void) {
@@ -38,26 +69,6 @@ extension HarvestDB {
       
       let s = Session(json: session, id: snapshot.key)
       completion(s)
-    }
-  }
-  
-  static func watchSessions(_ completion: @escaping ([Session]) -> Void) {
-    let sref = ref.child(Path.sessions)
-    sref.observe(.value) { (snapshot) in
-      var sessions = [Session]()
-      for _child in snapshot.children {
-        guard let child = _child as? DataSnapshot else {
-          continue
-        }
-        
-        guard let session = child.value as? [String: Any] else {
-          continue
-        }
-        
-        let s = Session(json: session, id: child.key)
-        sessions.append(s)
-      }
-      completion(sessions)
     }
   }
   
