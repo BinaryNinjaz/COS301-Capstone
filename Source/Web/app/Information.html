@@ -37,7 +37,32 @@
 
 </head>
 <body>
-
+	<nav class="navbar">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button  style="background-color:grey;padding-top:8px !important; padding-bottom:8px !important;" id="menu-toggle" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+					<i class="glyphicon glyphicon-plus"></i>
+					</button>
+					<a class="navbar-brand" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+				</div>
+				
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<a class="active" href="Information.html">Information</a>
+						<a href="Sessions.html">Sessions</a>
+						<a href="HeatMap.html">Heatmap</a>
+						<a href="graphs.html">Analytics</a>
+					</ul>
+					
+					<ul class="pull-right nav navbar-nav" style="position: relative;">
+						<a href="Settings.html" id="emailInNav">email</a>
+						<a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
+					</ul>
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
 <!--NavBar-->
 <!--<div class="topnav">
     <ul class="nav navbar-nav">
