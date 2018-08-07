@@ -200,7 +200,8 @@ public class Analytics_Graph extends AppCompatActivity {
         base.append("&startDate=").append(start);
         base.append("&endDate=").append(end);
         //Minutes from GMT
-        int minutes = (TimeZone.getDefault().getRawOffset() * 1000);
+        int minutes = (TimeZone.getDefault().getRawOffset() / 1000 / 60);
+//        int minutes = 120;
         base.append("&offset=").append(minutes);
         //Accumulation
         base.append("&mode=").append(mode);
@@ -259,6 +260,8 @@ public class Analytics_Graph extends AppCompatActivity {
                         String response = sendPost(urlTotalBagsPerDay(), urlParameters());
                         Log.i(TAG, response);
 
+                        LineData lineData = getDataFromString(response);
+                        populateLabels();
 
                         //No idea what I'm doing here, or more specifically, why. I'm just following the documentation.
 
@@ -274,21 +277,20 @@ public class Analytics_Graph extends AppCompatActivity {
                         lineChart.getAxisRight().setEnabled(false);
                         lineChart.setNoDataText(getString(R.string.anal_graph_noData));
 
-                        lineChart.setData(getDataFromString(response));
-
-                        populateLabels();
-
                         //Following settings come from John.
 //                        lineChart.getXAxis().setXOffset(0f);
 //                        lineChart.getXAxis().setYOffset(0f);
 //                        lineChart.getXAxis().setTextSize(8f);
 //                        lineChart.getXAxis().setGranularity(1f);
+
                         lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
                             @Override
                             public String getFormattedValue(float value, AxisBase axis) {
                                 return getLabel(value, axis);
                             }
                         });
+
+                        lineChart.setData(lineData);
 
                         runOnUiThread(new Runnable() {
                             public void run() {
@@ -365,20 +367,23 @@ public class Analytics_Graph extends AppCompatActivity {
         }
     }
 
+    /*
+    value is the amount of milliseconds / intervals since minTime.
+     */
     public String getLabel(float value, AxisBase axisBase){
-//          int position = ((int)value - minTime);
-//          double fpos = value / maxTime;
-//          fpos *= labels.length;
-//          fpos = Math.floor(fpos);
-//          int position = (int) fpos;
-//          if (position >= labels.length){
-//              Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is greater than array of size " + labels.length + ".");
-//          }
-//          else if (position < 0){
-//              Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is less than zero.");
-//          }
-//          return labels[Math.abs(position % labels.length)];
-        int position = (int) Math.floor((double) value);
+        int position;
+        if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+            if (value < 0) value = 0;
+            position = (int) Math.floor((double) value);
+        }
+        else {
+            //Need to determine where in the integer values the milliseconds best fit.
+            //maxTime is the largest amount of milliseconds seen.
+            double fpos = value / (maxTime - minTime);
+            fpos *= labels.length;
+            fpos = Math.floor(fpos);
+            position = (int) fpos;
+        }
         return labels[position];
     }
 
@@ -430,6 +435,7 @@ public class Analytics_Graph extends AppCompatActivity {
     public void populateLabels(){
         final int diffPOne = (int) (maxTime - minTime) + 1, diff = (int) (maxTime - minTime);
         if (diff < 0){
+            Log.e(TAG, "DiffPOne is less than zero.");
             return;
         }
         if (mode.equals(Analytics.ACCUMULATION_TIME)) {
@@ -458,10 +464,10 @@ public class Analytics_Graph extends AppCompatActivity {
                                 Calendar.SUNDAY //This here is the first day of week.
                         );
                         //Calendar sets up, so roll the week down.
-                        cal.roll(Calendar.WEEK_OF_YEAR, -1);
+                        cal.add(Calendar.WEEK_OF_YEAR, -1);
 
                         for (int i = 0; i <= diff; i++) {
-                            cal.roll(Calendar.WEEK_OF_YEAR, 1);
+                            cal.add(Calendar.WEEK_OF_YEAR, 1);
                             String builder = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) +
                                     "/" +
                                     cal.get(Calendar.MONTH); // +
@@ -522,19 +528,19 @@ public class Analytics_Graph extends AppCompatActivity {
                 labelsList.add(dateFormat.format(curCal.getTime()));
                 switch (interval){
                     case Analytics.HOURLY:
-                        curCal.roll(Calendar.HOUR, 1);
+                        curCal.add(Calendar.HOUR, 1);
                         break;
                     case Analytics.DAILY:
-                        curCal.roll(Calendar.DAY_OF_MONTH, 1);
+                        curCal.add(Calendar.DAY_OF_MONTH, 1);
                         break;
                     case Analytics.WEEKLY:
-                        curCal.roll(Calendar.WEEK_OF_YEAR, 1);
+                        curCal.add(Calendar.WEEK_OF_YEAR, 1);
                         break;
                     case Analytics.MONTHLY:
-                        curCal.roll(Calendar.MONTH, 1);
+                        curCal.add(Calendar.MONTH, 1);
                         break;
                     case Analytics.YEARLY:
-                        curCal.roll(Calendar.YEAR, 1);
+                        curCal.add(Calendar.YEAR, 1);
                         break;
                 }
             }
@@ -632,8 +638,12 @@ public class Analytics_Graph extends AppCompatActivity {
             }
         }
         else {
-            Date date = dateFormat.parse(key, new ParsePosition(0));
-            result = (double) (date.getTime());
+            try {
+                Date date = dateFormat.parse(key, new ParsePosition(0));
+                result = (double) (date.getTime());
+            } catch (NullPointerException e){
+                Log.w(TAG, "Failed parsing key to double.");
+            }
         }
         if (! subMin) {
             if (result < minTime) {
@@ -643,7 +653,7 @@ public class Analytics_Graph extends AppCompatActivity {
                 maxTime = result;
             }
         }
-        else {
+        else{
             result -= minTime;
         }
         return result;
