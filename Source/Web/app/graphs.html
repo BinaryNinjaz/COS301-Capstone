@@ -25,8 +25,8 @@
     
     
     <!-- Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+	--><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
@@ -37,9 +37,70 @@
 	<link rel="stylesheet" type="text/css" href="spin.css">
 	<script src="spin.js" charset="utf-8"></script>
 	<link rel="stylesheet" type="text/css" href="loading.css">
+	<style>
+	/* Black background colour to the top navigation */
+.navbar {
+    background-color: #333;
+    overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.navbar a {
+    float: left;
+    color: whitesmoke;
+    text-align: center;
+    padding: 19px 22px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* Change the colour of links on hover */
+.navbar a:hover {
+    background-color: #ddd; /*Grey*/
+    color: black;
+    text-decoration: none;
+}
+/* Colour Co active/current link */
+.navbar a.active {
+    background-color: #4CAF50; /*Green*/
+    color: white;
+}
+.navbar-nav > li > a {padding-top:11px !important; padding-bottom:11px !important;} /* This determines the height of the navbar */
+.navbar-nav > a {padding-top:12px !important; padding-bottom:12px !important;} /* This is for consistency with the height of the navbar */
+
+	</style>
   </head>
-  <body>
-	<div class="topnav">
+  <body style="background-color:grey;">
+	<nav class="navbar">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button  style="background-color:grey;padding-top:8px !important; padding-bottom:8px !important;" id="menu-toggle" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+				<i class="glyphicon glyphicon-plus"></i>
+				</button>
+				<a class="navbar-brand" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+			</div>
+			
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<a href="Information.html">Information</a>
+					<a href="Sessions.html">Sessions</a>
+					<a href="HeatMap.html">Heatmap</a>
+					<a class="active" href="graphs.html">Analytics</a>
+				</ul>
+				
+				<ul class="pull-right nav navbar-nav" style="position: relative;">
+					<a href="Settings.html" id="emailInNav">email</a>
+					<a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+	<!--<div class="topnav" style="min-width: 1000px;">
             <ul class="nav navbar-nav">
                 <li><a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
                 <a href="Information.html">Information</a>
@@ -48,7 +109,7 @@
                 <a class="active" href="graphs.html">Analytics</a></li>
             </ul>
             
-            <ul class="pull-right nav navbar-nav">
+            <ul class="pull-right nav navbar-nav" style="position: relative;">
                 <li><a href="Settings.html" id="emailInNav"></a>
                 <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -57,12 +118,13 @@
                     <span class="icon-bar"></span>
                 </button>
             </ul>
-	</div>
-	<div class="container">
-            <!-- top chart is the orchard historical performance graph-->
-			<div class="card border-success" style="top: 20px;">
-				<div class="card-header bg-transparent border-success" style="text-align: center;">Orchard Performance Graph</div>
-				<div class="card-body">
+	</div>-->
+	<div class="container" style="background-color:whitesmoke; border-radius: 25px;">
+		<!-- top chart is the orchard historical performance graph-->
+		<div class="panel-group" style="margin-top:30px; margin-bottom:30px;">
+			<div class="panel panel-default" style="border-color:green;">
+				<div class="panel-heading" style="background-color:transparent;text-align: center;">Orchard Performance Graph</div>
+				<div class="panel-body">
 					<div class="left">
 						<canvas id="myChart" width="900px" height="500px"></canvas>
 						<div id="myChart1" width="900px" height="500px"></div>
@@ -83,10 +145,12 @@
 					</div>
 				</div>
 			</div>
-            <!-- bottom graph can be is worker performance graph-->
-			<div class="card border-success" style="top: 50px;">
-				<div class="card-header bg-transparent border-success" style="text-align: center;">Worker Performance Graph</div>
-				<div class="card-body">
+		</div>
+		<!-- bottom graph can be is worker performance graph-->
+		<div class="panel-group" style="bottom: 50px;">
+			<div class="panel panel-default" style="border-color:green;">
+				<div class="panel-heading" style="text-align: center;">Worker Performance Graph</div>
+				<div class="panel-body">
 					<div class="right" >
 						<div id="curve_chart" style="width: 600px; height: 500px"></div>
 						<div id="cover-spin"></div>
@@ -104,6 +168,7 @@
 					</div>
 				</div>
 			</div>
+		</div>
 	</div>
       <script type="text/javascript">
          /* Below are examples that can be used to filter
