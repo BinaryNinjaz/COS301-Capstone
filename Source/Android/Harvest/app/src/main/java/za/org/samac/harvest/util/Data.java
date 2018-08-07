@@ -81,6 +81,16 @@ public class Data {
         }
     }
 
+    /**
+     * Ignore the FireBase stuff, manually set the data, and pretend it came from the magic internet.
+     * @param mock Does nothing...
+     */
+    public Data(boolean mock){
+        workers = new Vector<>();
+        orchards = new Vector<>();
+        farms = new Vector<>();
+    }
+
     public static boolean isPulling() {
         return pulling;
     }
@@ -850,6 +860,40 @@ public class Data {
     public void addWorker(Worker addMe){
         workers.addElement(addMe);
         changes.Add(Category.WORKER, addMe.getfID());
+    }
+
+    /**
+     * Populate the data's given category list with the given list.
+     *  Format of string is {id, name, [surname]}
+     *  (More to come?)
+     * @param setUs ids and names to set the current category
+     */
+    public void mockWith(List<String[]> setUs, Category category){
+        for (String[] strings : setUs){
+            switch (category){
+                case FARM:
+                    Farm farm = new Farm();
+                    farm.setID(strings[0]);
+                    farm.setName(strings[1]);
+                    farms.add(farm);
+                    return;
+                    
+                case ORCHARD:
+                    Orchard orchard = new Orchard();
+                    orchard.setID(strings[0]);
+                    orchard.setName(strings[1]);
+                    orchards.add(orchard);
+                    return;
+                    
+                case WORKER:
+                    Worker worker = new Worker();
+                    worker.setfID(strings[0]);
+                    worker.setfName(strings[1]);
+                    worker.setsName(strings[2]);
+                    workers.add(worker);
+                    return;
+            }
+        }
     }
 
 

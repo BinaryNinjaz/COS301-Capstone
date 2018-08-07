@@ -37,6 +37,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,8 +63,6 @@ public class Analytics_Graph extends AppCompatActivity {
     private ProgressBar progressBar;
     private LineChart lineChart;
 
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
     private static final String TAG = "Analytics";
 
     //Labels for graphs
@@ -79,7 +78,7 @@ public class Analytics_Graph extends AppCompatActivity {
     private static String group;            //entity type
     private static String mode;             //accumulation
 
-    private Data data = new Data();
+    private Data data;
 
     static double minTime = Double.MAX_VALUE, maxTime = Double.MIN_VALUE;
 
@@ -93,6 +92,8 @@ public class Analytics_Graph extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analytics_graph);
+
+        data = new Data();
 
         context = this;
 
@@ -335,16 +336,20 @@ public class Analytics_Graph extends AppCompatActivity {
                     JSONArray entryNames = object.names(); //Keys of the entries, for iteration
                     List<Entry> entries = new ArrayList<>();
                     if (entryNames != null) {
-                        LineDataSet lineDataSet;
+                        LineDataSet lineDataSet = null;
                         for (int j = 0; j < entryNames.length(); j++) {
                             //Get all of the entries, buy turning the key into an int (x axis), and the value to, erm, the value (y axis)
                             Entry entry = new Entry((float) (getDoubleFromKey(entryNames.get(j).toString(), true)), (float) object.getDouble(entryNames.get(j).toString()));
                             entries.add(entry);
                         }
-                        if (!entityNames.get(i).toString().equals("avg")) {
-                            lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
-                        } else {
+                        if (entityNames.get(i).toString().equals("avg")) {
                             lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_gragh_averageLabel));
+                        } else if (entityNames.get(i).toString().equals("sum")){
+                            if (mode.equals(Analytics.ACCUMULATION_ENTITY)) {
+                                lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_graph_sum));
+                            }
+                        } else {
+                            lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
                         }
                         lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
                         dataSets.add(lineDataSet);
@@ -384,13 +389,13 @@ public class Analytics_Graph extends AppCompatActivity {
         startCal.setTimeInMillis((long) (start * Analytics.THOUSAND));
         Calendar endCal = Calendar.getInstance();
         endCal.setTimeInMillis((long) (end * Analytics.THOUSAND));
-        final String fmtYear = isSameYear(startCal, endCal) ? "" : "YYYY ";
-        final String fmtMonth = isSameMonth(startCal, endCal) ? "" : "MMM ";
-        final String fmtDay = isSameDay(startCal, endCal) ? "" : "DD ";
-        final String fmt = fmtYear + fmtMonth + fmtDay;
+        final String fmtYear = isSameYear(startCal, endCal) ? "" : "YYYY";
+        final String fmtMonth = isSameMonth(startCal, endCal) ? "" : "MMM";
+        final String fmtDay = isSameDay(startCal, endCal) ? "" : "DD";
+        final String fmt = (fmtYear.equals("") ? "" : fmtYear + " ") + (fmtMonth.equals("") ? "" : fmtMonth + " ") + fmtDay;
         switch (interval){
             case Analytics.HOURLY:
-                dateFormat = new SimpleDateFormat(fmt + "HH:mm");
+                dateFormat = new SimpleDateFormat(fmt.equals("") ? "HH:mm" : fmt + " HH:mm");
                 return;
             case Analytics.DAILY:
                 dateFormat = new SimpleDateFormat(fmt.equals("") ? "ddd" : fmt);
@@ -399,7 +404,7 @@ public class Analytics_Graph extends AppCompatActivity {
                 dateFormat = new SimpleDateFormat(fmt.equals("") ? "ddd" : fmt);
                 return;
             case Analytics.MONTHLY:
-                dateFormat = new SimpleDateFormat(fmtYear + "MMM");
+                dateFormat = new SimpleDateFormat((fmtYear.equals("") ? "" : fmtYear + " ") + "MMM");
                 return;
             case Analytics.YEARLY:
                 dateFormat = new SimpleDateFormat("YYYY");
@@ -422,7 +427,7 @@ public class Analytics_Graph extends AppCompatActivity {
     /**
      * Depending on the interval, create a string array, so that the integers on the x axis can access the array to get what label they actually represent.
      */
-    private void populateLabels(){
+    public void populateLabels(){
         final int diffPOne = (int) (maxTime - minTime) + 1, diff = (int) (maxTime - minTime);
         if (diff < 0){
             return;
@@ -534,7 +539,7 @@ public class Analytics_Graph extends AppCompatActivity {
      * @param key the key to be converted.
      * @return the double representing the key.
      */
-    private double getDoubleFromKey(String key, boolean subMin){
+    public double getDoubleFromKey(String key, boolean subMin){
         double result = 0;
         if (mode.equals(Analytics.ACCUMULATION_TIME)) {
             switch (interval) {
@@ -614,11 +619,7 @@ public class Analytics_Graph extends AppCompatActivity {
             }
         }
         else {
-            try {
-                result = (double) (dateFormat.parse(key).getTime());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            result = (double) (dateFormat.parse(key, new ParsePosition(0)).getTime());
         }
         if (! subMin) {
             if (result < minTime) {
@@ -632,5 +633,20 @@ public class Analytics_Graph extends AppCompatActivity {
             result -= minTime;
         }
         return result;
+    }
+
+    //Testing
+    public void configureForLabelTesting(String mode, String interval, Category category){
+        Analytics_Graph.mode = mode;
+        Analytics_Graph.interval = interval;
+        this.category = category;
+    }
+
+    public SimpleDateFormat testDateFormatWith(double start, double end, String interval){
+        Analytics_Graph.start = start;
+        Analytics_Graph.end = end;
+        Analytics_Graph.interval = interval;
+        setDateFormat();
+        return dateFormat;
     }
 }

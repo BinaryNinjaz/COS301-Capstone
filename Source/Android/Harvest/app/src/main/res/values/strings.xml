@@ -251,6 +251,7 @@
     <!--Graphs-->
     <string name="anal_graph_noData">No Data Available to Show</string>
     <string name="anal_gragh_averageLabel">Overall Average</string>
+    <string name="anal_graph_sum">Sum</string>
 
 
 
