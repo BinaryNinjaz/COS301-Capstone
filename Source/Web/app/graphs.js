@@ -223,7 +223,6 @@ function getOrchardId(name){
 //takes information chosen by user for worker filter to pass to worker performance function
 //date to test function 2018/
 function filterWorker(){
-	myFunction(); //This calls the function which shows that resources are loading
     var name = document.getElementById('workerSelect').value;
     var date = document.getElementById('workerDateSelect').value;
     if(name!== '' && date!== ''){
@@ -234,6 +233,7 @@ function filterWorker(){
         start.setHours(6);
         start.setMinutes(0);
         var id = getWorkerId(name);
+		myFunction(); //This calls the function which shows that resources are loading
 		/*The next two line are unnecessary but they show the user that they have pressed the button */
 		var divHide = document.getElementById('curve_chart');
 		divHide.style.visibility = "hidden";
