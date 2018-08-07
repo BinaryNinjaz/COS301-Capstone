@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -128,35 +129,6 @@ public class Analytics_Graph extends AppCompatActivity {
                 break;
         }
 
-        bottomNavigationView = findViewById(R.id.BottomNav);
-        bottomNavigationView.setSelectedItemId(R.id.actionSession);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(Analytics_Graph.this, MainActivity.class);
-                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);
-                                return true;
-                            case R.id.actionInformation:
-                                Intent openInformation= new Intent(Analytics_Graph.this, InformationActivity.class);
-                                openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openInformation, 0);
-                                return true;
-                            case R.id.actionSession:
-                                return true;
-                            case R.id.actionStats:
-                                Intent openAnalytics= new Intent(Analytics_Graph.this, Analytics.class);
-                                openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openAnalytics, 0);
-                                return true;
-                        }
-                        return true;
-                    }
-                });
         generateAndDisplayGraph();
     }
 
@@ -283,49 +255,8 @@ public class Analytics_Graph extends AppCompatActivity {
                         //Get the result of the function
                         String response = sendPost(urlTotalBagsPerDay(), urlParameters());
                         Log.i(TAG, response);
-                        final JSONObject functionResult = new JSONObject(response);
 
-                        int colour = 0;
 
-                        //Determine max and min values
-                        JSONArray entityNames = functionResult.names(); //to iterate through the top level entities
-                        if (entityNames != null){
-                            for (int i = 0; i < entityNames.length(); i++){
-                                JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
-                                JSONArray entryNames = object.names(); //Keys of the entries, for iteration
-                                if (entryNames != null) {
-                                    for (int j = 0; j < entryNames.length(); j++) {
-                                       getDoubleFromKey(entryNames.get(j).toString(), false);
-                                    }
-                                }
-                            }
-                        }
-
-                        //Line always
-                        List<ILineDataSet> dataSets = new ArrayList<>(); //Holds all the data sets, so one for each entity
-                        entityNames = functionResult.names(); //to iterate through the top level entities
-                        if (entityNames != null){
-                            for (int i = 0; i < entityNames.length(); i++){
-                                JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
-                                JSONArray entryNames = object.names(); //Keys of the entries, for iteration
-                                List<Entry> entries = new ArrayList<>();
-                                if (entryNames != null) {
-                                    LineDataSet lineDataSet;
-                                    for (int j = 0; j < entryNames.length(); j++) {
-                                        //Get all of the entries, buy turning the key into an int (x axis), and the value to, erm, the value (y axis)
-                                        Entry entry = new Entry((float) (getDoubleFromKey(entryNames.get(j).toString(), true)), (float) object.getDouble(entryNames.get(j).toString()));
-                                        entries.add(entry);
-                                    }
-                                    if (!entityNames.get(i).toString().equals("avg")) {;
-                                        lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
-                                    } else {
-                                        lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_gragh_averageLabel));
-                                    }
-                                    lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
-                                    dataSets.add(lineDataSet);
-                                }
-                            }
-                        }
                         //No idea what I'm doing here, or more specifically, why. I'm just following the documentation.
 
                         //Following settings come from Letanyan.
@@ -340,36 +271,21 @@ public class Analytics_Graph extends AppCompatActivity {
                         lineChart.getAxisRight().setEnabled(false);
                         lineChart.setNoDataText(getString(R.string.anal_graph_noData));
 
+                        lineChart.setData(getDataFromString(response));
+
                         populateLabels();
 
                         //Following settings come from John.
-                        lineChart.getXAxis().setXOffset(0f);
-                        lineChart.getXAxis().setYOffset(0f);
-                        lineChart.getXAxis().setTextSize(8f);
-                        lineChart.getXAxis().setGranularity(1f);
+//                        lineChart.getXAxis().setXOffset(0f);
+//                        lineChart.getXAxis().setYOffset(0f);
+//                        lineChart.getXAxis().setTextSize(8f);
+//                        lineChart.getXAxis().setGranularity(1f);
                         lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
                             @Override
                             public String getFormattedValue(float value, AxisBase axis) {
-//                                int position = ((int)value - minTime);
-//                                double fpos = value / maxTime;
-//                                fpos *= labels.length;
-//                                fpos = Math.floor(fpos);
-//                                int position = (int) fpos;
-//                                if (position >= labels.length){
-//                                    Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is greater than array of size " + labels.length + ".");
-//                                }
-//                                else if (position < 0){
-//                                    Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is less than zero.");
-//                                }
-//                                return labels[Math.abs(position % labels.length)];
-                                int position = (int) Math.floor((double) value);
-                                return labels[position];
+                                return getLabel(value, axis);
                             }
                         });
-
-                        LineData lineData = new LineData(dataSets);
-
-                        lineChart.setData(lineData);
 
                         runOnUiThread(new Runnable() {
                             public void run() {
@@ -388,6 +304,77 @@ public class Analytics_Graph extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private LineData getDataFromString(String response){
+        try {
+            final JSONObject functionResult = new JSONObject(response);
+
+            int colour = 0;
+
+            //Determine max and min values
+            JSONArray entityNames = functionResult.names(); //to iterate through the top level entities
+            if (entityNames != null) {
+                for (int i = 0; i < entityNames.length(); i++) {
+                    JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
+                    JSONArray entryNames = object.names(); //Keys of the entries, for iteration
+                    if (entryNames != null) {
+                        for (int j = 0; j < entryNames.length(); j++) {
+                            getDoubleFromKey(entryNames.get(j).toString(), false);
+                        }
+                    }
+                }
+            }
+
+            //Line always
+            List<ILineDataSet> dataSets = new ArrayList<>(); //Holds all the data sets, so one for each entity
+            entityNames = functionResult.names(); //to iterate through the top level entities
+            if (entityNames != null) {
+                for (int i = 0; i < entityNames.length(); i++) {
+                    JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
+                    JSONArray entryNames = object.names(); //Keys of the entries, for iteration
+                    List<Entry> entries = new ArrayList<>();
+                    if (entryNames != null) {
+                        LineDataSet lineDataSet;
+                        for (int j = 0; j < entryNames.length(); j++) {
+                            //Get all of the entries, buy turning the key into an int (x axis), and the value to, erm, the value (y axis)
+                            Entry entry = new Entry((float) (getDoubleFromKey(entryNames.get(j).toString(), true)), (float) object.getDouble(entryNames.get(j).toString()));
+                            entries.add(entry);
+                        }
+                        if (!entityNames.get(i).toString().equals("avg")) {
+                            lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
+                        } else {
+                            lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_gragh_averageLabel));
+                        }
+                        lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
+                        dataSets.add(lineDataSet);
+                    }
+                }
+            }
+
+
+            return new LineData(dataSets);
+        } catch (JSONException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getLabel(float value, AxisBase axisBase){
+//          int position = ((int)value - minTime);
+//          double fpos = value / maxTime;
+//          fpos *= labels.length;
+//          fpos = Math.floor(fpos);
+//          int position = (int) fpos;
+//          if (position >= labels.length){
+//              Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is greater than array of size " + labels.length + ".");
+//          }
+//          else if (position < 0){
+//              Log.e(TAG, "Calculated label position " + position + " derived from " + value + " is less than zero.");
+//          }
+//          return labels[Math.abs(position % labels.length)];
+        int position = (int) Math.floor((double) value);
+        return labels[position];
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")

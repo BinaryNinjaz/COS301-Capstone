@@ -500,13 +500,14 @@ public class Analytics extends AppCompatActivity {
             case Analytics.LAST_WEEK:
                 Log.i(TAG, "Period is last week");
 
-                startCal.roll(Calendar.WEEK_OF_YEAR, -1);
+                startCal.roll(Calendar.WEEK_OF_YEAR, -2);
                 startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                 startCal.set(Calendar.HOUR, startCal.getActualMinimum(Calendar.HOUR));
                 startCal.set(Calendar.MINUTE, startCal.getActualMinimum(Calendar.MINUTE));
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
+                endCal.roll(Calendar.WEEK_OF_YEAR, -1);
                 endCal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
                 endCal.set(Calendar.HOUR, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
@@ -518,13 +519,13 @@ public class Analytics extends AppCompatActivity {
             case Analytics.THIS_MONTH:
                 Log.i(TAG, "Period is this month");
 
-                startCal.set(Calendar.WEEK_OF_MONTH, startCal.getActualMinimum(Calendar.WEEK_OF_MONTH));
+                startCal.set(Calendar.DAY_OF_MONTH, startCal.getActualMinimum(Calendar.DAY_OF_MONTH));
                 startCal.set(Calendar.HOUR, startCal.getActualMinimum(Calendar.HOUR));
                 startCal.set(Calendar.MINUTE, startCal.getActualMinimum(Calendar.MINUTE));
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
-                endCal.set(Calendar.WEEK_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 endCal.set(Calendar.HOUR, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
@@ -536,14 +537,14 @@ public class Analytics extends AppCompatActivity {
                 Log.i(TAG, "Period is last month");
 
                 startCal.roll(Calendar.MONTH, -1);
-                startCal.set(Calendar.WEEK_OF_MONTH, startCal.getActualMinimum(Calendar.WEEK_OF_MONTH));
+                startCal.set(Calendar.DAY_OF_MONTH, startCal.getActualMinimum(Calendar.DAY_OF_MONTH));
                 startCal.set(Calendar.HOUR, startCal.getActualMinimum(Calendar.HOUR));
                 startCal.set(Calendar.MINUTE, startCal.getActualMinimum(Calendar.MINUTE));
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
                 endCal.roll(Calendar.MONTH, -1);
-                endCal.set(Calendar.WEEK_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 endCal.set(Calendar.HOUR, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
@@ -561,13 +562,12 @@ public class Analytics extends AppCompatActivity {
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
-                endCal.set(Calendar.MONTH, endCal.getActualMinimum(Calendar.MONTH));
-                endCal.set(Calendar.WEEK_OF_MONTH, endCal.getActualMinimum(Calendar.DAY_OF_MONTH));
-                endCal.set(Calendar.HOUR, endCal.getActualMinimum(Calendar.HOUR));
-                endCal.set(Calendar.MINUTE, endCal.getActualMinimum(Calendar.HOUR));
-                endCal.set(Calendar.SECOND, endCal.getActualMinimum(Calendar.SECOND));
-                endCal.set(Calendar.MILLISECOND, endCal.getActualMinimum(Calendar.MILLISECOND));
-                endCal.roll(Calendar.YEAR, 1);
+                endCal.set(Calendar.MONTH, endCal.getActualMaximum(Calendar.MONTH));
+                endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                endCal.set(Calendar.HOUR, endCal.getActualMaximum(Calendar.HOUR));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
+                endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
+                endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
                 break;
 
@@ -582,12 +582,13 @@ public class Analytics extends AppCompatActivity {
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
-                endCal.set(Calendar.MONTH, endCal.getActualMinimum(Calendar.MONTH));
-                endCal.set(Calendar.WEEK_OF_MONTH, endCal.getActualMinimum(Calendar.DAY_OF_MONTH));
-                endCal.set(Calendar.HOUR, endCal.getActualMinimum(Calendar.HOUR));
-                endCal.set(Calendar.MINUTE, endCal.getActualMinimum(Calendar.HOUR));
-                endCal.set(Calendar.SECOND, endCal.getActualMinimum(Calendar.SECOND));
-                endCal.set(Calendar.MILLISECOND, endCal.getActualMinimum(Calendar.MILLISECOND));
+                endCal.roll(Calendar.YEAR, -1);
+                endCal.set(Calendar.MONTH, endCal.getActualMaximum(Calendar.MONTH));
+                endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                endCal.set(Calendar.HOUR, endCal.getActualMaximum(Calendar.HOUR));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR));
+                endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
+                endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
                 break;
 
