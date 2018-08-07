@@ -1,5 +1,7 @@
 package za.org.samac.harvest;
 
+import com.github.mikephil.charting.data.LineData;
+
 import org.junit.Test;
 
 import java.text.ParsePosition;
@@ -16,6 +18,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import static za.org.samac.harvest.Analytics.THOUSAND;
+import static za.org.samac.harvest.Analytics.WEEKLY;
 
 public class AnalyticsTests {
 
@@ -85,10 +88,7 @@ public class AnalyticsTests {
         Analytics_Graph analytics_graph = new Analytics_Graph();
 
         for (int i = 0; i < intervals.length; i++){
-            System.out.print(intervals[i]);
-
             //Same Year
-            System.out.print(", Same All");
 
             SimpleDateFormat simpleDateFormat;
             Calendar startCal = Calendar.getInstance();
@@ -105,12 +105,12 @@ public class AnalyticsTests {
                     break;
                 case 1:
                     //daily
-                    simpleDateFormat = new SimpleDateFormat("ddd");
+                    simpleDateFormat = new SimpleDateFormat("EEE");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 2:
                     //weekly
-                    simpleDateFormat = new SimpleDateFormat("ddd");
+                    simpleDateFormat = new SimpleDateFormat("EEE");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 3:
@@ -120,31 +120,30 @@ public class AnalyticsTests {
                     break;
                 case 4:
                     //yearly
-                    simpleDateFormat = new SimpleDateFormat("YYYY");
+                    simpleDateFormat = new SimpleDateFormat("yyyy");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
 
             }
 
             //Differing Day
-            System.out.print(", Day");
             endCal.roll(Calendar.DAY_OF_MONTH, 1);
 
             fromAnalytics = analytics_graph.testDateFormatWith(startCal.getTimeInMillis() / THOUSAND, endCal.getTimeInMillis() / THOUSAND, intervals[i]);
             switch (i){
                 case 0:
                     //hourly
-                    simpleDateFormat = new SimpleDateFormat("DD HH:mm");
+                    simpleDateFormat = new SimpleDateFormat("dd HH:mm");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 1:
                     //daily
-                    simpleDateFormat = new SimpleDateFormat("DD");
+                    simpleDateFormat = new SimpleDateFormat("dd");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 2:
                     //weekly
-                    simpleDateFormat = new SimpleDateFormat("DD");
+                    simpleDateFormat = new SimpleDateFormat("dd");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 3:
@@ -154,31 +153,30 @@ public class AnalyticsTests {
                     break;
                 case 4:
                     //yearly
-                    simpleDateFormat = new SimpleDateFormat("YYYY");
+                    simpleDateFormat = new SimpleDateFormat("yyyy");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
 
             }
 
             //Differing Day & Month
-            System.out.print(", Month");
             endCal.roll(Calendar.MONTH, 1);
 
             fromAnalytics = analytics_graph.testDateFormatWith(startCal.getTimeInMillis() / THOUSAND, endCal.getTimeInMillis() / THOUSAND, intervals[i]);
             switch (i){
                 case 0:
                     //hourly
-                    simpleDateFormat = new SimpleDateFormat("MMM DD HH:mm");
+                    simpleDateFormat = new SimpleDateFormat("MMM dd HH:mm");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 1:
                     //daily
-                    simpleDateFormat = new SimpleDateFormat("MMM DD");
+                    simpleDateFormat = new SimpleDateFormat("MMM dd");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 2:
                     //weekly
-                    simpleDateFormat = new SimpleDateFormat("MMM DD");
+                    simpleDateFormat = new SimpleDateFormat("MMM dd");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 3:
@@ -188,41 +186,40 @@ public class AnalyticsTests {
                     break;
                 case 4:
                     //yearly
-                    simpleDateFormat = new SimpleDateFormat("YYYY");
+                    simpleDateFormat = new SimpleDateFormat("yyyy");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
 
             }
 
             //Differing Day, Month, and Year
-            System.out.print(", Year");
             endCal.roll(Calendar.YEAR, 1);
 
             fromAnalytics = analytics_graph.testDateFormatWith(startCal.getTimeInMillis() / THOUSAND, endCal.getTimeInMillis() / THOUSAND, intervals[i]);
             switch (i){
                 case 0:
                     //hourly
-                    simpleDateFormat = new SimpleDateFormat("YYYY MMM DD HH:mm");
+                    simpleDateFormat = new SimpleDateFormat("yyyy MMM dd HH:mm");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 1:
                     //daily
-                    simpleDateFormat = new SimpleDateFormat("YYYY MMM DD");
+                    simpleDateFormat = new SimpleDateFormat("yyyy MMM dd");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 2:
                     //weekly
-                    simpleDateFormat = new SimpleDateFormat("YYYY MMM DD");
+                    simpleDateFormat = new SimpleDateFormat("yyyy MMM dd");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 3:
                     //monthly
-                    simpleDateFormat = new SimpleDateFormat("YYYY MMM");
+                    simpleDateFormat = new SimpleDateFormat("yyyy MMM");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
                 case 4:
                     //yearly
-                    simpleDateFormat = new SimpleDateFormat("YYYY");
+                    simpleDateFormat = new SimpleDateFormat("yyyy");
                     assertTrue(fromAnalytics.equals(simpleDateFormat));
                     break;
 
@@ -237,11 +234,10 @@ public class AnalyticsTests {
 
         We need to test that all of the labels are coming back correctly, these means testing the following functions:
          populateLabels(), and getDoubleFromKey(key, subMin).
-        The first thing that needs to be stated is that is that determineDates is correct (see above).
+        The first thing that needs to be stated is that is that determineDates is correct (see above), and so FireBase is working with fixed dates.
         Date formatting also works correctly (see above).
         It also needs to be assumed that FireBase returns correctly there, and since FireBase returns dates, fixed dates will be used in the mocking.
         We'll also assume that different groups all perform the same, so only mock a single group.
-        Also, the dates given are insignificant, since that's all performed before, and by, the FireBase function.
          */
 
         /*
@@ -261,10 +257,41 @@ public class AnalyticsTests {
 
         /*
         Now, constructing a response will be tough, since it needs to be different for each of the 15 situations.
-        We'll build it on the fly.
+        We'll _try_ and build it dynamically now.
+        To keep it simple, it's two workers, each with four collections, each collection in a different period.
          */
 
-        //All have an average, and it
+        //Applicable only to accumTime
+        //[interval][periods(key)]
+        String accumTime[][] = {
+          //hourly
+                {"12:00", "13:00", "14:00", "15:00"}, //not exact, ':00' added to match fancy display formatting
+          //daily
+                {"Sunday", "Monday", "Tuesday", "Wednesday"},
+          //weekly
+                {"32", "33", "34", "35"}, //Number of weeks 06 August through 27 August
+          //monthly
+                {"January", "February", "March", "April"},
+          //yearly
+                {"2000", "2001", "2002", "2003"}
+        };
+
+        //Applicable not to accumTime
+        //[interval][periods(key)]
+        String standardTime[][] = {
+          //hourly
+                {"12:00", "13:00", "14:00", "15:00"},
+          //daily
+                {"01", "02", "03", "04"},
+          //weekly
+                {"05", "12", "19", "26"}, //Date of the 'first' sundays of each week in august 2018.
+          //monthly
+                {"Jan", "Feb", "Mar", "Apr"},
+          //yearly
+                {"2000", "2001", "2002", "2003"}
+        };
+        //A reminder that date formatting is correct (see above), so it's irrelevant how simple or complex these are.
+        //Perhaps switch things up a bit at a later point.
 
         /*
         Now, both populateLabels() and getDoubleFromKey(key, subMin) need the mode and the intervals to be set, so lets do that.
@@ -276,17 +303,112 @@ public class AnalyticsTests {
                 Analytics.ACCUMULATION_TIME
         };
 
-        for (int mi = 0; mi < modes.length; mi++){
-            for (int ii = 0; ii < intervals.length; ii++){
-                analytics_graph.configureForLabelTesting(modes[mi], intervals[ii], category);
-
-
+        //Iterate through modes
+        for (String mode : modes) {
+            //Iterate through intervals
+            for (int ii = 0; ii < intervals.length; ii++) {
+                System.out.println("Accum: " + mode + ", Interval: " + intervals[ii] + ".");
+                analytics_graph.configureForLabelTesting(mode, intervals[ii], category); //Configure the object
+                //Use the correct periods.
+                String time[][];
+                if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+                    time = accumTime;
+                } else {
+                    time = standardTime;
+                }
 
                 /*
-                So now, populateLabels() needs all of the getDoubleFromKey(key, subMin) be run, so lets do that first.
+                So now, populateLabels() needs all of the getDoubleFromKey(key, subMin = false) be run, so lets do that first.
+                */
+
+                //Set the date format first.
+                //These Calendars HAVE to match the period arrays.
+                Calendar startCal = Calendar.getInstance(), endCal = Calendar.getInstance();
+                startCal.set(2018, 7, 7, startCal.getActualMinimum(Calendar.HOUR_OF_DAY), 0, 0);
+                startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
+                endCal.set(2018,7,7, endCal.getActualMaximum(Calendar.HOUR_OF_DAY), 59,59);
+                endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
+                switch (intervals[ii]){
+                    case Analytics.HOURLY:
+                        startCal.set(Calendar.HOUR_OF_DAY, 12);
+                        endCal.set(Calendar.HOUR_OF_DAY, 15);
+                        break;
+                    case Analytics.DAILY:
+                        if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+                            startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                            endCal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+                        }
+                        else{
+                            startCal.set(Calendar.DAY_OF_MONTH, 1);
+                            endCal.set(Calendar.DAY_OF_MONTH, 4);
+                        }
+                        break;
+                    case Analytics.WEEKLY:
+//                        if(mode.equals(Analytics.ACCUMULATION_TIME)) {
+                            startCal.set(Calendar.DATE, 5);
+                            endCal.set(Calendar.DATE, 26);
+//                        }
+//                        else {
+//                            startCal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+//                            endCal.set(Calendar.DAY_OF_WEEK,Calendar.THURSDAY);
+//                        }
+                        break;
+                    case Analytics.MONTHLY:
+                        startCal.set(Calendar.MONTH, Calendar.JANUARY);
+                        endCal.set(Calendar.MONTH,Calendar.APRIL);
+                        break;
+                    case Analytics.YEARLY:
+                        startCal.set(Calendar.YEAR, 2000);
+                        endCal.set(Calendar.YEAR, 2003);
+                        break;
+                }
+                System.out.println(startCal.getTime().toString() + ", " + endCal.getTime().toString());
+                analytics_graph.testDateFormatWith(startCal.getTimeInMillis() / THOUSAND, endCal.getTimeInMillis() / THOUSAND, intervals[ii]);
+                System.out.print("Date Format Set. ");
+
+                //Iterate through time periods
+                for (int ti = 0; ti < 4; ti++) {
+                    analytics_graph.getDoubleFromKey(time[ii][ti], false);
+                }
+
+                System.out.print("Min/Max Set (" + Analytics_Graph.minTime + " < " + Analytics_Graph.maxTime + "). ");
+
+                /*
+                Next up, let's check those labels.
+                AccumTime is easy, it's 0, 1, 2, 3.
+                StandardTime is more complicated, so for now, let's just check that 0 < 1 < 2 < 3
+                 It will be easier to check this is correct when the labels come up correct.
+                So, for both, check 0 < 1 < 2 < 3.
                  */
 
+                double results[] = new double[4];
+                for (int ti = 0; ti < 4; ti++) {
+                    results[ti] = analytics_graph.getDoubleFromKey(time[ii][ti], true);
+                }
+                for (int i = 0; i < 3; i++) {
+                    assertTrue(results[i] < results[i + 1]);
+                }
 
+                System.out.print("Keys To Doubles Successful. ");
+
+                /*
+                Now check the labels.
+                 */
+                analytics_graph.populateLabels();
+                for (int ti = 0; ti < 4; ti++) {
+                    if (mode.equals(Analytics.ACCUMULATION_TIME) && intervals[ii].equals(Analytics.WEEKLY)){
+                        //This setting here takes week numbers from FireBase, but returns the date of the 'first' sunday of the week, so make the conversion.
+                        String[] tokens = analytics_graph.getLabel(ti, null).split("/");
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(2018, Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+                        assertTrue(cal.get(Calendar.WEEK_OF_YEAR) + 1 == Integer.parseInt(time[ii][ti]));
+                    }
+                    else {
+                        assertTrue(analytics_graph.getLabel(ti, null).equals(time[ii][ti]));
+                    }
+                }
+                System.out.println("Labels Gotten Successfully.");
+                System.out.println("Passed\n");
             }
         }
     }

@@ -130,6 +130,8 @@ public class Analytics_Graph extends AppCompatActivity {
                 break;
         }
 
+        minTime = Double.MAX_VALUE;
+        maxTime = Double.MIN_VALUE;
         generateAndDisplayGraph();
     }
 
@@ -356,8 +358,6 @@ public class Analytics_Graph extends AppCompatActivity {
                     }
                 }
             }
-
-
             return new LineData(dataSets);
         } catch (JSONException e){
             e.printStackTrace();
@@ -389,25 +389,25 @@ public class Analytics_Graph extends AppCompatActivity {
         startCal.setTimeInMillis((long) (start * Analytics.THOUSAND));
         Calendar endCal = Calendar.getInstance();
         endCal.setTimeInMillis((long) (end * Analytics.THOUSAND));
-        final String fmtYear = isSameYear(startCal, endCal) ? "" : "YYYY";
+        final String fmtYear = isSameYear(startCal, endCal) ? "" : "yyyy";
         final String fmtMonth = isSameMonth(startCal, endCal) ? "" : "MMM";
-        final String fmtDay = isSameDay(startCal, endCal) ? "" : "DD";
+        final String fmtDay = isSameDay(startCal, endCal) ? "" : "dd";
         final String fmt = (fmtYear.equals("") ? "" : fmtYear + " ") + (fmtMonth.equals("") ? "" : fmtMonth + " ") + fmtDay;
         switch (interval){
             case Analytics.HOURLY:
                 dateFormat = new SimpleDateFormat(fmt.equals("") ? "HH:mm" : fmt + " HH:mm");
                 return;
             case Analytics.DAILY:
-                dateFormat = new SimpleDateFormat(fmt.equals("") ? "ddd" : fmt);
+                dateFormat = new SimpleDateFormat(fmt.equals("") ? "EEE" : fmt);
                 return;
             case Analytics.WEEKLY:
-                dateFormat = new SimpleDateFormat(fmt.equals("") ? "ddd" : fmt);
+                dateFormat = new SimpleDateFormat(fmt.equals("") ? "EEE" : fmt);
                 return;
             case Analytics.MONTHLY:
                 dateFormat = new SimpleDateFormat((fmtYear.equals("") ? "" : fmtYear + " ") + "MMM");
                 return;
             case Analytics.YEARLY:
-                dateFormat = new SimpleDateFormat("YYYY");
+                dateFormat = new SimpleDateFormat("yyyy");
                 return;
         }
     }
@@ -450,15 +450,18 @@ public class Analytics_Graph extends AppCompatActivity {
                     if (!isSameYear(cal, endCal)) {
                         for (int i = 0; i < diff; i++){
                             labels[i] = String.valueOf(i + minTime);
+                            //TODO: This needs to be improved
                         }
                     }
                     else {
                         cal.set(Calendar.DAY_OF_WEEK,
                                 Calendar.SUNDAY //This here is the first day of week.
                         );
+                        //Calendar sets up, so roll the week down.
+                        cal.roll(Calendar.WEEK_OF_YEAR, -1);
 
                         for (int i = 0; i <= diff; i++) {
-                            cal.set(Calendar.WEEK_OF_YEAR, (int) (i + minTime));
+                            cal.roll(Calendar.WEEK_OF_YEAR, 1);
                             String builder = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) +
                                     "/" +
                                     cal.get(Calendar.MONTH); // +
@@ -504,32 +507,41 @@ public class Analytics_Graph extends AppCompatActivity {
             }
         }
         else {
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis((long) (start * Analytics.THOUSAND));
+            /*
+            Here, the plan is to set a calendar to the start date, then keep rolling it by our interval, until it is > than our end date.
+             */
+            Calendar curCal = Calendar.getInstance();
+            curCal.setTimeInMillis((long) (start * Analytics.THOUSAND));
 
-            labels = new String[diffPOne];
-            Date date = cal.getTime();
-            int i = 0;
-            while (i < diff){
-                labels[i] = dateFormat.format(date);
+            Calendar endCal = Calendar.getInstance();
+            endCal.setTimeInMillis((long) (end * Analytics.THOUSAND));
+
+            List<String> labelsList = new ArrayList<>();
+
+            while (curCal.getTimeInMillis() <= endCal.getTimeInMillis()){
+                labelsList.add(dateFormat.format(curCal.getTime()));
                 switch (interval){
                     case Analytics.HOURLY:
-                        cal.roll(Calendar.HOUR, 1);
+                        curCal.roll(Calendar.HOUR, 1);
                         break;
                     case Analytics.DAILY:
-                        cal.roll(Calendar.DAY_OF_MONTH, 1);
+                        curCal.roll(Calendar.DAY_OF_MONTH, 1);
                         break;
                     case Analytics.WEEKLY:
-                        cal.roll(Calendar.WEEK_OF_YEAR, 1);
+                        curCal.roll(Calendar.WEEK_OF_YEAR, 1);
                         break;
                     case Analytics.MONTHLY:
-                        cal.roll(Calendar.MONTH, 1);
+                        curCal.roll(Calendar.MONTH, 1);
                         break;
                     case Analytics.YEARLY:
-                        cal.roll(Calendar.YEAR, 1);
+                        curCal.roll(Calendar.YEAR, 1);
                         break;
                 }
-                date = cal.getTime();
+            }
+            //Turn our resizable list to standard array.
+            labels = new String[labelsList.size()];
+            for (int i = 0; i < labelsList.size(); i++){
+                labels[i] = labelsList.get(i);
             }
         }
     }
@@ -537,6 +549,7 @@ public class Analytics_Graph extends AppCompatActivity {
     /**
      * Take any key, most notably a string key, and turn it into an double.
      * @param key the key to be converted.
+     * @param subMin if false, then the minimum will not be subtracted from the result, set false for initial determination of the min and max before doing anything.
      * @return the double representing the key.
      */
     public double getDoubleFromKey(String key, boolean subMin){
@@ -619,7 +632,8 @@ public class Analytics_Graph extends AppCompatActivity {
             }
         }
         else {
-            result = (double) (dateFormat.parse(key, new ParsePosition(0)).getTime());
+            Date date = dateFormat.parse(key, new ParsePosition(0));
+            result = (double) (date.getTime());
         }
         if (! subMin) {
             if (result < minTime) {
@@ -640,6 +654,8 @@ public class Analytics_Graph extends AppCompatActivity {
         Analytics_Graph.mode = mode;
         Analytics_Graph.interval = interval;
         this.category = category;
+        maxTime = Double.MIN_VALUE;
+        minTime = Double.MAX_VALUE;
     }
 
     public SimpleDateFormat testDateFormatWith(double start, double end, String interval){
