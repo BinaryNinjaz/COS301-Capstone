@@ -751,7 +751,7 @@ extension Session {
     }
     
     form
-      +++ Section("Foreman")
+      +++ Section()
       <<< displayRow
     
       +++ Section("Duration")

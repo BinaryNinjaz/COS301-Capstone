@@ -183,7 +183,7 @@ class SessionSelectionViewController: UITableViewController {
       return filtered[i].key
     } else {
       let formatter = DateFormatter()
-      formatter.dateStyle = .medium
+      formatter.dateStyle = .full
       
       let sidx = SessionsIndex(section)
       let date = sessions[sidx].key
