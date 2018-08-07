@@ -28,15 +28,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -160,36 +157,46 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         return flattenDataSource();
     }
 
-    static class DescOrder implements Comparator<String> {
+    static class DescOrder implements Comparator<Date> {
 
         @Override
-        public int compare(String o1, String o2) {
+        public int compare(Date o1, Date o2) {
             return o2.compareTo(o1);
         }
+    }
+
+    public static Date instanceToDay(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 
     private Boolean flattenDataSource() {
         int oldCount = adapterSource != null ? adapterSource.size() : 0;
         adapterSource.clear();
         if (filteredSessions == null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy MMM dd, EEEE", Locale.getDefault());
+            SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
             formatter.setCalendar(Calendar.getInstance());
 
-            TreeMap<String, ArrayList<SearchedItem.Session>> compacted = new TreeMap<>(new DescOrder());
+            TreeMap<Date, ArrayList<SearchedItem.Session>> compacted = new TreeMap<>(new DescOrder());
             for (String key : sessions.keySet()) {
                 SessionItem item = sessions.get(key);
-                String date = formatter.format(item.startDate);
+                Date day = instanceToDay(item.startDate);
 
-                if (compacted.get(date) == null) {
-                    compacted.put(date, new ArrayList<SearchedItem.Session>());
+                if (compacted.get(day) == null) {
+                    compacted.put(day, new ArrayList<SearchedItem.Session>());
                 }
-                compacted.get(date).add(new SearchedItem.Session(item, null));
+                compacted.get(day).add(new SearchedItem.Session(item, null));
             }
 
             Integer section = 1;
-            for (String key : compacted.keySet()) {
+            for (Date key : compacted.keySet()) {
                 ArrayList<SearchedItem.Session> items = compacted.get(key);
-                adapterSource.add(new SearchedItem.Session(null, key));
+                adapterSource.add(new SearchedItem.Session(null, formatter.format(key)));
                 for (SearchedItem.Session item : items) {
                     adapterSource.add(section, item);
                 }
