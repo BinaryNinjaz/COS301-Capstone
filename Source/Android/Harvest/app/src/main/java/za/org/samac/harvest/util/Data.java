@@ -20,6 +20,7 @@ import java.util.Vector;
 
 import za.org.samac.harvest.InfoListFragment;
 import za.org.samac.harvest.InformationActivity;
+import za.org.samac.harvest.Sessions;
 
 /**
  * This monster class is used to store and manipulate almost, if not all, information in the database that belongs to the logged in farmer.
@@ -57,6 +58,7 @@ public class Data {
     private boolean pWorkers = false;
 
     private InformationActivity infoAct = null;
+    public Sessions sessionsAct = null;
 
     /**
      * Constructor
@@ -305,6 +307,9 @@ public class Data {
 
             if (infoAct != null){
                 infoAct.tellAllPullDone();
+            }
+            if (sessionsAct != null) {
+                sessionsAct.getNewPage();
             }
         }
 
