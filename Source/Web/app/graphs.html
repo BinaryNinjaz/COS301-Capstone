@@ -40,54 +40,24 @@
 	<link rel="stylesheet" type="text/css" href="newNavbar.css">
   </head>
   <body style="background-color:grey;">
-	<nav class="navbar">
-		<div class="container-fluid">
-			<!-- Brand and toggle get grouped for better mobile display -->
+	<nav class="navbar navbar-inverse">
+		  <div class="container-fluid">
 			<div class="navbar-header">
-				<button  style="background-color:grey;padding-top:8px !important; padding-bottom:8px !important;" id="menu-toggle" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-				<i class="glyphicon glyphicon-plus"></i>
-				</button>
-				<a class="navbar-brand" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+			  <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+			  
 			</div>
-			
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<a href="Information.html">Information</a>
-					<a href="Sessions.html">Sessions</a>
-					<a href="HeatMap.html">Heatmap</a>
-					<a class="active" href="graphs.html">Analytics</a>
-				</ul>
-				
-				<ul class="pull-right nav navbar-nav" style="position: relative;">
-					<a href="Settings.html" id="emailInNav">email</a>
-					<a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
-				</ul>
-			</div><!-- /.navbar-collapse -->
-		</div><!-- /.container-fluid -->
+			<ul class="nav navbar-nav">
+			  <li><a href="Information.html">Information</a></li>
+			  <li><a href="Sessions.html">Sessions</a></li>
+			  <li><a class="active" href="HeatMap.html">Heatmap</a></li>
+			  <li><a href="graphs.html">Statistics</a></li>
+			</ul>
+			<ul class=" nav navbar-nav" id="ojo">
+						<li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
+						<li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
+					</ul>
+			</div>
 	</nav>
-	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
-	<!--<div class="topnav" style="min-width: 1000px;">
-            <ul class="nav navbar-nav">
-                <li><a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-                <a href="Information.html">Information</a>
-                <a href="Sessions.html">Sessions</a>
-                <a href="HeatMap.html">Heatmap</a>
-                <a class="active" href="graphs.html">Analytics</a></li>
-            </ul>
-            
-            <ul class="pull-right nav navbar-nav" style="position: relative;">
-                <li><a href="Settings.html" id="emailInNav"></a>
-                <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </ul>
-	</div>-->
 	<div class="container" style="background-color:whitesmoke; border-radius: 25px;">
 		<!-- top chart is the orchard historical performance graph-->
 		<div class="panel-group" style="margin-top:30px; margin-bottom:30px;">
