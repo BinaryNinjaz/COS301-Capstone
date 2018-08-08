@@ -156,7 +156,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // Show the Up button in the action bar.
 
             //Disabled until fix
-            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -184,6 +184,17 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || AccountPreferenceFragment.class.getName().equals(fragmentName);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -250,7 +261,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String fname = dataSnapshot.child("firstname").getValue(String.class);
-                        String sname = dataSnapshot.child("surname").getValue(String.class);
+                        String sname = dataSnapshot.child("lastname").getValue(String.class);
                         String org = dataSnapshot.child("organization").getValue(String.class);
 
                         findPreference(getString(R.string.pref_account_fname_key)).setSummary(fname);
@@ -314,7 +325,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 findPreference(getString(R.string.pref_account_sname_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        userAdmin.child("firstname").setValue(newValue.toString());
+                        userAdmin.child("lastname").setValue(newValue.toString());
                         preference.setSummary(newValue.toString());
 
                         return false;

@@ -35,6 +35,7 @@ public class WorkersForBarGraph extends AppCompatActivity {
     private WorkerForBarGraphRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +48,19 @@ public class WorkersForBarGraph extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
 
-        bottomNavigationView.setSelectedItemId(R.id.actionSession);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(WorkersForBarGraph.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(WorkersForBarGraph.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
                                 Intent openInformation= new Intent(WorkersForBarGraph.this, InformationActivity.class);
@@ -78,6 +81,18 @@ public class WorkersForBarGraph extends AppCompatActivity {
 
         init();
         collectOrchards();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(WorkersForBarGraph.this, WorkerOrForeman.class));
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);//set correct item to pop out on the nav bar
     }
 
     public void init() {
@@ -152,8 +167,7 @@ public class WorkersForBarGraph extends AppCompatActivity {
 //                onBackPressed();
 //                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
 //        return false;
     }

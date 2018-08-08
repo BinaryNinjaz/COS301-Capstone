@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Worker {
 
     private String name;
+    private String surname;
     private Integer value;
     private String ID;
     private ArrayList<String> assignedOrchards;//the orchards the worker is assigned to may or may not be more than one
@@ -15,6 +16,12 @@ public class Worker {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setSurname(String surname) { this.surname = surname; }
+
+    public String getSurname() {
+        return surname;
     }
 
     public Integer getValue() {

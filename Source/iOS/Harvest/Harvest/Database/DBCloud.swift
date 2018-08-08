@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/06/24.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Firebase
@@ -153,18 +153,21 @@ enum HarvestCloud {
   
   // swiftlint:disable function_parameter_count
   static func timeGraphSessions(
-    grouping: GroupBy,
+    grouping: StatKind,
     ids: [String],
-    period: TimePeriod,
+    period: TimeStep,
     startDate: Date,
     endDate: Date,
+    mode: TimedGraphMode,
     completion: @escaping (Any) -> Void
-    ) {
+  ) {
     var args = [
-      ("groupBy", grouping.description),
-      ("period", period.description),
+      ("groupBy", grouping.identifier),
+      ("period", period.identifier),
       ("startDate", startDate.timeIntervalSince1970.description),
       ("endDate", endDate.timeIntervalSince1970.description),
+      ("offset", Calendar.current.timeZone.offset()),
+      ("mode", mode.identifier),
       ("uid", HarvestDB.Path.parent)
     ]
     
@@ -187,130 +190,5 @@ extension HarvestCloud {
     static let expectedYield = "expectedYield"
     static let orchardCollections = "orchardCollectionsWithinDate"
     static let timeGraphSessions = "timedGraphSessions"
-  }
-  
-  enum TimePeriod: CustomStringConvertible {
-    case hourly
-    case daily
-    case weekly
-    case monthly
-    case yearly
-    
-    static var allCases: [TimePeriod] {
-      return [.hourly, .daily, .weekly, .monthly, .yearly]
-    }
-    
-    static func cases(forRange r: (Date, Date)) -> [TimePeriod] {
-      let days = Calendar.current.dateComponents([.day], from: r.0, to: r.1).day!
-      let weeks = Calendar.current.dateComponents([.weekOfYear], from: r.0, to: r.1).weekOfYear!
-      
-      if days <= 1 {
-        return [.hourly]
-      } else if weeks <= 1 {
-        return [.daily]
-      } else if weeks <= 4 {
-        return [.weekly]
-      } else {
-        return [.weekly, .monthly]
-      }
-    }
-    
-    var description: String {
-      switch self {
-      case .hourly: return "hourly"
-      case .daily: return "daily"
-      case .weekly: return "weekly"
-      case .monthly: return "monthly"
-      case .yearly: return "yearly"
-      }
-    }
-    
-    func fullDataSet(between start: Date? = nil, and end: Date? = nil, limitToDate: Bool = false) -> [String] {
-      switch self {
-      case .hourly:
-        return (0...23).map(String.init)
-      case .daily:
-        return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-      case .weekly:
-        let base = (1...54).map(String.init)
-        if limitToDate {
-          guard let s = start?.weekNumber(), let e = end?.weekNumber() else {
-            return base
-          }
-          return (s...e).map(String.init)
-        }
-        return base
-      case .monthly:
-        return [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December"
-          ]
-      case .yearly:
-        return ["2018", "2019", "2020", "2021", "2022"]
-      }
-    }
-    
-    func fullPrintableDataSet(
-      between start: Date? = nil,
-      and end: Date? = nil,
-      limitToDate: Bool = false
-    ) -> [String] {
-      switch self {
-      case .hourly:
-        return (0...23).map { ($0 < 10 ? "0\($0):00" : "\($0):00") + ($0 < 12 ? "am" : "pm") }
-      case .daily:
-        return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-      case .weekly:
-        let base = (1...54).map { Date.startOfWeek(from: $0) }
-        if limitToDate {
-          guard let s = start?.weekNumber(), let e = end?.weekNumber() else {
-            return base
-          }
-          return (s...e).map { Date.startOfWeek(from: $0) }
-        }
-        return base
-      case .monthly:
-        return [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec"
-        ]
-      case .yearly:
-        return ["2018", "2019", "2020", "2021", "2022"]
-      }
-    }
-  }
-  
-  enum GroupBy: CustomStringConvertible {
-    case worker
-    case orchard
-    case foreman
-    
-    var description: String {
-      switch self {
-      case .worker: return "worker"
-      case .orchard: return "orchard"
-      case .foreman: return "foreman"
-      }
-    }
   }
 }

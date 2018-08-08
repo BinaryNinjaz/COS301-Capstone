@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/harvestbackground"
+    tools:context=".SignIn_SignUp">
+
+    <!-- Sign Up progress -->
+    <ProgressBar
+        android:id="@+id/signUp_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/signUp_form"
+        android:layout_width="@dimen/tablet_form_width"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="@string/app_name"
+                style="@style/TextView.Heading" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_title"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/white"
+                    android:elevation="4dp"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="0dp">
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/TextInputLayout">
+
+                        <EditText
+                            android:id="@+id/edtFirstName"
+                            android:hint="@string/prompt_enter_firstName"
+                            style="@style/EditText"
+                            android:inputType="text" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/TextInputLayout">
+
+                        <EditText
+                            android:id="@+id/edtSurname"
+                            android:hint="@string/prompt_enter_surname"
+                            style="@style/EditText"
+                            android:inputType="text" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/TextInputLayout">
+
+                        <EditText
+                            android:id="@+id/edtEmail"
+                            android:hint="@string/prompt_enter_email"
+                            style="@style/EditText"
+                            android:inputType="textEmailAddress" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/TextInputLayout">
+
+                        <EditText
+                            android:id="@+id/edtOrganization"
+                            android:hint="@string/prompt_enter_organization"
+                            style="@style/EditText"
+                            android:inputType="text"/>
+
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/TextInputLayout">
+
+                        <EditText
+                            android:id="@+id/edtPassword"
+                            android:hint="@string/prompt_enter_newPassword"
+                            style="@style/EditText"
+                            android:inputType="textPassword" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/TextInputLayout">
+
+                        <EditText
+                            android:id="@+id/edtConfirmPassword"
+                            android:hint="@string/prompt_confirm_Password"
+                            style="@style/EditText"
+                            android:inputType="textPassword" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btnSignUp"
+                        style="@style/Button"
+                        android:text="Create Account" />
+
+                    <Button
+                        android:id="@+id/btnLogin"
+                        style="@style/Button"
+                        android:text="Already have an account?"
+                        android:background="@color/colorAccent"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

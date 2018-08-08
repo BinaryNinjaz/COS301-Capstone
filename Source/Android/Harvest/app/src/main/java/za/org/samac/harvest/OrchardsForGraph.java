@@ -40,36 +40,36 @@ public class OrchardsForGraph extends AppCompatActivity {
     private OrchardsForGraphRVAdapter adapter;
     private ProgressBar progressBar;
     private RecyclerView recyclerView;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orchards_for_graph);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setSelectedItemId(R.id.actionSession);
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(OrchardsForGraph.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(OrchardsForGraph.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                Intent openInformation= new Intent(OrchardsForGraph.this, InformationActivity.class);
-                                openInformation.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openInformation, 0);
+                                startActivity(new Intent(OrchardsForGraph.this, InformationActivity.class));
                                 return true;
                             case R.id.actionSession:
-                                Intent openSessions= new Intent(OrchardsForGraph.this, Sessions.class);
-                                openSessions.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openSessions, 0);
+                                startActivity(new Intent(OrchardsForGraph.this, Sessions.class));
                                 return true;
                             case R.id.actionStats:
                                 return true;
@@ -86,6 +86,18 @@ public class OrchardsForGraph extends AppCompatActivity {
         this.orchards = new ArrayList<>();
         this.orchardKeys = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(OrchardsForGraph.this, Analytics.class));
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionStats);//set correct item to pop out on the nav bar
     }
 
     public void collectOrchards() {
@@ -148,13 +160,8 @@ public class OrchardsForGraph extends AppCompatActivity {
                 }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-//        return false;
     }
 }

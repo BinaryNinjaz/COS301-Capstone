@@ -1,7 +1,7 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,8 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 import com.google.android.gms.common.api.Response;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,64 +25,56 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.Future;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.util.Vector;
 
 import za.org.samac.harvest.adapter.SessionsViewAdapter;
-import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.SearchedItem;
+import za.org.samac.harvest.util.Worker;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.Farm;
+import za.org.samac.harvest.util.Orchard;
+import za.org.samac.harvest.util.WorkerType;
 
 import static za.org.samac.harvest.MainActivity.farmerKey;
-import static za.org.samac.harvest.MainActivity.getForemen;
 
-public class Sessions extends AppCompatActivity {
+public class Sessions extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    private TreeMap<String, SessionItem.Selection> sessions; //used to store session data
+    private TreeMap<String, SessionItem> sessions; //used to store session data
+    private TreeMap<String, ArrayList<SearchedItem.Session>> filteredSessions;
+    private ArrayList<SearchedItem.Session> adapterSource;
     private ArrayList<String> dates;
     private Map<String, String> foremenID; //used to look up name with foreman id
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private String uid;
-    private FirebaseDatabase database;
-    private DatabaseReference ref;
-    private DatabaseReference sessionsRef;
-    private DatabaseReference collectionsRef;
     private ArrayList<Worker> foremen;
     private RecyclerView recyclerView;
     private SessionsViewAdapter adapter;
     private ProgressBar progressBar;
+    public static SessionItem selectedItem;
+    private ArrayList<Worker> workers;
+    public static ArrayList<Orchard> orchards;
+    private ArrayList<Farm> farms;
+    private HashMap<String, String> workerID;
+    private DatabaseReference workersRef;
+    private DatabaseReference foremenRef;
+    private ArrayList<String> foremenKeys;
 
-    private Integer pageNo = 0;
-    private Integer pageSize = 8;
+    private String searchText = "";
 
-    private String urlSessionText() {
-        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/flattendSessions?";
-        base = base + "pageNo=" + pageNo.toString();
-        base = base + "&pageSize=" + pageSize.toString();
-        base = base + "&uid=" + farmerKey;
-        return base;
-    }
+    private String pageIndex = null;
+    private Integer pageSize = 20;
+    private ArrayList<ValueEventListener> ids = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,31 +84,30 @@ public class Sessions extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
-        foremen = getForemen(); // get worker info to loop through it
-        foremenID = new HashMap<>();
-        for(int i = 0 ; i < foremen.size() ; ++i) {
-            String id = foremen.get(i).getID();
-            String name = foremen.get(i).getName();
-            foremenID.put(id, name);
-        }
+        listenForFarms();
+        listenForWorkers();
+        listenForOrchards();
 
         dates = new ArrayList<>();
         sessions = new TreeMap<>();
-        uid = user.getUid();
+        adapterSource = new ArrayList<>();
 
         getNewPage();
 
         //bottom nav bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(Sessions.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(Sessions.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
                                 startActivity(new Intent(Sessions.this, InformationActivity.class));
@@ -122,9 +115,6 @@ public class Sessions extends AppCompatActivity {
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                /*Intent openAnalytics= new Intent(Sessions.this, Analytics.class);
-                                openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openAnalytics, 0);*/
                                 startActivity(new Intent(Sessions.this, Analytics.class));
                                 return true;
                         }
@@ -133,106 +123,388 @@ public class Sessions extends AppCompatActivity {
                 });
 
         adapter = new SessionsViewAdapter(getApplicationContext(), this);
-        adapter.setSessions(sessions);
-        adapter.setDates(dates);
-
+        adapter.setItems(adapterSource);
     }
 
-    private void addButtons() {
-        adapter.setSessions(sessions);
-        adapter.setDates(dates);
-        recyclerView = findViewById(R.id.recView);
-        //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        //recyclerView.addItemDecoration(new DividerItemDecoration(Sessions.this, GridLayoutManager.VERTICAL));
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setVisibility(View.VISIBLE);
+    private SearchedItem.Session sessionsContainsId(ArrayList<SearchedItem.Session> sessions, String id) {
+        for (SearchedItem.Session session: sessions) {
+            if (session.session.key.compareTo(id) == 0) {
+                return session;
+            }
+        }
+        return null;
+    }
+
+    private Boolean filterSessions() {
+        if (searchText.compareTo("") != 0) {
+            filteredSessions = new TreeMap<>();
+            for (String key: sessions.keySet()) {
+                SessionItem item = sessions.get(key);
+                for (SearchedItem foundItem: item.search(searchText, workers, foremen, orchards)) {
+                    if (filteredSessions.get(foundItem.property) == null) {
+                        filteredSessions.put(foundItem.property, new ArrayList<SearchedItem.Session>());
+                    }
+                    ArrayList<SearchedItem.Session> s = filteredSessions.get(foundItem.property);
+                    if (sessionsContainsId(s, item.key) == null) {
+                        filteredSessions.get(foundItem.property).add(new SearchedItem.Session(item, foundItem.reason));
+                    }
+                }
+            }
+        } else {
+            filteredSessions = null;
+        }
+        return flattenDataSource();
+    }
+
+    private Boolean flattenDataSource() {
+        int oldCount = adapterSource != null ? adapterSource.size() : 0;
+        adapterSource.clear();
+        if (filteredSessions == null) {
+            for (String key : sessions.keySet()) {
+                SessionItem item = sessions.get(key);
+                adapterSource.add(0, new SearchedItem.Session(item, ""));
+            }
+        } else {
+            Integer section = 1;
+            for (String property : filteredSessions.keySet()) {
+                ArrayList<SearchedItem.Session> items = filteredSessions.get(property);
+                adapterSource.add(new SearchedItem.Session(null, property));
+                for (SearchedItem.Session item : items) {
+                    adapterSource.add(section, item);
+                }
+                section = adapterSource.size() + 1;
+            }
+        }
+        return oldCount != adapterSource.size();
     }
 
     public void getNewPage() {
-        pageNo++;
-        try {
-            Thread thread = new Thread(new Runnable() {
+        Query query;
 
-                @Override
-                public void run() {
-                    try  {
-                        String response = sendGet(urlSessionText());
-                        System.out.println(response);
-                        JSONArray objs = new JSONArray(response);
-                        for (int i = 0; i < objs.length(); i++) {
-                            JSONObject obj = objs.getJSONObject(i);
-                            SessionItem.Selection item = new SessionItem.Selection();
-                            item.key = obj.getString("key");
-                            item.startDate = new Date((long) (obj.getDouble("start_date") * 1000));
-                            if (obj.has("wid")) {
-                                item.foreman = foremenID.get(obj.getString("wid"));
-                            }
-
-                            if (item.foreman == null) {
-                                item.foreman = "Farm Owner";
-                            }
-
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                            formatter.setCalendar(Calendar.getInstance());
-                            final String date = formatter.format(item.startDate);
-
-                            dates.add(date);
-                            sessions.put(date, item);
-                            runOnUiThread(new Runnable() {
-                                public void run(){
-                                    if (pageNo == 1) {
-                                        recyclerView = findViewById(R.id.recView);
-                                        //RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), 1);
-                                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                                        //recyclerView.addItemDecoration(new DividerItemDecoration(Sessions.this, GridLayoutManager.VERTICAL));
-                                        recyclerView.setHasFixedSize(false);
-                                        recyclerView.setAdapter(adapter);
-                                        progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                    }
-                                    adapter.notifyItemInserted(sessions.size() - 1);
-                                }
-                            });
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            thread.start();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (pageIndex == null) {
+            query = FirebaseDatabase.getInstance().getReference(farmerKey + "/sessions/").orderByKey().limitToLast(pageSize);
+        } else {
+            query = FirebaseDatabase.getInstance().getReference(farmerKey + "/sessions/").orderByKey().endAt(pageIndex).limitToLast(pageSize);
         }
+
+        ValueEventListener listener = query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String lastKey = "";
+                ArrayList<SessionItem> tempSessions = new ArrayList<>();
+                ArrayList<String> tempDates = new ArrayList<>();
+                for(DataSnapshot aChild : dataSnapshot.getChildren()){
+                    SessionItem item = new SessionItem();
+
+                    if (lastKey == "") {
+                        lastKey = aChild.getKey();
+                    }
+
+                    item.key = aChild.getKey();
+                    item.foremanId = "";
+                    if (aChild.hasChild("wid")) {
+                        item.foremanId = aChild.child("wid").getValue(String.class);
+                        item.foreman = foremenID.get(item.foremanId);
+                    }
+
+                    if (item.foreman == null) {
+                        item.foreman = "Farm Owner";
+                    }
+
+                    Double endDate = aChild.child("end_date").getValue(Double.class);
+                    Double startDate = aChild.child("start_date").getValue(Double.class);
+                    if (endDate == null) {
+                        endDate = 0.0;
+                    }
+                    if (startDate == null) {
+                        startDate = 0.0;
+                    }
+                    item.endDate = new Date((long) (endDate * 1000));
+                    item.startDate = new Date((long) (startDate * 1000));
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+                    formatter.setCalendar(Calendar.getInstance());
+                    final String date = formatter.format(item.startDate);
+
+                    for (DataSnapshot trackSnapshot : aChild.child("track").getChildren()) {
+                        Double lat = trackSnapshot.child("lat").getValue(Double.class);
+                        Double lng = trackSnapshot.child("lng").getValue(Double.class);
+                        Location loc = new Location("");
+                        loc.setLatitude(lat.doubleValue());
+                        loc.setLongitude(lng.doubleValue());
+
+                        item.addTrack(loc);
+                    }
+                    for (DataSnapshot collectionSnapshot : aChild.child("collections").getChildren()) {
+                        String workerName = workerID.get(collectionSnapshot.getKey());
+                        int count = 0;
+                        for (DataSnapshot collection : collectionSnapshot.getChildren()) {
+                            Double lat = collection.child("coord").child("lat").getValue(Double.class);
+                            Double lng = collection.child("coord").child("lng").getValue(Double.class);
+                            Location loc = new Location("");
+                            loc.setLatitude(lat.doubleValue());
+                            loc.setLongitude(lng.doubleValue());
+                            Double time = collectionSnapshot.child("date").getValue(Double.class);
+
+                            item.addCollection(collectionSnapshot.getKey(), workerName, loc, time);
+                            count++;
+                        }
+                    }
+                    tempSessions.add(item);
+                    tempDates.add(date);
+                }
+
+                if (tempSessions.size() > 1) {
+                    for (int i = tempSessions.size() - 1; i > 0; i--) { // we miss the first one on purpose so it isn't duplicated on subsequent calls
+                        sessions.put(tempDates.get(i), tempSessions.get(i));
+                        dates.add(tempDates.get(i));
+                    }
+                } else if (tempSessions.size() == 1) {
+                    sessions.put(tempDates.get(0), tempSessions.get(0));
+                    dates.add(tempDates.get(0));
+                }
+
+
+                if (pageIndex == null) {
+                    recyclerView = findViewById(R.id.recView);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setHasFixedSize(false);
+                    recyclerView.setAdapter(adapter);
+                    progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+                pageIndex = lastKey;
+                Boolean reload = false;
+                if (searchText == "") {
+                    filteredSessions = null;
+                } else {
+                    reload = filterSessions();
+                }
+                if (flattenDataSource() || reload) {
+                    System.out.println("**********************");
+                    adapter.notifyItemInserted(adapterSource.size() - 1);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        ids.add(listener);
     }
 
-    private String sendGet(String url) throws Exception {
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+    public void listenForOrchards() {
+        orchards = new ArrayList<>();
+        DatabaseReference orchardsRef = FirebaseDatabase.getInstance().getReference(MainActivity.farmerKey + "/orchards");
+        orchardsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                orchards.clear();
+                for (DataSnapshot dataSet : dataSnapshot.getChildren()) {
+                    Orchard temp = new Orchard();
+                    temp.setName(dataSet.child("name").getValue(String.class));
+                    temp.setCrop(dataSet.child("crop").getValue(String.class));
 
-        // optional default is GET
-        con.setRequestMethod("GET");
+                    //Iterate through coordinate sets
+                    List<LatLng> coords = new Vector<>();
+                    for (DataSnapshot coord : dataSet.child("coords").getChildren()){
+                        // Iterate through
+                        Double lats = coord.child("lat").getValue(Double.class);
+                        Double lngs = coord.child("lng").getValue(Double.class);
+                        coords.add(new LatLng(lats, lngs));
+                    }
+                    temp.setCoordinates(coords);
 
-        //add request header
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
+                    try {
+                        String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
+                        Float meanBagMass = null;
+                        if (smeanBagMass != null) {
+                            if (!smeanBagMass.equals("")) {
+                                meanBagMass = Float.parseFloat(smeanBagMass);
+                            }
+                        }
+//                                else {
+//                                    meanBagMass = 0;
+//                                }
+                        temp.setMeanBagMass(meanBagMass);
+                    }
+                    catch (com.google.firebase.database.DatabaseException e){
+                        Long meanBagBass = dataSet.child("bagMass").getValue(Long.class);
+                        if (meanBagBass != null) {
+                            Float beanBagBass = meanBagBass.floatValue();
+                            temp.setMeanBagMass(beanBagBass);
+                        }
+                    }
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
+                    temp.setIrrigation(dataSet.child("irrigation").getValue(String.class));
 
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+                    Long tempL = dataSet.child("date").getValue(Long.class);
+                    Date date;
+                    Calendar c;
+                    if (tempL != null){
+                        c = Calendar.getInstance();
+                        date = new Date(tempL);
+                        c.setTime(date);
+                        temp.setDatePlanted(c);
+                    }
+
+                    Farm assignedFarm = new Farm();
+                    assignedFarm.setID(dataSet.child("farm").getValue(String.class));
+                    temp.setAssignedFarm(assignedFarm);
+
+                    Float row = null, tree = null;
+                    try {
+                        String sRow = dataSet.child("rowSpacing").getValue(String.class);
+                        if (sRow != null) {
+                            if (!sRow.equals("")) {
+                                row = Float.parseFloat(sRow);
+                            }
+                        }
+                    }
+                    catch (com.google.firebase.database.DatabaseException e){
+                        Long t = dataSet.child("rowSpacing").getValue(Long.class);
+                        if (t != null){
+                            row = t.floatValue();
+                        }
+                    }
+                    try{
+                        String sTree = dataSet.child("treeSpacing").getValue(String.class);
+                        if (sTree != null) {
+                            if(!sTree.equals("")){
+                                tree = Float.parseFloat(sTree);
+                            }
+                        }
+                    }
+                    catch (com.google.firebase.database.DatabaseException e){
+                        Long t = dataSet.child("rowSpacing").getValue(Long.class);
+                        if (t != null){
+                            tree = t.floatValue();
+                        }
+                    }
+
+                    temp.setRow(row);
+                    temp.setTree(tree);
+
+                    for (DataSnapshot cultivar : dataSet.child("cultivars").getChildren()){
+                        temp.addCultivar(cultivar.getValue(String.class));
+                    }
+
+                    temp.setFurther(dataSet.child("further").getValue(String.class));
+
+                    temp.setID(dataSet.getKey());
+
+                    orchards.add(temp);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public Orchard getOrchardFromIDString(String findMe){
+        for (Orchard current: orchards){
+            if (current.getID().equals(findMe)){
+                return current;
+            }
         }
-        in.close();
+        return null;
+    }
 
-        return response.toString();
+    public void listenForWorkers() {
+        workers = new ArrayList<>();
+        foremen = new ArrayList<>();
+        workerID = new HashMap<>();
+        foremenID = new HashMap<>();
+
+        DatabaseReference workersRef = FirebaseDatabase.getInstance().getReference(MainActivity.farmerKey + "/workers");
+
+        workersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                workers.clear();
+                foremen.clear();
+                workerID.clear();
+                foremenID.clear();
+                for (DataSnapshot dataSet : dataSnapshot.getChildren()) {
+                    Worker temp = new Worker();
+                    temp.setfID(dataSet.getKey());
+                    temp.setfName(dataSet.child("name").getValue(String.class));
+                    temp.setsName(dataSet.child("surname").getValue(String.class));
+
+                    //Orchards
+                    List<Orchard> newOrhards = new Vector<>();
+                    for (DataSnapshot orchard : dataSet.child("orchards").getChildren()){
+                        Orchard newOrchard = getOrchardFromIDString(orchard.getValue(String.class));
+                        if (newOrchard != null) {
+                            newOrhards.add(newOrchard);
+                        }
+                    }
+                    temp.setAssignedOrchards(newOrhards);
+
+                    //Type
+                    String sType = dataSet.child("type").getValue(String.class);
+                    WorkerType type = WorkerType.WORKER;
+                    assert sType != null;
+                    if (sType.equals("Foreman")){
+                        type = WorkerType.FOREMAN;
+                    }
+                    temp.setWorkerType(type);
+
+                    temp.setnID(dataSet.child("idNumber").getValue(String.class));
+                    temp.setFurther(dataSet.child("info").getValue(String.class));
+                    temp.setPhone(dataSet.child("phoneNumber").getValue(String.class));
+
+                    if (temp.getWorkerType() == WorkerType.FOREMAN) {
+                        foremen.add(temp);
+                        foremenID.put(temp.getfID(), temp.getfName() + " " + temp.getsName());
+                    } else {
+                        workers.add(temp);
+                        workerID.put(temp.getfID(), temp.getfName() + " " + temp.getsName());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void listenForFarms() {
+        farms = new ArrayList<>();
+
+        DatabaseReference farmsRef = FirebaseDatabase.getInstance().getReference(MainActivity.farmerKey + "/farms");
+
+        farmsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                farms.clear();
+                for (DataSnapshot dataSet : dataSnapshot.getChildren()) {
+                    Farm temp = new Farm();
+                    temp.setName(dataSet.child("name").getValue(String.class));
+                    temp.setCompany(dataSet.child("companyName").getValue(String.class));
+                    temp.setEmail(dataSet.child("email").getValue(String.class));
+                    temp.setPhone(dataSet.child("contactNumber").getValue(String.class));
+                    temp.setProvince(dataSet.child("province").getValue(String.class));
+                    temp.setTown(dataSet.child("town").getValue(String.class)); //TODO: Verify this typo
+                    temp.setFurther(dataSet.child("further").getValue(String.class));
+                    temp.setID(dataSet.getKey());
+                    farms.add(temp);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -246,6 +518,21 @@ public class Sessions extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.search:
+                final SearchView searchView = (SearchView) item.getActionView();
+                searchView.setIconified(false);
+                searchView.requestFocusFromTouch();
+                searchView.setOnQueryTextListener(this);
+                item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                        return true;
+                    }
+                });
                 return true;
             case R.id.settings:
                 startActivity(new Intent(Sessions.this, SettingsActivity.class));
@@ -269,13 +556,32 @@ public class Sessions extends AppCompatActivity {
                 }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return true;
         }
 //        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        searchText = query;
+        if (filterSessions()) {
+            synchronized (adapter) {
+                adapter.notifyDataSetChanged();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        searchText = newText;
+        if (filterSessions()) {
+            synchronized (adapter) {
+                adapter.notifyDataSetChanged();
+            }
+        }
+        return false;
     }
 }

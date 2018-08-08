@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.DatePicker;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
@@ -60,11 +62,12 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
         data = new Data();
-        data.pull(null);
+        data.pull(this);
 
         //bottom navigation bar
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionInformation);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -72,9 +75,9 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-//                                finish();
-//                                startActivity(new Intent(InformationActivity.this, MainActivity.class));
-                                startActivity(new Intent(InformationActivity.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(InformationActivity.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
                                 showNavFrag();
@@ -92,8 +95,16 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 });
 
         //Start the first fragment
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         showNavFrag();
+
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
     }
 
     private void showNavFrag(){
@@ -112,6 +123,15 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         selectedCat = NAV;
+        toggleUpButton(false);
+        setTitle("Information");
+    }
+
+    public void tellAllPullDone(){
+        InfoListFragment infoList = (InfoListFragment) getSupportFragmentManager().findFragmentByTag("LIST");
+        if (infoList != null) {
+            infoList.endRefresh();
+        }
     }
 
     //Override Back Button
@@ -186,6 +206,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         }
     }
 
+    private void toggleUpButton(boolean on){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(on);
+    }
+
     //Handle Buttons
     public void onCreateButtClick(View view){
         String choice = view.getTag().toString();
@@ -240,7 +264,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             InfoListFragment newInfoListFragment = new InfoListFragment();
-            fragmentTransaction.replace(R.id.infoMainPart, newInfoListFragment);
+            fragmentTransaction.replace(R.id.infoMainPart, newInfoListFragment, "LIST");
             fragmentTransaction.addToBackStack(null);
             newInfoListFragment.setData(data);
             if (view.getTag().equals("farms")) {
@@ -256,6 +280,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             newInfoListFragment.setCat(selectedCat);
             fragmentTransaction.commit();
 //        newInfoListFragment.showList(selectedCat);
+            toggleUpButton(true);
         }
     }
 
@@ -282,6 +307,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         fragmentTransaction.commit();
         backViews.clear();
 //        newInfoListFragment.showList(selectedCat);
+        toggleUpButton(true);
     }
 
     //If a farm, orchard, worker is selected
@@ -514,22 +540,6 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-//        MenuItem searchMenu = menu.findItem(R.id.search);
-//        final SearchView searchView = (SearchView) searchMenu.getActionView();
-//        searchView.setIconified(false);
-//        searchView.requestFocusFromTouch();
-//        searchView.setOnQueryTextListener(this);
-//        searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//            @Override
-//            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-//                return true;
-//            }
-//        });
         return true;
     }
 
@@ -568,16 +578,24 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 else {
 //                    FirebaseAuth.getInstance().signOut();
                 }
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(InformationActivity.this, SignIn_Choose.class));
+                                }
+                            });
+                }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
+            case android.R.id.home:
+                showNavFrag();
+                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return true;
         }
-//        return false;
     }
 
     public void onGotoButtClick(View view){

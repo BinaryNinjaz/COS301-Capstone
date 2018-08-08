@@ -3,13 +3,14 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/11.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
 import Firebase
 import GoogleMaps
 import Eureka
+import SCLAlertView
 
 public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedRowControllerType {
   public var row: RowOf<Session>!
@@ -26,19 +27,28 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
   var trackLine: GMSPolyline?
   var pickUpMarkers: [GMSMarker] = []
   
-  @IBOutlet weak var mapView: GMSMapView!
+  @IBOutlet weak var mapView: GMSMapView?
   
   public override func viewDidLoad() {
     super.viewDidLoad()
     
-    mapView.isHidden = false
-    mapView.mapType = GMSMapViewType.normal
-    mapView.settings.compassButton = true
-    mapView.delegate = self
-    mapView.settings.myLocationButton = true
-    mapView.padding = UIEdgeInsets(top: 42, left: 0, bottom: 101, right: 0)
+    navigationItem.rightBarButtonItem = UIBarButtonItem(
+      title: "Hybrid",
+      style: .plain,
+      target: self,
+      action: #selector(toggleMapType))
     
-    guard let session = row.value else {
+    mapView?.isHidden = false
+    mapView?.mapType = GMSMapViewType.hybrid
+    mapView?.isMyLocationEnabled = true
+    mapView?.settings.myLocationButton = true
+    mapView?.settings.rotateGestures = true
+    mapView?.settings.compassButton = true
+    mapView?.delegate = self
+    mapView?.settings.myLocationButton = true
+    mapView?.padding = UIEdgeInsets(top: 42, left: 0, bottom: 101, right: 0)
+    
+    guard let session = row.value, let mapView = mapView else {
       return
     }
     
@@ -60,6 +70,14 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
                                          viewingAngle: .pi)
     }
     
+  }
+  
+  @objc func toggleMapType() {
+    guard let mapView = mapView else {
+      return
+    }
+    
+    SCLAlertView.toggleMapType(for: mapView, from: navigationItem.rightBarButtonItem)
   }
   
   public override func didReceiveMemoryWarning() {

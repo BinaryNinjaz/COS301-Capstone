@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/21.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Eureka
@@ -28,7 +28,6 @@ struct OrganizationInfo: CustomStringConvertible, Equatable {
 }
 
 class SettingsEurekaViewController: ReloadableFormViewController {
-  /// swiftlint:disable function_body_length
   override func viewDidLoad() {
     super.viewDidLoad()
   }
@@ -55,24 +54,26 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     
     let resignRow = ButtonRow { row in
       row.title = "Resign"
-      }.onCellSelection { (_, _) in
-        let confirmationAlert = SCLAlertView(appearance: .warningAppearance)
-        confirmationAlert.addButton("Cancel", action: {})
-        confirmationAlert.addButton("Resign") {
-          HarvestDB.resign { _, _ in
-            if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInOptionViewController") {
-              self.present(vc, animated: true, completion: nil)
-            }
+    }.onCellSelection { (_, _) in
+      let confirmationAlert = SCLAlertView(appearance: .warningAppearance)
+      confirmationAlert.addButton("Cancel", action: {})
+      confirmationAlert.addButton("Resign") {
+        HarvestDB.resign { _, _ in
+          if let vc = self.storyboard?.instantiateViewController(withIdentifier: "signInOptionViewController") {
+            self.present(vc, animated: true, completion: nil)
           }
         }
-        
-        confirmationAlert.showWarning("Are You Sure?", subTitle: """
-      Are you sure you want to remove yourself from association with you current farm?
-      """)
-        
-      }.cellUpdate { (cell, _) in
-        cell.textLabel?.textColor = .white
-        cell.backgroundColor = .red
+      }
+      
+      confirmationAlert.showWarning(
+        "Are You Sure?",
+        subTitle: """
+        Are you sure you want to resign from working for "\(HarvestUser.current.organisationName)"?
+        """)
+      
+    }.cellUpdate { (cell, _) in
+      cell.textLabel?.textColor = .white
+      cell.backgroundColor = .red
     }
     
     if HarvestUser.current.workingForID.isEmpty { // is farmer

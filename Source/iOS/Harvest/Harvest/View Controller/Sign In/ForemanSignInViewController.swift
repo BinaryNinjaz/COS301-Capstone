@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/06/22.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -39,8 +39,7 @@ class ForemanSignInViewController: UIViewController {
       switch state {
       case .wantsPhoneNumber:
         instructionLabel.text = """
-          Please enter your phone number to receive a SMS with a verification code. Ensure you add \
-          your area code. Example \(Phoney.formatted(number: "0123456789") ?? "")
+          Please enter your phone number to receive a SMS with a verification code.
           """
         numberInputTextField.addLeftImage(#imageLiteral(resourceName: "Phone"))
         numberInputTextField.placeholder = "Phone Number"

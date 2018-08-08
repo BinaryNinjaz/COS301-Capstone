@@ -3,7 +3,7 @@
 //  HarvestUITests
 //
 //  Created by Letanyan Arumugam on 2018/07/02.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 // swiftlint:disable line_length

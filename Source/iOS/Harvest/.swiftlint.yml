@@ -3,8 +3,12 @@ disabled_rules:
   - identifier_name
   - nesting
   - trailing_whitespace
-  - file_length #todo?
+  - file_length
+  - large_tuple
   
 excluded:
   - Pods
   - HarvestTests
+  
+function_body_length:
+  - 50

@@ -1,18 +1,51 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+
+import java.io.File;
 
 public class SignIn_Choose extends AppCompatActivity {
+    private ImageView farmerPic = null;
+    private ImageView foremanPic =  null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_choose);
+        /*String fileName = "nutsinhands.jpg";
+        String completePath = Environment.getExternalStorageDirectory() + "/" + fileName;
+
+        File file = new File(completePath);
+        Uri imageUri = Uri.fromFile(file);
+
+        farmerPic = findViewById(R.id.farmerPic);
+        foremanPic = findViewById(R.id.foremanPic);
+
+        Glide.with(SignIn_Choose.this)
+                .load(imageUri)
+                .into(farmerPic);
+
+        fileName = "bookcheckedhand.jpg";
+        completePath = Environment.getExternalStorageDirectory() + "/" + fileName;
+
+        file = new File(completePath);
+        imageUri = Uri.fromFile(file);
+
+        Glide.with(SignIn_Choose.this)
+                .load(imageUri)
+                .into(foremanPic);*/
     }
 
     public void choseFarmer(View v){

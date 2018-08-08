@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/23.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -11,7 +11,9 @@ import SnapKit
 
 extension UIView {
   func apply(gradient: CAGradientLayer) {
-    layer.sublayers?.remove(at: 0)
+    if let sublayers = layer.sublayers, sublayers.count > 0 {
+      layer.sublayers?.remove(at: 0)
+    }
     backgroundColor = .clear
     gradient.frame = bounds
     layer.insertSublayer(gradient, at: 0)
