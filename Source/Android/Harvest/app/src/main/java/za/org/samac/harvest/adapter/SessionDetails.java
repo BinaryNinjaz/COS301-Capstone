@@ -165,7 +165,7 @@ public class SessionDetails extends AppCompatActivity {
         pieChart.setData(data); // set the data and list of lables into chart
 
         Description description = new Description();
-        description.setText("Worker Performance");
+        description.setText("");
         pieChart.setDescription(description); // set the description
         pieChart.notifyDataSetChanged();
     }
