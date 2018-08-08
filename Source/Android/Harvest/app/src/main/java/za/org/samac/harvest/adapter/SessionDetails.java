@@ -41,6 +41,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import za.org.samac.harvest.Analytics;
+import za.org.samac.harvest.BottomNavigationViewHelper;
+import za.org.samac.harvest.InformationActivity;
 import za.org.samac.harvest.Sessions;
 import za.org.samac.harvest.SignIn_Choose;
 import za.org.samac.harvest.MainActivity;
@@ -139,7 +142,43 @@ public class SessionDetails extends AppCompatActivity {
         startTime.setText(formatter.format(startDate));
         endTime.setText(formatter.format(endDate));
 
+        //bottom nav bar
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.actionSession);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.actionYieldTracker:
+                                Intent openMainActivity= new Intent(SessionDetails.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
+                                return true;
+                            case R.id.actionInformation:
+                                startActivity(new Intent(SessionDetails.this, InformationActivity.class));
+                                return true;
+                            case R.id.actionSession:
+                                return true;
+                            case R.id.actionStats:
+                                startActivity(new Intent(SessionDetails.this, Analytics.class));
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+
         displayGraph();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionSession);//set correct item to pop out on the nav bar
+        }
     }
 
     public void displayGraph() {

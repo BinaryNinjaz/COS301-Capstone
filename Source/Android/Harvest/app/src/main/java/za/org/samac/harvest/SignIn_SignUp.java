@@ -251,7 +251,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                 });
     }
 
-    //firebase suggested validate
+    //validate edit fields
     private boolean validateForm() {
         boolean valid = true;
         View focusView = null;
@@ -282,8 +282,6 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             edtPassword.setError(null);
         }
 
-
-
         //check if two passwords entered match
         if (!confirmPassword.equals(password)) {
             edtConfirmPassword.setError("Passwords do not match");
@@ -298,6 +296,9 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
             edtEmail.setError(getString(R.string.error_invalid_email));
             focusView = edtEmail;
             focusView.requestFocus();
+            valid = false;
+        } else if (TextUtils.isEmpty(email)) {
+            edtEmail.setError("Required.");
             valid = false;
         } else {
             edtEmail.setError(null);
