@@ -4,7 +4,8 @@ typealias Chromosome = (a: Double, b: Double, c: Double, d: Double)
 var function: (Chromosome) -> (Double) -> Double = { c in
   return { x in
 //    return c.a * x + c.b
-    return c.a * sin(c.b * (x - c.c)) + c.d
+//    return c.a * sin(c.b * (x - c.c)) + c.d
+    return c.a * sin(c.b * x + c.c) + c.d
   }
 }
 
@@ -25,6 +26,8 @@ func initSinusoidalGuess(against data: [(x: Double, y: Double)], forPeriod perio
   let c = asin((low - d) / a) - b
   
   // a * sin(b * x + c) + d
+  print("\(a) * sin(\(b) * x + \(c)) + \(d)")
+  print(evaluateFitness(of: (a, b, c, d), against: data))
   
   Limit.b = b..<(b + 0.1)
   if a < 0 {
@@ -42,6 +45,8 @@ func initSinusoidalGuess(against data: [(x: Double, y: Double)], forPeriod perio
   } else {
     Limit.c = 0..<c
   }
+  
+  Limit.chromo = (a, b, c, d)
 }
 
 enum Limit {
@@ -49,6 +54,7 @@ enum Limit {
   static var b = 0.0..<4.0
   static var c = 0.0..<100.0
   static var d = 0.0..<100.0
+  static var chromo: Chromosome = (a: 0, b: 0, c: 0, d: 0)
 }
 
 func mutate(_ chromosome: Chromosome) -> Chromosome {
@@ -162,6 +168,7 @@ func evolve(
   for _ in 0..<n {
     chromosomes.append(randomChromosome())
   }
+  chromosomes.append(Limit.chromo)
   
   for _ in 0..<100 {
     let ms = mutate(chromosomes, withChance: 0.05)
@@ -221,8 +228,10 @@ var data2: [(Double, Double)] = [
   (12, 7.43),
 ]
 
-initSinusoidalGuess(against: data2, forPeriod: 3)
-let best = evolve(populationOfSize: 100, generations: 100, against: data2)
+initSinusoidalGuess(against: data, forPeriod: 4)
+let best = evolve(populationOfSize: 100, generations: 0, against: data)
 
 
 print(best)
+print(evaluateFitness(of: best, against: data))
+print(evaluateFitness(of: (14.6559, 1.5708, 0.065, 27.6635), against: data))
