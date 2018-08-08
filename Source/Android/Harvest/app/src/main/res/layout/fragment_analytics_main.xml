@@ -21,13 +21,14 @@
             <Button
                 android:id="@+id/anal_choose_cus_make"
                 style="@style/Button"
-                android:background="@color/white"
+                android:background="@color/colorPrimary"
                 android:onClick="anal_main_buttonHandler"
                 android:text="@string/anal_create_make"
-                android:textColor="@color/blueLinks"
+                android:textColor="@color/white"
                 android:layout_marginTop="8dp"/>
 
             <TextView
+                android:id="@+id/anal_choose_farms_title"
                 style="@style/TextAppearance.AppCompat.Menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,6 +45,7 @@
                 android:layout_marginTop="4dp"/>
 
             <TextView
+                android:id="@+id/anal_choose_orchards_title"
                 style="@style/TextAppearance.AppCompat.Menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,6 +62,7 @@
                 android:layout_marginTop="4dp"/>
 
             <TextView
+                android:id="@+id/anal_choose_workers_title"
                 style="@style/TextAppearance.AppCompat.Menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,6 +79,7 @@
                 android:layout_marginTop="4dp"/>
 
             <TextView
+                android:id="@+id/anal_choose_foremen_title"
                 style="@style/TextAppearance.AppCompat.Menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
