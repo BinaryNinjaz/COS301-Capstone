@@ -3,7 +3,7 @@
         <title>Harvest Home</title>
         <meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="navbar.css" rel="stylesheet" type="text/css" />
+        <!--<link href="navbar.css" rel="stylesheet" type="text/css" />
 
         <!-- Firebase Dependencies -->
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
@@ -39,19 +39,20 @@
         <link rel="stylesheet" type="text/css" href="newNavbar.css">       
         <script src="databaseCallbacks.js" charset="utf-8"></script>
         <script src="homepage.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="active.css"> 
     </head>
     <body>
 		<nav class="navbar navbar-inverse">
 		  <div class="container-fluid">
 			<div class="navbar-header">
-			  <a class="navbar-brand active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+			  <a class="navbar-brand active" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
 			  
 			</div>
 			<ul class="nav navbar-nav">
 			  <li><a href="Information.html">Information</a></li>
 			  <li><a href="Sessions.html">Sessions</a></li>
 			  <li><a href="HeatMap.html">Heatmap</a></li>
-			  <li><a href="graphs.html">Analytics</a></li>
+			  <li><a href="graphs.html">Statistics</a></li>
 			</ul>
 			<ul class=" nav navbar-nav" id="ojo">
 						<li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
@@ -59,25 +60,6 @@
 					</ul>
 			</div>
 		</nav>
-    <!--<div class="topnav">
-        <ul class="nav navbar-nav">
-			<a class="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a> 
-			<a href="Information.html">Information</a>
-			<a href="Sessions.html">Sessions</a>
-			<a href="HeatMap.html">Heatmap</a>
-			<a href="graphs.html">Analytics</a>
-        </ul>
-
-        <ul class="pull-right nav navbar-nav">
-            <a href="Settings.html" id="emailInNav"></a>
-            <a href="javascript:;" id="signing" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> &nbsp;</a> 
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>			
-        </ul>
-    </div>-->
     
     <div class="container">
         <div class="row">
