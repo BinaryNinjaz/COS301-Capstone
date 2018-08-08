@@ -78,9 +78,11 @@ public class Analytics_Graph extends AppCompatActivity {
     private static String group;            //entity type
     private static String mode;             //accumulation
 
+    private static double HUNTHOUSAND = 100000;
+
     private Data data;
 
-    static double minTime = Double.MAX_VALUE, maxTime = Double.MIN_VALUE;
+    protected static double minTime = Double.MAX_VALUE, maxTime = Double.MIN_VALUE;
 
     private Category category;
     private Context context;
@@ -387,6 +389,127 @@ public class Analytics_Graph extends AppCompatActivity {
         return labels[position];
     }
 
+    /**
+     * Take any key, most notably a string key, and turn it into an double.
+     * @param key the key to be converted.
+     * @param subMin if false, then the minimum will not be subtracted from the result, set false for initial determination of the min and max before doing anything.
+     * @return the double representing the key.
+     */
+    public double getDoubleFromKey(String key, boolean subMin){
+        double result = 0;
+        if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+            switch (interval) {
+                case Analytics.HOURLY:
+                    String tokens[] = key.split(":");
+                    result = Double.parseDouble(tokens[0]);
+                    break;
+                case Analytics.DAILY:
+                    switch (key) {
+                        case "Sunday":
+                            result = 0.0;
+                            break;
+                        case "Monday":
+                            result = 1.0;
+                            break;
+                        case "Tuesday":
+                            result = 2.0;
+                            break;
+                        case "Wednesday":
+                            result = 3.0;
+                            break;
+                        case "Thursday":
+                            result = 4.0;
+                            break;
+                        case "Friday":
+                            result = 5.0;
+                            break;
+                        case "Saturday":
+                            result = 6.0;
+                    }
+                    break;
+                case Analytics.WEEKLY:
+                    result = Double.parseDouble(key);
+                    break;
+                case Analytics.MONTHLY:
+                    switch (key) {
+                        case "January":
+                            result = 0.0;
+                            break;
+                        case "February":
+                            result = 1.0;
+                            break;
+                        case "March":
+                            result = 2.0;
+                            break;
+                        case "April":
+                            result = 3.0;
+                            break;
+                        case "May":
+                            result = 4.0;
+                            break;
+                        case "June":
+                            result = 5.0;
+                            break;
+                        case "July":
+                            result = 6.0;
+                            break;
+                        case "August":
+                            result = 7.0;
+                            break;
+                        case "September":
+                            result = 8.0;
+                            break;
+                        case "October":
+                            result = 9.0;
+                            break;
+                        case "November":
+                            result = 10.0;
+                            break;
+                        case "December":
+                            result = 11.0;
+                    }
+                    break;
+                case Analytics.YEARLY:
+                    result = Double.parseDouble(key);
+                    break;
+            }
+        }
+        else {
+            try {
+                Date date = dateFormat.parse(key, new ParsePosition(0));
+                //Set the year to this year, if it comes back as 1970, to prevent negative dates. The year is insignificant if 1970.
+                // Because can't make sessions retroactively, and app wasn't around in 1970.
+//                Calendar cal = Calendar.getInstance();
+//                cal.setTime(date);
+//                if (cal.get(Calendar.YEAR) == 1970){
+//                    cal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+//                    date = cal.getTime();
+//                }
+                System.out.println(key + " parsed as " + date.toString() + ", " + date.getTime());
+                result = (double) (date.getTime());
+
+                result /= HUNTHOUSAND; // Prevent loss of precision because stupid graph wants to work with floats
+                //100 000 might be excessive though... Eh, it works, seemingly.
+
+            } catch (NullPointerException e){
+                Log.w(TAG, "Failed parsing key to double.");
+            }
+        }
+
+        if (! subMin) {
+            if (result < minTime) {
+                minTime = result;
+            }
+            if (result > maxTime) {
+                maxTime = result;
+            }
+        }
+        else{
+            result -= minTime;
+        }
+        return result;
+    }
+
     @SuppressWarnings("UnnecessaryReturnStatement")
     @SuppressLint("SimpleDateFormat")
     private void setDateFormat(){
@@ -550,113 +673,6 @@ public class Analytics_Graph extends AppCompatActivity {
                 labels[i] = labelsList.get(i);
             }
         }
-    }
-
-    /**
-     * Take any key, most notably a string key, and turn it into an double.
-     * @param key the key to be converted.
-     * @param subMin if false, then the minimum will not be subtracted from the result, set false for initial determination of the min and max before doing anything.
-     * @return the double representing the key.
-     */
-    public double getDoubleFromKey(String key, boolean subMin){
-        double result = 0;
-        if (mode.equals(Analytics.ACCUMULATION_TIME)) {
-            switch (interval) {
-                case Analytics.HOURLY:
-                    String tokens[] = key.split(":");
-                    result = Double.parseDouble(tokens[0]);
-                    break;
-                case Analytics.DAILY:
-                    switch (key) {
-                        case "Sunday":
-                            result = 0.0;
-                            break;
-                        case "Monday":
-                            result = 1.0;
-                            break;
-                        case "Tuesday":
-                            result = 2.0;
-                            break;
-                        case "Wednesday":
-                            result = 3.0;
-                            break;
-                        case "Thursday":
-                            result = 4.0;
-                            break;
-                        case "Friday":
-                            result = 5.0;
-                            break;
-                        case "Saturday":
-                            result = 6.0;
-                    }
-                    break;
-                case Analytics.WEEKLY:
-                    result = Double.parseDouble(key);
-                    break;
-                case Analytics.MONTHLY:
-                    switch (key) {
-                        case "January":
-                            result = 0.0;
-                            break;
-                        case "February":
-                            result = 1.0;
-                            break;
-                        case "March":
-                            result = 2.0;
-                            break;
-                        case "April":
-                            result = 3.0;
-                            break;
-                        case "May":
-                            result = 4.0;
-                            break;
-                        case "June":
-                            result = 5.0;
-                            break;
-                        case "July":
-                            result = 6.0;
-                            break;
-                        case "August":
-                            result = 7.0;
-                            break;
-                        case "September":
-                            result = 8.0;
-                            break;
-                        case "October":
-                            result = 9.0;
-                            break;
-                        case "November":
-                            result = 10.0;
-                            break;
-                        case "December":
-                            result = 11.0;
-                    }
-                    break;
-                case Analytics.YEARLY:
-                    result = Double.parseDouble(key);
-                    break;
-            }
-        }
-        else {
-            try {
-                Date date = dateFormat.parse(key, new ParsePosition(0));
-                result = (double) (date.getTime());
-            } catch (NullPointerException e){
-                Log.w(TAG, "Failed parsing key to double.");
-            }
-        }
-        if (! subMin) {
-            if (result < minTime) {
-                minTime = result;
-            }
-            if (result > maxTime) {
-                maxTime = result;
-            }
-        }
-        else{
-            result -= minTime;
-        }
-        return result;
     }
 
     //Testing

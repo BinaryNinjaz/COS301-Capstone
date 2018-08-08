@@ -396,15 +396,22 @@ public class AnalyticsTests {
                  */
                 analytics_graph.populateLabels();
                 for (int ti = 0; ti < 4; ti++) {
-                    if (mode.equals(Analytics.ACCUMULATION_TIME) && intervals[ii].equals(Analytics.WEEKLY)){
-                        //This setting here takes week numbers from FireBase, but returns the date of the 'first' sunday of the week, so make the conversion.
-                        String[] tokens = analytics_graph.getLabel(ti, null).split("/");
-                        Calendar cal = Calendar.getInstance();
-                        cal.set(2018, Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
-                        assertTrue(cal.get(Calendar.WEEK_OF_YEAR) + 1 == Integer.parseInt(time[ii][ti]));
+                    if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+                        if (intervals[ii].equals(Analytics.WEEKLY)) {
+                            //This setting here takes week numbers from FireBase, but returns the date of the 'first' sunday of the week, so make the conversion.
+                            String[] tokens = analytics_graph.getLabel(ti, null).split("/");
+                            Calendar cal = Calendar.getInstance();
+                            cal.set(2018, Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+                            assertTrue(cal.get(Calendar.WEEK_OF_YEAR) + 1 == Integer.parseInt(time[ii][ti]));
+                        } else {
+                            assertTrue(analytics_graph.getLabel(ti, null).equals(time[ii][ti]));
+                        }
                     }
                     else {
-                        assertTrue(analytics_graph.getLabel(ti, null).equals(time[ii][ti]));
+                        double send = ti * Math.floor((Analytics_Graph.maxTime - Analytics_Graph.minTime) / 4);
+                        String expect = time[ii][ti];
+                        String get = analytics_graph.getLabel((float) send, null);
+                        assertTrue(get.equals(expect));
                     }
                 }
                 System.out.println("Labels Gotten Successfully.");
