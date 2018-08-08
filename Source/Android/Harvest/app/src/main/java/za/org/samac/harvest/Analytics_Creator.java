@@ -236,54 +236,64 @@ public class Analytics_Creator extends Fragment{
     }
 
     /**
-     * Get a bundle consisting of all of the configurations that have been selected by the user, the keys match the strings in the Analytics class.
-     * The bundle is constructed as follows (Key : Data Type : Description):
-     *  KEY_GROUP : String : Matches a static from Analytics class.
-     *  KEY_PERIOD : String : Matches a static from Analytics class
-     *  KEY_START : double : The selected start date divided by 1 000
-     *  KEY_END : double : The selected end date, divided by 1 000
-     *  KEY_INTERVAL : String : Matches a static from Analytics class
-     *  KEY_ACCUMULATION : String : Matches a static from Analytics class
+     * Get a bundle consisting of all of the configurations that have been selected by the user, the keys match the strings in the Analytics class.<br>
+     * The bundle is constructed as follows (Key : Data Type : Description):<br>
+     *  KEY_GROUP : String : Matches a static from Analytics class.<br>
+     *  KEY_PERIOD : String : Matches a static from Analytics class<br>
+     *  KEY_START : double : The selected start date divided by 1 000<br>
+     *  KEY_END : double : The selected end date, divided by 1 000<br>
+     *  KEY_INTERVAL : String : Matches a static from Analytics class<br>
+     *  KEY_ACCUMULATION : String : Matches a static from Analytics class<br>
      * @return Bundle of all the configurations. NULL if error, such as a field not set.
      */
     public Bundle getConfigurations(){
-        Bundle bundle = new Bundle();
-        bundle.putString(Analytics.KEY_GROUP, getGroup());
 
-        String period = periodSpinner.getSelectedItem().toString().toLowerCase();
-        bundle.putString(Analytics.KEY_PERIOD, period.toLowerCase());
+        if (isInputValid()) {
+            Bundle bundle = new Bundle();
+            bundle.putString(Analytics.KEY_GROUP, getGroup());
 
-        if (period.equals(Analytics.BETWEEN_DATES)){
-            if (fromDateEditText.getText().toString().equals("")){
-                fromDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
-                return null;
+            String period = periodSpinner.getSelectedItem().toString().toLowerCase();
+            bundle.putString(Analytics.KEY_PERIOD, period.toLowerCase());
+
+            if (period.equals(Analytics.BETWEEN_DATES)) {
+
+                //noinspection ConstantConditions
+                String[] tokens = fromDateEditText.getText().toString().split("/");
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), calendar.getActualMinimum(Calendar.HOUR_OF_DAY), calendar.getActualMinimum(Calendar.MINUTE), calendar.getActualMinimum(Calendar.SECOND));
+                calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
+                Log.i(TAG, "start: " + calendar.getTime().toString());
+                bundle.putDouble(Analytics.KEY_START, calendar.getTimeInMillis() / THOUSAND);
+
+                //noinspection ConstantConditions
+                tokens = upToDateEditText.getText().toString().split("/");
+                calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), calendar.getMaximum(Calendar.HOUR_OF_DAY), calendar.getActualMaximum(Calendar.MINUTE), calendar.getActualMaximum(Calendar.SECOND));
+                calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
+                Log.i(TAG, "end: " + calendar.getTime().toString());
+                bundle.putDouble(Analytics.KEY_END, calendar.getTimeInMillis() / THOUSAND);
             }
-            else fromDateEditText.setError("");
-            if (upToDateEditText.getText().toString().equals("")){
-                upToDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
-                return null;
-            }
-            else fromDateEditText.setError("");
-            //noinspection ConstantConditions
-            String[] tokens = fromDateEditText.getText().toString().split("/");
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), calendar.getActualMinimum(Calendar.HOUR_OF_DAY), calendar.getActualMinimum(Calendar.MINUTE),calendar.getActualMinimum(Calendar.SECOND));
-            calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
-            Log.i(TAG, "start: " + calendar.getTime().toString());
-            bundle.putDouble(Analytics.KEY_START,calendar.getTimeInMillis() / THOUSAND);
 
-            //noinspection ConstantConditions
-            tokens = upToDateEditText.getText().toString().split("/");
-            calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), calendar.getMaximum(Calendar.HOUR_OF_DAY), calendar.getActualMaximum(Calendar.MINUTE), calendar.getActualMaximum(Calendar.SECOND));
-            calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
-            Log.i(TAG, "end: " + calendar.getTime().toString());
-            bundle.putDouble(Analytics.KEY_END, calendar.getTimeInMillis() / THOUSAND);
+            bundle.putString(Analytics.KEY_INTERVAL, intervalSpinner.getSelectedItem().toString().toLowerCase());
+            bundle.putString(Analytics.KEY_ACCUMULATION, accumulationSelection);
+
+            return bundle;
         }
+        return null;
+    }
 
-        bundle.putString(Analytics.KEY_INTERVAL, intervalSpinner.getSelectedItem().toString().toLowerCase());
-        bundle.putString(Analytics.KEY_ACCUMULATION, accumulationSelection);
-
-        return bundle;
+    public boolean isInputValid(){
+        String period = periodSpinner.getSelectedItem().toString().toLowerCase();
+        if (period.equals(Analytics.BETWEEN_DATES)) {
+            if (fromDateEditText.getText().toString().equals("")) {
+                fromDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
+                return false;
+            } else fromDateEditText.setError(null);
+            if (upToDateEditText.getText().toString().equals("")) {
+                upToDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
+                return false;
+            } else fromDateEditText.setError(null);
+        }
+        return true;
     }
 
     //Activity > Fragment Communication

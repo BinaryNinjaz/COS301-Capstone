@@ -197,6 +197,9 @@
     <!--Foreman Defaults-->
     <string name="anal_fore_tit">Foreman Comparison</string>
 
+    <!--Preference Identifier-->
+    <string name="anal_graph_pref">za.org.samac.harvest.savedGraphs.%1$s</string>
+
     <!--Selector-->
 
     <!--Custom-->
@@ -252,8 +255,18 @@
     <string name="anal_graph_noData">No Data Available to Show</string>
     <string name="anal_gragh_averageLabel">Overall Average</string>
     <string name="anal_graph_sum">Sum</string>
-
-
+    
+    <!--Saving, Editing, Whatever-->
+    <string name="anal_save_title">Enter Name For Graph</string>
+    <string name="anal_save_enterName">Graph Name</string>
+    <string name="anal_save_okay">Okay</string>
+    <string name="anal_save_cancel">Cancel</string>
+    <string name="anal_save_unique">That name is already taken.</string>
+    <string name="anal_popup_hint">Select an option to perform on the graph \'%1$s\'</string>
+    <string name="anal_popup_rename">Rename</string>
+    <string name="anal_popup_delete">Delete</string>
+    <string name="anal_popup_cancel">Cancel</string>
+    
 
 
     <string name="title_activity_sessions">Sessions</string>

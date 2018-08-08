@@ -1,28 +1,35 @@
 package za.org.samac.harvest;
 
-import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.util.ULocale;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.style.TtsSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Map;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
@@ -346,6 +353,7 @@ public class Analytics extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("UnnecessaryReturnStatement")
     public void anal_creator_buttonHandler(View v){
         switch (v.getId()){
             case R.id.anal_create_selectionButton:
@@ -390,7 +398,53 @@ public class Analytics extends AppCompatActivity {
 
             case R.id.anal_create_saveButton:
 
+                //Check the input
+                if (analytics_creator.isInputValid()){
+                    //Get the ball rolling
+                    askForGraphName("", null);
+                }
+
+                return;
         }
+    }
+
+    @SuppressWarnings("UnnecessaryReturnStatement")
+    public void anal_popup_buttonHandler(View v){
+        switch (v.getId()){
+            case R.id.anal_popup_renameButton:
+                return;
+
+            case R.id.anal_popup_deleteButton:
+                return;
+
+            case R.id.anal_popup_cancelButton:
+                return;
+        }
+    }
+
+    private void askForGraphName(String name, String error) {
+        AlertDialog.Builder builder= new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.anal_save_title));
+        final EditText editText = new EditText(this);
+        editText.setHint(getResources().getString(R.string.anal_save_enterName));
+        editText.setText(name);
+        editText.setError(error);
+        builder.setView(editText);
+
+        builder.setPositiveButton(getResources().getString(R.string.anal_save_okay), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                saveGraph(editText.getText().toString());
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.anal_save_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
     }
 
 
@@ -429,6 +483,43 @@ public class Analytics extends AppCompatActivity {
         extras.putString(KEY_ACCUMULATION, accumulation);
         Intent intent = new Intent(this, Analytics_Graph.class).putExtras(extras);
         startActivity(intent);
+    }
+
+    private void saveGraph(String name){
+        //Make a graph for the 'DB'
+        GraphDB.Graph graph = new GraphDB.Graph();
+
+        //Get the bundle
+        Bundle bundle = analytics_creator.getConfigurations();
+
+        //From the bundle
+        graph.group = bundle.getString(KEY_GROUP);
+        graph.period = bundle.getString(KEY_PERIOD);
+        graph.start = bundle.getDouble(KEY_START);
+        graph.end = bundle.getDouble(KEY_END);
+        graph.interval = bundle.getString(KEY_INTERVAL);
+        graph.accumulation = bundle.getString(KEY_ACCUMULATION);
+
+        //From the activity
+        String gIDs[] = new String[ids.size()];
+        for (int i = 0; i < ids.size(); i++){
+            gIDs[i] = ids.get(i);
+        }
+        graph.ids = gIDs;
+
+        //From the name asking popup
+        graph.name = name;
+
+        try{
+            //Save it.
+            GraphDB.saveGraph(graph, this);
+        }
+        catch (GraphDB.NotUniqueNameException e){
+            //Try again with an error if the name is already taken.
+            askForGraphName(name, getResources().getString(R.string.anal_save_unique));
+        }
+
+        //And, that's all she wrote.
     }
 
     /**
@@ -714,5 +805,85 @@ public class Analytics extends AppCompatActivity {
                 return FARM;
         }
         return "";
+    }
+}
+
+class GraphDB{
+
+    //KEYS
+    private static final String
+    IDS = "IDS",
+    START = "START",
+    END = "END",
+    INTERVAL = "INTERVAL",
+    GROUP = "GROUP",
+    PERIOD = "PERIOD",
+    ACCUMULATION = "ACCUMULATION";
+
+    private static String TAG = "GraphDB";
+
+    public static void saveGraph(Graph graph, Context context) throws NotUniqueNameException {
+        final String uid = FirebaseAuth.getInstance().getUid();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if(keyExists(sharedPreferences, graph.name)){
+            throw new NotUniqueNameException();
+        }
+        else {
+            JSONObject object = new JSONObject();
+            JSONArray ids = new JSONArray(Arrays.asList(graph.ids));
+            try {
+                object.put(IDS, ids);
+                object.put(START, graph.start);
+                object.put(END, graph.end);
+                object.put(INTERVAL, graph.interval);
+                object.put(GROUP, graph.group);
+                object.put(PERIOD, graph.period);
+                object.put(ACCUMULATION, graph.accumulation);
+                Log.i(TAG, "JSONObject assembled: " + object.toString());
+
+                editor.putString(graph.name, object.toString());
+
+                editor.apply();
+
+            } catch (JSONException e) {
+                Log.e(TAG, "Problem assembling JSONObject. Not saved.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void deleteGraph(String name, Context context){
+        final String uid = FirebaseAuth.getInstance().getUid();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.remove(name);
+        editor.apply();
+    }
+
+    private static boolean keyExists(SharedPreferences sharedPreferences, String key){
+        Map<String, ?> all = sharedPreferences.getAll();
+        return all.containsKey(key);
+    }
+
+    public static class Graph{
+
+        public String name;
+        public String ids[];
+        public double start, end;
+        public String interval, group, period, accumulation;
+    }
+
+    public static class NotUniqueNameException extends Exception{
+
+
+        public NotUniqueNameException(){
+
+        }
+
+        public NotUniqueNameException(String message){
+            super(message);
+        }
     }
 }
