@@ -52,6 +52,7 @@ import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
 
+import static za.org.samac.harvest.Analytics.THOUSAND;
 import static za.org.samac.harvest.MainActivity.farmerKey;
 
 /**
@@ -78,8 +79,6 @@ public class Analytics_Graph extends AppCompatActivity {
     private static String interval;         //hourly, daily, weekly, monthly, yearly, -- titled period
     private static String group;            //entity type
     private static String mode;             //accumulation
-
-    private static double HUNTHOUSAND = 100000;
 
     private Data data;
 
@@ -503,7 +502,7 @@ public class Analytics_Graph extends AppCompatActivity {
 
                 Log.i(TAG, key + " parsed as " + date.toString());
 
-                result /= HUNTHOUSAND; // Prevent loss of precision because stupid graph wants to work with floats
+                result /= THOUSAND; // Prevent loss of precision because stupid graph wants to work with floats
                 //100 000 might be excessive though... Eh, it works, seemingly.
 
             } catch (NullPointerException e){
@@ -529,9 +528,9 @@ public class Analytics_Graph extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     private void setDateFormat(){
         Calendar startCal = Calendar.getInstance();
-        startCal.setTimeInMillis((long) (start * Analytics.THOUSAND));
+        startCal.setTimeInMillis((long) (start * THOUSAND));
         Calendar endCal = Calendar.getInstance();
-        endCal.setTimeInMillis((long) (end * Analytics.THOUSAND));
+        endCal.setTimeInMillis((long) (end * THOUSAND));
         final String fmtYear = isSameYear(startCal, endCal) ? "" : "yyyy";
         final String fmtMonth = isSameMonth(startCal, endCal) ? "" : "MMM";
         final String fmtDay = isSameDay(startCal, endCal) ? "" : "dd";
@@ -588,9 +587,9 @@ public class Analytics_Graph extends AppCompatActivity {
                     labels = new String[diffPOne];
 
                     Calendar cal = Calendar.getInstance();
-                    cal.setTimeInMillis((long) (start * Analytics.THOUSAND));
+                    cal.setTimeInMillis((long) (start * THOUSAND));
                     Calendar endCal = Calendar.getInstance();
-                    endCal.setTimeInMillis((long) (end * Analytics.THOUSAND));
+                    endCal.setTimeInMillis((long) (end * THOUSAND));
                     if (!isSameYear(cal, endCal)) {
                         for (int i = 0; i < diff; i++){
                             labels[i] = String.valueOf(i + minTime);
@@ -655,10 +654,10 @@ public class Analytics_Graph extends AppCompatActivity {
             Here, the plan is to set a calendar to the start date, then keep rolling it by our interval, until it is > than our end date.
              */
             Calendar curCal = Calendar.getInstance();
-            curCal.setTimeInMillis((long) (start * Analytics.THOUSAND));
+            curCal.setTimeInMillis((long) (minTime * THOUSAND));
 
             Calendar endCal = Calendar.getInstance();
-            endCal.setTimeInMillis((long) (end * Analytics.THOUSAND));
+            endCal.setTimeInMillis((long) (maxTime * THOUSAND));
 
             Log.i(TAG, "LABELS: startCal: " + curCal.getTime().toString() + ", endCal: " + endCal.getTime().toString());
 
