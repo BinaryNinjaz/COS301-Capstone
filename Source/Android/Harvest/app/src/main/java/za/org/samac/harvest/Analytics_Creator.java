@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -266,12 +267,16 @@ public class Analytics_Creator extends Fragment{
             //noinspection ConstantConditions
             String[] tokens = fromDateEditText.getText().toString().split("/");
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+            calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), calendar.getActualMinimum(Calendar.HOUR_OF_DAY), calendar.getActualMinimum(Calendar.MINUTE),calendar.getActualMinimum(Calendar.SECOND));
+            calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
+            Log.i(TAG, "start: " + calendar.getTime().toString());
             bundle.putDouble(Analytics.KEY_START,calendar.getTimeInMillis() / THOUSAND);
 
             //noinspection ConstantConditions
             tokens = upToDateEditText.getText().toString().split("/");
-            calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[0]));
+            calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), calendar.getMaximum(Calendar.HOUR_OF_DAY), calendar.getActualMaximum(Calendar.MINUTE), calendar.getActualMaximum(Calendar.SECOND));
+            calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
+            Log.i(TAG, "end: " + calendar.getTime().toString());
             bundle.putDouble(Analytics.KEY_END, calendar.getTimeInMillis() / THOUSAND);
         }
 

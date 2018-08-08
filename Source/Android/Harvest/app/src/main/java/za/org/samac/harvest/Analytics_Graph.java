@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -81,6 +82,8 @@ public class Analytics_Graph extends AppCompatActivity {
     private static double HUNTHOUSAND = 100000;
 
     private Data data;
+
+    private boolean dataFound = false;
 
     protected static double minTime = Double.MAX_VALUE, maxTime = Double.MIN_VALUE;
 
@@ -265,25 +268,7 @@ public class Analytics_Graph extends AppCompatActivity {
                         LineData lineData = getDataFromString(response);
                         populateLabels();
 
-                        //No idea what I'm doing here, or more specifically, why. I'm just following the documentation.
-
-                        //Following settings come from Letanyan.
-                        lineChart.getDescription().setEnabled(false);
-                        lineChart.setDragEnabled(true);
-                        lineChart.setScaleEnabled(true);
-                        lineChart.setPinchZoom(true);
-                        lineChart.getXAxis().setDrawGridLines(false);
-                        //...
-                        lineChart.getAxisRight().setDrawGridLines(false);
-                        lineChart.getXAxis().setAxisMinimum(0);
-                        lineChart.getAxisRight().setEnabled(false);
-                        lineChart.setNoDataText(getString(R.string.anal_graph_noData));
-
-                        //Following settings come from John.
-//                        lineChart.getXAxis().setXOffset(0f);
-//                        lineChart.getXAxis().setYOffset(0f);
-//                        lineChart.getXAxis().setTextSize(8f);
-//                        lineChart.getXAxis().setGranularity(1f);
+                        makeGraphPretty();
 
                         lineChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
                             @Override
@@ -292,7 +277,9 @@ public class Analytics_Graph extends AppCompatActivity {
                             }
                         });
 
-                        lineChart.setData(lineData);
+                        if (dataFound) {
+                            lineChart.setData(lineData);
+                        }
 
                         runOnUiThread(new Runnable() {
                             public void run() {
@@ -313,6 +300,25 @@ public class Analytics_Graph extends AppCompatActivity {
         }
     }
 
+    private void makeGraphPretty(){
+
+        lineChart.getDescription().setEnabled(false);
+        lineChart.setDragEnabled(true);
+        lineChart.setScaleEnabled(true);
+        lineChart.setPinchZoom(true);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getAxisRight().setDrawGridLines(false);
+        lineChart.getXAxis().setAxisMinimum(0);
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.setNoDataText(getString(R.string.anal_graph_noData));
+
+        lineChart.getXAxis().setXOffset(0f);
+        lineChart.getXAxis().setYOffset(0f);
+        lineChart.getXAxis().setTextSize(8f);
+        lineChart.getXAxis().setGranularity(1f);
+    }
+
     private LineData getDataFromString(String response){
         try {
             final JSONObject functionResult = new JSONObject(response);
@@ -328,41 +334,57 @@ public class Analytics_Graph extends AppCompatActivity {
                     if (entryNames != null) {
                         for (int j = 0; j < entryNames.length(); j++) {
                             getDoubleFromKey(entryNames.get(j).toString(), false);
+                            dataFound = true;
                         }
                     }
                 }
             }
 
-            //Line always
-            List<ILineDataSet> dataSets = new ArrayList<>(); //Holds all the data sets, so one for each entity
-            entityNames = functionResult.names(); //to iterate through the top level entities
-            if (entityNames != null) {
-                for (int i = 0; i < entityNames.length(); i++) {
-                    JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
-                    JSONArray entryNames = object.names(); //Keys of the entries, for iteration
-                    List<Entry> entries = new ArrayList<>();
-                    if (entryNames != null) {
-                        LineDataSet lineDataSet = null;
-                        for (int j = 0; j < entryNames.length(); j++) {
-                            //Get all of the entries, buy turning the key into an int (x axis), and the value to, erm, the value (y axis)
-                            Entry entry = new Entry((float) (getDoubleFromKey(entryNames.get(j).toString(), true)), (float) object.getDouble(entryNames.get(j).toString()));
-                            entries.add(entry);
-                        }
-                        if (entityNames.get(i).toString().equals("avg")) {
-                            lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_gragh_averageLabel));
-                        } else if (entityNames.get(i).toString().equals("sum")){
-                            if (mode.equals(Analytics.ACCUMULATION_ENTITY)) {
-                                lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_graph_sum));
+            //If there's nothing, why bother?
+            if (dataFound) {
+                //Line always
+                List<ILineDataSet> dataSets = new ArrayList<>(); //Holds all the data sets, so one for each entity
+                entityNames = functionResult.names(); //to iterate through the top level entities
+                if (entityNames != null) {
+                    for (int i = 0; i < entityNames.length(); i++) {
+                        JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
+                        JSONArray entryNames = object.names(); //Keys of the entries, for iteration
+                        List<Entry> entries = new ArrayList<>();
+                        if (entryNames != null) {
+                            LineDataSet lineDataSet = null;
+                            for (int j = 0; j < entryNames.length(); j++) {
+                                //Get all of the entries, buy turning the key into an int (x axis), and the value to, erm, the value (y axis)
+                                Entry entry = new Entry((float) (getDoubleFromKey(entryNames.get(j).toString(), true)), (float) object.getDouble(entryNames.get(j).toString()));
+                                entries.add(entry);
                             }
-                        } else {
-                            lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
+                            switch (entityNames.get(i).toString()) {
+                                case "avg":
+                                    lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_gragh_averageLabel));
+                                    lineDataSet.enableDashedLine(1, 1, 0);
+                                    lineDataSet.setColor(getResources().getColor(R.color.grey));
+                                    break;
+                                case "sum":
+                                    if (mode.equals(Analytics.ACCUMULATION_ENTITY)) {
+                                        lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_graph_sum));
+                                        lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
+                                    }
+                                    break;
+                                default:
+                                    lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
+                                    lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
+                                    break;
+                            }
+                            assert lineDataSet != null;
+                            lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                            lineDataSet.setDrawCircles(false);
+                            lineDataSet.setLineWidth(2);
+                            dataSets.add(lineDataSet);
                         }
-                        lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
-                        dataSets.add(lineDataSet);
                     }
                 }
+                return new LineData(dataSets);
             }
-            return new LineData(dataSets);
+            return null;
         } catch (JSONException e){
             e.printStackTrace();
             return null;
@@ -477,16 +499,9 @@ public class Analytics_Graph extends AppCompatActivity {
         else {
             try {
                 Date date = dateFormat.parse(key, new ParsePosition(0));
-                //Set the year to this year, if it comes back as 1970, to prevent negative dates. The year is insignificant if 1970.
-                // Because can't make sessions retroactively, and app wasn't around in 1970.
-//                Calendar cal = Calendar.getInstance();
-//                cal.setTime(date);
-//                if (cal.get(Calendar.YEAR) == 1970){
-//                    cal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
-//                    date = cal.getTime();
-//                }
-                System.out.println(key + " parsed as " + date.toString() + ", " + date.getTime());
                 result = (double) (date.getTime());
+
+                Log.i(TAG, key + " parsed as " + date.toString());
 
                 result /= HUNTHOUSAND; // Prevent loss of precision because stupid graph wants to work with floats
                 //100 000 might be excessive though... Eh, it works, seemingly.
@@ -644,6 +659,8 @@ public class Analytics_Graph extends AppCompatActivity {
 
             Calendar endCal = Calendar.getInstance();
             endCal.setTimeInMillis((long) (end * Analytics.THOUSAND));
+
+            Log.i(TAG, "LABELS: startCal: " + curCal.getTime().toString() + ", endCal: " + endCal.getTime().toString());
 
             List<String> labelsList = new ArrayList<>();
 

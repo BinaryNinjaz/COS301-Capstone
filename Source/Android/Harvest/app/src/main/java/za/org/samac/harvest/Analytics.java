@@ -610,7 +610,6 @@ public class Analytics extends AppCompatActivity {
     }
 
     public static class DateBundle{
-
         double startDate, endDate;
     }
     /**
