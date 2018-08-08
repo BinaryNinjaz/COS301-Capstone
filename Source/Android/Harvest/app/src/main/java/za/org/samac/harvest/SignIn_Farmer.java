@@ -113,8 +113,10 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    hideSoftKeyboard();
-                    signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());//attemptLogin();
+                    if(validateForm()) {
+                        hideSoftKeyboard();
+                        signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());//attemptLogin();
+                    }
                     return true;
                 }
                 return false;
@@ -129,8 +131,10 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideSoftKeyboard();
-                signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
+                if(validateForm()) {
+                    hideSoftKeyboard();
+                    signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
+                }
             }
         });
 
@@ -310,7 +314,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
         Log.d(TAG, "signInToAccount:" + email);
         login_form.setVisibility(View.INVISIBLE);
         login_progress.setVisibility(View.VISIBLE);
-        if (!validateForm(edtEmail.toString(), edtPassword.toString())) {
+        if (!validateForm()) {
             return;
         }
 
@@ -363,19 +367,26 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
 
     }
 
-    public boolean validateForm(String email, String password) {
+    //validate edit fields
+    public boolean validateForm() {
         boolean valid = true;
         View focusView = null;
 
-        if (TextUtils.isEmpty(email)) {
+        String email = edtEmail.getText().toString();
+
+        if (isEmailValid(email) == false) {
+            edtEmail.setError(getString(R.string.error_invalid_email));
+            focusView = edtEmail;
+            focusView.requestFocus();
+            valid = false;
+        } else if (TextUtils.isEmpty(email)) {
             edtEmail.setError("Required.");
             valid = false;
         } else {
-            if (edtEmail != null) {
-                edtEmail.setError(null);
-            }
+            edtEmail.setError(null);
         }
 
+        String password = edtPassword.getText().toString();
         if (TextUtils.isEmpty(password)) {
             edtPassword.setError("Required.");
             valid = false;
