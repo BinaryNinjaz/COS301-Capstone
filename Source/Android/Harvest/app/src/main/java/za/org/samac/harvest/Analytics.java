@@ -487,6 +487,8 @@ public class Analytics extends AppCompatActivity {
                 dialog.cancel();
             }
         });
+
+        builder.show();
     }
 
     public void pullDone(){
@@ -519,21 +521,35 @@ public class Analytics extends AppCompatActivity {
         //From the bundle
         graph.group = bundle.getString(KEY_GROUP);
         graph.period = bundle.getString(KEY_PERIOD);
-        graph.start = bundle.getDouble(KEY_START);
-        graph.end = bundle.getDouble(KEY_END);
         graph.interval = bundle.getString(KEY_INTERVAL);
         graph.accumulation = bundle.getString(KEY_ACCUMULATION);
 
         //From the activity
+        if (!graph.group.equals(getGroupFromCategory(lastCategory))){
+            ids.clear();
+        }
         String gIDs[] = new String[ids.size()];
         for (int i = 0; i < ids.size(); i++){
             gIDs[i] = ids.get(i);
         }
         graph.ids = gIDs;
 
+        //handle dates
+        if (!graph.period.equals(BETWEEN_DATES)){
+            DateBundle dateBundle = determineDates(graph.period);
+            assert dateBundle != null;
+            graph.start = dateBundle.startDate;
+            graph.end = dateBundle.endDate;
+        }
+        else {
+            graph.start = bundle.getDouble(KEY_START);
+            graph.end = bundle.getDouble(KEY_END);
+        }
+
         //From the name asking popup
         graph.name = name;
 
+        boolean err = false;
         try{
             //Save it.
             GraphDB.saveGraph(graph, this);
@@ -541,6 +557,10 @@ public class Analytics extends AppCompatActivity {
         catch (GraphDB.NotUniqueNameException e){
             //Try again with an error if the name is already taken.
             askForGraphName(name, getResources().getString(R.string.anal_save_unique));
+            err = true;
+        }
+        if (!err) {
+            showMain();
         }
 
         //And, that's all she wrote.

@@ -68,9 +68,11 @@ public class Analytics_Main extends Fragment {
             RecyclerView.Adapter adapter = new SavedGraphsAdapter(list);
             recyclerView.setAdapter(adapter);
             textView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
         else {
             textView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
         }
     }
 }
