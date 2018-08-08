@@ -135,9 +135,9 @@ public class SessionDetails extends AppCompatActivity {
         TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
         TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
 
-        foremanTextView.setText("Foreman: " + foreman);
-        startTime.setText("Time Started: " + formatter.format(startDate));
-        endTime.setText("Time Ended: " + formatter.format(endDate));
+        foremanTextView.setText(foreman);
+        startTime.setText(formatter.format(startDate));
+        endTime.setText(formatter.format(endDate));
 
         displayGraph();
     }
@@ -165,7 +165,7 @@ public class SessionDetails extends AppCompatActivity {
         pieChart.setData(data); // set the data and list of lables into chart
 
         Description description = new Description();
-        description.setText("Worker Performance");
+        description.setText("");
         pieChart.setDescription(description); // set the description
         pieChart.notifyDataSetChanged();
     }
