@@ -64,6 +64,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
     private LatLng moveMapHere ; // just used to find where to move map to
     private PolylineOptions polyline;
     private ArrayList<MarkerOptions> pickups;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         mapFragment.getMapAsync(this);
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         if (bottomNavigationView != null) {
             bottomNavigationView.setSelectedItemId(R.id.actionSession);
             BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
@@ -105,6 +106,13 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionSession);//set correct item to pop out on the nav bar
+        }
+    }
 
     /**
      * Manipulates the map once available.

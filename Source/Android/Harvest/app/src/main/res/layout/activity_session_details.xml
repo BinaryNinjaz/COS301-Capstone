@@ -20,206 +20,209 @@
         android:id="@+id/relLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ScrollView
-            android:id="@+id/signUp_form"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/linearLayoutSessDetails"
+            <ScrollView
+                android:id="@+id/signUp_form"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@id/bottom_navigation">
 
-                <android.support.v7.widget.CardView
+                <LinearLayout
+                    android:id="@+id/linearLayoutSessDetails"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginTop="16dp"
-                    android:paddingBottom="16dp">
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="16dp"
+                        android:paddingBottom="16dp">
 
-                        <TextView
-                            android:id="@+id/sessionDetailForemanLabel"
-                            android:layout_width="164dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="8dp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:text="@string/sessionDetailForemanLabelText"
-                            android:textSize="17sp" />
-
-                        <TextView
-                            android:id="@+id/sessionDetailForemanTextView"
-                            style="@android:style/Widget.TextView"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:paddingLeft="8dp"
-                            android:paddingRight="8dp"
-                            android:text="@string/sessionDetailForemanName"
-                            android:textAlignment="textEnd"
-                            android:textAppearance="@android:style/TextAppearance.Material.Headline"
-                            android:textSize="17sp"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:layout_editor_absoluteX="16dp" />
-                    </LinearLayout>
+                            android:orientation="horizontal">
 
-                </android.support.v7.widget.CardView>
+                            <TextView
+                                android:id="@+id/sessionDetailForemanLabel"
+                                android:layout_width="164dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="@string/sessionDetailForemanLabelText"
+                                android:textSize="17sp" />
 
-                <TextView
-                    android:id="@+id/sessionDetailDurationLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/sessionDetailDurationLabelText" />
+                            <TextView
+                                android:id="@+id/sessionDetailForemanTextView"
+                                style="@android:style/Widget.TextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp"
+                                android:text="@string/sessionDetailForemanName"
+                                android:textAlignment="textEnd"
+                                android:textAppearance="@android:style/TextAppearance.Material.Headline"
+                                android:textSize="17sp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:layout_editor_absoluteX="16dp" />
+                        </LinearLayout>
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:paddingTop="8dp">
+                    </android.support.v7.widget.CardView>
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/sessionDetailDurationLabel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_marginStart="8dp"
+                        android:text="@string/sessionDetailDurationLabelText" />
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:paddingTop="8dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:orientation="horizontal">
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/sessionDetailStartDateLabel"
-                                android:layout_width="240dp"
-                                android:layout_height="40dp"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical"
-                                android:text="@string/sessionDetailTimeStartedLabelText"
-                                android:textSize="17sp" />
-
-                            <TextView
-                                android:id="@+id/sessionDetailStartDateTextView"
-                                style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:layout_marginTop="0dp"
+                                android:layout_height="44dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/sessionDetailStartDateLabel"
+                                    android:layout_width="240dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/sessionDetailTimeStartedLabelText"
+                                    android:textSize="17sp" />
+
+                                <TextView
+                                    android:id="@+id/sessionDetailStartDateTextView"
+                                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="40dp"
+                                    android:layout_marginTop="0dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="8dp"
+                                    android:paddingRight="8dp"
+                                    android:text="@string/sessionDetailStartDate"
+                                    android:textAlignment="textEnd"
+                                    android:textAppearance="@android:style/TextAppearance.Material.Headline"
+                                    android:textSize="17sp"
+                                    app:layout_constraintTop_toBottomOf="@+id/sessionDetailForemanTextView"
+                                    tools:layout_editor_absoluteX="0dp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
                                 android:layout_weight="1"
-                                android:gravity="center_vertical"
-                                android:paddingLeft="8dp"
-                                android:paddingRight="8dp"
-                                android:text="@string/sessionDetailStartDate"
-                                android:textAlignment="textEnd"
-                                android:textAppearance="@android:style/TextAppearance.Material.Headline"
-                                android:textSize="17sp"
-                                app:layout_constraintTop_toBottomOf="@+id/sessionDetailForemanTextView"
-                                tools:layout_editor_absoluteX="0dp" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/sessionDetailEndDateLabel"
+                                    android:layout_width="240dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/sessionDetailTimeEndedLabelText"
+                                    android:textSize="17sp" />
+
+                                <TextView
+                                    android:id="@+id/sessionDetailEndDateTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="8dp"
+                                    android:paddingRight="8dp"
+                                    android:text="@string/sessionDetailEndDate"
+                                    android:textAlignment="textEnd"
+                                    android:textAppearance="@android:style/TextAppearance.Material.Headline"
+                                    android:textSize="17sp"
+                                    tools:layout_editor_absoluteX="0dp" />
+                            </LinearLayout>
 
                         </LinearLayout>
 
-                        <LinearLayout
+                    </android.support.v7.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/sessionDetailTrackingLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/sessionDetailTrackingLabelText" />
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginBottom="16dp">
+
+                        <Button
+                            android:id="@+id/sessionDetailsMapButton"
+                            style="@style/Widget.AppCompat.Button"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            android:paddingStart="8dp"
+                            android:text="@string/sessionDetailsViewPickups"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/sessionDetailEndDateTextView" />
+                    </android.support.v7.widget.CardView>
 
-                            <TextView
-                                android:id="@+id/sessionDetailEndDateLabel"
-                                android:layout_width="240dp"
-                                android:layout_height="40dp"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical"
-                                android:text="@string/sessionDetailTimeEndedLabelText"
-                                android:textSize="17sp" />
-
-                            <TextView
-                                android:id="@+id/sessionDetailEndDateTextView"
-                                android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical"
-                                android:paddingLeft="8dp"
-                                android:paddingRight="8dp"
-                                android:text="@string/sessionDetailEndDate"
-                                android:textAlignment="textEnd"
-                                android:textAppearance="@android:style/TextAppearance.Material.Headline"
-                                android:textSize="17sp"
-                                tools:layout_editor_absoluteX="0dp" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </android.support.v7.widget.CardView>
-
-                <TextView
-                    android:id="@+id/sessionDetailTrackingLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/sessionDetailTrackingLabelText" />
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_marginBottom="16dp">
-
-                    <Button
-                        android:id="@+id/sessionDetailsMapButton"
-                        style="@style/Widget.AppCompat.Button"
+                    <TextView
+                        android:id="@+id/sessionDetailPerformanceLabel"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/white"
-                        android:paddingStart="8dp"
-                        android:text="@string/sessionDetailsViewPickups"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/black"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/sessionDetailEndDateTextView" />
-                </android.support.v7.widget.CardView>
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/sessionDetailPerformanceLabelText" />
 
-                <TextView
-                    android:id="@+id/sessionDetailPerformanceLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/sessionDetailPerformanceLabelText" />
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="266dp">
-
-                    <com.github.mikephil.charting.charts.PieChart
-                        android:id="@+id/pieChart"
+                    <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="visible"
-                        tools:layout_editor_absoluteX="8dp"
-                        tools:layout_editor_absoluteY="259dp">
+                        android:layout_height="266dp">
 
-                    </com.github.mikephil.charting.charts.PieChart>
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/pieChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:visibility="visible"
+                            tools:layout_editor_absoluteX="8dp"
+                            tools:layout_editor_absoluteY="259dp">
 
-                </android.support.v7.widget.CardView>
+                        </com.github.mikephil.charting.charts.PieChart>
 
-            </LinearLayout>
-        </ScrollView>
+                    </android.support.v7.widget.CardView>
 
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/navbar_background"
-            app:menu="@menu/bottom_navigation_main"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+                </LinearLayout>
+            </ScrollView>
+
+            <android.support.design.widget.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/navbar_background"
+                app:menu="@menu/bottom_navigation_main"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
