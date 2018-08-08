@@ -17,7 +17,7 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   var images: [UIImage] = [#imageLiteral(resourceName: "HarvestIntro"), #imageLiteral(resourceName: "HarvestManage"), #imageLiteral(resourceName: "HarvestTrack"), #imageLiteral(resourceName: "HarvestAnalyse")]
   var currentIndex = 0 {
     didSet {
-      if currentIndex == 3 {
+      if currentIndex == images.count - 1 {
         nextButton.setTitle("Done", for: .normal)
         skipButton.isHidden = true
       } else {
@@ -33,7 +33,7 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   }
   @IBOutlet weak var pageControler: FSPageControl! {
     didSet {
-      pageControler.numberOfPages = 4
+      pageControler.numberOfPages = images.count
     }
   }
   @IBOutlet weak var nextButton: UIButton!
@@ -46,7 +46,7 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   }
   
   func numberOfItems(in pagerView: FSPagerView) -> Int {
-    return 4
+    return images.count
   }
   
   func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
@@ -77,10 +77,10 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   }
   
   @IBAction func nextButtonTouchUp(_ sender: UIButton) {
-    if currentIndex == 3 {
+    if currentIndex == images.count - 1 {
       completeIntro()
     } else {
-      currentIndex = min(currentIndex + 1, 3)
+      currentIndex = min(currentIndex + 1, images.count - 1)
       pagerView.scrollToItem(at: currentIndex, animated: true)
     }
   }
