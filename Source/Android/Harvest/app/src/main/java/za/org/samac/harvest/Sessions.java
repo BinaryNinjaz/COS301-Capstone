@@ -64,6 +64,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
     public static SessionItem selectedItem;
     private String farmOwnerName = "Farm Owner";
     private Data data;
+    private BottomNavigationView bottomNavigationView;
 
     private String searchText = "";
 
@@ -92,7 +93,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         adapterSource = new ArrayList<>();
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
 
@@ -121,6 +122,14 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
 
         adapter = new SessionsViewAdapter(getApplicationContext(), this);
         adapter.setItems(adapterSource);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionSession);//set correct item to pop out on the nav bar
+        }
     }
 
     private SearchedItem.Session sessionsContainsId(ArrayList<SearchedItem.Session> sessions, String id) {
