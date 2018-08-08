@@ -102,6 +102,7 @@ class SavedGraphsAdapter extends RecyclerView.Adapter<SavedGraphsAdapter.ViewHol
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.button.setText(names.get(position));
+        //TODO: on hold listener
     }
 
     @Override

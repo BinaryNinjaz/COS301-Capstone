@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -426,7 +427,23 @@ public class Analytics extends AppCompatActivity {
     }
 
     public void anal_main_graph_chosen(View v){
+        //Have the name, so get the info from SharedPreferences, and send it forward.
+        Button button = (Button) v;
+        GraphDB.Graph graph = GraphDB.getGraphByName(button.getText().toString(), this);
 
+        //TODO: Go through selector.
+
+        //Set all the things
+        assert graph != null;
+        ids = new ArrayList<>(Arrays.asList(graph.ids));
+        start = graph.start;
+        end = graph.end;
+        interval = graph.interval;
+        group = graph.group;
+        period = graph.period;
+        accumulation = graph.accumulation;
+
+        displayGraph();
     }
 
     //Fragment support
