@@ -2,7 +2,8 @@
     <head>
         <title>Harvest Home</title>
         <meta charset="UTF-8">
-
+         <link rel="icon" href="HarvestLogo.png">
+         
         <link href="navbar.css" rel="stylesheet" type="text/css" />
 
         <!-- Firebase Dependencies -->
@@ -66,20 +67,20 @@
         </ul>
     </div>
     
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-3 scrollView">
-                <h1>Foremen Tracking</h1>
-                <div id="foremen"></div>
-                <button type="button" class="btn btn-success" id="updateButton" onclick="requestLocations()">
-                    Update Locations
-                </button>
-            </div>
-            <div class="col-sm-9">
-                <div class="map" id="map"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 scrollView">
+                    <h1>Foremen Tracking</h1>
+                    <div id="foremen"></div>
+                    <button type="button" class="btn btn-success" id="updateButton" onclick="requestLocations()">
+                        Update Locations
+                    </button>
+                </div>
+                <div class="col-sm-9">
+                    <div class="map" id="map"></div>
+                </div>
             </div>
         </div>
-    </div>
         <script src="navbar.js" type="text/javascript"></script>
     </body>
 </html>
