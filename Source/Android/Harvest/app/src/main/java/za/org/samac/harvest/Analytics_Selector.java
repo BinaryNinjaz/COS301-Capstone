@@ -76,7 +76,7 @@ public class Analytics_Selector extends Fragment{
             swipeRefreshLayout.setRefreshing(true);
         }
         else {
-            adapter = new Analytics_Selector_Adapter(data, category, ids);
+            adapter = new Analytics_Selector_Adapter(data, category);
             recyclerView.setAdapter(adapter);
         }
     }
@@ -97,8 +97,14 @@ public class Analytics_Selector extends Fragment{
     }
 
     public void endRefresh(){
+        for(String id : ids){
+            data.findObject(id, category);
+            data.getActiveThing().checked = true;
+        }
+
         swipeRefreshLayout.setRefreshing(false);
-        adapter = new Analytics_Selector_Adapter(data, category, ids);
+        adapter = new Analytics_Selector_Adapter(data, category);
+        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
 
@@ -153,7 +159,7 @@ class Analytics_Selector_Adapter extends RecyclerView.Adapter<Analytics_Selector
         }
     }
 
-    public Analytics_Selector_Adapter(Data data, Category category, List<String> ids){
+    public Analytics_Selector_Adapter(Data data, Category category){
         items = new Vector<>();
         if (category == Category.ORCHARD){
             items.addAll(data.getOrchards());
@@ -169,14 +175,6 @@ class Analytics_Selector_Adapter extends RecyclerView.Adapter<Analytics_Selector
                 }
                 else if(worker.getWorkerType() == WorkerType.WORKER && category == Category.WORKER){
                     items.add(worker);
-                }
-            }
-        }
-        for (DBInfoObject object : items){
-            for (String id : ids){
-                if (id.equals(object.ID)){
-                    object.checked = true;
-                    break;
                 }
             }
         }

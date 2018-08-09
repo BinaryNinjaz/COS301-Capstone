@@ -778,6 +778,26 @@ public class Data {
         return activeFarm;
     }
 
+    public DBInfoObject getActiveThing(){
+        switch (category){
+            case FARM: return activeFarm;
+            case ORCHARD: return activeOrchard;
+            default: return activeWorker;
+        }
+    }
+    
+    public void toggleCheckedness(boolean checked){
+        for (Farm farm : farms){
+            farm.checked = checked;
+        }
+        for (Orchard orchard : orchards){
+            orchard.checked = checked;
+        }
+        for (Worker worker : workers){
+            worker.checked = checked;
+        }
+    }
+
     public String toStringID(String ID, Category category){
         switch (category){
             case ORCHARD:

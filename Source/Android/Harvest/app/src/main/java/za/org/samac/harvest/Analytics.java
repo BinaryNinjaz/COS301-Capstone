@@ -12,13 +12,11 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -331,6 +329,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
     private void showCreate(){
         toggleUpButton(true);
+        data.toggleCheckedness(false);
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -461,11 +460,23 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
         period = graph.period;
         accumulation = graph.accumulation;
 
-        displayGraph();
+        Category category;
+        switch (group){
+            case FARM: category = Category.FARM; break;
+            case ORCHARD: category = Category.ORCHARD; break;
+            default: category = Category.WORKER; break;
+        }
+
+        data.toggleCheckedness(false);
+        for(String id : ids){
+            data.findObject(id, category);
+            data.getActiveThing().checked = true;
+        }
+
+        showSelector();
     }
 
     //Fragment support
-
     public void anal_checkEvent(View v){
         CheckBox box = (CheckBox) v;
         if (box.isChecked()){
@@ -508,7 +519,6 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
     }
 
     //Support functions
-
     private void askForGraphName(final String name, String error, final boolean save) {
         AlertDialog.Builder builder= new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.anal_save_title));
