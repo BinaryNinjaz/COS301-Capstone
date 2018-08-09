@@ -4,21 +4,60 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/anal_select_swipeRefresh"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/anal_select_recycler"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorPrimaryDark"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/anal_select_all"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:text="@string/anal_selector_all"
+            style="@style/Base.Widget.AppCompat.ButtonBar"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:onClick="anal_selector_buttonHandler"
+            />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <Button
+            android:id="@+id/anal_select_none"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:text="@string/anal_selector_none"
+            style="@style/Base.Widget.AppCompat.ButtonBar"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:onClick="anal_selector_buttonHandler"
+            />
+
+    </LinearLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/anal_select_swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/anal_select_recycler"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/anal_select_proceed"

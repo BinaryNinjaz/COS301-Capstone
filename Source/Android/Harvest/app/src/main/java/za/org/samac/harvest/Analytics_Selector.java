@@ -108,6 +108,13 @@ public class Analytics_Selector extends Fragment{
         recyclerView.setAdapter(adapter);
     }
 
+    public void checkAllPerhaps(boolean check){
+        data.toggleCheckedness(check);
+        adapter = new Analytics_Selector_Adapter(data, category);
+        adapter.notifyDataSetChanged();
+        recyclerView.setAdapter(adapter);
+    }
+
     public void showProceed(boolean show){
         showProceed = show;
     }

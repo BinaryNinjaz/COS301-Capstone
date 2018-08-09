@@ -201,6 +201,8 @@
     <string name="anal_graph_pref">za.org.samac.harvest.savedGraphs.%1$s</string>
 
     <!--Selector-->
+    <string name="anal_selector_all">Select All</string>
+    <string name="anal_selector_none">Select None</string>
 
     <!--Custom-->
     <string name="anal_create_make">Make New Graph</string>

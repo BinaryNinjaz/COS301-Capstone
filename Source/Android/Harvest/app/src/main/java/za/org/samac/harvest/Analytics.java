@@ -354,11 +354,18 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
         }
     }
 
+    @SuppressWarnings("UnnecessaryReturnStatement")
     public void anal_selector_buttonHandler(View v){
         switch (v.getId()){
             case R.id.anal_select_proceed:
                 displayGraph();
-                break;
+                return;
+            case R.id.anal_select_all:
+                analytics_selector.checkAllPerhaps(true);
+                return;
+            case R.id.anal_select_none:
+                analytics_selector.checkAllPerhaps(false);
+                return;
         }
     }
 
