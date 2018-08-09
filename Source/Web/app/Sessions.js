@@ -6,34 +6,8 @@
 *					"Sessions.html". It requests and recieves data from firebase
 *					databse, and uses google graph APIs 
 */
-const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/flattendSessions?';
-var pageIndex = null;
+var pageIndex = null; // track the last session loaded. Used for pagination
 var pageSize = 21;
-const user = function() { return firebase.auth().currentUser };/* Function which authenticates user */
-
-/* Function returns the user ID of the selected user */
-const userID = function() {
-  if (user() !== null) {
-    return user().uid 
-  } else {
-    return ""
-  }
-}
-
-/* Function returns a worker pointed to by the callback parameter */
-function getWorkers(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/workers');
-  ref.once('value').then((snapshot) => {
-    callback(snapshot);
-  });
-}
-
-/* Function returns a reference to the sessions on the database */
-function yieldsRef() {
-  return firebase.database().ref('/' + userID() + '/sessions');
-}
-
-/* This executes when the page loades */
 $(window).bind("load", () => {
 	var divHide = document.getElementById('loader'); /* When the page loads, the error div should be hidden */
 	divHide.style.visibility = "hidden"; /* When the page loads, the error div should be hidden, do not remove */
@@ -63,31 +37,16 @@ function initMap() {
   });
 }
 
-/* Function returns a foremen, given a particular key */
-function foremanForKey(key) {
-  for (var k in foremen) {
-    if (foremen[k].key === key) {
-      return foremen[k];
-    }
-  }
-  return {value: {name: "Farm", surname: "Owner"}};
-}
-
-/* Function returns a worker, given a particular key */
-function workerForKey(key) {
-  for (var k in workers) {
-    if (workers[k].key === key) {
-      return workers[k];
-    }
-  }
-  return undefined;
-}
-
 /* Function returns a session, given a particular key */
-function sessionForKey(key) {
-  for (var k in sessions) {
-    if (sessions[k].key === key) {
-      return sessions[k];
+function sessionForKey(key, sortedMap) {
+  for (const groupIdx in sortedMap) {
+    const group = sortedMap[groupIdx];
+    for (const itemIdx in group.values) {
+      const item = group.values[itemIdx];
+      console.log(item.key, key);
+      if (item.key === key) {
+        return item;
+      }
     }
   }
   return undefined;
@@ -109,33 +68,69 @@ function sessionsListLoader(loading) {
   }
 }
 
-
-var foremen = []; /* An array of foreman */
-var workers = []; /* An array of workers */
-
-/* This function displays the list of sessions by each foreman on "Session.html" */
+var farms = {};
+var orchards = {};
+var workers = {};
 function initPage() {
   var sessionsList = document.getElementById("sessionsList");
   sessionsListLoader(true);
-  getWorkers((workersSnap) => {
-    foremen = [];
-    workers = [];
-    workersSnap.forEach((worker) => {
-      const w = worker.val();
-      const k = worker.key;
-      if (w.type === "Foreman") {
-        foremen.push({key: k, value: w});
-      } else {
-        workers.push({key: k, value: w});
-      }
-    });
+  farms = {};
+  orchards = {};
+  workers = {};
+  setWorkers(workers, () => {
     newPage();
+    setFarms(farms, () => {});
+    setOrchards(orchards, () => {});
   });
 }
 
-var sessions = []; /* An array of sessions */
+// sorted map
+var sessions = [];
+var filteredSessions = [];
+function insertSessionIntoSortedMap(session, key, checkEqualKey, sortedMap) {
+  var belongsInGroup = undefined;
+  for (const groupIdx in sortedMap) {
+    const group = sortedMap[groupIdx];
+    if (checkEqualKey(group.key, key)) {
+      belongsInGroup = groupIdx;
+      break;
+    }
+  }
 
-/* This function appends more sessions to the list of initial sessions on "Sessions.html" */
+  if (belongsInGroup !== undefined) {
+    sortedMap[belongsInGroup].values.push(session);
+    sortedMap[belongsInGroup].values = sortedMap[belongsInGroup].values.sort((a, b) => {
+      return b.value.start_date - a.value.start_date;
+    });
+  } else {
+    sortedMap.push({key: key, values: [session]});
+  }
+
+  sortedMap = sortedMap.sort((a, b) => {
+    return b.key - a.key;
+  });
+}
+
+function displaySessions(sortedMap, displayHeader, isFiltered) {
+  var sessionsList = document.getElementById("sessionsList");
+  sessionsList.innerHTML = "";
+  for (const groupIdx in sortedMap) {
+    const group = sortedMap[groupIdx];
+    const key = group.key;
+    sessionsList.innerHTML += "<h5>" + displayHeader(key) + "</h5>";
+    for (const itemIdx in group.values) {
+      const item = group.values[itemIdx];
+      const foreman = workers[item.value.wid];
+      const time = moment(new Date(item.value.start_date * 1000)).format(isFiltered ? "YYYY/MM/DD HH:mm" : "HH:mm");
+      const text = foreman.name + " " + foreman.surname + " - " + time;
+      sessionsList.innerHTML += "<button type='button' class='btn btn-primary' style='margin: 4px' onclick=loadSession('" + item.key + "') >" + text + "</button>";
+      if (isFiltered) {
+        sessionsList.innerHTML += "<p class='searchReason'>" + item.reason + "</p>";
+      }
+    }
+  }
+}
+
 function newPage() {
   var ref;
   sessionsListLoader(true);
@@ -154,29 +149,31 @@ function newPage() {
   ref.once('value').then((snapshot) => {
     var lastSession = "";
     var resultHtml = [];
+    var i = 0;
     snapshot.forEach((child) => {
       const obj = child.val();
-      const foreman = foremanForKey(obj.wid);
+      const foreman = workers[obj.wid];
       if (foreman !== undefined) {
         if (lastSession === "") {
           lastSession = child.key;
         }
-        const name = foreman.value.name + " " + foreman.value.surname;
-        const text = name + " - " + (new Date(obj.start_date * 1000)).toLocaleString();
-        resultHtml.unshift("<button type='button' class='btn btn-primary' style='margin: 4px' onclick=loadSession('" + child.key + "') >" + text + "</button>");
-        tempSessions.unshift({val: obj, key: child.key});
+        const session = {value: obj, key: child.key};
+
+        const key = moment(new Date(session.value.start_date * 1000)).startOf('day');
+        const equalDates = (a, b) => {
+          return a.isSame(b);
+        };
+
+        insertSessionIntoSortedMap(session, key, equalDates, sessions);
       }
     });
-    tempSessions.pop();
-    for (var i = 0; i < tempSessions.length; i++) {
-      sessions.push(tempSessions[i]);
-    }
-    
-    resultHtml.pop();
-    sessionsList.innerHTML += resultHtml.join("");
-    
+
     pageIndex = lastSession;
-    sessionsListLoader(false)
+    sessionsListLoader(false);
+    const formatHeader = (date) => {
+      return date.format("dddd, DD MMMM YYYY");
+    };
+    filterSessions();
   });
 }
 
@@ -186,28 +183,30 @@ var polypath; /* Variable for storing the path of the polygon */
 /* This functions plots the graph of a choosen session by a particular foreman */
 function loadSession(sessionID) {
   const ref = firebase.database().ref('/' + userID() + '/sessions/' + sessionID);
-  
+
   var gdatai = 0;
   var graphData = {datasets: [{data: [], backgroundColor: []}], labels: []};
-  
-  const val = sessionForKey(sessionID).val;
-  
+
+
+  const session = sessionForKey(sessionID, sessions);
+  const val = session.value;
+
   const start = new Date(val.start_date * 1000);
   const end = new Date(val.end_date * 1000);
   const wid = val.wid;
-  const foreman = foremanForKey(wid);
-  const fname = foreman.value.name + " " + foreman.value.surname;
-  
+  const foreman = workers[wid];
+  const fname = foreman.name + " " + foreman.surname;
+
   var sessionDetails = document.getElementById("sessionDetails");
-  
+
   sessionDetails.innerHTML = "<form class=form-horizontal'><div class='form-group'>"
   sessionDetails.innerHTML += "<div class='col-sm-12'><label>Foreman: </label> " + fname + "</div>"
   sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Started: </label><p> " + start.toLocaleString() + "</p></div>"
   sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Ended: </label><p> " + end.toLocaleString() + "</p></div>"
   sessionDetails.innerHTML += "</div></form>";
-  
+
   var first = true;
-  
+
   if (val.track !== undefined) {
     var track = [];
     for (const ckey in val.track) {
@@ -232,26 +231,26 @@ function loadSession(sessionID) {
       map: map
     });
   }
-  
+
   for (const marker in markers) {
     markers[marker].setMap(null)
   }
-  
+
   if (val.collections !== undefined) {
     for (const ckey in val.collections) {
       const collection = val.collections[ckey];
-      const worker = workerForKey(ckey);
-      
+      const worker = workers[ckey];
+
       var wname = "";
       if (worker !== undefined) {
-        wname = worker.value.name + " " + worker.value.surname;
+        wname = worker.name + " " + worker.surname;
       }
-      
+
       graphData.datasets[0].data.push(collection.length);
       graphData.datasets[0].backgroundColor.push(harvestColorful[gdatai % 6]);
       graphData["labels"].push(wname);
       gdatai++;
-      
+
       for (const pkey in collection) {
         const pickup = collection[pkey];
         const coord = new google.maps.LatLng(pickup.coord.lat, pickup.coord.lng);
@@ -277,7 +276,7 @@ function initGraph(collections) {
   if (chart !== undefined) {
     chart.destroy();
   }
-  
+
   var options = {
     title: {
       display: true,
@@ -289,7 +288,7 @@ function initGraph(collections) {
   };
   var ctx = document.getElementById("doughnut").getContext('2d');
   chart = null;
-  
+
   chart = new Chart(ctx,{
     type: 'doughnut',
     data: collections,
@@ -326,10 +325,43 @@ function updateSpiner(shouldSpin) {
 	  target.style.position = "absolute"; //This is for proper alignment
 	  target.style.top = "100px"; //This is for proper alignment
 	  target.style.left = "100px"; //This is for proper alignment
-	spinner = new Spinner(opts).spin(target); //The class and corresponding css are defined in spin.js and spin.css
+	  spinner = new Spinner(opts).spin(target); //The class and corresponding css are defined in spin.js and spin.css
   } else {
 	  //target.style.top = "0px";
-	spinner.stop(); //This line stops the spinner. 
-	spinner = null;
+	  spinner.stop(); //This line stops the spinner. 
+	  spinner = null;
+  }
+}
+
+function filterSessions() {
+  const searchField = document.getElementById("sessionSearchField");
+  const searchText = searchField.value;
+
+  if (searchText === "") {
+    const formatHeader = (date) => {
+      return date.format("dddd, DD MMMM YYYY");
+    };
+    displaySessions(sessions, formatHeader, false);
+  } else {
+    filteredSessions = []
+    for (const groupKey in sessions) {
+      const group = sessions[groupKey].values;
+
+      for (const sessionId in group) {
+        const session = group[sessionId];
+        const sessionResults = searchSession(session.value, searchText, farms, orchards, workers);
+
+        for (const key in sessionResults) {
+          var newSession = session;
+          newSession["reason"] = sessionResults[key];
+          insertSessionIntoSortedMap(session, key, (a, b) => { return a === b; }, filteredSessions);
+        }
+      }
+    }
+    console.log(JSON.stringify(filteredSessions));
+
+    const formatHeader = (title) => { return title };
+
+    displaySessions(filteredSessions, formatHeader, true);
   }
 }

@@ -1,43 +1,11 @@
 /*
 *	File:	HeatMap.js
-*	Authour:	Binary Ninjaz (Letanyan, John, Vincent)
+*	Authour:	Binary Ninjaz (Letanyan, Vincent)
 *
 *	Description: 	This file requests and receives data from firebase database
 *					To display a heat map on >HeatMap.html". It shows heat where 
 *					bags were collected.
 */
-/* This function returns the authentication details of the current user from the database*/
-const user = function() { return firebase.auth().currentUser };
-/* This function checks whether the user shoukd have access or not*/
-const userID = function() {
-  if (user() !== null) {
-    return user().uid 
-  } else {
-    return ""
-  }
-}
-/* This function gets a "snapshot" of the ochards (given the particular userID) from firebase*/
-function getOrchards(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/orchards');
-  ref.once('value').then((snapshot) => {
-    callback(snapshot);
-  });
-}
-/* This function returns a snapshot of the particular worker from the database */
-function getWorkers(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/workers');
-  ref.once('value').then((snapshot) => {
-    callback(snapshot);
-  });
-}
-/* This function gets a snapshot of the farms (given the particular user id) from the database*/
-function getFarms(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/farms');
-  ref.once('value').then((snapshot) => {
-    callback(snapshot);
-  });
-}
-/* This function initializes the Orchards and workers seen on HeatMap.html and it allows filtering functionality*/
 $(window).bind("load", () => {
   let succ = () => {
     initOrchards();
