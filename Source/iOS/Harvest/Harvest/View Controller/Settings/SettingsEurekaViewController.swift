@@ -47,7 +47,7 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     }.onCellSelection { _, _ in
       let vc = self.storyboard?.instantiateViewController(withIdentifier: "appIntroViewController")
       let avc = vc as! AppIntroViewController
-      avc.images = [#imageLiteral(resourceName: "SignUpBackground"), #imageLiteral(resourceName: "Farms"), #imageLiteral(resourceName: "FruitTree"), #imageLiteral(resourceName: "Hand"), #imageLiteral(resourceName: "Orchards"), #imageLiteral(resourceName: "Sessions")]
+      avc.images = [#imageLiteral(resourceName: "TutorialWorkflow"), #imageLiteral(resourceName: "TutorialInfo"), #imageLiteral(resourceName: "TutorialCollections"), #imageLiteral(resourceName: "TutorialSessions"), #imageLiteral(resourceName: "TutorialStats")]
       
       self.present(avc, animated: true, completion: nil)
     }

@@ -971,7 +971,7 @@ Expected Yield: 0</string>
                                         </view>
                                     </subviews>
                                 </view>
-                                <blurEffect style="light"/>
+                                <blurEffect style="dark"/>
                             </visualEffectView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tRa-3I-ASB" customClass="FSPageControl" customModule="FSPagerView">
                                 <rect key="frame" x="0.0" y="625" width="375" height="42"/>
@@ -982,7 +982,7 @@ Expected Yield: 0</string>
                                 <rect key="frame" x="16" y="562" width="343" height="55"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
-                                <state key="normal" title="Next ⇢">
+                                <state key="normal" title="Next  ⇢">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>

@@ -12,10 +12,16 @@ import Charts
 struct StatStore {
   static var shared = StatStore()
   
-  let path = "StatStore"
-  var store: [Stat]
+  var path: String {
+    return HarvestUser.current.uid + "StatStore"
+  }
+  var store: [Stat] = []
   
   init() {
+    store = []
+  }
+  
+  mutating func updateStore() {
     store = (try? Disk.retrieve(path, from: .applicationSupport, as: [Stat].self)) ?? []
   }
   

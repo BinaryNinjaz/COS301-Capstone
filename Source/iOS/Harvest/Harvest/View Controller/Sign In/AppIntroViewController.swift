@@ -21,7 +21,7 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
         nextButton.setTitle("Done", for: .normal)
         skipButton.isHidden = true
       } else {
-        nextButton.setTitle("Next⇢", for: .normal)
+        nextButton.setTitle("Next  ⇢", for: .normal)
         skipButton.isHidden = false
       }
     }
@@ -90,8 +90,11 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   }
   
   func completeIntro() {
-    UserDefaults.standard.set(true, forKey: "Launched")
-    StatStore.shared.setUpPredefinedGraphs()
+    if !UserDefaults.standard.bool(forKey: "Launched") {
+      UserDefaults.standard.set(true, forKey: "Launched")
+      StatStore.shared.setUpPredefinedGraphs()
+    }
+    
     dismiss(animated: true, completion: nil)
   }
 }
