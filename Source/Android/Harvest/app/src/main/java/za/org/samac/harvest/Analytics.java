@@ -1,5 +1,6 @@
 package za.org.samac.harvest;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,13 +12,17 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,7 +35,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,7 +47,7 @@ import za.org.samac.harvest.util.Data;
  * This activity handles all of the setup of getting information before calling on the appropriate graph.
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class Analytics extends AppCompatActivity {
+public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.HoldListener{
 
     private final android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -101,6 +105,9 @@ public class Analytics extends AppCompatActivity {
     private String interval = NOTHING;
     private String accumulation = NOTHING;
     private String period = NOTHING;
+    private String name = null;
+
+    private Dialog dialog = null;
 
     private enum State{
         MAIN,
@@ -124,7 +131,6 @@ public class Analytics extends AppCompatActivity {
     Category lastCategory = Category.NOTHING;
 
     //Activity related
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -405,7 +411,7 @@ public class Analytics extends AppCompatActivity {
                 //Check the input
                 if (analytics_creator.isInputValid()){
                     //Get the ball rolling
-                    askForGraphName("", null);
+                    askForGraphName("", null, true);
                 }
 
                 return;
@@ -416,12 +422,24 @@ public class Analytics extends AppCompatActivity {
     public void anal_popup_buttonHandler(View v){
         switch (v.getId()){
             case R.id.anal_popup_renameButton:
+
+                //ask for the new name and tell it to update the current graph.
+                askForGraphName(name, null, false);
+
                 return;
 
             case R.id.anal_popup_deleteButton:
+
+                GraphDB.deleteGraph(name, this);
+                dismissPopup();
+                analytics_main.updateRecyclers(Category.FARM);
+
                 return;
 
             case R.id.anal_popup_cancelButton:
+
+                dismissPopup();
+
                 return;
         }
     }
@@ -462,21 +480,50 @@ public class Analytics extends AppCompatActivity {
         }
     }
 
+    public void showPopup(final String name){
+        this.name = name;
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View v = inflater.inflate(R.layout.dialog_graph_popup, null);
+        TextView title = v.findViewById(R.id.anal_popup_title);
+        TextView hint = v.findViewById(R.id.anal_popup_hint);
+        title.setText(name);
+        hint.setText(getResources().getString(R.string.anal_popup_hint, name));
+
+        builder.setView(v);
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    public void dismissPopup(){
+        if (dialog != null){
+            this.dialog.dismiss();
+            this.dialog = null;
+            this.name = null;
+        }
+        else {
+            Log.e(TAG, "Attempted to dismiss popup not showing.");
+        }
+    }
+
     //Support functions
 
-    private void askForGraphName(String name, String error) {
+    private void askForGraphName(final String name, String error, final boolean save) {
         AlertDialog.Builder builder= new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.anal_save_title));
         final EditText editText = new EditText(this);
         editText.setHint(getResources().getString(R.string.anal_save_enterName));
         editText.setText(name);
         editText.setError(error);
+        editText.requestLayout();
         builder.setView(editText);
 
         builder.setPositiveButton(getResources().getString(R.string.anal_save_okay), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                saveGraph(editText.getText().toString());
+                if(save) saveGraph(editText.getText().toString());
+                else updateGraphName(name, editText.getText().toString());
                 dialog.dismiss();
             }
         });
@@ -515,6 +562,9 @@ public class Analytics extends AppCompatActivity {
         //Make a graph for the 'DB'
         GraphDB.Graph graph = new GraphDB.Graph();
 
+        //From the name asking popup
+        graph.name = name;
+
         //Get the bundle
         Bundle bundle = analytics_creator.getConfigurations();
 
@@ -538,16 +588,11 @@ public class Analytics extends AppCompatActivity {
         if (!graph.period.equals(BETWEEN_DATES)){
             DateBundle dateBundle = determineDates(graph.period);
             assert dateBundle != null;
-            graph.start = dateBundle.startDate;
-            graph.end = dateBundle.endDate;
+            bundle.putDouble(KEY_START, dateBundle.startDate);
+            bundle.putDouble(KEY_END, dateBundle.endDate);
         }
-        else {
-            graph.start = bundle.getDouble(KEY_START);
-            graph.end = bundle.getDouble(KEY_END);
-        }
-
-        //From the name asking popup
-        graph.name = name;
+        graph.start = bundle.getDouble(KEY_START);
+        graph.end = bundle.getDouble(KEY_END);
 
         boolean err = false;
         try{
@@ -556,7 +601,7 @@ public class Analytics extends AppCompatActivity {
         }
         catch (GraphDB.NotUniqueNameException e){
             //Try again with an error if the name is already taken.
-            askForGraphName(name, getResources().getString(R.string.anal_save_unique));
+            askForGraphName(name, getResources().getString(R.string.anal_save_unique), true);
             err = true;
         }
         if (!err) {
@@ -564,6 +609,27 @@ public class Analytics extends AppCompatActivity {
         }
 
         //And, that's all she wrote.
+    }
+
+    private void updateGraphName(final String oldName, final String newName){
+        //Eh
+        GraphDB.Graph graph = GraphDB.getGraphByName(oldName, this);
+        assert graph != null;
+        graph.name = newName;
+        try {
+            GraphDB.saveGraph(graph, this);
+        }
+        catch (GraphDB.NotUniqueNameException e){
+            e.printStackTrace();
+        }
+
+        //Delete the old graph
+        GraphDB.deleteGraph(oldName, this);
+
+        //Update the main.
+        dismissPopup();
+        analytics_main.updateRecyclers(Category.FARM);
+        showPopup(newName);
     }
 
     /**
@@ -850,209 +916,216 @@ public class Analytics extends AppCompatActivity {
         }
         return "";
     }
-}
 
-class GraphDB{
+    public static class GraphDB{
 
-    //KEYS
-    private static final String
-    IDS = "IDS",
-    START = "START",
-    END = "END",
-    INTERVAL = "INTERVAL",
-    GROUP = "GROUP",
-    PERIOD = "PERIOD",
-    ACCUMULATION = "ACCUMULATION";
+        //KEYS
+        private static final String
+                IDS = "IDS",
+                START = "START",
+                END = "END",
+                INTERVAL = "INTERVAL",
+                GROUP = "GROUP",
+                PERIOD = "PERIOD",
+                ACCUMULATION = "ACCUMULATION";
 
-    private static String TAG = "GraphDB";
+        private static String TAG = "GraphDB";
 
-    private static List<String> farms, orchards, workers, foremen;
+        private static List<String> farms, orchards, workers, foremen;
 
-    public static void saveGraph(Graph graph, Context context) throws NotUniqueNameException {
-        final String uid = FirebaseAuth.getInstance().getUid();
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if(keyExists(sharedPreferences, graph.name)){
-            throw new NotUniqueNameException();
-        }
-        else {
-            JSONObject object = new JSONObject();
-            JSONArray ids = new JSONArray(Arrays.asList(graph.ids));
-            try {
-                object.put(IDS, ids);
-                object.put(START, graph.start);
-                object.put(END, graph.end);
-                object.put(INTERVAL, graph.interval);
-                object.put(GROUP, graph.group);
-                object.put(PERIOD, graph.period);
-                object.put(ACCUMULATION, graph.accumulation);
-                Log.i(TAG, "JSONObject assembled: " + object.toString());
-
-                editor.putString(graph.name, object.toString());
-
-                editor.apply();
-
-            } catch (JSONException e) {
-                Log.e(TAG, "Problem assembling JSONObject. Not saved.");
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void deleteGraph(String name, Context context){
-        final String uid = FirebaseAuth.getInstance().getUid();
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.remove(name);
-        editor.apply();
-    }
-
-    /**
-     * Return a GraphDB.Graph which has been found by name<br>
-     *     The assumption is that the name is gotten from a recycler, which was populated by yours truly.
-     * @param name name of graph to return.
-     * @param context Context.
-     * @return the graph itself.
-     */
-    public static Graph getGraphByName(String name, Context context){
-        final String uid = FirebaseAuth.getInstance().getUid();
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
-        try {
-            JSONObject object = new JSONObject(sharedPreferences.getString(name, null));
-
-            Graph graph = new Graph();
-
-            //Start with the name
-            graph.name = name;
-
-            //The ids
-            JSONArray array = object.getJSONArray(IDS);
-            String ids[] = new String[array.length()];
-            for (int i = 0; i < array.length(); i++){
-                ids[i] = array.get(i).toString();
-            }
-            graph.ids = ids;
-
-            //The rest
-            graph.start = object.getDouble(START);
-            graph.end = object.getDouble(END);
-            graph.interval = object.getString(INTERVAL);
-            graph.group = object.getString(GROUP);
-            graph.period = object.getString(PERIOD);
-            graph.accumulation = object.getString(ACCUMULATION);
-
-            return graph;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null; //Whoops!
-    }
-
-    /**
-     * <p>The assumption is for this to be used in a recycler, so once what the user wants is known, the name can be used to get the actual graph.</p>
-     * @param category the category for which the names are to be asked for.<br>
-     *                 Acceptable values are:
-     *                 <ul>
-     *                 <li>FARM</li>
-     *                 <li>ORCHARD</li>
-     *                 <li>WORKER</li>
-     *                 <li>FOREMAN</li>
-     *                 </ul>
-     * @param context Context
-     * @param restore If true, the statically kept lists, will be reset, if this is NOT set true after some write operation or account change, the results will be incorrect. And nothing will be doable with them.<br>
-     *                The intention is to keep this false if the method is being used in quick succession, like say, setting up four recyclers on the same fragment.
-     * @return names of the graphs.
-     */
-    public static List<String> getNamesByCategory(Category category, Context context, boolean restore){
-        if (restore) {
-            farms = new ArrayList<>();
-            orchards = new ArrayList<>();
-            workers = new ArrayList<>();
-            foremen = new ArrayList<>();
-
+        public static void saveGraph(Graph graph, Context context) throws NotUniqueNameException {
             final String uid = FirebaseAuth.getInstance().getUid();
             SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
-            Map<String, ?> all = sharedPreferences.getAll();
-            Set<String> keysSet = all.keySet();
-
-            for (String key : keysSet) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            if(keyExists(sharedPreferences, graph.name)){
+                throw new NotUniqueNameException();
+            }
+            else {
+                JSONObject object = new JSONObject();
+                JSONArray ids = new JSONArray(Arrays.asList(graph.ids));
                 try {
-                    JSONObject object = new JSONObject(sharedPreferences.getString(key, null));
-                    if (object.getString(GROUP).equals(Analytics.FARM)) {
-                        farms.add(key);
-                    }
-                    else if (object.getString(GROUP).equals(Analytics.ORCHARD)) {
-                        orchards.add(key);
-                    }
-                    else if (object.getString(GROUP).equals(Analytics.WORKER)) {
-                        workers.add(key);
-                    }
-                    else if (object.getString(GROUP).equals(Analytics.FOREMAN)) {
-                        foremen.add(key);
-                    }
+                    object.put(IDS, ids);
+                    object.put(START, graph.start);
+                    object.put(END, graph.end);
+                    object.put(INTERVAL, graph.interval);
+                    object.put(GROUP, graph.group);
+                    object.put(PERIOD, graph.period);
+                    object.put(ACCUMULATION, graph.accumulation);
+                    Log.i(TAG, "JSONObject assembled: " + object.toString());
+
+                    editor.putString(graph.name, object.toString());
+
+                    editor.apply();
+
                 } catch (JSONException e) {
+                    Log.e(TAG, "Problem assembling JSONObject. Not saved.");
                     e.printStackTrace();
                 }
             }
         }
 
-        switch (category){
-            case FARM:
-                return farms;
-            case ORCHARD:
-                return orchards;
-            case WORKER:
-                return workers;
-            case FOREMAN:
-                return foremen;
-        }
-        return null; //Whoops!
-    }
+        public static void deleteGraph(String name, Context context){
+            final String uid = FirebaseAuth.getInstance().getUid();
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 
-    /**
-     * Tells if a statically kept array holds elements. DOSE NOT get from SharedPreferences, so do after a restore with getting name.<br>
-     *     Perfect for finding out if a title should be shown above the list of names.
-     * @param category the category to find out about.
-     * @return true if the list is not empty.
-     */
-    public static boolean isThere(Category category){
-        switch (category){
-            case FARM:
-                return !farms.isEmpty();
-            case ORCHARD:
-                return !orchards.isEmpty();
-            case WORKER:
-                return !workers.isEmpty();
-            case FOREMAN:
-                return !foremen.isEmpty();
-        }
-        return false;
-    }
-
-    private static boolean keyExists(SharedPreferences sharedPreferences, String key){
-        Map<String, ?> all = sharedPreferences.getAll();
-        return all.containsKey(key);
-    }
-
-    public static class Graph{
-
-        public String name;
-        public String ids[];
-        public double start, end;
-        public String interval, group, period, accumulation;
-    }
-
-    public static class NotUniqueNameException extends Exception{
-
-
-        public NotUniqueNameException(){
-
+            editor.remove(name);
+            editor.apply();
         }
 
-        public NotUniqueNameException(String message){
-            super(message);
+        /**
+         * Return a GraphDB.Graph which has been found by name<br>
+         *     The assumption is that the name is gotten from a recycler, which was populated by yours truly.
+         * @param name name of graph to return.
+         * @param context Context.
+         * @return the graph itself.
+         */
+        public static Graph getGraphByName(String name, Context context){
+            final String uid = FirebaseAuth.getInstance().getUid();
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
+            try {
+                JSONObject object = new JSONObject(sharedPreferences.getString(name, null));
+
+                Graph graph = new Graph();
+
+                //Start with the name
+                graph.name = name;
+
+                //The ids
+                JSONArray array = object.getJSONArray(IDS);
+                String ids[] = new String[array.length()];
+                for (int i = 0; i < array.length(); i++){
+                    ids[i] = array.get(i).toString();
+                }
+                graph.ids = ids;
+
+                //The rest
+                graph.start = object.getDouble(START);
+                graph.end = object.getDouble(END);
+                graph.interval = object.getString(INTERVAL);
+                graph.group = object.getString(GROUP);
+                graph.period = object.getString(PERIOD);
+                graph.accumulation = object.getString(ACCUMULATION);
+
+                return graph;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null; //Whoops!
+        }
+
+        /**
+         * <p>The assumption is for this to be used in a recycler, so once what the user wants is known, the name can be used to get the actual graph.</p>
+         * @param category the category for which the names are to be asked for.<br>
+         *                 Acceptable values are:
+         *                 <ul>
+         *                 <li>FARM</li>
+         *                 <li>ORCHARD</li>
+         *                 <li>WORKER</li>
+         *                 <li>FOREMAN</li>
+         *                 </ul>
+         * @param context Context
+         * @param restore If true, the statically kept lists, will be reset, if this is NOT set true after some write operation or account change, the results will be incorrect. And nothing will be doable with them.<br>
+         *                The intention is to keep this false if the method is being used in quick succession, like say, setting up four recyclers on the same fragment.
+         * @return names of the graphs.
+         */
+        public static List<String> getNamesByCategory(Category category, Context context, boolean restore){
+            if (restore) {
+                farms = new ArrayList<>();
+                orchards = new ArrayList<>();
+                workers = new ArrayList<>();
+                foremen = new ArrayList<>();
+
+                final String uid = FirebaseAuth.getInstance().getUid();
+                SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
+                Map<String, ?> all = sharedPreferences.getAll();
+                Set<String> keysSet = all.keySet();
+
+                for (String key : keysSet) {
+                    try {
+                        JSONObject object = new JSONObject(sharedPreferences.getString(key, null));
+                        if (object.getString(GROUP).equals(Analytics.FARM)) {
+                            farms.add(key);
+                        }
+                        else if (object.getString(GROUP).equals(Analytics.ORCHARD)) {
+                            orchards.add(key);
+                        }
+                        else if (object.getString(GROUP).equals(Analytics.WORKER)) {
+                            workers.add(key);
+                        }
+                        else if (object.getString(GROUP).equals(Analytics.FOREMAN)) {
+                            foremen.add(key);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            switch (category){
+                case FARM:
+                    return farms;
+                case ORCHARD:
+                    return orchards;
+                case WORKER:
+                    return workers;
+                case FOREMAN:
+                    return foremen;
+            }
+            return null; //Whoops!
+        }
+
+        /**
+         * Tells if a statically kept array holds elements. DOSE NOT get from SharedPreferences, so do after a restore with getting name.<br>
+         *     Perfect for finding out if a title should be shown above the list of names.
+         * @param category the category to find out about.
+         * @return true if the list is not empty.
+         */
+        public static boolean isThere(Category category){
+            switch (category){
+                case FARM:
+                    return !farms.isEmpty();
+                case ORCHARD:
+                    return !orchards.isEmpty();
+                case WORKER:
+                    return !workers.isEmpty();
+                case FOREMAN:
+                    return !foremen.isEmpty();
+            }
+            return false;
+        }
+
+        private static boolean keyExists(SharedPreferences sharedPreferences, String key){
+            Map<String, ?> all = sharedPreferences.getAll();
+            return all.containsKey(key);
+        }
+
+        public static class Graph{
+
+            public String name;
+            public String ids[];
+            public double start, end;
+            public String interval, group, period, accumulation;
+
+            @Override
+            public String toString() {
+                return name;
+            }
+        }
+
+        public static class NotUniqueNameException extends Exception{
+
+
+            public NotUniqueNameException(){
+
+            }
+
+            public NotUniqueNameException(String message){
+                super(message);
+            }
         }
     }
 }
+
+

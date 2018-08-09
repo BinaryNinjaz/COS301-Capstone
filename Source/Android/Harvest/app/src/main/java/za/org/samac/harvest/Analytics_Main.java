@@ -1,35 +1,34 @@
 package za.org.samac.harvest;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.Fragment;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
-import java.util.Vector;
 
 import za.org.samac.harvest.util.Category;
-import za.org.samac.harvest.util.DBInfoObject;
-import za.org.samac.harvest.util.Data;
-import za.org.samac.harvest.util.Worker;
-import za.org.samac.harvest.util.WorkerType;
 
-public class Analytics_Main extends Fragment {
+@SuppressWarnings("FieldCanBeLocal")
+public class Analytics_Main extends Fragment{
     
     RecyclerView farmsRecycler, orchardsRecycler, workersRecycler, foremenRecycler;
     TextView farmsText, orchardsText, workersText, foremenText;
+
+    private final String TAG = "Analytics_Main";
 
     public Analytics_Main(){
         //Required empty public constructor
@@ -53,19 +52,46 @@ public class Analytics_Main extends Fragment {
         workersText = view.findViewById(R.id.anal_choose_workers_title);
         foremenText = view.findViewById(R.id.anal_choose_foremen_title);
 
-        populate(Category.FARM, true, farmsRecycler, farmsText);
-        populate(Category.ORCHARD, false, orchardsRecycler, orchardsText);
-        populate(Category.WORKER, false, workersRecycler, workersText);
-        populate(Category.FOREMAN, false, foremenRecycler, foremenText);
+        updateRecyclers(Category.FARM);
+    }
+
+    /**
+     * Update all of the recyclers
+     * @param categories which of the recyclers need to be restored, as in, the stored contents need to be recreated.
+     */
+    public void updateRecyclers(Category ... categories){
+        boolean farm = false, orchard = false, worker = false, foreman = false;
+        for (Category category : categories){
+            switch (category){
+                case FARM:
+                    farm = true;
+                    break;
+                case ORCHARD:
+                    orchard = true;
+                    break;
+                case WORKER:
+                    worker = true;
+                    break;
+                case FOREMAN:
+                    foreman = true;
+                    break;
+            }
+        }
+
+        populate(Category.FARM, farm, farmsRecycler, farmsText);
+        populate(Category.ORCHARD, orchard, orchardsRecycler, orchardsText);
+        populate(Category.WORKER, worker, workersRecycler, workersText);
+        populate(Category.FOREMAN, foreman, foremenRecycler, foremenText);
+
     }
 
     private void populate(Category category, boolean restore, RecyclerView recyclerView, TextView textView){
-        List<String> list = GraphDB.getNamesByCategory(category, getContext(), restore);
-        if (GraphDB.isThere(category)){
-            recyclerView.setHasFixedSize(true);
+        List<String> list = Analytics.GraphDB.getNamesByCategory(category, getContext(), restore);
+        if (Analytics.GraphDB.isThere(category)){
+            recyclerView.setHasFixedSize(false);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(layoutManager);
-            RecyclerView.Adapter adapter = new SavedGraphsAdapter(list);
+            RecyclerView.Adapter adapter = new SavedGraphsAdapter(list, getActivity());
             recyclerView.setAdapter(adapter);
             textView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
@@ -80,6 +106,7 @@ public class Analytics_Main extends Fragment {
 class SavedGraphsAdapter extends RecyclerView.Adapter<SavedGraphsAdapter.ViewHolder>{
 
     private List<String> names;
+    private HoldListener holdListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public Button button;
@@ -91,7 +118,8 @@ class SavedGraphsAdapter extends RecyclerView.Adapter<SavedGraphsAdapter.ViewHol
         }
     }
 
-    public SavedGraphsAdapter(List<String> names){
+    public SavedGraphsAdapter(List<String> names, Activity activity){
+        this.holdListener = (HoldListener) activity;
         this.names = names;
     }
 
@@ -104,11 +132,22 @@ class SavedGraphsAdapter extends RecyclerView.Adapter<SavedGraphsAdapter.ViewHol
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.button.setText(names.get(position));
-        //TODO: on hold listener
+        holder.button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                holdListener.showPopup(((Button) v).getText().toString());
+                return true;
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return names.size();
+    }
+
+    public interface HoldListener{
+        public void showPopup(String name);
     }
 }
