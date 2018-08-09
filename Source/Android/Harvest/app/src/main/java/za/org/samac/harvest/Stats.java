@@ -110,10 +110,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     private enum State{
         MAIN,
         CREATE,
-        GRAPH,
         SELECTOR_THROUGH_MAIN,
         SELECTOR_THROUGH_CREATE
-    };
+    }
     private State state;
 
     // For the selector.
@@ -211,12 +210,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 finish();
                 return true;
             case android.R.id.home:
-                if (state == State.SELECTOR_THROUGH_CREATE){
-                    captureSelections();
-                }
-                else {
-                    showMain();
-                }
+                onBackPressed();
                 return true;
             default:
                 super.onOptionsItemSelected(item);
@@ -224,10 +218,38 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         }
     }
 
+    @SuppressWarnings("UnnecessaryReturnStatement")
     @Override
     public void onBackPressed() {
-        captureSelections();
-        super.onBackPressed();
+        switch (state){
+            case MAIN:
+
+                finish();
+
+                return;
+
+            case CREATE:
+
+                fragmentManager.popBackStack();
+                state = State.MAIN;
+                toggleUpButton(false);
+
+                return;
+            case SELECTOR_THROUGH_MAIN:
+
+                fragmentManager.popBackStack();
+                state = State.MAIN;
+                toggleUpButton(false);
+
+                return;
+            case SELECTOR_THROUGH_CREATE:
+
+                captureSelections();
+                fragmentManager.popBackStack();
+                state = State.CREATE;
+
+                return;
+        }
     }
 
     private void captureSelections(){
@@ -251,9 +273,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             if (builder.length() > 2) {
                 builder.delete(builder.length() - 2, builder.length()).append(".");
             }
-            getSupportFragmentManager().popBackStack();
             stats_creator.setSelectedItemsText(builder.toString());
-            state = State.CREATE;
         }
     }
 
