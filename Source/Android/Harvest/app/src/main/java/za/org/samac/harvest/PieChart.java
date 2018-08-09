@@ -42,7 +42,7 @@ public class PieChart extends AppCompatActivity {
     private ArrayList<Integer> yield;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Query query;
-    private static final String TAG = "Analytics";
+    private static final String TAG = "Stats";
     ArrayList<PieEntry> entries = new ArrayList<>();
     com.github.mikephil.charting.charts.PieChart pieChart;
     private ProgressBar progressBar;
@@ -77,7 +77,7 @@ public class PieChart extends AppCompatActivity {
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                Intent openPieChart= new Intent(PieChart.this, Analytics.class);
+                                Intent openPieChart= new Intent(PieChart.this, Stats.class);
                                 openPieChart.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openPieChart, 0);
                                 return true;

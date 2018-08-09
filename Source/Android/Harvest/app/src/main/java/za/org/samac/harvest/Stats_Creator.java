@@ -24,10 +24,10 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
-import static za.org.samac.harvest.Analytics.THOUSAND;
+import static za.org.samac.harvest.Stats.THOUSAND;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class Analytics_Creator extends Fragment{
+public class Stats_Creator extends Fragment{
 
     //Views
     private Spinner compareSpinner, periodSpinner, intervalSpinner;
@@ -37,54 +37,54 @@ public class Analytics_Creator extends Fragment{
     private RadioGroup accumulatorRadioGroup;
 
     //Specification
-    private final String TAG = "Analytics_Creator";
+    private final String TAG = "Stats_Creator";
 
     //Others
-    private String accumulationSelection = Analytics.NOTHING;
+    private String accumulationSelection = Stats.NOTHING;
 
     private String selectedItemsText;
 
     private int lastSelection, lastAcceptanceSelection;
 
 
-    public Analytics_Creator(){
+    public Stats_Creator(){
         //Required empty public constructor
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_analytics_creator, container, false);
+        return inflater.inflate(R.layout.fragment_stats_creator, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //initialize views
-        compareSpinner = view.findViewById(R.id.anal_create_compSpinner);
-        periodSpinner = view.findViewById(R.id.anal_create_periodSpinner);
-        intervalSpinner = view.findViewById(R.id.anal_create_interval_spinner);
+        compareSpinner = view.findViewById(R.id.stats_create_compSpinner);
+        periodSpinner = view.findViewById(R.id.stats_create_periodSpinner);
+        intervalSpinner = view.findViewById(R.id.stats_create_interval_spinner);
 
-        selectorButton = view.findViewById(R.id.anal_create_selectionButton);
+        selectorButton = view.findViewById(R.id.stats_create_selectionButton);
 
-        compareSelectionTextView = view.findViewById(R.id.anal_create_selectionDisplayTextView);
+        compareSelectionTextView = view.findViewById(R.id.stats_create_selectionDisplayTextView);
         compareSelectionTextView.setVisibility(View.VISIBLE);
-        accumulatorDescriptionTextView = view.findViewById(R.id.anal_create_accumulator_description);
+        accumulatorDescriptionTextView = view.findViewById(R.id.stats_create_accumulator_description);
 
-        fromDateEditText = view.findViewById(R.id.anal_create_from);
-        upToDateEditText = view.findViewById(R.id.anal_create_upTo);
+        fromDateEditText = view.findViewById(R.id.stats_create_from);
+        upToDateEditText = view.findViewById(R.id.stats_create_upTo);
 
-        accumulatorRadioGroup = view.findViewById(R.id.anal_create_accumulator_radioGroup);
+        accumulatorRadioGroup = view.findViewById(R.id.stats_create_accumulator_radioGroup);
 
         //Populate Spinners
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.anal_create_compsChoose, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.stats_create_compsChoose, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         compareSpinner.setAdapter(arrayAdapter);
 
-        arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.anal_create_periodChoose, android.R.layout.simple_spinner_item);
+        arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.stats_create_periodChoose, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         periodSpinner.setAdapter(arrayAdapter);
 
-        arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.anal_create_intervalChoose, android.R.layout.simple_spinner_item);
+        arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.stats_create_intervalChoose, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         intervalSpinner.setAdapter(arrayAdapter);
 
@@ -92,8 +92,8 @@ public class Analytics_Creator extends Fragment{
         setSelectorButtonTitle("farm");
 
         //Set default accumulator selection
-        accumulatorRadioGroup.check(R.id.anal_create_accumulator_radio_none);
-        accumulationSelection = Analytics.ACCUMULATION_NONE;
+        accumulatorRadioGroup.check(R.id.stats_create_accumulator_radio_none);
+        accumulationSelection = Stats.ACCUMULATION_NONE;
 
         //Set Accumulation hint
         updateAccumulatorHint();
@@ -102,7 +102,7 @@ public class Analytics_Creator extends Fragment{
         compareSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                @SuppressWarnings("ConstantConditions") String entity = Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase();
+                @SuppressWarnings("ConstantConditions") String entity = Stats.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase();
                 setSelectorButtonTitle(entity);
                 updateAccumulatorTitles();
                 updateAccumulatorHint();
@@ -164,14 +164,14 @@ public class Analytics_Creator extends Fragment{
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId){
-                    case R.id.anal_create_accumulator_radio_none:
-                        accumulationSelection = Analytics.ACCUMULATION_NONE;
+                    case R.id.stats_create_accumulator_radio_none:
+                        accumulationSelection = Stats.ACCUMULATION_NONE;
                         break;
-                    case R.id.anal_create_accumulator_radio_entity:
-                        accumulationSelection = Analytics.ACCUMULATION_ENTITY;
+                    case R.id.stats_create_accumulator_radio_entity:
+                        accumulationSelection = Stats.ACCUMULATION_ENTITY;
                         break;
-                    case R.id.anal_create_accumulator_radio_interval:
-                        accumulationSelection = Analytics.ACCUMULATION_TIME;
+                    case R.id.stats_create_accumulator_radio_interval:
+                        accumulationSelection = Stats.ACCUMULATION_TIME;
                         break;
                 }
                 updateAccumulatorHint();
@@ -189,7 +189,7 @@ public class Analytics_Creator extends Fragment{
 
     //UI
     private void setSelectorButtonTitle(String entity){
-        selectorButton.setText(getString(R.string.anal_create_selectorButton, Analytics.pluralizor(entity, true)));
+        selectorButton.setText(getString(R.string.stats_create_selectorButton, Stats.pluralizor(entity, true)));
     }
 
     /**
@@ -202,20 +202,20 @@ public class Analytics_Creator extends Fragment{
 
     private void updateAccumulatorHint(){
         switch (accumulationSelection){
-            case Analytics.ACCUMULATION_NONE:
-                accumulatorDescriptionTextView.setText(getString(R.string.anal_create_accumulation_desc_none, Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase()));
+            case Stats.ACCUMULATION_NONE:
+                accumulatorDescriptionTextView.setText(getString(R.string.stats_create_accumulation_desc_none, Stats.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase()));
                 break;
-            case Analytics.ACCUMULATION_ENTITY:
-                accumulatorDescriptionTextView.setText(getString(R.string.anal_create_accumulation_desc_entity, Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase(), Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), true).toLowerCase(), Analytics.timeConverter(intervalSpinner.getSelectedItem().toString(), false).toLowerCase()));
+            case Stats.ACCUMULATION_ENTITY:
+                accumulatorDescriptionTextView.setText(getString(R.string.stats_create_accumulation_desc_entity, Stats.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase(), Stats.pluralizor(compareSpinner.getSelectedItem().toString(), true).toLowerCase(), Stats.timeConverter(intervalSpinner.getSelectedItem().toString(), false).toLowerCase()));
                 break;
-            case Analytics.ACCUMULATION_TIME:
-                accumulatorDescriptionTextView.setText(getString(R.string.anal_create_accumulation_desc_time, Analytics.timeConverter(intervalSpinner.getSelectedItem().toString(), false).toLowerCase(), Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), true).toLowerCase()));
+            case Stats.ACCUMULATION_TIME:
+                accumulatorDescriptionTextView.setText(getString(R.string.stats_create_accumulation_desc_time, Stats.timeConverter(intervalSpinner.getSelectedItem().toString(), false).toLowerCase(), Stats.pluralizor(compareSpinner.getSelectedItem().toString(), true).toLowerCase()));
         }
     }
 
     private void updateAccumulatorTitles(){
-        ((RadioButton) getView().findViewById(R.id.anal_create_accumulator_radio_entity)).setText(getString(R.string.anal_create_accumulation_entity, Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), false)));
-        ((RadioButton) getView().findViewById(R.id.anal_create_accumulator_radio_interval)).setText(getString(R.string.anal_create_accumulation_interval, Analytics.timeConverter(intervalSpinner.getSelectedItem().toString(), false)));
+        ((RadioButton) getView().findViewById(R.id.stats_create_accumulator_radio_entity)).setText(getString(R.string.stats_create_accumulation_entity, Stats.pluralizor(compareSpinner.getSelectedItem().toString(), false)));
+        ((RadioButton) getView().findViewById(R.id.stats_create_accumulator_radio_interval)).setText(getString(R.string.stats_create_accumulation_interval, Stats.timeConverter(intervalSpinner.getSelectedItem().toString(), false)));
     }
 
     public void toggleDates(boolean on){
@@ -232,30 +232,30 @@ public class Analytics_Creator extends Fragment{
     //Fragment > Activity Communication
 
     public String getGroup(){
-        return Analytics.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase();
+        return Stats.pluralizor(compareSpinner.getSelectedItem().toString(), false).toLowerCase();
     }
 
     /**
-     * Get a bundle consisting of all of the configurations that have been selected by the user, the keys match the strings in the Analytics class.<br>
+     * Get a bundle consisting of all of the configurations that have been selected by the user, the keys match the strings in the Stats class.<br>
      * The bundle is constructed as follows (Key : Data Type : Description):<br>
-     *  KEY_GROUP : String : Matches a static from Analytics class.<br>
-     *  KEY_PERIOD : String : Matches a static from Analytics class<br>
+     *  KEY_GROUP : String : Matches a static from Stats class.<br>
+     *  KEY_PERIOD : String : Matches a static from Stats class<br>
      *  KEY_START : double : The selected start date divided by 1 000<br>
      *  KEY_END : double : The selected end date, divided by 1 000<br>
-     *  KEY_INTERVAL : String : Matches a static from Analytics class<br>
-     *  KEY_ACCUMULATION : String : Matches a static from Analytics class<br>
+     *  KEY_INTERVAL : String : Matches a static from Stats class<br>
+     *  KEY_ACCUMULATION : String : Matches a static from Stats class<br>
      * @return Bundle of all the configurations. NULL if error, such as a field not set.
      */
     public Bundle getConfigurations(){
 
         if (isInputValid()) {
             Bundle bundle = new Bundle();
-            bundle.putString(Analytics.KEY_GROUP, getGroup());
+            bundle.putString(Stats.KEY_GROUP, getGroup());
 
             String period = periodSpinner.getSelectedItem().toString().toLowerCase();
-            bundle.putString(Analytics.KEY_PERIOD, period.toLowerCase());
+            bundle.putString(Stats.KEY_PERIOD, period.toLowerCase());
 
-            if (period.equals(Analytics.BETWEEN_DATES)) {
+            if (period.equals(Stats.BETWEEN_DATES)) {
 
                 //noinspection ConstantConditions
                 String[] tokens = fromDateEditText.getText().toString().split("/");
@@ -263,18 +263,18 @@ public class Analytics_Creator extends Fragment{
                 calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), calendar.getActualMinimum(Calendar.HOUR_OF_DAY), calendar.getActualMinimum(Calendar.MINUTE), calendar.getActualMinimum(Calendar.SECOND));
                 calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
                 Log.i(TAG, "start: " + calendar.getTime().toString());
-                bundle.putDouble(Analytics.KEY_START, calendar.getTimeInMillis() / THOUSAND);
+                bundle.putDouble(Stats.KEY_START, calendar.getTimeInMillis() / THOUSAND);
 
                 //noinspection ConstantConditions
                 tokens = upToDateEditText.getText().toString().split("/");
                 calendar.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), calendar.getMaximum(Calendar.HOUR_OF_DAY), calendar.getActualMaximum(Calendar.MINUTE), calendar.getActualMaximum(Calendar.SECOND));
                 calendar.set(Calendar.MILLISECOND, calendar.getActualMaximum(Calendar.MILLISECOND));
                 Log.i(TAG, "end: " + calendar.getTime().toString());
-                bundle.putDouble(Analytics.KEY_END, calendar.getTimeInMillis() / THOUSAND);
+                bundle.putDouble(Stats.KEY_END, calendar.getTimeInMillis() / THOUSAND);
             }
 
-            bundle.putString(Analytics.KEY_INTERVAL, intervalSpinner.getSelectedItem().toString().toLowerCase());
-            bundle.putString(Analytics.KEY_ACCUMULATION, accumulationSelection);
+            bundle.putString(Stats.KEY_INTERVAL, intervalSpinner.getSelectedItem().toString().toLowerCase());
+            bundle.putString(Stats.KEY_ACCUMULATION, accumulationSelection);
 
             return bundle;
         }
@@ -283,13 +283,13 @@ public class Analytics_Creator extends Fragment{
 
     public boolean isInputValid(){
         String period = periodSpinner.getSelectedItem().toString().toLowerCase();
-        if (period.equals(Analytics.BETWEEN_DATES)) {
+        if (period.equals(Stats.BETWEEN_DATES)) {
             if (fromDateEditText.getText().toString().equals("")) {
-                fromDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
+                fromDateEditText.setError(getResources().getString(R.string.stats_create_dateError));
                 return false;
             } else fromDateEditText.setError(null);
             if (upToDateEditText.getText().toString().equals("")) {
-                upToDateEditText.setError(getResources().getString(R.string.anal_create_dateError));
+                upToDateEditText.setError(getResources().getString(R.string.stats_create_dateError));
                 return false;
             } else fromDateEditText.setError(null);
         }
@@ -304,7 +304,7 @@ public class Analytics_Creator extends Fragment{
 
     //Support Functions
 
-    public static class AnalDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+    public static class StatsDatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
         EditText editText;
 
         @NonNull
@@ -343,8 +343,8 @@ public class Analytics_Creator extends Fragment{
 
     public void showDateSpinner(View v){
         EditText editText = (EditText) v;
-        AnalDatePickerFragment analDatePickerFragment = new AnalDatePickerFragment();
-        analDatePickerFragment.setEditText(editText);
-        analDatePickerFragment.show(getFragmentManager(), "DATEPICKER");
+        StatsDatePickerFragment statsDatePickerFragment = new StatsDatePickerFragment();
+        statsDatePickerFragment.setEditText(editText);
+        statsDatePickerFragment.show(getFragmentManager(), "DATEPICKER");
     }
 }

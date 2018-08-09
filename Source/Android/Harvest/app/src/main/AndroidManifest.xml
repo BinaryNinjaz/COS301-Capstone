@@ -71,21 +71,21 @@
             android:name=".PieChart"
             android:label="@string/title_stats" />
 
-        <!--Analytics-->
+        <!--Stats-->
         <activity
-            android:name=".Analytics"
+            android:name=".Stats"
             android:label="@string/title_stats" />
 
         <activity
-            android:name=".Analytics_Graph"
+            android:name=".Stats_Graph"
             android:label="@string/title_stats"
             android:launchMode="singleTop"
-            android:parentActivityName=".Analytics">
+            android:parentActivityName=".Stats">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Analytics" />
+                android:value=".Stats" />
         </activity>
-        <!--End Analytics-->
+        <!--End Stats-->
 
         <activity
             android:name=".ForemenPerSession"

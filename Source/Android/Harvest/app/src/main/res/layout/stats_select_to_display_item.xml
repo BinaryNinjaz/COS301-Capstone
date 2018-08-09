@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <CheckBox
-        android:id="@+id/anal_itemCheckBox"
+        android:id="@+id/stats_itemCheckBox"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:paddingTop="4dp"
@@ -15,6 +15,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
-        android:onClick="anal_checkEvent" />
+        android:onClick="stats_checkEvent" />
 
 </LinearLayout>

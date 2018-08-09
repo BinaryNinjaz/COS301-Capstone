@@ -45,18 +45,18 @@ import za.org.samac.harvest.util.Data;
  * This activity handles all of the setup of getting information before calling on the appropriate graph.
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.HoldListener{
+public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldListener{
 
     private final android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
     private BottomNavigationView bottomNavigationView;
 
-    private final String TAG = "Analytics";
+    private final String TAG = "Stats";
 
     //Various Fragments
-    private Analytics_Main analytics_main;
-    private Analytics_Selector analytics_selector;
-    private Analytics_Creator analytics_creator;
+    private Stats_Main stats_main;
+    private Stats_Selector stats_selector;
+    private Stats_Creator stats_creator;
 
     //Keys for Bundles
     public static final String KEY_IDS = "KEY_IDS";
@@ -132,7 +132,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_analytics);
+        setContentView(R.layout.activity_stats);
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
@@ -143,15 +143,15 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(Analytics.this, MainActivity.class);
+                                Intent openMainActivity= new Intent(Stats.this, MainActivity.class);
                                 openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                startActivity(new Intent(Analytics.this, InformationActivity.class));
+                                startActivity(new Intent(Stats.this, InformationActivity.class));
                                 return true;
                             case R.id.actionSession:
-                                startActivity(new Intent(Analytics.this, Sessions.class));
+                                startActivity(new Intent(Stats.this, Sessions.class));
                                 return true;
                             case R.id.actionStats:
                                 return true;
@@ -189,12 +189,12 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
             case R.id.search:
                 return true;
             case R.id.settings:
-                startActivity(new Intent(Analytics.this, SettingsActivity.class));
+                startActivity(new Intent(Stats.this, SettingsActivity.class));
                 return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(Analytics.this, SignIn_Farmer.class));
+                    startActivity(new Intent(Stats.this, SignIn_Farmer.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
@@ -204,7 +204,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(Analytics.this, SignIn_Choose.class));
+                                    startActivity(new Intent(Stats.this, SignIn_Choose.class));
                                 }
                             });
                 }
@@ -252,7 +252,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
                 builder.delete(builder.length() - 2, builder.length()).append(".");
             }
             getSupportFragmentManager().popBackStack();
-            analytics_creator.setSelectedItemsText(builder.toString());
+            stats_creator.setSelectedItemsText(builder.toString());
             state = State.CREATE;
         }
     }
@@ -274,8 +274,8 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
             fragmentManager.executePendingTransactions();
         }
 
-        analytics_main = new Analytics_Main();
-        fragmentTransaction.replace(R.id.analMainPart, analytics_main, "MAIN");
+        stats_main = new Stats_Main();
+        fragmentTransaction.replace(R.id.statsMainPart, stats_main, "MAIN");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         toggleUpButton(false);
@@ -287,7 +287,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        analytics_selector = new Analytics_Selector();
+        stats_selector = new Stats_Selector();
         Category temp = Category.NOTHING;
         switch (group){
             case FARM:
@@ -307,14 +307,14 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
             ids.clear();
             lastCategory = temp;
         }
-        analytics_selector.setDataAndCategory(this.data, temp);
-        analytics_selector.setIDs(ids);
-        fragmentTransaction.replace(R.id.analMainPart, analytics_selector, "SELECTOR");
+        stats_selector.setDataAndCategory(this.data, temp);
+        stats_selector.setIDs(ids);
+        fragmentTransaction.replace(R.id.statsMainPart, stats_selector, "SELECTOR");
         if (state == State.CREATE) {
-            analytics_selector.showProceed(false);
+            stats_selector.showProceed(false);
         }
         else {
-            analytics_selector.showProceed(true);
+            stats_selector.showProceed(true);
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -333,9 +333,9 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        analytics_creator = new Analytics_Creator();
+        stats_creator = new Stats_Creator();
 
-        fragmentTransaction.replace(R.id.analMainPart, analytics_creator, "CREATOR");
+        fragmentTransaction.replace(R.id.statsMainPart, stats_creator, "CREATOR");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
@@ -344,47 +344,47 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
 
     //Button handling
-    public void anal_main_buttonHandler(View v){
+    public void stats_main_buttonHandler(View v){
         switch (v.getId()){
             //Create Custom Graph
 
-            case R.id.anal_choose_cus_make:
+            case R.id.stats_choose_cus_make:
                 showCreate();
                 break;
         }
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")
-    public void anal_selector_buttonHandler(View v){
+    public void stats_selector_buttonHandler(View v){
         switch (v.getId()){
-            case R.id.anal_select_proceed:
+            case R.id.stats_select_proceed:
                 displayGraph();
                 return;
-            case R.id.anal_select_all:
-                analytics_selector.checkAllPerhaps(true);
+            case R.id.stats_select_all:
+                stats_selector.checkAllPerhaps(true);
                 return;
-            case R.id.anal_select_none:
-                analytics_selector.checkAllPerhaps(false);
+            case R.id.stats_select_none:
+                stats_selector.checkAllPerhaps(false);
                 return;
         }
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")
-    public void anal_creator_buttonHandler(View v){
+    public void stats_creator_buttonHandler(View v){
         switch (v.getId()){
-            case R.id.anal_create_selectionButton:
+            case R.id.stats_create_selectionButton:
 
                 //They want to select things.
-                group = analytics_creator.getGroup();
+                group = stats_creator.getGroup();
                 showSelector();
-                analytics_creator.notifySelectionMade();
+                stats_creator.notifySelectionMade();
 
                 return;
 
-            case R.id.anal_create_dispButton:
+            case R.id.stats_create_dispButton:
 
                 //Get the bundle of joy.
-                Bundle bundle = analytics_creator.getConfigurations();
+                Bundle bundle = stats_creator.getConfigurations();
                 if (bundle != null){
                     group = bundle.getString(KEY_GROUP);
                     //noinspection ConstantConditions
@@ -412,10 +412,10 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
                 return;
 
-            case R.id.anal_create_saveButton:
+            case R.id.stats_create_saveButton:
 
                 //Check the input
-                if (analytics_creator.isInputValid()){
+                if (stats_creator.isInputValid()){
                     //Get the ball rolling
                     askForGraphName("", null, true);
                 }
@@ -425,24 +425,24 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")
-    public void anal_popup_buttonHandler(View v){
+    public void stats_popup_buttonHandler(View v){
         switch (v.getId()){
-            case R.id.anal_popup_renameButton:
+            case R.id.stats_popup_renameButton:
 
                 //ask for the new name and tell it to update the current graph.
                 askForGraphName(name, null, false);
 
                 return;
 
-            case R.id.anal_popup_deleteButton:
+            case R.id.stats_popup_deleteButton:
 
                 GraphDB.deleteGraph(name, this);
                 dismissPopup();
-                analytics_main.updateRecyclers(Category.FARM);
+                stats_main.updateRecyclers(Category.FARM);
 
                 return;
 
-            case R.id.anal_popup_cancelButton:
+            case R.id.stats_popup_cancelButton:
 
                 dismissPopup();
 
@@ -450,7 +450,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
         }
     }
 
-    public void anal_main_graph_chosen(View v){
+    public void stats_main_graph_chosen(View v){
         //Have the name, so get the info from SharedPreferences, and send it forward.
         Button button = (Button) v;
         GraphDB.Graph graph = GraphDB.getGraphByName(button.getText().toString(), this);
@@ -484,7 +484,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
     }
 
     //Fragment support
-    public void anal_checkEvent(View v){
+    public void stats_checkEvent(View v){
         CheckBox box = (CheckBox) v;
         if (box.isChecked()){
             ids.add(box.getTag().toString());
@@ -503,10 +503,10 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_graph_popup, null);
-        TextView title = v.findViewById(R.id.anal_popup_title);
-        TextView hint = v.findViewById(R.id.anal_popup_hint);
+        TextView title = v.findViewById(R.id.stats_popup_title);
+        TextView hint = v.findViewById(R.id.stats_popup_hint);
         title.setText(name);
-        hint.setText(getResources().getString(R.string.anal_popup_hint, name));
+        hint.setText(getResources().getString(R.string.stats_popup_hint, name));
 
         builder.setView(v);
 
@@ -528,15 +528,15 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
     //Support functions
     private void askForGraphName(final String name, String error, final boolean save) {
         AlertDialog.Builder builder= new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.anal_save_title));
+        builder.setTitle(getString(R.string.stats_save_title));
         final EditText editText = new EditText(this);
-        editText.setHint(getResources().getString(R.string.anal_save_enterName));
+        editText.setHint(getResources().getString(R.string.stats_save_enterName));
         editText.setText(name);
         editText.setError(error);
         editText.requestLayout();
         builder.setView(editText);
 
-        builder.setPositiveButton(getResources().getString(R.string.anal_save_okay), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getResources().getString(R.string.stats_save_okay), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(save) saveGraph(editText.getText().toString());
@@ -545,7 +545,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
             }
         });
 
-        builder.setNegativeButton(getResources().getString(R.string.anal_save_cancel), new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getResources().getString(R.string.stats_save_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -556,9 +556,9 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
     }
 
     public void pullDone(){
-        Analytics_Selector analytics_selector = (Analytics_Selector) getSupportFragmentManager().findFragmentByTag("SELECTOR");
-        if (analytics_selector != null){
-            analytics_selector.endRefresh();
+        Stats_Selector stats_selector = (Stats_Selector) getSupportFragmentManager().findFragmentByTag("SELECTOR");
+        if (stats_selector != null){
+            stats_selector.endRefresh();
         }
     }
 
@@ -571,7 +571,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
         extras.putString(KEY_GROUP, group);
         extras.putString(KEY_PERIOD, period);
         extras.putString(KEY_ACCUMULATION, accumulation);
-        Intent intent = new Intent(this, Analytics_Graph.class).putExtras(extras);
+        Intent intent = new Intent(this, Stats_Graph.class).putExtras(extras);
         startActivity(intent);
     }
 
@@ -583,7 +583,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
         graph.name = name;
 
         //Get the bundle
-        Bundle bundle = analytics_creator.getConfigurations();
+        Bundle bundle = stats_creator.getConfigurations();
 
         //From the bundle
         graph.group = bundle.getString(KEY_GROUP);
@@ -618,7 +618,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
         }
         catch (GraphDB.NotUniqueNameException e){
             //Try again with an error if the name is already taken.
-            askForGraphName(name, getResources().getString(R.string.anal_save_unique), true);
+            askForGraphName(name, getResources().getString(R.string.stats_save_unique), true);
             err = true;
         }
         if (!err) {
@@ -645,17 +645,17 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
         //Update the main.
         dismissPopup();
-        analytics_main.updateRecyclers(Category.FARM);
+        stats_main.updateRecyclers(Category.FARM);
         showPopup(newName);
     }
 
     /**
      * Using the selected configurations, determine the dates.
-     * @param period represents the time period, must be lower case string that matches one of the finals in the analytics class
+     * @param period represents the time period, must be lower case string that matches one of the finals in the stats class
      * @return dateBundle that holds two doubles, one for start date, and the other for the end date.
      */
     public static DateBundle determineDates(String period){
-        final String TAG = "Analytics_Creator-dates";
+        final String TAG = "Stats_Creator-dates";
 
         period = period.toLowerCase();
 
@@ -663,7 +663,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
         Calendar endCal = Calendar.getInstance();
 
         switch (period){
-            case Analytics.TODAY:
+            case Stats.TODAY:
                 Log.i(TAG, "Period is today");
 
                 startCal.set(Calendar.HOUR_OF_DAY, startCal.getActualMinimum(Calendar.HOUR_OF_DAY));
@@ -678,7 +678,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
                 break;
 
-            case Analytics.YESTERDAY:
+            case Stats.YESTERDAY:
                 Log.i(TAG, "Period is yesterday");
 
                 startCal.add(Calendar.DATE, -1);
@@ -695,7 +695,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
                 break;
 
-            case Analytics.THIS_WEEK:
+            case Stats.THIS_WEEK:
                 Log.i(TAG, "Period is this week");
 
                 startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -713,7 +713,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
                 break;
 
-            case Analytics.LAST_WEEK:
+            case Stats.LAST_WEEK:
                 Log.i(TAG, "Period is last week");
 
                 startCal.add(Calendar.WEEK_OF_YEAR, -2);
@@ -732,7 +732,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
                 break;
 
-            case Analytics.THIS_MONTH:
+            case Stats.THIS_MONTH:
                 Log.i(TAG, "Period is this month");
 
                 startCal.set(Calendar.DAY_OF_MONTH, startCal.getActualMinimum(Calendar.DAY_OF_MONTH));
@@ -749,7 +749,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
                 break;
 
-            case Analytics.LAST_MONTH:
+            case Stats.LAST_MONTH:
                 Log.i(TAG, "Period is last month");
 
                 startCal.add(Calendar.MONTH, -1);
@@ -768,7 +768,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
                 break;
 
-            case Analytics.THIS_YEAR:
+            case Stats.THIS_YEAR:
                 Log.i(TAG, "Period is this year");
 
                 startCal.set(Calendar.MONTH, startCal.getActualMinimum(Calendar.MONTH));
@@ -787,7 +787,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
                 break;
 
-            case Analytics.LAST_YEAR:
+            case Stats.LAST_YEAR:
                 Log.i(TAG, "Period is last year");
 
                 startCal.add(Calendar.YEAR, -1);
@@ -808,7 +808,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
                 break;
 
-            case Analytics.NOTHING:
+            case Stats.NOTHING:
                 Log.w(TAG, "Period is nothing.");
                 return null;
         }
@@ -821,8 +821,8 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
         result.startDate = (double) startCal.getTimeInMillis();
         result.endDate = (double) endCal.getTimeInMillis();
 
-        result.startDate /= Analytics.THOUSAND;
-        result.endDate /= Analytics.THOUSAND;
+        result.startDate /= Stats.THOUSAND;
+        result.endDate /= Stats.THOUSAND;
 
         return result;
     }
@@ -952,7 +952,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
         public static void saveGraph(Graph graph, Context context) throws NotUniqueNameException {
             final String uid = FirebaseAuth.getInstance().getUid();
-            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.stats_graph_pref, uid), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             if(keyExists(sharedPreferences, graph.name)){
                 throw new NotUniqueNameException();
@@ -983,7 +983,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
 
         public static void deleteGraph(String name, Context context){
             final String uid = FirebaseAuth.getInstance().getUid();
-            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.stats_graph_pref, uid), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.remove(name);
@@ -999,7 +999,7 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
          */
         public static Graph getGraphByName(String name, Context context){
             final String uid = FirebaseAuth.getInstance().getUid();
-            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.stats_graph_pref, uid), Context.MODE_PRIVATE);
             try {
                 JSONObject object = new JSONObject(sharedPreferences.getString(name, null));
 
@@ -1055,23 +1055,23 @@ public class Analytics extends AppCompatActivity implements SavedGraphsAdapter.H
                 foremen = new ArrayList<>();
 
                 final String uid = FirebaseAuth.getInstance().getUid();
-                SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.anal_graph_pref, uid), Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.stats_graph_pref, uid), Context.MODE_PRIVATE);
                 Map<String, ?> all = sharedPreferences.getAll();
                 Set<String> keysSet = all.keySet();
 
                 for (String key : keysSet) {
                     try {
                         JSONObject object = new JSONObject(sharedPreferences.getString(key, null));
-                        if (object.getString(GROUP).equals(Analytics.FARM)) {
+                        if (object.getString(GROUP).equals(Stats.FARM)) {
                             farms.add(key);
                         }
-                        else if (object.getString(GROUP).equals(Analytics.ORCHARD)) {
+                        else if (object.getString(GROUP).equals(Stats.ORCHARD)) {
                             orchards.add(key);
                         }
-                        else if (object.getString(GROUP).equals(Analytics.WORKER)) {
+                        else if (object.getString(GROUP).equals(Stats.WORKER)) {
                             workers.add(key);
                         }
-                        else if (object.getString(GROUP).equals(Analytics.FOREMAN)) {
+                        else if (object.getString(GROUP).equals(Stats.FOREMAN)) {
                             foremen.add(key);
                         }
                     } catch (JSONException e) {

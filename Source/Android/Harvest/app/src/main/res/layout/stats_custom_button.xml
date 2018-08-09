@@ -4,10 +4,10 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/anal_choose_cus_buttonInRecycler"
+        android:id="@+id/stats_choose_cus_buttonInRecycler"
         style="@style/Button"
         android:background="@color/white"
-        android:onClick="anal_main_buttonHandler"
+        android:onClick="stats_main_buttonHandler"
         android:textColor="@color/black" />
 
 </android.support.constraint.ConstraintLayout>

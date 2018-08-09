@@ -78,7 +78,7 @@ public class SessionDetails extends AppCompatActivity {
     private ArrayList<Integer> yield;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Query query;
-    private static final String TAG = "Analytics";
+    private static final String TAG = "Stats";
     ArrayList<PieEntry> entries = new ArrayList<>();
     com.github.mikephil.charting.charts.PieChart pieChart;
     private com.github.mikephil.charting.charts.PieChart pieChartView;

@@ -23,34 +23,34 @@ import java.util.List;
 import za.org.samac.harvest.util.Category;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class Analytics_Main extends Fragment{
+public class Stats_Main extends Fragment{
     
     RecyclerView farmsRecycler, orchardsRecycler, workersRecycler, foremenRecycler;
     TextView farmsText, orchardsText, workersText, foremenText;
 
-    private final String TAG = "Analytics_Main";
+    private final String TAG = "Stats_Main";
 
-    public Analytics_Main(){
+    public Stats_Main(){
         //Required empty public constructor
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_analytics_main, container, false);
+        return inflater.inflate(R.layout.fragment_stats_main, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        farmsRecycler = view.findViewById(R.id.anal_choose_farmRecycler);
-        orchardsRecycler = view.findViewById(R.id.anal_choose_orchardRecycler);
-        workersRecycler = view.findViewById(R.id.anal_choose_workerRecycler);
-        foremenRecycler = view.findViewById(R.id.anal_choose_foremanRecycler);
+        farmsRecycler = view.findViewById(R.id.stats_choose_farmRecycler);
+        orchardsRecycler = view.findViewById(R.id.stats_choose_orchardRecycler);
+        workersRecycler = view.findViewById(R.id.stats_choose_workerRecycler);
+        foremenRecycler = view.findViewById(R.id.stats_choose_foremanRecycler);
         
-        farmsText = view.findViewById(R.id.anal_choose_farms_title);
-        orchardsText = view.findViewById(R.id.anal_choose_orchards_title);
-        workersText = view.findViewById(R.id.anal_choose_workers_title);
-        foremenText = view.findViewById(R.id.anal_choose_foremen_title);
+        farmsText = view.findViewById(R.id.stats_choose_farms_title);
+        orchardsText = view.findViewById(R.id.stats_choose_orchards_title);
+        workersText = view.findViewById(R.id.stats_choose_workers_title);
+        foremenText = view.findViewById(R.id.stats_choose_foremen_title);
 
         updateRecyclers(Category.FARM);
     }
@@ -86,8 +86,8 @@ public class Analytics_Main extends Fragment{
     }
 
     private void populate(Category category, boolean restore, RecyclerView recyclerView, TextView textView){
-        List<String> list = Analytics.GraphDB.getNamesByCategory(category, getContext(), restore);
-        if (Analytics.GraphDB.isThere(category)){
+        List<String> list = Stats.GraphDB.getNamesByCategory(category, getContext(), restore);
+        if (Stats.GraphDB.isThere(category)){
             recyclerView.setHasFixedSize(false);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(layoutManager);
@@ -114,7 +114,7 @@ class SavedGraphsAdapter extends RecyclerView.Adapter<SavedGraphsAdapter.ViewHol
         public ViewHolder(View view){
             super(view);
 
-            button = view.findViewById(R.id.anal_graph_chooseButton);
+            button = view.findViewById(R.id.stats_graph_chooseButton);
         }
     }
 
@@ -125,7 +125,7 @@ class SavedGraphsAdapter extends RecyclerView.Adapter<SavedGraphsAdapter.ViewHol
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.analytics_graph_button, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stats_graph_button, parent, false);
         return new ViewHolder(v);
     }
 

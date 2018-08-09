@@ -183,40 +183,40 @@
     <string name="pref_account_reAuthConfirm">Confirm</string>
 
 
-    <!--Strings related to analytics-->
+    <!--Strings related to stats-->
 
     <!--Farm Defaults-->
-    <string name="anal_farm_tit">Farm Comparison</string>
+    <string name="stats_farm_title">Farm Comparison</string>
 
     <!--Orchard Defaults-->
-    <string name="anal_orch_tit">Orchard Comparison</string>
+    <string name="stats_orch_title">Orchard Comparison</string>
 
     <!--Worker Defaults-->
-    <string name="anal_work_tit">Worker Comparison</string>
+    <string name="stats_work_title">Worker Comparison</string>
 
     <!--Foreman Defaults-->
-    <string name="anal_fore_tit">Foreman Comparison</string>
+    <string name="stats_fore_title">Foreman Comparison</string>
 
     <!--Preference Identifier-->
-    <string name="anal_graph_pref">za.org.samac.harvest.savedGraphs.%1$s</string>
+    <string name="stats_graph_pref">za.org.samac.harvest.savedGraphs.%1$s</string>
 
     <!--Selector-->
-    <string name="anal_selector_all">Select All</string>
-    <string name="anal_selector_none">Select None</string>
+    <string name="stats_selector_all">Select All</string>
+    <string name="stats_selector_none">Select None</string>
 
     <!--Custom-->
-    <string name="anal_create_make">Make New Graph</string>
-    <string name="anal_create_det">Details</string>
-    <string name="anal_create_compsTitle">Compare</string>
-    <string-array name="anal_create_compsChoose">
+    <string name="stats_create_make">Make New Graph</string>
+    <string name="stats_create_det">Details</string>
+    <string name="stats_create_compsTitle">Compare</string>
+    <string-array name="stats_create_compsChoose">
         <item>Farms</item>
         <item>Workers</item>
         <item>Orchards</item>
         <item>Foremen</item>
     </string-array>
-    <string name="anal_create_selectorButton">Select %1$s to compare</string>
-    <string name="anal_create_periodTitle">Time Period</string>
-    <string-array name="anal_create_periodChoose">
+    <string name="stats_create_selectorButton">Select %1$s to compare</string>
+    <string name="stats_create_periodTitle">Time Period</string>
+    <string-array name="stats_create_periodChoose">
         <item>Between Dates</item>
         <item>Yesterday</item>
         <item>Today</item>
@@ -227,57 +227,56 @@
         <item>This Year</item>
         <item>Last Year</item>
     </string-array>
-    <string name="anal_create_intervalTitle">Time Interval</string>
-    <string-array name="anal_create_intervalChoose">
+    <string name="stats_create_intervalTitle">Time Interval</string>
+    <string-array name="stats_create_intervalChoose">
         <item>Hourly</item>
         <item>Daily</item>
         <item>Weekly</item>
         <item>Monthly</item>
         <item>Yearly</item>
     </string-array>
-    <string name="anal_create_from">From Date</string>
-    <string name="anal_create_upTo">Up To Date</string>
-    <string name="anal_create_dateError">Set this, or change the time period.</string>
-    <string name="anal_create_accumulation">Accumulation</string>
-    <string name="anal_create_accumulation_none">None</string>
-    <string name="anal_create_accumulation_entity">By %1$s</string>
-    <string name="anal_create_accumulation_interval">By %1$s</string>
+    <string name="stats_create_from">From Date</string>
+    <string name="stats_create_upTo">Up To Date</string>
+    <string name="stats_create_dateError">Set this, or change the time period.</string>
+    <string name="stats_create_accumulation">Accumulation</string>
+    <string name="stats_create_accumulation_none">None</string>
+    <string name="stats_create_accumulation_entity">By %1$s</string>
+    <string name="stats_create_accumulation_interval">By %1$s</string>
 
     <!--1: entity, lowercase, singular.-->
-    <string name="anal_create_accumulation_desc_none">No accumulation will take place, a regular graph will be displayed whereby each %1$s will have its own line.</string>
+    <string name="stats_create_accumulation_desc_none">No accumulation will take place, a regular graph will be displayed whereby each %1$s will have its own line.</string>
     <!--1: entity, lowercase, singular. 2: entity, lowercase, plural. 3: interval, lowercase, notly.-->
-    <string name="anal_create_accumulation_desc_entity">The selected %2$s will have their values for each %3$s summed up, so that the sum of each individual %1$s\'s collections across the selected time period, for that %3$s will be shown, for each %3$s.</string>
+    <string name="stats_create_accumulation_desc_entity">The selected %2$s will have their values for each %3$s summed up, so that the sum of each individual %1$s\'s collections across the selected time period, for that %3$s will be shown, for each %3$s.</string>
     <!--1: interval, lowercase, notly. 2: entity, lowercase, plural.-->
-    <string name="anal_create_accumulation_desc_time">The sum across each %1$s will be shown, so that the total bags collected each %1s by each of the selected %2$s will be shown.</string>
+    <string name="stats_create_accumulation_desc_time">The sum across each %1$s will be shown, so that the total bags collected each %1s by each of the selected %2$s will be shown.</string>
 
-    <string name="anal_create_disp">Display</string>
-    <string name="anal_create_save">Save</string>
+    <string name="stats_create_disp">Display</string>
+    <string name="stats_create_save">Save</string>
 
     <!--Graphs-->
-    <string name="anal_graph_noData">No Data Available to Show</string>
-    <string name="anal_gragh_averageLabel">Overall Average</string>
-    <string name="anal_graph_sum">Sum</string>
+    <string name="stats_graph_noData">No Data Available to Show</string>
+    <string name="stats_gragh_averageLabel">Overall Average</string>
+    <string name="stats_graph_sum">Sum</string>
     
     <!--Saving, Editing, Whatever-->
-    <string name="anal_save_title">Enter Name For Graph</string>
-    <string name="anal_save_enterName">Graph Name</string>
-    <string name="anal_save_okay">Okay</string>
-    <string name="anal_save_cancel">Cancel</string>
-    <string name="anal_save_unique">That name is already taken.</string>
-    <string name="anal_popup_hint">Select an option to perform on the graph \'%1$s\'</string>
-    <string name="anal_popup_rename">Rename</string>
-    <string name="anal_popup_delete">Delete</string>
-    <string name="anal_popup_cancel">Cancel</string>
+    <string name="stats_save_title">Enter Name For Graph</string>
+    <string name="stats_save_enterName">Graph Name</string>
+    <string name="stats_save_okay">Okay</string>
+    <string name="stats_save_cancel">Cancel</string>
+    <string name="stats_save_unique">That name is already taken.</string>
+    <string name="stats_popup_hint">Select an option to perform on the graph \'%1$s\'</string>
+    <string name="stats_popup_rename">Rename</string>
+    <string name="stats_popup_delete">Delete</string>
+    <string name="stats_popup_cancel">Cancel</string>
     
 
 
     <string name="title_activity_sessions">Sessions</string>
     <string name="title_activity_sessions_map">Map</string>
 
-    <string name="title_analytics">Analytics</string>
+    <string name="title_stats">Stats</string>
     <string name="WorkerHistPerformance">Worker Historical Performance</string>
     <string name="OrchHistPerformance">Orchard Historical Performance</string>
-    <string name="title_stats">Stats</string>
     <string name="title_activity_maps">Orchard Map</string>
     <string name="title_activity_foremen_session">ForemenSessionActivity</string>
     <string name="sessionDetailStartDate">Time Started</string>

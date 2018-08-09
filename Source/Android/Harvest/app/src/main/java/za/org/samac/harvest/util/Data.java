@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
-import za.org.samac.harvest.Analytics;
+import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.InfoListFragment;
 import za.org.samac.harvest.InformationActivity;
 
@@ -334,8 +334,8 @@ public class Data {
                     InformationActivity temp = (InformationActivity) act;
                     temp.tellAllPullDone();
                 }
-                else if (act.getClass() == Analytics.class){
-                    Analytics temp = (Analytics) act;
+                else if (act.getClass() == Stats.class){
+                    Stats temp = (Stats) act;
                     temp.pullDone();
                 }
             }

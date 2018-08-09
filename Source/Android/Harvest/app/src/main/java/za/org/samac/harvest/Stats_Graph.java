@@ -52,20 +52,20 @@ import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.Data;
 
-import static za.org.samac.harvest.Analytics.THOUSAND;
+import static za.org.samac.harvest.Stats.THOUSAND;
 import static za.org.samac.harvest.MainActivity.farmerKey;
 
 /**
  * Radar graph for orchards
  */
-public class Analytics_Graph extends AppCompatActivity {
+public class Stats_Graph extends AppCompatActivity {
 
     //Views
     private BottomNavigationView bottomNavigationView;
     private ProgressBar progressBar;
     private LineChart lineChart;
 
-    private static final String TAG = "Analytics";
+    private static final String TAG = "Stats";
 
     //Labels for graphs
     /*
@@ -95,26 +95,26 @@ public class Analytics_Graph extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_analytics_graph);
+        setContentView(R.layout.activity_stats_graph);
 
         data = new Data();
 
         context = this;
 
         progressBar = findViewById(R.id.progressBar);
-        lineChart = findViewById(R.id.anal_graph);
+        lineChart = findViewById(R.id.stats_graph);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         try {
             //Get the filters from the Bundle
             Bundle extras = getIntent().getExtras();
-            ids = extras.getStringArrayList(Analytics.KEY_IDS);
-            start = extras.getDouble(Analytics.KEY_START);
-            end = extras.getDouble(Analytics.KEY_END);
-            interval = extras.getString(Analytics.KEY_INTERVAL);
-            group = extras.getString(Analytics.KEY_GROUP);
-            mode = extras.getString(Analytics.KEY_ACCUMULATION);
+            ids = extras.getStringArrayList(Stats.KEY_IDS);
+            start = extras.getDouble(Stats.KEY_START);
+            end = extras.getDouble(Stats.KEY_END);
+            interval = extras.getString(Stats.KEY_INTERVAL);
+            group = extras.getString(Stats.KEY_GROUP);
+            mode = extras.getString(Stats.KEY_ACCUMULATION);
         }
         catch (java.lang.NullPointerException e){
             Log.e(TAG, "NPE from bundle");
@@ -123,10 +123,10 @@ public class Analytics_Graph extends AppCompatActivity {
         }
 
         switch (group){
-            case Analytics.FARM:
+            case Stats.FARM:
                 category = Category.FARM;
                 break;
-            case  Analytics.ORCHARD:
+            case  Stats.ORCHARD:
                 category = Category.ORCHARD;
                 break;
             default:
@@ -152,12 +152,12 @@ public class Analytics_Graph extends AppCompatActivity {
             case R.id.search:
                 return true;
             case R.id.settings:
-                startActivity(new Intent(Analytics_Graph.this, SettingsActivity.class));
+                startActivity(new Intent(Stats_Graph.this, SettingsActivity.class));
                 return true;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(Analytics_Graph.this, SignIn_Choose.class));
+                    startActivity(new Intent(Stats_Graph.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
@@ -167,7 +167,7 @@ public class Analytics_Graph extends AppCompatActivity {
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(Analytics_Graph.this, SignIn_Choose.class));
+                                    startActivity(new Intent(Stats_Graph.this, SignIn_Choose.class));
                                 }
                             });
                 }
@@ -256,7 +256,7 @@ public class Analytics_Graph extends AppCompatActivity {
                 public void run() {
                     try {
 
-                        if (!mode.equals(Analytics.ACCUMULATION_TIME)) {
+                        if (!mode.equals(Stats.ACCUMULATION_TIME)) {
                             setDateFormat();
                         }
 
@@ -310,7 +310,7 @@ public class Analytics_Graph extends AppCompatActivity {
         lineChart.getAxisRight().setDrawGridLines(false);
         lineChart.getXAxis().setAxisMinimum(0);
         lineChart.getAxisRight().setEnabled(false);
-        lineChart.setNoDataText(getString(R.string.anal_graph_noData));
+        lineChart.setNoDataText(getString(R.string.stats_graph_noData));
 
         lineChart.getXAxis().setXOffset(0f);
         lineChart.getXAxis().setYOffset(0f);
@@ -358,13 +358,13 @@ public class Analytics_Graph extends AppCompatActivity {
                             }
                             switch (entityNames.get(i).toString()) {
                                 case "avg":
-                                    lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_gragh_averageLabel));
+                                    lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_gragh_averageLabel));
                                     lineDataSet.enableDashedLine(1, 1, 0);
                                     lineDataSet.setColor(getResources().getColor(R.color.grey));
                                     break;
                                 case "sum":
-                                    if (mode.equals(Analytics.ACCUMULATION_ENTITY)) {
-                                        lineDataSet = new LineDataSet(entries, getResources().getString(R.string.anal_graph_sum));
+                                    if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
+                                        lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
                                         lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
                                     }
                                     break;
@@ -395,7 +395,7 @@ public class Analytics_Graph extends AppCompatActivity {
      */
     public String getLabel(float value, AxisBase axisBase){
         int position;
-        if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+        if (mode.equals(Stats.ACCUMULATION_TIME)) {
             if (value < 0) value = 0;
             position = (int) Math.floor((double) value);
         }
@@ -418,13 +418,13 @@ public class Analytics_Graph extends AppCompatActivity {
      */
     public double getDoubleFromKey(String key, boolean subMin){
         double result = 0;
-        if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+        if (mode.equals(Stats.ACCUMULATION_TIME)) {
             switch (interval) {
-                case Analytics.HOURLY:
+                case Stats.HOURLY:
                     String tokens[] = key.split(":");
                     result = Double.parseDouble(tokens[0]);
                     break;
-                case Analytics.DAILY:
+                case Stats.DAILY:
                     switch (key) {
                         case "Sunday":
                             result = 0.0;
@@ -448,10 +448,10 @@ public class Analytics_Graph extends AppCompatActivity {
                             result = 6.0;
                     }
                     break;
-                case Analytics.WEEKLY:
+                case Stats.WEEKLY:
                     result = Double.parseDouble(key);
                     break;
-                case Analytics.MONTHLY:
+                case Stats.MONTHLY:
                     switch (key) {
                         case "January":
                             result = 0.0;
@@ -490,7 +490,7 @@ public class Analytics_Graph extends AppCompatActivity {
                             result = 11.0;
                     }
                     break;
-                case Analytics.YEARLY:
+                case Stats.YEARLY:
                     result = Double.parseDouble(key);
                     break;
             }
@@ -536,19 +536,19 @@ public class Analytics_Graph extends AppCompatActivity {
         final String fmtDay = isSameDay(startCal, endCal) ? "" : "dd";
         final String fmt = (fmtYear.equals("") ? "" : fmtYear + " ") + (fmtMonth.equals("") ? "" : fmtMonth + " ") + fmtDay;
         switch (interval){
-            case Analytics.HOURLY:
+            case Stats.HOURLY:
                 dateFormat = new SimpleDateFormat(fmt.equals("") ? "HH:mm" : fmt + " HH:mm");
                 return;
-            case Analytics.DAILY:
+            case Stats.DAILY:
                 dateFormat = new SimpleDateFormat(fmt.equals("") ? "EEE" : fmt);
                 return;
-            case Analytics.WEEKLY:
+            case Stats.WEEKLY:
                 dateFormat = new SimpleDateFormat(fmt.equals("") ? "EEE" : fmt);
                 return;
-            case Analytics.MONTHLY:
+            case Stats.MONTHLY:
                 dateFormat = new SimpleDateFormat((fmtYear.equals("") ? "" : fmtYear + " ") + "MMM");
                 return;
-            case Analytics.YEARLY:
+            case Stats.YEARLY:
                 dateFormat = new SimpleDateFormat("yyyy");
                 return;
         }
@@ -575,15 +575,15 @@ public class Analytics_Graph extends AppCompatActivity {
             Log.e(TAG, "DiffPOne is less than zero.");
             return;
         }
-        if (mode.equals(Analytics.ACCUMULATION_TIME)) {
+        if (mode.equals(Stats.ACCUMULATION_TIME)) {
             switch (interval) {
-                case Analytics.HOURLY:
+                case Stats.HOURLY:
                     labels = new String[diffPOne];
                     for (int i = 0; i <= diff; i++) {
                         labels[i] = String.valueOf((int) (minTime) + i) + ":00";
                     }
                     break;
-                case Analytics.WEEKLY:
+                case Stats.WEEKLY:
                     labels = new String[diffPOne];
 
                     Calendar cal = Calendar.getInstance();
@@ -614,7 +614,7 @@ public class Analytics_Graph extends AppCompatActivity {
                         }
                     }
                     break;
-                case Analytics.DAILY:
+                case Stats.DAILY:
                     labels = new String[]{
                             "Sunday",
                             "Monday",
@@ -625,7 +625,7 @@ public class Analytics_Graph extends AppCompatActivity {
                             "Saturday",
                     };
                     break;
-                case Analytics.MONTHLY:
+                case Stats.MONTHLY:
                     labels = new String[]{
                             "January",
                             "February",
@@ -641,7 +641,7 @@ public class Analytics_Graph extends AppCompatActivity {
                             "December",
                     };
                     break;
-                case Analytics.YEARLY:
+                case Stats.YEARLY:
                     labels = new String[diffPOne];
                     for (int i = 0; i <= diff; i++) {
                         labels[i] = Integer.toString((int) (minTime + i));
@@ -666,19 +666,19 @@ public class Analytics_Graph extends AppCompatActivity {
             while (curCal.getTimeInMillis() <= endCal.getTimeInMillis()){
                 labelsList.add(dateFormat.format(curCal.getTime()));
                 switch (interval){
-                    case Analytics.HOURLY:
+                    case Stats.HOURLY:
                         curCal.add(Calendar.HOUR, 1);
                         break;
-                    case Analytics.DAILY:
+                    case Stats.DAILY:
                         curCal.add(Calendar.DAY_OF_MONTH, 1);
                         break;
-                    case Analytics.WEEKLY:
+                    case Stats.WEEKLY:
                         curCal.add(Calendar.WEEK_OF_YEAR, 1);
                         break;
-                    case Analytics.MONTHLY:
+                    case Stats.MONTHLY:
                         curCal.add(Calendar.MONTH, 1);
                         break;
-                    case Analytics.YEARLY:
+                    case Stats.YEARLY:
                         curCal.add(Calendar.YEAR, 1);
                         break;
                 }
@@ -693,17 +693,17 @@ public class Analytics_Graph extends AppCompatActivity {
 
     //Testing
     public void configureForLabelTesting(String mode, String interval, Category category){
-        Analytics_Graph.mode = mode;
-        Analytics_Graph.interval = interval;
+        Stats_Graph.mode = mode;
+        Stats_Graph.interval = interval;
         this.category = category;
         maxTime = Double.MIN_VALUE;
         minTime = Double.MAX_VALUE;
     }
 
     public SimpleDateFormat testDateFormatWith(double start, double end, String interval){
-        Analytics_Graph.start = start;
-        Analytics_Graph.end = end;
-        Analytics_Graph.interval = interval;
+        Stats_Graph.start = start;
+        Stats_Graph.end = end;
+        Stats_Graph.interval = interval;
         setDateFormat();
         return dateFormat;
     }

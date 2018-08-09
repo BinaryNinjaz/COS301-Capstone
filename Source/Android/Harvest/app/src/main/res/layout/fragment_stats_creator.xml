@@ -14,12 +14,12 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/anal_create_compsTitle"
+            android:text="@string/stats_create_compsTitle"
             android:layout_marginStart="8dp"
             style="@style/TextAppearance.AppCompat.Body1"/>
 
         <Spinner
-            android:id="@+id/anal_create_compSpinner"
+            android:id="@+id/stats_create_compSpinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -27,7 +27,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/anal_create_selectionButton"
+        android:id="@+id/stats_create_selectionButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -35,10 +35,10 @@
         android:background="@color/white"
         android:text="Select Things to Compare"
         android:textAllCaps="true"
-        android:onClick="anal_creator_buttonHandler" />
+        android:onClick="stats_creator_buttonHandler" />
 
     <TextView
-        android:id="@+id/anal_create_selectionDisplayTextView"
+        android:id="@+id/stats_create_selectionDisplayTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -48,7 +48,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/anal_create_det"
+        android:text="@string/stats_create_det"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:textColor="@color/colorPrimary"
@@ -64,12 +64,12 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/anal_create_periodTitle"
+            android:text="@string/stats_create_periodTitle"
             android:layout_marginStart="8dp"
             style="@style/TextAppearance.AppCompat.Body1"/>
 
         <Spinner
-            android:id="@+id/anal_create_periodSpinner"
+            android:id="@+id/stats_create_periodSpinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -84,21 +84,21 @@
         android:layout_marginEnd="8dp">
 
         <EditText
-            android:id="@+id/anal_create_from"
+            android:id="@+id/stats_create_from"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:hint="@string/anal_create_from"
+            android:hint="@string/stats_create_from"
             android:inputType="none"
             android:focusable="false"
             android:clickable="true" />
 
         <EditText
-            android:id="@+id/anal_create_upTo"
+            android:id="@+id/stats_create_upTo"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:hint="@string/anal_create_upTo"
+            android:hint="@string/stats_create_upTo"
             android:inputType="none"
             android:focusable="false"
             android:clickable="true" />
@@ -115,12 +115,12 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/anal_create_intervalTitle"
+            android:text="@string/stats_create_intervalTitle"
             android:layout_marginStart="8dp"
             style="@style/TextAppearance.AppCompat.Body1"/>
 
         <Spinner
-            android:id="@+id/anal_create_interval_spinner"
+            android:id="@+id/stats_create_interval_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -130,14 +130,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/anal_create_accumulation"
+        android:text="@string/stats_create_accumulation"
         android:layout_marginTop="16dp"
         android:layout_marginStart="8dp"
         style="@style/TextAppearance.AppCompat.Menu"
         android:textColor="@color/colorPrimary"/>
     
     <RadioGroup
-        android:id="@+id/anal_create_accumulator_radioGroup"
+        android:id="@+id/stats_create_accumulator_radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -145,33 +145,33 @@
         android:layout_marginEnd="8dp">
         
         <RadioButton
-            android:id="@+id/anal_create_accumulator_radio_none"
+            android:id="@+id/stats_create_accumulator_radio_none"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/anal_create_accumulation_none" />
+            android:text="@string/stats_create_accumulation_none" />
 
         <RadioButton
-            android:id="@+id/anal_create_accumulator_radio_entity"
+            android:id="@+id/stats_create_accumulator_radio_entity"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="By Entity" />
 
         <RadioButton
-            android:id="@+id/anal_create_accumulator_radio_interval"
+            android:id="@+id/stats_create_accumulator_radio_interval"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/anal_create_accumulation_interval" />
+            android:text="@string/stats_create_accumulation_interval" />
         
     </RadioGroup>
 
     <TextView
-        android:id="@+id/anal_create_accumulator_description"
+        android:id="@+id/stats_create_accumulator_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/anal_create_accumulation_desc_none"
+        android:text="@string/stats_create_accumulation_desc_none"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         style="@style/TextAppearance.AppCompat.Caption"/>
@@ -183,26 +183,26 @@
         android:background="@color/white">
 
         <Button
-            android:id="@+id/anal_create_dispButton"
+            android:id="@+id/stats_create_dispButton"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:text="@string/anal_create_disp"
+            android:text="@string/stats_create_disp"
             android:textAllCaps="true"
             style="@style/Widget.AppCompat.ButtonBar"
             android:textColor="@color/blueLinks"
-            android:onClick="anal_creator_buttonHandler" />
+            android:onClick="stats_creator_buttonHandler" />
 
         <Button
-            android:id="@+id/anal_create_saveButton"
+            android:id="@+id/stats_create_saveButton"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/anal_create_save"
+            android:text="@string/stats_create_save"
             android:textAllCaps="true"
             style="@style/Base.Widget.AppCompat.ButtonBar"
             android:textColor="@color/blueLinks"
-            android:onClick="anal_creator_buttonHandler"
+            android:onClick="stats_creator_buttonHandler"
             />
 
 
