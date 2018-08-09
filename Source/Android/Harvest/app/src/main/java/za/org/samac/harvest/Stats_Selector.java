@@ -65,6 +65,11 @@ public class Stats_Selector extends Fragment{
             view.findViewById(R.id.stats_select_proceed).setVisibility(View.GONE);
         }
 
+        for(String id : ids){
+            data.findObject(id, category);
+            data.getActiveThing().checked = true;
+        }
+
         recyclerView = getView().findViewById(R.id.stats_select_recycler);
 
         recyclerView.setHasFixedSize(true);
@@ -84,6 +89,7 @@ public class Stats_Selector extends Fragment{
     @Override
     public void onDestroyView() {
         showProceed = null;
+        ids = null;
         super.onDestroyView();
     }
 
@@ -104,7 +110,6 @@ public class Stats_Selector extends Fragment{
 
         swipeRefreshLayout.setRefreshing(false);
         adapter = new Stats_Selector_Adapter(data, category);
-        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
 

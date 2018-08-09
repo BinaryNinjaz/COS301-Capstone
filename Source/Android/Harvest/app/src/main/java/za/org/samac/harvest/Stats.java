@@ -330,6 +330,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     private void showCreate(){
         toggleUpButton(true);
         data.toggleCheckedness(false);
+        ids.clear();
 
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
