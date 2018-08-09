@@ -325,6 +325,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         }
         if (temp != lastCategory){
             ids.clear();
+            data.toggleCheckedness(false);
             lastCategory = temp;
         }
         stats_selector.setDataAndCategory(this.data, temp);

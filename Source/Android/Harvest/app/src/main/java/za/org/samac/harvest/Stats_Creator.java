@@ -44,7 +44,7 @@ public class Stats_Creator extends Fragment{
 
     private String selectedItemsText;
 
-    private int lastSelection, lastAcceptanceSelection;
+    private int lastSelection, lastAcceptedSelection;
 
 
     public Stats_Creator(){
@@ -107,7 +107,7 @@ public class Stats_Creator extends Fragment{
                 updateAccumulatorTitles();
                 updateAccumulatorHint();
                 lastSelection = position;
-                if (lastAcceptanceSelection == lastSelection){
+                if (lastAcceptedSelection == lastSelection){
                     compareSelectionTextView.setVisibility(View.VISIBLE);
                 }
                 else {
@@ -299,7 +299,7 @@ public class Stats_Creator extends Fragment{
     //Activity > Fragment Communication
 
     public void notifySelectionMade(){
-        lastAcceptanceSelection = lastSelection;
+        lastAcceptedSelection = lastSelection;
     }
 
     //Support Functions
