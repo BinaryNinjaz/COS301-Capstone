@@ -1,33 +1,3 @@
-const user = function() { return firebase.auth().currentUser };
-const userID = function() {
-  if (user() !== null) {
-    return user().uid 
-  } else {
-    return ""
-  }
-}
-
-function getOrchards(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/orchards');
-  ref.once('value').then((snapshot) => {
-    callback(snapshot);
-  });
-}
-
-function getWorkers(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/workers');
-  ref.once('value').then((snapshot) => {
-    callback(snapshot);
-  });
-}
-
-function getFarms(callback) {
-  const ref = firebase.database().ref('/' + userID() + '/farms');
-  ref.once('value').then((snapshot) => {
-    callback(snapshot);
-  });
-}
-
 $(window).bind("load", () => {
   let succ = () => {
     initOrchards();
