@@ -148,7 +148,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {//changed from GPS to NETWORK
-            buildAlertMessageNoGps();
+            //buildAlertMessageNoGps();
             return false;
         }
 
