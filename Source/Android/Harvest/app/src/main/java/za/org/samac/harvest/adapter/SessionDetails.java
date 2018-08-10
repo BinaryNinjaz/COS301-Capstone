@@ -185,6 +185,7 @@ public class SessionDetails extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog, final int id) {
                                 DatabaseReference myRef;
+                                database = FirebaseDatabase.getInstance();
                                 myRef = database.getReference(MainActivity.farmerKey + "/sessions/" + key);//path to sessions increment in Firebase
                                 myRef.removeValue();//remove latest increment
                                 dialog.dismiss();
