@@ -50,6 +50,38 @@ struct StatStore {
 }
 
 struct Stat: Codable {
+  struct SinusoidalFunction {
+    var key: String
+    var a: Double
+    var b: Double
+    var c: Double
+    var d: Double
+    
+    func apply(_ x: Double) -> Double {
+      return a * sin(b * x + c) + d
+    }
+    
+    func lineChartData(startDate: Date, endDate: Date, step: TimeStep) -> LineChartDataSet {
+      let start = startDate.daysSince1970()
+      let end = endDate.daysSince1970()
+      
+      let interval = Double(step.fullRunningDataSet(between: startDate, and: endDate).count)
+      
+      let diff = end - start
+      let move = diff / interval
+      
+      var x = start
+      let result = LineChartDataSet()
+      
+      for i in 0..<Int(interval) {
+        _ = result.addEntry(ChartDataEntry(x: Double(i), y: apply(x)))
+        x += move
+      }
+
+      return result
+    }
+  }
+  
   var ids: [String]
   var timePeriod: TimePeriod
   var timeStep: TimeStep
@@ -57,10 +89,52 @@ struct Stat: Codable {
   var mode: TimedGraphMode
   var name: String
   
+  func legendTitle(forKey key: String) -> String {
+    let worker = Entities.shared.worker(withId: key)
+    let orchard = Entities.shared.orchards.first { $0.value.id == key }.map { $0.value }
+    let farm = Entities.shared.farms.first { $0.value.id == key }.map { $0.value }
+    
+    var message = ""
+    
+    let missingMessage = self.grouping.description
+    message = (self.grouping == .orchard
+      ? orchard?.name
+      : self.grouping == .worker
+        ? worker?.name
+        : farm?.name) ?? "Unknown \(missingMessage)"
+    message = mode == .accumEntity ? "(Sum)" : message
+    message = key == "avg" ? "Overall Average" : message
+    
+    return message
+  }
+  
+  func dataSetColor(key: String, allUsedColors: inout [String: UIColor], position i: Int) -> UIColor {
+    let colors = ChartColorTemplates.harvest()
+    if let color = allUsedColors[key] {
+      return color
+    } else {
+      if i < colors.count {
+        allUsedColors[key] = colors[i]
+      } else {
+        allUsedColors[key] = UIColor.randomColor()
+      }
+      return allUsedColors[key]!
+    }
+  }
+  
+  func formatDataSet(_ dataSet: LineChartDataSet) {
+    dataSet.drawValuesEnabled = false
+    dataSet.valueFormatter = DataValueFormatter()
+    dataSet.mode = .horizontalBezier
+    dataSet.drawCirclesEnabled = false
+    dataSet.lineWidth = 2
+  }
+  
   func graphData(completion: @escaping (LineChartData?) -> Void) {
     let (sd, ed) = timePeriod.dateRange()
     
     var dataSets = [LineChartDataSet]()
+    var expectedDataSets: [LineChartDataSet] = []
     
     HarvestCloud.timeGraphSessions(
       grouping: grouping, ids: ids, period: timeStep, startDate: sd, endDate: ed, mode: mode) { data in
@@ -70,25 +144,25 @@ struct Stat: Codable {
         }
         
         var i = 0
-        let colors = ChartColorTemplates.harvest()
+        
+        var allUsedColors = [String: UIColor]()
         for (key, _dataSetObject) in json {
+          if key == "exp" {
+            if let data = _dataSetObject as? [String: [String: Double]] {
+              expectedDataSets = self.expectedGraphData(
+                json: data,
+                allUsedColors: &allUsedColors,
+                position: i)
+            }
+            continue
+          }
+          
           guard let dataSetObject = _dataSetObject as? [String: Double] else {
             continue
           }
-          let worker = Entities.shared.worker(withId: key)
-          let orchard = Entities.shared.orchards.first { $0.value.id == key }.map { $0.value }
-          let farm = Entities.shared.farms.first { $0.value.id == key }.map { $0.value }
           
           let dataSet = LineChartDataSet()
-          
-          let missingMessage = self.grouping.description
-          dataSet.label = (self.grouping == .orchard
-            ? orchard?.name
-            : self.grouping == .worker
-            ? worker?.name
-            : farm?.name) ?? "Unknown \(missingMessage)"
-          dataSet.label = self.mode == .accumEntity ? "(Sum)" : dataSet.label
-          dataSet.label = key == "avg" ? "Overall Average" : dataSet.label
+          dataSet.label = self.legendTitle(forKey: key)
           
           let fullDataSet = self.mode == .accumTime
             ? self.timeStep.fullDataSet(between: sd, and: ed, limitToDate: self.timeStep == .weekly)
@@ -102,29 +176,56 @@ struct Stat: Codable {
             }
           }
           
-          if i < colors.count {
-            dataSet.setColor(colors[i])
-          } else {
-            dataSet.setColor(UIColor.randomColor())
-          }
+          dataSet.setColor(self.dataSetColor(key: key, allUsedColors: &allUsedColors, position: i))
           
-          dataSet.drawValuesEnabled = false
-          dataSet.valueFormatter = DataValueFormatter()
-          dataSet.mode = .horizontalBezier
-          dataSet.drawCirclesEnabled = false
-          dataSet.lineWidth = 2
+          self.formatDataSet(dataSet)
           if key == "avg" {
             dataSet.setColor(.darkGray)
             dataSet.lineDashPhase = 0.5
             dataSet.lineDashLengths = [1, 1]
+            dataSets.insert(dataSet, at: 0)
+          } else {
+            dataSets.append(dataSet)
           }
           i += 1
-          dataSets.append(dataSet)
         }
         
         let data = LineChartData(dataSets: dataSets)
+        for expDataSet in expectedDataSets {
+          data.addDataSet(expDataSet)
+        }
         
         completion(data)
+    }
+  }
+  
+  func expectedGraphData(
+    json: [String: [String: Double]],
+    allUsedColors: inout [String: UIColor],
+    position: Int
+  ) -> [LineChartDataSet] {
+    var functions = [SinusoidalFunction]()
+    for (key, function) in json {
+      let a = function["a"] ?? 0.0
+      let b = function["b"] ?? 0.0
+      let c = function["c"] ?? 0.0
+      let d = function["d"] ?? 0.0
+      functions.append(SinusoidalFunction(key: key, a: a, b: b, c: c, d: d))
+    }
+    
+    let (sd, ed) = timePeriod.dateRange()
+    
+    return functions.map { fx in
+      let dataSet = fx.lineChartData(startDate: sd, endDate: ed, step: timeStep)
+      let color = dataSetColor(key: fx.key, allUsedColors: &allUsedColors, position: position)
+      dataSet.setColor(color.withAlphaComponent(0.25))
+      
+      dataSet.label = self.legendTitle(forKey: fx.key)
+      
+      formatDataSet(dataSet)
+      dataSet.mode = .linear
+      
+      return dataSet
     }
   }
 }
