@@ -6,6 +6,7 @@ var function: (Chromosome) -> (Double) -> Double = { c in
 //    return c.a * x + c.b
 //    return c.a * sin(c.b * (x - c.c)) + c.d
     return c.a * sin(c.b * x + c.c) + c.d
+
   }
 }
 
@@ -19,16 +20,15 @@ func initSinusoidalGuess(against data: [(x: Double, y: Double)], forPeriod perio
       low = y
     }
   }
-  
+
   let d = (high + low) / 2
   let a = high - d
   let b = 2.0 * .pi / period
   let c = asin((low - d) / a) - b
-  
+
   // a * sin(b * x + c) + d
-  print("\(a) * sin(\(b) * x + \(c)) + \(d)")
   print(evaluateFitness(of: (a, b, c, d), against: data))
-  
+
   Limit.b = b..<(b + 0.1)
   if a < 0 {
     Limit.a = a..<0
@@ -45,7 +45,12 @@ func initSinusoidalGuess(against data: [(x: Double, y: Double)], forPeriod perio
   } else {
     Limit.c = 0..<c
   }
-  
+  if d < 0 {
+    Limit.d = d..<0
+  } else {
+    Limit.d = 0..<d
+  }
+
   Limit.chromo = (a, b, c, d)
 }
 
@@ -88,11 +93,11 @@ func cross(_ xs: [Chromosome], withChance prob: Double) -> [Chromosome] {
   var result = xs
   for i in 0..<(xs.count / 2) {
     let p = Double.random(in: 0..<1)
-    
+
     if p > prob {
       let a = xs[i * 2]
       let b = xs[i * 2 + 1]
-      
+
       let c = cross(a, b)
       result.append(c)
     }
@@ -115,14 +120,14 @@ func mutate(_ xs: [Chromosome], withChance prob: Double) -> [Chromosome] {
 
 func select(
   from chromosomes: [Chromosome],
-  withTournamentSize n: Int, 
+  withTournamentSize n: Int,
   against data: [(x: Double, y: Double)]
 ) -> [Chromosome] {
   var result = [Chromosome]()
   result.reserveCapacity(n)
   var evals = [Double]()
   evals.reserveCapacity(n)
-  
+
   for chromosome in chromosomes {
     let fitness = evaluateFitness(of: chromosome, against: data)
     for i in 0..<min(result.count, n) {
@@ -134,7 +139,7 @@ func select(
           evals.append(fitness)
           result.append(chromosome)
         }
-        
+
       }
     }
     if result.count < n {
@@ -142,25 +147,32 @@ func select(
       result.append(chromosome)
     }
   }
-  
+
   return result
 }
 
-func evaluateFitness(of chromosome: Chromosome, against data: [(x: Double, y: Double)]) -> Double {
+func evaluateFitness(of chromosome: Chromosome, against data: [(x: Double, y: Double)], log: Bool = false) -> Double {
   var error = 0.0
   let f = function(chromosome)
-  
+
+  if log {
+    print(chromosome)
+  }
+
   for (xi, yi) in data {
     let y = f(xi)
+    if log {
+      print(xi, yi, y, (yi - y) * (yi - y))
+    }
     error += (yi - y) * (yi - y)
   }
-  
+
   return error
 }
 
 func evolve(
-  populationOfSize n: Int, 
-  generations: Int, 
+  populationOfSize n: Int,
+  generations: Int,
   against data: [(x: Double, y: Double)]
 ) -> Chromosome {
   var chromosomes = [Chromosome]()
@@ -169,12 +181,12 @@ func evolve(
     chromosomes.append(randomChromosome())
   }
   chromosomes.append(Limit.chromo)
-  
-  for _ in 0..<100 {
+
+  for _ in 0..<generations {
     let ms = mutate(chromosomes, withChance: 0.05)
     let cs = cross(ms, withChance: 0.25)
     let ts = select(from: cs, withTournamentSize: n, against: data)
-    
+
     chromosomes = ts
   }
 
@@ -185,32 +197,23 @@ func evolve(
 
   for v in chromosomes.dropFirst() {
     let e = evaluateFitness(of: v, against: data)
-    
+
     if e < bestE {
       bestE = e
       best = v
     }
   }
-  
+  // best.d = 93
   return best
 }
 
 var data: [(Double, Double)] = [
-  (1, 10),
-  (2, 14),
-  (3, 12),
-  (4, 16),
-  (5, 133),
-  (6, 18),
-  (7, 9),
-  (8, 20),
-  (9, 22),
-  (10, 21),
-  (11, 24),
-  (12, 26),
-  (13, 28),
-  (14, 30),
-  (15, 31),
+  (17726, 4),
+  (17727, 4),
+  (17743, 19),
+  (17748, 6),
+  (17749, 7),
+  (17752, 192),
 ]
 
 var data2: [(Double, Double)] = [
@@ -228,10 +231,10 @@ var data2: [(Double, Double)] = [
   (12, 7.43),
 ]
 
-initSinusoidalGuess(against: data, forPeriod: 4)
-let best = evolve(populationOfSize: 100, generations: 0, against: data)
+initSinusoidalGuess(against: data, forPeriod: 365.25)
+let best = evolve(populationOfSize: 50, generations: 50, against: data)
 
 
 print(best)
-print(evaluateFitness(of: best, against: data))
-print(evaluateFitness(of: (14.6559, 1.5708, 0.065, 27.6635), against: data))
+print(evaluateFitness(of: best, against: data, log: true))
+print(evaluateFitness(of: (5544.7588, 0.0172, 1.2017, 5475.2688), against: data))
