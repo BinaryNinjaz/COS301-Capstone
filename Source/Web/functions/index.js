@@ -267,11 +267,10 @@ function crossChromosome(x, y) {
   };
 }
 
-function crossChromosomesWithChance(chromosomes, chance) {
+function crossChromosomesWithChance(chromosomes, prob) {
   var result = chromosomes;
   for (var i = 0; i < chromosomes.length / 2; i += 1) {
     const p = Math.random();
-
     if (p > prob) {
       const a = chromosomes[i * 2];
       const b = chromosomes[i * 2 + 1];
@@ -282,17 +281,17 @@ function crossChromosomesWithChance(chromosomes, chance) {
   return result;
 }
 
-function mutateChromosomesWithChance(chromosomes, chance) {
+function mutateChromosomesWithChance(chromosomes, limit, prob) {
   var result = chromosomes;
   for (var i = 0; i < chromosomes.length; i += 1) {
     const p = Math.random();
-
     if (p > prob) {
       const a = chromosomes[i];
-      const c = mutateChromosome(a);
+      const c = mutateChromosome(a, limit);
       result.push(c);
     }
   }
+  return result;
 }
 
 function selectChromosomes(chromosomes, tourneySize, data) {
@@ -314,7 +313,7 @@ function selectChromosomes(chromosomes, tourneySize, data) {
         }
       }
     }
-    if (result.length < n) {
+    if (result.length < tourneySize) {
       evals.push(fitness);
       result.push(chromosome);
     }
@@ -344,9 +343,9 @@ function evolvePopulation(size, generations, data) {
   }
   chromosomes.push(limit);
 
-  for (var j = 0; i < generations; i += 1) {
-    const ms = mutateChromosomesWithChance(chromosomes, 0.05);
-    const cs = crossChromosomesWithChance(ms, 0.25);
+  for (var j = 0; j < generations; j += 1) {
+    const ms = mutateChromosomesWithChance(chromosomes, limit, 0.1);
+    const cs = crossChromosomesWithChance(ms, 0.4);
     const ts = selectChromosomes(cs, size, data);
     chromosomes = ts;
   }
@@ -699,7 +698,7 @@ function sinusoidalOfSessionItems(items) {
   const keys = Object.keys(items);
   for (const ikey in keys) {
     const key = keys[ikey];
-    result[key] = evolvePopulation(100, 50, items[key]);
+    result[key] = evolvePopulation(100, 20, items[key]);
   }
   return result;
 }
@@ -720,7 +719,7 @@ function sinusoidalOfSessionItems(items) {
 // uid=[String]
 //
 // --------- Result ------------- Mode = accumTime
-// result = {avg: {*: #}, p}
+// result = {avg: {*: #}, p, exp: {*: {a: #, b: #, c: #, d: #}, ...}}
 //
 // where p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
 // where * is some values determined by period hourly = [0, 23], daily=[Sunday, ..., Saturday]
@@ -728,7 +727,7 @@ function sinusoidalOfSessionItems(items) {
 // # is total number of bags collected
 //
 // --------- Result ------------- Mode = accumEntity
-// result = {avg: {*: #, ...}, sum: {*: #, ...}}
+// result = {avg: {*: #, ...}, sum: {*: #, ...}, exp: {sum: {a: #, b: #, c: #, d: #}}}
 //
 // where * is some values determined by period hourly = YYYY MMM dd HH:mm, daily= YYYY MMM DD
 // weekly = YYYY MMM DD, monthly = YYYY MMM, yearly = YYYY
@@ -736,8 +735,9 @@ function sinusoidalOfSessionItems(items) {
 // sum is the sum of id0 + id1 + ... + idN at date points determined by period.
 //
 // --------- Result ------------- Mode = running
-// let result = {avg: {*: #, ...}, id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
+// let result = {avg: {*: #}, p, exp: {*: {a: #, b: #, c: #, d: #}, ...}}
 //
+// where p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
 // where * is some values determined by period hourly = YYYY MMM dd HH:mm, daily= YYYY MMM DD
 // weekly = YYYY MMM DD, monthly = YYYY MMM, yearly = YYYY
 // # is total number of bags collected
@@ -749,6 +749,7 @@ function sinusoidalOfSessionItems(items) {
 //   and MM are discarded. If your startDate and endDate go into different months but are in
 //   the same year then only YYYY is dropped. This applies for all dates in running and accumEntity.
 // + for running and accumEntity when the same YYYY MM and DD is asked for it returns ddd
+// + exp components are constants in the function: a * sin(b * x + c) + d where x is the only variable
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const startDate = req.body.startDate;

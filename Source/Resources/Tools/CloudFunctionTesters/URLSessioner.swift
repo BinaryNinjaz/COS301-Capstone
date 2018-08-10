@@ -34,6 +34,18 @@ extension Date {
 
     return (s, e)
   }
+
+  func thisYear(using calendar: Calendar = .current) -> (Date, Date) {
+    let components = calendar.dateComponents([.year], from: self)
+    let s = calendar.date(from: components)!
+
+    var nextYearComps = DateComponents()
+    nextYearComps.year = 1
+    nextYearComps.month = -1
+    let e = calendar.date(byAdding: nextYearComps, to: s)!
+
+    return (s, e)
+  }
 }
 
 enum HarvestCloud {
@@ -280,14 +292,16 @@ func collection() {
 }
 
 func timeGraphSessionsWorker() {
-  let s = Date().thisMonth().0
-  let e = Date().thisMonth().1
+  let s = Date().thisYear().0
+  let e = Date().thisYear().1
   let g = HarvestCloud.GroupBy.worker
-  let p = HarvestCloud.TimePeriod.daily
+  let p = HarvestCloud.TimePeriod.monthly
   print(s, e)
   let ids = [
-    "-LBykXujU0Igjzvq5giB", // Peter Parker 3
-    "-LBykjpjTy2RrDApKGLy", // Barry Allen 7
+    "-LC4tqYXblh6RD6F_LIS", // Tandy Joe
+    "-LHJzXzzw_p4LaK93UYu", // Arthur Melo
+    // "-LBykXujU0Igjzvq5giB", // Peter Parker 3
+    // "-LBykjpjTy2RrDApKGLy", // Barry Allen 7
 //    "-LBykZoPlQ2xkIMylBr2", // Tony Stark 4
 //    "-LBykabv5OJNBsdv0yl7", // Clark Kent 5
 //    "-LBykcR9o5_S_ndIYHj9", // Bruce Wayne 6
@@ -368,27 +382,28 @@ func expectedYield() {
 
 //collection()
 
-// timeGraphSessionsWorker()
+timeGraphSessionsWorker()
 
-timeGraphSessionsOrchard()
+// timeGraphSessionsOrchard()
 
 // expectedYield()
 
 RunLoop.main.run()
 
 /*
-
-{
-  "-LCEFgdMMO80LR98BzPC" =     {
-    "Jul 31" = 19;
-  };
-  "-LCEFoWPEw7ThnUaz07W" =     {
-    "Aug 02" = 418;
-    "Jul 27" = 113;
-    "Jul 30" = 628;
-  };
-  "-LCnEEUlavG3eFLCC3MI" =     {
-  };
-}
+exp =     {
+    "-LBykXujU0Igjzvq5giB" =         {
+        a = "137.793259159423";
+        b = "0.01706842260699562";
+        c = "-1.154915072474072";
+        d = "45.6586291145962";
+    };
+    "-LBykjpjTy2RrDApKGLy" =         {
+        a = "47.99884456564988";
+        b = "0.01634019500485161";
+        c = "-0.983434772921029";
+        d = "33.35763312268708";
+    };
+};
 
 */
