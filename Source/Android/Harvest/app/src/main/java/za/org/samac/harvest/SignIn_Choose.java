@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.io.File;
+
+import za.org.samac.harvest.util.IntroActivity;
 
 public class SignIn_Choose extends AppCompatActivity {
     private ImageView farmerPic = null;
@@ -26,34 +26,6 @@ public class SignIn_Choose extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_choose);
-        /*String fileName = "nutsinhands.jpg";
-        String completePath = Environment.getExternalStorageDirectory() + "/" + fileName;
-
-        File file = new File(completePath);
-        Uri imageUri = Uri.fromFile(file);
-
-        farmerPic = findViewById(R.id.farmerPic);
-        foremanPic = findViewById(R.id.foremanPic);
-
-        Glide.with(SignIn_Choose.this)
-                .load(imageUri)
-                .into(farmerPic);
-
-        fileName = "bookcheckedhand.jpg";
-        completePath = Environment.getExternalStorageDirectory() + "/" + fileName;
-
-        file = new File(completePath);
-        imageUri = Uri.fromFile(file);
-
-        Glide.with(SignIn_Choose.this)
-                .load(imageUri)
-                .into(foremanPic);*/
-        new ShowcaseView.Builder(SignIn_Choose.this)
-                .setTarget(new ViewTarget(R.id.login_form, SignIn_Choose.this))
-                .setContentTitle(R.string.app_name)
-                .setContentText(R.string.app_name)
-                .singleShot(42)
-                .build();
     }
 
     public void choseFarmer(View v){
@@ -66,7 +38,6 @@ public class SignIn_Choose extends AppCompatActivity {
         Intent openForeman = new Intent (SignIn_Choose.this, SignIn_Foreman.class);
         openForeman.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivityIfNeeded(openForeman, 0);
-
     }
 
     public void choseNew(View v){
