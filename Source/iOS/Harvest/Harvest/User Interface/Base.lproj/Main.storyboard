@@ -941,10 +941,25 @@ Expected Yield: 0</string>
             </objects>
             <point key="canvasLocation" x="3084" y="2121"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="64d-kd-0Td">
+            <objects>
+                <viewController storyboardIdentifier="pdfViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="A7C-gD-aQu" customClass="PDFViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ecz-2t-QJH">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="ao6-8b-x9Q"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A4W-Aj-9Tu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3084" y="2804.347826086957"/>
+        </scene>
         <!--Data Source-->
         <scene sceneID="TIm-H1-HXh">
             <objects>
-                <viewController storyboardIdentifier="appIntroViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LdN-pK-Uud" customClass="AppIntroViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="carouselViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LdN-pK-Uud" customClass="CarouselViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EDy-jp-6gl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

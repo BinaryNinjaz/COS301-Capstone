@@ -236,7 +236,7 @@ final class DataValueFormatter: IValueFormatter {
     entry: ChartDataEntry,
     dataSetIndex: Int,
     viewPortHandler: ViewPortHandler?
-    ) -> String {
+  ) -> String {
     if value.isZero {
       return ""
     } else if trunc(value) == value {

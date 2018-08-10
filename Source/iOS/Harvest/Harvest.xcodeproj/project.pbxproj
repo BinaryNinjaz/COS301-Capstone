@@ -21,7 +21,7 @@
 		16420FCC2069718400E1A292 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCB2069718400E1A292 /* Database.swift */; };
 		16420FCE2069738200E1A292 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16420FCD2069738200E1A292 /* SignUpViewController.swift */; };
 		164DC2AC2115C84B008A8523 /* StatParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164DC2AB2115C84B008A8523 /* StatParameters.swift */; };
-		164DC2AE211659F0008A8523 /* AppIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164DC2AD211659F0008A8523 /* AppIntroViewController.swift */; };
+		164DC2AE211659F0008A8523 /* CarouselViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164DC2AD211659F0008A8523 /* CarouselViewController.swift */; };
 		164F30A720D4745900E7772A /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164F30A620D4745900E7772A /* Verification.swift */; };
 		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
 		1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */; };
@@ -89,6 +89,8 @@
 		16C82F5E20819B6E0074595C /* Poly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5920819B6E0074595C /* Poly.swift */; };
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
 		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
+		16DA38FB211DF7D80094A4E8 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DA38FA211DF7D80094A4E8 /* PDFViewController.swift */; };
+		16DA38FD211DFA550094A4E8 /* HarvestUserManual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 16DA38FC211DFA540094A4E8 /* HarvestUserManual.pdf */; };
 		16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */; };
 		16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */; };
 		16E3750F20F0E4220023AD2C /* StatSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3750E20F0E4220023AD2C /* StatSelectionViewController.swift */; };
@@ -143,7 +145,7 @@
 		16420FCB2069718400E1A292 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		16420FCD2069738200E1A292 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		164DC2AB2115C84B008A8523 /* StatParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatParameters.swift; sourceTree = "<group>"; };
-		164DC2AD211659F0008A8523 /* AppIntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntroViewController.swift; sourceTree = "<group>"; };
+		164DC2AD211659F0008A8523 /* CarouselViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselViewController.swift; sourceTree = "<group>"; };
 		164F30A520D46DAA00E7772A /* Harvest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Harvest.entitlements; sourceTree = "<group>"; };
 		164F30A620D4745900E7772A /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
 		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
@@ -212,6 +214,8 @@
 		16C82F5920819B6E0074595C /* Poly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly.swift; sourceTree = "<group>"; };
 		16C82F66208407730074595C /* GeoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKitTests.swift; sourceTree = "<group>"; };
 		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
+		16DA38FA211DF7D80094A4E8 /* PDFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
+		16DA38FC211DFA540094A4E8 /* HarvestUserManual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = HarvestUserManual.pdf; sourceTree = "<group>"; };
 		16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutChartEurekaCell.swift; sourceTree = "<group>"; };
 		16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DonutChartEurekaCell.xib; sourceTree = "<group>"; };
 		16E3750E20F0E4220023AD2C /* StatSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatSelectionViewController.swift; sourceTree = "<group>"; };
@@ -343,6 +347,7 @@
 		1604E4D22069598D00E9BA15 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				16DA38FC211DFA540094A4E8 /* HarvestUserManual.pdf */,
 				16BF89972108F76800B023A7 /* GPX */,
 				1604E4A9206958E900E9BA15 /* Assets.xcassets */,
 			);
@@ -455,7 +460,7 @@
 				16420FCD2069738200E1A292 /* SignUpViewController.swift */,
 				1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */,
 				1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */,
-				164DC2AD211659F0008A8523 /* AppIntroViewController.swift */,
+				164DC2AD211659F0008A8523 /* CarouselViewController.swift */,
 			);
 			path = "Sign In";
 			sourceTree = "<group>";
@@ -464,6 +469,7 @@
 			isa = PBXGroup;
 			children = (
 				167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */,
+				16DA38FA211DF7D80094A4E8 /* PDFViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -716,6 +722,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1604E4AD206958E900E9BA15 /* LaunchScreen.storyboard in Resources */,
+				16DA38FD211DFA550094A4E8 /* HarvestUserManual.pdf in Resources */,
 				1604E4AA206958E900E9BA15 /* Assets.xcassets in Resources */,
 				16BF89A02108F78200B023A7 /* outa.gpx in Resources */,
 				16BF89A12108F78200B023A7 /* trouter.gpx in Resources */,
@@ -910,6 +917,7 @@
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
 				16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
+				16DA38FB211DF7D80094A4E8 /* PDFViewController.swift in Sources */,
 				16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */,
 				16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */,
 				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
@@ -929,7 +937,7 @@
 				167448C420893B8200FA605C /* SortedDictionary.swift in Sources */,
 				167448B320892AE900FA605C /* Farm.swift in Sources */,
 				16C82F5D20819B6E0074595C /* Point.swift in Sources */,
-				164DC2AE211659F0008A8523 /* AppIntroViewController.swift in Sources */,
+				164DC2AE211659F0008A8523 /* CarouselViewController.swift in Sources */,
 				164F30A720D4745900E7772A /* Verification.swift in Sources */,
 				16E3750F20F0E4220023AD2C /* StatSelectionViewController.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,

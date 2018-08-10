@@ -9,12 +9,20 @@
 import UIKit
 import FSPagerView
 
-class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerViewDelegate {
+class CarouselViewController: UIViewController, FSPagerViewDataSource, FSPagerViewDelegate {
   override var prefersStatusBarHidden: Bool {
     return true
   }
   
-  var images: [UIImage] = [#imageLiteral(resourceName: "HarvestIntro"), #imageLiteral(resourceName: "HarvestManage"), #imageLiteral(resourceName: "HarvestTrack"), #imageLiteral(resourceName: "HarvestAnalyse")]
+  private var images: [UIImage] = []
+  func showTutorial() {
+    images = [#imageLiteral(resourceName: "TutorialWorkflow"), #imageLiteral(resourceName: "TutorialInfo"), #imageLiteral(resourceName: "TutorialCollections"), #imageLiteral(resourceName: "TutorialSessions"), #imageLiteral(resourceName: "TutorialStats")]
+  }
+  
+  func showIntro() {
+    images = [#imageLiteral(resourceName: "HarvestIntro"), #imageLiteral(resourceName: "HarvestManage"), #imageLiteral(resourceName: "HarvestTrack"), #imageLiteral(resourceName: "HarvestAnalyse")]
+  }
+  
   var currentIndex = 0 {
     didSet {
       if currentIndex == images.count - 1 {
