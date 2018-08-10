@@ -284,21 +284,23 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                         Double lat = trackSnapshot.child("lat").getValue(Double.class);
                         Double lng = trackSnapshot.child("lng").getValue(Double.class);
                         Location loc = new Location("");
-                        loc.setLatitude(lat.doubleValue());
-                        loc.setLongitude(lng.doubleValue());
+                        loc.setLatitude(lat == null ? 0 : lat);
+                        loc.setLongitude(lng == null ? 0 : lng);
 
                         item.addTrack(loc);
                     }
                     for (DataSnapshot collectionSnapshot : aChild.child("collections").getChildren()) {
                         Worker w = data.getWorkerFromIDString(collectionSnapshot.getKey());
-                        String workerName = w.getfName() + " " + w.getsName();
+                        String fName = w == null ? "Unknown" : w.getfName();
+                        String sName = w == null ? "Worker" : w.getsName();
+                        String workerName = fName + " " + sName;
                         int count = 0;
                         for (DataSnapshot collection : collectionSnapshot.getChildren()) {
                             Double lat = collection.child("coord").child("lat").getValue(Double.class);
                             Double lng = collection.child("coord").child("lng").getValue(Double.class);
                             Location loc = new Location("");
-                            loc.setLatitude(lat.doubleValue());
-                            loc.setLongitude(lng.doubleValue());
+                            loc.setLatitude(lat == null ? 0 : lat);
+                            loc.setLongitude(lng == null ? 0 : lng);
                             Double time = collectionSnapshot.child("date").getValue(Double.class);
 
                             item.addCollection(collectionSnapshot.getKey(), workerName, loc, time);
@@ -330,7 +332,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                 }
                 pageIndex = lastKey;
                 Boolean reload = false;
-                if (searchText == "") {
+                if (searchText.isEmpty()) {
                     filteredSessions = null;
                 } else {
                     reload = filterSessions();
