@@ -269,7 +269,7 @@ function crossChromosome(x, y) {
 
 function crossChromosomesWithChance(chromosomes, prob) {
   var result = chromosomes;
-  for (var i = 0; i < chromosomes.length / 2; i += 1) {
+  for (var i = 0; i < chromosomes.length / 2 - 1; i += 1) {
     const p = Math.random();
     if (p > prob) {
       const a = chromosomes[i * 2];
