@@ -1,5 +1,7 @@
 package za.org.samac.harvest.adapter;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -86,6 +88,7 @@ public class SessionDetails extends AppCompatActivity {
     com.github.mikephil.charting.charts.PieChart pieChart;
     private com.github.mikephil.charting.charts.PieChart pieChartView;
     Map<String, Float> collections = new HashMap<>();
+    private Button deleteSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,7 @@ public class SessionDetails extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         linearLayoutSessDetails.setVisibility(View.GONE);
         pieChartView = findViewById(R.id.pieChart);
+        deleteSession = findViewById(R.id.deleteSession);
 
         Button mapButton = findViewById(R.id.sessionDetailsMapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +137,7 @@ public class SessionDetails extends AppCompatActivity {
         startDate = Sessions.selectedItem.startDate;
         endDate = Sessions.selectedItem.endDate;
         foreman = Sessions.selectedItem.foreman;
+        key = Sessions.selectedItem.key;
 
         TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
         TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
@@ -169,6 +174,33 @@ public class SessionDetails extends AppCompatActivity {
                         return true;
                     }
                 });
+
+
+        deleteSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(SessionDetails.this);
+                builder.setMessage("Delete session?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                DatabaseReference myRef;
+                                myRef = database.getReference(MainActivity.farmerKey + "/sessions/" + key);//path to sessions increment in Firebase
+                                myRef.removeValue();//remove latest increment
+                                dialog.dismiss();
+                                startActivity(new Intent(SessionDetails.this, Sessions.class));
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
 
         displayGraph();
     }

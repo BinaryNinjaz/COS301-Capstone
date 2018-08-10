@@ -210,6 +210,7 @@
     <string name="sessionDetailTimeEndedLabelText">Time Ended</string>
     <string name="sessionDetailTrackingLabelText">TRACKING</string>
     <string name="sessionDetailPerformanceLabelText">WORKER PERFORMANCE SUMMARY</string>
+    <string name="delSess">Delete Session</string>
 
     <!--Country codes for formatting telephone numbers-->
     <string-array name="CountryCodes" >
