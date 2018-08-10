@@ -161,6 +161,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ForemenForBarGraph" />
         </activity>
+        <activity android:name=".util.IntroActivity" />
 
         <service
             android:name=".service.BackgroundService"

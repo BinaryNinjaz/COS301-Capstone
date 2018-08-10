@@ -2,25 +2,38 @@ package za.org.samac.harvest;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.annotation.Target;
+
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.IntroActivity;
+
+import static za.org.samac.harvest.util.Category.NAV;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -35,6 +48,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         tvAppName = findViewById(R.id.tvAppName);
         tvAppName.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
+        //Target viewTarget = new ViewTarget(R.id.tvAppName, SplashScreenActivity.this);
 
         showLoading();
 
@@ -54,7 +68,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 
-                        showLoading();
+                        //showLoading();
                     }
 
                 } else {
@@ -82,7 +96,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     //                                          int[] grantResults)
                     // to handle the case where the user grants the permission. See the documentation
                     // for ActivityCompat#requestPermissions for more details.
-                    showLoading();
+                    //showLoading();
                     return;
                 }
 
@@ -98,7 +112,16 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                if(AppUtil.isUserSignedIn(getApplicationContext())) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this);
+                if(!prefs.getBoolean("firstTime", false)) {
+                    // run your one time code
+                    Intent intent = new Intent(SplashScreenActivity.this, IntroActivity.class);
+                    startActivity(intent);
+                    finish();
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("firstTime", true);
+                    editor.commit();
+                } else if(AppUtil.isUserSignedIn(getApplicationContext())) {
                     Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -120,7 +143,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, GPS_PERMISSIONS);
 
         } else {
-            showLoading();
+            //showLoading();
         }
     }
 
@@ -148,7 +171,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {//changed from GPS to NETWORK
-            buildAlertMessageNoGps();
+            //buildAlertMessageNoGps();
             return false;
         }
 
