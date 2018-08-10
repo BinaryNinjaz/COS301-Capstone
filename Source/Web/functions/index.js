@@ -767,8 +767,8 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     const isAccumTime = mode === 'accumTime';
     const isAccumEntity = mode === 'accumEntity';
     const isRunning = mode === 'running';
-    const sd = moment(new Date(startDate * 1000)).add(+offset, 'm').toDate();
-    const ed = moment(new Date(endDate * 1000)).add(+offset, 'm').toDate();
+    const sd = moment(new Date(startDate * 1000)).add(Number(offset), 'm').toDate();
+    const ed = moment(new Date(endDate * 1000)).add(Number(offset), 'm').toDate();
 
     const sameY = isSameYear(sd, ed);
     const sameM = isSameMonth(sd, ed);
