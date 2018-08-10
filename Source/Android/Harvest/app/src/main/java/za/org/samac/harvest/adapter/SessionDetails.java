@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.MediaCas;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,7 @@ import za.org.samac.harvest.SignIn_Farmer;
 import za.org.samac.harvest.SignIn_SignUp;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.SearchedItem;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
 import static za.org.samac.harvest.MainActivity.getWorkers;
@@ -185,11 +187,12 @@ public class SessionDetails extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog, final int id) {
                                 DatabaseReference myRef;
+                                database = FirebaseDatabase.getInstance();
                                 myRef = database.getReference(MainActivity.farmerKey + "/sessions/" + key);//path to sessions increment in Firebase
                                 myRef.removeValue();//remove latest increment
                                 dialog.dismiss();
-                                startActivity(new Intent(SessionDetails.this, Sessions.class));
-                                finish();
+                                Intent intent = new Intent(SessionDetails.this, Sessions.class);
+                                startActivity(intent);
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
