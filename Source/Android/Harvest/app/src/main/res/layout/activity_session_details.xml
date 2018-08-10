@@ -212,6 +212,12 @@
 
                     </android.support.v7.widget.CardView>
 
+                    <Button
+                        android:id="@+id/deleteSession"
+                        style="@style/Button"
+                        android:background="@color/colorGoogleRed"
+                        android:text="@string/delSess" />
+
                 </LinearLayout>
             </ScrollView>
 
