@@ -27,7 +27,7 @@ import za.org.samac.harvest.util.DBInfoObject;
 import za.org.samac.harvest.util.Worker;
 import za.org.samac.harvest.util.WorkerType;
 
-public class Analytics_Selector extends Fragment{
+public class Stats_Selector extends Fragment{
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -41,19 +41,19 @@ public class Analytics_Selector extends Fragment{
     private Boolean showProceed;
     private List<String> ids;
 
-    public Analytics_Selector(){
+    public Stats_Selector(){
         //Required empty public constructor
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_analytics_selector, container, false);
+        return inflater.inflate(R.layout.fragment_stats_selector, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        swipeRefreshLayout = getView().findViewById(R.id.anal_select_swipeRefresh);
+        swipeRefreshLayout = getView().findViewById(R.id.stats_select_swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -62,21 +62,26 @@ public class Analytics_Selector extends Fragment{
         });
 
         if (!showProceed){
-            view.findViewById(R.id.anal_select_proceed).setVisibility(View.GONE);
+            view.findViewById(R.id.stats_select_proceed).setVisibility(View.GONE);
         }
 
-        recyclerView = getView().findViewById(R.id.anal_select_recycler);
+        for(String id : ids){
+            data.findObject(id, category);
+            data.getActiveThing().checked = true;
+        }
+
+        recyclerView = getView().findViewById(R.id.stats_select_recycler);
 
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new Analytics_Selector_ItemDivider(getContext()));
+        recyclerView.addItemDecoration(new Stats_Selector_ItemDivider(getContext()));
 
         if (Data.isPulling()){
             swipeRefreshLayout.setRefreshing(true);
         }
         else {
-            adapter = new Analytics_Selector_Adapter(data, category, ids);
+            adapter = new Stats_Selector_Adapter(data, category);
             recyclerView.setAdapter(adapter);
         }
     }
@@ -84,6 +89,7 @@ public class Analytics_Selector extends Fragment{
     @Override
     public void onDestroyView() {
         showProceed = null;
+        ids = null;
         super.onDestroyView();
     }
 
@@ -97,8 +103,20 @@ public class Analytics_Selector extends Fragment{
     }
 
     public void endRefresh(){
+        for(String id : ids){
+            data.findObject(id, category);
+            data.getActiveThing().checked = true;
+        }
+
         swipeRefreshLayout.setRefreshing(false);
-        adapter = new Analytics_Selector_Adapter(data, category, ids);
+        adapter = new Stats_Selector_Adapter(data, category);
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void checkAllPerhaps(boolean check){
+        data.toggleCheckedness(check);
+        adapter = new Stats_Selector_Adapter(data, category);
+        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
 
@@ -111,10 +129,10 @@ public class Analytics_Selector extends Fragment{
     }
 }
 
-class Analytics_Selector_ItemDivider extends RecyclerView.ItemDecoration{
+class Stats_Selector_ItemDivider extends RecyclerView.ItemDecoration{
     private Drawable divider;
 
-    public Analytics_Selector_ItemDivider(Context context){
+    public Stats_Selector_ItemDivider(Context context){
 //        divider = context.getResources().getDrawable(R.drawable.line_divider);
         divider = ContextCompat.getDrawable(context, R.drawable.line_divider);
     }
@@ -139,7 +157,7 @@ class Analytics_Selector_ItemDivider extends RecyclerView.ItemDecoration{
     }
 }
 
-class Analytics_Selector_Adapter extends RecyclerView.Adapter<Analytics_Selector_Adapter.ViewHolder>{
+class Stats_Selector_Adapter extends RecyclerView.Adapter<Stats_Selector_Adapter.ViewHolder>{
 
     private List<DBInfoObject> items;
 
@@ -149,11 +167,11 @@ class Analytics_Selector_Adapter extends RecyclerView.Adapter<Analytics_Selector
         public ViewHolder(View view){
             super(view);
 
-            checkBox = view.findViewById(R.id.anal_itemCheckBox);
+            checkBox = view.findViewById(R.id.stats_itemCheckBox);
         }
     }
 
-    public Analytics_Selector_Adapter(Data data, Category category, List<String> ids){
+    public Stats_Selector_Adapter(Data data, Category category){
         items = new Vector<>();
         if (category == Category.ORCHARD){
             items.addAll(data.getOrchards());
@@ -172,19 +190,11 @@ class Analytics_Selector_Adapter extends RecyclerView.Adapter<Analytics_Selector
                 }
             }
         }
-        for (DBInfoObject object : items){
-            for (String id : ids){
-                if (id.equals(object.ID)){
-                    object.checked = true;
-                    break;
-                }
-            }
-        }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.analytics_select_to_display_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stats_select_to_display_item, parent, false);
         return new ViewHolder(v);
     }
 

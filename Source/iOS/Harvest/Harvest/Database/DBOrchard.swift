@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/20.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Firebase
@@ -30,10 +30,12 @@ extension HarvestDB {
     }
   }
   
+  static var orchards = [Orchard]()
+  
   static func watchOrchards(_ completion: @escaping ([Orchard]) -> Void) {
     let oref = ref.child(Path.orchards)
-    oref.observe(.value) { (snapshot) in
-      var orchards = [Orchard]()
+    oref.observeSingleEvent(of: .value) { (snapshot) in
+      orchards.removeAll()
       for _child in snapshot.children {
         guard let child = _child as? DataSnapshot else {
           continue
@@ -47,6 +49,37 @@ extension HarvestDB {
         orchards.append(o)
       }
       completion(orchards)
+    }
+    oref.observe(.childAdded) { (snapshot) in
+      guard let orchard = snapshot.value as? [String: Any] else {
+        return
+      }
+      let o = Orchard(json: orchard, id: snapshot.key)
+      if orchards.index(where: { $0.id == o.id }) == nil {
+        orchards.append(o)
+        completion(orchards)
+      }
+    }
+    oref.observe(.childRemoved) { (snapshot) in
+      guard let orchard = snapshot.value as? [String: Any] else {
+        return
+      }
+      let o = Orchard(json: orchard, id: snapshot.key)
+      if let idx = orchards.index(where: { $0.id == o.id }) {
+        orchards.remove(at: idx)
+        completion(orchards)
+      }
+    }
+    oref.observe(.childChanged) { (snapshot) in
+      guard let orchard = snapshot.value as? [String: Any] else {
+        return
+      }
+      let o = Orchard(json: orchard, id: snapshot.key)
+      if let idx = orchards.index(where: { $0.id == o.id }) {
+        orchards.remove(at: idx)
+        orchards.insert(o, at: idx)
+        completion(orchards)
+      }
     }
   }
   

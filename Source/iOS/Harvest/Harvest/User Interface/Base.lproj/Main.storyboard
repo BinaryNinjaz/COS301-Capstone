@@ -154,7 +154,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-890.39999999999998" y="53.523238380809602"/>
+            <point key="canvasLocation" x="-539" y="54"/>
         </scene>
         <!--Log In-->
         <scene sceneID="tne-QT-ifu">
@@ -350,7 +350,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-39.200000000000003" y="53.523238380809602"/>
+            <point key="canvasLocation" x="190" y="54"/>
         </scene>
         <!--Foreman Sign In View Controller-->
         <scene sceneID="QRg-gl-2fW">
@@ -515,7 +515,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-39.200000000000003" y="771.36431784107947"/>
+            <point key="canvasLocation" x="190" y="901"/>
         </scene>
         <!--Main Tab Bar View Controller-->
         <scene sceneID="264-Fa-FqB">
@@ -643,7 +643,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2eA-wC-zae" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3084" y="-663"/>
+            <point key="canvasLocation" x="2990" y="-664"/>
         </scene>
         <!--Stat Entity Selection View Controller-->
         <scene sceneID="vwx-1A-lRy">
@@ -658,7 +658,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WUr-yq-z0K" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3799" y="-663"/>
+            <point key="canvasLocation" x="3687" y="-664"/>
         </scene>
         <!--Yield Tracker-->
         <scene sceneID="H2b-6H-xwA">
@@ -897,6 +897,7 @@ Expected Yield: 0</string>
                     </view>
                     <tabBarItem key="tabBarItem" title="Yield Tracker" image="Add" id="i4D-U6-cRY"/>
                     <connections>
+                        <outlet property="infoEffectView" destination="NUJ-f3-gPy" id="ep3-q2-pjl"/>
                         <outlet property="searchBar" destination="8FH-FL-a95" id="lAQ-ee-WXo"/>
                         <outlet property="startSessionButton" destination="nb1-AJ-Upq" id="pHu-m5-OxK"/>
                         <outlet property="workerCollectionView" destination="5MG-iq-Vf2" id="93F-FX-mKd"/>
@@ -939,6 +940,80 @@ Expected Yield: 0</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rnN-uo-A6x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3084" y="2121"/>
+        </scene>
+        <!--Data Source-->
+        <scene sceneID="TIm-H1-HXh">
+            <objects>
+                <viewController storyboardIdentifier="appIntroViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LdN-pK-Uud" customClass="AppIntroViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="EDy-jp-6gl">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="SignUpBackground" translatesAutoresizingMaskIntoConstraints="NO" id="CA5-Yk-eQV">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R0U-8d-mNz">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="Q0C-vi-WV1">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PSs-7t-VWj" customClass="FSPagerView" customModule="FSPagerView">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <connections>
+                                                <outlet property="dataSource" destination="LdN-pK-Uud" id="70g-kk-12V"/>
+                                                <outlet property="delegate" destination="LdN-pK-Uud" id="3Kc-DF-YNn"/>
+                                            </connections>
+                                        </view>
+                                    </subviews>
+                                </view>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tRa-3I-ASB" customClass="FSPageControl" customModule="FSPagerView">
+                                <rect key="frame" x="0.0" y="625" width="375" height="42"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QcK-4Z-PUZ">
+                                <rect key="frame" x="16" y="562" width="100" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
+                                <state key="normal" title="Skip">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="skipButtonTouchUp:" destination="LdN-pK-Uud" eventType="touchUpInside" id="JV3-fl-ftf"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZMi-oQ-keN">
+                                <rect key="frame" x="16" y="562" width="343" height="55"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
+                                <state key="normal" title="Next ⇢">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="nextButtonTouchUp:" destination="LdN-pK-Uud" eventType="touchUpInside" id="I3w-Oe-z6V"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="W7y-7c-N1p"/>
+                    </view>
+                    <connections>
+                        <outlet property="nextButton" destination="ZMi-oQ-keN" id="T0E-MQ-KEr"/>
+                        <outlet property="pageControler" destination="tRa-3I-ASB" id="BH5-w3-MDk"/>
+                        <outlet property="pagerView" destination="PSs-7t-VWj" id="afs-Wk-8Qo"/>
+                        <outlet property="skipButton" destination="QcK-4Z-PUZ" id="wsu-lr-Osh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KhS-kv-DId" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1386.4000000000001" y="900.89955022488766"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="cel-RK-Rty">
@@ -1109,7 +1184,7 @@ Expected Yield: 0</string>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-890.39999999999998" y="757.87106446776613"/>
+            <point key="canvasLocation" x="-540" y="901"/>
         </scene>
         <!--Infomation-->
         <scene sceneID="mK2-uN-hZX">

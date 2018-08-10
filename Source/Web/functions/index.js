@@ -494,7 +494,7 @@ function roundDateToRunningPeriod(timeinterval, period, sameYear, sameMonth, sam
   } else if (period === "weekly") {
     return moment(date).startOf('week').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "monthly") {
-    return moment(date).startOf('month').format(fmtYear + ' MMM');
+    return moment(date).startOf('month').format(fmtYear + 'MMM');
   } else if (period === "yearly") {
     return moment(date).startOf('day').format('YYYY');
   } else {
@@ -589,23 +589,40 @@ function averageOfSessionItem(item, key, days, workingOn) {
 // period=[hourly, daily, weekly, monthly, yearly]
 // startDate=[Double]
 // endDate=[Double]
-// avgRange=[all, inclusive, onlybefore] default = onlybefore
+// offset=[minutes from GMT]
 // mode=[accumTime, accumEntity, running]
 // uid=[String]
 //
-// --------- Result ------------- Mode = Accum
-// let p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
+// --------- Result ------------- Mode = accumTime
+// result = {avg: {*: #}, p}
+//
+// where p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
 // where * is some values determined by period hourly = [0, 23], daily=[Sunday, ..., Saturday]
 // weekly = [0, 52], monthly = [January, ..., December], yearly = [0, Int.max)
 // # is total number of bags collected
 //
-// result = {avg: p, p}
+// --------- Result ------------- Mode = accumEntity
+// result = {avg: {*: #, ...}, sum: {*: #, ...}}
 //
-// --------- Result ------------- Mode = Running
-// let result = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
-// where * is some values determined by period hourly = YYYY-MM-dd hh, daily= YYYY-MM-dd
-// weekly = YYYY-MM-dd, monthly = YYYY-MM, yearly = YYYY
+// where * is some values determined by period hourly = YYYY MMM dd HH:mm, daily= YYYY MMM DD
+// weekly = YYYY MMM DD, monthly = YYYY MMM, yearly = YYYY
 // # is total number of bags collected
+// sum is the sum of id0 + id1 + ... + idN at date points determined by period.
+//
+// --------- Result ------------- Mode = running
+// let result = {avg: {*: #, ...}, id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
+//
+// where * is some values determined by period hourly = YYYY MMM dd HH:mm, daily= YYYY MMM DD
+// weekly = YYYY MMM DD, monthly = YYYY MMM, yearly = YYYY
+// # is total number of bags collected
+//
+// ------------------------------ NOTE:
+// + avg is always the average of all entities
+// + running and accumEntity * are truncated if time doesnt overlap into different bases.
+//   example: for daily if your startDate and endDate are within the same month then YYYY
+//   and MM are discarded. If your startDate and endDate go into different months but are in
+//   the same year then only YYYY is dropped. This applies for all dates in running and accumEntity.
+// + for running and accumEntity when the same YYYY MM and DD is asked for it returns ddd
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const startDate = req.body.startDate;
@@ -613,19 +630,19 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     const uid = req.body.uid;
     const groupBy = req.body.groupBy;
     const period = req.body.period;
-    var avgRange = req.body.avgRange;
-    if (avgRange === undefined) {
-      avgRange = "onlybefore";
-    }
     var mode = req.body.mode;
     if (mode === undefined) {
       mode = "accumTime";
     }
+    var offset = req.body.offset;
+    if (offset === undefined) {
+      offset = "0";
+    }
     const isAccumTime = mode === 'accumTime';
     const isAccumEntity = mode === 'accumEntity';
     const isRunning = mode === 'running';
-    const sd = new Date(startDate * 1000);
-    const ed = new Date(endDate * 1000);
+    const sd = moment(new Date(startDate * 1000)).add(+offset, 'm').toDate();
+    const ed = moment(new Date(endDate * 1000)).add(+offset, 'm').toDate();
     
     const sameY = isSameYear(sd, ed);
     const sameM = isSameMonth(sd, ed);

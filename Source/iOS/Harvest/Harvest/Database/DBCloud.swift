@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/06/24.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Firebase
@@ -153,20 +153,21 @@ enum HarvestCloud {
   
   // swiftlint:disable function_parameter_count
   static func timeGraphSessions(
-    grouping: GroupBy,
+    grouping: StatKind,
     ids: [String],
-    period: TimePeriod,
+    period: TimeStep,
     startDate: Date,
     endDate: Date,
-    mode: Mode,
+    mode: TimedGraphMode,
     completion: @escaping (Any) -> Void
-    ) {
+  ) {
     var args = [
-      ("groupBy", grouping.description),
-      ("period", period.description),
+      ("groupBy", grouping.identifier),
+      ("period", period.identifier),
       ("startDate", startDate.timeIntervalSince1970.description),
       ("endDate", endDate.timeIntervalSince1970.description),
-      ("mode", mode.description),
+      ("offset", Calendar.current.timeZone.offset()),
+      ("mode", mode.identifier),
       ("uid", HarvestDB.Path.parent)
     ]
     
@@ -189,224 +190,5 @@ extension HarvestCloud {
     static let expectedYield = "expectedYield"
     static let orchardCollections = "orchardCollectionsWithinDate"
     static let timeGraphSessions = "timedGraphSessions"
-  }
-  
-  enum TimePeriod: String, CustomStringConvertible, Codable {
-    case hourly
-    case daily
-    case weekly
-    case monthly
-    case yearly
-    
-    static var allCases: [TimePeriod] {
-      return [.hourly, .daily, .weekly, .monthly, .yearly]
-    }
-    
-    static func cases(forRange r: (Date, Date)) -> [TimePeriod] {
-      let days = Calendar.current.dateComponents([.day], from: r.0, to: r.1).day!
-      let weeks = Calendar.current.dateComponents([.weekOfYear], from: r.0, to: r.1).weekOfYear!
-      
-      if days <= 1 {
-        return [.hourly]
-      } else if weeks <= 1 {
-        return [.daily]
-      } else if weeks <= 4 {
-        return [.weekly]
-      } else {
-        return [.weekly, .monthly]
-      }
-    }
-    
-    var description: String {
-      switch self {
-      case .hourly: return "hourly"
-      case .daily: return "daily"
-      case .weekly: return "weekly"
-      case .monthly: return "monthly"
-      case .yearly: return "yearly"
-      }
-    }
-    
-    func fullDataSet(between start: Date? = nil, and end: Date? = nil, limitToDate: Bool = false) -> [String] {
-      switch self {
-      case .hourly:
-        return (0...23).map(String.init)
-      case .daily:
-        return ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-      case .weekly:
-        let base = (1...54).map(String.init)
-        if limitToDate {
-          guard let s = start?.weekNumber(), let e = end?.weekNumber() else {
-            return base
-          }
-          return (s...e).map(String.init)
-        }
-        return base
-      case .monthly:
-        return [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December"
-          ]
-      case .yearly:
-        return ["2018", "2019", "2020", "2021", "2022"]
-      }
-    }
-    
-    func fullPrintableDataSet(
-      between start: Date? = nil,
-      and end: Date? = nil,
-      limitToDate: Bool = false
-    ) -> [String] {
-      switch self {
-      case .hourly:
-        return (0...23).map { ($0 < 10 ? "0\($0):00" : "\($0):00") }
-      case .daily:
-        return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-      case .weekly:
-        let base = (1...54).map { Date.startOfWeek(from: $0) }
-        if limitToDate {
-          guard let s = start?.weekNumber(), let e = end?.weekNumber() else {
-            return base
-          }
-          return (s...e).map { Date.startOfWeek(from: $0) }
-        }
-        return base
-      case .monthly:
-        return [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec"
-        ]
-      case .yearly:
-        return ["2018", "2019", "2020", "2021", "2022"]
-      }
-    }
-    
-    func fullRunningDataSet(between startDate: Date, and endDate: Date) -> [String] {
-      let isSameYear = startDate.startOfYear() == endDate.startOfYear()
-      let isSameMonth = startDate.startOfMonth() == endDate.startOfMonth()
-      let isSameDay = startDate.startOfDay() == endDate.startOfDay()
-      
-      let fmtYear = isSameYear ? "" : "YYYY "
-      let fmtMonth = isSameMonth ? "" : "MMM "
-      let fmtDay = isSameDay ? "" : "dd"
-      let fmt = fmtYear + fmtMonth + fmtDay
-      
-      var result = [String]()
-      let formatter = DateFormatter()
-      let comp: Calendar.Component
-      let format: String
-      var start: Date
-      let end: Date
-      
-      switch self {
-      case .hourly:
-        comp = .hour
-        format = fmt + " HH:mm"
-        start = startDate.startOfDay()
-        end = endDate.startOfDay().date(byAdding: .day, value: 1)
-        
-      case .daily:
-        comp = .day
-        format = fmt == "" ? "EEE" : fmt
-        start = startDate.startOfDay()
-        end = endDate.startOfDay().date(byAdding: .day, value: 1)
-        
-      case .weekly:
-        comp = .weekOfYear
-        format = fmt == "" ? "EEE" : fmt
-        start = startDate.startOfWeek()
-        end = endDate.startOfWeek().date(byAdding: .weekOfYear, value: 1)
-        
-      case .monthly:
-        comp = .month
-        format = fmtYear + " MMM"
-        start = startDate.startOfMonth()
-        end = endDate.startOfMonth().date(byAdding: .month, value: 1)
-        
-      case .yearly:
-        comp = .year
-        format = "YYYY"
-        start = startDate.startOfYear()
-        end = endDate.startOfYear().date(byAdding: .year, value: 1)
-        
-      }
-      
-      formatter.dateFormat = format
-      
-      while start < end {
-        result.append(formatter.string(from: start))
-        start = start.date(byAdding: comp, value: 1)
-      }
-      
-      return result
-    }
-  }
-  
-  enum GroupBy: String, CustomStringConvertible, Codable {
-    case worker
-    case orchard
-    case foreman
-    
-    init(_ statKind: StatKind) {
-      switch statKind {
-      case .workers: self = .worker
-      case .orchards: self = .orchard
-      case .foremen: self = .foreman
-      }
-    }
-    
-    var description: String {
-      switch self {
-      case .worker: return "worker"
-      case .orchard: return "orchard"
-      case .foreman: return "foreman"
-      }
-    }
-    
-    var title: String {
-      switch self {
-      case .worker: return "Worker"
-      case .orchard: return "Orchard"
-      case .foreman: return "Foreman"
-      }
-    }
-  }
-  
-  enum Mode: String, CustomStringConvertible, Codable {
-    case accum, running
-    
-    var description: String {
-      switch self {
-      case .accum: return "accum"
-      case .running: return "running"
-      }
-    }
-    
-    var title: String {
-      switch self {
-      case .accum: return "Accumulating"
-      case .running: return "Running"
-      }
-    }
   }
 }

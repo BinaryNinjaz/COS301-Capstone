@@ -114,7 +114,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(Sessions.this, Analytics.class));
+                                startActivity(new Intent(Sessions.this, Stats.class));
                                 return true;
                         }
                         return true;

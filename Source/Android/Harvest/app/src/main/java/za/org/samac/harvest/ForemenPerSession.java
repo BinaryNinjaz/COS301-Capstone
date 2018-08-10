@@ -44,9 +44,9 @@ public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<
                                 startActivityIfNeeded(openSessions, 0);
                                 return true;
                             case R.id.actionStats:
-                                Intent openAnalytics= new Intent(ForemenPerSession.this, Analytics.class);
-                                openAnalytics.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openAnalytics, 0);
+                                Intent openStats= new Intent(ForemenPerSession.this, Stats.class);
+                                openStats.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openStats, 0);
                                 return true;
 
                         }

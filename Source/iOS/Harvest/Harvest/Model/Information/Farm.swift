@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/19.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Swift
@@ -38,7 +38,7 @@ final class Farm: Codable {
       "email": email,
       "contactNumber": contactNumber,
       "province": province,
-      "neartestTown": nearestTown,
+      "town": nearestTown,
       "further": details
     ]]
   }
@@ -80,7 +80,7 @@ final class Farm: Codable {
   }
 }
 
-extension Farm: Equatable {
+extension Farm: Hashable {
   static func == (lhs: Farm, rhs: Farm) -> Bool {
     return lhs.id == rhs.id
       && lhs.name == rhs.name
@@ -90,6 +90,10 @@ extension Farm: Equatable {
       && lhs.province == rhs.province
       && lhs.nearestTown == rhs.nearestTown
       && lhs.details == rhs.details
+  }
+  
+  var hashValue: Int {
+    return id.hashValue
   }
 }
 

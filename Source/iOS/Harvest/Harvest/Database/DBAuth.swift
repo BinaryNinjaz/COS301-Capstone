@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/20.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Firebase
@@ -125,7 +125,7 @@ extension HarvestDB {
       }
       
       HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
-      HarvestUser.current.setUser(user, nil, { _, succ in completion(succ) })
+      HarvestUser.current.setUser(user, nil, requestWorkingFor(completion))
       
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()

@@ -3,7 +3,7 @@
 //  HarvestTests
 //
 //  Created by Letanyan Arumugam on 2018/04/16.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import XCTest

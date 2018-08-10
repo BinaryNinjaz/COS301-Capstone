@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
-import za.org.samac.harvest.Analytics;
+import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.InfoListFragment;
 import za.org.samac.harvest.InformationActivity;
 
@@ -79,6 +79,16 @@ public class Data {
             Log.i("Data", "Pulling for the first time.");
             pull();
         }
+    }
+
+    /**
+     * Ignore the FireBase stuff, manually set the data, and pretend it came from the magic internet.
+     * @param mock Does nothing...
+     */
+    public Data(boolean mock){
+        workers = new Vector<>();
+        orchards = new Vector<>();
+        farms = new Vector<>();
     }
 
     public static boolean isPulling() {
@@ -324,8 +334,8 @@ public class Data {
                     InformationActivity temp = (InformationActivity) act;
                     temp.tellAllPullDone();
                 }
-                else if (act.getClass() == Analytics.class){
-                    Analytics temp = (Analytics) act;
+                else if (act.getClass() == Stats.class){
+                    Stats temp = (Stats) act;
                     temp.pullDone();
                 }
             }
@@ -768,6 +778,26 @@ public class Data {
         return activeFarm;
     }
 
+    public DBInfoObject getActiveThing(){
+        switch (category){
+            case FARM: return activeFarm;
+            case ORCHARD: return activeOrchard;
+            default: return activeWorker;
+        }
+    }
+    
+    public void toggleCheckedness(boolean checked){
+        for (Farm farm : farms){
+            farm.checked = checked;
+        }
+        for (Orchard orchard : orchards){
+            orchard.checked = checked;
+        }
+        for (Worker worker : workers){
+            worker.checked = checked;
+        }
+    }
+
     public String toStringID(String ID, Category category){
         switch (category){
             case ORCHARD:
@@ -850,6 +880,40 @@ public class Data {
     public void addWorker(Worker addMe){
         workers.addElement(addMe);
         changes.Add(Category.WORKER, addMe.getfID());
+    }
+
+    /**
+     * Populate the data's given category list with the given list.
+     *  Format of string is {id, name, [surname]}
+     *  (More to come?)
+     * @param setUs ids and names to set the current category
+     */
+    public void mockWith(List<String[]> setUs, Category category){
+        for (String[] strings : setUs){
+            switch (category){
+                case FARM:
+                    Farm farm = new Farm();
+                    farm.setID(strings[0]);
+                    farm.setName(strings[1]);
+                    farms.add(farm);
+                    return;
+                    
+                case ORCHARD:
+                    Orchard orchard = new Orchard();
+                    orchard.setID(strings[0]);
+                    orchard.setName(strings[1]);
+                    orchards.add(orchard);
+                    return;
+                    
+                case WORKER:
+                    Worker worker = new Worker();
+                    worker.setfID(strings[0]);
+                    worker.setfName(strings[1]);
+                    worker.setsName(strings[2]);
+                    workers.add(worker);
+                    return;
+            }
+        }
     }
 
 

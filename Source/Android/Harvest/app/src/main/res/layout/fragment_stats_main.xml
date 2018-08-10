@@ -19,24 +19,25 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/anal_choose_cus_make"
+                android:id="@+id/stats_choose_cus_make"
                 style="@style/Button"
-                android:background="@color/white"
-                android:onClick="anal_main_buttonHandler"
-                android:text="@string/anal_create_make"
-                android:textColor="@color/blueLinks"
+                android:background="@color/colorPrimary"
+                android:onClick="stats_main_buttonHandler"
+                android:text="@string/stats_create_make"
+                android:textColor="@color/white"
                 android:layout_marginTop="8dp"/>
 
             <TextView
+                android:id="@+id/stats_choose_farms_title"
                 style="@style/TextAppearance.AppCompat.Menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/anal_farm_tit" />
+                android:text="@string/stats_farm_title" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/anal_choose_farmRecycler"
+                android:id="@+id/stats_choose_farmRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -44,15 +45,16 @@
                 android:layout_marginTop="4dp"/>
 
             <TextView
+                android:id="@+id/stats_choose_orchards_title"
                 style="@style/TextAppearance.AppCompat.Menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/anal_orch_tit" />
+                android:text="@string/stats_orch_title" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/anal_choose_orchardRecycler"
+                android:id="@+id/stats_choose_orchardRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -60,15 +62,16 @@
                 android:layout_marginTop="4dp"/>
 
             <TextView
+                android:id="@+id/stats_choose_workers_title"
                 style="@style/TextAppearance.AppCompat.Menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/anal_work_tit" />
+                android:text="@string/stats_work_title" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/anal_choose_workerRecycler"
+                android:id="@+id/stats_choose_workerRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -76,15 +79,16 @@
                 android:layout_marginTop="4dp"/>
 
             <TextView
+                android:id="@+id/stats_choose_foremen_title"
                 style="@style/TextAppearance.AppCompat.Menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/anal_fore_tit" />
+                android:text="@string/stats_fore_title" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/anal_choose_foremanRecycler"
+                android:id="@+id/stats_choose_foremanRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

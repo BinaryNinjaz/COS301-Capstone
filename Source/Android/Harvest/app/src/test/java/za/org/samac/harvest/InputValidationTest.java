@@ -64,11 +64,11 @@ public class InputValidationTest {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            assertThat(SignIn_Farmer.validateForm("a@gmail.com", "a"), is(true));
+//                            assertThat(SignIn_Farmer.validateForm("a@gmail.com", "a"), is(true));
 
                         } else {
                             Log.d(TAG, "signInWithEmail:fail");
-                            assertThat(SignIn_Farmer.validateForm("a@gmail.com", "a"), is(false));
+//                            assertThat(SignIn_Farmer.validateForm("a@gmail.com", "a"), is(false));
                         }
 
                         // ...

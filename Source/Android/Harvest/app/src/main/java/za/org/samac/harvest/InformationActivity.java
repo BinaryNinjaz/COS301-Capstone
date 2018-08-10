@@ -80,7 +80,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                                 startActivity(new Intent(InformationActivity.this, Sessions.class));
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(InformationActivity.this, Analytics.class));
+                                startActivity(new Intent(InformationActivity.this, Stats.class));
                                 return true;
 
                         }

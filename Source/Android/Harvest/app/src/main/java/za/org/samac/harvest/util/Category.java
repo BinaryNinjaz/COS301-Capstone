@@ -6,5 +6,24 @@ public enum Category{
     WORKER,
     NOTHING,
     NAV,
-    FOREMAN
+    FOREMAN;
+
+    @Override
+    public String toString() {
+        switch (this){
+            case ORCHARD:
+                return "orchard";
+            case FARM:
+                return "farm";
+            case FOREMAN:
+                return "foreman";
+            case WORKER:
+                return "worker";
+            case NOTHING:
+                return null;
+            case NAV:
+                return "nav";
+        }
+        return null;
+    }
 }
