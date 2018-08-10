@@ -346,6 +346,9 @@ public class Stats_Graph extends AppCompatActivity {
                 entityNames = functionResult.names(); //to iterate through the top level entities
                 if (entityNames != null) {
                     for (int i = 0; i < entityNames.length(); i++) {
+                        if(entityNames.get(i).equals("exp")){
+                            break;
+                        }
                         JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
                         JSONArray entryNames = object.names(); //Keys of the entries, for iteration
                         List<Entry> entries = new ArrayList<>();
@@ -367,6 +370,9 @@ public class Stats_Graph extends AppCompatActivity {
                                         lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
                                         lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
                                     }
+                                    break;
+                                case "exp":
+                                    //Oh what fun it all is.
                                     break;
                                 default:
                                     lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
