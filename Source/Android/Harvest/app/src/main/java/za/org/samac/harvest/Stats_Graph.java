@@ -347,43 +347,45 @@ public class Stats_Graph extends AppCompatActivity {
                 if (entityNames != null) {
                     for (int i = 0; i < entityNames.length(); i++) {
                         if(entityNames.get(i).equals("exp")){
-                            break;
+                            //Deal with this later.
                         }
-                        JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
-                        JSONArray entryNames = object.names(); //Keys of the entries, for iteration
-                        List<Entry> entries = new ArrayList<>();
-                        if (entryNames != null) {
-                            LineDataSet lineDataSet = null;
-                            for (int j = 0; j < entryNames.length(); j++) {
-                                //Get all of the entries, buy turning the key into an int (x axis), and the value to, erm, the value (y axis)
-                                Entry entry = new Entry((float) (getDoubleFromKey(entryNames.get(j).toString(), true)), (float) object.getDouble(entryNames.get(j).toString()));
-                                entries.add(entry);
+                        else {
+                            JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
+                            JSONArray entryNames = object.names(); //Keys of the entries, for iteration
+                            List<Entry> entries = new ArrayList<>();
+                            if (entryNames != null) {
+                                LineDataSet lineDataSet = null;
+                                for (int j = 0; j < entryNames.length(); j++) {
+                                    //Get all of the entries, buy turning the key into an int (x axis), and the value to, erm, the value (y axis)
+                                    Entry entry = new Entry((float) (getDoubleFromKey(entryNames.get(j).toString(), true)), (float) object.getDouble(entryNames.get(j).toString()));
+                                    entries.add(entry);
+                                }
+                                switch (entityNames.get(i).toString()) {
+                                    case "avg":
+                                        lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_gragh_averageLabel));
+                                        lineDataSet.enableDashedLine(1, 1, 0);
+                                        lineDataSet.setColor(getResources().getColor(R.color.grey));
+                                        break;
+                                    case "sum":
+                                        if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
+                                            lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
+                                            lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
+                                        }
+                                        break;
+                                    case "exp":
+                                        //Oh what fun it all is.
+                                        break;
+                                    default:
+                                        lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
+                                        lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
+                                        break;
+                                }
+                                assert lineDataSet != null;
+                                lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                                lineDataSet.setDrawCircles(false);
+                                lineDataSet.setLineWidth(2);
+                                dataSets.add(lineDataSet);
                             }
-                            switch (entityNames.get(i).toString()) {
-                                case "avg":
-                                    lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_gragh_averageLabel));
-                                    lineDataSet.enableDashedLine(1, 1, 0);
-                                    lineDataSet.setColor(getResources().getColor(R.color.grey));
-                                    break;
-                                case "sum":
-                                    if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
-                                        lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
-                                        lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
-                                    }
-                                    break;
-                                case "exp":
-                                    //Oh what fun it all is.
-                                    break;
-                                default:
-                                    lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
-                                    lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
-                                    break;
-                            }
-                            assert lineDataSet != null;
-                            lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                            lineDataSet.setDrawCircles(false);
-                            lineDataSet.setLineWidth(2);
-                            dataSets.add(lineDataSet);
                         }
                     }
                 }
