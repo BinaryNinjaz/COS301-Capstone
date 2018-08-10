@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +34,15 @@ public class Stats_Selector extends Fragment{
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     private Data data;
     private Category category;
 
     private Boolean showProceed;
     private List<String> ids;
+
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String TAG = "Stats_Selector";
 
     public Stats_Selector(){
         //Required empty public constructor
@@ -65,15 +68,12 @@ public class Stats_Selector extends Fragment{
             view.findViewById(R.id.stats_select_proceed).setVisibility(View.GONE);
         }
 
-        for(String id : ids){
-            data.findObject(id, category);
-            data.getActiveThing().checked = true;
-        }
+        Log.i(TAG, "size: " + ids.size());
 
         recyclerView = getView().findViewById(R.id.stats_select_recycler);
 
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new Stats_Selector_ItemDivider(getContext()));
 
@@ -81,8 +81,7 @@ public class Stats_Selector extends Fragment{
             swipeRefreshLayout.setRefreshing(true);
         }
         else {
-            adapter = new Stats_Selector_Adapter(data, category);
-            recyclerView.setAdapter(adapter);
+            endRefresh();
         }
     }
 
@@ -103,12 +102,22 @@ public class Stats_Selector extends Fragment{
     }
 
     public void endRefresh(){
-        for(String id : ids){
-            data.findObject(id, category);
-            data.getActiveThing().checked = true;
+
+        List things = data.getThings(category);
+        for (Object thing : things){ //Okay then
+            DBInfoObject thingerThing = (DBInfoObject) thing;
+            if (ids.contains(thingerThing.getId())){
+                thingerThing.checked = true;
+            }
+            else {
+                thingerThing.checked = false;
+            }
         }
 
-        swipeRefreshLayout.setRefreshing(false);
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
         adapter = new Stats_Selector_Adapter(data, category);
         recyclerView.setAdapter(adapter);
     }

@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -832,6 +833,23 @@ public class Data {
 
     public Vector<Orchard> getOrchards() {
         return orchards;
+    }
+
+    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
+    public List<DBInfoObject> getThings(Category category){
+        List<DBInfoObject> result = new ArrayList<>();
+        switch (category){
+            case ORCHARD:
+                result.addAll(getOrchards());
+                break;
+            case FARM:
+                result.addAll(getFarms());
+                break;
+            default:
+                result.addAll(getWorkers());
+                break;
+        }
+        return result;
     }
 
     //If overwriteID is false, then the id of the new object and the active object must match

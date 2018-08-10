@@ -323,9 +323,8 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 temp = Category.FOREMAN;
                 break;
         }
-        if (temp != lastCategory){
+        if (state == State.CREATE && temp != lastCategory){
             ids.clear();
-            data.toggleCheckedness(false);
             lastCategory = temp;
         }
         stats_selector.setDataAndCategory(this.data, temp);
@@ -481,26 +480,14 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
 
         //Set all the things
         assert graph != null;
-        ids = new ArrayList<>(Arrays.asList(graph.ids));
+        ids.clear();
+        ids.addAll(Arrays.asList(graph.ids));
         start = graph.start;
         end = graph.end;
         interval = graph.interval;
         group = graph.group;
         period = graph.period;
         accumulation = graph.accumulation;
-
-        Category category;
-        switch (group){
-            case FARM: category = Category.FARM; break;
-            case ORCHARD: category = Category.ORCHARD; break;
-            default: category = Category.WORKER; break;
-        }
-
-        data.toggleCheckedness(false);
-        for(String id : ids){
-            data.findObject(id, category);
-            data.getActiveThing().checked = true;
-        }
 
         showSelector();
     }
