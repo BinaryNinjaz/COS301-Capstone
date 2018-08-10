@@ -183,9 +183,6 @@
     <string name="pref_account_reAuthConfirm">Confirm</string>
 
 
-
-
-
     <string name="title_activity_sessions">Sessions</string>
     <string name="title_activity_sessions_map">Map</string>
 
@@ -213,7 +210,7 @@
     <string name="delSess">Delete Session</string>
 
     <!--Country codes for formatting telephone numbers-->
-    <string-array name="CountryCodes" >
+    <string-array name="CountryCodes">
         <item>93,AF</item>
         <item>355,AL</item>
         <item>213,DZ</item>
@@ -421,4 +418,7 @@
         <item>260,ZM</item>
         <item>263,ZW</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

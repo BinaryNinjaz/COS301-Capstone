@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import java.io.File;
 
@@ -46,6 +48,12 @@ public class SignIn_Choose extends AppCompatActivity {
         Glide.with(SignIn_Choose.this)
                 .load(imageUri)
                 .into(foremanPic);*/
+        new ShowcaseView.Builder(SignIn_Choose.this)
+                .setTarget(new ViewTarget(R.id.login_form, SignIn_Choose.this))
+                .setContentTitle(R.string.app_name)
+                .setContentText(R.string.app_name)
+                .singleShot(42)
+                .build();
     }
 
     public void choseFarmer(View v){

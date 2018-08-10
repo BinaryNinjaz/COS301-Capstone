@@ -2,6 +2,7 @@ package za.org.samac.harvest;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,17 +11,28 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.annotation.Target;
+
 import za.org.samac.harvest.util.AppUtil;
+
+import static za.org.samac.harvest.util.Category.NAV;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -35,6 +47,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         tvAppName = findViewById(R.id.tvAppName);
         tvAppName.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
+        //Target viewTarget = new ViewTarget(R.id.tvAppName, SplashScreenActivity.this);
 
         showLoading();
 
