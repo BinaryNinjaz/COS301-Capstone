@@ -4,208 +4,260 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/stats_create_compsTitle"
-            android:layout_marginStart="8dp"
-            style="@style/TextAppearance.AppCompat.Body1"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <Spinner
-            android:id="@+id/stats_create_compSpinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/stats_create_compsTitle"
+                    android:layout_marginStart="8dp"
+                    style="@style/TextAppearance.AppCompat.Body1"/>
 
-    <Button
-        android:id="@+id/stats_create_selectionButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/blueLinks"
-        android:background="@color/white"
-        android:text="Select Things to Compare"
-        android:textAllCaps="true"
-        android:onClick="stats_creator_buttonHandler" />
+                <Spinner
+                    android:id="@+id/stats_create_compSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
 
-    <TextView
-        android:id="@+id/stats_create_selectionDisplayTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Apple Farm, Sushi Farm, Swords Farm, Pointless Farm, Deadly Farm, Power Farm." />
+            </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/stats_create_det"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/colorPrimary"
-        style="@style/TextAppearance.AppCompat.Menu"/>
+            <Button
+                android:id="@+id/stats_create_selectionButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/blueLinks"
+                android:background="@color/white"
+                android:text="Select Things to Compare"
+                android:textAllCaps="true"
+                android:onClick="stats_creator_buttonHandler" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+            <TextView
+                android:id="@+id/stats_create_selectionDisplayTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Apple Farm, Sushi Farm, Swords Farm, Pointless Farm, Deadly Farm, Power Farm." />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/stats_create_periodTitle"
-            android:layout_marginStart="8dp"
-            style="@style/TextAppearance.AppCompat.Body1"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_create_det"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/colorPrimary"
+                style="@style/TextAppearance.AppCompat.Menu"/>
 
-        <Spinner
-            android:id="@+id/stats_create_periodSpinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary"/>
 
-    </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/stats_create_intervalTitle"
+                    android:layout_marginStart="8dp"
+                    style="@style/TextAppearance.AppCompat.Body1"/>
 
-        <EditText
-            android:id="@+id/stats_create_from"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="@string/stats_create_from"
-            android:inputType="none"
-            android:focusable="false"
-            android:clickable="true" />
+                <Spinner
+                    android:id="@+id/stats_create_interval_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
 
-        <EditText
-            android:id="@+id/stats_create_upTo"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="@string/stats_create_upTo"
-            android:inputType="none"
-            android:focusable="false"
-            android:clickable="true" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/stats_create_periodTitle"
+                    android:layout_marginStart="8dp"
+                    style="@style/TextAppearance.AppCompat.Body1"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/stats_create_intervalTitle"
-            android:layout_marginStart="8dp"
-            style="@style/TextAppearance.AppCompat.Body1"/>
+                <Spinner
+                    android:id="@+id/stats_create_periodSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-        <Spinner
-            android:id="@+id/stats_create_interval_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/stats_create_from_layout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/stats_create_accumulation"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="8dp"
-        style="@style/TextAppearance.AppCompat.Menu"
-        android:textColor="@color/colorPrimary"/>
-    
-    <RadioGroup
-        android:id="@+id/stats_create_accumulator_radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
-        
-        <RadioButton
-            android:id="@+id/stats_create_accumulator_radio_none"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/stats_create_accumulation_none" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.1"
+                    android:layout_height="match_parent"
+                    android:text="@string/stats_create_from"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:gravity="center_vertical"/>
 
-        <RadioButton
-            android:id="@+id/stats_create_accumulator_radio_entity"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="By Entity" />
+                <EditText
+                    android:id="@+id/stats_create_from"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="40dp"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"/>
 
-        <RadioButton
-            android:id="@+id/stats_create_accumulator_radio_interval"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/stats_create_accumulation_interval" />
-        
-    </RadioGroup>
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/stats_create_accumulator_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/stats_create_accumulation_desc_none"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        style="@style/TextAppearance.AppCompat.Caption"/>
+            <LinearLayout
+                android:id="@+id/stats_create_upTo_layout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:background="@color/white">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.1"
+                    android:layout_height="match_parent"
+                    android:text="@string/stats_create_upTo"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:gravity="center_vertical"/>
 
-        <Button
-            android:id="@+id/stats_create_dispButton"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:text="@string/stats_create_disp"
-            android:textAllCaps="true"
-            style="@style/Widget.AppCompat.ButtonBar"
-            android:textColor="@color/blueLinks"
-            android:onClick="stats_creator_buttonHandler" />
+                <EditText
+                    android:id="@+id/stats_create_upTo"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"/>
 
-        <Button
-            android:id="@+id/stats_create_saveButton"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="@string/stats_create_save"
-            android:textAllCaps="true"
-            style="@style/Base.Widget.AppCompat.ButtonBar"
-            android:textColor="@color/blueLinks"
-            android:onClick="stats_creator_buttonHandler"
-            />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_create_accumulation"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                style="@style/TextAppearance.AppCompat.Menu"
+                android:textColor="@color/colorPrimary"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary"/>
 
 
-    </LinearLayout>
+            <RadioGroup
+                android:id="@+id/stats_create_accumulator_radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
+
+                <RadioButton
+                    android:id="@+id/stats_create_accumulator_radio_none"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stats_create_accumulation_none" />
+
+                <RadioButton
+                    android:id="@+id/stats_create_accumulator_radio_entity"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="By Entity" />
+
+                <RadioButton
+                    android:id="@+id/stats_create_accumulator_radio_interval"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stats_create_accumulation_interval" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/stats_create_accumulator_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_create_accumulation_desc_none"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                style="@style/TextAppearance.AppCompat.Caption"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@color/white">
+
+                <Button
+                    android:id="@+id/stats_create_dispButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stats_create_disp"
+                    android:textAllCaps="true"
+                    style="@style/Widget.AppCompat.ButtonBar"
+                    android:textColor="@color/blueLinks"
+                    android:onClick="stats_creator_buttonHandler" />
+
+                <Button
+                    android:id="@+id/stats_create_saveButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stats_create_save"
+                    android:textAllCaps="true"
+                    style="@style/Base.Widget.AppCompat.ButtonBar"
+                    android:textColor="@color/blueLinks"
+                    android:onClick="stats_creator_buttonHandler"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

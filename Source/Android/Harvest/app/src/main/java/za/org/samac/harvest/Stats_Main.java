@@ -95,6 +95,7 @@ public class Stats_Main extends Fragment{
             recyclerView.setAdapter(adapter);
             textView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.setHasFixedSize(false);
         }
         else {
             textView.setVisibility(View.GONE);

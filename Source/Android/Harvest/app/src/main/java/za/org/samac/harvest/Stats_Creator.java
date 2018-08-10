@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -35,6 +36,7 @@ public class Stats_Creator extends Fragment{
     private TextView compareSelectionTextView, accumulatorDescriptionTextView;
     private EditText fromDateEditText, upToDateEditText;
     private RadioGroup accumulatorRadioGroup;
+    private LinearLayout fromLayout, upToLayout;
 
     //Specification
     private final String TAG = "Stats_Creator";
@@ -74,6 +76,9 @@ public class Stats_Creator extends Fragment{
         upToDateEditText = view.findViewById(R.id.stats_create_upTo);
 
         accumulatorRadioGroup = view.findViewById(R.id.stats_create_accumulator_radioGroup);
+
+        fromLayout = view.findViewById(R.id.stats_create_from_layout);
+        upToLayout = view.findViewById(R.id.stats_create_upTo_layout);
 
         //Populate Spinners
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.stats_create_compsChoose, android.R.layout.simple_spinner_item);
@@ -220,12 +225,12 @@ public class Stats_Creator extends Fragment{
 
     public void toggleDates(boolean on){
         if (on){
-            fromDateEditText.setVisibility(View.VISIBLE);
-            upToDateEditText.setVisibility(View.VISIBLE);
+            fromLayout.setVisibility(View.VISIBLE);
+            upToLayout.setVisibility(View.VISIBLE);
         }
         else {
-            fromDateEditText.setVisibility(View.GONE);
-            upToDateEditText.setVisibility(View.GONE);
+            fromLayout.setVisibility(View.GONE);
+            upToLayout.setVisibility(View.GONE);
         }
     }
 
