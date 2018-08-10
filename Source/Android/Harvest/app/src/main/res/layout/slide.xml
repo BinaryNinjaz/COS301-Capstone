@@ -10,5 +10,7 @@
         android:adjustViewBounds="true"
         android:layout_gravity="center"
         android:src="@drawable/harvestintro"
-        android:scaleType="centerInside"/>
+        android:scaleType="centerInside"
+        android:background="@color/black"
+        android:alpha="0.7"/>
 </FrameLayout>
