@@ -277,7 +277,6 @@
     <string name="title_stats">Stats</string>
     <string name="WorkerHistPerformance">Worker Historical Performance</string>
     <string name="OrchHistPerformance">Orchard Historical Performance</string>
-    <string name="title_stats">Stats</string>
     <string name="title_activity_maps">Orchard Map</string>
     <string name="title_activity_foremen_session">ForemenSessionActivity</string>
     <string name="sessionDetailStartDate">Time Started</string>

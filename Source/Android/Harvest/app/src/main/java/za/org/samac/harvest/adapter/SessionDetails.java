@@ -44,7 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import za.org.samac.harvest.Analytics;
+import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.BottomNavigationViewHelper;
 import za.org.samac.harvest.InformationActivity;
 import za.org.samac.harvest.Sessions;
@@ -55,6 +55,7 @@ import za.org.samac.harvest.SessionsMap;
 import za.org.samac.harvest.SettingsActivity;
 import za.org.samac.harvest.SignIn_Farmer;
 import za.org.samac.harvest.SignIn_SignUp;
+import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.SearchedItem;
@@ -170,7 +171,7 @@ public class SessionDetails extends AppCompatActivity {
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(SessionDetails.this, Analytics.class));
+                                startActivity(new Intent(SessionDetails.this, Stats.class));
                                 return true;
                         }
                         return true;
