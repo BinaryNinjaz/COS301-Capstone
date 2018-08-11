@@ -295,6 +295,9 @@
     <string name="sessionDetailTrackingLabelText">TRACKING</string>
     <string name="sessionDetailPerformanceLabelText">WORKER PERFORMANCE SUMMARY</string>
     <string name="delSess">Delete Session</string>
+    <string name="swipe_to_continue">Swipe right to view next slide</string>
+    <string name="skip">Skip</string>
+    <string name="done">Done</string>
 
     <!--Country codes for formatting telephone numbers-->
     <string-array name="CountryCodes">
