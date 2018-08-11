@@ -1,8 +1,11 @@
 package za.org.samac.harvest.adapter;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.MediaCas;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +44,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import za.org.samac.harvest.Stats;
+import za.org.samac.harvest.BottomNavigationViewHelper;
+import za.org.samac.harvest.InformationActivity;
 import za.org.samac.harvest.Sessions;
 import za.org.samac.harvest.SignIn_Choose;
 import za.org.samac.harvest.MainActivity;
@@ -49,8 +55,10 @@ import za.org.samac.harvest.SessionsMap;
 import za.org.samac.harvest.SettingsActivity;
 import za.org.samac.harvest.SignIn_Farmer;
 import za.org.samac.harvest.SignIn_SignUp;
+import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.SearchedItem;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
 import static za.org.samac.harvest.MainActivity.getWorkers;
@@ -78,11 +86,12 @@ public class SessionDetails extends AppCompatActivity {
     private ArrayList<Integer> yield;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Query query;
-    private static final String TAG = "Analytics";
+    private static final String TAG = "Stats";
     ArrayList<PieEntry> entries = new ArrayList<>();
     com.github.mikephil.charting.charts.PieChart pieChart;
     private com.github.mikephil.charting.charts.PieChart pieChartView;
     Map<String, Float> collections = new HashMap<>();
+    private Button deleteSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +104,7 @@ public class SessionDetails extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         linearLayoutSessDetails.setVisibility(View.GONE);
         pieChartView = findViewById(R.id.pieChart);
+        deleteSession = findViewById(R.id.deleteSession);
 
         Button mapButton = findViewById(R.id.sessionDetailsMapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -130,16 +140,81 @@ public class SessionDetails extends AppCompatActivity {
         startDate = Sessions.selectedItem.startDate;
         endDate = Sessions.selectedItem.endDate;
         foreman = Sessions.selectedItem.foreman;
+        key = Sessions.selectedItem.key;
 
         TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
         TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
         TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
 
-        foremanTextView.setText("Foreman: " + foreman);
-        startTime.setText("Time Started: " + formatter.format(startDate));
-        endTime.setText("Time Ended: " + formatter.format(endDate));
+        foremanTextView.setText(foreman);
+        startTime.setText(formatter.format(startDate));
+        endTime.setText(formatter.format(endDate));
+
+        //bottom nav bar
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.actionSession);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.actionYieldTracker:
+                                Intent openMainActivity= new Intent(SessionDetails.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
+                                return true;
+                            case R.id.actionInformation:
+                                startActivity(new Intent(SessionDetails.this, InformationActivity.class));
+                                return true;
+                            case R.id.actionSession:
+                                return true;
+                            case R.id.actionStats:
+                                startActivity(new Intent(SessionDetails.this, Stats.class));
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+
+
+        deleteSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(SessionDetails.this);
+                builder.setMessage("Delete session?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                DatabaseReference myRef;
+                                database = FirebaseDatabase.getInstance();
+                                myRef = database.getReference(MainActivity.farmerKey + "/sessions/" + key);//path to sessions increment in Firebase
+                                myRef.removeValue();//remove latest increment
+                                dialog.dismiss();
+                                Intent intent = new Intent(SessionDetails.this, Sessions.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
 
         displayGraph();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionSession);//set correct item to pop out on the nav bar
+        }
     }
 
     public void displayGraph() {
@@ -165,7 +240,7 @@ public class SessionDetails extends AppCompatActivity {
         pieChart.setData(data); // set the data and list of lables into chart
 
         Description description = new Description();
-        description.setText("Worker Performance");
+        description.setText("");
         pieChart.setDescription(description); // set the description
         pieChart.notifyDataSetChanged();
     }

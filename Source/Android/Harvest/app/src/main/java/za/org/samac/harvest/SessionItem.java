@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.util.Orchard;
@@ -36,7 +37,7 @@ public class SessionItem {
         track.add(loc);
     }
 
-    protected Worker workerWithId(ArrayList<Worker> workers, String id) {
+    protected Worker workerWithId(List<Worker> workers, String id) {
         for (Worker worker : workers) {
             if (worker.getfID().compareTo(id) == 0) {
                 return worker;
@@ -45,7 +46,7 @@ public class SessionItem {
         return null;
     }
 
-    protected Boolean orchardsContainsOrchard(ArrayList<Orchard> orchards, Orchard orchard) {
+    protected Boolean orchardsContainsOrchard(List<Orchard> orchards, Orchard orchard) {
         for (Orchard o : orchards) {
             if (o.getID().compareTo(orchard.getID()) == 0) {
                 return true;
@@ -54,7 +55,7 @@ public class SessionItem {
         return false;
     }
 
-    protected Orchard orchardWithId(ArrayList<Orchard> orchards, String id) {
+    protected Orchard orchardWithId(List<Orchard> orchards, String id) {
         for (Orchard orchard : orchards) {
             if (orchard.getID().compareTo(id) == 0) {
                 return orchard;
@@ -63,7 +64,7 @@ public class SessionItem {
         return null;
     }
 
-    protected Orchard orchardAtPoint(ArrayList<Orchard> orchards, Double x, Double y) {
+    protected Orchard orchardAtPoint(List<Orchard> orchards, Double x, Double y) {
         for (Orchard o : orchards) {
             if (orchardContainsPoint(o, x, y)) {
                 return o;
@@ -73,8 +74,8 @@ public class SessionItem {
     }
 
     protected Boolean orchardContainsPoint(Orchard o, Double x, Double y) {
-        ArrayList<Double> xcoords = new ArrayList<Double>();
-        ArrayList<Double> ycoords = new ArrayList<Double>();
+        ArrayList<Double> xcoords = new ArrayList<>();
+        ArrayList<Double> ycoords = new ArrayList<>();
 
         for (LatLng coord : o.getCoordinates()) {
             xcoords.add(coord.latitude);
@@ -100,7 +101,7 @@ public class SessionItem {
         return c;
     }
 
-    public ArrayList<SearchedItem> search(String text, ArrayList<Worker> workers, ArrayList<Worker> foremen, ArrayList<Orchard> orchards) {
+    public ArrayList<SearchedItem> search(String text, List<Worker> workers, List<Worker> foremen, List<Orchard> orchards) {
         ArrayList<SearchedItem> result = new ArrayList<>();
 
         Worker foremanObj = workerWithId(foremen, foremanId);

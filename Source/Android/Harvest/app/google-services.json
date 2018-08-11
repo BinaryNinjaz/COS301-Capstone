@@ -33,7 +33,7 @@
         }
       ],
       "services": {
-        "analytics_service": {
+        "stats_service": {
           "status": 1
         },
         "appinvite_service": {

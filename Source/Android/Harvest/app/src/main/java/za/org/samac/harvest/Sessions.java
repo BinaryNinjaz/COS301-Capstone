@@ -31,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import za.org.samac.harvest.adapter.SessionsViewAdapter;
+import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.SearchedItem;
 import za.org.samac.harvest.util.Worker;
 import za.org.samac.harvest.util.AppUtil;
@@ -51,24 +53,18 @@ import static za.org.samac.harvest.MainActivity.farmerKey;
 
 public class Sessions extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    private TreeMap<String, SessionItem> sessions; //used to store session data
+    private TreeMap<Date, SessionItem> sessions; //used to store session data
     private TreeMap<String, ArrayList<SearchedItem.Session>> filteredSessions;
     private ArrayList<SearchedItem.Session> adapterSource;
-    private ArrayList<String> dates;
-    private Map<String, String> foremenID; //used to look up name with foreman id
+    private ArrayList<Date> dates;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private ArrayList<Worker> foremen;
     private RecyclerView recyclerView;
     private SessionsViewAdapter adapter;
     private ProgressBar progressBar;
     public static SessionItem selectedItem;
-    private ArrayList<Worker> workers;
-    public static ArrayList<Orchard> orchards;
-    private ArrayList<Farm> farms;
-    private HashMap<String, String> workerID;
-    private DatabaseReference workersRef;
-    private DatabaseReference foremenRef;
-    private ArrayList<String> foremenKeys;
+    private String farmOwnerName = "Farm Owner";
+    private Data data;
+    private BottomNavigationView bottomNavigationView;
 
     private String searchText = "";
 
@@ -84,18 +80,22 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
-        listenForFarms();
-        listenForWorkers();
-        listenForOrchards();
+
+        getAdmin();
+
+        data = new Data();
+        data.notifyMe(this);
+
+        if(!Data.isPulling()){
+            getNewPage();
+        }
 
         dates = new ArrayList<>();
         sessions = new TreeMap<>();
         adapterSource = new ArrayList<>();
 
-        getNewPage();
-
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.actionSession);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
 
@@ -115,7 +115,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(Sessions.this, Analytics.class));
+                                startActivity(new Intent(Sessions.this, Stats.class));
                                 return true;
                         }
                         return true;
@@ -124,6 +124,14 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
 
         adapter = new SessionsViewAdapter(getApplicationContext(), this);
         adapter.setItems(adapterSource);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionSession);//set correct item to pop out on the nav bar
+        }
     }
 
     private SearchedItem.Session sessionsContainsId(ArrayList<SearchedItem.Session> sessions, String id) {
@@ -138,9 +146,21 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
     private Boolean filterSessions() {
         if (searchText.compareTo("") != 0) {
             filteredSessions = new TreeMap<>();
-            for (String key: sessions.keySet()) {
+            for (Date key: sessions.keySet()) {
                 SessionItem item = sessions.get(key);
-                for (SearchedItem foundItem: item.search(searchText, workers, foremen, orchards)) {
+
+                Vector<Worker> workers = new Vector<Worker>();
+                Vector<Worker> foremen = new Vector<Worker>();
+
+                for (Worker worker : data.getWorkers()) {
+                    if (worker.getWorkerType() == WorkerType.FOREMAN) {
+                        foremen.add(worker);
+                    } else {
+                        workers.add(worker);
+                    }
+                }
+
+                for (SearchedItem foundItem: item.search(searchText, workers, foremen, data.getOrchards())) {
                     if (filteredSessions.get(foundItem.property) == null) {
                         filteredSessions.put(foundItem.property, new ArrayList<SearchedItem.Session>());
                     }
@@ -156,13 +176,50 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         return flattenDataSource();
     }
 
+    static class DescOrder implements Comparator<Date> {
+
+        @Override
+        public int compare(Date o1, Date o2) {
+            return o2.compareTo(o1);
+        }
+    }
+
+    public static Date instanceToDay(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
     private Boolean flattenDataSource() {
         int oldCount = adapterSource != null ? adapterSource.size() : 0;
         adapterSource.clear();
         if (filteredSessions == null) {
-            for (String key : sessions.keySet()) {
+            SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
+            formatter.setCalendar(Calendar.getInstance());
+
+            TreeMap<Date, ArrayList<SearchedItem.Session>> compacted = new TreeMap<>(new DescOrder());
+            for (Date key : sessions.keySet()) {
                 SessionItem item = sessions.get(key);
-                adapterSource.add(0, new SearchedItem.Session(item, ""));
+                Date day = instanceToDay(item.startDate);
+
+                if (compacted.get(day) == null) {
+                    compacted.put(day, new ArrayList<SearchedItem.Session>());
+                }
+                compacted.get(day).add(new SearchedItem.Session(item, null));
+            }
+
+            Integer section = 1;
+            for (Date key : compacted.keySet()) {
+                ArrayList<SearchedItem.Session> items = compacted.get(key);
+                adapterSource.add(new SearchedItem.Session(null, formatter.format(key)));
+                for (SearchedItem.Session item : items) {
+                    adapterSource.add(section, item);
+                }
+                section = adapterSource.size() + 1;
             }
         } else {
             Integer section = 1;
@@ -192,7 +249,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String lastKey = "";
                 ArrayList<SessionItem> tempSessions = new ArrayList<>();
-                ArrayList<String> tempDates = new ArrayList<>();
+                ArrayList<Date> tempDates = new ArrayList<>();
                 for(DataSnapshot aChild : dataSnapshot.getChildren()){
                     SessionItem item = new SessionItem();
 
@@ -204,11 +261,14 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                     item.foremanId = "";
                     if (aChild.hasChild("wid")) {
                         item.foremanId = aChild.child("wid").getValue(String.class);
-                        item.foreman = foremenID.get(item.foremanId);
+                        Worker f = data.getWorkerFromIDString(item.foremanId);
+                        if (f != null) {
+                            item.foreman = f.getfName() + " " + f.getsName();
+                        }
                     }
 
                     if (item.foreman == null) {
-                        item.foreman = "Farm Owner";
+                        item.foreman = farmOwnerName;
                     }
 
                     Double endDate = aChild.child("end_date").getValue(Double.class);
@@ -222,28 +282,27 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                     item.endDate = new Date((long) (endDate * 1000));
                     item.startDate = new Date((long) (startDate * 1000));
 
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
-                    formatter.setCalendar(Calendar.getInstance());
-                    final String date = formatter.format(item.startDate);
-
                     for (DataSnapshot trackSnapshot : aChild.child("track").getChildren()) {
                         Double lat = trackSnapshot.child("lat").getValue(Double.class);
                         Double lng = trackSnapshot.child("lng").getValue(Double.class);
                         Location loc = new Location("");
-                        loc.setLatitude(lat.doubleValue());
-                        loc.setLongitude(lng.doubleValue());
+                        loc.setLatitude(lat == null ? 0 : lat);
+                        loc.setLongitude(lng == null ? 0 : lng);
 
                         item.addTrack(loc);
                     }
                     for (DataSnapshot collectionSnapshot : aChild.child("collections").getChildren()) {
-                        String workerName = workerID.get(collectionSnapshot.getKey());
+                        Worker w = data.getWorkerFromIDString(collectionSnapshot.getKey());
+                        String fName = w == null ? "Unknown" : w.getfName();
+                        String sName = w == null ? "Worker" : w.getsName();
+                        String workerName = fName + " " + sName;
                         int count = 0;
                         for (DataSnapshot collection : collectionSnapshot.getChildren()) {
                             Double lat = collection.child("coord").child("lat").getValue(Double.class);
                             Double lng = collection.child("coord").child("lng").getValue(Double.class);
                             Location loc = new Location("");
-                            loc.setLatitude(lat.doubleValue());
-                            loc.setLongitude(lng.doubleValue());
+                            loc.setLatitude(lat == null ? 0 : lat);
+                            loc.setLongitude(lng == null ? 0 : lng);
                             Double time = collectionSnapshot.child("date").getValue(Double.class);
 
                             item.addCollection(collectionSnapshot.getKey(), workerName, loc, time);
@@ -251,7 +310,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                         }
                     }
                     tempSessions.add(item);
-                    tempDates.add(date);
+                    tempDates.add(item.startDate);
                 }
 
                 if (tempSessions.size() > 1) {
@@ -275,13 +334,12 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                 }
                 pageIndex = lastKey;
                 Boolean reload = false;
-                if (searchText == "") {
+                if (searchText.isEmpty()) {
                     filteredSessions = null;
                 } else {
                     reload = filterSessions();
                 }
                 if (flattenDataSource() || reload) {
-                    System.out.println("**********************");
                     adapter.notifyItemInserted(adapterSource.size() - 1);
                 }
             }
@@ -293,218 +351,6 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         });
 
         ids.add(listener);
-    }
-
-    public void listenForOrchards() {
-        orchards = new ArrayList<>();
-        DatabaseReference orchardsRef = FirebaseDatabase.getInstance().getReference(MainActivity.farmerKey + "/orchards");
-        orchardsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                orchards.clear();
-                for (DataSnapshot dataSet : dataSnapshot.getChildren()) {
-                    Orchard temp = new Orchard();
-                    temp.setName(dataSet.child("name").getValue(String.class));
-                    temp.setCrop(dataSet.child("crop").getValue(String.class));
-
-                    //Iterate through coordinate sets
-                    List<LatLng> coords = new Vector<>();
-                    for (DataSnapshot coord : dataSet.child("coords").getChildren()){
-                        // Iterate through
-                        Double lats = coord.child("lat").getValue(Double.class);
-                        Double lngs = coord.child("lng").getValue(Double.class);
-                        coords.add(new LatLng(lats, lngs));
-                    }
-                    temp.setCoordinates(coords);
-
-                    try {
-                        String smeanBagMass = dataSet.child("bagMass").getValue(String.class);
-                        Float meanBagMass = null;
-                        if (smeanBagMass != null) {
-                            if (!smeanBagMass.equals("")) {
-                                meanBagMass = Float.parseFloat(smeanBagMass);
-                            }
-                        }
-//                                else {
-//                                    meanBagMass = 0;
-//                                }
-                        temp.setMeanBagMass(meanBagMass);
-                    }
-                    catch (com.google.firebase.database.DatabaseException e){
-                        Long meanBagBass = dataSet.child("bagMass").getValue(Long.class);
-                        if (meanBagBass != null) {
-                            Float beanBagBass = meanBagBass.floatValue();
-                            temp.setMeanBagMass(beanBagBass);
-                        }
-                    }
-
-                    temp.setIrrigation(dataSet.child("irrigation").getValue(String.class));
-
-                    Long tempL = dataSet.child("date").getValue(Long.class);
-                    Date date;
-                    Calendar c;
-                    if (tempL != null){
-                        c = Calendar.getInstance();
-                        date = new Date(tempL);
-                        c.setTime(date);
-                        temp.setDatePlanted(c);
-                    }
-
-                    Farm assignedFarm = new Farm();
-                    assignedFarm.setID(dataSet.child("farm").getValue(String.class));
-                    temp.setAssignedFarm(assignedFarm);
-
-                    Float row = null, tree = null;
-                    try {
-                        String sRow = dataSet.child("rowSpacing").getValue(String.class);
-                        if (sRow != null) {
-                            if (!sRow.equals("")) {
-                                row = Float.parseFloat(sRow);
-                            }
-                        }
-                    }
-                    catch (com.google.firebase.database.DatabaseException e){
-                        Long t = dataSet.child("rowSpacing").getValue(Long.class);
-                        if (t != null){
-                            row = t.floatValue();
-                        }
-                    }
-                    try{
-                        String sTree = dataSet.child("treeSpacing").getValue(String.class);
-                        if (sTree != null) {
-                            if(!sTree.equals("")){
-                                tree = Float.parseFloat(sTree);
-                            }
-                        }
-                    }
-                    catch (com.google.firebase.database.DatabaseException e){
-                        Long t = dataSet.child("rowSpacing").getValue(Long.class);
-                        if (t != null){
-                            tree = t.floatValue();
-                        }
-                    }
-
-                    temp.setRow(row);
-                    temp.setTree(tree);
-
-                    for (DataSnapshot cultivar : dataSet.child("cultivars").getChildren()){
-                        temp.addCultivar(cultivar.getValue(String.class));
-                    }
-
-                    temp.setFurther(dataSet.child("further").getValue(String.class));
-
-                    temp.setID(dataSet.getKey());
-
-                    orchards.add(temp);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public Orchard getOrchardFromIDString(String findMe){
-        for (Orchard current: orchards){
-            if (current.getID().equals(findMe)){
-                return current;
-            }
-        }
-        return null;
-    }
-
-    public void listenForWorkers() {
-        workers = new ArrayList<>();
-        foremen = new ArrayList<>();
-        workerID = new HashMap<>();
-        foremenID = new HashMap<>();
-
-        DatabaseReference workersRef = FirebaseDatabase.getInstance().getReference(MainActivity.farmerKey + "/workers");
-
-        workersRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                workers.clear();
-                foremen.clear();
-                workerID.clear();
-                foremenID.clear();
-                for (DataSnapshot dataSet : dataSnapshot.getChildren()) {
-                    Worker temp = new Worker();
-                    temp.setfID(dataSet.getKey());
-                    temp.setfName(dataSet.child("name").getValue(String.class));
-                    temp.setsName(dataSet.child("surname").getValue(String.class));
-
-                    //Orchards
-                    List<Orchard> newOrhards = new Vector<>();
-                    for (DataSnapshot orchard : dataSet.child("orchards").getChildren()){
-                        Orchard newOrchard = getOrchardFromIDString(orchard.getValue(String.class));
-                        if (newOrchard != null) {
-                            newOrhards.add(newOrchard);
-                        }
-                    }
-                    temp.setAssignedOrchards(newOrhards);
-
-                    //Type
-                    String sType = dataSet.child("type").getValue(String.class);
-                    WorkerType type = WorkerType.WORKER;
-                    assert sType != null;
-                    if (sType.equals("Foreman")){
-                        type = WorkerType.FOREMAN;
-                    }
-                    temp.setWorkerType(type);
-
-                    temp.setnID(dataSet.child("idNumber").getValue(String.class));
-                    temp.setFurther(dataSet.child("info").getValue(String.class));
-                    temp.setPhone(dataSet.child("phoneNumber").getValue(String.class));
-
-                    if (temp.getWorkerType() == WorkerType.FOREMAN) {
-                        foremen.add(temp);
-                        foremenID.put(temp.getfID(), temp.getfName() + " " + temp.getsName());
-                    } else {
-                        workers.add(temp);
-                        workerID.put(temp.getfID(), temp.getfName() + " " + temp.getsName());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-    public void listenForFarms() {
-        farms = new ArrayList<>();
-
-        DatabaseReference farmsRef = FirebaseDatabase.getInstance().getReference(MainActivity.farmerKey + "/farms");
-
-        farmsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                farms.clear();
-                for (DataSnapshot dataSet : dataSnapshot.getChildren()) {
-                    Farm temp = new Farm();
-                    temp.setName(dataSet.child("name").getValue(String.class));
-                    temp.setCompany(dataSet.child("companyName").getValue(String.class));
-                    temp.setEmail(dataSet.child("email").getValue(String.class));
-                    temp.setPhone(dataSet.child("contactNumber").getValue(String.class));
-                    temp.setProvince(dataSet.child("province").getValue(String.class));
-                    temp.setTown(dataSet.child("town").getValue(String.class)); //TODO: Verify this typo
-                    temp.setFurther(dataSet.child("further").getValue(String.class));
-                    temp.setID(dataSet.getKey());
-                    farms.add(temp);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
@@ -561,6 +407,24 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                 return true;
         }
 //        return false;
+    }
+
+    private void getAdmin() {
+        DatabaseReference adminRef = FirebaseDatabase.getInstance().getReference("/" + user.getUid() + "/admin/");
+        adminRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String fname = dataSnapshot.child("firstname").getValue(String.class);
+                String sname = dataSnapshot.child("lastname").getValue(String.class);
+
+                farmOwnerName = fname + " " + sname;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

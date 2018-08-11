@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +39,8 @@ import java.util.Map;
 import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.SessionDetails;
 import za.org.samac.harvest.domain.Worker;
+import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Orchard;
 
 import static za.org.samac.harvest.MainActivity.getWorkers;
@@ -60,6 +64,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
     private LatLng moveMapHere ; // just used to find where to move map to
     private PolylineOptions polyline;
     private ArrayList<MarkerOptions> pickups;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,34 +76,43 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         mapFragment.getMapAsync(this);
 
         //bottom nav bar
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.actionSession);
-        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionSession);
+            BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(SessionsMap.this, MainActivity.class);
-                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);
-                                return true;
-                            case R.id.actionInformation:
-                                startActivity(new Intent(SessionsMap.this, InformationActivity.class));
-                                return true;
-                            case R.id.actionSession:
-                                return true;
-                            case R.id.actionStats:
-                                startActivity(new Intent(SessionsMap.this, Analytics.class));
-                                return true;
+            bottomNavigationView.setOnNavigationItemSelectedListener(
+                    new BottomNavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.actionYieldTracker:
+                                    Intent openMainActivity = new Intent(SessionsMap.this, MainActivity.class);
+                                    openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                    startActivityIfNeeded(openMainActivity, 0);
+                                    return true;
+                                case R.id.actionInformation:
+                                    startActivity(new Intent(SessionsMap.this, InformationActivity.class));
+                                    return true;
+                                case R.id.actionSession:
+                                    return true;
+                                case R.id.actionStats:
+                                    startActivity(new Intent(SessionsMap.this, Stats.class));
+                                    return true;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
+                    });
+        }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionSession);//set correct item to pop out on the nav bar
+        }
+    }
 
     /**
      * Manipulates the map once available.
@@ -144,7 +158,8 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
             }
         }
 
-        for (Orchard orchard : Sessions.orchards) {
+        Data data = new Data();
+        for (Orchard orchard : data.getOrchards()) {
             if (!orchard.getCoordinates().isEmpty()) {
                 PolygonOptions polygon = new PolygonOptions();
                 polygon.fillColor(0x110000FF);

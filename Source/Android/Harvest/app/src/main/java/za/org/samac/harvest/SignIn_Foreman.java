@@ -287,7 +287,7 @@ public class SignIn_Foreman extends AppCompatActivity {
         farms.clear();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference workingFor = database.getReference("/WorkingFor/");
-        workingFor.addListenerForSingleValueEvent(new ValueEventListener() {
+        workingFor.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot worker : dataSnapshot.getChildren()){
@@ -308,7 +308,7 @@ public class SignIn_Foreman extends AppCompatActivity {
                     //Set all the organizations
                     for (final Organization org : farms) {
                         DatabaseReference orgAdmin = database.getReference("/" + org.getID() + "/admin/");
-                        orgAdmin.addListenerForSingleValueEvent(new ValueEventListener() {
+                        orgAdmin.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 String orgName = dataSnapshot.child("organization").getValue(String.class);
