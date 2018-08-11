@@ -111,6 +111,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Sessions" />
         </activity>
+        <activity android:name=".ViewFlipperActivity" />
 
     </application>
 

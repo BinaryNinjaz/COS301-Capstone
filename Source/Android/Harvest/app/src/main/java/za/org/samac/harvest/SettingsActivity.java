@@ -257,7 +257,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 getActivity().setTitle(user.getEmail());
 
                 //Set summaries
-                userAdmin.addListenerForSingleValueEvent(new ValueEventListener() {
+                userAdmin.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String fname = dataSnapshot.child("firstname").getValue(String.class);

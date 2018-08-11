@@ -135,6 +135,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
 
         bottomNavigationView = findViewById(R.id.BottomNav);
         bottomNavigationView.setSelectedItemId(R.id.actionStats);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
