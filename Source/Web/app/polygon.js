@@ -69,3 +69,20 @@ function bounds(polygon) {
   }
   return bounds;
 }
+
+function polygonContainsPoint(px, py, pointx, pointy) {
+  var i = 0;
+  var j = px.length - 1;
+  var c = false;
+
+  for (; i < px.length; j = i++) {
+    const yValid = (py[i] > pointy) != (py[j] > pointy);
+    const xValidCond = (px[j] - px[i]) * ((pointy - py[i]) / (py[j] - py[i])) + px[i];
+
+    if (yValid && pointx < xValidCond) {
+      c = !c;
+    }
+  }
+  
+  return c;
+}

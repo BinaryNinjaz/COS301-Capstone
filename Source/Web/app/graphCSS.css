@@ -65,6 +65,9 @@ p.errmsg {
     color: red;
 }
 
+.panel-default{
+	background-color: transparent;
+}
 
 
 
