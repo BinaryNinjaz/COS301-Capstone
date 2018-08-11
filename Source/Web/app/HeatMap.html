@@ -2,8 +2,8 @@
   <head>
     <title>Heat Map</title>
     <meta charset="UTF-8">
-
-    <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="bodyElements.css" rel="stylesheet" type="text/css" /><!-- css file -->
     
     <!-- Firebase Dependencies -->
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
@@ -35,27 +35,27 @@
     
     <link rel="stylesheet" type="text/css" href="spin.css">
     <script src="spin.js" charset="utf-8"></script>
+	<link rel="stylesheet" type="text/css" href="newNavbar.css">
   </head>
   <body>
-    <div class="topnav">
-      <ul class="nav navbar-nav">
-				<a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-				<a href="Information.html">Information</a>
-				<a href="Sessions.html">Sessions</a>
-				<a class="active" href="HeatMap.html">Heatmap</a>
-				<a href="graphs.html">Analytics</a>
-      </ul>
-
-      <ul class="pull-right nav navbar-nav">
-      <a href="Settings.html" id="emailInNav"></a>
-      <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> &nbsp;</a>
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </ul>
-  </div>
+	<nav class="navbar navbar-inverse">
+		  <div class="container-fluid">
+			<div class="navbar-header">
+			  <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+			  
+			</div>
+			<ul class="nav navbar-nav">
+			  <li><a href="Information.html">Information</a></li>
+			  <li><a href="Sessions.html">Sessions</a></li>
+			  <li><a class="active" href="HeatMap.html">Heatmap</a></li>
+			  <li><a href="graphs.html">Statistics</a></li>
+			</ul>
+			<ul class=" nav navbar-nav" id="ojo">
+						<li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
+						<li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
+					</ul>
+			</div>
+	</nav>
 
     <div class="container">
       <div class="row">

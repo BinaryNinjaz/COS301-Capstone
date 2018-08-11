@@ -10,3 +10,8 @@
   height: 95%;
   overflow-y: scroll;
 }
+
+.searchReason {
+  text-align: right;
+  color: lightgrey;
+}

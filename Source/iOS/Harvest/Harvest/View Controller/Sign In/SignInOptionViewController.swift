@@ -34,8 +34,10 @@ class SignInOptionViewController: UIViewController {
   
   override func viewDidAppear(_ animated: Bool) {
     guard UserDefaults.standard.bool(forKey: "Launched") else {
-      if let pvc = storyboard?.instantiateViewController(withIdentifier: "appIntroViewController") {
-        present(pvc, animated: true, completion: nil)
+      let vc = storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
+      if let avc = vc as? CarouselViewController {
+        avc.showIntro()
+        present(avc, animated: true, completion: nil)
       }
       return
     }

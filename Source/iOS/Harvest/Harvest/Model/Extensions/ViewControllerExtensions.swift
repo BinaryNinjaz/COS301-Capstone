@@ -62,3 +62,52 @@ public class ReloadableFormViewController: FormViewController, ReloadableViewCon
     }
   }
 }
+
+class AllSelector {
+  var onSelectionChange: (Bool) -> Void
+  
+  init(onSelectionChange: @escaping (Bool) -> Void) {
+    self.onSelectionChange = onSelectionChange
+  }
+  
+  @objc func changeSelection(sender: UIBarButtonItem) {
+    if sender.title == "Select All" {
+      sender.title = "Deselect All"
+      onSelectionChange(true)
+    } else {
+      sender.title = "Select All"
+      onSelectionChange(false)
+    }
+  }
+  
+  static var shared = AllSelector { _ in }
+}
+
+extension MultipleSelectorViewController {
+  func allSelector() {
+    AllSelector.shared.onSelectionChange = { isSelectAll in
+      if isSelectAll {
+        if let row = self.row as? MultipleSelectorRow, let options = row.options {
+          self.row.value = Set(options)
+        }
+        self.form.rows.forEach { $0.baseCell.accessoryType = .checkmark }
+      } else {
+        self.row.value = []
+        self.form.rows.forEach { $0.baseCell.accessoryType = .none }
+      }
+    }
+    let isAllSelected: Bool
+    if let row = self.row as? MultipleSelectorRow, let options = row.options, let value = row.value {
+      isAllSelected = Set(options) == value
+    } else {
+      isAllSelected = false
+    }
+    
+    let button = UIBarButtonItem(
+      title: isAllSelected ? "Deselect All" : "Select All",
+      style: .plain,
+      target: AllSelector.shared,
+      action: #selector(AllSelector.changeSelection(sender:)))
+    navigationItem.rightBarButtonItem = button
+  }
+}

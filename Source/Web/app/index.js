@@ -1,6 +1,14 @@
+/*!
+ * File:   Index.js
+ * Author: Binary Ninjaz (Teboho, Sizo, Kevin)
+ *
+ * Description: Contains all functions required for successful signing in or loging in. 
+ * 
+ */
+
 let page = 0; //0 being login, 1 being sign up
 
-// This will add the login with google functionality
+/// This function will add the login with google functionality
 function googleLogin(){
 	var provider = new firebase.auth.GoogleAuthProvider();
 	firebase.auth().useDeviceLanguage();
@@ -21,6 +29,7 @@ function googleLogin(){
 	});
 	
 }
+///This function allows the user to login
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
 
@@ -150,28 +159,22 @@ function register() {
         firebaseRegister(email, pass);
     }
 }
-
+/* This function checks whether the first password matches the 'verify' password */
 function checkPass(pass1, pass2) {
 	if(page === 0){
             return false;
-	}
-	/*else if (pass1 === "" && pass2 === ""){
-            document.getElementById("errorSpace").innerHTML = "<br>";
-        return true;
-	}*/ 
+	} 
     //We can do this validation through html's minimum character attribute
     if (pass1 !== pass2) {
         document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Passwords do not match</p>";
-        //document.getElementById("password").value = 0;
-        //document.getElementById("passwordConf").value = 0;
         return false;
     }
     if (pass1 === pass2) {
-        //document.getElementById("errorSpace").innerHTML = "<br>";
         return true;
     }
 }
 
+/* This function resets the password, if the user forgot his/her password */
 function resetPassword() {
     document.getElementById("ModalSpace").innerHTML = "" +
         "" +
@@ -201,7 +204,7 @@ function resetPassword() {
 }
 
 
-/* This section of code was added by Vincent, to listen for the Enter shortcut on the keyboard*/
+/* This section of code was added to listen for the Enter shortcut on the keyboard*/
 var input = document.getElementById("password");
 input.addEventListener("keyup", function(event) {
     event.preventDefault();

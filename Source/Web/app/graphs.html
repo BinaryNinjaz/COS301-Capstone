@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <!-- Vincent worked on this on 9/05/2018 -->
 <!-- Shaun made some changes 11/07/2018  -->
@@ -5,7 +6,8 @@
   <head>
   <meta charset="utf-8" />
   <title>Analytics</title>
-  
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+   	<link rel="icon" href="HarvestLogo.png">
     <!--Firebase-->
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script><!--Firebase application-->
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script><!--Firebase authentication-->
@@ -24,70 +26,89 @@
     
     
     <!-- Bootstrap-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+	--><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-     <link href="graphCSS.css" rel="stylesheet" type="text/css"/>
+    <link href="bodyElements.css" rel="stylesheet" type="text/css"/>
     
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- This file needs to be included when youre working with charts -->
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-	
+	<link rel="stylesheet" type="text/css" href="spin.css">
+	<script src="spin.js" charset="utf-8"></script>
+	<link rel="stylesheet" type="text/css" href="loading.css">
+	<link rel="stylesheet" type="text/css" href="newNavbar.css">
   </head>
-  <body>
-	<div class="topnav">
-            <ul class="nav navbar-nav">
-                <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-                <a href="Information.html">Information</a>
-                <a href="Sessions.html">Sessions</a>
-                <a href="HeatMap.html">Heatmap</a>
-                <a class="active" href="graphs.html">Analytics</a>
-            </ul>
-            
-            <ul class="pull-right nav navbar-nav">
-                <a href="Settings.html" id="emailInNav"></a>
-                <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </ul>
-	</div>
-	<div class="container">
-            <!-- top chart is the orchard historical performance graph-->
-            <div class="left">
-                <canvas id="myChart" width="900px" height="500px"></canvas>
-                <!-- below are objects the user can use to filter information-->
-                <div id="topChartFilter">
-                    <label>Select an orchard:
-                        <select id="orchardSelect"></select>
-                    </label> 
-                    <label>Select starting date:
-                        <input type="date" id="weekSelect" onchange="changeLabel()" />
-                    </label>
-                    <label>Ending Date:
-                        <input type="input" id="endDate" readonly="true" />
-                    </label>
-                    <button type = "button" id='orchardFilter' onclick='filterOrchard()'>
-                        Filter Orchard Graph</button>
-                </div>
-            </div>
-            <!-- bottom graph can be is worker performance graph-->
-            <div class="right" >
-                <div id="curve_chart" style="width: 900px; height: 500px"></div>
-                <!-- below are objects the user can use to filter information-->
-                <div id="bottomChartFilter">
-                    <label>Select a worker:
-                        <select id="workerSelect"></select>
-                    </label> 
-                    <label>Select date:
-                        <input type="date" id="workerDateSelect" />
-                    </label>
-                    <button type = "button" id='workerFilter' onclick='filterWorker()'>
-                        Filter Worker Performance Graph </button>
-                </div>
-            </div>
+  <body style="background-color:grey;">
+	<nav class="navbar navbar-inverse">
+		  <div class="container-fluid">
+			<div class="navbar-header">
+			  <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+			  
+			</div>
+			<ul class="nav navbar-nav">
+			  <li><a href="Information.html">Information</a></li>
+			  <li><a href="Sessions.html">Sessions</a></li>
+			  <li><a href="HeatMap.html">Heatmap</a></li>
+			  <li><a class="active" href="graphs.html">Statistics</a></li>
+			</ul>
+			<ul class=" nav navbar-nav" id="ojo">
+						<li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
+						<li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
+					</ul>
+			</div>
+	</nav>
+	<div class="container" style="background-color:whitesmoke; border-radius: 25px;">
+		<!-- top chart is the orchard historical performance graph-->
+		<div class="panel-group" style="margin-top:30px; margin-bottom:30px;">
+			<div class="panel panel-default" style="border-color:green;">
+				<div class="panel-heading" style="background-color:transparent;text-align: center;">Orchard Performance Graph</div>
+				<div class="panel-body">
+					<div class="left">
+						<canvas id="myChart" width="900px" height="500px"></canvas>
+						<div id="myChart1" width="900px" height="500px"></div>
+						<!-- below are objects the user can use to filter information-->
+						<div id="topChartFilter">
+							<label>Select an orchard:
+								<select id="orchardSelect"></select>
+							</label> 
+							<label>Select starting date:
+								<input type="date" id="weekSelect" onchange="changeLabel()" />
+							</label>
+							<label>Ending Date:
+								<input type="input" id="endDate" readonly="true" />
+							</label>
+							<button type = "button" class="btn" id='orchardFilter' onclick='filterOrchard()'>
+								Filter Orchard Graph</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- bottom graph can be is worker performance graph-->
+		<div class="panel-group" style="bottom: 50px;">
+			<div class="panel panel-default" style="border-color:green;">
+				<div class="panel-heading" style="text-align: center;">Worker Performance Graph</div>
+				<div class="panel-body">
+					<div class="right" >
+						<div id="curve_chart" style="width: 600px; height: 500px"></div>
+						<div id="cover-spin"></div>
+						<!-- below are objects the user can use to filter information-->
+						<div id="bottomChartFilter">
+							<label>Select a worker:
+								<select id="workerSelect"></select>
+							</label> 
+							<label>Select date:
+								<input type="date" id="workerDateSelect" />
+							</label>
+							<button type = "button" class="btn" id='workerFilter' onclick='filterWorker()'>
+								Filter Worker Performance Graph </button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
       <script type="text/javascript">
          /* Below are examples that can be used to filter

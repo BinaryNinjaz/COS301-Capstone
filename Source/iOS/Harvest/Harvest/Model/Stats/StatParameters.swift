@@ -372,7 +372,7 @@ enum TimeStep: String, CustomStringConvertible, Codable {
       
     case .monthly:
       comp = .month
-      format = fmtYear + " MMM"
+      format = fmtYear + "MMM"
       start = startDate.startOfMonth()
       end = endDate.startOfMonth().date(byAdding: .month, value: 1)
       

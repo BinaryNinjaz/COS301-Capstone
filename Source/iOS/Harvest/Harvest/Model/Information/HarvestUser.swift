@@ -79,6 +79,7 @@ public final class HarvestUser {
         HarvestUser.current.firstname = user.firstname
         HarvestUser.current.lastname = user.lastname
         HarvestUser.current.organisationName = user.organisationName
+        StatStore.shared.updateStore()
         completion(nil, true)
       }
     })
