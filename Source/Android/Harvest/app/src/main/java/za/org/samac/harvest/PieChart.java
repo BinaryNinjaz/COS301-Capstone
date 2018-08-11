@@ -139,7 +139,7 @@ public class PieChart extends AppCompatActivity {
     public void getWorkerNames() {
         DatabaseReference ref = database.getReference(userUid + "/workers/");//path to workers increment in Firebase
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (int i = 0; i<workerKeys.size(); i++) {

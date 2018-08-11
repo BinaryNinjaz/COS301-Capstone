@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void getForemenId() {
         DatabaseReference foremanRef;
         foremanRef = currUserRef.child("workers");
-        foremanRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        foremanRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -362,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void collectOrchards() {
         DatabaseReference orchRef;
         orchRef = currUserRef.child("orchards");
-        orchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        orchRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void getPolygon() {
         DatabaseReference myRef;
         myRef = database.getReference(farmerKey + "/orchards");
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot child : dataSnapshot.getChildren()){
@@ -430,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void pathAfterGotOrchard(final String path, DatabaseReference myRef2) {
-        myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int m = 0;
@@ -454,7 +454,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         for (int j = 0; j<coords.size(); j++) {
             DatabaseReference myRef3;
             myRef3 = database.getReference(coords.get(j));
-            myRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+            myRef3.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String lat = dataSnapshot.child("lat").getValue().toString();
@@ -653,7 +653,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             To reproduce
             > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
 //        workersRef.addValueEventListener(new ValueEventListener() {
-        workersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        workersRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -904,7 +904,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 final DatabaseReference myRefDel;
                 myRef = database.getReference(farmerKey + "/requestedLocations");//path to sessions increment in Firebase
                 myRefDel = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
-                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Boolean locationWanted = false;
@@ -948,7 +948,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         final DatabaseReference myRefDel;
                         myRef = database.getReference(farmerKey + "/requestedLocations");//path to sessions increment in Firebase
                         myRefDel = database.getReference(farmerKey + "/requestedLocations/" + foremanID);//path to sessions increment in Firebase
-                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        myRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Boolean locationWanted = false;

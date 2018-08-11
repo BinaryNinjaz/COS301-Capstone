@@ -411,7 +411,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
 
     private void getAdmin() {
         DatabaseReference adminRef = FirebaseDatabase.getInstance().getReference("/" + user.getUid() + "/admin/");
-        adminRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        adminRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String fname = dataSnapshot.child("firstname").getValue(String.class);
