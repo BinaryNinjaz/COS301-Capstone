@@ -723,12 +723,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             finish();
             return;
         }
-        //getPolygon();
         farmLevelRef = database.getReference(farmerKey);
         workersRef = farmLevelRef.child("workers");
         currUserRef = database.getReference(farmerKey);//Firebase reference
         collectOrchards();
-        //collectWorkers();
     }
 
     public void statusCheck() {
@@ -736,7 +734,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {//changed from GPS to NETWORK
             buildAlertMessageNoGps();
-
         }
     }
 
