@@ -9,19 +9,27 @@
 import UIKit
 import FSPagerView
 
-class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerViewDelegate {
+class CarouselViewController: UIViewController, FSPagerViewDataSource, FSPagerViewDelegate {
   override var prefersStatusBarHidden: Bool {
     return true
   }
   
-  var images: [UIImage] = [#imageLiteral(resourceName: "HarvestIntro"), #imageLiteral(resourceName: "HarvestManage"), #imageLiteral(resourceName: "HarvestTrack"), #imageLiteral(resourceName: "HarvestAnalyse")]
+  private var images: [UIImage] = []
+  func showTutorial() {
+    images = [#imageLiteral(resourceName: "TutorialWorkflow"), #imageLiteral(resourceName: "TutorialInfo"), #imageLiteral(resourceName: "TutorialCollections"), #imageLiteral(resourceName: "TutorialSessions"), #imageLiteral(resourceName: "TutorialStats")]
+  }
+  
+  func showIntro() {
+    images = [#imageLiteral(resourceName: "HarvestIntro"), #imageLiteral(resourceName: "HarvestManage"), #imageLiteral(resourceName: "HarvestTrack"), #imageLiteral(resourceName: "HarvestAnalyse")]
+  }
+  
   var currentIndex = 0 {
     didSet {
-      if currentIndex == 3 {
+      if currentIndex == images.count - 1 {
         nextButton.setTitle("Done", for: .normal)
         skipButton.isHidden = true
       } else {
-        nextButton.setTitle("Next⇢", for: .normal)
+        nextButton.setTitle("Next  ⇢", for: .normal)
         skipButton.isHidden = false
       }
     }
@@ -33,7 +41,7 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   }
   @IBOutlet weak var pageControler: FSPageControl! {
     didSet {
-      pageControler.numberOfPages = 4
+      pageControler.numberOfPages = images.count
     }
   }
   @IBOutlet weak var nextButton: UIButton!
@@ -46,7 +54,7 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   }
   
   func numberOfItems(in pagerView: FSPagerView) -> Int {
-    return 4
+    return images.count
   }
   
   func pagerView(_ pagerView: FSPagerView, cellForItemAt index: Int) -> FSPagerViewCell {
@@ -77,10 +85,10 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   }
   
   @IBAction func nextButtonTouchUp(_ sender: UIButton) {
-    if currentIndex == 3 {
+    if currentIndex == images.count - 1 {
       completeIntro()
     } else {
-      currentIndex = min(currentIndex + 1, 3)
+      currentIndex = min(currentIndex + 1, images.count - 1)
       pagerView.scrollToItem(at: currentIndex, animated: true)
     }
   }
@@ -90,8 +98,11 @@ class AppIntroViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   }
   
   func completeIntro() {
-    UserDefaults.standard.set(true, forKey: "Launched")
-    StatStore.shared.setUpPredefinedGraphs()
+    if !UserDefaults.standard.bool(forKey: "Launched") {
+      UserDefaults.standard.set(true, forKey: "Launched")
+      StatStore.shared.setUpPredefinedGraphs()
+    }
+    
     dismiss(animated: true, completion: nil)
   }
 }

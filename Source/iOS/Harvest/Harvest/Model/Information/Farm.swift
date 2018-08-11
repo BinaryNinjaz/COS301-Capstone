@@ -26,7 +26,7 @@ final class Farm: Codable {
     email = json["email"] as? String ?? ""
     contactNumber = json["contactNumber"] as? String ?? ""
     province = json["province"] as? String ?? ""
-    nearestTown = json["nearestTown"] as? String ?? ""
+    nearestTown = json["town"] as? String ?? ""
     details = json["further"] as? String ?? ""
     tempory = nil
   }

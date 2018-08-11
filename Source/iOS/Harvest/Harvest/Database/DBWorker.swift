@@ -84,6 +84,8 @@ extension HarvestDB {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
     let workingFor = ref.child(Path.workingFor)
+    let locations = ref.child(Path.locations)
+    let requestedLocations = ref.child(Path.requestedLocations)
     
     if worker.id == "" {
       worker.id = workers.childByAutoId().key
@@ -98,8 +100,11 @@ extension HarvestDB {
         foremen.child(oldNumber.removedFirebaseInvalids()).removeValue()
       }
     } else if worker.phoneNumber != "" {
-      foremen.child(worker.phoneNumber.removedFirebaseInvalids()).removeValue()
-      workingFor.child(worker.phoneNumber.removedFirebaseInvalids()).removeValue()
+      let workerPath = worker.phoneNumber.removedFirebaseInvalids()
+      foremen.child(workerPath).removeValue()
+      workingFor.child(workerPath).removeValue()
+      locations.child(workerPath).removeValue()
+      requestedLocations.child(workerPath).removeValue()
     }
   }
   

@@ -112,9 +112,9 @@ public final class Orchard {
       result.append(("Name", name))
     }
     
-    let farmName = Entities.shared.farms.first { $0.value.id == assignedFarm }.map { $0.value.name } ?? ""
-    if farmName.lowercased().contains(text) {
-      result.append(("Assigned Farm", farmName))
+    let farm = Entities.shared.farms.first { $0.value.id == assignedFarm }
+    for (prop, reason) in farm?.value.search(for: text) ?? [] {
+      result.append(("Farm " + prop, reason))
     }
     
     let workerNames = Entities.shared.workers

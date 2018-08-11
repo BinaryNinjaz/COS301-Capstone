@@ -25,6 +25,28 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    let allOptions = Set(Entities.shared.entities(for: grouping).map { $0.id })
+    let isAllSelected = allOptions.subtracting(selected).isEmpty
+    
+    navigationItem.rightBarButtonItem = UIBarButtonItem(
+      title: isAllSelected ? "Deselect All" : "Select All",
+      style: .plain,
+      target: self,
+      action: #selector(changeSelection))
+  }
+  
+  @objc func changeSelection() {
+    if navigationItem.rightBarButtonItem?.title == "Select All" {
+      navigationItem.rightBarButtonItem?.title = "Deselect All"
+      selected = Entities.shared.entities(for: grouping).map { $0.id }
+      row.value = selected
+    } else {
+      navigationItem.rightBarButtonItem?.title = "Select All"
+      selected.removeAll()
+      row.value = selected
+    }
+    reloadFormVC()
   }
   
   func selectableEntitiesSection() -> SelectableSection<ListCheckRow<EntityItem>> {

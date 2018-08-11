@@ -141,6 +141,12 @@ extension Date {
     
     return formatter.string(from: date)
   }
+  
+  func daysSince1970() -> Double {
+    var interval = Int(timeIntervalSince1970)
+    interval -= interval % 86400
+    return Double(interval) / 86400.0
+  }
 }
 
 extension Date {
