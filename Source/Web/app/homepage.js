@@ -1,5 +1,14 @@
-var markers = [];
+/*!
+*  	File:   homepage.js
+*	Author: Binary Ninjaz (Teboho, Sizo, Kevin)
+*
+*	Description: Contains all functions required for the home page interface.
+*/
 
+
+
+var markers = [];
+///This function is a get function, it returns the location of the user ID, from the database
 function locationsRef() {
   return firebase.database().ref('/' + userID() + '/locations');
 }
@@ -14,7 +23,9 @@ $(window).bind("load", function() {
   retryUntilTimeout(succ, fail, 1000);
 });
 
-var foremen = [];
+var foremen = []; /* This is an array of tracked formen */
+
+///This function functions allows the use to narrow down the number of foreman being tracked
 function changeSelection(checkbox) {
   for (var i = 0; i < foremen.length; i++) {
     if (foremen[i].key === checkbox.value) {
@@ -25,7 +36,7 @@ function changeSelection(checkbox) {
     }
   }
 }
-
+///This function displays the changes in the tick boxes, of the names of the foreman being tracked
 function createForemenSelectionButton(name, key) {
   result = '';
   result += '<div class="checkbox">';
@@ -35,6 +46,7 @@ function createForemenSelectionButton(name, key) {
   return result;
 }
 
+///This function initiates the available foreman for tracking. Each checkbox for each farmer will be ticked for tracking
 function initForemen() {
   getWorkers((workersSnap) => {
     var foremenDiv = document.getElementById("foremen");
@@ -54,6 +66,7 @@ function initForemen() {
   setInterval(requestLocations, 1000 * 60 * 5);
 }
 
+///This function requests location of the foreman from the foreman's phone. The phone will delete this request after it was granted
 function requestLocations() {
   for (var i = 0; i < foremen.length; i++) {
     if (foremen[i].beingTracked) {
@@ -63,8 +76,10 @@ function requestLocations() {
   }
 }
 
-var locations = [];
-var map;
+var locations = []; /* This is an array of locations for the map */
+var map; /* This variable will be used as a container for drawing on google maps */
+
+///This function initialises the points which initially appear on the map 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -25, lng: 28 },
@@ -78,6 +93,7 @@ function initMap() {
   });
 }
 
+///This function returns the name of each foreman
 function initials(name) {
   var f = name[0];
   var e = " ";

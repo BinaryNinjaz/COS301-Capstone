@@ -1,0 +1,14 @@
+@media (min-width: 768px){
+	#ojo { float:right;}
+	
+}
+.nav a.active {
+    background-color: #4CAF50; /*Green*/
+    color: white;
+}
+.navbar ul.nav a { color: whitesmoke; }
+.navbar ul.nav a:hover { 
+	background-color: #ddd; /*Grey*/
+    color: black;
+    text-decoration: none;
+}

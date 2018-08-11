@@ -1,0 +1,32 @@
+h1 {
+    font-family: sans-serif;
+    color: black;
+}
+
+label {
+    font-family: sans-serif;
+    color: black;
+}
+
+.form-control {
+    border-color: grey;
+}
+
+button {
+    background-color: #4CAF50; /*Green*/
+    color: white;
+    padding: 14px 20px;
+    margin: 10px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.loginBlock {
+    background-color: whitesmoke;
+    width: 90%;
+}
+
+p.errmsg {
+    color: red;
+}

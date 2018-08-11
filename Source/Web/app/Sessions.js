@@ -1,6 +1,16 @@
+/* 
+* 	File:	Sessions.js
+*	Author:	Binary Ninjaz (Letanyan,Ojo)
+*
+*	Description:	This file contais functions for the data representation on 
+*					"Sessions.html". It requests and recieves data from firebase
+*					databse, and uses google graph APIs 
+*/
 var pageIndex = null; // track the last session loaded. Used for pagination
 var pageSize = 21;
 $(window).bind("load", () => {
+	var divHide = document.getElementById('loader'); /* When the page loads, the error div should be hidden */
+	divHide.style.visibility = "hidden"; /* When the page loads, the error div should be hidden, do not remove */
   let succ = () => {
     initPage();
     initMap();
@@ -12,6 +22,7 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
+/* This function initiates the coordinates on the map*/
 var map;
 function initMap() {
   locationLookup((data, response) => {
@@ -26,6 +37,7 @@ function initMap() {
   });
 }
 
+/* Function returns a session, given a particular key */
 function sessionForKey(key, sortedMap) {
   for (const groupIdx in sortedMap) {
     const group = sortedMap[groupIdx];
@@ -40,15 +52,21 @@ function sessionForKey(key, sortedMap) {
   return undefined;
 }
 
+/* Function loads a list of sessions on the side of the screen */
 function sessionsListLoader(loading) {
   var sessionsListHolder = document.getElementById("sessionsListLoader");
   if (!loading) {
+	var divHide = document.getElementById('loader');
+	divHide.style.visibility = "hidden";
+	updateSpiner(false);
     sessionsListHolder.innerHTML = "<button type='button' class='btn btn-secoundary' style='margin: 4px' onclick='newPage()'>Load More Sessions</button>";
   } else {
-    sessionsListHolder.innerHTML = "<h2>Loading Sessions...</h2>";
+	var divHide = document.getElementById('loader');
+	divHide.style.visibility = "visible";
+	updateSpiner(true);
+    /*sessionsListHolder.innerHTML = "<h2>Loading Sessions...</h2>";*/
   }
 }
-
 
 var farms = {};
 var orchards = {};
@@ -159,8 +177,10 @@ function newPage() {
   });
 }
 
-var markers = [];
-var polypath;
+var markers = []; /* An array of markers for the map */
+var polypath; /* Variable for storing the path of the polygon */
+
+/* This functions plots the graph of a choosen session by a particular foreman */
 function loadSession(sessionID) {
   const ref = firebase.database().ref('/' + userID() + '/sessions/' + sessionID);
 
@@ -250,6 +270,7 @@ function loadSession(sessionID) {
   initGraph(graphData);
 }
 
+/* This function (is a subfunction) simply displays the doughnut graph */
 var chart;
 function initGraph(collections) {
   if (chart !== undefined) {
@@ -273,6 +294,43 @@ function initGraph(collections) {
     data: collections,
     options: options
   });
+}
+
+/* This function shows the spinner while still waiting for resources*/
+var spinner;
+function updateSpiner(shouldSpin) {
+  var opts = {
+	lines: 8, // The number of lines to draw
+	length: 37, // The length of each line
+	width: 10, // The line thickness
+	radius: 20, // The radius of the inner circle
+	scale: 1, // Scales overall size of the spinner
+	corners: 1, // Corner roundness (0..1)
+	color: '#4CAF50', // CSS color or array of colors
+	fadeColor: 'transparent', // CSS color or array of colors
+	speed: 1, // Rounds per second
+	rotate: 0, // The rotation offset
+	animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+	direction: 1, // 1: clockwise, -1: counterclockwise
+	zIndex: 2e9, // The z-index (defaults to 2000000000)
+	className: 'spinner', // The CSS class to assign to the spinner
+	top: '50%', // Top position relative to parent
+	left: '50%', // Left position relative to parent
+	shadow: '0 0 1px transparent', // Box-shadow for the lines
+	position: 'absolute' // Element positioning
+  };
+  
+  var target = document.getElementById("loader"); //This is where the spinner is gonna show
+  if (shouldSpin) {
+	  target.style.position = "absolute"; //This is for proper alignment
+	  target.style.top = "100px"; //This is for proper alignment
+	  target.style.left = "100px"; //This is for proper alignment
+	  spinner = new Spinner(opts).spin(target); //The class and corresponding css are defined in spin.js and spin.css
+  } else {
+	  //target.style.top = "0px";
+	  spinner.stop(); //This line stops the spinner. 
+	  spinner = null;
+  }
 }
 
 function filterSessions() {

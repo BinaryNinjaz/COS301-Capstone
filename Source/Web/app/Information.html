@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Information</title>
-     <link rel="icon" href="HarvestLogo.png">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="HarvestLogo.png">
+
     <!--Here import stuff-->
     <!--Firebase-->
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
@@ -22,7 +25,7 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link type="text/css" rel="stylesheet" href="navbar.css">
+    <link type="text/css" rel="stylesheet" href="bodyElements.css">
 
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css"/>
 
@@ -34,30 +37,27 @@
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap">
         </script>
     <script src="polygon.js" charset="utf-8"></script>
-	
-
+	  <link rel="stylesheet" type="text/css" href="newNavbar.css">
 </head>
 <body>
-
-<div class="topnav">
-      <ul class="nav navbar-nav">
-        <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-        <a class="active" href="Information.html">Information</a>
-        <a href="Sessions.html">Sessions</a>
-        <a href="HeatMap.html">Heatmap</a>
-        <a href="graphs.html">Analytics</a>
-      </ul>
-      
-      <ul class="pull-right nav navbar-nav">
-        <a href="Settings.html" id="emailInNav"></a>
-        <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> &nbsp;</a>
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-      </ul>
-    </div>
+	<nav class="navbar navbar-inverse">
+		  <div class="container-fluid">
+			<div class="navbar-header">
+			  <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+			  
+			</div>
+			<ul class="nav navbar-nav">
+			  <li><a class="active" href="Information.html">Information</a></li>
+			  <li><a href="Sessions.html">Sessions</a></li>
+			  <li><a href="HeatMap.html">Heatmap</a></li>
+			  <li><a href="graphs.html">Statistics</a></li>
+			</ul>
+			<ul class=" nav navbar-nav" id="ojo">
+						<li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
+						<li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
+					</ul>
+			</div>
+	</nav>
     
     <div class="container-fluid">
       <!--Body of the page-->
