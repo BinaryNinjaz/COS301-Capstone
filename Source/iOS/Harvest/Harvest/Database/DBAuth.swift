@@ -73,7 +73,7 @@ extension HarvestDB {
     on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
-    Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+    Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
       if let error = error {
         let nserr = error as NSError
         if [AuthErrorCode.emailAlreadyInUse, .wrongPassword, .userNotFound]
@@ -86,7 +86,7 @@ extension HarvestDB {
         return
       }
       
-      guard let user = user else {
+      guard let user = authResult?.user else {
         SCLAlertView().showError("Sign In Failure", subTitle: "An unknow error occured")
         completion(false)
         return
@@ -105,7 +105,7 @@ extension HarvestDB {
     with credential: AuthCredential,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
-    Auth.auth().signIn(with: credential) { (user, error) in
+    Auth.auth().signInAndRetrieveData(with: credential) { (authResult, error) in
       if let error = error {
         let nserr = error as NSError
         if [AuthErrorCode.emailAlreadyInUse, .wrongPassword, .userNotFound]
@@ -118,7 +118,7 @@ extension HarvestDB {
         return
       }
       
-      guard let user = user else {
+      guard let user = authResult?.user else {
         SCLAlertView().showError("Sign In Failure", subTitle: "An unknow error occured")
         completion(false)
         return
@@ -142,14 +142,14 @@ extension HarvestDB {
     Auth.auth().createUser(
       withEmail: details.email,
       password: details.password
-    ) { (user, error) in
+    ) { (authResult, error) in
       if let error = error {
         SCLAlertView().showError("Sign Up Failure", subTitle: error.localizedDescription)
         completion(false)
         return
       }
       
-      guard let user = user else {
+      guard let user = authResult?.user else {
         SCLAlertView().showError("Sign Up Failure", subTitle: "An unknown error occured")
         completion(false)
         return
@@ -231,8 +231,7 @@ extension HarvestDB {
   static func getWorkingFor(
     completion: @escaping ([(uid: String, wid: String)]) -> Void
   ) {
-    let wfref = ref.child(
-      Path.workingFor
+    let wfref = ref.child(Path.workingFor
         + "/"
         + HarvestUser.current.accountIdentifier.removedFirebaseInvalids())
     wfref.observeSingleEvent(of: .value) { (snapshot) in

@@ -33,6 +33,55 @@ class SettingsEurekaViewController: ReloadableFormViewController {
   }
   
   override func setUp() {
+    let welcomeScreenRow = ButtonRow { row in
+      row.title = "Welcome Screen"
+    }.onCellSelection { _, _ in
+      let vc = self.storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
+      let avc = vc as! CarouselViewController
+      avc.showIntro()
+      
+      self.present(avc, animated: true, completion: nil)
+    }
+    
+    let tutorialScreenRow = ButtonRow { row in
+      row.title = "Tutorial"
+    }.onCellSelection { _, _ in
+      let vc = self.storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
+      let avc = vc as! CarouselViewController
+      avc.showTutorial()
+      
+      self.present(avc, animated: true, completion: nil)
+    }
+    
+    let userManualRow = ButtonRow { row in
+      row.title = "User Manual"
+    }.onCellSelection { _, _ in
+      let vc = self.storyboard?.instantiateViewController(withIdentifier: "pdfViewController")
+      let pvc = vc as! PDFViewController
+      pvc.loadPDF(named: "HarvestUserManual")
+      
+//      self.navigationController?.present(pvc, animated: true, completion: nil)
+      self.navigationController?.pushViewController(pvc, animated: true)
+//      self.present(pvc, animated: true, completion: nil)
+    }
+    
+    userSection(form: form)
+    
+    if HarvestUser.current.workingForID.isEmpty { // is farmer
+      form
+        +++ Section("Help")
+        <<< tutorialScreenRow
+        <<< userManualRow
+        <<< welcomeScreenRow
+      
+    } else { // is foreman
+      form
+        +++ Section("Help")
+        <<< tutorialScreenRow
+    }
+  }
+  
+  func userSection(form: Form) {
     let userRow = HarvestUser.current.accountIdentifier
     
     let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
@@ -41,15 +90,15 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     
     let logoutRow = ButtonRow { row in
       row.title = "Logout"
-      }.onCellSelection { (_, _) in
-        HarvestDB.signOut { w in
-          if w,
-            let vc = self
-              .storyboard?
-              .instantiateViewController(withIdentifier: "signInOptionViewController") {
-            self.present(vc, animated: true, completion: nil)
-          }
+    }.onCellSelection { (_, _) in
+      HarvestDB.signOut { w in
+        if w,
+          let vc = self
+            .storyboard?
+            .instantiateViewController(withIdentifier: "signInOptionViewController") {
+          self.present(vc, animated: true, completion: nil)
         }
+      }
     }
     
     let resignRow = ButtonRow { row in
@@ -81,6 +130,7 @@ class SettingsEurekaViewController: ReloadableFormViewController {
         +++ Section(userRow)
         <<< adminRow
         <<< logoutRow
+      
     } else { // is foreman
       form
         +++ Section(userRow)

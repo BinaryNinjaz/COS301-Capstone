@@ -27,6 +27,15 @@ class MainTabBarViewController: UITabBarController {
     }
     
     Entities.shared.start()
+    
+    if !UserDefaults.standard.bool(forKey: HarvestUser.current.uid + "SignedIn") {
+      UserDefaults.standard.set(true, forKey: HarvestUser.current.uid + "SignedIn")
+      let vc = storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
+      if let avc = vc as? CarouselViewController {
+        avc.showTutorial()
+        present(avc, animated: true, completion: nil)
+      }
+    }
   }
   
   override func viewWillDisappear(_ animated: Bool) {

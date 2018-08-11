@@ -528,10 +528,10 @@
                         <color key="selectedImageTintColor" red="0.1629850102" green="0.73037697209999997" blue="0.36622702639999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
+                        <segue destination="3Wl-k0-RpW" kind="relationship" relationship="viewControllers" id="x2a-Es-20V"/>
                         <segue destination="P1R-gw-ymn" kind="relationship" relationship="viewControllers" id="csQ-Sy-KhN"/>
                         <segue destination="9Hd-kJ-s2Y" kind="relationship" relationship="viewControllers" id="2mQ-rB-PvP"/>
                         <segue destination="pXj-sO-QG3" kind="relationship" relationship="viewControllers" id="B03-cU-mkX"/>
-                        <segue destination="3Wl-k0-RpW" kind="relationship" relationship="viewControllers" id="x2a-Es-20V"/>
                         <segue destination="vND-wI-MtW" kind="relationship" relationship="viewControllers" id="KCM-nJ-IM6"/>
                     </connections>
                 </tabBarController>
@@ -941,10 +941,25 @@ Expected Yield: 0</string>
             </objects>
             <point key="canvasLocation" x="3084" y="2121"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="64d-kd-0Td">
+            <objects>
+                <viewController storyboardIdentifier="pdfViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="A7C-gD-aQu" customClass="PDFViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ecz-2t-QJH">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="ao6-8b-x9Q"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A4W-Aj-9Tu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3084" y="2804.347826086957"/>
+        </scene>
         <!--Data Source-->
         <scene sceneID="TIm-H1-HXh">
             <objects>
-                <viewController storyboardIdentifier="appIntroViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LdN-pK-Uud" customClass="AppIntroViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="carouselViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LdN-pK-Uud" customClass="CarouselViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EDy-jp-6gl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -971,15 +986,26 @@ Expected Yield: 0</string>
                                         </view>
                                     </subviews>
                                 </view>
-                                <blurEffect style="light"/>
+                                <blurEffect style="dark"/>
                             </visualEffectView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tRa-3I-ASB" customClass="FSPageControl" customModule="FSPagerView">
                                 <rect key="frame" x="0.0" y="625" width="375" height="42"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZMi-oQ-keN">
+                                <rect key="frame" x="16" y="562" width="343" height="55"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
+                                <state key="normal" title="Next  ⇢">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="nextButtonTouchUp:" destination="LdN-pK-Uud" eventType="touchUpInside" id="I3w-Oe-z6V"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QcK-4Z-PUZ">
-                                <rect key="frame" x="16" y="562" width="100" height="55"/>
+                                <rect key="frame" x="16" y="562" width="92" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
                                 <state key="normal" title="Skip">
@@ -987,17 +1013,6 @@ Expected Yield: 0</string>
                                 </state>
                                 <connections>
                                     <action selector="skipButtonTouchUp:" destination="LdN-pK-Uud" eventType="touchUpInside" id="JV3-fl-ftf"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZMi-oQ-keN">
-                                <rect key="frame" x="16" y="562" width="343" height="55"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
-                                <state key="normal" title="Next ⇢">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="nextButtonTouchUp:" destination="LdN-pK-Uud" eventType="touchUpInside" id="I3w-Oe-z6V"/>
                                 </connections>
                             </button>
                         </subviews>

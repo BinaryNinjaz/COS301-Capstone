@@ -5,6 +5,7 @@ disabled_rules:
   - trailing_whitespace
   - file_length
   - large_tuple
+  - force_cast
   
 excluded:
   - Pods

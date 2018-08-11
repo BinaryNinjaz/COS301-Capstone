@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Information</title>
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="HarvestLogo.png">
 
     <!--Here import stuff-->
     <!--Firebase-->
@@ -22,7 +25,7 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link type="text/css" rel="stylesheet" href="navbar.css">
+    <link type="text/css" rel="stylesheet" href="bodyElements.css">
 
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css"/>
 
@@ -34,73 +37,81 @@
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap">
         </script>
     <script src="polygon.js" charset="utf-8"></script>
-
+	  <link rel="stylesheet" type="text/css" href="newNavbar.css">
 </head>
 <body>
-
-<!--NavBar-->
-<div class="topnav">
-    <ul class="nav navbar-nav">
-        <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-        <a class='active' href="Information.html">Information</a>
-        <a href="Sessions.html">Sessions</a>
-        <a href="HeatMap.html">Heatmap</a>
-        <a href="graphs.html">Analytics</a>
-    </ul>
-
- 
-        <ul class="pull-right nav navbar-nav">
-            <a href="Settings.html" id="emailInNav"></a>
-            <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> &nbsp;</a>
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </ul>
-    </div>
-
-<!--Body of the page-->
-<div class="row">
-    <div class="col-sm-2" id="col1">
-        <!--Column One-->
-        <button type="button" class="btn btn-primary" id="farm" onclick="popFarm()">Farms</button>
-        <button type="button" class="btn btn-primary" id="orchInfo" onclick="popOrch()">Orchards</button>
-        <button type="button" class="btn btn-primary" id="workers" onclick="popWork()">Workers</button>       
-    </div>
-    <div class="col-sm-2" id="col2">
-        <!--Column Two-->
-        <div id="SearchSpace"></div>
-        <div id="AddButt"></div>
-        <div id="DispButt"></div>
-    </div>
-    <div class="col-sm-8" id="col3">
-        <!--Column Two-->
-    </div>
-</div>
-
-<!-- Modal -->
-<div id="delModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Confirm Deletion</h4>
-            </div>
-            <div class="modal-body" id="modalText"></div>
-            <div class="modal-footer">
-                <div class="col-sm-2 col-sm-offset-8" style="padding: 5px;">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                </div>
-                <div class="col-sm-2" style="padding: 5px;">
-                    <div id="modalDelBut"></div>
-                    <!--<button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>-->
-                </div>
+	<nav class="navbar navbar-inverse">
+		  <div class="container-fluid">
+			<div class="navbar-header">
+			  <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+			  
+			</div>
+			<ul class="nav navbar-nav">
+			  <li><a class="active" href="Information.html">Information</a></li>
+			  <li><a href="Sessions.html">Sessions</a></li>
+			  <li><a href="HeatMap.html">Heatmap</a></li>
+			  <li><a href="graphs.html">Statistics</a></li>
+			</ul>
+			<ul class=" nav navbar-nav" id="ojo">
+						<li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
+						<li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
+					</ul>
+			</div>
+	</nav>
+    
+    <div class="container-fluid">
+      <!--Body of the page-->
+      <div class="row">
+        <div class="col-12 text-center" id="col1">
+            <div id="selectedEntity" class="btn-group" data-toggle="buttons" style="visibility: hidden">
+              <label class="btn btn-primary active">
+                <input type="radio" name="selectedEntity" id="farm" value="F" checked onchange="popFarm()"> Farms
+              </label>
+              <label class="btn btn-primary">
+                <input type="radio" name="selectedEntity" id="orchInfo" value="O" onchange="popOrch()"> Orchards
+              </label>
+              <label class="btn btn-primary">
+                <input type="radio" name="selectedEntity" id="workers" value="W" onchange="popWork()"> Workers
+              </label>
             </div>
         </div>
-
+      </div>
+      <div class="row">
+          <div class="col-12 col-sm-4 col-md-3" id="col2" style="height: calc(100vh - 198px)">
+              <!--Column One-->
+              <div id="SearchSpace"></div>
+              <div id="AddButt"></div>
+              <div id="DispButt" class="scrollView"></div>
+          </div>
+          <div id="right" class="col-12 col-sm-8 col-md-9" style="height: calc(100vh - 98px)">
+            <div class="scrollView" id="col3">
+            </div>
+          </div>
+      </div>
     </div>
+
+    <!-- Modal -->
+    <div id="delModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirm Deletion</h4>
+                </div>
+                <div class="modal-body" id="modalText"></div>
+                <div class="modal-footer">
+                    <div class="col-sm-2 col-sm-offset-8" style="padding: 5px;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                    <div class="col-sm-2" style="padding: 5px;">
+                        <div id="modalDelBut"></div>
+                        <!--<button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
 </div>
 
 </body>

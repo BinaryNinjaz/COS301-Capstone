@@ -19,7 +19,7 @@ extension Array where Element == CLLocationCoordinate2D {
     return path
   }
   
-  func gmsPolyline(mapView: GMSMapView, color: UIColor = .blue, width: CGFloat = 1.0) -> GMSPolyline {
+  func gmsPolyline(mapView: GMSMapView, color: UIColor = .red, width: CGFloat = 3.0) -> GMSPolyline {
     let result = GMSPolyline(path: gmsPath())
     result.strokeColor = color
     result.strokeWidth = width

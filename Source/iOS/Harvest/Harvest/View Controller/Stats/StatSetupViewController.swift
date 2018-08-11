@@ -124,6 +124,9 @@ final class StatSetupViewController: ReloadableFormViewController {
         return row?.value != .worker
       }
     }.cellUpdate { _, row in
+      row.onPresentCallback = { _, tovc in
+        tovc.allSelector()
+      }
       row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .worker })
     }
     
@@ -137,6 +140,9 @@ final class StatSetupViewController: ReloadableFormViewController {
         return row?.value != .foreman
       }
     }.cellUpdate { _, row in
+      row.onPresentCallback = { _, tovc in
+        tovc.allSelector()
+      }
       row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
       row.options?.append(Worker(HarvestUser.current))
     }
@@ -150,6 +156,9 @@ final class StatSetupViewController: ReloadableFormViewController {
         return row?.value != .orchard
       }
     }.cellUpdate { _, row in
+      row.onPresentCallback = { _, tovc in
+        tovc.allSelector()
+      }
       row.options = Entities.shared.orchards.map { $0.value }
     }
     
@@ -162,6 +171,9 @@ final class StatSetupViewController: ReloadableFormViewController {
         return row?.value != .farm
       }
     }.cellUpdate { _, row in
+      row.onPresentCallback = { _, tovc in
+        tovc.allSelector()
+      }
       row.options = Entities.shared.farms.map { $0.value }
     }
     
@@ -200,8 +212,12 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.value = .hourly
     }.onChange { row in
       UIView.performWithoutAnimation {
-        modeSection.footer?.title = (self.modeRow?.value ?? TimedGraphMode.running)
+        let mode = self.modeRow?.value ?? TimedGraphMode.running
+        modeSection.footer?.title = mode
           .explanation(for: self.statKindRow?.value ?? .farm, by: row.value ?? .hourly)
+        
+        let timeStep = (row.value ?? .hourly).itemizedDescription.localizedCapitalized
+        self.modeRow?.cell.segmentedControl.setTitle("By \(timeStep)", forSegmentAt: 2)
         modeSection.reload()
       }
     }
@@ -210,7 +226,9 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.options = [.running, .accumEntity, .accumTime]
       row.value = .running
     }.cellUpdate { (cell, _) in
+      let timeStep = (self.timeStepRow?.value ?? .hourly).itemizedDescription.localizedCapitalized
       cell.segmentedControl.setTitle("None", forSegmentAt: 0)
+      cell.segmentedControl.setTitle("By \(timeStep)", forSegmentAt: 2)
       let ent = self.statKindRow?.value?.description ?? "Farm"
       self.modeRow?.cell.segmentedControl.setTitle("By \(ent)", forSegmentAt: 1)
     }.onChange { (row) in

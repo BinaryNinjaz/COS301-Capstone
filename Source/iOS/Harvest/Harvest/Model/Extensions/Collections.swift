@@ -22,3 +22,9 @@ extension Array {
     return result
   }
 }
+
+extension String {
+  func captilized() -> String {
+    return String((first ?? " ")).uppercased() + String(dropFirst())
+  }
+}
