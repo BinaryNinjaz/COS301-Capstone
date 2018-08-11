@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Below are all of the classes that will store and manipulate all of the individual information.
  */
 
-public class Farm{
+public class Farm extends DBInfoObject {
     protected String name;
     protected String company;
     protected String email;
@@ -14,7 +14,6 @@ public class Farm{
     protected String province;
     protected String town;
     protected String further;
-    protected String ID;
 
     public Farm(){
 

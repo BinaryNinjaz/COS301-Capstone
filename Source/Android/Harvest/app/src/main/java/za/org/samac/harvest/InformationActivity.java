@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,25 +45,19 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     private boolean mapLocationPermissionSessionAsked = false;
     private boolean mapLocationInformationSessionAsked = false;
     private BottomNavigationView bottomNavigationView;
-    private Data data;
-    private boolean editing = false, map = false;
+    private static Data data;
+    private boolean editing = false, map = false, listing = false;
+    private static boolean setDateToday = false;
     private Stack<Category> backViews = new Stack<>();
     private List<LatLng> coords;
-
-    Category selectedCat = NOTHING;
-
-//    @Override
-//    protected void onResume(){
-//        super.onResume();
-//        bottomNavigationView.setSelectedItemId(R.id.actionInformation);
-//    }
+    Category selectedCat = NOTHING, stackTop = NOTHING;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
         data = new Data();
-        data.pull(this);
+        data.notifyMe(this);
 
         //bottom navigation bar
         bottomNavigationView = findViewById(R.id.BottomNav);
@@ -86,7 +81,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                                 startActivity(new Intent(InformationActivity.this, Sessions.class));
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(InformationActivity.this, Analytics.class));
+                                startActivity(new Intent(InformationActivity.this, Stats.class));
                                 return true;
 
                         }
@@ -101,13 +96,14 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
 
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
-    }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
+//    }
 
     private void showNavFrag(){
+        listing = false;
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -214,6 +210,8 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public void onCreateButtClick(View view){
         String choice = view.getTag().toString();
         editing = true;
+        listing = false;
+        setDateToday = true;
         switch (choice){
             case "FARM":
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -277,16 +275,19 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 setTitle("Workers");
                 selectedCat = WORKER;
             }
+            stackTop = selectedCat;
             newInfoListFragment.setCat(selectedCat);
             fragmentTransaction.commit();
 //        newInfoListFragment.showList(selectedCat);
             toggleUpButton(true);
+            listing = true;
         }
     }
 
     public void showList(Category cat){
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         showNavFrag();
+        listing = true;
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         InfoListFragment newInfoListFragment = new InfoListFragment();
@@ -312,6 +313,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
 
     //If a farm, orchard, worker is selected
     public void onSelectItemButtClick(View view){
+        listing = false;
         String tags[] = view.getTag().toString().split(" ");
         if (tags.length == 2){
             switch (tags[1]) {
@@ -590,7 +592,15 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 finish();
                 return true;
             case android.R.id.home:
-                showNavFrag();
+                if (listing){
+                    showNavFrag();
+                }
+                else if (map){
+                    onBackPressed();
+                }
+                else {
+                    showList(stackTop);
+                }
                 return true;
             default:
                 super.onOptionsItemSelected(item);
@@ -628,10 +638,25 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+            int year, month, day;
+            Calendar c;
+            if (setDateToday){
+                c = Calendar.getInstance();
+                setDateToday = false;
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                day = c.get(Calendar.DAY_OF_MONTH);
+            }
+            else {
+                InfoOrchardFragment frag = (InfoOrchardFragment) getFragmentManager().findFragmentByTag("CREATE");
+                if (frag == null){
+                    frag = (InfoOrchardFragment) getFragmentManager().findFragmentByTag("EDIT");
+                }
+                String[] dat = frag.getSetDate();
+                year = Integer.parseInt(dat[2]);
+                month = Integer.parseInt(dat[1]) - 1;
+                day = Integer.parseInt(dat[0]);
+            }
 
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
@@ -641,7 +666,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             if (frag == null){
                 frag = (InfoOrchardFragment) getFragmentManager().findFragmentByTag("EDIT");
             }
-            frag.biteMe(day, month, year);
+            frag.biteMe(day, month + 1, year);
         }
     }
 

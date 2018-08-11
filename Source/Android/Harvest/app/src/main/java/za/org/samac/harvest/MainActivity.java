@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                             startActivity(new Intent(MainActivity.this, Sessions.class));
                                             return true;
                                         case R.id.actionStats:
-                                            startActivity(new Intent(MainActivity.this, Analytics.class));
+                                            startActivity(new Intent(MainActivity.this, Stats.class));
                                             return true;
                                     }
                                     return true;

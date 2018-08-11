@@ -389,7 +389,7 @@ class WorkerOrchardAdapter extends RecyclerView.Adapter<WorkerOrchardAdapter.Vie
         }
         else {
             holder.mButton.setText(orchards.get(position).orchard.getName());
-            holder.mButton.setTag("Orchard " + orchards.get(position).orchard.getName());
+            holder.mButton.setTag("Orchard " + orchards.get(position).orchard.getID());
             holder.mButton.setVisibility(View.VISIBLE);
         }
     }

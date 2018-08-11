@@ -97,7 +97,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
                                 case R.id.actionSession:
                                     return true;
                                 case R.id.actionStats:
-                                    startActivity(new Intent(SessionsMap.this, Analytics.class));
+                                    startActivity(new Intent(SessionsMap.this, Stats.class));
                                     return true;
                             }
                             return true;

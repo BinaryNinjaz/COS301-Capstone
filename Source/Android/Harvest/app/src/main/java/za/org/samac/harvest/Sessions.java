@@ -84,9 +84,11 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         getAdmin();
 
         data = new Data();
-        data.sessionsAct = this;
-        data.pull(null);
+        data.notifyMe(this);
 
+        if(!Data.isPulling()){
+            getNewPage();
+        }
 
         dates = new ArrayList<>();
         sessions = new TreeMap<>();
@@ -113,7 +115,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(Sessions.this, Analytics.class));
+                                startActivity(new Intent(Sessions.this, Stats.class));
                                 return true;
                         }
                         return true;

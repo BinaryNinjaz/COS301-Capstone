@@ -95,7 +95,7 @@ public class InfoListFragment extends Fragment{
     }
 
     private void refresh() {
-        data.pull((InformationActivity) getActivity());
+        data.pull();
     }
 
     public void endRefresh(){
