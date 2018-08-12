@@ -180,73 +180,138 @@ function setFarms(farms, completion) {
   });
 }
 
-function searchFarm(farm, searchText) {
+function watchFarms(farms, completion) {
+  const ref = firebase.database().ref('/' + userID() + '/farms');
+  ref.on('child_added', (snapshot) => {
+    farms[snapshot.key] = snapshot.val();
+    completion();
+  });
+  ref.on('child_removed', (snapshot) => {
+    delete farms[snapshot.key];
+    completion();
+  });
+  ref.on('child_changed', (snapshot) => {
+    farms[snapshot.key] = snapshot.val();
+    completion();
+  });
+}
+
+function watchOrchards(orchards, completion) {
+  const ref = firebase.database().ref('/' + userID() + '/orchards');
+  ref.on('child_added', (snapshot) => {
+    orchards[snapshot.key] = snapshot.val();
+    completion();
+  });
+  ref.on('child_removed', (snapshot) => {
+    delete orchards[snapshot.key];
+    completion();
+  });
+  ref.on('child_changed', (snapshot) => {
+    orchards[snapshot.key] = snapshot.val();
+    completion();
+  });
+}
+
+function watchWorkers(workers, completion) {
+  const ref = firebase.database().ref('/' + userID() + '/workers');
+  ref.on('child_added', (snapshot) => {
+    workers[snapshot.key] = snapshot.val();
+    completion();
+  });
+  ref.on('child_removed', (snapshot) => {
+    delete workers[snapshot.key];
+    completion();
+  });
+  ref.on('child_changed', (snapshot) => {
+    workers[snapshot.key] = snapshot.val();
+    completion();
+  });
+}
+
+function searchFarm(farm, searchText, full) {
   var result = {};
+  if (farm === undefined) {
+    return result;
+  }
 
   const text = searchText.toLowerCase();
 
-  if (stringContainsSubstring(farm.name.toLowerCase(), text)) {
+  if (farm.name !== undefined && stringContainsSubstring(farm.name.toLowerCase(), text)) {
     result["Name"] = farm.name;
   }
 
-  if (stringContainsSubstring(farm.companyName.toLowerCase(), text)) {
+  if (farm.companyName !== undefined && stringContainsSubstring(farm.companyName.toLowerCase(), text)) {
     result["Company"] = farm.companyName;
   }
 
-  if (stringContainsSubstring(farm.email.toLowerCase(), text)) {
+  if (farm.email !== undefined && stringContainsSubstring(farm.email.toLowerCase(), text)) {
     result["Email"] = farm.email;
   }
 
-  if (stringContainsSubstring(farm.contactNumber.toLowerCase(), text)) {
+  if (farm.contactNumber !== undefined && stringContainsSubstring(farm.contactNumber.toLowerCase(), text)) {
     result["Phone Number"] = farm.contactNumber;
   }
 
-  if (stringContainsSubstring(farm.province.toLowerCase(), text)) {
+  if (farm.province !== undefined && stringContainsSubstring(farm.province.toLowerCase(), text)) {
     result["Province"] = farm.province;
   }
 
-  if (stringContainsSubstring(farm.town.toLowerCase(), text)) {
+  if (farm.town !== undefined && stringContainsSubstring(farm.town.toLowerCase(), text)) {
     result["Nearest Town"] = farm.town;
+  }
+
+  if (full && farm.further !== undefined && stringContainsSubstring(farm.further.toLowerCase(), text)) {
+    result["Details"] = farm.further;
   }
 
   return result;
 }
 
-function searchOrchard(orchard, farms, searchText) {
+function searchOrchard(orchard, farms, searchText, full) {
   var result = {};
+  if (orchard === undefined) {
+    return result;
+  }
 
   const text = searchText.toLowerCase();
 
   const farm = farms[orchard.farm];
-  const farmResults = searchFarm(farm, text);
+  const farmResults = searchFarm(farm, text, full);
   for (const key in Object.keys(farmResults)) {
     result["Farm " + key] = farmResults[key];
   }
 
-  if (stringContainsSubstring(orchard.name.toLowerCase(), text)) {
+  if (orchard.name !== undefined && stringContainsSubstring(orchard.name.toLowerCase(), text)) {
     result["Name"] = orchard.name;
   }
 
-  if (stringContainsSubstring(orchard.crop.toLowerCase(), text)) {
+  if (orchard.crop !== undefined && stringContainsSubstring(orchard.crop.toLowerCase(), text)) {
     result["Crop"] = orchard.crop;
   }
 
   for (const i in orchard.cultivars) {
-    if (stringContainsSubstring(orchard.cultivars[i].toLowerCase(), text)) {
+    if (orchard.cultivars[i] !== undefined && stringContainsSubstring(orchard.cultivars[i].toLowerCase(), text)) {
       result["Cultivar"] = orchard.cultivars[i];
       break;
     }
   }
 
-  if (stringContainsSubstring(orchard.irrigation.toLowerCase(), text)) {
+  if (orchard.irrigation !== undefined && stringContainsSubstring(orchard.irrigation.toLowerCase(), text)) {
     result["Irrigation Type"] = orchard.irrigation;
+  }
+
+  if (full && orchard.further !== undefined && stringContainsSubstring(orchard.further.toLowerCase(), text)) {
+    result["Details"] = orchard.further;
   }
 
   return result;
 }
 
-function searchWorker(worker, searchText) {
+function searchWorker(worker, searchText, full, orchards) {
   var result = {};
+  if (worker === undefined) {
+    return result;
+  }
 
   const text = searchText.toLowerCase();
 
@@ -261,6 +326,21 @@ function searchWorker(worker, searchText) {
   }
   if (worker.phoneNumber !== undefined && stringContainsSubstring(worker.phoneNumber.toLowerCase(), text)) {
     result["Phone Number"] = worker.phoneNumber;
+  }
+  if (full && worker.info !== undefined && stringContainsSubstring(worker.info.toLowerCase(), text)) {
+    result["Details"] = worker.info;
+  }
+  if (full && worker.type !== undefined && stringContainsSubstring(worker.type.toLowerCase(), text)) {
+    result["Type"] = worker.type;
+  }
+  if (full && worker.orchards !== undefined) {
+    for (const idx in worker.orchards) {
+      const orchardId = worker.orchards[idx];
+      const orchard = orchards[orchardId];
+      if (orchard.name !== undefined && stringContainsSubstring(orchard.name.toLowerCase(), text)) {
+        result["Assigned Orchard"] = orchard.name;
+      }
+    }
   }
 
   return result;
@@ -296,10 +376,10 @@ function searchSession(session, searchText, farms, orchards, workers) {
   var result = {};
 
   const text = searchText.toLowerCase();
-  
+
   const foreman = workers[session.wid];
   if (foreman !== undefined) {
-    const foremanResults = searchWorker(foreman, text);
+    const foremanResults = searchWorker(foreman, text, false);
     for (const key in foremanResults) {
       result["Foreman " + key] = foremanResults[key];
     }
@@ -307,7 +387,7 @@ function searchSession(session, searchText, farms, orchards, workers) {
   for (const workerId in session.collections) {
     const worker = workers[workerId];
     if (worker !== undefined) {
-      const workerResults = searchWorker(worker, text);
+      const workerResults = searchWorker(worker, text, false);
       for (const key in workerResults) {
         result["Worker " + key] = workerResults[key];
       }
@@ -319,7 +399,7 @@ function searchSession(session, searchText, farms, orchards, workers) {
       const o = orchardAtPoint(orchards, point.lng, point.lat);
       if (o !== undefined && !arrayContainsEntity(orchardsForSession, o.key)) {
         orchardsForSession.push(o.key);
-        const orchardsResult = searchOrchard(o, farms, text);
+        const orchardsResult = searchOrchard(o, farms, text, false);
         for (const key in orchardsResult) {
           result["Orchard " + key] = orchardsResult[key];
         }
