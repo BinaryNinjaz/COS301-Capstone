@@ -7,66 +7,6 @@ const cors = require('cors')({origin: true});
 const moment = require('moment');
 admin.initializeApp();
 
-// ?startDate=[Double]&endDate=[Double]&uid=[String]
-exports.sessionsWithinDates = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    const startDate = req.query.startDate;
-    const endDate = req.query.endDate;
-    const uid = req.query.uid;
-
-    var result = {};
-
-    var sessions = admin.database().ref('/' + uid + '/sessions');
-    sessions.once('value').then((snapshot) => {
-      snapshot.forEach((childSnapshot) => {
-        const key = childSnapshot.key;
-        const val = childSnapshot.val();
-
-        if (startDate <= val.start_date && val.start_date <= endDate) {
-          result[key] = val;
-        }
-      });
-      res.send(result);
-      return true;
-    }).catch((error) => {
-
-    });
-  });
-});
-
-// ?pageNo=[Int]&pageSize=[Int? = 50]&uid=[String]
-exports.flattendSessions = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    const pageNo = req.query.pageNo;
-    var pageSize = req.query.pageSize;
-    if (pageSize === undefined) {
-      pageSize = 50;
-    }
-    const uid = req.query.uid;
-
-    var result = [];
-    var count = 0;
-    var sessions = admin.database().ref('/' + uid + '/sessions').orderByChild('start_date');
-    sessions.once('value').then((snapshot) => {
-      const total = snapshot.numChildren();
-
-      snapshot.forEach((childSnapshot) => {
-        if (count >= total - (pageNo - 1) * pageSize) {
-          res.send(result);
-          return;
-        } else if (count >= total - pageNo * pageSize) {
-          const key = childSnapshot.key;
-          const val = childSnapshot.val();
-          result.unshift({key: key, start_date: val.start_date, wid: val.wid});
-        }
-        count++;
-      });
-      res.send(result);
-      return true;
-    }).catch((error) => {});
-  });
-});
-
 // Point: [x: Float, y: Float]
 // polygon: [Point]
 // point: Point
@@ -175,27 +115,21 @@ function orchardsCooked(orchardIds, uid, completion) {
   }).catch((error) => {});
 }
 
-function roundToDaysSince1970(timeinterval) {
-  timeinterval -= timeinterval % 86400;
-  return timeinterval / 86400.0;
-}
-
-// groups all collections by day into summation, from collections that are in polygon.
-function summationOfCollections(summation, collections, polygon) {
-  for (const wkey in collections) {
-    for (const ckey in collections[wkey]) {
-      const collection = collections[wkey][ckey];
-      const xyCoord = {x: collection.coord.lng, y: collection.coord.lat};
-      if (polygonContainsPoint(polygon, xyCoord)) {
-        const day = roundToDaysSince1970(collection.date);
-        if (summation[day] === undefined) {
-          summation[day] = 1;
-        } else {
-          summation[day] += 1;
-        }
-      }
-    }
+function roundSince1970(timeinterval, period) {
+  const d = moment(new Date(timeinterval * 1000));
+  const startOfTime = moment(0);
+  if (period === "hourly") {
+    return d.diff(startOfTime, 'hour');
+  } else if (period === "daily") {
+    return d.diff(startOfTime, 'day');
+  } else if (period === "weekly") {
+    return d.diff(startOfTime, 'week');
+  } else if (period === "monthly") {
+    return d.diff(startOfTime, 'month');
+  } else if (period === "yearly") {
+    return d.diff(startOfTime, 'year');
   }
+  return d.diff(startOfTime, 'day');
 }
 
 function highest(summation) {
@@ -218,8 +152,23 @@ function lowest(summation) {
   return min;
 }
 
-function sinusoidalRegression(data) {
-  const period = 365.25;
+function periodStep(period) {
+  if (period === "hourly") {
+    return 24;
+  } else if (period === "daily") {
+    return 364.25;
+  } else if (period === "weekly") {
+    return 54;
+  } else if (period === "monthly") {
+    return 12;
+  } else if (period === "yearly") {
+    return 1;
+  }
+  return 364.25;
+}
+
+function sinusoidalRegression(data, periodType) {
+  const period = periodStep(periodType);
   const high = highest(data);
   const low = lowest(data);
   const d = (high + low) / 2;
@@ -335,8 +284,8 @@ function evaluateFitness(chromosome, data) {
   return error;
 }
 
-function evolvePopulation(size, generations, data) {
-  const limit = sinusoidalRegression(data);
+function evolvePopulation(size, generations, data, period) {
+  const limit = sinusoidalRegression(data, period);
   var chromosomes = [];
   for (var i = 0; i < size; i += 1) {
     chromosomes.push(randomChromosome(limit));
@@ -363,37 +312,6 @@ function evolvePopulation(size, generations, data) {
 
   return best;
 }
-
-
-// id0=[String]
-// id1=[String]
-// ...
-// idN=[String]
-//
-// groupBy=[worker, farm, foreman, orchard]
-// accum=[running, accumEntity]
-// uid=[String]
-exports.expectedYield = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    const orchardId = req.query.orchardId;
-    const timeinterval = req.query.date;
-    const uid = req.query.uid;
-
-    orchardPolygon(orchardId, uid, (polygon) => {
-      const sessions = admin.database().ref('/' + uid + '/sessions');
-      sessions.once('value').then((snapshot) => {
-        var summation = {};
-        snapshot.forEach((childSnapshot) => {
-          const val = childSnapshot.val();
-          const collections = val.collections;
-          summationOfCollections(summation, collections, polygon);
-        });
-        res.send(evolvePopulation(100, 100, summation));
-        return true;
-      }).catch((error) => {});
-    });
-  });
-});
 
 // -------- POST Body --------
 //
@@ -693,12 +611,12 @@ function averageOfSessionItem(item, key, days, workingOn) {
   return result;
 }
 
-function sinusoidalOfSessionItems(items) {
+function sinusoidalOfSessionItems(items, period) {
   var result = {};
   const keys = Object.keys(items);
   for (const ikey in keys) {
     const key = keys[ikey];
-    result[key] = evolvePopulation(100, 20, items[key]);
+    result[key] = evolvePopulation(100, 25, items[key], period);
   }
   return result;
 }
@@ -823,13 +741,13 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                 updateDaysCounter(days, workingOnDays, wkey, accum, period, pickup.date);
               }
               if (contained) {
-                incrSessionCounter(all, wkey, roundToDaysSince1970(pickup.date));
+                incrSessionCounter(all, wkey, roundSince1970(pickup.date, period));
               }
             }
           }
         });
         result.avg = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
-        result.exp = sinusoidalOfSessionItems(all);
+        result.exp = sinusoidalOfSessionItems(all, period);
         res.send(result);
         return true;
       }).catch((err) => {
@@ -882,13 +800,13 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                   updateDaysCounter(days, workingOnDays, pkey, accum, period, pickup.date);
                 }
                 if (contained) {
-                  incrSessionCounter(all, pkey, roundToDaysSince1970(pickup.date));
+                  incrSessionCounter(all, pkey, roundSince1970(pickup.date, period));
                 }
               }
             }
           });
           result.avg = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
-          result.exp = sinusoidalOfSessionItems(all);
+          result.exp = sinusoidalOfSessionItems(all, period);
           res.send(result);
           return true;
         }).catch((err) => {
