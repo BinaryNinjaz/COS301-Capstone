@@ -62,8 +62,8 @@ struct Stat: Codable {
     }
     
     func lineChartData(startDate: Date, endDate: Date, step: TimeStep) -> LineChartDataSet {
-      let start = startDate.daysSince1970()
-      let end = endDate.daysSince1970()
+      let start = Double(startDate.stepsSince1970(step: step))
+      let end = Double(endDate.stepsSince1970(step: step))
       
       let interval = Double(step.fullRunningDataSet(between: startDate, and: endDate).count)
       

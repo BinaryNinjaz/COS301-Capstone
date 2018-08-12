@@ -519,15 +519,13 @@ extension TrackerViewController {
     super.viewWillLayoutSubviews()
     
     self.startSessionButton?.setOriginX(view.layoutMargins.left + 8)
-    self.yieldLabel?.setOriginX(
-      self.startSessionButton?.frame.origin.x ?? 0 + 8 + (self.startSessionButton?.frame.width ?? 0.0))
     
     let fullWidth = self.infoEffectView.frame.width
     let startWidth = self.startSessionButton?.frame.width ?? 0.0
     let startLeft = self.startSessionButton?.frame.origin.x ?? 0.0
     
     self.yieldLabel?.setWidth(fullWidth - startWidth - startLeft - 16)
-    
+    self.yieldLabel?.setOriginX(startLeft + 8 + startWidth)
   }
 }
 
