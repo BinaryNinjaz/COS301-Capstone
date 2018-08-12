@@ -28,6 +28,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   @IBOutlet weak var mapView: GMSMapView!
   @IBOutlet weak var removeAllButton: UIButton!
   @IBOutlet weak var removeLastButton: UIButton!
+  @IBOutlet weak var instructionLabel: UILabel!
   
   var actuallyChanged: ((RowOf<Orchard>) -> Void)?
   
@@ -68,9 +69,6 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       style: .plain,
       target: self,
       action: #selector(toggleMapType))
-    
-    removeAllButton.apply(gradient: .deleteAllButton)
-    removeLastButton.apply(gradient: .deleteButton)
     
     mapView.isHidden = false
     mapView.mapType = GMSMapViewType.hybrid
@@ -140,5 +138,22 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   
   public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
     print(error)
+  }
+  
+  public override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    
+    instructionLabel.setOriginX(8)
+    instructionLabel.setWidth(view.frame.width - 16)
+    
+    removeAllButton.setOriginX(8)
+    removeAllButton.setWidth((instructionLabel.frame.width - 16) / 2)
+    
+    removeLastButton.setWidth(removeAllButton.frame.width)
+    
+    removeLastButton.setOriginX(removeAllButton.frame.width + removeAllButton.frame.origin.x + 8)
+    
+    removeAllButton.apply(gradient: .deleteAllButton)
+    removeLastButton.apply(gradient: .deleteButton)
   }
 }

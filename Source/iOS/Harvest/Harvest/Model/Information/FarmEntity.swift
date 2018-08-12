@@ -236,6 +236,15 @@ final class Entities {
     }
   }
   
+  func addItem(_ item: EntityItem) {
+    switch item {
+    case let .farm(f): farms.insert(unique: (f.id, f))
+    case let .orchard(o): orchards.insert(unique: (o.id, o))
+    case let .worker(w): workers.insert(unique: (w.id, w))
+    default: break
+    }
+  }
+  
   func items(for kind: EntityItem.Kind) -> SortedDictionary<String, EntityItem>? {
     switch kind {
     case .farm: return farms.mapValues { .farm($0) }
@@ -252,9 +261,7 @@ final class Entities {
       return Worker.currentWorker
     }
     
-    guard let worker = workers
-      .first(where: { $0.1.id == id })?
-    .value else {
+    guard let worker = workers.first(where: { $0.1.id == id })?.value else {
       return nil
     }
     

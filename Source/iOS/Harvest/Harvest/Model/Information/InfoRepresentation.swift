@@ -126,7 +126,7 @@ extension Worker {
         let valid = Phoney.formatted(number: row.value) != nil
         return valid ? nil : ValidationError(msg: "• Phone numbers must be validly formatted")
       }
-      row.add(rule: RuleRequired(msg: "• Phone numbers must exist for foreman"))
+      row.add(rule: RuleRequired(msg: "• Foremen must have phone numbers. So they can sign in."))
       row.add(rule: validPhone)
       row.validationOptions = .validatesAlways
       row.title = "Phone Number"
@@ -324,6 +324,12 @@ extension Farm {
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .addOrchard
       cell.textLabel?.textAlignment = .center
+    }.onCellSelection { _, _ in
+      if let temp = self.tempory, self != temp {
+        HarvestDB.save(farm: temp)
+        self.makeChangesPermanent()
+        Entities.shared.addItem(.farm(temp))
+      }
     }
     
     let orchardsSection = Section("Orchards in \(name)")
@@ -332,7 +338,7 @@ extension Farm {
       let oRow = OrchardInFarmRow(tag: nil, orchard: orchard) { row in
         row.title = orchard.name
       }
-      if orchard.assignedFarm == id {
+      if orchard.assignedFarm == id, id != "" {
         orchardsSection <<< oRow
       }
     }
@@ -467,7 +473,7 @@ extension Orchard {
             && $0.value.assignedFarm == self.tempory?.assignedFarm
             && $0.value.id != self.id
         }
-        return notUnique ? ValidationError(msg: "• Orchard names in the same farm must have different names") : nil
+        return notUnique ? ValidationError(msg: "• Orchard names in the same farm must have different names.") : nil
       }
       row.add(rule: RuleRequired(msg: "• Orchard names must be filled in"))
       row.add(rule: uniqueNameRule)
@@ -500,10 +506,10 @@ extension Orchard {
     
     let bagMassRow = DecimalRow { row in
       row.title = "Bag Mass (kilogram)"
-      row.value = bagMass.isNaN ? nil : bagMass
+      row.value = bagMass
       row.placeholder = "Average mass of a bag"
     }.onChange { row in
-      self.tempory?.bagMass = row.value ?? .nan
+      self.tempory?.bagMass = row.value
       onChange()
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
@@ -528,10 +534,10 @@ extension Orchard {
     
     let widthRow = DecimalRow { row in
       row.title = "Tree Spacing (meter)"
-      row.value = treeSpacing.isNaN ? nil : treeSpacing
+      row.value = treeSpacing
       row.placeholder = "Horizontal Spacing"
     }.onChange { row in
-      self.tempory?.treeSpacing = row.value ?? .nan
+      self.tempory?.treeSpacing = row.value
       onChange()
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
@@ -539,10 +545,10 @@ extension Orchard {
     
     let heightRow = DecimalRow { row in
       row.title = "Row Spacing (meter)"
-      row.value = rowSpacing.isNaN ? nil : rowSpacing
+      row.value = rowSpacing
       row.placeholder = "Vertical Spacing"
     }.onChange { row in
-      self.tempory?.rowSpacing = row.value ?? .nan
+      self.tempory?.rowSpacing = row.value
       onChange()
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
@@ -562,7 +568,7 @@ extension Orchard {
       row.options = []
       var aFarm: Farm? = nil
       
-      for (_, farm) in farms {
+      for (_, farm) in Entities.shared.farms {
         let farm = farm
         row.options?.append(farm)
         if farm.id == assignedFarm {
@@ -582,7 +588,11 @@ extension Orchard {
       row.title = "Orchard Location"
       row.value = self
     }.cellUpdate { (cell, _) in
-      cell.detailTextLabel?.text = ""
+      let lat = self.coords.first?.latitude ?? 0.0
+      let lng = self.coords.first?.longitude ?? 0.0
+      let lt = String(format: "%.4f", lat)
+      let lg = String(format: "%.4f", lng)
+      cell.detailTextLabel?.text = "\(lt), \(lg)"
     }
       
     orchardAreaRow.actuallyChanged = { (row) in
