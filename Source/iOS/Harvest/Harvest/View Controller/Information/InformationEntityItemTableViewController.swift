@@ -52,6 +52,11 @@ class InformationEntityItemTableViewController: UITableViewController {
         self.tableView.backgroundView = label
       } else {
         self.tableView.backgroundView = nil
+        if let searchText = self.searchBar?.text, !searchText.isEmpty {
+          self.filteredItems = self.items?.search(for: searchText)
+        } else {
+          self.filteredItems = nil
+        }
       }
       self.tableView.reloadData()
     }
@@ -143,7 +148,7 @@ class InformationEntityItemTableViewController: UITableViewController {
     
     switch item {
     case let .worker(w):
-      cell.textLabel?.text = w.firstname + " " + w.lastname
+      cell.textLabel?.text = w.description
     case let .orchard(o):
       cell.textLabel?.text = o.description
     case let .farm(f):

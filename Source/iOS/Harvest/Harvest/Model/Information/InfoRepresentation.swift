@@ -50,12 +50,7 @@ extension Worker {
     
     for (_, orchard) in orchards {
       orchardSection <<< ListCheckRow<Orchard>(orchard.description) { row in
-        let farmName = Entities
-          .shared.farms
-          .first { _, v in v.id == orchard.assignedFarm }
-          .map { $0.value.name }
-          ?? orchard.assignedFarm
-        row.title = farmName + " " + orchard.name
+        row.title = orchard.description
         row.selectableValue = orchard
         row.value = assignedOrchards.contains(orchard.id) ? orchard : nil
       }.onChange { (row) in

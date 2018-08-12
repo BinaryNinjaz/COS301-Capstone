@@ -102,6 +102,23 @@ public final class Orchard {
     ]]
   }
   
+  func makeChangesPermanent() {
+    if let t = tempory {
+      bagMass = t.bagMass
+      crop = t.crop
+      date = t.date
+      assignedFarm = t.assignedFarm
+      details = t.details
+      name = t.name
+      treeSpacing = t.treeSpacing
+      rowSpacing = t.rowSpacing
+      coords = t.coords
+      cultivars = t.cultivars
+      irrigationKind = t.irrigationKind
+      tempory = nil
+    }
+  }
+  
   // swiftlint:disable cyclomatic_complexity
   func search(for text: String) -> [(String, String)] {
     var result = [(String, String)]()
@@ -191,7 +208,7 @@ extension Orchard: CustomStringConvertible {
       .shared
       .farms
       .first(where: { $0.value.id == assignedFarm }) else {
-      return name + " – Unassigned (" + Date().timeIntervalSince1970.description + ")"
+      return id + " - " + name
     }
     return farm.value.name + " – " + name
   }

@@ -60,7 +60,7 @@ class TrackerViewController: UIViewController {
     return (startSessionButton?.frame.width ?? 10) / 2
   }
   
-  fileprivate func finishCollecting() {
+  fileprivate func endCollecting() {
     locationManager?.stopUpdatingLocation()
     
     startSessionButton?.setTitle("Start", for: .normal)
@@ -69,28 +69,24 @@ class TrackerViewController: UIViewController {
                                                 cornerRadius: startButtonCornerRadius,
                                                 borderColor: [UIColor].startSession[1])
     startSessionButton?.apply(gradient: sessionLayer)
-    tracker?.storeSession()
     
-    tracker = nil
     searchBar?.isUserInteractionEnabled = false
+    
+    sessionOrchards = []
+    yieldLabel?.attributedText = attributedStringForYieldCollection(0)
     
     workerCollectionView?.reloadData()
   }
   
+  fileprivate func finishCollecting() {
+    endCollecting()
+    tracker?.storeSession()
+    tracker = nil
+  }
+  
   fileprivate func discardCollections() {
-    self.locationManager?.stopUpdatingLocation()
-    
-    self.startSessionButton?.setTitle("Start", for: .normal)
-    let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
-                                                locations: [0, 1],
-                                                cornerRadius: startButtonCornerRadius,
-                                                borderColor: [UIColor].startSession[1])
-    self.startSessionButton?.apply(gradient: sessionLayer)
-    
-    self.tracker = nil
-    self.searchBar?.isUserInteractionEnabled = false
-    
-    self.workerCollectionView?.reloadData()
+    endCollecting()
+    tracker = nil
   }
   
   fileprivate func presentYieldCollection() {
@@ -518,8 +514,19 @@ extension TrackerViewController: UICollectionViewDataSource {
   }
 }
 
-extension TrackerViewController: UICollectionViewDelegate {
-  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+extension TrackerViewController {
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    
+    self.startSessionButton?.setOriginX(view.layoutMargins.left + 8)
+    self.yieldLabel?.setOriginX(
+      self.startSessionButton?.frame.origin.x ?? 0 + 8 + (self.startSessionButton?.frame.width ?? 0.0))
+    
+    let fullWidth = self.infoEffectView.frame.width
+    let startWidth = self.startSessionButton?.frame.width ?? 0.0
+    let startLeft = self.startSessionButton?.frame.origin.x ?? 0.0
+    
+    self.yieldLabel?.setWidth(fullWidth - startWidth - startLeft - 16)
     
   }
 }

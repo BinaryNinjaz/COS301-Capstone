@@ -80,7 +80,7 @@ extension HarvestDB {
     }
   }
   
-  static func save(worker: Worker, oldNumber: String) {
+  static func save(worker: Worker, oldWorker: Worker) {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
     let workingFor = ref.child(Path.workingFor)
@@ -93,11 +93,19 @@ extension HarvestDB {
     let update = worker.json()
     workers.updateChildValues(update)
     
+    if worker.kind == .worker && oldWorker.kind == .foreman && oldWorker.phoneNumber != "" {
+      let workerPath = worker.phoneNumber.removedFirebaseInvalids()
+      foremen.child(workerPath).removeValue()
+      workingFor.child(workerPath).removeValue()
+      locations.child(workerPath).removeValue()
+      requestedLocations.child(workerPath).removeValue()
+    }
+    
     if worker.kind == .foreman && worker.phoneNumber != "" {
       foremen.updateChildValues([worker.phoneNumber.removedFirebaseInvalids(): true])
-      saveWorkerReference(worker, oldNumber)
-      if oldNumber != "" && worker.phoneNumber != oldNumber {
-        foremen.child(oldNumber.removedFirebaseInvalids()).removeValue()
+      saveWorkerReference(worker, oldWorker.phoneNumber)
+      if oldWorker.phoneNumber != "" && worker.phoneNumber != oldWorker.phoneNumber {
+        foremen.child(oldWorker.phoneNumber.removedFirebaseInvalids()).removeValue()
       }
     } else if worker.phoneNumber != "" {
       let workerPath = worker.phoneNumber.removedFirebaseInvalids()
