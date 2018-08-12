@@ -256,17 +256,17 @@ function initEntities() {
         updateSpiner(false);
         watchFarms(farms, () => {
           if (selectedEntity === "Farm") {
-            showFarmsList();
+            filterInformation(document.getElementById("informationSearchField"));
           }
         });
         watchOrchards(orchards, () => {
           if (selectedEntity === "Orchard") {
-            showOrchardsList();
+            filterInformation(document.getElementById("informationSearchField"));
           }
         });
         watchWorkers(workers, () => {
           if (selectedEntity === "Worker") {
-            showWorkersList();
+            filterInformation(document.getElementById("informationSearchField"));
           }
         });
         showFarmsList();
@@ -1152,7 +1152,7 @@ function filterInformation(searchField) {
       } else if (selectedEntity === "Orchard") {
         searchResults = searchOrchard(entity, farms, searchText, true);
       } else if (selectedEntity === "Worker") {
-        searchResults = searchWorker(entity, searchText, true);
+        searchResults = searchWorker(entity, orchards, searchText, true);
       }
 
       for (const property in searchResults) {

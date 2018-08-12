@@ -307,7 +307,7 @@ function searchOrchard(orchard, farms, searchText, full) {
   return result;
 }
 
-function searchWorker(worker, searchText, full, orchards) {
+function searchWorker(worker, orchards, searchText, full) {
   var result = {};
   if (worker === undefined) {
     return result;
@@ -336,7 +336,7 @@ function searchWorker(worker, searchText, full, orchards) {
   if (full && worker.orchards !== undefined) {
     for (const idx in worker.orchards) {
       const orchardId = worker.orchards[idx];
-      const orchard = orchards[orchardId];
+      const orchard = (orchards || [])[orchardId];
       if (orchard.name !== undefined && stringContainsSubstring(orchard.name.toLowerCase(), text)) {
         result["Assigned Orchard"] = orchard.name;
       }

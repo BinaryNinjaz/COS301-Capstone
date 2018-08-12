@@ -31,9 +31,9 @@
 
 .detailsView {
   background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
+  border-radius: 16px;
   border: 1px solid #CCC;
-  padding: 10px;
+  padding: 8px;
   visibility: visible;
   margin-top: 8px;
   margin-left: 16px;
