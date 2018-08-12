@@ -3,15 +3,56 @@
   width: 100%;
   background-color: #EFEEEC;
   border-radius: 8px;
-  margin-top: 16px;
+  margin-top: 8px;
+  border: 1px solid white;
 }
 
 .scrollView {
-  height: 95%;
+  height: 93%;
   overflow-y: scroll;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid #CCC;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 8px;
+}
+
+.scrollView h4 {
+  padding: 4px;
+  color: color: rgba(255, 255, 255, 0.8);
+  margin-bottom: -8px;
 }
 
 .searchReason {
   text-align: right;
-  color: lightgrey;
+  color: color: rgba(196, 196, 196, 0.9);
+}
+
+.detailsView {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+  border: 1px solid #CCC;
+  padding: 8px;
+  visibility: visible;
+  margin-top: 8px;
+  margin-left: 16px;
+  margin-right: -16px;
+}
+
+label {
+  color: whitesmoke;
+}
+
+p, span {
+  color: rgb(198, 198, 198);
+}
+
+body{
+    font-family: Sans-Serif;
+    background-image: url("background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: block;
+    overflow: auto;
 }

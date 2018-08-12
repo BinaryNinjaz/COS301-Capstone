@@ -3,16 +3,17 @@
 *	Authour:	Binary Ninjaz (Letanyan, Vincent)
 *
 *	Description: 	This file requests and receives data from firebase database
-*					To display a heat map on >HeatMap.html". It shows heat where 
+*					To display a heat map on >HeatMap.html". It shows heat where
 *					bags were collected.
 */
 $(window).bind("load", () => {
   let succ = () => {
+    updateSpiner(true);
     initOrchards();
     initWorkers();
     $("#selectedFilter :input").change(function() {
-      loadEntity(this.id === "workerFilter" 
-        ? "worker" 
+      loadEntity(this.id === "workerFilter"
+        ? "worker"
         : this.id === "orchardFilter"
           ? "orchard"
           : this.id === "foremanFilter"
@@ -30,8 +31,8 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
-var orchards = []; //An array of available orchards 
-var farms = []; //An array of available farms 
+var orchards = []; //An array of available orchards
+var farms = []; //An array of available farms
 
 /* This functions allows the user to filter out orchards, workers,farms, or forman*/
 function changeSelection(checkbox) {
@@ -113,7 +114,7 @@ function createSelectionButton(name, key, checked) {
   result += '<div class="checkbox">';
   result += '<label><input type="checkbox" onchange="changeSelection(this)" ' + isChecked + ' value="' + key + '">' + name + '</label>';
   result += '</div>';
-  
+
   return result;
 }
 
@@ -144,16 +145,16 @@ function initOrchards() {
   var dd = ("0" + today.getDate()).slice(-2);
   var mm = ("0" + (today.getMonth() + 1)).slice(-2);
   var yyyy = today.getFullYear();
-  
+
   $("#endDate").val(yyyy + "-" + mm + "-" + dd);
-  
+
   today.setDate(today.getDate() - 7);
   dd = ("0" + today.getDate()).slice(-2);
   mm = ("0" + (today.getMonth() + 1)).slice(-2);
   yyyy = today.getFullYear();
-  
+
   $("#startDate").val(yyyy + "-" + mm + "-" + dd);
-  
+
   getFarms((farmsSnap) => {
     farmsSnap.forEach((farm) => {
       farms.push({key: farm.key, value: farm.val(), showing: false});
@@ -189,6 +190,8 @@ function initOrchards() {
         const o = orchards[oid];
         entityDiv.innerHTML += createSelectionButton(o.title, o.key, true);
       }
+      var btn = document.getElementById("selectedFilter");
+      btn.style.visibility = "visible";
       updateHeatmap();
     });
   });
@@ -203,8 +206,8 @@ function initWorkers() {
       const k = worker.key;
       workers.push({key: k, value: w, showing: false});
     });
-    workers.sort((a, b) => { 
-      return (a.value.surname + a.value.name) < (b.value.surname + b.value.name) ? -1 : 1 
+    workers.sort((a, b) => {
+      return (a.value.surname + a.value.name) < (b.value.surname + b.value.name) ? -1 : 1
     });
   });
 }
@@ -257,7 +260,7 @@ function requestedIds() {
       }
     }
   }
-  
+
   return result; /* Returns the IDs of interest */
 }
 
@@ -270,14 +273,14 @@ function updateHeatmap() {
   const endDate = new Date(document.getElementById("endDate").value);
   const startTime = startDate.getTime() / 1000;
   const endTime = endDate.getTime() / 1000 + 60 * 60 * 24;
-  
+
   keys.startDate = startTime;
   keys.endDate = endTime;
   keys.uid = userID();
   keys.groupBy = selectedEntity;
-  
+
   const url = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/collectionsWithinDate';
-  
+
   updateSpiner(true);
   $.post(url, keys, (data, status) => {
     var formattedData = [];
@@ -306,31 +309,30 @@ function updateHeatmap() {
 var spinner;
 function updateSpiner(shouldSpin) {
   var opts = {
-    lines: 8, // The number of lines to draw
-    length: 27, // The length of each line
-    width: 10, // The line thickness
-    radius: 20, // The radius of the inner circle
-    scale: 0.5, // Scales overall size of the spinner
-    corners: 1, // Corner roundness (0..1)
-    color: '#2A2', // CSS color or array of colors
-    fadeColor: 'transparent', // CSS color or array of colors
-    speed: 1, // Rounds per second
-    rotate: 0, // The rotation offset
-    animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
-    direction: 1, // 1: clockwise, -1: counterclockwise
-    zIndex: 2e9, // The z-index (defaults to 2000000000)
-    className: 'spinner', // The CSS class to assign to the spinner
-    top: '110%', // Top position relative to parent
-    left: '50%', // Left position relative to parent
-    shadow: '0 0 1px transparent', // Box-shadow for the lines
-    position: 'absolute' // Element positioning
+		lines: 8, // The number of lines to draw
+		length: 37, // The length of each line
+		width: 10, // The line thickness
+		radius: 20, // The radius of the inner circle
+		scale: 1, // Scales overall size of the spinner
+		corners: 1, // Corner roundness (0..1)
+		color: '#4CAF50', // CSS color or array of colors
+		fadeColor: 'transparent', // CSS color or array of colors
+		speed: 1, // Rounds per second
+		rotate: 0, // The rotation offset
+		animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+		direction: 1, // 1: clockwise, -1: counterclockwise
+		zIndex: 2e9, // The z-index (defaults to 2000000000)
+		className: 'spinner', // The CSS class to assign to the spinner
+		shadow: '0 0 1px transparent', // Box-shadow for the lines
   };
 
   var target = document.getElementById('spinner');
   var button = document.getElementById('updateButton');
   if (shouldSpin) {
-    spinner = new Spinner(opts).spin(target);
-    button.style.visibility = "hidden";
+    if (spinner == null) {
+      spinner = new Spinner(opts).spin(target);
+      button.style.visibility = "hidden";
+    }
   } else {
     button.style.visibility = "visible";
     spinner.stop();
