@@ -55,7 +55,7 @@ function saveChanges(){
 function saveEmail(){
     var auth = passwordPrompt();
     if(auth){
-    
+        email = document.getElementById("email").value;
     }else{
         alert("Incorrect password entered.");
     }
