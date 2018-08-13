@@ -53,7 +53,7 @@ function saveChanges(){
 }
 
 function deleteAccount(){
-   if(confirm("Are you sure you want to delete your account?")){
+   if(confirm("Are you sure you want to permanently delete this account?")){
        firebase.database().ref('/' + userID()).remove();
    }
 }
