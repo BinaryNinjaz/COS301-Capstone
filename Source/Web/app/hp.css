@@ -21,3 +21,7 @@ section .c{
     opacity: 0.5;
     border-radius: 3px;
 }
+
+#ft{
+    background-image: url("images/NIH.jpg");
+}
