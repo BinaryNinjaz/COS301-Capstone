@@ -1,0 +1,23 @@
+Meeting 6 (09¬-05-18)
+What has each person done?
+Documentation (Shaun review), Send pictures by Thursday night and slide show (Sizo).
+View web, iOS and Android (bottom nav bar is a problem as clicking on home and back button is a common mistake).
+What are we showing Stacy?
+Something to show the client.
+Letanyan gives Git-hub demo, merging, what is push, what is pull, what are conflicts, how do we reduce conflicts. 
+Change web datatypes. *
+Code re-use.
+Testing.
+Code freeze noon Thursday (10-05-18).
+Push to master tonight (09-05-18), but not the documentation yet we will give that to those with low number of commits.
+Skype meeting with client date.
+Walk through demo (try standing) and pep talk.
+John – team roles and brief description
+Letanyan – iOS
+Sizo – pop in with comments
+Kevin – web
+Vince– pop in with comments
+John - git-structure
+Kevin -  testing
+Shaun – pop in with comments
+Any questions for our client?
