@@ -43,17 +43,25 @@ function initPage(){
 }
 
 function saveChanges(){
-   if(confirm("Are you sure you want to save your account changes?")){
+    if(confirm("Are you sure you want to save your account changes?")){
         firebase.database().ref('/' + userID() +'/admin').update({   
           firstname: document.getElementById("first").value,
           lastname: document.getElementById("sur").value,
           organization: document.getElementById("org").value
         });  
-   }
+    }
+}
+
+function saveEmail(){
+
+}
+
+function savePassword(){
+
 }
 
 function deleteAccount(){
-   if(confirm("Are you sure you want to permanently delete this account?")){
+    if(confirm("Are you sure you want to permanently delete this account?")){
        firebase.database().ref('/' + userID()).remove();
-   }
-}
+    }
+}   
