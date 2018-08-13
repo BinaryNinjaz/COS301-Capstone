@@ -17,11 +17,25 @@ section .c{
     margin-bottom: 20px;
     margin-left: 10px;
     margin-right: 10px;
-    background-color: grey;
-    opacity: 0.5;
+    //background-color: rgba(155,0,0,0.6);// grey;
+    //opacity: 0.9;
     border-radius: 3px;
 }
 
+.c .header{
+    //font-style: inherit;
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 1;
+    position: relative;
+    margin: 5px;
+    color: white;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;  
+}
 #ft{
     background-image: url("images/NIH.jpg");
 }
