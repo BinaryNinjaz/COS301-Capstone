@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,6 +60,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
     private ArrayList<Date> dates;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout recyclerRefresh;
     private SessionsViewAdapter adapter;
     private ProgressBar progressBar;
     public static SessionItem selectedItem;
@@ -80,15 +82,31 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
 
+        recyclerRefresh = findViewById(R.id.recViewSwipeRefresh);
 
         getAdmin();
 
         data = new Data();
         data.notifyMe(this);
 
-        if(!Data.isPulling()){
-            getNewPage();
+//        if(!Data.isPulling()){
+//            getNewPage();
+//        }
+
+        if (Data.isPulling()){
+            recyclerRefresh.setRefreshing(true);
         }
+        else {
+            endRefresh();
+        }
+
+        recyclerRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                recyclerRefresh.setRefreshing(true);
+                data.pull();
+            }
+        });
 
         dates = new ArrayList<>();
         sessions = new TreeMap<>();
@@ -330,7 +348,8 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                     recyclerView.setHasFixedSize(false);
                     recyclerView.setAdapter(adapter);
                     progressBar.setVisibility(View.GONE);//put progress bar until data is retrieved from firebase
-                    recyclerView.setVisibility(View.VISIBLE);
+//                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerRefresh.setVisibility(View.VISIBLE);
                 }
                 pageIndex = lastKey;
                 Boolean reload = false;
@@ -351,6 +370,17 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         });
 
         ids.add(listener);
+    }
+
+    public void pullDone(){
+        endRefresh();
+    }
+
+    private void endRefresh(){
+
+        //TODO: reset all the things.
+
+        recyclerRefresh.setRefreshing(false);
     }
 
     @Override
