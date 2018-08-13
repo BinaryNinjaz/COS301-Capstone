@@ -75,6 +75,8 @@ function deleteAccount(){
         var auth = passwordPrompt();
         if(auth){
             firebase.database().ref('/' + userID()).remove();
+        }else{
+            alert("Incorrect password entered.");
         }
     }
 }   
