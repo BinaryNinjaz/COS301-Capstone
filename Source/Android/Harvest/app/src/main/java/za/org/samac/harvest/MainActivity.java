@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -397,6 +398,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // the user clicked on colors[which]
+                TextView textViewOrch = findViewById(R.id.textViewOrch);
+                textViewOrch.setText(new StringBuilder().append("Orchard: ").append(orchards.get(which)).toString());
+                textViewOrch.setTypeface(null, Typeface.BOLD);
                 selectedOrchardKey = orchardKeys.get(which);
                 progressBar.setVisibility(View.VISIBLE);
                 collectWorkers();
