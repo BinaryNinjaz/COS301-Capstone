@@ -34,7 +34,7 @@
         <a href="Information.html">Information</a>
         <a href="Sessions.html">Sessions</a>
         <a href="HeatMap.html">Heatmap</a>
-         <a href="graphs.html">Analytics</a>
+        <a href="graphs.html">Analytics</a>
     </ul>
 
     <ul class="pull-right nav navbar-nav">
@@ -50,14 +50,17 @@
     
 <div class="container">
     <h3>Login Details:</h3>
-    <label for="email"><b>Update Email</b></label>
+    <label for="email"><b>Change Email</b></label>
     <input type="text" name="email" id ="email">
+    <button name = "savePass" onclick="saveEmail()">Update Email</button>
     <br /> 
-    <label for="psw"><b>Update Password</b></label>
+    <label for="psw"><b>New Password</b></label>
     <input type="password" name="psw" id ="psw">
     <br /> 
-    <label for="psw2"><b>Confirm New Password Password</b></label>
+    <label for="psw2"><b>Confirm New Password </b></label>
     <input type="password" name="psw2" id ="psw2">
+    <br /> 
+    <button name = "savePass" onclick="savePassword()">Update Password</button>
 
     <h3>Account Information:</h3>
     <label for="org"><b>Organization Name</b></label>
