@@ -10,11 +10,14 @@ body{
 
 
 section .c{
-    width:100%;
+    width:99%;
     height: 200px;
     border: 1px black solid;
     float: left;
-    margin: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     background-color: grey;
     opacity: 0.5;
+    border-radius: 3px;
 }
