@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -68,6 +69,8 @@ import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.service.BackgroundService;
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.WorkerComparator;
+
+import static za.org.samac.harvest.R.drawable.rounded_button;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, WorkerRecyclerViewAdapter.OnItemClickListener {
 
@@ -1009,7 +1012,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             track.put(trackCount, BackgroundService.location);
             //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
             startTime = System.currentTimeMillis();
-            btnStart.setBackgroundColor(Color.parseColor("#FFFF8800"));
+            btnStart.setBackgroundResource(R.drawable.rounded_button_orange);
+            btnStart.setDrawingCacheBackgroundColor(Color.parseColor("#FFFF8800"));
+            //btnStart.setBackgroundColor(Color.parseColor("#FFFF8800"));
             btnStart.setText("Stop");
             btnStart.setTag("orange");
         } else {
@@ -1083,7 +1088,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             dlgAlert.setCancelable(false);
             dlgAlert.create().show();
 
-            btnStart.setBackgroundColor(Color.parseColor("#FF0CCB29"));
+            btnStart.setBackgroundResource(R.drawable.rounded_button);
+            btnStart.setDrawingCacheBackgroundColor(Color.parseColor("#FF0CCB29"));
 
             btnStart.setText("Start");
             btnStart.setTag("green");
