@@ -43,7 +43,9 @@ section .c{
 #ft{
     background-image: url("images/ft.jpg");
 }
-
+#heatm{
+    background-image: url("images/hmp2.jpg");
+}
 
 .c{
     overflow: auto;
