@@ -3,6 +3,7 @@ package za.org.samac.harvest;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -409,14 +410,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
         builder.show();
     }
-
-//    @Override
-//    protected void onResume(){
-//        super.onResume();
-////        if(isFarmer) {
-////            bottomNavigationView.setSelectedItemId(R.id.actionInformation);
-////        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
