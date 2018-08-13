@@ -78,7 +78,7 @@ function deleteAccount(){
 }   
 
 function passwordPrompt(){
-    var thePrompt = window.open("", "", "widht=500");
+    var thePrompt = window.open("", "", "width=500");
     var theHTML = "";
 
     theHTML += "<p>To continue this action, please enter your current password.</p>";
