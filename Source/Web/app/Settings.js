@@ -53,7 +53,7 @@ function saveChanges(){
 }
 
 function saveEmail(){
-
+    var password = passwordPrompt();
 }
 
 function savePassword(){
@@ -65,3 +65,20 @@ function deleteAccount(){
        firebase.database().ref('/' + userID()).remove();
     }
 }   
+
+function passwordPrompt(){
+    var thePrompt = window.open("", "", "widht=500");
+    var theHTML = "";
+
+    theHTML += "<p>To continue this action, please enter your current password.</p>";
+    theHTML += "<br/>";
+    theHTML += "Password: <input type='password' id='thePass'/>";
+    theHTML += "<br />";
+    theHTML += "<input type='button' value='OK' id='authOK'/>";
+    thePrompt.document.body.innerHTML = theHTML;
+
+    var thePass = thePrompt.document.getElementById("thePass").value;
+    thePrompt.document.getElementById("authOK").onclick = function () {
+        // do authentication
+    }
+}
