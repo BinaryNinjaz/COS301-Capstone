@@ -107,11 +107,11 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
 
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
-    }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
+//    }
 
     private void showNavFrag(){
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -317,7 +317,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         toggleUpButton(true);
     }
 
-    //If a farm, orchard, worker is selected
+    //If a farm, orchard, worker is selected, also in search
     public void onSelectItemButtClick(View view){
         String tags[] = view.getTag().toString().split(" ");
         if (tags.length == 2){
@@ -545,9 +545,9 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     //Handle the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -604,6 +604,8 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     }
 
     public void onGotoButtClick(View view){
+        closeSearch();
+
         Category cat;
         String token[] = view.getTag().toString().split(" ");
         switch (token[0]){
@@ -623,8 +625,6 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         backViews.push(selectedCat);
         data.setCategory(cat);
         showObject(token[1], cat);
-
-        closeSearch();
     }
 
     public void showDateSpinner(View v){
@@ -779,7 +779,14 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     private void closeSearch(){
         if (searching){
             searching = false;
-            searchView.onActionViewCollapsed();
+
+//            searchView.setQuery("", false);
+//            searchView.clearFocus();
+//            searchView.setIconified(true);
+//            searchView.onActionViewCollapsed();
+
+            menu.findItem(R.id.search).collapseActionView();
+
 //            getMenuInflater().inflate(R.menu.menu, this.menu);
         }
     }

@@ -38,6 +38,7 @@ public class InfoSearchFragment extends Fragment {
     TextView titleFarms, titleOrchards, titleWorkers;
     RecyclerView recyclerFarms, recyclerOrchards, recyclerWorkers;
     SearcherAdapter adapterFarms, adapterOrchards, adapterWorkers;
+    LinearLayout parent;
 
     public InfoSearchFragment() {
         // Required empty public constructor
@@ -60,6 +61,8 @@ public class InfoSearchFragment extends Fragment {
         recyclerFarms = getView().findViewById(R.id.info_search_farms);
         recyclerOrchards = getView().findViewById(R.id.info_search_orchards);
         recyclerWorkers = getView().findViewById(R.id.info_search_workers);
+
+        parent = getView().findViewById(R.id.recyclersParentLinearLayout);
         
         adapterFarms = new SearcherAdapter();
         adapterOrchards = new SearcherAdapter();
@@ -69,9 +72,15 @@ public class InfoSearchFragment extends Fragment {
         recyclerOrchards.setHasFixedSize(false);
         recyclerWorkers.setHasFixedSize(false);
 
-        recyclerFarms.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerOrchards.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerWorkers.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setAutoMeasureEnabled(true);
+        recyclerFarms.setLayoutManager(linearLayoutManager);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setAutoMeasureEnabled(true);
+        recyclerOrchards.setLayoutManager(linearLayoutManager);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setAutoMeasureEnabled(true);
+        recyclerWorkers.setLayoutManager(linearLayoutManager);
         
         recyclerFarms.setAdapter(adapterFarms);
         recyclerOrchards.setAdapter(adapterOrchards);
@@ -99,10 +108,16 @@ public class InfoSearchFragment extends Fragment {
                 adapterWorkers.addToShow(dbInfoObject);
             }
         }
-        
+
         adapterFarms.notifyDataSetChanged();
         adapterOrchards.notifyDataSetChanged();
         adapterWorkers.notifyDataSetChanged();
+
+        recyclerFarms.invalidate();
+        recyclerWorkers.invalidate();
+        recyclerOrchards.invalidate();
+
+        parent.invalidate();
         
         if (adapterFarms.shouldShow()){
             recyclerFarms.setVisibility(View.VISIBLE);
