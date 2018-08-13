@@ -604,7 +604,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     }
 
     public void onGotoButtClick(View view){
-        closeSearch();
+        if (searching) {
+            closeSearch();
+            toggleUpButton(true);
+        }
 
         Category cat;
         String token[] = view.getTag().toString().split(" ");
@@ -780,14 +783,9 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         if (searching){
             searching = false;
 
-//            searchView.setQuery("", false);
-//            searchView.clearFocus();
-//            searchView.setIconified(true);
-//            searchView.onActionViewCollapsed();
+            searchView.setQuery("", false);
 
             menu.findItem(R.id.search).collapseActionView();
-
-//            getMenuInflater().inflate(R.menu.menu, this.menu);
         }
     }
 }

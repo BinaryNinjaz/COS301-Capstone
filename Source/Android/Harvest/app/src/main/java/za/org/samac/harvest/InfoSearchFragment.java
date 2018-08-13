@@ -114,8 +114,8 @@ public class InfoSearchFragment extends Fragment {
         adapterWorkers.notifyDataSetChanged();
 
         recyclerFarms.invalidate();
-        recyclerWorkers.invalidate();
         recyclerOrchards.invalidate();
+        recyclerWorkers.invalidate();
 
         parent.invalidate();
         
