@@ -112,6 +112,7 @@
                 android:value=".Sessions" />
         </activity>
         <activity android:name=".ViewFlipperActivity" />
+        <activity android:name=".IntroViewFlipper" />
 
     </application>
 
