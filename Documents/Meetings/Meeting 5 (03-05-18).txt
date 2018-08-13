@@ -1,0 +1,33 @@
+Meeting 5 (03¬-05-18)
+
+What has each person done?
+
+Any problems?
+
+Structure of the database.
+
+What architecture are we using? Look into blackboard style.
+
+What are our functional requirements?
+
+What are our non-functional requirements?
+
+What are our subsystems?
+
+What type and what is our development methodology?
+
+What is our development process?
+
+Look through response from client. Length 6 passwords at least. Look at slack message from Kevin.
+
+Try to make the system simpler.
+
+Remember to use automated testing.
+
+Push to master by Friday night.
+
+Skype meeting with client.
+
+Landing page.
+
+Any questions for our client?
