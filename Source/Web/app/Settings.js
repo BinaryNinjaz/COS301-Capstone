@@ -65,6 +65,8 @@ function savePassword(){
     var auth = passwordPrompt();
     if(auth){
     
+    }else{
+        alert("Incorrect password entered.");
     }
 }
 
