@@ -65,8 +65,10 @@ function savePassword(){
 
 function deleteAccount(){
     if(confirm("Are you sure you want to permanently delete this account?")){
-       var auth = passwordPrompt();
-       firebase.database().ref('/' + userID()).remove();
+        var auth = passwordPrompt();
+        if(auth){
+            firebase.database().ref('/' + userID()).remove();
+        }
     }
 }   
 
