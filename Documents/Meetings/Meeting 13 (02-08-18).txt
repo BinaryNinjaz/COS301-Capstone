@@ -1,0 +1,17 @@
+Meeting 13 (02-08-18)
+It’s almost over men, just give your best for a couple more weeks and we will soon reap the harvest.
+Status check, what has everyone done so far.
+Load Harvest on to everyone’s phones for field test.
+Communication: there are different string name on the database, decide on one thing and stick with it.
+We need quicker reviews and do not forget to always use our Github rules.
+What needs to be done? Tutorials on all platforms (iOS Letanyan, Android John, Web Vincent), fix up web UI (Vince), user settings on web (Shaun) *, completing graphs on all platforms *, code clean up, search functionality *, change to persistent friendly snapshots and bring persistence call back, time zone stuff.
+Next week we do touch ups on the apps and web (nothing new, we are on a tight schedule) and documentation for deployment e.g. user manual.
+Meeting with Stacy game plan: stay calm we control the pace, no arguing only rebutting your statements, we haven’t seen as she has given us a lot of guidance about the project and in this round, we were just concentrating on putting it into practice. Remind me to ask her what does the client do after we are done with the project to maintain it.
+Keep thinking of wow factor, we want every single person on project day to come to our stall.
+How does a worker get added to yield tracker? How does the foremen tracker work? How does approximate yields get calculated?
+Field test (role playing) game plan: 
+Letanyan foreman (toggle nav bar, lock and unlock phone), Sizo foreman, John walks with them, Shaun is farmer (also check database), Vince creates farm on web and Kevin checks that it corresponds to android and vice versa.
+Letanyan creates account with iOS, Vince check that web is in sync and Sizo checks that android is in sync, Kevin and John go out and try to break app (switch off data, kill app, see what happens when a call is ongoing) and Shaun checks database to see what happens.
+Analyse problems of field test.
+In lab test: anyone want to test anything
+Let’s get priorities straight (see what we have left to do and cut out the nonsense). If you have any problems with the system say it now or forever hold your peace this isn’t the time for cold feet, whatever it is UI or functionality, say it.
