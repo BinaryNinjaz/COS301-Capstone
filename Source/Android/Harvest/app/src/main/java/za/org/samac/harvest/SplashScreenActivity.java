@@ -31,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.lang.annotation.Target;
 
 import za.org.samac.harvest.util.AppUtil;
-import za.org.samac.harvest.util.IntroActivity;
 
 import static za.org.samac.harvest.util.Category.NAV;
 
@@ -115,7 +114,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this);
                 if(!prefs.getBoolean("firstTime", false)) {
                     // run your one time code
-                    Intent intent = new Intent(SplashScreenActivity.this, IntroActivity.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, IntroViewFlipper.class);
                     startActivity(intent);
                     finish();
                     SharedPreferences.Editor editor = prefs.edit();

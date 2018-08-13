@@ -93,14 +93,24 @@
                             android:background="@color/colorGoogleRed"
                             android:text="@string/loginWithGoogle" />
 
-                        <TextView
-                            android:id="@+id/linkForgotAccountDetails"
-                            android:text="@string/forgotAccountDetails"
-                            style="@style/TextView.links"
-                            android:gravity="bottom|center"
-                            android:layout_gravity="bottom|center"
-                            android:layout_marginTop="10dp"/>
                     </LinearLayout>
+
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:id="@+id/linkForgotAccountDetails"
+                        android:text="@string/forgotAccountDetails"
+                        style="@style/TextView.links"
+                        android:gravity="bottom|center"
+                        android:layout_gravity="bottom|center"
+                        android:layout_marginTop="10dp"/>
                 </RelativeLayout>
 
             </LinearLayout>

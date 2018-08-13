@@ -27,7 +27,7 @@ public class IntroViewFlipper extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_flipper);
+        setContentView(R.layout.activity_intro_view_flipper);
         mContext = this;
         mViewFlipper = (ViewFlipper) this.findViewById(R.id.view_flipper);
 
@@ -37,7 +37,7 @@ public class IntroViewFlipper extends Activity {
         skipOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntroViewFlipper.this, InformationActivity.class);
+                Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
                 startActivity(intent);
                 finish();//kill current Activity
             }
@@ -48,7 +48,7 @@ public class IntroViewFlipper extends Activity {
         skipTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntroViewFlipper.this, InformationActivity.class);
+                Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
                 startActivity(intent);
                 finish();//kill current Activity
             }
@@ -59,18 +59,7 @@ public class IntroViewFlipper extends Activity {
         skipThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntroViewFlipper.this, InformationActivity.class);
-                startActivity(intent);
-                finish();//kill current Activity
-            }
-        });
-
-        skipFour = findViewById(R.id.skipFour);
-        skipFour.setMovementMethod(LinkMovementMethod.getInstance());
-        skipFour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(IntroViewFlipper.this, InformationActivity.class);
+                Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
                 startActivity(intent);
                 finish();//kill current Activity
             }
@@ -81,7 +70,7 @@ public class IntroViewFlipper extends Activity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntroViewFlipper.this, InformationActivity.class);
+                Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
                 startActivity(intent);
                 finish();//kill current Activity
             }

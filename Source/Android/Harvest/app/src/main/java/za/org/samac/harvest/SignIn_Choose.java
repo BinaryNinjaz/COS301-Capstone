@@ -16,8 +16,6 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 
-import za.org.samac.harvest.util.IntroActivity;
-
 public class SignIn_Choose extends AppCompatActivity {
     private ImageView farmerPic = null;
     private ImageView foremanPic =  null;
