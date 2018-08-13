@@ -378,7 +378,9 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
 
     private void endRefresh(){
 
-        //TODO: reset all the things.
+        //TODO: Refresh.
+        pageIndex = null;
+        getNewPage();
 
         recyclerRefresh.setRefreshing(false);
     }
