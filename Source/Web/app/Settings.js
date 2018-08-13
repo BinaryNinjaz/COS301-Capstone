@@ -54,6 +54,9 @@ function saveChanges(){
 
 function saveEmail(){
     var auth = passwordPrompt();
+    if(auth){
+    
+    }
 }
 
 function savePassword(){
