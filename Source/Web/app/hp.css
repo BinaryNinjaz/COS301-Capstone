@@ -46,6 +46,10 @@ section .c{
 #heatm{
     background-image: url("images/hmp2.jpg");
 }
+#sess{
+    background-image: url("images/sess.jpg");
+}
+
 
 .c{
     overflow: auto;
