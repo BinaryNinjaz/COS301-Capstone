@@ -48,13 +48,17 @@
                         android:orientation="vertical"
                         android:paddingTop="0dp">
 
-                        <EditText
-                            android:id="@+id/signIn_foreman_phone_edit"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/signIn_foreman_phone"
-                            android:inputType="phone"
-                            android:layout_marginTop="16dp" />
+                        <android.support.design.widget.TextInputLayout
+                            style="@style/TextInputLayout">
+
+                            <EditText
+                                android:id="@+id/signIn_foreman_phone_edit"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/signIn_foreman_phone"
+                                android:inputType="phone"
+                                android:layout_marginTop="16dp" />
+                        </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
                 </RelativeLayout>
 

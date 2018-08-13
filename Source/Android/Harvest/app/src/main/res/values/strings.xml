@@ -71,7 +71,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to bottom nav-->
-    <string name="bottomYieldTracker">Yield Tracker</string>
+    <string name="bottomYieldTracker">Yield Collector</string>
     <string name="bottomInformation">Information</string>
     <string name="bottomSession">Session</string>
 

@@ -177,22 +177,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     --totalBagsCollected;
 
                     //display incremented current yield
-                    try {
-                        Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    MainActivity.textView.setText("Current Yield: " + totalBagsCollected);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-
-                        thread.start();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if(onItemClickListener != null) {
+                        onItemClickListener.onClick(totalBagsCollected);
                     }
 
                     worker.setValue(value);

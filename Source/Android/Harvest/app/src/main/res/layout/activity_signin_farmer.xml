@@ -96,13 +96,23 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/linkForgotAccountDetails"
-                android:text="@string/forgotAccountDetails"
-                style="@style/TextView.links"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="bottom">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/linkForgotAccountDetails"
+                    android:text="@string/forgotAccountDetails"
+                    style="@style/TextView.links"
+                    android:gravity="bottom|center"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>

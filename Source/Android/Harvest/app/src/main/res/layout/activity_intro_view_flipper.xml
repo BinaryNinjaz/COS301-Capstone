@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/harvestbackground"
+    android:alpha="0.7">
+
+    <ViewFlipper
+        android:id="@+id/view_flipper"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/harvestintro"
+                android:background="@color/black"
+                android:alpha="0.7"/>
+
+            <TextView
+                style="@style/ImageTitle"
+                android:text="@string/swipe_to_continue"/>
+
+            <TextView
+                style="@style/TextView.links"
+                android:id="@+id/skipOne"
+                android:text="@string/skip"
+                android:gravity="bottom|center"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/harvestmanage"
+                android:background="@color/black"
+                android:alpha="0.7"/>
+
+            <TextView
+                style="@style/ImageTitle"
+                android:text="@string/swipe_to_continue"/>
+
+            <TextView
+                style="@style/TextView.links"
+                android:id="@+id/skipTwo"
+                android:text="@string/skip"
+                android:gravity="bottom|center"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/harvesttrack"
+                android:background="@color/black"
+                android:alpha="0.7"/>
+
+            <TextView
+                style="@style/ImageTitle"
+                android:text="@string/swipe_to_continue"/>
+
+            <TextView
+                style="@style/TextView.links"
+                android:id="@+id/skipThree"
+                android:text="@string/skip"
+                android:gravity="bottom|center"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/harvestanalyse"
+                android:background="@color/black"
+                android:alpha="0.7"/>
+
+            <TextView
+                style="@style/ImageTitle"
+                android:text="@string/swipe_to_continue"/>
+
+            <TextView
+                style="@style/TextView.links"
+                android:id="@+id/done"
+                android:text="@string/done"
+                android:gravity="bottom|center"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+
+    </ViewFlipper>
+
+</RelativeLayout>
