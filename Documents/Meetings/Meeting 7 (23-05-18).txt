@@ -1,0 +1,28 @@
+Meeting 7 (23-05-18)
+
+Any problems? Get analytics using cloud function (heavy lifting).
+
+Analytics on web, any ideas?
+
+Ask people how system works e.g. what happens when plus is clicked, why farmer has to map out farm, accuracy of foremen tracking, what the heat map displays, structure of database, what is our server (ask how it works)? We must all understand our system.
+
+Letanyan gives presentation on database rules (things that can and can’t be accessed once system is up and running) * Look at video on WhatsApp group.
+Change how we check if user is farmer on Android.
+
+Design on mobile, bring in iOS and Android phones (buttons, colours).
+
+How much of the stats history should be shown on mobile (e.g. only last session, last 5 days)?
+
+Live tracking of foreman on Android can be as accurate as when ever they change location as we can run it as a background process and we may not have to worry about battery life.
+
+Should we discard sessions if nothing was clicked on (empty sessions may mess up stats)? Put pop up asking if user wants to discard empty session.
+
+Look at icebox on Zenhub.
+
+Load android on everyone’s phone so people play around and identify improvements and bugs.
+
+Study meeting for exam will be in the week of 3 June.
+
+When will we meet Stacy, we will try to arrange it on 29 May.
+
+Any questions for our client?
