@@ -48,7 +48,7 @@ import static android.content.ContentValues.TAG;
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
- * settings are split by category, with category headers shown to the left of
+ * settings are split by group, with group headers shown to the left of
  * the list of settings.
  * <p>
  * See <a href="http://developer.android.com/design/patterns/settings.html">
@@ -257,7 +257,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 getActivity().setTitle(user.getEmail());
 
                 //Set summaries
-                userAdmin.addListenerForSingleValueEvent(new ValueEventListener() {
+                userAdmin.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String fname = dataSnapshot.child("firstname").getValue(String.class);

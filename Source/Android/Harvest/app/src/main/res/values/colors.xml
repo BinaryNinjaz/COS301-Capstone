@@ -16,4 +16,5 @@
     <color name="signIn_verification_resend">#FFA500</color>
     <color name="signIn_verification_cancel">#FF8C00</color>
     <color name="loginTextColor">#80000000</color>
+    <color name="red">#770000</color>
 </resources>

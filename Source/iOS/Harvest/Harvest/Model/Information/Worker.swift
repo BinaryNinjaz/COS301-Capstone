@@ -59,7 +59,7 @@ final class Worker {
       "orchards": assignedOrchards,
       "info": details,
       "type": kind == .foreman ? "Foreman" : "Worker",
-      "phoneNumber": phoneNumber,
+      "phoneNumber": phoneNumber.removedFirebaseInvalids(),
       "idNumber": idNumber
     ]]
   }

@@ -1,5 +1,12 @@
-/* Vincent Added comments to the following code below */
-const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions';
+/* 
+* 	File:	Graphs.js
+*	Author:	Binary Ninjaz (Vincent,Shaun,Letanyan,Ojo)
+*
+*	Description:	This file contais functions for the data representation on 
+*					"graphs.html". It requests and recieves data from firebase
+*					databse, and uses google graph APIs 
+*/
+const baseUrl = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions'; //Base URL for accessing firebase
 const database = firebase.database();	/* Pointing to database on firebase cloud */
 const user = function() { return firebase.auth().currentUser }; /* Function which authenticates user */
 
@@ -17,6 +24,10 @@ var workers = []; /* Array containing a list of workers names */
 var orchards = []; /* Array containing a list of Orchard names */
 
 $(window).bind("load", () => {
+	myFunction(); //This function starts the spinner, as soon as the page loads
+	/* The next two lines hide the div that displays the spinner*/
+	var divHide = document.getElementById('myChart1');
+	divHide.style.visibility = "hidden";
   let succ = () => {
     initPage();
   };
@@ -91,7 +102,7 @@ function initPage(){
                     label: "Number of Bags p/day", //These are the number of bags per day since the start date and the end date
 
                     //The following values in the data array are the number of bags collected each day. from start date to end date
-                    data: [4, 0, 5, 0, 0, 0, 4], //The size of this will also depend on the start and the end date
+                    data: [0, 0, 0, 0, 0, 0, 0], //The size of this will also depend on the start and the end date
                     pontBackgroundColor: '#4CAF50' //Color of the area 
             }]
             }
@@ -102,18 +113,18 @@ function initPage(){
     function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ["Period", "Number of Bags", { role: "style" } ], //This line explains the format of the array object
-        ["06:00 - 07:00", 8, "#4CAF50"], //[label: which is the period of 1 hour, Number of bags, color of bar]
-        ["07:00 - 08:00", 6, "#4CAF50"],
-        ["08:00 - 09:00", 3, "#4CAF50"],
-		["09:00 - 10:00", 7, "#4CAF50"],
-        ["10:00 - 11:00", 5, "#4CAF50"],
-        ["11:00 - 12:00", 9, "#4CAF50"],
-		["12:00 - 13:00", 7, "#4CAF50"],
-        ["13:00 - 14:00", 7, "#4CAF50"],
-        ["14:00 - 15:00", 9, "#4CAF50"],
-        ["15:00 - 16:00", 8, "#4CAF50"],
-		["16:00 - 17:00", 11, "#4CAF50"],
-        ["17:00 - 18:00", 15, "#4CAF50"]
+        ["06:00 - 07:00", 0, "#4CAF50"], //[label: which is the period of 1 hour, Number of bags, color of bar]
+        ["07:00 - 08:00", 0, "#4CAF50"],
+        ["08:00 - 09:00", 0, "#4CAF50"],
+		["09:00 - 10:00", 0, "#4CAF50"],
+        ["10:00 - 11:00", 0, "#4CAF50"],
+        ["11:00 - 12:00", 0, "#4CAF50"],
+		["12:00 - 13:00", 0, "#4CAF50"],
+        ["13:00 - 14:00", 0, "#4CAF50"],
+        ["14:00 - 15:00", 0, "#4CAF50"],
+        ["15:00 - 16:00", 0, "#4CAF50"],
+		["16:00 - 17:00", 0, "#4CAF50"],
+        ["17:00 - 18:00", 0, "#4CAF50"]
       ]);
 
       var view = new google.visualization.DataView(data);
@@ -126,7 +137,7 @@ function initPage(){
       var nameOfWorker; //This has to be assigned the name of the worker/the id ow the worker
       var options = {
         title: "Number of bags collected per hour", //Teboho Mokoena will be replaced with 'nameOfWorker' variable
-        width: 1200, //Setting the width 
+        width: 1080, //Setting the width 
         height: 500, //Setting the height
         bar: {groupWidth: "95%"}, //This is the grouping width of the bar graph
         legend: { position: "none" }, //This will be determined by the UX designer
@@ -150,7 +161,8 @@ function initOrchards(){
 		  //console.log(option);
           orchardSelect.options.add(option);
         });
-    }); 
+    });
+	
 }
 
 /* This function loads all available workers in the database, for graph filtering */
@@ -173,6 +185,8 @@ function initWorkers(){
           }
         });
     });
+	myFunction2();//This function stops the spinner, it is here because it (initWorkers) is the last function called in initPage()
+					//This means that when this line executes, resources are ready
 }
 
 //takes information chosen by user for orchard filter to pass to orchard performance function
@@ -182,7 +196,12 @@ function filterOrchard(){
     if(name!== '' && week!==''){
         var start = new Date(week);
         var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
-        var id = getOrchardId(name);
+        var id = getOrchardId(name);  
+		myFunction(); //This function activates the spinner to signify fetching of resources
+		var canvasHide = document.getElementById('myChart');
+		canvasHide.style.visibility = "hidden";
+		/* updateSpinerOrchard is no longer active because the div is not visible*/
+		updateSpinerOrchard(true); //This calls the spinner when filtering the orchard for the graphs
         orchardPerformance(start, end, id);
     }else{
         window.alert("Some fields in the orchard filter appear to be blank. \n"
@@ -214,6 +233,10 @@ function filterWorker(){
         start.setHours(6);
         start.setMinutes(0);
         var id = getWorkerId(name);
+		myFunction(); //This calls the function which shows that resources are loading
+		/*The next two line are unnecessary but they show the user that they have pressed the button */
+		var divHide = document.getElementById('curve_chart');
+		divHide.style.visibility = "hidden";
         workerPerformance(start, end, id);
     }else{
         window.alert("Some fields in the worker filter appear to be blank. \n"
@@ -255,7 +278,7 @@ function orchardPerformance(start, end, id){
     });
 }
 
-//post request for worker
+///This function gets worker performance data to represent as graphical statistics
 function workerPerformance(start, end, id){
    const groupBy = 'worker';
    const period = 'hourly';
@@ -274,8 +297,14 @@ function workerPerformance(start, end, id){
     });
 }
 
-//updates orchard graph based on user input
+///This function updates orchard graph based on user input
 function changeOrchardGraph(data){
+	myFunction2();
+	var canvasHide = document.getElementById('myChart');
+	var divHide = document.getElementById('myChart1');
+	canvasHide.style.visibility = "visible"; //Shows the graph
+	divHide.style.visibility = "hidden"; //Hides the spinner div
+	updateSpinerOrchard(false); /* This function call stops the spinner */
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('orchardSelect').value;
     var key = getOrchardId(name);
@@ -307,8 +336,11 @@ function changeOrchardGraph(data){
     });
 }
 
-//updates worker graph based on user input
+///This function updates worker graph based on user input
 function changeWorkerGraph(data){
+	myFunction2(); //This function de-activates the spinner to signify that resources have arrived
+	var divHide = document.getElementById('curve_chart');
+	divHide.style.visibility = "visible";
     console.log(data); // can be removed, just used to view json object
     var name = document.getElementById('workerSelect').value;
     var key = getWorkerId(name);
@@ -362,14 +394,14 @@ function changeWorkerGraph(data){
     }
 }
 
-//edits value of end date label when a starting date is picked
+///edits value of end date label when a starting date is picked
 function changeLabel(){
     var start = new Date(document.getElementById('weekSelect').value);
     var end = new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);
     document.getElementById('endDate').value = formatDate(end);
 }
 
-//formats a date to yyyy-mm-dd, used in changeLabel() function
+///formats a date to yyyy-mm-dd, used in changeLabel() function
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -380,4 +412,47 @@ function formatDate(date) {
     if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
+}
+/* This function shows the spinner while still waiting for resources*/
+var spinnerOrchard;
+function updateSpinerOrchard(shouldSpin) {
+  var opts = {
+	lines: 8, // The number of lines to draw
+	length: 37, // The length of each line
+	width: 10, // The line thickness
+	radius: 45, // The radius of the inner circle
+	scale: 1, // Scales overall size of the spinner
+	corners: 1, // Corner roundness (0..1)
+	color: '#4CAF50', // CSS color or array of colors
+	fadeColor: 'transparent', // CSS color or array of colors
+	speed: 1, // Rounds per second
+	rotate: 0, // The rotation offset
+	animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+	direction: 1, // 1: clockwise, -1: counterclockwise
+	zIndex: 2e9, // The z-index (defaults to 2000000000)
+	className: 'spinner', // The CSS class to assign to the spinner
+	top: '50%', // Top position relative to parent
+	left: '50%', // Left position relative to parent
+	shadow: '0 0 1px transparent', // Box-shadow for the lines
+	position: 'absolute' // Element positioning
+  };
+
+  var target = document.getElementById('myChart1'); //This is where the spinner is gonna show
+  if (shouldSpin) {
+	spinnerOrchard = new Spinner(opts).spin(target); //The class and corresponding css are defined in spin.js and spin.css
+  } else {
+	spinnerOrchard.stop(); //This line stops the spinner. 
+	spinnerOrchard = null;
+  }
+}
+
+//This function is needed to display spinner
+function myFunction(){ 
+	var target = document.getElementById('cover-spin');
+	target.style.display = "inline"; //This line shows the spinner
+}
+//This function is needed to stop the spinner
+function myFunction2(){
+	var target = document.getElementById('cover-spin');
+	target.style.display = "none"; //This line simply hides the spinner
 }

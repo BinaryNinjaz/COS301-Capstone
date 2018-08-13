@@ -137,14 +137,14 @@ class TrackerViewController: UIViewController {
     let current = NSAttributedString(string: "Current Yield: ", attributes: boldFont)
     let currentAmount = NSAttributedString(string: a.description + "\n", attributes: regularFont)
     
-    let o = Entities.shared.orchards.first { $0.value.id == tracker?.currentOrchard }?.value
-    let oname = o?.description ?? ""
-    let currentLoc = NSAttributedString(string: "Current Location: ", attributes: boldFont)
-    let name = NSAttributedString(string: oname + "\n", attributes: regularFont)
+//    let o = Entities.shared.orchards.first { $0.value.id == tracker?.currentOrchard }?.value
+//    let oname = o?.description ?? ""
+//    let currentLoc = NSAttributedString(string: "Current Location: ", attributes: boldFont)
+//    let name = NSAttributedString(string: oname + "\n", attributes: regularFont)
     
     let os = Entities.shared.orchards.first { $0.value.id == sessionOrchards.first }?.value
     let onames = os?.description ?? ""
-    let currentSel = NSAttributedString(string: "Current Selection: ", attributes: boldFont)
+    let currentSel = NSAttributedString(string: "Selected Orchard: ", attributes: boldFont)
     let names = NSAttributedString(string: onames + "\n", attributes: regularFont)
     
     let result = NSMutableAttributedString()
@@ -155,10 +155,10 @@ class TrackerViewController: UIViewController {
     }
     result.append(current)
     result.append(currentAmount)
-    if o != nil {
-      result.append(currentLoc)
-      result.append(name)
-    }
+//    if o != nil {
+//      result.append(currentLoc)
+//      result.append(name)
+//    }
     
     return result
   }
@@ -170,12 +170,13 @@ class TrackerViewController: UIViewController {
       preferredStyle: .actionSheet)
     
     let lastSel = sessionOrchards.first
-    sessionOrchards.removeAll()
+    
     for (_, orchard) in Entities.shared.orchards {
       let sel = lastSel == orchard.id ? "✅ " : ""
       let action = UIAlertAction(
         title: sel + orchard.description,
         style: .default) { (_) in
+          self.sessionOrchards.removeAll()
           self.sessionOrchards.append(orchard.id)
           self.workerCollectionView?.reloadData()
           self.yieldLabel?.attributedText = self

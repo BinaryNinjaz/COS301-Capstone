@@ -1,3 +1,6 @@
+/* jshint esversion: 6 */
+/* jshint -W014 */
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const cors = require('cors')({origin: true});
@@ -10,15 +13,15 @@ exports.sessionsWithinDates = functions.https.onRequest((req, res) => {
     const startDate = req.query.startDate;
     const endDate = req.query.endDate;
     const uid = req.query.uid;
-    
+
     var result = {};
-    
+
     var sessions = admin.database().ref('/' + uid + '/sessions');
     sessions.once('value').then((snapshot) => {
       snapshot.forEach((childSnapshot) => {
         const key = childSnapshot.key;
         const val = childSnapshot.val();
-        
+
         if (startDate <= val.start_date && val.start_date <= endDate) {
           result[key] = val;
         }
@@ -26,7 +29,7 @@ exports.sessionsWithinDates = functions.https.onRequest((req, res) => {
       res.send(result);
       return true;
     }).catch((error) => {
-      
+
     });
   });
 });
@@ -40,13 +43,13 @@ exports.flattendSessions = functions.https.onRequest((req, res) => {
       pageSize = 50;
     }
     const uid = req.query.uid;
-    
+
     var result = [];
     var count = 0;
     var sessions = admin.database().ref('/' + uid + '/sessions').orderByChild('start_date');
     sessions.once('value').then((snapshot) => {
       const total = snapshot.numChildren();
-      
+
       snapshot.forEach((childSnapshot) => {
         if (count >= total - (pageNo - 1) * pageSize) {
           res.send(result);
@@ -55,7 +58,7 @@ exports.flattendSessions = functions.https.onRequest((req, res) => {
           const key = childSnapshot.key;
           const val = childSnapshot.val();
           result.unshift({key: key, start_date: val.start_date, wid: val.wid});
-        } 
+        }
         count++;
       });
       res.send(result);
@@ -73,11 +76,11 @@ function polygonContainsPoint(polygon, point) {
   }
   var i = 0;
   var j = polygon.length - 1;
-  var c = false
+  var c = false;
   for (; i < polygon.length; j = i++) {
-    const yValid = (polygon[i].y > point.y) !== (polygon[j].y > point.y)
+    const yValid = (polygon[i].y > point.y) !== (polygon[j].y > point.y);
     const xValidCond = (polygon[j].x - polygon[i].x) * (point.y - polygon[i].y) / (polygon[j].y - polygon[i].y) + polygon[i].x;
-    
+
     if (yValid && point.x < xValidCond) {
       c = !c;
     }
@@ -215,7 +218,7 @@ function lowest(summation) {
   return min;
 }
 
-function sinusoidalRegression(data, x) {
+function sinusoidalRegression(data) {
   const period = 365.25;
   const high = highest(data);
   const low = lowest(data);
@@ -223,28 +226,159 @@ function sinusoidalRegression(data, x) {
   const a = high - d;
   const b = 2.0 * Math.PI / period;
   const c = Math.asin((low - d) / a) - b;
-  
-  const y = a * Math.sin(b * x + c) + d;
-  
+
   return {
-    definition: {
-      a: a,
-      b: b,
-      c: c,
-      d: d,
-    },
-    expected: y
+    a: a,
+    b: b,
+    c: c,
+    d: d,
+  };
+}
+
+function randomBool() {
+  return Math.random() < 0.5;
+}
+
+function randomChromosome(limit) {
+  return {
+    a: Math.random() * limit.a,
+    b: Math.random() * limit.b,
+    c: Math.random() * limit.c,
+    d: Math.random() * limit.d
+  };
+}
+
+function mutateChromosome(chromosome, limit) {
+  const rChromo = randomChromosome(limit);
+  return {
+    a: randomBool() ? chromosome.a : rChromo.a,
+    b: randomBool() ? chromosome.b : rChromo.b,
+    c: randomBool() ? chromosome.c : rChromo.c,
+    d: randomBool() ? chromosome.d : rChromo.d
+  };
+}
+
+function crossChromosome(x, y) {
+  return {
+    a: randomBool() ? x.a : y.a,
+    b: randomBool() ? x.b : y.b,
+    c: randomBool() ? x.c : y.c,
+    d: randomBool() ? x.d : y.d
+  };
+}
+
+function crossChromosomesWithChance(chromosomes, prob) {
+  var result = chromosomes;
+  for (var i = 0; i < chromosomes.length / 2 - 1; i += 1) {
+    const p = Math.random();
+    if (p > prob) {
+      const a = chromosomes[i * 2];
+      const b = chromosomes[i * 2 + 1];
+      const c = crossChromosome(a, b);
+      result.push(c);
+    }
   }
+  return result;
+}
+
+function mutateChromosomesWithChance(chromosomes, limit, prob) {
+  var result = chromosomes;
+  for (var i = 0; i < chromosomes.length; i += 1) {
+    const p = Math.random();
+    if (p > prob) {
+      const a = chromosomes[i];
+      const c = mutateChromosome(a, limit);
+      result.push(c);
+    }
+  }
+  return result;
+}
+
+function selectChromosomes(chromosomes, tourneySize, data) {
+  var result = [];
+  var evals = [];
+
+  for (const ci in chromosomes) {
+    const chromosome = chromosomes[ci];
+    const fitness = evaluateFitness(chromosome, data);
+
+    for (var i = 0; i < Math.min(result.length, tourneySize); i += 1) {
+      if (fitness < evals[i]) {
+        if (i < result.length - 1) {
+          evals.splice(i, 0, fitness);
+          result.splice(i, 0, chromosome);
+        } else {
+          evals.push(fitness);
+          result.push(chromosome);
+        }
+      }
+    }
+    if (result.length < tourneySize) {
+      evals.push(fitness);
+      result.push(chromosome);
+    }
+  }
+  return result;
+}
+
+function evaluateFitness(chromosome, data) {
+  var error = 0.0;
+  const f = (x) => {
+    return chromosome.a * Math.sin(chromosome.b * x + chromosome.c) + chromosome.d;
+  };
+
+  for (const xi in data) {
+    const yi = data[xi];
+    const y = f(xi);
+    error += (y - yi) * (y - yi);
+  }
+  return error;
+}
+
+function evolvePopulation(size, generations, data) {
+  const limit = sinusoidalRegression(data);
+  var chromosomes = [];
+  for (var i = 0; i < size; i += 1) {
+    chromosomes.push(randomChromosome(limit));
+  }
+  chromosomes.push(limit);
+
+  for (var j = 0; j < generations; j += 1) {
+    const ms = mutateChromosomesWithChance(chromosomes, limit, 0.1);
+    const cs = crossChromosomesWithChance(ms, 0.4);
+    const ts = selectChromosomes(cs, size, data);
+    chromosomes = ts;
+  }
+
+  var best = limit;
+  var bestE = evaluateFitness(best, data);
+
+  for (var k = 0; k < chromosomes.length; k += 1) {
+    const e = evaluateFitness(chromosomes[k], data);
+    if (e < bestE) {
+      best = chromosomes[k];
+      bestE = e;
+    }
+  }
+
+  return best;
 }
 
 
-// ?orchardId=[String]&date=[Double]&uid=[String]
+// id0=[String]
+// id1=[String]
+// ...
+// idN=[String]
+//
+// groupBy=[worker, farm, foreman, orchard]
+// accum=[running, accumEntity]
+// uid=[String]
 exports.expectedYield = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const orchardId = req.query.orchardId;
     const timeinterval = req.query.date;
     const uid = req.query.uid;
-    
+
     orchardPolygon(orchardId, uid, (polygon) => {
       const sessions = admin.database().ref('/' + uid + '/sessions');
       sessions.once('value').then((snapshot) => {
@@ -254,7 +388,7 @@ exports.expectedYield = functions.https.onRequest((req, res) => {
           const collections = val.collections;
           summationOfCollections(summation, collections, polygon);
         });
-        res.send(sinusoidalRegression(summation, roundToDaysSince1970(timeinterval)));
+        res.send(evolvePopulation(100, 100, summation));
         return true;
       }).catch((error) => {});
     });
@@ -279,9 +413,9 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
     const uid = req.body.uid;
     var groupBy = req.body.groupBy;
     if (groupBy === undefined) {
-      groupBy = "orchard"
+      groupBy = "orchard";
     }
-    
+
     var ids = [];
     for (var i = 0; i < Object.keys(req.body).length; i++) {
       const key = "id" + i;
@@ -289,11 +423,11 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
         ids.push(req.body[key]);
       }
     }
-    
+
     var result = [];
-    
+
     var sessions = admin.database().ref('/' + uid + '/sessions');
-    
+
     if (groupBy === "orchard") {
       orchardPolygons(ids, uid, (polygons) => {
         sessions.once('value').then((snapshot) => {
@@ -304,8 +438,8 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
               for (var ckey in val.collections) {
                 const collection = val.collections[ckey];
                 for (var pickup in collection) {
-                  const geopoint = collection[pickup].coord
-                  const point = {x: geopoint.lng, y: geopoint.lat}; 
+                  const geopoint = collection[pickup].coord;
+                  const point = {x: geopoint.lng, y: geopoint.lat};
                   if (anyPolygonContainsPoint(polygons, point)) {
                     result.push(geopoint);
                   }
@@ -331,14 +465,14 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
                 continue;
               }
               for (var pickup in collection) {
-                const geopoint = collection[pickup].coord
-                const point = {x: geopoint.lng, y: geopoint.lat}; 
+                const geopoint = collection[pickup].coord;
+                const point = {x: geopoint.lng, y: geopoint.lat};
                 result.push(geopoint);
               }
             }
           }
         });
-        
+
         res.send(result);
         return true;
       }).catch((error) => {
@@ -354,14 +488,14 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
             for (var ckey in val.collections) {
               const collection = val.collections[ckey];
               for (var pickup in collection) {
-                const geopoint = collection[pickup].coord
-                const point = {x: geopoint.lng, y: geopoint.lat}; 
+                const geopoint = collection[pickup].coord;
+                const point = {x: geopoint.lng, y: geopoint.lat};
                 result.push(geopoint);
               }
             }
           }
         });
-        
+
         res.send(result);
         return true;
       }).catch((error) => {
@@ -377,7 +511,7 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
               for (var ckey in val.collections) {
                 const collection = val.collections[ckey];
                 for (var pickup in collection) {
-                  const geopoint = collection[pickup].coord
+                  const geopoint = collection[pickup].coord;
                   const point = {x: geopoint.lng, y: geopoint.lat};
                   const o = anyOrchardContainsPoint(orchards, point);
                   if (o === undefined || !arrayContainsItem(ids, o.farm)) {
@@ -450,7 +584,7 @@ function roundDateToMonth(timeinterval) {
 function roundDateToYear(timeinterval) {
   const date = new Date(timeinterval * 1000);
   const year = date.getUTCFullYear();
-  return year
+  return year;
 }
 
 function roundDateToPeriod(timeinterval, period) {
@@ -506,7 +640,7 @@ function incrSessionCounter(counter, key, accum) {
   if (key === "" || accum === "") {
     return;
   }
-  
+
   if (counter[key] !== undefined) {
     if (counter[key][accum] !== undefined) {
       counter[key][accum] += 1;
@@ -542,25 +676,6 @@ function updateDaysCounter(days, entities, key, accum, period, pickedDate) {
   }
 }
 
-function averageOfSessionCounter(counter, days) {
-  var result = {};
-  var keys = Object.keys(counter);
-  for (const ikey in keys) {
-    const key = keys[ikey];
-    const accums = Object.keys(counter[key]);
-    for (const iaccum in accums) {
-      const accum = accums[iaccum];
-      if (result[key] === undefined) {
-        result[key] = {};
-      }
-      var len = Object.keys(days[key][accum]).length;
-      if (len === undefined || len === null) { len = 1; }
-      result[key][accum] = counter[key][accum] / len;
-    }
-  }
-  return result;
-}
-
 function averageOfSessionItem(item, key, days, workingOn) {
   var result = {};
   const accums = Object.keys(item);
@@ -574,6 +689,16 @@ function averageOfSessionItem(item, key, days, workingOn) {
     var cnt = Object.keys(workingOn[accum]).length;
     if (cnt === undefined || cnt === null) { cnt = 1; }
     result[accum] = (item[accum] / len) / cnt;
+  }
+  return result;
+}
+
+function sinusoidalOfSessionItems(items) {
+  var result = {};
+  const keys = Object.keys(items);
+  for (const ikey in keys) {
+    const key = keys[ikey];
+    result[key] = evolvePopulation(100, 20, items[key]);
   }
   return result;
 }
@@ -594,7 +719,7 @@ function averageOfSessionItem(item, key, days, workingOn) {
 // uid=[String]
 //
 // --------- Result ------------- Mode = accumTime
-// result = {avg: {*: #}, p}
+// result = {avg: {*: #}, p, exp: {*: {a: #, b: #, c: #, d: #}, ...}}
 //
 // where p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
 // where * is some values determined by period hourly = [0, 23], daily=[Sunday, ..., Saturday]
@@ -602,7 +727,7 @@ function averageOfSessionItem(item, key, days, workingOn) {
 // # is total number of bags collected
 //
 // --------- Result ------------- Mode = accumEntity
-// result = {avg: {*: #, ...}, sum: {*: #, ...}}
+// result = {avg: {*: #, ...}, sum: {*: #, ...}, exp: {sum: {a: #, b: #, c: #, d: #}}}
 //
 // where * is some values determined by period hourly = YYYY MMM dd HH:mm, daily= YYYY MMM DD
 // weekly = YYYY MMM DD, monthly = YYYY MMM, yearly = YYYY
@@ -610,8 +735,9 @@ function averageOfSessionItem(item, key, days, workingOn) {
 // sum is the sum of id0 + id1 + ... + idN at date points determined by period.
 //
 // --------- Result ------------- Mode = running
-// let result = {avg: {*: #, ...}, id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
+// let result = {avg: {*: #}, p, exp: {*: {a: #, b: #, c: #, d: #}, ...}}
 //
+// where p = {id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, ...}
 // where * is some values determined by period hourly = YYYY MMM dd HH:mm, daily= YYYY MMM DD
 // weekly = YYYY MMM DD, monthly = YYYY MMM, yearly = YYYY
 // # is total number of bags collected
@@ -623,6 +749,7 @@ function averageOfSessionItem(item, key, days, workingOn) {
 //   and MM are discarded. If your startDate and endDate go into different months but are in
 //   the same year then only YYYY is dropped. This applies for all dates in running and accumEntity.
 // + for running and accumEntity when the same YYYY MM and DD is asked for it returns ddd
+// + exp components are constants in the function: a * sin(b * x + c) + d where x is the only variable
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     const startDate = req.body.startDate;
@@ -641,18 +768,19 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     const isAccumTime = mode === 'accumTime';
     const isAccumEntity = mode === 'accumEntity';
     const isRunning = mode === 'running';
-    const sd = moment(new Date(startDate * 1000)).add(+offset, 'm').toDate();
-    const ed = moment(new Date(endDate * 1000)).add(+offset, 'm').toDate();
-    
+    const sd = moment(new Date(startDate * 1000)).add(Number(offset), 'm').toDate();
+    const ed = moment(new Date(endDate * 1000)).add(Number(offset), 'm').toDate();
+
     const sameY = isSameYear(sd, ed);
     const sameM = isSameMonth(sd, ed);
     const sameD = isSameDay(sd, ed);
-    
+
     var result = {};
-    var allOthers = {avg: {}};
+    var allOthers = {avg: {}}; // all collections in the requested period
+    var all = {}; // all collections ever for requested ids
     var days = {};
     var workingOnDays = {};
-    
+
     var ids = [];
     for (var i = 0; i < Object.keys(req.body).length; i++) {
       const ikey = "id" + i;
@@ -663,14 +791,14 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
         }
       }
     }
-    
+
     if (groupBy === "worker" || groupBy === "foreman") {
       var sessionsRef = admin.database().ref('/' + uid + '/sessions');
       sessionsRef.once("value").then((snapshot) => {
         snapshot.forEach((childSnapshot) => {
           const key = childSnapshot.key;
           const val = childSnapshot.val();
-          
+
           const foremanKey = val.wid;
           for (const workerKey in val.collections) {
             const collection = val.collections[workerKey];
@@ -682,11 +810,11 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
               const wkey = isAccumEntity
                 ? "sum"
                 : groupBy === "foreman" ? foremanKey : workerKey;
-                
-                
+
+
               var contained = groupBy === "foreman" && arrayContainsItem(ids, foremanKey)
-              || groupBy === "worker" && arrayContainsItem(ids, workerKey)
-                
+              || groupBy === "worker" && arrayContainsItem(ids, workerKey);
+
               if (startDate <= pickup.date && pickup.date <= endDate) {
                 if (contained) {
                   incrSessionCounter(result, wkey, accum);
@@ -694,10 +822,14 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                 incrSessionCounter(allOthers, "avg", accum);
                 updateDaysCounter(days, workingOnDays, wkey, accum, period, pickup.date);
               }
+              if (contained) {
+                incrSessionCounter(all, wkey, roundToDaysSince1970(pickup.date));
+              }
             }
           }
         });
-        result["avg"] = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
+        result.avg = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
+        result.exp = sinusoidalOfSessionItems(all);
         res.send(result);
         return true;
       }).catch((err) => {
@@ -710,17 +842,17 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
           snapshot.forEach((childSnapshot) => {
             const key = childSnapshot.key;
             const val = childSnapshot.val();
-            
+
             for (const workerKey in val.collections) {
               const collection = val.collections[workerKey];
-              
+
               for (const pickupKey in collection) {
                 const pickup = collection[pickupKey];
                 const accum = !isAccumTime
                   ? roundDateToRunningPeriod(pickup.date, period, sameY, sameM, sameD)
                   : roundDateToPeriod(pickup.date, period);
                 const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
-                
+
                 var orc = undefined;
                 for (const okey in cookedOrchards) {
                   if (polygonContainsPoint(cookedOrchards[okey].polygon, pnt)) {
@@ -728,24 +860,20 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                     break;
                   }
                 }
-                
-                if (orc === undefined 
-                || orc.id === undefined 
-                || orc.val === undefined 
+
+                if (orc === undefined
+                || orc.id === undefined
+                || orc.val === undefined
                 || orc.val.farm === undefined) {
                   continue;
                 }
-                
+
                 // akey is to check if we are actually in an asked for orchard/farm
                 // but we will always use pkey to group dat based on the mode.
                 const akey = groupBy === "orchard" ? orc.id : orc.val.farm;
-                
-                const pkey = isAccumEntity
-                  ? "sum"
-                  : akey;
-                
+                const pkey = isAccumEntity ? "sum" : akey;
                 const contained = arrayContainsItem(ids, akey);
-                
+
                 if (startDate <= pickup.date && pickup.date <= endDate) {
                   if (contained) {
                     incrSessionCounter(result, pkey, accum);
@@ -753,10 +881,14 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                   incrSessionCounter(allOthers, "avg", accum);
                   updateDaysCounter(days, workingOnDays, pkey, accum, period, pickup.date);
                 }
+                if (contained) {
+                  incrSessionCounter(all, pkey, roundToDaysSince1970(pickup.date));
+                }
               }
             }
           });
-          result["avg"] = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
+          result.avg = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
+          result.exp = sinusoidalOfSessionItems(all);
           res.send(result);
           return true;
         }).catch((err) => {

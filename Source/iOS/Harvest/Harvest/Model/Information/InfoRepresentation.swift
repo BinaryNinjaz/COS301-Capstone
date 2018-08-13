@@ -127,7 +127,12 @@ extension Worker {
       row.hidden = Condition.function(["isForemanTag"], { form in
         return !((form.rowBy(tag: "isForemanTag") as? SwitchRow)?.value ?? false)
       })
+      let validPhone = RuleClosure<String> { (_) -> ValidationError? in
+        let valid = Phoney.formatted(number: row.value) != nil
+        return valid ? nil : ValidationError(msg: "• Phone numbers must be validly formatted")
+      }
       row.add(rule: RuleRequired(msg: "• Phone numbers must exist for foreman"))
+      row.add(rule: validPhone)
       row.validationOptions = .validatesAlways
       row.title = "Phone Number"
       row.value = Phoney.formatted(number: phoneNumber)
@@ -746,7 +751,7 @@ extension Session {
     }
     
     form
-      +++ Section("Foreman")
+      +++ Section()
       <<< displayRow
     
       +++ Section("Duration")
@@ -803,7 +808,7 @@ extension HarvestUser {
     }
     
     let lastnameRow = TextRow { row in
-      row.title = "Last Name"
+      row.title = "Surname"
       row.value = self.lastname
       row.placeholder = ""
     }.cellUpdate { (cell, _) in
@@ -905,22 +910,22 @@ extension HarvestUser {
       cell.backgroundColor = .addOrchard
     }
     
-    form
-      +++ Section("Organisation Information")
-      <<< organisationNameRow
-      
-      +++ Section("Account Details")
-      <<< emailRow
-      <<< firstnameRow
-      <<< lastnameRow
-    
+    let loginDetailsSection = Section("Login Details")
+    loginDetailsSection <<< emailRow
     if Auth.auth().currentUser?.providerID == "Firebase" {
-      form +++ Section()
-        <<< newPasswordRow
+      loginDetailsSection <<< newPasswordRow
     }
     
     form
-      +++ Section()
+      +++ loginDetailsSection
+      
+      +++ Section("Account Details")
+      <<< organisationNameRow
+      <<< firstnameRow
+      <<< lastnameRow
+    
+    form
+      +++ Section("Account Management")
       <<< deleteAccountRow
   }
 }
