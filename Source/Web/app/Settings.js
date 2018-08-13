@@ -57,7 +57,7 @@ function saveEmail(){
 }
 
 function savePassword(){
-
+    var password = passwordPrompt();
 }
 
 function deleteAccount(){
