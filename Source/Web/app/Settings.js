@@ -58,6 +58,9 @@ function saveEmail(){
 
 function savePassword(){
     var auth = passwordPrompt();
+    if(auth){
+    
+    }
 }
 
 function deleteAccount(){
