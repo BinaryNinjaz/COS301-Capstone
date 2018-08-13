@@ -1,0 +1,14 @@
+Meeting 10 (20-07-18)
+Status check on everyone.
+Get someone to review some iOS code (criticise, tell how to improve UI etc).
+Next week is test week (field tests, test on people who are not in our group, do the testing we may have slacked on). We improve efficiency, performance etc. Fix up UI and prepare for play store.
+iOS app and Android app must be ready for deployment by 17 August, as we need actual farmers to test it and the real world is full of surprises.
+Meeting with client next week (who wants to come)?
+Set times for meetings next week (12:30 Monday, 10:30 Thursday).
+Once iOS and android are ready for public use (in a month’s time) we all move to the web (don’t let anyone step on to your turf). We have to start being a full-on team, the system is almost complete, let us concentrate on what 301 is really about (learning team work, applying agile principles etc) we shouldn’t deny ourselves learning opportunities; therefore, once the apps are done all work (wow-factors) will go on to web.
+Wow factors are for us to show the lecturer only (we give the client what they asked for, nothing more, nothing less We cannot impose things on the client).
+Walkthrough demo (concentrate on what 301 is really about). Change sitting arrangements. Whoever wants to wing it (pop in with comments, be confident when you speak, do not hesitate). Start demo with smile and passion (show that Harvest improves farming, it is simple intuitive, computational). Touch the other person if they are speaking for too long, concentrating on boring stuff or speaking too fast/slowly. Open first slide and android emulator (be careful on the emulator) while explaining what Harvest is and telling them what we have done (slide 2). Who wants to say what we have done (change finances to deployment costs)? Who wants to say what we are yet to do? Who wants to do the coding standards? Show off iOS (be quick, not Letanyan) and someone pop in with comments that emphasised team work and 301 methods. Show off website (be quick, not Kevin) and someone pop in with comments that emphasised team work and 301 methods. One unit test, one integration test and UI test. Round up (strongly).
+Introduction:
+Good morning, we are the team Binary Ninjaz.
+Now our system, called Harvest, runs on two mobile platforms (Android and iOS).
+By formal definition Harvest is an application to assist growers with yield data and optimise worker performance. In other words, it is the paper and pen farmers use to count how much produce was collected in the form of a simple click of a button. It is the transformation of this data into analytics such as graphs and heatmaps that helps determine if there is something killing their crops or check if enough work is being done. It helps monitor workers (through location services) to see where they are as stealing is a problem on farms. Before we get into the design and functionality of the system lets first talk about what we have done…
