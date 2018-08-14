@@ -67,7 +67,8 @@ function savePassword(){
     if(newPass === newPass2){
         var auth = passwordPrompt();
         if(auth){
-
+            user().updatePassword(newPass);
+            alert("Your password has been changed successfully.");
         }else{
             alert("Incorrect password entered.");
         }
