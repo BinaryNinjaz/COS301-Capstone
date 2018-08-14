@@ -1,5 +1,80 @@
 body{
-    
-    
-    
+    font-family: Sans-Serif;	
+    background-image: url("back2smaller.jpg");
+    background-repeat: no-repeat;  
+    background-size: cover;  
+    display: block;
+    overflow: auto;    
 }
+section .c{
+    width:92%;
+    height: 240px;
+    border: 2px white solid;
+    float: left;
+    margin-bottom: 60px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 12px;
+    border-radius: 20px;
+}
+
+.c .header{
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 1;
+    position: relative;
+    margin: 5px;
+    color: white;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;  
+}
+#info{
+    background-image: url("images/info.jpeg");
+}
+
+#ft{
+    background-image: url("images/ft.jpg");
+}
+#heatm{
+    background-image: url("images/hmp2.jpeg");
+}
+#sess{
+    background-image: url("images/sess.jpg");
+}
+
+#ana{
+    background-image: url("images/sta.jpeg");    
+}
+#sett{
+    background-image: url("images/sett.jpeg");    
+}
+.c{
+    overflow: auto;
+    background-size:  cover;
+    background-repeat: no-repeat;
+}
+.desc{
+    margin: 10px;
+    visibility: hidden;
+    color: white;    
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;  
+}
+.c:hover .desc{
+    visibility: visible;
+}
+footer img{
+    width:50px;
+}
+footer{
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+

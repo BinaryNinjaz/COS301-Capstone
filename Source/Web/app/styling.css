@@ -32,7 +32,10 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+      display: block;
+    overflow: auto;  
 }
+
 .register, .login{
 	background-color: whitesmoke;
 	background-image: url("backgrdSmaller.jpg");
