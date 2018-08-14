@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private static RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
     public static TextView textView;
     private TextView textViewPressStart;
-    public static WorkerRecyclerViewAdapter adapter;
+    private WorkerRecyclerViewAdapter adapter;
     public static LocationManager locationManager;
     private Location location;
     private FirebaseAuth mAuth;
@@ -117,8 +117,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference farmLevelRef;
     public static String sessionKey;
     public static String farmerKey;
-    public static String selectedOrchardKey;
     private boolean isFarmer = true;
+    public static String selectedOrchardKey;
     private ArrayList<String> orchards = new ArrayList<>();
     private ArrayList<String> orchardKeys = new ArrayList<>();
     private BroadcastReceiver locationBroadcastReceiver;
@@ -810,7 +810,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 dlgAlertIfNoLocation.setCancelable(false);
                 dlgAlertIfNoLocation.create().show();
             } else {
-                if (latitude != null && longitude != null) {
+                if (location != null) {
                     getOrchard();
                 }
             }
@@ -838,7 +838,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             sessRef.updateChildren(sessionDate);//save data to Firebase
         }
 
-        if (latitude == null && longitude == null && btnStart.getTag() == "green") {
+        if (location == null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.VISIBLE);
             Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
             recyclerView.setVisibility(View.GONE);
@@ -846,7 +846,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             handler.postDelayed(new Runnable() {
                 public void run() {
                     //do something
-                    if (latitude == null && longitude == null) {
+                    if (location == null) {
 
                     } else {
                         getOrchard();
@@ -877,7 +877,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             recyclerView.setVisibility(View.VISIBLE);
         }
 
-        if (latitude != null && longitude != null && btnStart.getTag() == "green") {
+        if (location != null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);//only show workers once when location is in
             //start background location services
@@ -889,8 +889,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             trackIndex = 0;
             DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
             Map<String, Object> track = new HashMap<>();
-            track.put("lat", latitude);
-            track.put("lng", longitude);
+            double currentLat = location.getLatitude();
+            double currentLong = location.getLongitude();
+            track.put("lat", currentLat);
+            track.put("lng", currentLong);
             trackRef.updateChildren(track);
 
             handler.postDelayed(new Runnable() {
@@ -898,8 +900,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     //tracks every 2 minutes
                     DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
                     Map<String, Object> track = new HashMap<>();
-                    track.put("lat", latitude);
-                    track.put("lng", longitude);
+                    double currentLat = location.getLatitude();
+                    double currentLong = location.getLongitude();
+                    track.put("lat", currentLat);
+                    track.put("lng", currentLong);
                     trackRef.updateChildren(track);
                     if (sessionEnded == true || trackIndex > 0 && btnStart.getTag() == "green") {
                         trackIndex = 0;
@@ -935,8 +939,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
 
                             Map<String, Object> coordinates = new HashMap<>();
-                            coordinates.put("lat", latitude);
-                            coordinates.put("lng", longitude);
+                            coordinates.put("lat", location.getLatitude());
+                            coordinates.put("lng", location.getLongitude());
 
                             Map<String, Object> childUpdates = new HashMap<>();
                             childUpdates.put("coord", coordinates);
@@ -979,8 +983,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
 
                                     Map<String, Object> coordinates = new HashMap<>();
-                                    coordinates.put("lat", latitude);
-                                    coordinates.put("lng", longitude);
+                                    coordinates.put("lat", location.getLatitude());
+                                    coordinates.put("lng", location.getLongitude());
 
                                     Map<String, Object> childUpdates = new HashMap<>();
                                     childUpdates.put("coord", coordinates);
@@ -1021,8 +1025,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setPlusEnabled(true);
             adapter.setMinusEnabled(true);
             track = new HashMap<Integer, Location>(); //used in firebase function
-            track.put(trackCount, BackgroundService.location);
-            //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
+            track.put(trackCount, location);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
             startTime = System.currentTimeMillis();
             btnStart.setBackgroundResource(R.drawable.rounded_button_orange);
             btnStart.setDrawingCacheBackgroundColor(Color.parseColor("#FFFF8800"));
@@ -1077,6 +1081,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             });
             dlgAlerter.setCancelable(false);
             dlgAlerter.create().show();
+
+            if (locationEnabled) {
+                locationManager.removeUpdates(mLocationListener);
+            }
 
             adapter.totalBagsCollected = 0;//reset total number of bags collected for all workers
             textView.setText("Current Yield: " + adapter.totalBagsCollected);

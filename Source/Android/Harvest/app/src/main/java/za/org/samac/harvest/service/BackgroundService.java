@@ -62,7 +62,7 @@ public class BackgroundService extends IntentService {
             location = locationChange;
             trackCount++;
             track.put(trackCount, location);
-            MainActivity.adapter.setLatLng(locationChange.getLatitude(), locationChange.getLongitude());
+            //MainActivity.adapter.setLatLng(locationChange.getLatitude(), locationChange.getLongitude());
         }
 
         @Override
