@@ -71,6 +71,8 @@ function savePassword(){
         }else{
             alert("Incorrect password entered.");
         }
+    }else{
+        alert("Please make sure you have entered the new password correctly.");
     }
 }
 
