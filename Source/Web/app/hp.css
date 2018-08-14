@@ -53,7 +53,9 @@ section .c{
 #ana{
     background-image: url("images/sta.jpeg");    
 }
-
+#sett{
+    background-image: url("images/sett.jpeg");    
+}
 .c{
     overflow: auto;
     background-size: cover; 
