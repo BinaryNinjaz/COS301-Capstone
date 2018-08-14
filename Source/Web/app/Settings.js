@@ -43,12 +43,15 @@ function initPage(){
 }
 
 function saveChanges(){
-    if(confirm("Are you sure you want to save your account changes?")){
-        database.ref('/' + userID() +'/admin').update({   
-          firstname: document.getElementById("first").value,
-          lastname: document.getElementById("sur").value,
-          organization: document.getElementById("org").value
-        });  
+    if(confirm("Are you sure you want to save these account changes?")){
+        var auth = passwordPrompt();
+        if(auth){
+            database.ref('/' + userID() +'/admin').update({   
+              firstname: document.getElementById("first").value,
+              lastname: document.getElementById("sur").value,
+              organization: document.getElementById("org").value
+            });  
+        }
     }
 }
 
@@ -78,7 +81,7 @@ function savePassword(){
 }
 
 function deleteAccount(){
-    if(confirm("Are you sure you want to permanently delete this account?")){
+    if(confirm("Are you sure you want to permanently delete this account and all the information it contains?")){
         var auth = passwordPrompt();
         if(auth){
             database.ref('/' + userID()).remove();
