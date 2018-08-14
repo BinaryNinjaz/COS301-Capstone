@@ -62,6 +62,10 @@ function saveEmail(){
         var auth = passwordPrompt();
         if(auth){
             email = document.getElementById("email").value;
+            user().updateEmail(email);
+            database.ref('/' + userID() +'/admin').update({
+                email: email
+            });
         }else{
             alert("Incorrect password entered.");
         }
