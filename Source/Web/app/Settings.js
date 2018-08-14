@@ -101,5 +101,5 @@ function passwordPrompt(){
     var thePass = thePrompt.document.getElementById("thePass").value;
     thePrompt.document.getElementById("authOK").onclick = function () {
         // do authentication
-    }
+    };
 }
