@@ -74,7 +74,7 @@ function deleteAccount(){
     if(confirm("Are you sure you want to permanently delete this account?")){
         var auth = passwordPrompt();
         if(auth){
-            firebase.database().ref('/' + userID()).remove();
+            database.ref('/' + userID()).remove();
         }else{
             alert("Incorrect password entered.");
         }
