@@ -49,7 +49,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private ArrayList<Button> plus;
     private ArrayList<Button> minus;
     private ArrayList<TextView> incrementViews;
-    //private Location location;
+    private Location location;
     public int totalBagsCollected;
     private collections collectionObj;
     private FirebaseDatabase database;
@@ -121,8 +121,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 holder.increment.setText(String.format("%d", value));
 
                 //get coordinates
-                currentLat = lat;
-                currentLong = lng;
+                currentLat = location.getLatitude();
+                currentLong = location.getLongitude();
 
                 //get time
                 currentTime = (System.currentTimeMillis()/divideBy1000Var);//seconds since January 1, 1970 00:00:00 UTC
@@ -152,7 +152,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 sessRef.updateChildren(sessionDate);//save data to Firebase
                 myRef.updateChildren(childUpdates);//store plus button info in Firebase
 
-                collectionObj.addCollection(personName, lat, lng);
+                collectionObj.addCollection(personName, location);
                 ++totalBagsCollected;
 
                 //display incremented current yield
@@ -249,9 +249,9 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         }
     }
 
-    /*public void setLocation(Location location) {
+    public void setLocation(Location location) {
         this.location = location;
-    }*/
+    }
 
     public void setLatLng(Double lat, Double lng) {
         this.lat = lat;

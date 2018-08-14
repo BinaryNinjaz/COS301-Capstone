@@ -96,7 +96,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private TextView textViewPressStart;
     public static WorkerRecyclerViewAdapter adapter;
     public static LocationManager locationManager;
+    private Location location;
     private FirebaseAuth mAuth;
+    private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
     private double startSessionTime;
@@ -141,7 +143,53 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         init();
 
-        handleLocationServices();
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        } else {
+            locationEnabled = true;
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+
+            List<String> providers = locationManager.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                location = locationManager.getLastKnownLocation(provider);
+                //Log.d("last known location, provider: %s, location: %s", provider, location);
+
+                if (location != null) {
+                    break;
+                }
+                /*if (bestLocation == null
+                        || location.getAccuracy() < bestLocation.getAccuracy()) {
+                    //Log.d("found best last known location: %s", location);
+                    bestLocation = location;
+                }*/
+            }
+
+            if (location == null) {
+                location = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+                //adapter.setLocation(location);
+            }
+            adapter.setLocation(location);
+        }
+
+        locationPermissions();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationEnabled = true;
+            if (locationManager == null) {
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                if (locationManager != null) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+                    location = locationManager
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+                }
+            }
+        }
         //new LocationHelper().getLocation(this);
 
         uid = user.getUid();
@@ -158,41 +206,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         statusCheck();
     }
 
-    public void handleLocationServices() {
-        IntentFilter intentFilter = new IntentFilter(BackgroundService.ACTION_LOCATION_BROADCAST);
-        locationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action != null && action.equals(BackgroundService.ACTION_LOCATION_BROADCAST)) {
-                    if (intent != null) {
-                        double lat = intent.getDoubleExtra("latitude", 0);
-                        double lng = intent.getDoubleExtra("longitude", 0);
-                        Log.i(TAG, "*********************** " + lat + " ; " + lng);
-                        latitude = lat;
-                        longitude = lng;
-                        adapter.setLatLng(lat, lng);
-                    }
-                }
-            }
-        };
-        registerReceiver(locationBroadcastReceiver ,intentFilter);
-
-        locationPermissions();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            stopService(new Intent(getApplicationContext(), BackgroundService.class));
-            Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
-            intent.setAction(BackgroundService.ACTION_LOCATION_UPDATES);
-            startService(intent);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(locationBroadcastReceiver);
-    }
-
     @Override
     public void onResume(){
         super.onResume();
@@ -205,11 +218,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == GPS_SETTINGS_UPDATE) {
-            stopService(new Intent(getApplicationContext(), BackgroundService.class));
-            Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
-            intent.setAction(BackgroundService.ACTION_LOCATION_UPDATES);
-            startService(intent);
-            /*locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             if (locationManager != null) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
@@ -219,15 +228,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     //                                          int[] grantResults)
                     // to handle the case where the user grants the permission. See the documentation
                     // for ActivityCompat#requestPermissions for more details.
-                    //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                             LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
-                    //location = locationManager
+                    location = locationManager
                             .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
-
                     return;
                 }
 
-            }*/
+            }
             return;
         }
 
@@ -299,27 +307,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             bottomNavigationView = findViewById(R.id.bottom_navigation);
 
             bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
-            BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
             bottomNavigationView.setOnNavigationItemSelectedListener(
                     new BottomNavigationView.OnNavigationItemSelectedListener() {
                         @Override
                         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                             switch (item.getItemId()) {
-                                        case R.id.actionYieldTracker:
-                                            return true;
-                                        case R.id.actionInformation:
-                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
-                                            return true;
-                                        case R.id.actionSession:
-                                            startActivity(new Intent(MainActivity.this, Sessions.class));
-                                            return true;
-                                        case R.id.actionStats:
-                                            startActivity(new Intent(MainActivity.this, Stats.class));
-                                            return true;
-                                    }
+                                case R.id.actionYieldTracker:
                                     return true;
-                                }
-                            });
+                                case R.id.actionInformation:
+                                    startActivity(new Intent(MainActivity.this, InformationActivity.class));
+                                    return true;
+                                case R.id.actionSession:
+                                    startActivity(new Intent(MainActivity.this, Sessions.class));
+                                    return true;
+                                case R.id.actionStats:
+                                    startActivity(new Intent(MainActivity.this, Stats.class));
+                                    return true;
+                            }
+                            return true;
+                        }
+                    });
         }
     }
 
@@ -410,6 +417,189 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         });
         builder.show();
     }
+
+    private void getPolygon() {
+        DatabaseReference myRef;
+        myRef = database.getReference(farmerKey + "/orchards");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    currentOrchard.add(child.getKey().toString());
+                    pathsToOrchardCoords.add(farmerKey + "/orchards/" + currentOrchard.get(currentOrchard.size()-1) + "/coords");
+                }
+
+                for (int i = 0; i<pathsToOrchardCoords.size(); i++) {
+                    DatabaseReference myRef2;
+                    myRef2 = database.getReference(pathsToOrchardCoords.get(i));
+                    holdi = i;
+                    pathAfterGotOrchard(pathsToOrchardCoords.get(i), myRef2);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void pathAfterGotOrchard(final String path, DatabaseReference myRef2) {
+        myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int m = 0;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    coords.add(path + "/" + child.getKey().toString());
+                    m++;
+                }
+
+                pathAfterGotCoords();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    int coordsCount = 0;
+    private void pathAfterGotCoords() {
+        for (int j = 0; j<coords.size(); j++) {
+            DatabaseReference myRef3;
+            myRef3 = database.getReference(coords.get(j));
+            myRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String lat = dataSnapshot.child("lat").getValue().toString();
+                    String lng = dataSnapshot.child("lng").getValue().toString();
+                    polygonStoreX.add(Double.parseDouble(lat));
+                    polygonStoreY.add(Double.parseDouble(lng));
+                    coordsCount++;
+
+                    if (coordsCount == coords.size()) {
+                        for (int m = 0; m < currentOrchard.size(); m++) {
+                            for (int i = 0; i < coords.size(); i++) {
+                                if (coords.get(i).contains(currentOrchard.get(m))) {
+                                    polygonX.add(polygonStoreX.get(i));
+                                    polygonY.add(polygonStoreY.get(i));
+                                    correctOrchard = currentOrchard.get(m);
+                                }
+                            }
+
+                            if (polygonContainsPoint(polygonX, polygonY) == true) {
+                                //getExpectedYield();//set expected yield
+                                break;
+                            } else {
+                                polygonX.clear();
+                                polygonY.clear();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    private Boolean polygonContainsPoint(List<Double> px, List<Double> py) {
+        Double pointx = 0.0;
+        Double pointy = 0.0;
+        if (location != null) {
+            pointx = location.getLatitude();
+            pointy = location.getLongitude();
+        }
+
+        int i = 0;
+        int j = px.size() - 1;
+        Boolean c = false;
+        for (; i < px.size(); j = i++) {
+            final Boolean yValid = (py.get(i) > pointy) != (py.get(j) > pointy);
+            final Double xValidCond = (px.get(j) - px.get(i)) * (pointy - py.get(i)) / (py.get(j) - py.get(i)) + px.get(i);
+
+            if (yValid && pointx < xValidCond) {
+                c = !c;
+            }
+        }
+
+        return c;
+    }
+
+    private String urlExpectYieldText() {
+        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/expectedYield?";
+        base = base + "orchardId=" + correctOrchard;
+        double currentTime;
+        double divideBy1000Var = 1000.0000000;
+        currentTime = (System.currentTimeMillis()/divideBy1000Var);
+        base = base + "&date=" + currentTime;
+        base = base + "&uid=" + farmerKey;
+        return base;
+    }
+
+    public void getExpectedYield() {
+        try {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String response = sendGet(urlExpectYieldText());
+                        JSONObject obj = new JSONObject(response);
+                        final Double expectedYield = obj.getDouble("expected"); // This is the value
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                textView = findViewById(R.id.textView);
+                                textView.setText("Expected Yield: " + Math.round(expectedYield));
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String sendGet(String url) throws Exception {
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        // optional default is GET
+        con.setRequestMethod("GET");
+
+        //add request header
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        return response.toString();
+    }
+
+//    @Override
+//    protected void onResume(){
+//        super.onResume();
+////        if(isFarmer) {
+////            bottomNavigationView.setSelectedItemId(R.id.actionInformation);
+////        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -908,8 +1098,32 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public Location getLocation() {
-        return BackgroundService.location;
+        return location;
     }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location locationChange) {
+            location = locationChange;
+            trackCount++;
+            track.put(trackCount, location);
+            adapter.setLocation(location);
+            //recyclerView.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+    };
 
 
     @Override
