@@ -51,8 +51,6 @@ function saveChanges(){
               lastname: document.getElementById("sur").value,
               organization: document.getElementById("org").value
             });  
-        }else{
-            alert("Incorrect password entered.");
         }
     }
 }
@@ -66,8 +64,6 @@ function saveEmail(){
             database.ref('/' + userID() +'/admin').update({
                 email: email
             });
-        }else{
-            alert("Incorrect password entered.");
         }
     }
 }
@@ -80,8 +76,6 @@ function savePassword(){
         if(auth){
             user().updatePassword(newPass);
             alert("Your password has been changed successfully.");
-        }else{
-            alert("Incorrect password entered.");
         }
     }else{
         alert("Please make sure you have entered the new password correctly and that it is at least 6 characters long.");
@@ -105,8 +99,6 @@ function deleteAccount(){
         var auth = passwordPrompt();
         if(auth){
             database.ref('/' + userID()).remove();
-        }else{
-            alert("Incorrect password entered.");
         }
     }
 }   
@@ -129,6 +121,7 @@ function passwordPrompt(){
         if(user().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
             return true;
         }else{
+            alert("Incorrect password entered.");
             return false;
         }
     };
