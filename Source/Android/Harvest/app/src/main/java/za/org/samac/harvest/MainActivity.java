@@ -307,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             bottomNavigationView = findViewById(R.id.bottom_navigation);
 
             bottomNavigationView.setSelectedItemId(R.id.actionYieldTracker);
+            BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
             bottomNavigationView.setOnNavigationItemSelectedListener(
                     new BottomNavigationView.OnNavigationItemSelectedListener() {
                         @Override
@@ -1038,8 +1039,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             //session ended
             sessionEnded = true;
             stopService(new Intent(getApplicationContext(), BackgroundService.class));//stop 2 minute location updates
-            workers.clear();
-            workersSearch.clear();
+
             TextView pressStart = findViewById(R.id.startText);
             pressStart.setText(R.string.pressStart);
 
@@ -1095,6 +1095,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             for (int i = 0; i < workers.size(); i++) {
                 workers.get(i).setValue(0);
             }
+
+            workers.clear();
+            workersSearch.clear();
             adapter.setPlusEnabled(false);
             adapter.setMinusEnabled(false);
             collections collectionObj = adapter.getCollectionObj();
