@@ -44,7 +44,7 @@ function initPage(){
 
 function saveChanges(){
     if(confirm("Are you sure you want to save your account changes?")){
-        firebase.database().ref('/' + userID() +'/admin').update({   
+        database.ref('/' + userID() +'/admin').update({   
           firstname: document.getElementById("first").value,
           lastname: document.getElementById("sur").value,
           organization: document.getElementById("org").value
