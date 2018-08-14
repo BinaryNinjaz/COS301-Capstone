@@ -98,8 +98,8 @@ function passwordPrompt(){
     theHTML += "<input type='button' value='OK' id='authOK'/>";
     thePrompt.document.body.innerHTML = theHTML;
 
-    var thePass = thePrompt.document.getElementById("thePass").value;
     thePrompt.document.getElementById("authOK").onclick = function () {
+        var thePass = thePrompt.document.getElementById("thePass").value;
         // do authentication
     };
 }
