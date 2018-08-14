@@ -87,6 +87,8 @@ function deleteAccount(){
     }
 }   
 
+/*makes use of a prompt to get user to enter current password before
+making account changes*/
 function passwordPrompt(){
     var thePrompt = window.open("", "", "width=500");
     var theHTML = "";
