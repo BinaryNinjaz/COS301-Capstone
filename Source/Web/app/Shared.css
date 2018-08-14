@@ -49,10 +49,10 @@ p, span {
 }
 
 body{
-    font-family: Sans-Serif;
-    background-image: url("background.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
+    font-family: Sans-Serif;	
+    background-image: url("back2smaller.jpg");
+    background-repeat: no-repeat;  
+    background-size: cover;  
     display: block;
-    overflow: auto;
+    overflow: auto;    
 }
