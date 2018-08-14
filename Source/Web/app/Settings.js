@@ -102,6 +102,10 @@ function passwordPrompt(){
 
     thePrompt.document.getElementById("authOK").onclick = function () {
         var thePass = thePrompt.document.getElementById("thePass").value;
-        // do authentication
+        if(user().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
+            return true;
+        }else{
+            return false;
+        }
     };
 }
