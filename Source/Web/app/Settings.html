@@ -28,57 +28,58 @@
 </head>
 <body>
 
-<div class="topnav">
-    <ul class="nav navbar-nav">
-        <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-        <a href="Information.html">Information</a>
-        <a href="Sessions.html">Sessions</a>
-        <a href="HeatMap.html">Heatmap</a>
-        <a href="graphs.html">Statistics</a>
-    </ul>
+    <div class="topnav">
+        <ul class="nav navbar-nav">
+            <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+            <a href="Information.html">Information</a>
+            <a href="Sessions.html">Sessions</a>
+            <a href="HeatMap.html">Heatmap</a>
+            <a href="graphs.html">Statistics</a>
+        </ul>
 
-    <ul class="pull-right nav navbar-nav">
-        <a class="active" href="Settings.html" id="emailInNav"></a>
-        <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-    </ul>
-</div>
+        <ul class="pull-right nav navbar-nav">
+            <a class="active" href="Settings.html" id="emailInNav"></a>
+            <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </ul>
+    </div>
     
     <div class="container" style="width: 450px">
-    <h3>Login Details:</h3>
-    <label for="email"><b>Email</b></label>
-    <input type="text" name="email" id ="email">
-    <br /> 
-    <button name = "saveEmail" style="height: 45px;" onclick="saveEmail()">Reset Email</button>
-    <br /> 
-    <label for="psw"><b>New Password</b></label>
-    <input type="password" name="psw" id ="psw">
-    <br /> 
-    <label for="psw2"><b>Confirm New Password </b></label>
-    <input type="password" name="psw2" id ="psw2">
-    <br /> 
-    <button name = "savePass" style="height: 45px;" onclick="savePassword()">Reset Password</button>
+        
+        <h3>Login Details:</h3>
+        <label for="email"><b>Email</b></label>
+        <input type="text" name="email" id ="email">
+        <br /> 
+        <button name = "saveEmail" style="height: 45px;" onclick="saveEmail()">Reset Email</button>
+        <br /> 
+        <label for="psw"><b>New Password</b></label>
+        <input type="password" name="psw" id ="psw">
+        <br /> 
+        <label for="psw2"><b>Confirm New Password </b></label>
+        <input type="password" name="psw2" id ="psw2">
+        <br /> 
+        <button name = "savePass" style="height: 45px;" onclick="savePassword()">Reset Password</button>
 
-    <h3>Account Information:</h3>
-    <label for="org"><b>Organization Name</b></label>
-    <input type="text" name="org" id ="org">
-    <br />
-    <label for="first"><b>First Name</b></label>
-    <input type="text" name="first" id ="first">
-    <br />
-    <label for="sur"><b>Surname</b></label>
-    <input type="text" name="sur" id ="sur">
-    <br />
-    <button name = "save" style="height: 45px;" onclick="saveChanges()">Save Changes</button>
-    
-    <h3>Account Management:</h3>
-    <button name = "del" style="height: 45px;" onclick="deleteAccount()">Delete Account</button>
-    
-  </div>
+        <h3>Account Information:</h3>
+        <label for="org"><b>Organization Name</b></label>
+        <input type="text" name="org" id ="org">
+        <br />
+        <label for="first"><b>First Name</b></label>
+        <input type="text" name="first" id ="first">
+        <br />
+        <label for="sur"><b>Surname</b></label>
+        <input type="text" name="sur" id ="sur">
+        <br />
+        <button name = "save" style="height: 45px;" onclick="saveChanges()">Save Changes</button>
+
+        <h3>Account Management:</h3>
+        <button name = "del" style="height: 45px;" onclick="deleteAccount()">Delete Account</button>
+
+    </div>
 
 </body>
 </html>
