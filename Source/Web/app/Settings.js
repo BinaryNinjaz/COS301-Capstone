@@ -8,7 +8,7 @@ const userID = function() {
   } else {
     return "";
   }
-}
+};
 
 var email;
 
@@ -72,10 +72,12 @@ function savePassword(){
     var newPass = document.getElementById("psw").value;
     var newPass2 = document.getElementById("psw2").value;
     if(checkPass(newPass, newPass2)){
-        var auth = passwordPrompt();
-        if(auth){
-            user().updatePassword(newPass);
-            alert("Your password has been changed successfully.");
+        if(confirm("Would you like to proceed with changing your password?")){
+            var auth = passwordPrompt();
+            if(auth){
+                user().updatePassword(newPass);
+                alert("Your password has been changed successfully.");
+            }
         }
     }else{
         alert("Please make sure you have entered the new password correctly and that it is at least 6 characters long.");
