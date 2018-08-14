@@ -18,21 +18,21 @@ public class MyData {
         date = new ArrayList<>();
     }
 
-    public void addLocation(Double lat, Double lng) {
-        if(lat != null && lng != null) {
+    public void addLocation(Location location) {
+        if(location!=null) {
             ++size;
-            longitude.add(lat);
-            latitude.add(lng);
+            longitude.add(location.getLongitude());
+            latitude.add(location.getLatitude());
             double currentDate = System.currentTimeMillis() / 1000l;
             date.add(currentDate);
         }
     }
 
-    public void addLocation(Double lat, Double lng, Double adate) {
-        if(lat != null && lng != null) {
+    public void addLocation(Location location, Double adate) {
+        if(location!=null) {
             ++size;
-            longitude.add(lat);
-            latitude.add(lng);
+            longitude.add(location.getLongitude());
+            latitude.add(location.getLatitude());
             date.add(adate);
         }
     }
