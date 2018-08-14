@@ -62,6 +62,8 @@ function saveEmail(){
 }
 
 function savePassword(){
+    var newPass = document.getElementById("psw").value;
+    var newPass2 = document.getElementById("psw2").value;
     var auth = passwordPrompt();
     if(auth){
     
