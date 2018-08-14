@@ -64,11 +64,15 @@ function saveEmail(){
 function savePassword(){
     var newPass = document.getElementById("psw").value;
     var newPass2 = document.getElementById("psw2").value;
-    var auth = passwordPrompt();
-    if(auth){
-    
+    if(newPass === newPass2){
+        var auth = passwordPrompt();
+        if(auth){
+
+        }else{
+            alert("Incorrect password entered.");
+        }
     }else{
-        alert("Incorrect password entered.");
+        alert("Please make sure you have entered the new password correctly.");
     }
 }
 
