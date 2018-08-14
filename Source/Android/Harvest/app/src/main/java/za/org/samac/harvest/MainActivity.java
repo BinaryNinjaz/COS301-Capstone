@@ -894,22 +894,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             track.put("lat", currentLat);
             track.put("lng", currentLong);
             trackRef.updateChildren(track);
+            trackIndex++;
 
             handler.postDelayed(new Runnable() {
                 public void run() {
                     //tracks every 2 minutes
-                    DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
-                    Map<String, Object> track = new HashMap<>();
-                    double currentLat = location.getLatitude();
-                    double currentLong = location.getLongitude();
-                    track.put("lat", currentLat);
-                    track.put("lng", currentLong);
-                    trackRef.updateChildren(track);
                     if (sessionEnded == true || trackIndex > 0 && btnStart.getTag() == "green") {
                         trackIndex = 0;
-                        trackRef.removeValue();
                         sessionEnded = false;
                         return;//end tracking because session is finished
+                    } else {
+                        DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
+                        Map<String, Object> track = new HashMap<>();
+                        double currentLat = location.getLatitude();
+                        double currentLong = location.getLongitude();
+                        track.put("lat", currentLat);
+                        track.put("lng", currentLong);
+                        trackRef.updateChildren(track);
                     }
                     trackIndex++;
 
@@ -1088,6 +1089,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             adapter.totalBagsCollected = 0;//reset total number of bags collected for all workers
             textView.setText("Current Yield: " + adapter.totalBagsCollected);
+            TextView textViewOrch = findViewById(R.id.textViewOrch);
+            textViewOrch.setText(new StringBuilder().append("Orchard: --").toString());
+            textViewOrch.setTypeface(null, Typeface.BOLD);
             for (int i = 0; i < workers.size(); i++) {
                 workers.get(i).setValue(0);
             }
