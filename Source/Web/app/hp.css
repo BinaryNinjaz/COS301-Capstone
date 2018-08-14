@@ -65,11 +65,15 @@ section .c{
     //max-height: 100%;
 }
 .desc{
-   // visibility: hidden;
+    visibility: hidden;
     color: white;    
     text-shadow:
     -1px -1px 0 #000,
     1px -1px 0 #000,
     -1px 1px 0 #000,
     1px 1px 0 #000;  
+}
+
+.c:hover .desc{
+    visibility: visible;
 }
