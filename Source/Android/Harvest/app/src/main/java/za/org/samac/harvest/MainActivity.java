@@ -855,11 +855,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             textViewPressStart.setText(R.string.pressStart);
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
-            String msger = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
+            //String msger = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
+            stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            // do something with time
+            int h = (int) ((elapsedTime / 1000) / 3600);
+            int m = (int) (((elapsedTime / 1000) / 60) % 60);
+            int s = (int) ((elapsedTime / 1000) % 60);
+            //this is the output of the pop up when the user clicks stop (the session)
+            String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
+            String msg = adapter.totalBagsCollected + " bags collected in " + timeTaken;
+            msg = msg + ", would you like to save this session?";
             AlertDialog.Builder dlgAlerter = new AlertDialog.Builder(this);
-            dlgAlerter.setMessage(msger);
+            dlgAlerter.setMessage(msg);
             dlgAlerter.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
                     recyclerView.setVisibility(View.GONE);
                     dialog.dismiss();
                 }
@@ -877,16 +888,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             dlgAlerter.setCancelable(false);
             dlgAlerter.create().show();
 
-            stopTime = System.currentTimeMillis();
-            long elapsedTime = stopTime - startTime;
-            // do something with time
-            int h = (int) ((elapsedTime / 1000) / 3600);
-            int m = (int) (((elapsedTime / 1000) / 60) % 60);
-            int s = (int) ((elapsedTime / 1000) % 60);
-            //this is the output of the pop up when the user clicks stop (the session)
-            String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
-            String msg = adapter.totalBagsCollected + " bags collected " + timeTaken + ".";
-
             adapter.totalBagsCollected = 0;//reset total number of bags collected for all workers
             textView.setText("Current Yield: " + adapter.totalBagsCollected);
             for (int i = 0; i < workers.size(); i++) {
@@ -896,19 +897,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setMinusEnabled(false);
             collections collectionObj = adapter.getCollectionObj();
             collectionObj.sessionEnd();
-            //****writeToFirebase(collectionObj);
-            //pop up is used to show how many bags were collected in the elapsed time
-            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-            dlgAlert.setMessage(msg);
-            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    adapter.setIncrement();
-                    recyclerView.setVisibility(View.GONE);
-                    dialog.dismiss();
-                }
-            });
-            dlgAlert.setCancelable(false);
-            dlgAlert.create().show();
 
             btnStart.setBackgroundResource(R.drawable.rounded_button);
             btnStart.setDrawingCacheBackgroundColor(Color.parseColor("#FF0CCB29"));
