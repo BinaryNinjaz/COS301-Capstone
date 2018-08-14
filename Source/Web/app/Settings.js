@@ -51,23 +51,27 @@ function saveChanges(){
               lastname: document.getElementById("sur").value,
               organization: document.getElementById("org").value
             });  
+        }else{
+            alert("Incorrect password entered.");
         }
     }
 }
 
 function saveEmail(){
-    var auth = passwordPrompt();
-    if(auth){
-        email = document.getElementById("email").value;
-    }else{
-        alert("Incorrect password entered.");
+    if(confirm("Are you sure you want to change your email?")){
+        var auth = passwordPrompt();
+        if(auth){
+            email = document.getElementById("email").value;
+        }else{
+            alert("Incorrect password entered.");
+        }
     }
 }
 
 function savePassword(){
     var newPass = document.getElementById("psw").value;
     var newPass2 = document.getElementById("psw2").value;
-    if(newPass === newPass2){
+    if(checkPass(newPass, newPass2)){
         var auth = passwordPrompt();
         if(auth){
             user().updatePassword(newPass);
@@ -76,7 +80,19 @@ function savePassword(){
             alert("Incorrect password entered.");
         }
     }else{
-        alert("Please make sure you have entered the new password correctly.");
+        alert("Please make sure you have entered the new password correctly and that it is at least 6 characters long.");
+    }
+}
+
+function checkPass(psw, psw2){
+    if(psw === psw2){
+        if(psw.length >= 6){
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        return false;
     }
 }
 
