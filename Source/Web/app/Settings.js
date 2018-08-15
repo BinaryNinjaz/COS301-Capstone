@@ -140,6 +140,6 @@ function constructPrompt(){
     thePrompt.document.body.innerHTML = theHTML;
     thePrompt.document.getElementById("canc").onclick = function () {
         thePrompt.close();
-    }
+    };
     return thePrompt;
 }
