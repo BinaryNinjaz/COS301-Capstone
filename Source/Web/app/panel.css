@@ -1,15 +1,19 @@
+/*	Making the background of our panel transparent*/
 .panel-default{
     background: transparent;
 }
 
+/*	making the panel heading transparent*/
 .panel-default .panel-heading{
 	background: rgba(0, 0, 0, 0);
 }
 
+/*	making the panel body transparent*/
 .panel-default .panel-body{
 	background: rgba(0, 0, 0, 0);
 }
 
+/*	Alinging each image of the smaller panels to fit in each panel*/
 #Panel_Image 
 {
     display: block;
@@ -18,15 +22,18 @@
     width: 70%;
 }
 
+/*	making the the images of each small panel rounded*/
 img {
 	border-radius: 50%;
 }
 
+/*	Making border green and thicker, of each panel*/
 #green { border-style: solid;
     border-color: green;
 	border: 4px solid green;
 }
 
+/*	Making border green and thicker, of each panel*/
 #green1 { 
 	border-bottom: 4px solid green;}
 	
