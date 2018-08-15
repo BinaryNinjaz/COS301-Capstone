@@ -671,6 +671,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //        workersRef.addValueEventListener(new ValueEventListener() {
         workers.clear();
         workersSearch.clear();
+        adapter.setWorkers(workers);
         workersRef.addValueEventListener(new ValueEventListener() {
 
             @Override

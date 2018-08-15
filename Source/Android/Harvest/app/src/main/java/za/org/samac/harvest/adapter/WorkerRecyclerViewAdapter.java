@@ -99,7 +99,12 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
     @Override
     public int getItemCount() {
-        return this.workers.size();
+        return this.workers == null ? 0 : this.workers.size();
+    }
+
+    public void setWorkers(ArrayList<Worker> workers){
+        this.workers = workers == null ? new ArrayList<Worker>() : workers;
+        notifyDataSetChanged();
     }
 
     @Override
