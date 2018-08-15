@@ -44,14 +44,11 @@ function initPage(){
 
 function saveChanges(){
     if(confirm("Are you sure you want to save these account changes?")){
-        var auth = passwordPrompt();
-        if(auth){
-            database.ref('/' + userID() +'/admin').update({   
-              firstname: document.getElementById("first").value,
-              lastname: document.getElementById("sur").value,
-              organization: document.getElementById("org").value
-            });  
-        }
+        database.ref('/' + userID() +'/admin').update({  
+          firstname: document.getElementById("first").value,
+          lastname: document.getElementById("sur").value,
+          organization: document.getElementById("org").value
+        });
     }
 }
 
@@ -121,8 +118,10 @@ function passwordPrompt(){
     thePrompt.document.getElementById("authOK").onclick = function () {
         var thePass = thePrompt.document.getElementById("thePass").value;
         if(user().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
+            thePrompt.close();
             return true;
         }else{
+            thePrompt.close();
             alert("Incorrect password entered.");
             return false;
         }
