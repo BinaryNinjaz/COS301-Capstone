@@ -43,7 +43,6 @@ function sessionForKey(key, sortedMap) {
     const group = sortedMap[groupIdx];
     for (const itemIdx in group.values) {
       const item = group.values[itemIdx];
-      console.log(item.key, key);
       if (item.key === key) {
         return item;
       }
