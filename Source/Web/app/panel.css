@@ -26,3 +26,9 @@ img {
     border-color: green;
 	border: 4px solid green;
 }
+
+#green1 { 
+	border-bottom: 4px solid green;}
+	
+#green2 { border-style: hidden;
+border: 4px hidden;}
