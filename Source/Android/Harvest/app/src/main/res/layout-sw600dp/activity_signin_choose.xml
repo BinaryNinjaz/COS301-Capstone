@@ -6,7 +6,7 @@
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/harvestbackground">
+    android:background="@drawable/newharvestback">
 
     <ScrollView
         android:id="@+id/login_form"
