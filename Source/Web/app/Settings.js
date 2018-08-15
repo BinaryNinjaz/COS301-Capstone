@@ -54,14 +54,11 @@ function saveChanges(){
 
 function saveEmail(){
     if(confirm("Are you sure you want to change your email?")){
-        var auth = passwordPrompt();
-        if(auth){
-            email = document.getElementById("email").value;
-            user().updateEmail(email);
-            database.ref('/' + userID() +'/admin').update({
-                email: email
-            });
-        }
+        email = document.getElementById("email").value;
+        user().updateEmail(email);
+        database.ref('/' + userID() +'/admin').update({
+            email: email
+        });
     }
 }
 
