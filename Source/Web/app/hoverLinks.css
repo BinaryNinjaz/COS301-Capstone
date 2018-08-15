@@ -22,3 +22,10 @@
   transform:translateX(-100%) skewX(-45deg);
   transition: transform .5s;
 }
+
+#fork:hover {
+  color: #4CAF50;
+}
+#fork:hover:before {
+  transform: translateX(0) skewX(-45deg);
+}
