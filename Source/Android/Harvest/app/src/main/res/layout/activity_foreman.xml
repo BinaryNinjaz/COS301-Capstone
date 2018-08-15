@@ -93,7 +93,7 @@
                     android:layout_height="35dp"
                     android:background="@color/white"
                     android:gravity="center|left"
-                    android:text="Orchard: --"
+                    android:text="Selected Orchard: --"
                     android:textStyle="bold"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     tools:layout_editor_absoluteX="92dp"
