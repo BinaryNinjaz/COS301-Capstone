@@ -52,6 +52,7 @@ function saveChanges(){
     }
 }
 
+/* TODO: verify new email as a real email address */
 function saveEmail(){
     if(confirm("Are you sure you want to change your email?")){
         email = document.getElementById("email").value;
@@ -127,8 +128,8 @@ function constructPrompt(){
 
     theHTML += "<title>Enter password</title>";
     theHTML += "<p style='font-family:sans-serif'>To continue this action, please enter your current password.</p>";
-    theHTML += "<br/>";
-    theHTML += "Password: <input type='password' id='thePass'/>";
+    theHTML += "<br/><label for='thePass' style='font-family:sans-serif'>";
+    theHTML +="<b>Password:</b></label><input type='password' id='thePass'/>";
     theHTML += "<br /><br />";
     theHTML += "<input type='button' value='Cancel' id='canc' ";
     theHTML += "style='background-color:red;border:none;color:white;cursor:pointer;";
