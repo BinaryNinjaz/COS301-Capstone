@@ -70,8 +70,8 @@
   transform: translateX(0) skewX(-45deg);
 }
 
-/* From this point, we are styling the "Github" button/link */
-
+/* 	From this point, we are styling the "Github" button/link	*/
+/* 	Positioning the "Github" button/link to after the documentation link	*/
 #fork2{
   position:fixed;
   top:0;
@@ -85,6 +85,7 @@
   overflow:hidden;
 }
 
+/*	This creates the black effect, over a period of 0.5s	*/
 #fork2:before {
   content: '';
   position: absolute;
@@ -97,6 +98,7 @@
   transition: transform .5s;
 }
 
+/* 	This creates the green effect on the text of the link	*/
 #fork2:hover {
   color: #4CAF50;
 }
