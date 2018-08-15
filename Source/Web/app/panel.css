@@ -1,8 +1,11 @@
-.panel-default
-{
+.panel-default{
     background: transparent;
 }
 
 .panel-default .panel-heading{
-	 background: rgba(0, 0, 0, 0);
+	background: rgba(0, 0, 0, 0);
+}
+
+.panel-default .panel-body{
+	background: rgba(0, 0, 0, 0);
 }
