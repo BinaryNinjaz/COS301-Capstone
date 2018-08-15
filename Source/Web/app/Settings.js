@@ -63,6 +63,8 @@ function saveEmail(){
     }
 }
 
+/* TODO: send reset password to email for security (real emails need 
+  to be used first) */
 function savePassword(){
     var newPass = document.getElementById("psw").value;
     var newPass2 = document.getElementById("psw2").value;
