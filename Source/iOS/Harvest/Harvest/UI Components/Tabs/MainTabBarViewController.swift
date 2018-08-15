@@ -30,6 +30,7 @@ class MainTabBarViewController: UITabBarController {
     
     if !UserDefaults.standard.bool(forKey: HarvestUser.current.uid + "SignedIn") {
       UserDefaults.standard.set(true, forKey: HarvestUser.current.uid + "SignedIn")
+      StatStore.shared.setUpPredefinedGraphs()
       let vc = storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
       if let avc = vc as? CarouselViewController {
         avc.showTutorial()
