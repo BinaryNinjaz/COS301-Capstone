@@ -64,7 +64,6 @@ public class Data {
 
     private static boolean needsPull = true;
 
-
     private Activity act = null;
 
     /**

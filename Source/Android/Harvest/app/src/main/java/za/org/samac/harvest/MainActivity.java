@@ -842,9 +842,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
 
         if (location != null&& btnStart.getTag() == "green") {
-            //start track
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);//only show workers once when location is in
+            //start track path of where phone has been
             trackIndex = 0;
             DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
             Map<String, Object> track = new HashMap<>();

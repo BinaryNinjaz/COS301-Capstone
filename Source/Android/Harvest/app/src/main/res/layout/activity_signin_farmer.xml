@@ -62,23 +62,22 @@
                         <android.support.design.widget.TextInputLayout
                             style="@style/TextInputLayout">
 
-                    <EditText
-                        android:id="@+id/edtEmail"
-                        style="@style/EditText"
-                        android:hint="@string/prompt_email"
-                        android:inputType="textEmailAddress"
-                        tools:text="john@mail.com" />
+                            <EditText
+                                android:id="@+id/edtEmail"
+                                android:hint="@string/prompt_email"
+                                style="@style/EditText"
+                                android:inputType="textEmailAddress" />
 
                         </android.support.design.widget.TextInputLayout>
 
                         <android.support.design.widget.TextInputLayout
                             style="@style/TextInputLayout">
 
-                    <EditText
-                        android:id="@+id/edtPassword"
-                        style="@style/EditText"
-                        android:hint="@string/prompt_enter_password"
-                        android:inputType="textPassword" />
+                            <EditText
+                                android:id="@+id/edtPassword"
+                                android:hint="@string/prompt_enter_password"
+                                style="@style/EditText"
+                                android:inputType="textPassword" />
 
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
