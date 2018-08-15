@@ -54,7 +54,7 @@ body{
 @media only screen and (min-width: 700px) {
     html {
         font-family: Sans-Serif;	
-		background-image: url("../images/back1.jpeg");
+		background-image: url("../images/back3.jpeg");
         background-repeat: no-repeat;  
         background-size: 100%;
     }
@@ -63,7 +63,7 @@ body{
 @media only screen and (max-width: 728px) {
    html {
         font-family: Sans-Serif;	
-        background-image: url("../images/back1.jpeg");
+        background-image: url("../images/back3.jpeg");
         background-repeat: no-repeat;  
         background-size: cover;
     }
