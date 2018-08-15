@@ -69,14 +69,21 @@ function savePassword(){
         var thePrompt = constructPrompt();
         thePrompt.document.getElementById("authOK").onclick = function () {
             var thePass = thePrompt.document.getElementById("thePass").value;
-            if(user().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
-                thePrompt.close();
-                user().updatePassword(newPass);
-                alert("Password successfully changed.");
-            }else{
+            firebase.auth().signInWithEmailAndPassword(email, thePass)
+            .then(function() {
+                user().updatePassword(newPass).then(function(){
+                    thePrompt.close();
+                    alert("Password successfully changed.");
+                    document.getElementById("psw").value = '';
+                    document.getElementById("psw2").value = '';
+                }).catch(function(err){
+                    thePrompt.close();
+                    alert("An error has occurred with changing the password.");
+                });
+            }).catch(function(err){
                 thePrompt.close();
                 alert("Incorrect password entered.");
-            }
+            });
         };
     }else{
         alert("Please make sure you have entered the new password correctly and that it is at least 6 characters long.");
