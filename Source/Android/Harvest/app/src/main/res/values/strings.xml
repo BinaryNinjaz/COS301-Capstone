@@ -295,9 +295,17 @@
     <string name="sessionDetailTrackingLabelText">TRACKING</string>
     <string name="sessionDetailPerformanceLabelText">WORKER PERFORMANCE SUMMARY</string>
     <string name="delSess">Delete Session</string>
-    <string name="swipe_to_continue">Swipe right to view next slide</string>
+    <string name="swipe_to_continue">Swipe left to view next slide</string>
     <string name="skip">Skip</string>
     <string name="done">Done</string>
+
+    <integer-array name="img_id_arr">
+        <item>@drawable/harvestintro</item>
+        <item>@drawable/harvestmanage</item>
+        <item>@drawable/harvesttrack</item>
+        <item>@drawable/harvestanalyse</item>
+    </integer-array>
+
 
     <!--Country codes for formatting telephone numbers-->
     <string-array name="CountryCodes">
