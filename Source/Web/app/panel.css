@@ -2,3 +2,7 @@
 {
     background: transparent;
 }
+
+.panel-default .panel-heading{
+	 background: rgba(0, 0, 0, 0);
+}
