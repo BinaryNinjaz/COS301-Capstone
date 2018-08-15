@@ -66,13 +66,18 @@ function savePassword(){
     var newPass = document.getElementById("psw").value;
     var newPass2 = document.getElementById("psw2").value;
     if(checkPass(newPass, newPass2)){
-        if(confirm("Would you like to proceed with changing your password?")){
-            var auth = passwordPrompt();
-            if(auth){
+        var thePrompt = constructPrompt();
+        thePrompt.document.getElementById("authOK").onclick = function () {
+            var thePass = thePrompt.document.getElementById("thePass").value;
+            if(user().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
+                thePrompt.close();
                 user().updatePassword(newPass);
-                alert("Your password has been changed successfully.");
+                alert("Password successfully changed.");
+            }else{
+                thePrompt.close();
+                alert("Incorrect password entered.");
             }
-        }
+        };
     }else{
         alert("Please make sure you have entered the new password correctly and that it is at least 6 characters long.");
     }
@@ -92,16 +97,24 @@ function checkPass(psw, psw2){
 
 function deleteAccount(){
     if(confirm("Are you sure you want to permanently delete this account and all the information it contains?")){
-        var auth = passwordPrompt();
-        if(auth){
-            database.ref('/' + userID()).remove();
-        }
+        var thePrompt = constructPrompt();
+        thePrompt.document.getElementById("authOK").onclick = function () {
+            var thePass = thePrompt.document.getElementById("thePass").value;
+            if(user().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
+                thePrompt.close();
+                database.ref('/' + userID()).remove();
+                //sign user out
+            }else{
+                thePrompt.close();
+                alert("Incorrect password entered.");
+            }
+        };
     }
 }   
 
-/*makes use of a prompt to get user to enter current password before
+/*creates a prompt to get user to enter current password before
 making account changes*/
-function passwordPrompt(){
+function constructPrompt(){
     var thePrompt = window.open("", "", "height=200,width=300");
     var theHTML = "";
 
@@ -111,16 +124,5 @@ function passwordPrompt(){
     theHTML += "<br />";
     theHTML += "<input type='button' value='OK' id='authOK'/>";
     thePrompt.document.body.innerHTML = theHTML;
-
-    thePrompt.document.getElementById("authOK").onclick = function () {
-        var thePass = thePrompt.document.getElementById("thePass").value;
-        if(user().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
-            thePrompt.close();
-            return true;
-        }else{
-            thePrompt.close();
-            alert("Incorrect password entered.");
-            return false;
-        }
-    };
+    return thePrompt;
 }
