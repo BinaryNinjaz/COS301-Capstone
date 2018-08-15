@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.DBInfoObject;
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Farm;
@@ -39,6 +40,7 @@ public class InfoSearchFragment extends Fragment {
     RecyclerView recyclerFarms, recyclerOrchards, recyclerWorkers;
     SearcherAdapter adapterFarms, adapterOrchards, adapterWorkers;
     LinearLayout parent;
+    Category category;
 
     public InfoSearchFragment() {
         // Required empty public constructor
@@ -90,13 +92,17 @@ public class InfoSearchFragment extends Fragment {
     public void setData(Data data){
         this.data = data;
     }
+
+    public void setCategory(Category category){
+        this.category = category;
+    }
     
     public void searchForQuery(String query){
         adapterFarms.emptyResults();
         adapterOrchards.emptyResults();
         adapterWorkers.emptyResults();
         
-        List<DBInfoObject> result = data.search(query);
+        List<DBInfoObject> result = data.search(query, category);
         for (DBInfoObject dbInfoObject: result){
             if (dbInfoObject.getClass() == Farm.class){
                 adapterFarms.addToShow(dbInfoObject);

@@ -753,6 +753,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         final InfoSearchFragment searchFrag = new InfoSearchFragment();
         fragmentTransaction.replace(R.id.infoMainPart, searchFrag, "SEARCHER");
         searchFrag.setData(data);
+        searchFrag.setCategory(selectedCat);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 

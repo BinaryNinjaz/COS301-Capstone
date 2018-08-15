@@ -844,21 +844,27 @@ public class Data {
         changes.Add(Category.WORKER, addMe.getfID());
     }
 
-    public List<DBInfoObject> search(String query){
+    public List<DBInfoObject> search(String query, Category category){
         List<DBInfoObject> result = new ArrayList<>();
-        for (Farm farm: farms){
-            if (farm.toString().toLowerCase().contains(query.toLowerCase())){
-                result.add(farm);
+        if (category == Category.NAV || category == Category.FARM) {
+            for (Farm farm : farms) {
+                if (farm.toString().toLowerCase().contains(query.toLowerCase())) {
+                    result.add(farm);
+                }
             }
         }
-        for (Orchard orchard: orchards){
-            if (orchard.toString().toLowerCase().contains(query.toLowerCase())){
-                result.add(orchard);
+        if (category == Category.NAV || category == Category.ORCHARD) {
+            for (Orchard orchard : orchards) {
+                if (orchard.toString().toLowerCase().contains(query.toLowerCase())) {
+                    result.add(orchard);
+                }
             }
         }
-        for (Worker worker: workers){
-            if (worker.toString().toLowerCase().contains(query.toLowerCase())){
-                result.add(worker);
+        if (category == Category.NAV || category == Category.WORKER) {
+            for (Worker worker : workers) {
+                if (worker.toString().toLowerCase().contains(query.toLowerCase())) {
+                    result.add(worker);
+                }
             }
         }
         return result;
