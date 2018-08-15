@@ -84,6 +84,10 @@ public class Data {
         return pulling;
     }
 
+    public static void forceNextPull(){
+        needsPull = true;
+    }
+
     /**
      * Replace all local information from Firebase, TODO: while preserving local changes.
      */
