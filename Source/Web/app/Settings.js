@@ -129,7 +129,8 @@ function constructPrompt(){
     theHTML += "<br/>";
     theHTML += "Password: <input type='password' id='thePass'/>";
     theHTML += "<br />";
-    theHTML += "<input type='button' value='OK' id='authOK'/>";
+    theHTML += "<input type='button' style='background-color:#4CAF50'";
+    theHTML += "value='OK' id='authOK'/>";
     thePrompt.document.body.innerHTML = theHTML;
     return thePrompt;
 }
