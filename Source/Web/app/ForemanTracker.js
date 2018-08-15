@@ -206,7 +206,7 @@ function updateSpiner(shouldSpin) {
 		shadow: '0 0 1px transparent', // Box-shadow for the lines
   };
 
-  var target = document.getElementById('loader');
+  var target = document.getElementById('trackerFilter');
   var button = document.getElementById('updateButton');
   if (shouldSpin) {
     if (spinner == null) {
