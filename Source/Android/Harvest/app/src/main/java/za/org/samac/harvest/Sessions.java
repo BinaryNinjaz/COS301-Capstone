@@ -71,7 +71,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
     private String searchText = "";
 
     private String pageIndex = null;
-    private Integer pageSize = 20;
+    private Integer pageSize = 21;
     private ArrayList<ValueEventListener> ids = new ArrayList<>();
 
     @Override
@@ -376,9 +376,14 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         endRefresh();
     }
 
-    private void endRefresh(){
-
-        //TODO: Refresh.
+    private void endRefresh() {
+        if (sessions != null) {
+            sessions.clear();
+        }
+        if (filteredSessions != null) {
+            sessions.clear();
+        }
+        filteredSessions = null;
         pageIndex = null;
         getNewPage();
 
