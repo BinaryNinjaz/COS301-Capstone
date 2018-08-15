@@ -67,40 +67,6 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     
     userSection(form: form)
     
-    if HarvestUser.current.workingForID.isEmpty { // is farmer
-      form
-        +++ Section("Help")
-        <<< tutorialScreenRow
-        <<< userManualRow
-        <<< welcomeScreenRow
-      
-    } else { // is foreman
-      form
-        +++ Section("Help")
-        <<< tutorialScreenRow
-    }
-  }
-  
-  func userSection(form: Form) {
-    let userRow = HarvestUser.current.accountIdentifier
-    
-    let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
-      row.title = "Admin"
-    }
-    
-    let logoutRow = ButtonRow { row in
-      row.title = "Logout"
-    }.onCellSelection { (_, _) in
-      HarvestDB.signOut { w in
-        if w,
-          let vc = self
-            .storyboard?
-            .instantiateViewController(withIdentifier: "signInOptionViewController") {
-          self.present(vc, animated: true, completion: nil)
-        }
-      }
-    }
-    
     let resignRow = ButtonRow { row in
       row.title = "Resign"
     }.onCellSelection { (_, _) in
@@ -127,6 +93,42 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     
     if HarvestUser.current.workingForID.isEmpty { // is farmer
       form
+        +++ Section("Help")
+        <<< tutorialScreenRow
+        <<< userManualRow
+        <<< welcomeScreenRow
+      
+    } else { // is foreman
+      form
+        +++ Section("Help")
+        <<< tutorialScreenRow
+        +++ Section()
+        <<< resignRow
+    }
+  }
+  
+  func userSection(form: Form) {
+    let userRow = HarvestUser.current.accountIdentifier
+    
+    let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
+      row.title = "Admin"
+    }
+    
+    let logoutRow = ButtonRow { row in
+      row.title = "Logout"
+    }.onCellSelection { (_, _) in
+      HarvestDB.signOut { w in
+        if w,
+          let vc = self
+            .storyboard?
+            .instantiateViewController(withIdentifier: "signInOptionViewController") {
+          self.present(vc, animated: true, completion: nil)
+        }
+      }
+    }
+    
+    if HarvestUser.current.workingForID.isEmpty { // is farmer
+      form
         +++ Section(userRow)
         <<< adminRow
         <<< logoutRow
@@ -135,8 +137,6 @@ class SettingsEurekaViewController: ReloadableFormViewController {
       form
         +++ Section(userRow)
         <<< logoutRow
-        +++ Section()
-        <<< resignRow
     }
   }
   

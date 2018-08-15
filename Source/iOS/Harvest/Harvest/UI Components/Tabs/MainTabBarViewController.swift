@@ -18,14 +18,6 @@ class MainTabBarViewController: UITabBarController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    HarvestDB.checkLocationRequested { locRequested in
-      LocationTracker.shared.requestLocation(wantsLocation: locRequested)
-    }
-    
-    HarvestDB.listenLocationRequested { locRequested in
-      LocationTracker.shared.requestLocation(wantsLocation: locRequested)
-    }
-    
     Entities.shared.start()
     
     if !UserDefaults.standard.bool(forKey: HarvestUser.current.uid + "SignedIn") {

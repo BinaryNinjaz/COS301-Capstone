@@ -30,17 +30,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O4N-TZ-dJ7">
-                                            <rect key="frame" x="8" y="593" width="359" height="40"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                            <state key="normal" title="Don't Have An Account?">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
-                                            <connections>
-                                                <segue destination="wzz-PV-SJ5" kind="show" id="ZiY-Pa-ATt"/>
-                                            </connections>
-                                        </button>
                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wsK-1g-2fP">
                                             <rect key="frame" x="8" y="172" width="359" height="136"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -138,7 +127,6 @@
                     <connections>
                         <outlet property="farmerSignInButton" destination="wsK-1g-2fP" id="gjR-JI-4Hd"/>
                         <outlet property="foremanSignInButton" destination="7ZS-dy-OAw" id="H64-TA-qQm"/>
-                        <outlet property="signUpButton" destination="O4N-TZ-dJ7" id="Ewl-X7-PbN"/>
                         <outlet property="titleVisualEffectView" destination="OId-ks-kFe" id="7cc-BT-IVa"/>
                     </connections>
                 </viewController>
@@ -246,6 +234,18 @@
                                                 <action selector="googleSignInTouchUp:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oG7-cK-Hlz"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ui1-OV-C5u">
+                                            <rect key="frame" x="20" y="574" width="343" height="36"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                            <state key="normal" title="Don't Have An Account?">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <connections>
+                                                <segue destination="wzz-PV-SJ5" kind="show" id="kkB-8W-SKe"/>
+                                            </connections>
+                                        </button>
                                         <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xby-px-FZc">
                                             <rect key="frame" x="175" y="318" width="32" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -338,6 +338,7 @@
                         <outlet property="passwordTextField" destination="R87-SE-52j" id="SEc-HY-5Gn"/>
                         <outlet property="signInButton" destination="jNF-TA-p9f" id="I5f-hW-IHN"/>
                         <outlet property="signInVisualEffect" destination="GfQ-DM-Ykn" id="xQL-8A-IW9"/>
+                        <outlet property="signUpButton" destination="ui1-OV-C5u" id="xKI-BF-SBL"/>
                         <outlet property="textGroupView" destination="Ydh-DC-G5M" id="eGf-eB-9Xe"/>
                         <outlet property="titleLabelVisualEffectView" destination="DOp-Su-OFq" id="P87-VZ-Dgs"/>
                         <outlet property="usernameTextField" destination="xaf-iG-9SP" id="0oc-Zm-bDZ"/>
@@ -350,7 +351,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="190" y="54"/>
+            <point key="canvasLocation" x="189.59999999999999" y="53.523238380809602"/>
         </scene>
         <!--Foreman Sign In View Controller-->
         <scene sceneID="QRg-gl-2fW">
@@ -898,7 +899,7 @@ Select Orchard: Apple Farm - Block A</string>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gY2-33-92o"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Yield Tracker" image="Add" id="i4D-U6-cRY"/>
+                    <tabBarItem key="tabBarItem" title="Yield Collector" image="Add" id="i4D-U6-cRY"/>
                     <connections>
                         <outlet property="infoEffectView" destination="NUJ-f3-gPy" id="ep3-q2-pjl"/>
                         <outlet property="searchBar" destination="8FH-FL-a95" id="lAQ-ee-WXo"/>
@@ -1563,7 +1564,7 @@ Select Orchard: Apple Farm - Block A</string>
         <image name="Location" width="30" height="30"/>
         <image name="Sessions" width="5616" height="3744"/>
         <image name="Settings" width="30" height="30"/>
-        <image name="SignUpBackground" width="8192" height="3470"/>
+        <image name="SignUpBackground" width="940" height="496"/>
         <image name="Stats" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>

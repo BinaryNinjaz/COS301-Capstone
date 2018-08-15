@@ -78,7 +78,7 @@ extension HarvestDB {
         let nserr = error as NSError
         if [AuthErrorCode.emailAlreadyInUse, .wrongPassword, .userNotFound]
           .contains(AuthErrorCode(rawValue: nserr.code)) {
-          SCLAlertView().showError("Sign In Failure", subTitle: "Your Email or password is incorrect.")
+          SCLAlertView().showError("Sign In Failure", subTitle: "Your email or password is incorrect.")
         } else {
           SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
         }

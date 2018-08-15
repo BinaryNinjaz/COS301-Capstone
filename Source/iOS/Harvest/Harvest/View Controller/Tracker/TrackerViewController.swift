@@ -196,6 +196,14 @@ class TrackerViewController: UIViewController {
         locationManager?.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
       }
       
+      HarvestDB.checkLocationRequested { locRequested in
+        LocationTracker.shared.requestLocation(wantsLocation: locRequested)
+      }
+      
+      HarvestDB.listenLocationRequested { locRequested in
+        LocationTracker.shared.requestLocation(wantsLocation: locRequested)
+      }
+      
       locationManager?.requestAlwaysAuthorization()
       if CLLocationManager.locationServicesEnabled() {
         locationManager?.startUpdatingLocation()
