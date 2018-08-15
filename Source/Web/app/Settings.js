@@ -125,6 +125,7 @@ function constructPrompt(){
     var thePrompt = window.open("", "", "height=200,width=300");
     var theHTML = "";
 
+    theHTML += "<title>Enter password</title>";
     theHTML += "<p>To continue this action, please enter your current password.</p>";
     theHTML += "<br/>";
     theHTML += "Password: <input type='password' id='thePass'/>";
