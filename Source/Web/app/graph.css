@@ -1,0 +1,24 @@
+.statView {
+  height: 80vh;
+  max-height: 480px;
+  margin-bottom: 16px;
+}
+
+.statFilter {
+  height: 66vh;
+  max-height: 424px;
+}
+
+.statGraph {
+  height: 75vh;
+  max-height: 460px;
+}
+
+.statUpdateButton {
+  height: 7vh;
+  max-height: 32px;
+}
+
+label {
+  color: rgba(255, 255, 255, 0.6);
+}
