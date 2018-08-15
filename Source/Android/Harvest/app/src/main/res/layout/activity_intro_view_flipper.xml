@@ -3,8 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@drawable/harvestbackground"
-    android:alpha="0.7">
+    android:background="@drawable/newharvestbackdark">
 
     <ViewFlipper
         android:id="@+id/view_flipper"
