@@ -105,6 +105,7 @@ function checkPass(psw, psw2){
     }
 }
 
+/* TODO: sign user out of website after account deletion */
 function deleteAccount(){
     if(confirm("Are you sure you want to permanently delete this account and all the information it contains?")){
         var thePrompt = constructPrompt();
