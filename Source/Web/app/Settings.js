@@ -129,16 +129,17 @@ function constructPrompt(){
     theHTML += "<p style='font-family:sans-serif'>To continue this action, please enter your current password.</p>";
     theHTML += "<br/>";
     theHTML += "Password: <input type='password' id='thePass'/>";
-    theHTML += "<br />";
-    theHTML += "<br />";
+    theHTML += "<br /><br />";
     theHTML += "<input type='button' value='Cancel' id='canc' ";
     theHTML += "style='background-color:red;border:none;color:white;cursor:pointer;";
     theHTML +="padding:10px 10px'/>";
-    theHTML +="&nbsp;&nbsp;&nbsp;&nbsp";
-    theHTML +="&nbsp;&nbsp;&nbsp;&nbsp";
+    theHTML +="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
     theHTML += "<input type='button' value='Continue' id='authOK' ";
     theHTML += "style='background-color:#4CAF50;border:none;color:white;cursor:pointer;";
     theHTML +="padding:10px 10px'/>";
     thePrompt.document.body.innerHTML = theHTML;
+    thePrompt.document.getElementById("canc").onclick = function () {
+        thePrompt.close();
+    }
     return thePrompt;
 }
