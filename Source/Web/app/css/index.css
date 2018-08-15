@@ -7,7 +7,6 @@ body{
 /* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
 .inputBlock {
 	position: relative;
-
     border: 4px solid green;
     border-radius: 10px;
     padding: 7px;
