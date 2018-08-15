@@ -64,7 +64,8 @@ function saveEmail(){
 }
 
 /* TODO: send reset password to email for security (real emails need 
-  to be used first) */
+  to be used first) 
+  firebase.auth().sendPasswordResetEmail(email); */
 function savePassword(){
     var newPass = document.getElementById("psw").value;
     var newPass2 = document.getElementById("psw2").value;
@@ -123,8 +124,8 @@ function deleteAccount(){
     }
 }   
 
-/*creates a prompt to get user to enter current password before
-making account changes*/
+/* creates a prompt to get user to enter current password before
+making account changes */
 function constructPrompt(){
     var thePrompt = window.open("", "", "height=200,width=300");
     var theHTML = "";
