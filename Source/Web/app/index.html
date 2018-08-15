@@ -22,11 +22,12 @@
                 integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css.map">
+		<!-- This if for google buttons-->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css.map">
+	
 	
         <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
         <link href="css/index.css" rel="stylesheet" type="text/css"/>
@@ -124,13 +125,13 @@
 										<div class="container col-lg-12">
 											<div class="row">
 												<div class="col-sm-2 col-lg-2">
-													<button class="btn btn-dark">Learn More <i class="fa fa-angle-right"></i></button>
+													<button class="btn btn-dark" data-toggle="modal" data-target="#myModal">Learn More <i class="fa fa-angle-right"></i></button>
 												</div>
 												<div class="col-sm-2 col-lg-2">
-													<button class="btn btn-dark">Learn More <i class="fa fa-angle-right"></i></button>
+													<button class="btn btn-dark" data-toggle="modal" data-target="#myModal">Learn More <i class="fa fa-angle-right"></i></button>
 												</div>
 												<div class="col-sm-2 col-lg-2">
-													<button class="btn btn-dark">Learn More <i class="fa fa-angle-right"></i></button>
+													<button class="btn btn-dark" data-toggle="modal" data-target="#myModal">Learn More <i class="fa fa-angle-right"></i></button>
 												</div>
 											</div>
 										</div> <!-- inner container-->
@@ -145,6 +146,28 @@
 				</div>                       
             </div>
         </section>
+		<!--******************************View Messages***********************************************-->
+		
+    <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
         
     <!--QUnit testing-->
     <!--Uncomment to enable-->
