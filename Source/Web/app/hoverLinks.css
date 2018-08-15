@@ -1,3 +1,5 @@
+/* From this point, we are styling the "contact" button/link */
+/* Positioning the "contact" button/link to the farmost position*/
 #fork{
   position:fixed;
   top:0;
@@ -11,18 +13,20 @@
   overflow:hidden;
 }
 
+/*	This creates the black effect, over a period of 0.5s */
 #fork:before {
   content: '';
   position: absolute;
   top: 0; left: 0;
   width: 130%; height: 100%;
-  background: #000;
+  background: #000; /* Changes the background to black*/
   z-index: -1;
   transform-origin:0 0 ;
   transform:translateX(-100%) skewX(-45deg);
-  transition: transform .5s;
+  transition: transform .5s; /* It affects the effect in 0.5s*/
 }
 
+/* This creates the green effect on the text of the link*/
 #fork:hover {
   color: #4CAF50;
 }
