@@ -21,3 +21,8 @@
 img {
 	border-radius: 50%;
 }
+
+#green { border-style: solid;
+    border-color: green;
+	border: 4px solid green;
+}
