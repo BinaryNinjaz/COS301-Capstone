@@ -32,15 +32,18 @@ public class ViewFlipperActivity extends Activity {
         mContext = this;
         mViewFlipper = (ViewFlipper) this.findViewById(R.id.view_flipper);
 
+        //If this is called as a redo, then we don't want to go back to the clicker, so the HelpPreferenceFragment will signal with this.
+        Bundle extras = getIntent().getExtras();
+        final boolean noNewActivity;
+        noNewActivity = extras != null && extras.getBoolean(SettingsActivity.HelpPreferenceFragment.KEY_NONEWACTIVITY, false);
+
 
         skipOne = findViewById(R.id.skipOne);
         skipOne.setMovementMethod(LinkMovementMethod.getInstance());
         skipOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ViewFlipperActivity.this, InformationActivity.class);
-                startActivity(intent);
-                finish();//kill current Activity
+                endThis(!noNewActivity);
             }
         });
 
@@ -49,9 +52,7 @@ public class ViewFlipperActivity extends Activity {
         skipTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ViewFlipperActivity.this, InformationActivity.class);
-                startActivity(intent);
-                finish();//kill current Activity
+                endThis(!noNewActivity);
             }
         });
 
@@ -60,9 +61,7 @@ public class ViewFlipperActivity extends Activity {
         skipThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ViewFlipperActivity.this, InformationActivity.class);
-                startActivity(intent);
-                finish();//kill current Activity
+                endThis(!noNewActivity);
             }
         });
 
@@ -71,9 +70,7 @@ public class ViewFlipperActivity extends Activity {
         skipFour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ViewFlipperActivity.this, InformationActivity.class);
-                startActivity(intent);
-                finish();//kill current Activity
+                endThis(!noNewActivity);
             }
         });
 
@@ -82,9 +79,7 @@ public class ViewFlipperActivity extends Activity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ViewFlipperActivity.this, InformationActivity.class);
-                startActivity(intent);
-                finish();//kill current Activity
+                endThis(!noNewActivity);
             }
         });
 
@@ -95,6 +90,14 @@ public class ViewFlipperActivity extends Activity {
                 return true;
             }
         });
+    }
+
+    private void endThis(boolean goToStart){
+        if (goToStart) {
+            Intent intent = new Intent(ViewFlipperActivity.this, InformationActivity.class);
+            startActivity(intent);
+        }
+        finish();
     }
 
     class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {

@@ -14,6 +14,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -146,7 +147,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
 
-
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
@@ -183,7 +183,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || AccountPreferenceFragment.class.getName().equals(fragmentName);
+                || AccountPreferenceFragment.class.getName().equals(fragmentName)
+                || HelpPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     @Override
@@ -457,7 +458,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             });
         }
 
-
         /**
          * Reauthenticate the user.
          * @param again true if the user is trying again.
@@ -525,5 +525,52 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class HelpPreferenceFragment extends PreferenceFragment{
+
+        public final static String KEY_NONEWACTIVITY = "KEY_NONEWACTIVITY";
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_help);
+
+            setHasOptionsMenu(true);
+
+            findPreference(getString(R.string.pref_help_intro_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Bundle extras = new Bundle();
+                    extras.putBoolean(KEY_NONEWACTIVITY, true);
+                    Intent intent = new Intent(getActivity(), IntroViewFlipper.class);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
+            findPreference(getString(R.string.pref_help_tutorial_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Bundle extras = new Bundle();
+                    extras.putBoolean(KEY_NONEWACTIVITY, true);
+                    Intent intent = new Intent(getActivity(), ViewFlipperActivity.class);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
+            findPreference(getString(R.string.pref_help_man_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Log.i(TAG, "Zhu Li, Do the Thing!");
+                    return true;
+                }
+            });
+        }
+
     }
 }
