@@ -370,8 +370,9 @@ public class Stats_Graph extends AppCompatActivity {
                             switch (entityNames.get(i).toString()) {
                                 case "avg":
                                     lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_gragh_averageLabel));
-                                    lineDataSet.enableDashedLine(2, 2, 1);
+                                    lineDataSet.enableDashedLine(10, 10, 1);
                                     lineDataSet.setColor(getResources().getColor(R.color.grey));
+                                    lineDataSet.setLineWidth(1);
                                     break;
                                 case "sum":
                                     if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
@@ -384,7 +385,7 @@ public class Stats_Graph extends AppCompatActivity {
                                         expectedLineDataSet.setDrawCircles(false);
                                         expectedLineDataSet.setLineWidth(1);
                                         dataSets.add(expectedLineDataSet);
-
+                                        lineDataSet.setLineWidth(2);
                                     }
                                     break;
                                 default:
@@ -392,17 +393,19 @@ public class Stats_Graph extends AppCompatActivity {
                                     lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour]);
 
                                     expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
+                                    expectedLineDataSet.enableDashedLine(10, 5, 1);
                                     expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 200);
-                                    expectedLineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                                    expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
                                     expectedLineDataSet.setDrawCircles(false);
                                     expectedLineDataSet.setLineWidth(1);
                                     dataSets.add(expectedLineDataSet);
+                                    lineDataSet.setLineWidth(2);
                                     break;
                             }
                             assert lineDataSet != null;
                             lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
                             lineDataSet.setDrawCircles(false);
-                            lineDataSet.setLineWidth(2);
+
                             dataSets.add(lineDataSet);
                         }
                     }
