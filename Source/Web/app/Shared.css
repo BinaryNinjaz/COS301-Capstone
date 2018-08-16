@@ -51,11 +51,7 @@ p, span {
 
 body{
     font-family: Sans-Serif;	
-    background-image: url("background.jpg");
-    background-repeat: no-repeat;  
-    background-size: cover;  
-    background-origin: center;
-    background-attachment: fixed;
+    background-color: #4E342E;
     display: block;
     overflow: auto;    
 }
