@@ -20,66 +20,68 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <link type="text/css" rel="stylesheet" href="navbar.css">
+    <link type="text/css" rel="stylesheet" href="bodyElements.css">
+    <link rel="stylesheet" type="text/css" href="newNavbar.css">
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css"/>
 
+    <link rel="stylesheet" type="text/css" href="spin.css">
+    <link rel="stylesheet" type="text/css" href="Settings.css">
+    <script src="spin.js" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="Shared.css">
     <script src="navbar.js" type="text/javascript"></script>
     <script src="Settings.js"></script>
     
 </head>
 <body>
-
-    <div class="topnav">
+   <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+        </div>
         <ul class="nav navbar-nav">
-            <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-            <a href="Information.html">Information</a>
-            <a href="Sessions.html">Sessions</a>
-            <a href="HeatMap.html">Heatmap</a>
-            <a href="graphs.html">Statistics</a>
+          <li><a href="ForemanTracker.html">Tracker</a></li>
+          <li><a href="Information.html">Information</a></li>
+          <li><a href="Sessions.html">Sessions</a></li>
+          <li><a href="HeatMap.html">Heatmap</a></li>
+          <li><a href="graphs.html">Statistics</a></li>
         </ul>
-
-        <ul class="pull-right nav navbar-nav">
-            <a class="active" href="Settings.html" id="emailInNav"></a>
-            <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+        <ul class=" nav navbar-nav" id="ojo">
+          <li class="nav-item"><a class="active" href="Settings.html" id="emailInNav"></a></li>
+          <li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
         </ul>
-    </div>
-    
-    <div class="container" style="width: 450px">
-        
-        <h3>Login Details:</h3>
-        <label for="email"><b>Email</b></label>
-        <input type="text" name="email" id ="email">
-        <br /> 
-        <button name = "saveEmail" onclick="saveEmail()">Update Email</button>
-        <br /> 
-        <label for="psw"><b>New Password</b></label>
-        <input type="password" name="psw" id ="psw">
-        <br /> 
-        <label for="psw2"><b>Confirm New Password </b></label>
-        <input type="password" name="psw2" id ="psw2">
-        <br /> 
-        <button name = "savePass" onclick="savePassword()">Update Password</button>
+        </div>
+     </nav>
+    <div class ="container">
+        <div class ="block">
+             <h2>Login Details:</h2>
+             <label style="color: black" for="email"><b>Email</b></label>
+             <input type="text" name="email" id ="email">
+             <br /> 
+             <button name = "saveEmail" onclick="saveEmail()">Update Email</button>
+             <br /> 
+             <label style="color: black" for="psw"><b>New Password</b></label>
+             <input type="password" name="psw" id ="psw">
+             <br /> 
+             <label style="color: black" for="psw2"><b>Confirm New Password </b></label>
+             <input type="password" name="psw2" id ="psw2">
+             <br /> 
+             <button name = "savePass" onclick="savePassword()">Update Password</button>
 
-        <h3>Account Information:</h3>
-        <label for="org"><b>Organization Name</b></label>
-        <input type="text" name="org" id ="org">
-        <br />
-        <label for="first"><b>First Name</b></label>
-        <input type="text" name="first" id ="first">
-        <br />
-        <label for="sur"><b>Surname</b></label>
-        <input type="text" name="sur" id ="sur">
-        <br />
-        <button name = "save" onclick="saveChanges()">Save Changes</button>
+             <h2>Account Information:</h2>
+             <label style="color: black" for="org"><b>Organization Name</b></label>
+             <input type="text" name="org" id ="org">
+             <br />
+             <label style="color: black" for="first"><b>First Name</b></label>
+             <input type="text" name="first" id ="first">
+             <br />
+             <label style="color: black" for="sur"><b>Surname</b></label>
+             <input type="text" name="sur" id ="sur">
+             <br />
+             <button name = "save" onclick="saveChanges()">Save Changes</button>
 
-        <h3>Account Management:</h3>
-        <button name = "del" onclick="deleteAccount()">Delete Account</button>
-
+             <h2>Account Management:</h2>
+             <button name = "del" onclick="deleteAccount()">Delete Account</button>
+        </div>
     </div>
 
 </body>
