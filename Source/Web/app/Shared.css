@@ -20,13 +20,13 @@
 
 .scrollView h4 {
   padding: 4px;
-  color: color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: -8px;
 }
 
 .searchReason {
   text-align: right;
-  color: color: rgba(196, 196, 196, 0.9);
+  color: rgba(196, 196, 196, 0.9);
 }
 
 .detailsView {
@@ -54,8 +54,7 @@ body{
     background-image: url("back2Smaller.jpg");
     background-repeat: no-repeat;  
     background-size: cover;  
-    display: block;   
-
+    display: block;
     background-origin: center;
-background-attachment: fixed;
+    background-attachment: fixed;  
 }
