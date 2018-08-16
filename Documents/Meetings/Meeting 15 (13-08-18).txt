@@ -1,0 +1,12 @@
+Meeting 14 (06-08-18)
+All eyes are on us, client expects an award, Stacy expects and award. The pressure is on, but remember pressure is something accepted rather than given. Expectations are high men, lets give it our best so we can bring something home for our parents.
+Status check, what has everyone done so far.
+Load Harvest on to everyone’s phones for field test.
+Project day shirts: “Harvest” and logo in the front. Nominate someone to sort it out (Letanyan and Kevin), I need to send the invoice as soon as possible.
+What features do the graphs have (status check).
+How can we fill up white space on web?
+We need to address time zone issues (see on Wednesday).
+Keep thinking of wow factor, will never be on mobile please keep all ideas within the bounds of the web.
+Field test (role playing) game plan: 
+Letanyan creates account on iOS and check if it corresponds to android (Sizo) and Web (Vincent) – change fields that Letanyan changed, Vince is a farmer, John and Kevin are foremen (check performance and try to break clicker).
+Sync Android, Web and iOS (mostly in terms of error messages).

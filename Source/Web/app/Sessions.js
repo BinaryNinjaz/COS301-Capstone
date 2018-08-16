@@ -43,7 +43,6 @@ function sessionForKey(key, sortedMap) {
     const group = sortedMap[groupIdx];
     for (const itemIdx in group.values) {
       const item = group.values[itemIdx];
-      console.log(item.key, key);
       if (item.key === key) {
         return item;
       }
@@ -243,7 +242,7 @@ function loadSession(sessionID) {
       }
 
       graphData.datasets[0].data.push(collection.length);
-      graphData.datasets[0].backgroundColor.push(harvestColorful[gdatai % 6]);
+      graphData.datasets[0].backgroundColor.push(colorForIndex(gdatai));
       graphData["labels"].push(wname);
       gdatai++;
 
@@ -276,10 +275,14 @@ function initGraph(collections) {
   var options = {
     title: {
       display: true,
-      text: "Worker Performance Summary"
+      text: "Worker Performance Summary",
+			fontColor: 'white'
     },
     legend: {
-      position: 'right'
+			labels: {
+				fontColor: "white"
+			},
+			position: 'right'
     }
   };
   var ctx = document.getElementById("doughnut").getContext('2d');
@@ -292,7 +295,6 @@ function initGraph(collections) {
   });
 }
 
-/* This function shows the spinner while still waiting for resources*/
 var spinner;
 function updateSpiner(shouldSpin) {
   var opts = {
@@ -319,8 +321,7 @@ function updateSpiner(shouldSpin) {
 		  spinner = new Spinner(opts).spin(target);
 		}
   } else {
-	  //target.style.top = "0px";
-	  spinner.stop(); //This line stops the spinner.
+	  spinner.stop();
 	  spinner = null;
   }
 }

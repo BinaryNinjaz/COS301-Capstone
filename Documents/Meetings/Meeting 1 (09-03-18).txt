@@ -1,0 +1,33 @@
+Meeting 1(09-03-18)
+
+What project management tool do you want to use? Waffle is simple to use, helps with effective project management, keeps track of where you are with your project to see what you’ve done and what you haven’t done, we can link it to our Github and it is popular, Zenhub can be integrated with Github, you can always see what others are working on. Codetree works well with Github (Two-way sync). Set up will be delegated tonight, but most likely me.
+
+Which use case to make? The Button and Website.
+
+Intro – John
+Brief description – John
+
+Domain Model – Sizo (Letanyan can offer some guidance as he made model in tender)
+
+Outline of our requirements and design document – Shaun and John
+
+Package diagram (shows packages and dependencies between them, packages are used to group and provide namespaces for elements) – Vincent (knows Software Modelling well) and Kevin.
+
+Deployment diagram (shows how components are deployed in hardware) – Vincent and Sizo
+
+Compile PowerPoint slides – Shaun (Libre Office)
+User manual (uses cases) – Shaun
+
+Use case (we are doing two use cases) – Button (Letanyan) and Website, this is the sixth requirement in the project specifications (Kevin, Sizo can Help with UI and Vince can help with mock database).
+
+Landing page – John and Shaun (I could give this to more people to even out load).
+
+Documentation – Shaun leads all documentaion.
+
+Compile information about yourself and add contact details for landing page (beef up bios if you want to).
+
+This may be assumed protocol, but just to be certain:
+Don’t forget to use technologies in the tender.
+Try to install all the technologies we will need (even if we aren’t working on them yet).
+Don’t forget to use Latex (do it in Word first then copy to Latex to reduce errors).
+Don’t forget to comment and in way we can all understand (we suggested Doxygen in meeeting), avoid hard coding and don’t forget to code efficiently.

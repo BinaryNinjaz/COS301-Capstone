@@ -46,86 +46,80 @@
 </head>
 <!-- style="background-color: #4E342E; background-image: url(/);"-->
 <body>
-	<nav class="navbar navbar-inverse">
-		  <div class="container-fluid">
-			<div class="navbar-header">
-			  <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-
-			</div>
-			<ul class="nav navbar-nav">
-
-                          <li><a href="foremanTracking.html">Foreman Tracking</a></li>
-
-			  <li><a class="active" href="Information.html">Information</a></li>
-			  <li><a href="Sessions.html">Sessions</a></li>
-			  <li><a href="HeatMap.html">Heatmap</a></li>
-			  <li><a href="graphs.html">Statistics</a></li>
-			</ul>
-			<ul class=" nav navbar-nav" id="ojo">
-						<li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
-						<li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
-					</ul>
-			</div>
-	</nav>
-
+  <nav class="navbar navbar-inverse">
     <div class="container-fluid">
-      <!--Body of the page-->
-      <div class="row">
-        <div class="col-12 text-center" id="entitySelector">
-            <div id="selectedEntity" class="btn-group" data-toggle="buttons" style="visibility: hidden">
-              <label class="btn btn-primary active">
-                <input type="radio" name="selectedEntity" id="farm" value="F" checked autocomplete="off" onchange="showFarmsList()"> Farms
-              </label>
-              <label class="btn btn-primary">
-                <input type="radio" name="selectedEntity" id="orchInfo" value="O" autocomplete="off" onchange="showOrchardsList()"> Orchards
-              </label>
-              <label class="btn btn-primary">
-                <input type="radio" name="selectedEntity" id="workers" value="W" autocomplete="off" onchange="showWorkersList()"> Workers
-              </label>
-            </div>
-        </div>
-      </div>
-      <div class="row">
-          <div class="col-12 col-sm-4 col-md-3" id="entityList" style="height: calc(100vh - 198px)">
-              <!--Column One-->
-              <div id="SearchSpace">
-                <input class="form-control" type="text" placeholder="Search" id="informationSearchField" oninput="filterInformation(this)">
-              </div>
-              <div id="AddButt"><div id="loader"></div></div>
-              <div id="DispButt" class="scrollView"></div>
-          </div>
-          <div id="right" class="col-12 col-sm-8 col-md-9" style="height: calc(100vh - 98px)">
-            <div id="entityDetails">
-              <h1 class="infoDetailHelp">Select An Item From the Sidebar</h1>
-            </div>
+    <div class="navbar-header">
+      <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="ForemanTracker.html">Tracker</a></li>
+      <li><a class="active" href="Information.html">Information</a></li>
+      <li><a href="Sessions.html">Sessions</a></li>
+      <li><a href="HeatMap.html">Heatmap</a></li>
+      <li><a href="graphs.html">Statistics</a></li>
+    </ul>
+    <ul class=" nav navbar-nav" id="ojo">
+      <li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
+      <li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
+    </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <!--Body of the page-->
+    <div class="row">
+      <div class="col-12 text-center" id="entitySelector">
+          <div id="selectedEntity" class="btn-group" data-toggle="buttons" style="visibility: hidden">
+            <label class="btn btn-primary active">
+              <input type="radio" name="selectedEntity" id="farm" value="F" checked autocomplete="off" onchange="showFarmsList()"> Farms
+            </label>
+            <label class="btn btn-primary">
+              <input type="radio" name="selectedEntity" id="orchInfo" value="O" autocomplete="off" onchange="showOrchardsList()"> Orchards
+            </label>
+            <label class="btn btn-primary">
+              <input type="radio" name="selectedEntity" id="workers" value="W" autocomplete="off" onchange="showWorkersList()"> Workers
+            </label>
           </div>
       </div>
     </div>
+    <div class="row">
+        <div class="col-12 col-sm-4 col-md-3" id="entityList" style="height: calc(100vh - 198px)">
+          <!--Column One-->
+          <div id="SearchSpace">
+            <input class="form-control" type="text" placeholder="Search" id="informationSearchField" oninput="filterInformation(this)">
+          </div>
+          <div id="AddButt"><div id="loader"></div></div>
+          <div id="DispButt" class="scrollView"></div>
+        </div>
+        <div id="right" class="col-12 col-sm-8 col-md-9" style="height: calc(100vh - 98px)">
+          <div id="entityDetails">
+            <h1 class="infoDetailHelp">Select An Item From the Sidebar</h1>
+          </div>
+        </div>
+    </div>
+  </div>
 
     <!-- Modal -->
-    <div id="delModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Confirm Deletion</h4>
-                </div>
-                <div class="modal-body" id="modalText"></div>
-                <div class="modal-footer">
-                    <div class="col-sm-2 col-sm-offset-8" style="padding: 5px;">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    </div>
-                    <div class="col-sm-2" style="padding: 5px;">
-                        <div id="modalDelBut"></div>
-                        <!--<button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>-->
-                    </div>
-                </div>
-            </div>
-
+  <div id="delModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Confirm Deletion</h4>
         </div>
-</div>
+        <div class="modal-body" id="modalText"></div>
+        <div class="modal-footer">
+          <div class="col-sm-2 col-sm-offset-8" style="padding: 5px;">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          </div>
+          <div class="col-sm-2" style="padding: 5px;">
+            <div id="modalDelBut"></div>
+            <!--<button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
-

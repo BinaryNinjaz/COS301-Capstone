@@ -60,7 +60,6 @@ function firebaseRegister(email, password) {
       } else {
         alert(errorMessage);
       }
-      console.log(error);
   });
 }
 
@@ -379,7 +378,7 @@ function searchSession(session, searchText, farms, orchards, workers) {
 
   const foreman = workers[session.wid];
   if (foreman !== undefined) {
-    const foremanResults = searchWorker(foreman, text, false);
+    const foremanResults = searchWorker(foreman, orchards, text, false);
     for (const key in foremanResults) {
       result["Foreman " + key] = foremanResults[key];
     }
@@ -387,7 +386,7 @@ function searchSession(session, searchText, farms, orchards, workers) {
   for (const workerId in session.collections) {
     const worker = workers[workerId];
     if (worker !== undefined) {
-      const workerResults = searchWorker(worker, text, false);
+      const workerResults = searchWorker(worker, orchards, text, false);
       for (const key in workerResults) {
         result["Worker " + key] = workerResults[key];
       }
