@@ -26,6 +26,7 @@ public class ViewFlipperActivity extends Activity {
     private TextView skipFour;
     private TextView done;
     private Integer slideCount = 0;
+    boolean noNewActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,6 @@ public class ViewFlipperActivity extends Activity {
 
         //If this is called as a redo, then we don't want to go back to the clicker, so the HelpPreferenceFragment will signal with this.
         Bundle extras = getIntent().getExtras();
-        final boolean noNewActivity;
         noNewActivity = extras != null && extras.getBoolean(SettingsActivity.HelpPreferenceFragment.KEY_NONEWACTIVITY, false);
 
 
@@ -119,9 +119,7 @@ public class ViewFlipperActivity extends Activity {
                 if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                     if (slideCount == 4) {
                         slideCount = 0;
-                        Intent intent = new Intent(ViewFlipperActivity.this, InformationActivity.class);
-                        startActivity(intent);
-                        finish();
+                        endThis(!noNewActivity);
                     } else {
                         mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_in));
                         mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_out));
