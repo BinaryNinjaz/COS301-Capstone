@@ -32,7 +32,7 @@
     <script src="Settings.js"></script>
     
 </head>
-<body style='background-image: url("back2smaller.jpg")'>
+<body style='background-color: gray'>
    <nav class="navbar navbar-inverse">
         <div class="container-fluid">
         <div class="navbar-header">
@@ -54,33 +54,28 @@
     <div class ="container">
         <div class ="block">
              <h2>Login Details:</h2>
-             <label style="color: black" for="email"><b>Email</b></label>
-             <input type="text" name="email" id ="email">
-             <br /> 
-             <button name = "saveEmail" onclick="saveEmail()">Update Email</button>
-             <br /> 
-             <label style="color: black" for="psw"><b>New Password</b></label>
-             <input type="password" name="psw" id ="psw">
-             <br /> 
-             <label style="color: black" for="psw2"><b>Confirm New Password </b></label>
-             <input type="password" name="psw2" id ="psw2">
-             <br /> 
-             <button name = "savePass" onclick="savePassword()">Update Password</button>
+             <form class='form-horizontal'>
+                <div class='form-group'><label class='control-label col-sm-2' style='color: black' for='email'>Email:</label>
+                <div class='col-sm-9'><input type='text' class='form-control' id='email'></div> </div> 
+                <button name = "saveEmail" onclick="saveEmail()">Update Email</button>
+                <div class='form-group'><label class='control-label col-sm-2' style='color: black' for='psw'>New Password:</label>
+                <div class='col-sm-9'><input type='text' class='form-control' id='psw'></div> </div>
+                <div class='form-group'><label class='control-label col-sm-2' style='color: black' for='psw2'>Confirm New Password:</label>
+                <div class='col-sm-9'><input type='text' class='form-control' id='psw2'></div> </div>
+                <button name = "savePass" onclick="savePassword()">Update Password</button>
 
-             <h2>Account Information:</h2>
-             <label style="color: black" for="org"><b>Organization Name</b></label>
-             <input type="text" name="org" id ="org">
-             <br />
-             <label style="color: black" for="first"><b>First Name</b></label>
-             <input type="text" name="first" id ="first">
-             <br />
-             <label style="color: black" for="sur"><b>Surname</b></label>
-             <input type="text" name="sur" id ="sur">
-             <br />
-             <button name = "save" onclick="saveChanges()">Save Changes</button>
+                <h2>Account Information:</h2>
+                <div class='form-group'><label class='control-label col-sm-2' style='color: black' for='org'>Organisation Name:</label>
+                <div class='col-sm-9'><input type='text' class='form-control' id='org'></div> </div>
+                <div class='form-group'><label class='control-label col-sm-2' style='color: black' for='first'>First Name:</label>
+                <div class='col-sm-9'><input type='text' class='form-control' id='first'></div> </div>
+                <div class='form-group'><label class='control-label col-sm-2' style='color: black' for='sur'>Surname:</label>
+                <div class='col-sm-9'><input type='text' class='form-control' id='sur'></div> </div>
+                <button name = "save" onclick="saveChanges()">Save Changes</button>
 
-             <h2>Account Management:</h2>
-             <button name = "del" onclick="deleteAccount()">Delete Account</button>
+                <h2>Account Management:</h2>
+                <button name = "del" onclick="deleteAccount()">Delete Account</button>
+             </form>
         </div>
     </div>
 
