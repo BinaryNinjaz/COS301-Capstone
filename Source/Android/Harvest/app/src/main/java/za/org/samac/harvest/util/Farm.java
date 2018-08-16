@@ -120,4 +120,32 @@ public class Farm extends DBInfoObject {
 
         return result;
     }
+
+    public ArrayList<SearchedItem> search(String text, boolean searchName) {
+        ArrayList<SearchedItem> result = new ArrayList<>();
+
+        text = text.toLowerCase();
+
+        if (getCompany() != null && getCompany().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Company Name", getCompany()));
+        }
+
+        if (getEmail() != null && getEmail().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Email", getEmail()));
+        }
+
+        if (getPhone() != null && getPhone().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Phone Number", getPhone()));
+        }
+
+        if (getProvince() != null && getProvince().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Province", getProvince()));
+        }
+
+        if (getTown() != null && getTown().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Nearest Town", getTown()));
+        }
+
+        return result;
+    }
 }

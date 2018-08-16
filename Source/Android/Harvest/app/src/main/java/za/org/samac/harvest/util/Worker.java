@@ -86,6 +86,11 @@ public class Worker extends DBInfoObject {
         return nID;
     }
 
+    @Override
+    public String getId() {
+        return ID;
+    }
+
     public WorkerType getWorkerType() {
         return workerType;
     }
@@ -133,6 +138,22 @@ public class Worker extends DBInfoObject {
         if ((getfName() + " " + getsName()).toLowerCase().contains(text)) {
             result.add(new SearchedItem("Name", getfName() + " " + getsName()));
         }
+
+        if (getnID().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("ID", getnID()));
+        }
+
+        if (getPhone().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Phone Number", getPhone()));
+        }
+
+        return result;
+    }
+
+    public ArrayList<SearchedItem> search(String text, boolean searchName) {
+        ArrayList<SearchedItem> result = new ArrayList<>();
+
+        text = text.toLowerCase();
 
         if (getnID().toLowerCase().contains(text)) {
             result.add(new SearchedItem("ID", getnID()));

@@ -20,6 +20,7 @@ import za.org.samac.harvest.util.DBInfoObject;
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.Orchard;
+import za.org.samac.harvest.util.SearchedItem;
 import za.org.samac.harvest.util.Worker;
 
 
@@ -29,7 +30,6 @@ import za.org.samac.harvest.util.Worker;
 public class InfoSearchFragment extends Fragment {
 
     Data data;
-    List<DBInfoObject> allThings;
     List<LinearLayout> layouts;
 
     LinearLayout uberParentLayout;
@@ -58,7 +58,6 @@ public class InfoSearchFragment extends Fragment {
 
         inflater = getLayoutInflater();
 
-        allThings = data.getThings(category);
         uberParentLayout = view.findViewById(R.id.info_searchResults);
 
         layouts = new ArrayList<>();
@@ -79,6 +78,31 @@ public class InfoSearchFragment extends Fragment {
 
         List<DBInfoObject> foundMegas = data.search(query, category);
         addResults(foundMegas);
+
+        List<DBInfoObject> allThings = data.getThings(category);
+
+        //Now the inners
+        for (DBInfoObject object : allThings){
+            List<SearchedItem> searchedItems;
+            String tag = "";
+            if (object.getClass() == Farm.class){
+                searchedItems = ((Farm) object).search(query);
+                tag = "Farm " + object.getId();
+            }
+            else if (object.getClass() == Orchard.class){
+                searchedItems = ((Orchard) object).search(query);
+                tag = "Orchard " + object.getId();
+            }
+            else if (object.getClass() == Worker.class){
+                searchedItems = ((Worker) object).search(query);
+                tag = "Worker " + object.getId();
+            }
+            else searchedItems = new ArrayList<>();
+
+            for (SearchedItem searchedItem : searchedItems){
+                addResult(" " + object.toString() + " - " + searchedItem.reason, tag, searchedItem.property);
+            }
+        }
     }
 
     //Add the given mega results
@@ -131,45 +155,5 @@ public class InfoSearchFragment extends Fragment {
         layouts.add(linearLayout);
         uberParentLayout.addView(linearLayout);
         return linearLayout;
-    }
-}
-
-class SearcherAdapter extends RecyclerView.Adapter<SearcherAdapter.ViewHolder>{
-
-    private List<DBInfoObject> showUs;
-    
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-        public Button mButton;
-
-        public ViewHolder(View view){
-            super(view);
-
-            mButton = view.findViewById(R.id.info_list_butt);
-        }
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_goto, parent, false);
-        return new ViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position){
-        holder.mButton.setText(showUs.get(position).toString());
-        if (showUs.get(position).getClass() == Worker.class) {
-            holder.mButton.setTag("Worker " + showUs.get(position).getId());
-        }
-        else if (showUs.get(position).getClass() == Orchard.class){
-            holder.mButton.setTag("Orchard " + showUs.get(position).getId());
-        }
-        else if (showUs.get(position).getClass() == Farm.class){
-            holder.mButton.setTag("Farm " + showUs.get(position).getId());
-        }
-    }
-
-    @Override
-    public int getItemCount(){
-        return showUs.size();
     }
 }

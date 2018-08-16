@@ -142,8 +142,10 @@ public class Orchard extends DBInfoObject {
 
         text = text.toLowerCase();
 
-        for (SearchedItem item : assignedFarm.search(text)) {
-            result.add(new SearchedItem("Farm " + item.property, item.reason));
+        if (assignedFarm != null) {
+            for (SearchedItem item : assignedFarm.search(text)) {
+                result.add(new SearchedItem("Farm " + item.property, item.reason));
+            }
         }
 
         if ((getName()).toLowerCase().contains(text)) {
@@ -165,6 +167,34 @@ public class Orchard extends DBInfoObject {
 
         return result;
     }
+
+    public ArrayList<SearchedItem> search(String text, boolean searchName) {
+        ArrayList<SearchedItem> result = new ArrayList<>();
+
+        text = text.toLowerCase();
+
+        if (assignedFarm != null) {
+            for (SearchedItem item : assignedFarm.search(text)) {
+                result.add(new SearchedItem("Farm " + item.property, item.reason));
+            }
+        }
+
+        if (getCrop().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Crop", getCrop()));
+        }
+
+        String culti = containsSubText(getCultivars(), text);
+        if (culti != null) {
+            result.add(new SearchedItem("Cultivar", culti));
+        }
+
+        if (getIrrigation().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Irrigation Type", getIrrigation()));
+        }
+
+        return result;
+    }
+
 
     @Override
     public String toString() {
