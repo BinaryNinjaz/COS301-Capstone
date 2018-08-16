@@ -26,6 +26,7 @@ public class IntroViewFlipper extends Activity {
     private TextView skipFour;
     private TextView done;
     private Integer slideCount = 0;
+    boolean noNewActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,6 @@ public class IntroViewFlipper extends Activity {
         mViewFlipper = (ViewFlipper) this.findViewById(R.id.view_flipper);
         //If this is called as a redo, then we don't want to go back to the login, so the HelpPreferenceFragment will signal with this.
         Bundle extras = getIntent().getExtras();
-        final boolean noNewActivity;
         noNewActivity = extras != null && extras.getBoolean(SettingsActivity.HelpPreferenceFragment.KEY_NONEWACTIVITY, false);
 
 
@@ -109,9 +109,7 @@ public class IntroViewFlipper extends Activity {
                 if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                     if (slideCount == 3) {
                         slideCount = 0;
-                        Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
-                        startActivity(intent);
-                        finish();
+                        endThis(!noNewActivity);
                     } else {
                         mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_in));
                         mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_out));

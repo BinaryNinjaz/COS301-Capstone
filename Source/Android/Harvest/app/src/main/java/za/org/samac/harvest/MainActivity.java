@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private BroadcastReceiver locationBroadcastReceiver;
     private Double latitude;
     private Double longitude;
+    ArrayList<String> orchardsForPopUp = new ArrayList<>();
 
     private FirebaseDatabase database;
     //private Query q;
@@ -141,7 +142,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init();
+
+        if(savedInstanceState == null) {
+            init();
+        }
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -398,25 +402,45 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void getOrchard() {
-
-        CharSequence orchardsSelected[] = orchards.toArray(new CharSequence[orchards.size()]);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select Orchard");
-        builder.setItems(orchardsSelected, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // the user clicked on colors[which]
-                TextView textViewOrch = findViewById(R.id.textViewOrch);
-                textViewOrch.setText(new StringBuilder().append("Selected Orchard: ").append(orchards.get(which)).toString());
-                textViewOrch.setTypeface(null, Typeface.BOLD);
-                selectedOrchardKey = orchardKeys.get(which);
-                progressBar.setVisibility(View.VISIBLE);
-                collectWorkers();
-                dialog.dismiss();
+        if (orchards.size() == 0) {
+            String msg = "No orchard's created, please add orchards in Information";
+            AlertDialog.Builder dlgAlertIfNoLocation = new AlertDialog.Builder(this);
+            dlgAlertIfNoLocation.setMessage(msg);
+            dlgAlertIfNoLocation.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            dlgAlertIfNoLocation.setCancelable(false);
+            dlgAlertIfNoLocation.create().show();
+        } else {
+            orchardsForPopUp = orchards;
+            if (orchardsForPopUp.contains("All orchards") == false) {
+                orchardsForPopUp.add("All orchards");
             }
-        });
-        builder.show();
+            CharSequence orchardsSelected[] = orchardsForPopUp.toArray(new CharSequence[orchardsForPopUp.size()]);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Select Orchard");
+            builder.setItems(orchardsSelected, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // the user clicked on colors[which]
+                    TextView textViewOrch = findViewById(R.id.textViewOrch);
+                    textViewOrch.setText(new StringBuilder().append("Selected Orchard: ").append(orchardsForPopUp.get(which)).toString());
+                    textViewOrch.setTypeface(null, Typeface.BOLD);
+                    if (orchardsForPopUp.get(which).equals("All orchards")) {
+                        selectedOrchardKey = "-";//all keys should have a minus
+                    } else {
+                        selectedOrchardKey = orchardKeys.get(which);
+                    }
+
+                    progressBar.setVisibility(View.VISIBLE);
+                    collectWorkers();
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+        }
     }
 
     private void getPolygon() {
