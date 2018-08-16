@@ -48,11 +48,14 @@ p, span {
   color: rgb(198, 198, 198);
 }
 
+
 body{
     font-family: Sans-Serif;	
-    background-image: url("back2smaller.jpg");
+    background-image: url("back2Smaller.jpg");
     background-repeat: no-repeat;  
     background-size: cover;  
-    display: block;
-    overflow: auto;    
+    display: block;   
+
+    background-origin: center;
+background-attachment: fixed;
 }
