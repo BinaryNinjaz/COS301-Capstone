@@ -92,7 +92,7 @@ function showRegister(){
         document.getElementById("formData").innerHTML = "";
 	document.getElementById("formData").innerHTML = '<fieldset>'
 								+"<div class='card-header'>"
-                                                                    +"<h2>Signup:</h2>"
+                                                                    +"<h2>Signup</h2>"
                                                                 +"</div>"
                                                                 +"<div class='card-body'>"
                                                                     +'<div class="form-group">'
