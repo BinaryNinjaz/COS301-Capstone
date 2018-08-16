@@ -26,7 +26,6 @@ public class SignIn_Choose extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_choose);
-        Data.newAccount();
     }
 
     public void choseFarmer(View v){
