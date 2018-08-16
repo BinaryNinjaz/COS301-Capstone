@@ -38,9 +38,9 @@
     <string name="signIn_foreman_verificationResend">Resend</string>
     <string name="signIn_foreman_verificationCancel">Cancel</string>
     <string name="signIn_foreman_numberTip">Your number, as saved in the system, is shown below, please ensure that your employer has you saved with the same number as seen below, and that you are flagged as a foreman.</string>
-    <string name="signIn_foreman_farmChooseTip">You are assigned to multiple organizations, please select the one you wish to work for for this session, and press okay to continue.</string>
-    <string name="signIn_foreman_farmNone">You do not work for any organization, and will be unable to continue.</string>
-    <string name="signIn_foreman_farmOne">You are assigned to the organization seen below.</string>
+    <string name="signIn_foreman_farmChooseTip">You are assigned to multiple organisations, please select the one you wish to work for for this session, and press okay to continue.</string>
+    <string name="signIn_foreman_farmNone">You do not work for any organisation, and will be unable to continue.</string>
+    <string name="signIn_foreman_farmOne">You are assigned to the organisation seen below.</string>
     <string name="signIn_foreman_goBack">Go Back</string>
 
     <string name="farmerID_Pref">farmerID_Pref_8701297856420847507893465</string>
