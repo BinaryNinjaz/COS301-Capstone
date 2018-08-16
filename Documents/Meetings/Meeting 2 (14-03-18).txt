@@ -1,0 +1,42 @@
+Meeting 2 (14-03-18)
+
+Asterixes represent priority topics (things of importance).
+
+Deployment model: spelling, protocols in relationships and device (Android version).*
+
+Testing of use cases (nothing must fall apart in the demo).
+
+Can all our computers handle android studio?
+
+Android app (mostly front end). Front end/user interface - XML.
+
+Android app (back end. Still on the front-end side overall) - Java or C# if we use Xamarin (that would also cover the iOS App) * research on which is best.
+
+iOS app if we don't use Xamarin - Objective C/Swift.
+
+Web development front end (this is like the page where the admin guys add info etc) - Html, CSS, JavaScript, Bootstrap (maybe for better GUI).
+
+The backend (server)- PHP or Java * research on which is due. This is very important, will have the most coding. All other parts will rely on functions from here to operate, like the front-end apps.
+
+Database * research on which is best to use between MySQL and Firebase – We are all familiar with MySQL. And it's a commonly used database plus works well with PHP, Letanyan suggested firebase. It is going to be open source. We should not take too any adventures. Where are we going to run the server?
+
+Maybe we should use Xamarin, input?
+
+Roles in team:
+•	Teboho, UI designer (android app front-end and database).
+•	Shaun, UX designer (android app front-end and android app back-end).
+•	Kevin, Back-end Architect (back-end, PHP or Java).
+•	Letanyan, QA Lead (back-end, PHP or Java and iOS application back-end).
+•	Sizo, Front-end Architect (web development, iOS application back-end and database).
+•	John, Team Leader/Scrum Master and Analyst (web development and android app back-end).
+
+Do we all understand what is going on in the project (architecturally)? * very important for demo
+
+Anything we want to ask the client, something we are unclear about?
+
+Presentation (we all do it, have confidence, be knowledgeable).
+John or Shaun on Introduction or Brief Description, Letanyan on Domain Model, Teboho on Requirements and Design Document, Kevin on Package Diagram and Sizo on Deployment Diagram
+
+Make sure that code is reusable for example the error handling. Let’s keep the logic and business rules in the back-end.
+
+Work distribution was not the best, for next stages we will try to even out the load.

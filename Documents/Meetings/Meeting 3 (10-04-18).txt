@@ -1,0 +1,56 @@
+Meeting 3 (10-04-18)
+
+What have we each done, does it work (automated testing) and does it look good.
+
+Letanyan – Check up on design, free role.
+
+Sizo – Mock heat map and homepage, web design, use cases for web must use automated testing.
+
+Vince – Mock profile settings, web design, use cases for web must use automated testing.
+
+Kevin – Use case for web (edit info needs to be filled up more) automated testing.
+
+Shaun – Location use case, use cases for android must use automated testing.
+
+John – Check up on design and help with android.
+
+Any problems that anyone is still dealing with?
+
+Are all use cases done?
+
+More fields for edit details and design differences in mobile app (also talked about plus and minus buttons, we will look at it, and search functionality, add later).
+
+We need to attach an ID to the names, names are not unique enough.
+
+Someone said that they get different names from someone else from Firebase, all is well now.
+
+Can Firebase handle the amount of data?
+
+Colours used must be consistent.
+
+Commenting code in a detailed matter.
+
+Give suggestions to improve system (we may see something one of us missed).
+
+User manual to be joined, plus we put some estimates for the ram and local disk storage?
+
+Decide on Github structure, we chose to create a branch every time we make a change.
+
+*Requirements and Design Document, we must all look through it and make sure it is correct, if we missed something we are finished.
+
+Landing page must be in tip top shape (Shaun).
+
+Is all documentation in?
+
+Compilation of slide show (Vince).
+
+All necessary work must be in Github, by Thursday.
+
+We cannot be rearranging work anymore as it messed up work division; thus, messing up our marks.
+
+Maybe add Stacy to all our threads on Slack, talk to Stacy in meeting. We booked meeting with Stacy at 12 (noon) on this week Thursday (12-04-18).
+Check Zenhub and Zube (everyone).
+
+We will be going on a rampage on Thursday to make sure everything is integrated (everyone on it).
+
+Study hard for tomorrow’s test, just text the group if help is needed, Kevin said our answers must be the same (in terms of our own system).

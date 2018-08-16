@@ -1,0 +1,27 @@
+Meeting 4 (18-04-18)
+Any problems. 
+Start moving stuff on Zube, you can subscribe to ZenHub.
+Go to Zube in meeting.
+Rotations and scrolling bugs.
+Password minimum length, ask Client.
+Architecture we are using, get back to each other on Monday.
+Something about GitHub structure and commit bit by bit, always go through developer, git ignore libraries.
+Look at domain model, remove GPSTracker class, look into using database class.
+Design of apps switching around plus or minus on android, change background colour and try to make button height shorter, logo, colours, plain background for mobile login look into that.
+Communication, post design pictures continuously.
+Start using code freezes (Thursday noon).
+Explain firebase set up.
+New roles:
+Kevin – Android (mostly back-end), handle all android testing.
+Vince – Website (mostly front-end), prototypes for mobile settings, administration and privileges, try to get iOS emulator working on your laptop
+Shaun – Android and website (back-end in android and back-end in web), make logout on android, administration and privileges
+Sizo – Website (full stack, head of web), make web homepage functional, administration and privileges
+Letanyan – iOS (full stack), QA lead and head of iOS finish app
+John – Android (full stack), head of android, catch up to iOS.
+No half jobs, if you are going to do something you do it all (design, logic, database) it must work like how it will work in its target market.
+We can’t leave Letanyan alone on iOS so we will have to really find out how the iOS emulators are.
+Ask for permission before messing around with another guys code/file.
+Go to web to explain admin.
+Walk through project plan from now, admin in app, privileges, what first time users see (look at domain model again).
+Any questions for client?
+Let’s try and work every day 2 hours or more per day in other words we cannot slack off.

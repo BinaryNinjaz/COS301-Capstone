@@ -11,7 +11,6 @@
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="information.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
@@ -20,36 +19,68 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
     <link type="text/css" rel="stylesheet" href="navbar.css">
-
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css"/>
-    <script src="navbar.js" type="text/javascript"></script>
 
+    <script src="navbar.js" type="text/javascript"></script>
+    <script src="Settings.js"></script>
+    
 </head>
 <body>
-
-<div class="topnav">
-    <ul class="nav navbar-nav">
+    <div class="topnav">
+        <ul class="nav navbar-nav">
         <a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
         <a href="foremanTracking.html">Foreman Tracking</a>
         <a href="Information.html">Information</a>
         <a href="Sessions.html">Sessions</a>
         <a href="HeatMap.html">Heatmap</a>
-         <a href="graphs.html">Analytics</a>
-    </ul>
+         <a href="graphs.html">Statistics</a>
+        </ul>
 
-    <ul class="pull-right nav navbar-nav">
-        <a class="active" href="Settings.html" id="emailInNav"></a>
-        <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-    </ul>
-</div>
+        <ul class="pull-right nav navbar-nav">
+            <a class="active" href="Settings.html" id="emailInNav"></a>
+            <a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </ul>
+    </div>
+    
+    <div class="container" style="width: 450px">
+        
+        <h3>Login Details:</h3>
+        <label for="email"><b>Email</b></label>
+        <input type="text" name="email" id ="email">
+        <br /> 
+        <button name = "saveEmail" onclick="saveEmail()">Update Email</button>
+        <br /> 
+        <label for="psw"><b>New Password</b></label>
+        <input type="password" name="psw" id ="psw">
+        <br /> 
+        <label for="psw2"><b>Confirm New Password </b></label>
+        <input type="password" name="psw2" id ="psw2">
+        <br /> 
+        <button name = "savePass" onclick="savePassword()">Update Password</button>
 
-User Settings go here. Like change email, password, delete account, etc.
+        <h3>Account Information:</h3>
+        <label for="org"><b>Organization Name</b></label>
+        <input type="text" name="org" id ="org">
+        <br />
+        <label for="first"><b>First Name</b></label>
+        <input type="text" name="first" id ="first">
+        <br />
+        <label for="sur"><b>Surname</b></label>
+        <input type="text" name="sur" id ="sur">
+        <br />
+        <button name = "save" onclick="saveChanges()">Save Changes</button>
+
+        <h3>Account Management:</h3>
+        <button name = "del" onclick="deleteAccount()">Delete Account</button>
+
+    </div>
 
 </body>
 </html>

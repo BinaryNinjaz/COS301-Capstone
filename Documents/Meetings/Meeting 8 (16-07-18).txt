@@ -1,0 +1,18 @@
+Meeting 8 (16-07-18)
+Any problems? How far is each and every person.
+We have to pick up the pace to avoid client pressure.
+We have to be done a moth be for the final demo day as iOS has a two week review period and they a strict so to say (apparently android is a couple of hours).
+Book demo at 9 (remind me) email client the time.
+Make sure everyone knows what is going on. How does foreman tracking work? What are we displaying on the graph? How does firebase work in terms of client and server? What is our integration point? How does approximate yields work in connection with polygon? What does workingFor and other collections in the database store? Where do the map start on the web? How does our new login work? What does session tab show? What do our cloud functions do?
+We are boycotting android and iOS for the sake of team work, so once they are good enough we all move over to the web.
+Maybe make starting page on web edit information, make new page/ tutorial.
+Field test on Friday, maybe.
+Integration, unit and UI testing, explain them and complication of integration testing (sign up and login).
+Android, iOS and web side by side.
+Look at ice box.
+Commits (we are a team people can lose marks if someone is too high or too low) and don’t push it, stop at 170.
+Documentation (assign to people who need more commits) don’t forget the picture I posted on the group about testing.
+Game plan for demo (emphasise that it counts the most). We can try to show android but it takes so we will probably show both iOS and android, everyone should be vocal, there is nothing to be scared of its fourth time, we try to show the product and show the methodology (while we show the system a few side comments about how we used software engineering methods in the development) and we control the pace (take it slow).
+Wow factors?
+Meeting with client, Wednesday.
+Any questions for our client?

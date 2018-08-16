@@ -1,0 +1,19 @@
+Meeting 11 (23-07-18)
+
+What needs to be done? Change buttons to picture buttons that iOS has in android (Kevin), set app icon on android (John),  get rid of that line of space at bottom of android (Kevin), making cloud functions less expensive (Letanyan), email client the deployment costs (Letanyan, emails it to John), fix web nav bar (Vince), user settings on web (Sizo), add things to help first time users (hints, tutorials) (Sizo and Letanyan), filtering on android graphs (Kevin), sync UI of all 3 platforms (Letanyan, John and Shaun), fix up web UI (Vince), automated testing (everyone test what you did), make workers get added only if foreman is in polygon (John) compile stuff for app store app store and play store.
+
+Load Harvest on to everyone’s phones for field test.
+
+Praise everyone for hard work last week, and the last demo may have actually been our best. Keep it up I want see this until the end, it is almost over, let us end well (we have arrived men, the app is taking shape and looking better and better).
+
+New meeting time on Thursday at 8:30 am (John and Sizo have a tutor meeting)?
+
+Any ideas of a wow factor, it has to make the lecturers tick on the final evaluation day, it has to bring people to our stall, distract them from any faults in our app (health monitor, use Bolton vs Tottenham story)?
+
+Book meeting with Stacy, when is everyone available?
+
+Game plan for this week: separate place for client product and wow factor system, field test for the whole week, prepare for play store and app store (documents, secure apps etc), do testing for the sake of evidence.
+
+Field test (Shaun is farmer, the rest of us are foremen).
+
+Problems: fix android tracking when location is witched off, null session keys on database, foremen tracking map didn’t load at some point, graphs take some time to update

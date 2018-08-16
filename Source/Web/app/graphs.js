@@ -16,6 +16,7 @@ $(window).bind("load", () => {
   const succ = () => {
     initPage();
   };
+
   const fail = () => {
     farms = {};
     orchards = {};

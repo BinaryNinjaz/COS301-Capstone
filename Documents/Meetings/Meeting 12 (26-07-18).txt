@@ -1,0 +1,10 @@
+Meeting 12 (26-07-18)
+What needs to be done? Change buttons to picture buttons in android (Kevin), get rid of that line of space at bottom of android (Kevin), making cloud functions less expensive (Letanyan), email client the deployment costs (Letanyan, emails it to John), fix web nav bar (Vince), user settings on web (Sizo), add things to help first time users (hints, tutorials) (Sizo and Letanyan), filtering on android graphs (Kevin), sync UI of all 3 platforms (Letanyan, John and Vince), fix up web UI (Vince, Shaun), foreman graph (Shaun), automated testing (everyone test what you did), compile stuff for app store app store and play store, user manual, search functionality where necessary, now sessions format.
+Load Harvest on to everyone’s phones for field test.
+We have to decide on things to help the user, we chose tutorial.
+New meeting time on Thursday at 9:30 am.
+Syncing web, iOS and Android (27 July 11:30 am).
+Someone has to review Letanyan’s code and put some code in so his name is not the only one that shows as a contributor (just add comments) Shaun.
+Think of wow factor, it should be made of data we already have, be interactive with the user.
+How does/will foremen tracking work (it collections in the database, its accuracy in time)? When and how do workers get added to yield tracker screen? Formula for expected yield and when it gets displayed? What is an organisation in our app and its relation to farms? How accurate in terms of position is the tracking in iOS and Android? Somebody ask John something.
+Field test game plan: (Vince and John are farmers on laptop, Kevin is farmer phone, Sizo is foreman and Letanyan; the rest are foremen (Letanyan subs in Vince after 30 minutes)) check heatmap, analytics on all platforms, sessions on all platforms.
