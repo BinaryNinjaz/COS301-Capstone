@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -91,8 +93,14 @@ public class Stats_Graph extends AppCompatActivity {
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats_graph);
+
+        getSupportActionBar().hide();
 
         data = new Data();
 
@@ -129,45 +137,6 @@ public class Stats_Graph extends AppCompatActivity {
                 break;
         }
         generateAndDisplayGraph();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case R.id.search:
-                return true;
-            case R.id.settings:
-                startActivity(new Intent(Stats_Graph.this, SettingsActivity.class));
-                return true;
-            case R.id.logout:
-                FirebaseAuth.getInstance().signOut();
-                if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(Stats_Graph.this, SignIn_Choose.class));
-                }
-                else {
-//                    FirebaseAuth.getInstance().signOut();
-                }
-                if (SignIn_Farmer.mGoogleSignInClient != null) {
-                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                            new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(Stats_Graph.this, SignIn_Choose.class));
-                                }
-                            });
-                }
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     //Function

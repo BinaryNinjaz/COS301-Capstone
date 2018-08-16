@@ -143,9 +143,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(Stats.this, MainActivity.class);
-                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);
+                                startActivity(new Intent(Stats.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
                                 startActivity(new Intent(Stats.this, InformationActivity.class));
