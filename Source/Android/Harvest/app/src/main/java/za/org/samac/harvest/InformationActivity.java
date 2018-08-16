@@ -13,6 +13,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,15 +56,11 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     private List<LatLng> coords;
     Category selectedCat = NOTHING, stackTop = NOTHING;
 
+    private final String TAG = "Information";
+
     private boolean searching = false;
     private SearchView searchView;
     private Menu menu;
-
-//    @Override
-//    protected void onResume(){
-//        super.onResume();
-//        bottomNavigationView.setSelectedItemId(R.id.actionInformation);
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +80,9 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(InformationActivity.this, MainActivity.class);
-                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);
+                                startActivity(new Intent(InformationActivity.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
-                                showNavFrag();
                                 return true;
                             case R.id.actionSession:
                                 startActivity(new Intent(InformationActivity.this, Sessions.class));
@@ -109,11 +103,11 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
 
     }
 
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
-//    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        bottomNavigationView.setSelectedItemId(R.id.actionInformation);//set correct item to pop out on the nav bar
+    }
 
     private void showNavFrag(){
         listing = false;
