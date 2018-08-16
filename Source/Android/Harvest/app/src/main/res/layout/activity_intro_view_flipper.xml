@@ -51,15 +51,18 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rbtn2"/>
+                    android:id="@+id/rbtn2"
+                    android:buttonTint="@color/white"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rbtn3"/>
+                    android:id="@+id/rbtn3"
+                    android:buttonTint="@color/white"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rbtn4"/>
+                    android:id="@+id/rbtn4"
+                    android:buttonTint="@color/white"/>
             </RadioGroup>
             
         </RelativeLayout>
@@ -100,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rbtn1"
-                    />
+                    android:buttonTint="@color/white"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,11 +113,13 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rbtn13"/>
+                    android:id="@+id/rbtn13"
+                    android:buttonTint="@color/white"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rbtn14"/>
+                    android:id="@+id/rbtn14"
+                    android:buttonTint="@color/white"/>
             </RadioGroup>
         </RelativeLayout>
 
@@ -154,12 +159,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rbtn20"
-                    />
+                    android:buttonTint="@color/white"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rbtn22"
-                    />
+                    android:buttonTint="@color/white"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -169,7 +174,8 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rbtn44"/>
+                    android:id="@+id/rbtn44"
+                    android:buttonTint="@color/white"/>
             </RadioGroup>
 
         </RelativeLayout>
@@ -190,7 +196,7 @@
 
             <TextView
                 style="@style/ImageTitle"
-                android:text="@string/swipe_to_continue"/>
+                android:text="@string/thatsAll"/>
 
             <TextView
                 style="@style/TextView.links"
@@ -210,17 +216,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rbtn50"
-                    />
+                    android:buttonTint="@color/white"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rbtn52"
-                    />
+                    android:buttonTint="@color/white"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/rbtn53"
-                    />
+                    android:buttonTint="@color/white"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
