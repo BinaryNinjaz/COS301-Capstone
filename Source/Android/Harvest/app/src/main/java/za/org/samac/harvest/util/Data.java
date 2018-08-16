@@ -339,7 +339,7 @@ public class Data {
                     ((Stats) act).pullDone();
                 }
                 else if (act.getClass() == Sessions.class){
-                    ((Sessions) act).getNewPage();
+                    ((Sessions) act).pullDone();
                 }
             }
         }
