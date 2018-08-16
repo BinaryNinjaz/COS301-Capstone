@@ -816,3 +816,32 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     }
   });
 });
+
+
+exports.onRemovedWorker = functions.database.ref('/{uid}/workers')
+  .onDelete((snapshot, context) => {
+    const oldValue= snapshot.val();
+    const oldKey = snapshot.key;
+    snapshot.ref.parent.child('deleted/' + oldKey).set(oldValue);
+  });
+
+exports.onRemovedOrchard = functions.database.ref('/{uid}/orchards')
+  .onDelete((snapshot, context) => {
+    const oldValue = snapshot.val();
+    const oldKey = snapshot.key;
+    snapshot.ref.parent.child('deleted/' + oldKey).set(oldValue);
+  });
+
+exports.onRemovedFarm = functions.database.ref('/{uid}/farms')
+  .onDelete((snapshot, context) => {
+    const oldValue = snapshot.val();
+    const oldKey = snapshot.key;
+    snapshot.ref.parent.child('deleted/' + oldKey).set(oldValue);
+  });
+
+exports.onRemovedSession = functions.database.ref('/{uid}/sessions')
+  .onDelete((snapshot, context) => {
+    const oldValue = snapshot.val();
+    const oldKey = snapshot.key;
+    snapshot.ref.parent.child('deleted/' + oldKey).set(oldValue);
+  });
