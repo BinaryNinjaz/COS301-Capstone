@@ -36,8 +36,9 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     let welcomeScreenRow = ButtonRow { row in
       row.title = "Welcome Screen"
     }.onCellSelection { _, _ in
-      let vc = self.storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
-      let avc = vc as! CarouselViewController
+      let avc = self
+        .storyboard?
+        .instantiateViewController(withIdentifier: "carouselViewController") as! CarouselViewController
       avc.showIntro()
       
       self.present(avc, animated: true, completion: nil)
@@ -46,23 +47,12 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     let tutorialScreenRow = ButtonRow { row in
       row.title = "Tutorial"
     }.onCellSelection { _, _ in
-      let vc = self.storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
-      let avc = vc as! CarouselViewController
+      let avc = self
+        .storyboard?
+        .instantiateViewController(withIdentifier: "carouselViewController") as! CarouselViewController
       avc.showTutorial()
       
       self.present(avc, animated: true, completion: nil)
-    }
-    
-    let userManualRow = ButtonRow { row in
-      row.title = "User Manual"
-    }.onCellSelection { _, _ in
-      let vc = self.storyboard?.instantiateViewController(withIdentifier: "pdfViewController")
-      let pvc = vc as! PDFViewController
-      pvc.loadPDF(named: "HarvestUserManual")
-      
-//      self.navigationController?.present(pvc, animated: true, completion: nil)
-      self.navigationController?.pushViewController(pvc, animated: true)
-//      self.present(pvc, animated: true, completion: nil)
     }
     
     userSection(form: form)
@@ -95,7 +85,6 @@ class SettingsEurekaViewController: ReloadableFormViewController {
       form
         +++ Section("Help")
         <<< tutorialScreenRow
-        <<< userManualRow
         <<< welcomeScreenRow
       
     } else { // is foreman

@@ -185,7 +185,17 @@ class TrackerViewController: UIViewController {
     alert.addAction(cancel)
     alert.popoverPresentationController?.sourceView = yieldLabel
     
-    present(alert, animated: true, completion: nil)
+    if Entities.shared.orchards.isEmpty {
+      let notice = SCLAlertView()
+      
+      notice.showNotice(
+        "No Orchards",
+        subTitle: """
+        You have not added any orchards. Please add orchards in 'Information' before using the yield collector.
+        """)
+    } else {
+      present(alert, animated: true, completion: nil)
+    }
   }
   
   @IBAction func startSession(_ sender: Any) {

@@ -74,7 +74,9 @@ class SignInOptionViewController: UIViewController {
   }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    return UIInterfaceOrientationMask.portrait
+    return UIDevice.current.userInterfaceIdiom == .phone
+      ? .portrait
+      : .all
   }
   
   override var prefersStatusBarHidden: Bool {
