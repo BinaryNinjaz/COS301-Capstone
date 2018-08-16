@@ -34,7 +34,6 @@ extension HarvestDB {
         guard let child = _child as? DataSnapshot else {
           continue
         }
-        
         guard let session = child.value as? [String: Any] else {
           continue
         }
@@ -42,7 +41,7 @@ extension HarvestDB {
         sessions.insert(w, at: 0)
       }
       sessionEndKey = sessions.last?.id
-      if !sessions.isEmpty {
+      if !sessions.isEmpty && sessions.count == n {
         sessions.removeLast()
       }
       completion(sessions)
