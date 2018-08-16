@@ -38,9 +38,9 @@
     <string name="signIn_foreman_verificationResend">Resend</string>
     <string name="signIn_foreman_verificationCancel">Cancel</string>
     <string name="signIn_foreman_numberTip">Your number, as saved in the system, is shown below, please ensure that your employer has you saved with the same number as seen below, and that you are flagged as a foreman.</string>
-    <string name="signIn_foreman_farmChooseTip">You are assigned to multiple organizations, please select the one you wish to work for for this session, and press okay to continue.</string>
-    <string name="signIn_foreman_farmNone">You do not work for any organization, and will be unable to continue.</string>
-    <string name="signIn_foreman_farmOne">You are assigned to the organization seen below.</string>
+    <string name="signIn_foreman_farmChooseTip">You are assigned to multiple organisations, please select the one you wish to work for for this session, and press okay to continue.</string>
+    <string name="signIn_foreman_farmNone">You do not work for any organisation, and will be unable to continue.</string>
+    <string name="signIn_foreman_farmOne">You are assigned to the organisation seen below.</string>
     <string name="signIn_foreman_goBack">Go Back</string>
 
     <string name="farmerID_Pref">farmerID_Pref_8701297856420847507893465</string>
@@ -71,7 +71,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to bottom nav-->
-    <string name="bottomYieldTracker">Yield Tracker</string>
+    <string name="bottomYieldTracker">Yield Collector</string>
     <string name="bottomInformation">Information</string>
     <string name="bottomSession">Session</string>
 
@@ -107,6 +107,14 @@
     <string name="info_orch_loc">Orchard Location</string>
     <string name="info_orch_mass">Bag Mass:</string>
     <string name="info_orch_irig">Irrigation Type:</string>
+    <string-array name="info_orch_irig_options">
+        <item>Micro</item>
+        <item>Drip</item>
+        <item>Floppy</item>
+        <item>Drag Lines</item>
+        <item>Other</item>
+        <item>None (dry land)</item>
+    </string-array>
     <string name="info_orch_date">Date Planted:</string>
     <string name="info_orch_farm">Assigned Farm:</string>
     <string name="info_orch_work">Assigned Workers:</string>
@@ -136,6 +144,8 @@
     <string name="info_work_orchard">Assigned Orchards:</string>
     <string name="info_work_fore_off">Worker</string>
     <string name="info_work_fore_on">Foreman</string>
+
+    <string name="info_none_tip">Press the green plus button at the bottom right to add %1$s</string>
 
     <!-- Strings related to Settings -->
 
@@ -181,6 +191,16 @@
     <string name="pref_account_reAuthAgain">Sign in details incorrect, please try again.</string>
     <string name="pref_account_reAuthCancel">Cancel</string>
     <string name="pref_account_reAuthConfirm">Confirm</string>
+
+    <!--Help Settings-->
+    <string name="pref_help_key">pref_help_key</string>
+    <string name="pref_help_header">Help</string>
+    <string name="pref_help_intro">Restart Introduction</string>
+    <string name="pref_help_intro_key">pref_help_intro_key</string>
+    <string name="pref_help_tutorial">Restart Tutorial</string>
+    <string name="pref_help_tutorial_key">pref_help_tutorial_key</string>
+    <string name="pref_help_man">Open Manual in Browser</string>
+    <string name="pref_help_man_key">pref_help_man_key</string>
 
 
     <!--Strings related to stats-->
@@ -269,6 +289,7 @@
     <string name="stats_popup_delete">Delete</string>
     <string name="stats_popup_cancel">Cancel</string>
 
+    <string name="stats_create_tip">Press \"MAKE NEW GRAPH\" above to begin.</string>
 
 
     <string name="title_activity_sessions">Sessions</string>
@@ -295,9 +316,18 @@
     <string name="sessionDetailTrackingLabelText">TRACKING</string>
     <string name="sessionDetailPerformanceLabelText">WORKER PERFORMANCE SUMMARY</string>
     <string name="delSess">Delete Session</string>
-    <string name="swipe_to_continue">Swipe right to view next slide</string>
+    <string name="swipe_to_continue">Swipe left to view next slide</string>
     <string name="skip">Skip</string>
     <string name="done">Done</string>
+    <string name="thatsAll">That\'s all</string>
+
+    <integer-array name="img_id_arr">
+        <item>@drawable/harvestintro</item>
+        <item>@drawable/harvestmanage</item>
+        <item>@drawable/harvesttrack</item>
+        <item>@drawable/harvestanalyse</item>
+    </integer-array>
+
 
     <!--Country codes for formatting telephone numbers-->
     <string-array name="CountryCodes">

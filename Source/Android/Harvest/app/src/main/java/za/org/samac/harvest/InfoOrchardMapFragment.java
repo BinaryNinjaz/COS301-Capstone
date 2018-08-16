@@ -73,7 +73,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         //Create location provider
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        // Inflate the layout for this fragment
+        // Inflate the uberParentLayout for this fragment
         return inflater.inflate(R.layout.fragment_info_orchard_map, container, false);
     }
 

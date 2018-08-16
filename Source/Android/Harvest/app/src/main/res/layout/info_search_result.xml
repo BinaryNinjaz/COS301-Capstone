@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/info_search_result"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:onClick="onGotoButtClick"
+            android:text="Button"
+            style="@style/Widget.AppCompat.ButtonBar"
+            android:textAlignment="viewStart"
+            android:paddingLeft="8dp"
+            android:textAllCaps="false"
+            android:layout_marginBottom="1dp"/>
+
+        <Button
+            android:id="@+id/info_search_reason"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:onClick="onGotoButtClick"
+            android:text="Reason"
+            style="@style/Widget.AppCompat.ButtonBar"
+            android:textAlignment="viewEnd"
+            android:textAllCaps="false"
+            android:paddingRight="8dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1" />
+
+</LinearLayout>

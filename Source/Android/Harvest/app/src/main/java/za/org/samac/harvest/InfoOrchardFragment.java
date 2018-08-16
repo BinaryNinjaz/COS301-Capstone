@@ -51,7 +51,8 @@ public class InfoOrchardFragment extends Fragment {
     private TextView name;
     private TextView crop;
     private TextView mass;
-    private TextView irig;
+//    private TextView irig;
+    private Spinner irig;
     private TextView dateText;
     private Date date;
     private RecyclerView cRecyclerView;
@@ -72,7 +73,7 @@ public class InfoOrchardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the uberParentLayout for this fragment
         return inflater.inflate(R.layout.fragment_info_orch, container, false);
     }
 
@@ -100,6 +101,9 @@ public class InfoOrchardFragment extends Fragment {
             getView().findViewById(R.id.info_orch_irig_look).setVisibility(View.GONE);
             irig = getView().findViewById(R.id.info_orch_irig_edit);
             irig.setVisibility(View.VISIBLE);
+            ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.info_orch_irig_options, android.R.layout.simple_spinner_item);
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            irig.setAdapter(arrayAdapter);
 
             getView().findViewById(R.id.info_orch_date_look).setVisibility(View.GONE);
             dateText = getView().findViewById(R.id.info_orch_date_edit);
@@ -160,7 +164,10 @@ public class InfoOrchardFragment extends Fragment {
                 getView().findViewById(R.id.info_orch_irig_look).setVisibility(View.GONE);
                 irig = getView().findViewById(R.id.info_orch_irig_edit);
                 irig.setVisibility(View.VISIBLE);
-                irig.setText(orch.getIrrigation());
+                ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.info_orch_irig_options, android.R.layout.simple_spinner_item);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                irig.setAdapter(arrayAdapter);
+                irig.setSelection(arrayAdapter.getPosition(orch.getIrrigation()));
 
                 getView().findViewById(R.id.info_orch_date_look).setVisibility(View.GONE);
                 dateText = getView().findViewById(R.id.info_orch_date_edit);
@@ -349,7 +356,8 @@ public class InfoOrchardFragment extends Fragment {
         if (!mass.getText().toString().equals("")) {
             orch.setMeanBagMass(Float.parseFloat(mass.getText().toString()));
         }
-        orch.setIrrigation(irig.getText().toString());
+//        orch.setIrrigation(irig.selected().toString());
+        orch.setIrrigation(irig.getSelectedItem().toString());
 
         //Date Planted
         Calendar c = Calendar.getInstance();
@@ -390,7 +398,7 @@ public class InfoOrchardFragment extends Fragment {
         if (!temp.equals("")){
             newOrch.setMeanBagMass(Float.parseFloat(temp));
         }
-        newOrch.setIrrigation(irig.getText().toString());
+        newOrch.setIrrigation(irig.getSelectedItem().toString());
 
         //Date Planted
         Calendar c = Calendar.getInstance();

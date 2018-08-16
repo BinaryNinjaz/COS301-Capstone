@@ -3,6 +3,7 @@ package za.org.samac.harvest;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -69,6 +72,8 @@ import za.org.samac.harvest.service.BackgroundService;
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.WorkerComparator;
 
+import static za.org.samac.harvest.R.drawable.rounded_button;
+
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, WorkerRecyclerViewAdapter.OnItemClickListener {
 
     private final int GPS_SETTINGS_UPDATE = 989;
@@ -89,9 +94,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private static RecyclerView recyclerView;//I used recycler view as the grid view duplicated and rearranged worker names
     public static TextView textView;
     private TextView textViewPressStart;
-    public static WorkerRecyclerViewAdapter adapter;
+    private WorkerRecyclerViewAdapter adapter;
     public static LocationManager locationManager;
+    private Location location;
     private FirebaseAuth mAuth;
+    private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
     private double startSessionTime;
@@ -110,13 +117,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private DatabaseReference farmLevelRef;
     public static String sessionKey;
     public static String farmerKey;
-    public static String selectedOrchardKey;
     private boolean isFarmer = true;
+    public static String selectedOrchardKey;
     private ArrayList<String> orchards = new ArrayList<>();
     private ArrayList<String> orchardKeys = new ArrayList<>();
     private BroadcastReceiver locationBroadcastReceiver;
     private Double latitude;
     private Double longitude;
+    ArrayList<String> orchardsForPopUp = new ArrayList<>();
 
     private FirebaseDatabase database;
     //private Query q;
@@ -134,9 +142,58 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init();
 
-        handleLocationServices();
+        if(savedInstanceState == null) {
+            init();
+        }
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        } else {
+            locationEnabled = true;
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+
+            List<String> providers = locationManager.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                location = locationManager.getLastKnownLocation(provider);
+                //Log.d("last known location, provider: %s, location: %s", provider, location);
+
+                if (location != null) {
+                    break;
+                }
+                /*if (bestLocation == null
+                        || location.getAccuracy() < bestLocation.getAccuracy()) {
+                    //Log.d("found best last known location: %s", location);
+                    bestLocation = location;
+                }*/
+            }
+
+            if (location == null) {
+                location = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+                //adapter.setLocation(location);
+            }
+            adapter.setLocation(location);
+        }
+
+        locationPermissions();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationEnabled = true;
+            if (locationManager == null) {
+                locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                if (locationManager != null) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
+                    location = locationManager
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
+                }
+            }
+        }
         //new LocationHelper().getLocation(this);
 
         uid = user.getUid();
@@ -153,41 +210,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         statusCheck();
     }
 
-    public void handleLocationServices() {
-        IntentFilter intentFilter = new IntentFilter(BackgroundService.ACTION_LOCATION_BROADCAST);
-        locationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action != null && action.equals(BackgroundService.ACTION_LOCATION_BROADCAST)) {
-                    if (intent != null) {
-                        double lat = intent.getDoubleExtra("latitude", 0);
-                        double lng = intent.getDoubleExtra("longitude", 0);
-                        Log.i(TAG, "*********************** " + lat + " ; " + lng);
-                        latitude = lat;
-                        longitude = lng;
-                        adapter.setLatLng(lat, lng);
-                    }
-                }
-            }
-        };
-        registerReceiver(locationBroadcastReceiver ,intentFilter);
-
-        locationPermissions();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            stopService(new Intent(getApplicationContext(), BackgroundService.class));
-            Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
-            intent.setAction(BackgroundService.ACTION_LOCATION_UPDATES);
-            startService(intent);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(locationBroadcastReceiver);
-    }
-
     @Override
     public void onResume(){
         super.onResume();
@@ -200,11 +222,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == GPS_SETTINGS_UPDATE) {
-            stopService(new Intent(getApplicationContext(), BackgroundService.class));
-            Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
-            intent.setAction(BackgroundService.ACTION_LOCATION_UPDATES);
-            startService(intent);
-            /*locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             if (locationManager != null) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
@@ -214,15 +232,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     //                                          int[] grantResults)
                     // to handle the case where the user grants the permission. See the documentation
                     // for ActivityCompat#requestPermissions for more details.
-                    //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                             LOCATION_REFRESH_TIME, LOCATION_REFRESH_DISTANCE, mLocationListener);//changed to network provider as GPS wasn't working
-                    //location = locationManager
+                    location = locationManager
                             .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
-
                     return;
                 }
 
-            }*/
+            }
             return;
         }
 
@@ -300,21 +317,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         @Override
                         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                             switch (item.getItemId()) {
-                                        case R.id.actionYieldTracker:
-                                            return true;
-                                        case R.id.actionInformation:
-                                            startActivity(new Intent(MainActivity.this, InformationActivity.class));
-                                            return true;
-                                        case R.id.actionSession:
-                                            startActivity(new Intent(MainActivity.this, Sessions.class));
-                                            return true;
-                                        case R.id.actionStats:
-                                            startActivity(new Intent(MainActivity.this, Stats.class));
-                                            return true;
-                                    }
+                                case R.id.actionYieldTracker:
                                     return true;
-                                }
-                            });
+                                case R.id.actionInformation:
+                                    startActivity(new Intent(MainActivity.this, InformationActivity.class));
+                                    return true;
+                                case R.id.actionSession:
+                                    startActivity(new Intent(MainActivity.this, Sessions.class));
+                                    return true;
+                                case R.id.actionStats:
+                                    startActivity(new Intent(MainActivity.this, Stats.class));
+                                    return true;
+                            }
+                            return true;
+                        }
+                    });
         }
     }
 
@@ -385,28 +402,51 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void getOrchard() {
-
-        CharSequence orchardsSelected[] = orchards.toArray(new CharSequence[orchards.size()]);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select Orchard");
-        builder.setItems(orchardsSelected, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // the user clicked on colors[which]
-                selectedOrchardKey = orchardKeys.get(which);
-                progressBar.setVisibility(View.VISIBLE);
-                collectWorkers();
-                dialog.dismiss();
+        if (orchards.size() == 0) {
+            String msg = "No orchard's created, please add orchards in Information";
+            AlertDialog.Builder dlgAlertIfNoLocation = new AlertDialog.Builder(this);
+            dlgAlertIfNoLocation.setMessage(msg);
+            dlgAlertIfNoLocation.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            dlgAlertIfNoLocation.setCancelable(false);
+            dlgAlertIfNoLocation.create().show();
+        } else {
+            orchardsForPopUp = orchards;
+            if (orchardsForPopUp.contains("All orchards") == false) {
+                orchardsForPopUp.add("All orchards");
             }
-        });
-        builder.show();
+            CharSequence orchardsSelected[] = orchardsForPopUp.toArray(new CharSequence[orchardsForPopUp.size()]);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Select Orchard");
+            builder.setItems(orchardsSelected, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // the user clicked on colors[which]
+                    TextView textViewOrch = findViewById(R.id.textViewOrch);
+                    textViewOrch.setText(new StringBuilder().append("Selected Orchard: ").append(orchardsForPopUp.get(which)).toString());
+                    textViewOrch.setTypeface(null, Typeface.BOLD);
+                    if (orchardsForPopUp.get(which).equals("All orchards")) {
+                        selectedOrchardKey = "-";//all keys should have a minus
+                    } else {
+                        selectedOrchardKey = orchardKeys.get(which);
+                    }
+
+                    progressBar.setVisibility(View.VISIBLE);
+                    collectWorkers();
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+        }
     }
 
     private void getPolygon() {
         DatabaseReference myRef;
         myRef = database.getReference(farmerKey + "/orchards");
-        myRef.addValueEventListener(new ValueEventListener() {
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot child : dataSnapshot.getChildren()){
@@ -430,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void pathAfterGotOrchard(final String path, DatabaseReference myRef2) {
-        myRef2.addValueEventListener(new ValueEventListener() {
+        myRef2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int m = 0;
@@ -454,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         for (int j = 0; j<coords.size(); j++) {
             DatabaseReference myRef3;
             myRef3 = database.getReference(coords.get(j));
-            myRef3.addValueEventListener(new ValueEventListener() {
+            myRef3.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String lat = dataSnapshot.child("lat").getValue().toString();
@@ -495,9 +535,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private Boolean polygonContainsPoint(List<Double> px, List<Double> py) {
         Double pointx = 0.0;
         Double pointy = 0.0;
-        if (BackgroundService.location != null && longitude != null) {
-            pointx = BackgroundService.location.getLatitude();
-            pointy = BackgroundService.location.getLongitude();
+        if (location != null) {
+            pointx = location.getLatitude();
+            pointy = location.getLongitude();
         }
 
         int i = 0;
@@ -653,6 +693,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             To reproduce
             > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
 //        workersRef.addValueEventListener(new ValueEventListener() {
+        workers.clear();
+        workersSearch.clear();
+        adapter.setWorkers(workers);
         workersRef.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -795,7 +838,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 dlgAlertIfNoLocation.setCancelable(false);
                 dlgAlertIfNoLocation.create().show();
             } else {
-                if (latitude != null && longitude != null) {
+                if (location != null) {
                     getOrchard();
                 }
             }
@@ -823,7 +866,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             sessRef.updateChildren(sessionDate);//save data to Firebase
         }
 
-        if (latitude == null && longitude == null && btnStart.getTag() == "green") {
+        if (location == null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.VISIBLE);
             Snackbar.make(recyclerView, "Obtaining GPS Information...", 3000).show();
             recyclerView.setVisibility(View.GONE);
@@ -831,7 +874,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             handler.postDelayed(new Runnable() {
                 public void run() {
                     //do something
-                    if (latitude == null && longitude == null) {
+                    if (location == null) {
 
                     } else {
                         getOrchard();
@@ -862,7 +905,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             recyclerView.setVisibility(View.VISIBLE);
         }
 
-        if (latitude != null && longitude != null && btnStart.getTag() == "green") {
+        if (location != null && btnStart.getTag() == "green") {
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);//only show workers once when location is in
             //start background location services
@@ -874,23 +917,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             trackIndex = 0;
             DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
             Map<String, Object> track = new HashMap<>();
-            track.put("lat", latitude);
-            track.put("lng", longitude);
+            double currentLat = location.getLatitude();
+            double currentLong = location.getLongitude();
+            track.put("lat", currentLat);
+            track.put("lng", currentLong);
             trackRef.updateChildren(track);
+            trackIndex++;
 
             handler.postDelayed(new Runnable() {
                 public void run() {
                     //tracks every 2 minutes
-                    DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
-                    Map<String, Object> track = new HashMap<>();
-                    track.put("lat", latitude);
-                    track.put("lng", longitude);
-                    trackRef.updateChildren(track);
                     if (sessionEnded == true || trackIndex > 0 && btnStart.getTag() == "green") {
                         trackIndex = 0;
-                        trackRef.removeValue();
                         sessionEnded = false;
                         return;//end tracking because session is finished
+                    } else {
+                        DatabaseReference trackRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/track/" + trackIndex + "/");
+                        Map<String, Object> track = new HashMap<>();
+                        double currentLat = location.getLatitude();
+                        double currentLong = location.getLongitude();
+                        track.put("lat", currentLat);
+                        track.put("lng", currentLong);
+                        trackRef.updateChildren(track);
                     }
                     trackIndex++;
 
@@ -920,8 +968,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
 
                             Map<String, Object> coordinates = new HashMap<>();
-                            coordinates.put("lat", latitude);
-                            coordinates.put("lng", longitude);
+                            coordinates.put("lat", location.getLatitude());
+                            coordinates.put("lng", location.getLongitude());
 
                             Map<String, Object> childUpdates = new HashMap<>();
                             childUpdates.put("coord", coordinates);
@@ -964,8 +1012,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     myRef2 = database.getReference(farmerKey + "/locations/" + foremanID);//path to sessions increment in Firebase
 
                                     Map<String, Object> coordinates = new HashMap<>();
-                                    coordinates.put("lat", latitude);
-                                    coordinates.put("lng", longitude);
+                                    coordinates.put("lat", location.getLatitude());
+                                    coordinates.put("lng", location.getLongitude());
 
                                     Map<String, Object> childUpdates = new HashMap<>();
                                     childUpdates.put("coord", coordinates);
@@ -1006,18 +1054,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.setPlusEnabled(true);
             adapter.setMinusEnabled(true);
             track = new HashMap<Integer, Location>(); //used in firebase function
-            track.put(trackCount, BackgroundService.location);
-            //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
+            track.put(trackCount, location);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);//changed from GPS to NETWORK
             startTime = System.currentTimeMillis();
-            btnStart.setBackgroundColor(Color.parseColor("#FFFF8800"));
+            btnStart.setBackgroundResource(R.drawable.rounded_button_orange);
+            btnStart.setDrawingCacheBackgroundColor(Color.parseColor("#FFFF8800"));
+            //btnStart.setBackgroundColor(Color.parseColor("#FFFF8800"));
             btnStart.setText("Stop");
             btnStart.setTag("orange");
         } else {
             //session ended
             sessionEnded = true;
             stopService(new Intent(getApplicationContext(), BackgroundService.class));//stop 2 minute location updates
-            workers.clear();
-            workersSearch.clear();
+
             TextView pressStart = findViewById(R.id.startText);
             pressStart.setText(R.string.pressStart);
 
@@ -1028,11 +1077,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             textViewPressStart.setText(R.string.pressStart);
             progressBar.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
-            String msger = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
+            //String msger = adapter.totalBagsCollected + " bags collected, would you like to save this session?";
+            stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            // do something with time
+            int h = (int) ((elapsedTime / 1000) / 3600);
+            int m = (int) (((elapsedTime / 1000) / 60) % 60);
+            int s = (int) ((elapsedTime / 1000) % 60);
+            //this is the output of the pop up when the user clicks stop (the session)
+            String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
+            String msg = adapter.totalBagsCollected + " bags collected in " + timeTaken;
+            msg = msg + ", would you like to save this session?";
             AlertDialog.Builder dlgAlerter = new AlertDialog.Builder(this);
-            dlgAlerter.setMessage(msger);
+            dlgAlerter.setMessage(msg);
             dlgAlerter.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    adapter.setIncrement();
                     recyclerView.setVisibility(View.GONE);
                     dialog.dismiss();
                 }
@@ -1050,40 +1110,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             dlgAlerter.setCancelable(false);
             dlgAlerter.create().show();
 
-            stopTime = System.currentTimeMillis();
-            long elapsedTime = stopTime - startTime;
-            // do something with time
-            int h = (int) ((elapsedTime / 1000) / 3600);
-            int m = (int) (((elapsedTime / 1000) / 60) % 60);
-            int s = (int) ((elapsedTime / 1000) % 60);
-            //this is the output of the pop up when the user clicks stop (the session)
-            String timeTaken = h + " hour(s), " + m + " minute(s) and " + s + " second(s)";
-            String msg = adapter.totalBagsCollected + " bags collected " + timeTaken + ".";
+            if (locationEnabled) {
+                locationManager.removeUpdates(mLocationListener);
+            }
 
             adapter.totalBagsCollected = 0;//reset total number of bags collected for all workers
             textView.setText("Current Yield: " + adapter.totalBagsCollected);
+            TextView textViewOrch = findViewById(R.id.textViewOrch);
+            textViewOrch.setText(new StringBuilder().append("Selected Orchard: --").toString());
+            textViewOrch.setTypeface(null, Typeface.BOLD);
             for (int i = 0; i < workers.size(); i++) {
                 workers.get(i).setValue(0);
             }
+
+            workers.clear();
+            workersSearch.clear();
             adapter.setPlusEnabled(false);
             adapter.setMinusEnabled(false);
             collections collectionObj = adapter.getCollectionObj();
             collectionObj.sessionEnd();
-            //****writeToFirebase(collectionObj);
-            //pop up is used to show how many bags were collected in the elapsed time
-            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-            dlgAlert.setMessage(msg);
-            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    adapter.setIncrement();
-                    recyclerView.setVisibility(View.GONE);
-                    dialog.dismiss();
-                }
-            });
-            dlgAlert.setCancelable(false);
-            dlgAlert.create().show();
 
-            btnStart.setBackgroundColor(Color.parseColor("#FF0CCB29"));
+            btnStart.setBackgroundResource(R.drawable.rounded_button);
+            btnStart.setDrawingCacheBackgroundColor(Color.parseColor("#FF0CCB29"));
 
             btnStart.setText("Start");
             btnStart.setTag("green");
@@ -1092,8 +1140,32 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public Location getLocation() {
-        return BackgroundService.location;
+        return location;
     }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location locationChange) {
+            location = locationChange;
+            trackCount++;
+            track.put(trackCount, location);
+            adapter.setLocation(location);
+            //recyclerView.setVisibility(View.VISIBLE);
+            //progressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+    };
 
 
     @Override
@@ -1144,5 +1216,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onClick(int value) {
         textView.setText(new StringBuilder().append("Current Yield: ").append(value).toString());
+        textView.setTypeface(null, Typeface.BOLD);
     }
 }

@@ -1,0 +1,16 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/pref_help_key">
+    
+        <Preference
+            android:title="@string/pref_help_intro"
+            android:key="@string/pref_help_intro_key" />
+
+        <Preference
+            android:title="@string/pref_help_tutorial"
+            android:key="@string/pref_help_tutorial_key" />
+
+        <Preference
+            android:title="@string/pref_help_man"
+            android:key="@string/pref_help_man_key" />
+
+</PreferenceScreen>

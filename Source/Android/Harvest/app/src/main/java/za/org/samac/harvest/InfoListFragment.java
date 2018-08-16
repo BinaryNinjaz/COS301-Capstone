@@ -25,6 +25,7 @@ public class InfoListFragment extends Fragment{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private TextView nothing;
     private Category cat = Category.NOTHING;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -37,7 +38,7 @@ public class InfoListFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the uberParentLayout for this fragment
         return inflater.inflate(R.layout.fragment_info_list, container, false);
     }
 
@@ -53,6 +54,9 @@ public class InfoListFragment extends Fragment{
                     }
                 }
         );
+
+        nothing = view.findViewById(R.id.nothingText);
+        nothing.setVisibility(View.GONE);
 
         String catString = "";
         switch (cat){
@@ -82,6 +86,10 @@ public class InfoListFragment extends Fragment{
         else {
             mAdapter = new infoAdapter(data);
             mRecyclerView.setAdapter(mAdapter);
+            if (mAdapter.getItemCount() == 0){
+                nothing.setText(getResources().getString(R.string.info_none_tip, cat.toPluralString()));
+                nothing.setVisibility(View.VISIBLE);
+            }
         }
 
     }
@@ -102,6 +110,10 @@ public class InfoListFragment extends Fragment{
         mSwipeRefreshLayout.setRefreshing(false);
         mAdapter = new infoAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
+        if (mAdapter.getItemCount() == 0){
+            nothing.setText(getResources().getString(R.string.info_none_tip, cat.toPluralString()));
+            nothing.setVisibility(View.VISIBLE);
+        }
     }
 }
 

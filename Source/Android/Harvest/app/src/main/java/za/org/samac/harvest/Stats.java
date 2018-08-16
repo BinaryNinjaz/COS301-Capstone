@@ -143,9 +143,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                Intent openMainActivity= new Intent(Stats.this, MainActivity.class);
-                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivityIfNeeded(openMainActivity, 0);
+                                startActivity(new Intent(Stats.this, MainActivity.class));
                                 return true;
                             case R.id.actionInformation:
                                 startActivity(new Intent(Stats.this, InformationActivity.class));
@@ -384,9 +382,11 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 return;
             case R.id.stats_select_all:
                 stats_selector.checkAllPerhaps(true);
+                ids.addAll(data.extractIDs(data.getThings(stats_selector.getCategory()), stats_selector.getCategory()));
                 return;
             case R.id.stats_select_none:
                 stats_selector.checkAllPerhaps(false);
+                ids.clear();
                 return;
         }
     }
@@ -1142,7 +1142,6 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         }
 
         public static class NotUniqueNameException extends Exception{
-
 
             public NotUniqueNameException(){
 

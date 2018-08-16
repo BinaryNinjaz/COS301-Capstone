@@ -1,10 +1,8 @@
 package za.org.samac.harvest.util;
 
 import android.app.Activity;
-import android.location.Location;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.ViewDebug;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +20,6 @@ import java.util.Stack;
 import java.util.Vector;
 
 import za.org.samac.harvest.Stats;
-import za.org.samac.harvest.InfoListFragment;
 import za.org.samac.harvest.InformationActivity;
 import za.org.samac.harvest.Sessions;
 
@@ -66,7 +63,6 @@ public class Data {
 
     private static boolean needsPull = true;
 
-
     private Activity act = null;
 
     /**
@@ -95,6 +91,10 @@ public class Data {
 
     public static boolean isPulling() {
         return pulling;
+    }
+
+    public static void forceNextPull(){
+        needsPull = true;
     }
 
     /**
@@ -339,7 +339,7 @@ public class Data {
                     ((Stats) act).pullDone();
                 }
                 else if (act.getClass() == Sessions.class){
-                    ((Sessions) act).getNewPage();
+                    ((Sessions) act).pullDone();
                 }
             }
         }
@@ -841,11 +841,15 @@ public class Data {
     public List<DBInfoObject> getThings(Category category){
         List<DBInfoObject> result = new ArrayList<>();
         switch (category){
-            case ORCHARD:
+            case NAV:
+                result.addAll(getFarms());
                 result.addAll(getOrchards());
-                break;
+                result.addAll(getWorkers());
             case FARM:
                 result.addAll(getFarms());
+                break;
+            case ORCHARD:
+                result.addAll(getOrchards());
                 break;
             default:
                 result.addAll(getWorkers());
@@ -902,6 +906,32 @@ public class Data {
         changes.Add(Category.WORKER, addMe.getfID());
     }
 
+    public List<String> extractIDs(List<DBInfoObject> list, Category category){
+        List<String> ids = new ArrayList<String>();
+
+        if (category == Category.WORKER){
+            for (DBInfoObject item : list){
+                if (((Worker) item).getWorkerType() == WorkerType.WORKER) {
+                    ids.add(item.ID);
+                }
+            }
+        }
+        else if (category == Category.FOREMAN){
+            for (DBInfoObject item : list){
+                if (((Worker) item).getWorkerType() == WorkerType.FOREMAN) {
+                    ids.add(item.ID);
+                }
+            }
+        }
+        else {
+            for (DBInfoObject item : list){
+                ids.add(item.ID);
+            }
+        }
+
+        return ids;
+    }
+
     /**
      * Populate the data's given category list with the given list.
      *  Format of string is {id, name, [surname]}
@@ -934,6 +964,32 @@ public class Data {
                     return;
             }
         }
+    }
+
+    public List<DBInfoObject> search(String query, Category category){
+        List<DBInfoObject> result = new ArrayList<>();
+        if (category == Category.NAV || category == Category.FARM) {
+            for (Farm farm : farms) {
+                if (farm.toString().toLowerCase().contains(query.toLowerCase())) {
+                    result.add(farm);
+                }
+            }
+        }
+        if (category == Category.NAV || category == Category.ORCHARD) {
+            for (Orchard orchard : orchards) {
+                if (orchard.toString().toLowerCase().contains(query.toLowerCase())) {
+                    result.add(orchard);
+                }
+            }
+        }
+        if (category == Category.NAV || category == Category.WORKER) {
+            for (Worker worker : workers) {
+                if (worker.toString().toLowerCase().contains(query.toLowerCase())) {
+                    result.add(worker);
+                }
+            }
+        }
+        return result;
     }
 
 

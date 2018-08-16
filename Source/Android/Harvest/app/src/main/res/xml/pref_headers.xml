@@ -6,4 +6,8 @@
         android:fragment="za.org.samac.harvest.SettingsActivity$AccountPreferenceFragment"
         android:title="@string/pref_header_account" />
 
+    <header
+        android:fragment="za.org.samac.harvest.SettingsActivity$HelpPreferenceFragment"
+        android:title="@string/pref_help_header" />
+
 </preference-headers>

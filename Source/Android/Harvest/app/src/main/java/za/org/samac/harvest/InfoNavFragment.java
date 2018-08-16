@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 
@@ -17,9 +18,9 @@ import java.io.File;
 
 public class InfoNavFragment extends Fragment {
 
-    private ImageView farmPic = null;
-    private ImageView orchardsPic =  null;
-    private ImageView workersPic =  null;
+    private RelativeLayout farmPic = null;
+    private RelativeLayout orchardsPic =  null;
+    private RelativeLayout workersPic =  null;
 
     public InfoNavFragment() {
         // Required empty public constructor
@@ -30,7 +31,7 @@ public class InfoNavFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_info_nav, container, false);
 
-        String fileName = "agriculturebarnbuildings.jpg";
+        /*String fileName = "agriculturebarnbuildings.jpg";
         String completePath = Environment.getExternalStorageDirectory() + "/" + fileName;
 
         File file = new File(completePath);
@@ -62,9 +63,9 @@ public class InfoNavFragment extends Fragment {
 
         Glide.with(InfoNavFragment.this)
                 .load(imageUri)
-                .into(workersPic);
+                .into(workersPic);*/
 
-        // Inflate the layout for this fragment
+        // Inflate the uberParentLayout for this fragment
         return inflater.inflate(R.layout.fragment_info_nav, container, false);
     }
 

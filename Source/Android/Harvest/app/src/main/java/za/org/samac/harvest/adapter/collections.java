@@ -22,26 +22,26 @@ public class collections {
         track = new ArrayList<>();
     }
 
-    public void addCollection(String workerName, Double lat, Double lng){
+    public void addCollection(String workerName, Location location){
         if(individualCollections.containsKey(workerName)) {
             MyData data = individualCollections.get(workerName);
-            data.addLocation(lat, lng);
+            data.addLocation(location);
             individualCollections.put(workerName, data);
         }else {
             MyData data = new MyData();
-            data.addLocation(lat, lng);
+            data.addLocation(location);
             individualCollections.put(workerName, data);
         }
     }
 
-    public void addCollection(String workerName, Double lat, Double lng, Double date){
+    public void addCollection(String workerName, Location location, Double date){
         if(individualCollections.containsKey(workerName)) {
             MyData data = individualCollections.get(workerName);
-            data.addLocation(lat, lng, date);
+            data.addLocation(location, date);
             individualCollections.put(workerName, data);
         }else {
             MyData data = new MyData();
-            data.addLocation(lat, lng, date);
+            data.addLocation(location, date);
             individualCollections.put(workerName, data);
         }
     }

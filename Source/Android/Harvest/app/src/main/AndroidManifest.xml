@@ -74,7 +74,9 @@
             android:name=".Stats_Graph"
             android:label="@string/title_stats"
             android:launchMode="singleTop"
-            android:parentActivityName=".Stats">
+            android:parentActivityName=".Stats"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Stats" />
@@ -112,6 +114,7 @@
                 android:value=".Sessions" />
         </activity>
         <activity android:name=".ViewFlipperActivity" />
+        <activity android:name=".IntroViewFlipper" />
 
     </application>
 

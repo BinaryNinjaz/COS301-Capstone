@@ -107,7 +107,7 @@ public class SessionItem {
         Worker foremanObj = workerWithId(foremen, foremanId);
         
         if (foremanObj != null) {
-            for (SearchedItem searchedItem : foremanObj.search(text)) {
+            for (SearchedItem searchedItem : foremanObj.search(text, true)) {
                 result.add(new SearchedItem("Foreman " + searchedItem.property, searchedItem.reason));
             }
         }
@@ -116,7 +116,7 @@ public class SessionItem {
             Worker w = workerWithId(workers, workerId);
             System.out.println(w);
             if (w != null) {
-                for (SearchedItem searchedItem : w.search(text)) {
+                for (SearchedItem searchedItem : w.search(text, true)) {
                     result.add(new SearchedItem("Worker " + searchedItem.property, searchedItem.reason));
                 }
             }
@@ -127,7 +127,7 @@ public class SessionItem {
                 Orchard o = orchardAtPoint(orchards, point.lat, point.lng);
                 if (o != null && !orchardsContainsOrchard(orchardsForSession, o)) {
                     orchardsForSession.add(o);
-                    for (SearchedItem searchedItem : o.search(text)) {
+                    for (SearchedItem searchedItem : o.search(text, true)) {
                         result.add(new SearchedItem("Orchard " + searchedItem.property, searchedItem.reason));
                     }
                 }

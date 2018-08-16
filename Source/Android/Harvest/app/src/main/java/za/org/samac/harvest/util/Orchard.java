@@ -137,17 +137,21 @@ public class Orchard extends DBInfoObject {
         return null;
     }
 
-    public ArrayList<SearchedItem> search(String text) {
+    public ArrayList<SearchedItem> search(String text, boolean searchName) {
         ArrayList<SearchedItem> result = new ArrayList<>();
 
         text = text.toLowerCase();
 
-        for (SearchedItem item : assignedFarm.search(text)) {
-            result.add(new SearchedItem("Farm " + item.property, item.reason));
+        if (assignedFarm != null) {
+            for (SearchedItem item : assignedFarm.search(text, true)) {
+                result.add(new SearchedItem("Farm " + item.property, item.reason));
+            }
         }
 
-        if ((getName()).toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Name", getName()));
+        if (searchName) {
+            if ((getName()).toLowerCase().contains(text)) {
+                result.add(new SearchedItem("Name", getName()));
+            }
         }
 
         if (getCrop().toLowerCase().contains(text)) {

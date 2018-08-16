@@ -27,12 +27,15 @@
                     android:orientation="vertical">
 
                 <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/buttFarms"
                     app:cardCornerRadius="10dp"
                     app:elevation="3dp"
                     style="@style/cardPictureButton"
                     android:tag="farms"
-                    android:onClick="onInfoNavButtClick">
+                    android:onClick="onInfoNavButtClick"
+                    card_view:cardBackgroundColor="@android:color/transparent">
 
                     <LinearLayout
                         android:background="@android:color/transparent"
@@ -40,25 +43,27 @@
                         android:focusable="false"
                         style="@style/cardPictureButtonLayout">
 
-                        <ImageView
-                            android:id="@+id/farmPic"
-                            android:clickable="false"
-                            android:focusable="false"
-                            android:src="@drawable/agriculturebarnbuildings"
-                            android:scaleType="centerCrop"
-                            android:layout_weight="8"
+                        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:tools="http://schemas.android.com/tools"
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:contentDescription="@string/infoFarms" />
+                            android:layout_height="match_parent"
+                            android:background="@drawable/agriculturebarnbuildings"
+                            tools:context="com.alvinalexander.motify.LandingPageActivity.ShowFullQuoteFragment"
+                            android:id="@+id/farmPic">
 
-                        <TextView
-                            android:background="#07000000"
-                            android:gravity="center"
-                            android:text="@string/infoFarms"
-                            android:layout_weight="2"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp" />
+                            <TextView
+                                android:text="@string/infoFarms"
+                                android:textSize="30dp"
+                                android:textAlignment="viewEnd"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:gravity="bottom"
+                                android:padding="3dp"
+                                android:background="#ddffffff"
+                                android:alpha="0.8"
+                                android:layout_alignParentBottom="true"/>
 
+                        </RelativeLayout>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
@@ -76,25 +81,27 @@
                         android:focusable="false"
                         style="@style/cardPictureButtonLayout">
 
-                        <ImageView
-                            android:id="@+id/orchardsPic"
-                            android:clickable="false"
-                            android:focusable="false"
-                            android:src="@drawable/nutsontreethree"
-                            android:scaleType="centerCrop"
-                            android:layout_weight="8"
+                        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:tools="http://schemas.android.com/tools"
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:contentDescription="@string/infoOrchards" />
+                            android:layout_height="match_parent"
+                            android:background="@drawable/nutsontreethree"
+                            tools:context="com.alvinalexander.motify.LandingPageActivity.ShowFullQuoteFragment"
+                            android:id="@+id/orchardsPic">
 
-                        <TextView
-                            android:background="#07000000"
-                            android:gravity="center"
-                            android:text="@string/infoOrchards"
-                            android:layout_weight="2"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp" />
+                            <TextView
+                                android:text="@string/infoOrchards"
+                                android:textSize="30dp"
+                                android:textAlignment="viewEnd"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:gravity="bottom"
+                                android:padding="3dp"
+                                android:background="#ddffffff"
+                                android:alpha="0.8"
+                                android:layout_alignParentBottom="true"/>
 
+                        </RelativeLayout>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
@@ -112,25 +119,28 @@
                         android:focusable="false"
                         style="@style/cardPictureButtonLayout">
 
-                        <ImageView
-                            android:id="@+id/workersPic"
-                            android:clickable="false"
-                            android:focusable="false"
-                            android:src="@drawable/nih"
-                            android:scaleType="centerCrop"
-                            android:layout_weight="8"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:contentDescription="@string/infoWorkers" />
 
-                        <TextView
-                            android:background="#07000000"
-                            android:gravity="center"
-                            android:text="@string/infoWorkers"
-                            android:layout_weight="2"
+                        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:tools="http://schemas.android.com/tools"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp" />
+                            android:layout_height="match_parent"
+                            android:background="@drawable/nih"
+                            tools:context="com.alvinalexander.motify.LandingPageActivity.ShowFullQuoteFragment"
+                            android:id="@+id/workersPic">
 
+                            <TextView
+                                android:text="@string/infoWorkers"
+                                android:textSize="30dp"
+                                android:textAlignment="viewEnd"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:gravity="bottom"
+                                android:padding="3dp"
+                                android:background="#ddffffff"
+                                android:alpha="0.8"
+                                android:layout_alignParentBottom="true"/>
+
+                        </RelativeLayout>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 </LinearLayout>

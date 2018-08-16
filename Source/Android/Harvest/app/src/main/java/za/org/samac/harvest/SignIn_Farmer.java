@@ -59,6 +59,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.Data;
 
 /**
  * A login screen that offers login via email/password.
@@ -279,9 +280,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
-                                    startActivity(intent);
-                                    finish();//kill current Activity
+                                    startMain();
                                 }
                             }, 1500);
                         } else {
@@ -310,6 +309,13 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
 
     }
 
+    private void startMain(){
+        Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
+        startActivity(intent);
+        finish();//kill current Activity
+        Data.forceNextPull();
+    }
+
     private void signInToAccount(String email, String password) {
         Log.d(TAG, "signInToAccount:" + email);
         login_form.setVisibility(View.INVISIBLE);
@@ -336,9 +342,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
-                                    startActivity(intent);
-                                    finish();//kill current Activity
+                                    startMain();
                                 }
                             }, 1500);
                         } else {
