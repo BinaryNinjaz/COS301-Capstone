@@ -18,18 +18,11 @@ class MainTabBarViewController: UITabBarController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    HarvestDB.checkLocationRequested { locRequested in
-      LocationTracker.shared.requestLocation(wantsLocation: locRequested)
-    }
-    
-    HarvestDB.listenLocationRequested { locRequested in
-      LocationTracker.shared.requestLocation(wantsLocation: locRequested)
-    }
-    
     Entities.shared.start()
     
     if !UserDefaults.standard.bool(forKey: HarvestUser.current.uid + "SignedIn") {
       UserDefaults.standard.set(true, forKey: HarvestUser.current.uid + "SignedIn")
+      StatStore.shared.setUpPredefinedGraphs()
       let vc = storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
       if let avc = vc as? CarouselViewController {
         avc.showTutorial()

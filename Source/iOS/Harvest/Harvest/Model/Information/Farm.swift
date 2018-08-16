@@ -43,6 +43,19 @@ final class Farm: Codable {
     ]]
   }
   
+  func makeChangesPermanent() {
+    if let t = tempory {
+      name = t.name
+      companyName = t.companyName
+      email = t.email
+      contactNumber = t.contactNumber
+      province = t.province
+      nearestTown = t.nearestTown
+      details = t.details
+      tempory = nil
+    }
+  }
+  
   func search(for text: String) -> [(String, String)] {
     var result = [(String, String)]()
     
