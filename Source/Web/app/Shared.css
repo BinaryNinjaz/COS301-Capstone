@@ -51,7 +51,10 @@ p, span {
 
 body{
     font-family: Sans-Serif;	
-    background-color: #4E342E;
+    background-image: url("back2Smaller.jpg");
+    background-repeat: no-repeat;  
+    background-size: cover;  
     display: block;
-    overflow: auto;    
+    background-origin: center;
+    background-attachment: fixed;  
 }
