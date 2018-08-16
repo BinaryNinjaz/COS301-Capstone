@@ -20,13 +20,18 @@
 
 .scrollView h4 {
   padding: 4px;
-  color: color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: -8px;
+}
+
+.detailsView h2 {
+  padding: 4px;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .searchReason {
   text-align: right;
-  color: color: rgba(196, 196, 196, 0.9);
+  color: rgba(196, 196, 196, 0.9);
 }
 
 .detailsView {
@@ -40,6 +45,11 @@
   margin-right: -16px;
 }
 
+.detailsView .formButton {
+  margin-top: -4px;
+  margin-bottom: 8px;
+}
+
 label {
   color: whitesmoke;
 }
@@ -48,14 +58,9 @@ p, span {
   color: rgb(198, 198, 198);
 }
 
-
 body{
-    font-family: Sans-Serif;	
-    background-image: url("back2Smaller.jpg");
-    background-repeat: no-repeat;  
-    background-size: cover;  
-    display: block;   
-
-    background-origin: center;
-background-attachment: fixed;
+    font-family: Sans-Serif;
+    background-color: #795548;
+    display: block;
+    overflow: auto;
 }
