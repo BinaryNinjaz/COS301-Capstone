@@ -30,17 +30,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O4N-TZ-dJ7">
-                                            <rect key="frame" x="8" y="593" width="359" height="40"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                            <state key="normal" title="Don't Have An Account?">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
-                                            <connections>
-                                                <segue destination="wzz-PV-SJ5" kind="show" id="ZiY-Pa-ATt"/>
-                                            </connections>
-                                        </button>
                                         <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wsK-1g-2fP">
                                             <rect key="frame" x="8" y="172" width="359" height="136"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -60,7 +49,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="359" height="42"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
-                                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Farmer Sign In" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LL2-lU-boh">
+                                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Farmer Section" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LL2-lU-boh">
                                                                 <rect key="frame" x="8" y="8" width="343" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
@@ -93,7 +82,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="359" height="42"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
-                                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Foreman Sign In" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yap-YA-eLK">
+                                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Foreman Section" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yap-YA-eLK">
                                                                 <rect key="frame" x="8" y="8" width="343" height="26"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
@@ -131,6 +120,18 @@
                                 </view>
                                 <blurEffect style="regular"/>
                             </visualEffectView>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ryy-ZI-G7b">
+                                <rect key="frame" x="16" y="600" width="343" height="36"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="Don't Have An Account?">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <segue destination="wzz-PV-SJ5" kind="show" id="942-HW-BHk"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="cq3-uc-Ngi"/>
@@ -138,7 +139,7 @@
                     <connections>
                         <outlet property="farmerSignInButton" destination="wsK-1g-2fP" id="gjR-JI-4Hd"/>
                         <outlet property="foremanSignInButton" destination="7ZS-dy-OAw" id="H64-TA-qQm"/>
-                        <outlet property="signUpButton" destination="O4N-TZ-dJ7" id="Ewl-X7-PbN"/>
+                        <outlet property="signUpButton" destination="Ryy-ZI-G7b" id="tPO-wT-bWy"/>
                         <outlet property="titleVisualEffectView" destination="OId-ks-kFe" id="7cc-BT-IVa"/>
                     </connections>
                 </viewController>
@@ -350,7 +351,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="190" y="54"/>
+            <point key="canvasLocation" x="189.59999999999999" y="53.523238380809602"/>
         </scene>
         <!--Foreman Sign In View Controller-->
         <scene sceneID="QRg-gl-2fW">
@@ -583,14 +584,15 @@
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OPr-DU-HRK">
-                                <rect key="frame" x="0.0" y="587" width="375" height="80"/>
+                                <rect key="frame" x="0.0" y="569" width="375" height="98"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="N3y-0D-b8p">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="98"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u1Z-oz-y3x">
-                                            <rect key="frame" x="8" y="42" width="175" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <rect key="frame" x="8" y="60" width="175" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="0.0" green="0.70854275170000003" blue="0.28617075079999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" title="Remove All">
                                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             </state>
@@ -598,16 +600,17 @@
                                                 <action selector="removeAllCoords:" destination="093-0Y-SHj" eventType="touchUpInside" id="BVI-0W-Y9L"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hold each corner of the field" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="APc-qa-jGg">
-                                            <rect key="frame" x="8" y="8" width="359" height="26"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tap and hold to place a point. Repeat for each corner of the field." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="APc-qa-jGg">
+                                            <rect key="frame" x="8" y="8" width="359" height="44"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.16290088820000001" green="0.72999999999999998" blue="0.36074126299999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5CS-PE-hjW">
-                                            <rect key="frame" x="191" y="42" width="175" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <rect key="frame" x="192" y="60" width="175" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" title="Remove Last Point">
                                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             </state>
@@ -618,24 +621,25 @@
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="tls-oK-N0y"/>
+                                    <constraint firstAttribute="height" constant="98" id="tls-oK-N0y"/>
                                 </constraints>
                                 <blurEffect style="prominent"/>
                             </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="hZg-Cq-gaK" secondAttribute="trailing" constant="-16" id="25q-lA-PZZ"/>
-                            <constraint firstItem="hZg-Cq-gaK" firstAttribute="leading" secondItem="PHT-cc-rgE" secondAttribute="leadingMargin" constant="-16" id="As7-gs-dp6"/>
+                            <constraint firstItem="wEx-BZ-8Uz" firstAttribute="trailing" secondItem="hZg-Cq-gaK" secondAttribute="trailing" id="25q-lA-PZZ"/>
+                            <constraint firstItem="hZg-Cq-gaK" firstAttribute="leading" secondItem="wEx-BZ-8Uz" secondAttribute="leading" id="As7-gs-dp6"/>
                             <constraint firstAttribute="bottomMargin" secondItem="hZg-Cq-gaK" secondAttribute="bottom" id="Xpm-1A-Wed"/>
                             <constraint firstItem="OPr-DU-HRK" firstAttribute="leading" secondItem="wEx-BZ-8Uz" secondAttribute="leading" id="aFK-cK-9jx"/>
-                            <constraint firstItem="hZg-Cq-gaK" firstAttribute="top" secondItem="PHT-cc-rgE" secondAttribute="topMargin" constant="-20" id="cHh-4k-h8t"/>
+                            <constraint firstItem="hZg-Cq-gaK" firstAttribute="top" secondItem="PHT-cc-rgE" secondAttribute="top" id="cHh-4k-h8t"/>
                             <constraint firstItem="OPr-DU-HRK" firstAttribute="bottom" secondItem="wEx-BZ-8Uz" secondAttribute="bottom" id="hjP-CN-bUp"/>
                             <constraint firstItem="wEx-BZ-8Uz" firstAttribute="trailing" secondItem="OPr-DU-HRK" secondAttribute="trailing" id="osH-C1-NWx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wEx-BZ-8Uz"/>
                     </view>
                     <connections>
+                        <outlet property="instructionLabel" destination="APc-qa-jGg" id="ojj-pH-LSc"/>
                         <outlet property="mapView" destination="hZg-Cq-gaK" id="xOw-sK-eIv"/>
                         <outlet property="removeAllButton" destination="u1Z-oz-y3x" id="6ja-ot-Gwi"/>
                         <outlet property="removeLastButton" destination="5CS-PE-hjW" id="ZL8-WR-Bgc"/>
@@ -643,7 +647,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2eA-wC-zae" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2990" y="-664"/>
+            <point key="canvasLocation" x="2989.5999999999999" y="-664.31784107946032"/>
         </scene>
         <!--Stat Entity Selection View Controller-->
         <scene sceneID="vwx-1A-lRy">
@@ -834,11 +838,11 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kR4-Uf-yut">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="kR4-Uf-yut">
                                             <rect key="frame" x="80" y="8" width="287" height="64"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <string key="text">Current Yield: 0
-Expected Yield: 0</string>
+Select Orchard: Apple Farm - Block A</string>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -895,7 +899,7 @@ Expected Yield: 0</string>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gY2-33-92o"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Yield Tracker" image="Add" id="i4D-U6-cRY"/>
+                    <tabBarItem key="tabBarItem" title="Yield Collector" image="Add" id="i4D-U6-cRY"/>
                     <connections>
                         <outlet property="infoEffectView" destination="NUJ-f3-gPy" id="ep3-q2-pjl"/>
                         <outlet property="searchBar" destination="8FH-FL-a95" id="lAQ-ee-WXo"/>
@@ -1112,7 +1116,7 @@ Expected Yield: 0</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                     <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                                                 </textField>
-                                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Organization Name" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="ben-Tb-cMv">
+                                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Organisation Name" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="ben-Tb-cMv">
                                                     <rect key="frame" x="0.0" y="122" width="343" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <nil key="textColor"/>
@@ -1560,7 +1564,7 @@ Expected Yield: 0</string>
         <image name="Location" width="30" height="30"/>
         <image name="Sessions" width="5616" height="3744"/>
         <image name="Settings" width="30" height="30"/>
-        <image name="SignUpBackground" width="8192" height="3470"/>
+        <image name="SignUpBackground" width="940" height="496"/>
         <image name="Stats" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>

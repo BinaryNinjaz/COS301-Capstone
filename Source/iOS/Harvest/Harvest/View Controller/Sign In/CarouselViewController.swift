@@ -100,7 +100,6 @@ class CarouselViewController: UIViewController, FSPagerViewDataSource, FSPagerVi
   func completeIntro() {
     if !UserDefaults.standard.bool(forKey: "Launched") {
       UserDefaults.standard.set(true, forKey: "Launched")
-      StatStore.shared.setUpPredefinedGraphs()
     }
     
     dismiss(animated: true, completion: nil)

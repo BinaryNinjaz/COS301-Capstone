@@ -33,6 +33,10 @@ class TrackerViewController: UIViewController {
   }
   var filteredWorkers: [Worker] {
     return workers.filter { (worker) -> Bool in
+      if sessionOrchards.contains("Select All") {
+        return true
+      }
+      
       if !sessionOrchards.isEmpty
       && !worker.assignedOrchards.contains(where: { sessionOrchards.contains($0) }) {
         return false
@@ -60,7 +64,7 @@ class TrackerViewController: UIViewController {
     return (startSessionButton?.frame.width ?? 10) / 2
   }
   
-  fileprivate func finishCollecting() {
+  fileprivate func endCollecting() {
     locationManager?.stopUpdatingLocation()
     
     startSessionButton?.setTitle("Start", for: .normal)
@@ -69,28 +73,24 @@ class TrackerViewController: UIViewController {
                                                 cornerRadius: startButtonCornerRadius,
                                                 borderColor: [UIColor].startSession[1])
     startSessionButton?.apply(gradient: sessionLayer)
-    tracker?.storeSession()
     
-    tracker = nil
     searchBar?.isUserInteractionEnabled = false
+    
+    sessionOrchards = []
+    yieldLabel?.attributedText = attributedStringForYieldCollection(0)
     
     workerCollectionView?.reloadData()
   }
   
+  fileprivate func finishCollecting() {
+    endCollecting()
+    tracker?.storeSession()
+    tracker = nil
+  }
+  
   fileprivate func discardCollections() {
-    self.locationManager?.stopUpdatingLocation()
-    
-    self.startSessionButton?.setTitle("Start", for: .normal)
-    let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
-                                                locations: [0, 1],
-                                                cornerRadius: startButtonCornerRadius,
-                                                borderColor: [UIColor].startSession[1])
-    self.startSessionButton?.apply(gradient: sessionLayer)
-    
-    self.tracker = nil
-    self.searchBar?.isUserInteractionEnabled = false
-    
-    self.workerCollectionView?.reloadData()
+    endCollecting()
+    tracker = nil
   }
   
   fileprivate func presentYieldCollection() {
@@ -185,11 +185,32 @@ class TrackerViewController: UIViewController {
       }
       alert.addAction(action)
     }
+    let action = UIAlertAction(
+      title: "Select All",
+      style: .default) { (_) in
+        self.sessionOrchards.removeAll()
+        self.sessionOrchards.append("Select All")
+        self.workerCollectionView?.reloadData()
+        self.yieldLabel?.attributedText = self
+          .attributedStringForYieldCollection(self.tracker?.totalCollected() ?? 0)
+        completion()
+    }
+    alert.addAction(action)
     let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
     alert.addAction(cancel)
     alert.popoverPresentationController?.sourceView = yieldLabel
     
-    present(alert, animated: true, completion: nil)
+    if Entities.shared.orchards.isEmpty {
+      let notice = SCLAlertView()
+      
+      notice.showEdit(
+        "No Orchards",
+        subTitle: """
+        You have not added any orchards. Please add orchards in 'Information' before using the yield collector.
+        """)
+    } else {
+      present(alert, animated: true, completion: nil)
+    }
   }
   
   @IBAction func startSession(_ sender: Any) {
@@ -198,6 +219,14 @@ class TrackerViewController: UIViewController {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         locationManager?.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+      }
+      
+      HarvestDB.checkLocationRequested { locRequested in
+        LocationTracker.shared.requestLocation(wantsLocation: locRequested)
+      }
+      
+      HarvestDB.listenLocationRequested { locRequested in
+        LocationTracker.shared.requestLocation(wantsLocation: locRequested)
       }
       
       locationManager?.requestAlwaysAuthorization()
@@ -518,9 +547,18 @@ extension TrackerViewController: UICollectionViewDataSource {
   }
 }
 
-extension TrackerViewController: UICollectionViewDelegate {
-  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+extension TrackerViewController {
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
     
+    self.startSessionButton?.setOriginX(view.layoutMargins.left + 8)
+    
+    let fullWidth = self.infoEffectView.frame.width
+    let startWidth = self.startSessionButton?.frame.width ?? 0.0
+    let startLeft = self.startSessionButton?.frame.origin.x ?? 0.0
+    
+    self.yieldLabel?.setWidth(fullWidth - startWidth - startLeft - 16)
+    self.yieldLabel?.setOriginX(startLeft + 8 + startWidth)
   }
 }
 

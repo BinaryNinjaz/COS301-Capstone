@@ -59,17 +59,19 @@ public final class EntityViewController: ReloadableFormViewController, TypedRowC
     switch entity {
     case let .farm(f) where f.tempory != nil:
       HarvestDB.save(farm: f.tempory!)
+      f.makeChangesPermanent()
       SCLAlertView.showSuccessToast(message: "Farm Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .orchard(o) where o.tempory != nil:
       HarvestDB.save(orchard: o.tempory!)
+      o.makeChangesPermanent()
       SCLAlertView.showSuccessToast(message: "Orchard Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       
     case let .worker(w) where w.tempory != nil:
-      HarvestDB.save(worker: w.tempory!, oldNumber: w.phoneNumber)
-      w.phoneNumber = w.tempory!.phoneNumber
+      HarvestDB.save(worker: w.tempory!, oldWorker: w)
+      w.makeChangesPermanent()
       SCLAlertView.showSuccessToast(message: "Worker Saved")
       self.navigationItem.rightBarButtonItem?.isEnabled = false
       

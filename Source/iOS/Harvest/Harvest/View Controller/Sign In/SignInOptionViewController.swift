@@ -13,10 +13,10 @@ import Disk
 import SCLAlertView
 
 class SignInOptionViewController: UIViewController {
-  @IBOutlet weak var signUpButton: UIButton!
   @IBOutlet weak var farmerSignInButton: UIView!
   @IBOutlet weak var foremanSignInButton: UIView!
   @IBOutlet weak var titleVisualEffectView: UIVisualEffectView!
+  @IBOutlet weak var signUpButton: UIButton!
   
   func mainViewToPresent() -> UIViewController? {
     let result = storyboard?
@@ -50,8 +50,6 @@ class SignInOptionViewController: UIViewController {
       return
     }
     
-    signUpButton.apply(gradient: .signUpButton)
-    
     if let user = Auth.auth().currentUser {
       HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor { succ in
         if succ, let vc = self.mainViewToPresent() {
@@ -77,7 +75,9 @@ class SignInOptionViewController: UIViewController {
   }
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    return UIInterfaceOrientationMask.portrait
+    return UIDevice.current.userInterfaceIdiom == .phone
+      ? .portrait
+      : .all
   }
   
   override var prefersStatusBarHidden: Bool {

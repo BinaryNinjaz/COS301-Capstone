@@ -64,6 +64,19 @@ final class Worker {
     ]]
   }
   
+  func makeChangesPermanent() {
+    if let t = tempory {
+      firstname = t.firstname
+      lastname = t.lastname
+      assignedOrchards = t.assignedOrchards
+      details = t.details
+      kind = t.kind
+      phoneNumber = t.phoneNumber
+      idNumber = t.idNumber
+      tempory = nil
+    }
+  }
+  
   convenience init(_ user: HarvestUser) {
     self.init(json: ["name": "Farm Owner"], id: user.uid)
   }
@@ -143,6 +156,11 @@ extension Worker: Hashable {
 
 extension Worker: CustomStringConvertible {
   var description: String {
-    return name
+    let samePeople = Entities.shared.workers.filter { $0.value.name == name && $0.value.id != id }
+    if samePeople.count > 0 {
+      return name + " (" + (idNumber != "" ? idNumber : id) + ")"
+    } else {
+      return name
+    }
   }
 }

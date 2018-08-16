@@ -36,8 +36,9 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     let welcomeScreenRow = ButtonRow { row in
       row.title = "Welcome Screen"
     }.onCellSelection { _, _ in
-      let vc = self.storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
-      let avc = vc as! CarouselViewController
+      let avc = self
+        .storyboard?
+        .instantiateViewController(withIdentifier: "carouselViewController") as! CarouselViewController
       avc.showIntro()
       
       self.present(avc, animated: true, completion: nil)
@@ -46,60 +47,15 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     let tutorialScreenRow = ButtonRow { row in
       row.title = "Tutorial"
     }.onCellSelection { _, _ in
-      let vc = self.storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
-      let avc = vc as! CarouselViewController
+      let avc = self
+        .storyboard?
+        .instantiateViewController(withIdentifier: "carouselViewController") as! CarouselViewController
       avc.showTutorial()
       
       self.present(avc, animated: true, completion: nil)
     }
     
-    let userManualRow = ButtonRow { row in
-      row.title = "User Manual"
-    }.onCellSelection { _, _ in
-      let vc = self.storyboard?.instantiateViewController(withIdentifier: "pdfViewController")
-      let pvc = vc as! PDFViewController
-      pvc.loadPDF(named: "HarvestUserManual")
-      
-//      self.navigationController?.present(pvc, animated: true, completion: nil)
-      self.navigationController?.pushViewController(pvc, animated: true)
-//      self.present(pvc, animated: true, completion: nil)
-    }
-    
     userSection(form: form)
-    
-    if HarvestUser.current.workingForID.isEmpty { // is farmer
-      form
-        +++ Section("Help")
-        <<< tutorialScreenRow
-        <<< userManualRow
-        <<< welcomeScreenRow
-      
-    } else { // is foreman
-      form
-        +++ Section("Help")
-        <<< tutorialScreenRow
-    }
-  }
-  
-  func userSection(form: Form) {
-    let userRow = HarvestUser.current.accountIdentifier
-    
-    let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
-      row.title = "Admin"
-    }
-    
-    let logoutRow = ButtonRow { row in
-      row.title = "Logout"
-    }.onCellSelection { (_, _) in
-      HarvestDB.signOut { w in
-        if w,
-          let vc = self
-            .storyboard?
-            .instantiateViewController(withIdentifier: "signInOptionViewController") {
-          self.present(vc, animated: true, completion: nil)
-        }
-      }
-    }
     
     let resignRow = ButtonRow { row in
       row.title = "Resign"
@@ -127,7 +83,42 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     
     if HarvestUser.current.workingForID.isEmpty { // is farmer
       form
-        +++ Section(userRow)
+        +++ Section("Help")
+        <<< tutorialScreenRow
+        <<< welcomeScreenRow
+      
+    } else { // is foreman
+      form
+        +++ Section("Help")
+        <<< tutorialScreenRow
+        +++ Section()
+        <<< resignRow
+    }
+  }
+  
+  func userSection(form: Form) {
+    let userRow = HarvestUser.current.accountIdentifier
+    
+    let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
+      row.title = userRow
+    }
+    
+    let logoutRow = ButtonRow { row in
+      row.title = "Logout"
+    }.onCellSelection { (_, _) in
+      HarvestDB.signOut { w in
+        if w,
+          let vc = self
+            .storyboard?
+            .instantiateViewController(withIdentifier: "signInOptionViewController") {
+          self.present(vc, animated: true, completion: nil)
+        }
+      }
+    }
+    
+    if HarvestUser.current.workingForID.isEmpty { // is farmer
+      form
+        +++ Section("Admin")
         <<< adminRow
         <<< logoutRow
       
@@ -135,8 +126,6 @@ class SettingsEurekaViewController: ReloadableFormViewController {
       form
         +++ Section(userRow)
         <<< logoutRow
-        +++ Section()
-        <<< resignRow
     }
   }
   

@@ -86,6 +86,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     supportedInterfaceOrientationsFor window: UIWindow?
   ) -> UIInterfaceOrientationMask {
-    return .allButUpsideDown
+    return UIDevice.current.userInterfaceIdiom == .phone
+      ? .allButUpsideDown
+      : .all
   }
 }

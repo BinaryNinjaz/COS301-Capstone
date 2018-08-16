@@ -96,10 +96,11 @@ extension HarvestDB {
       }
       if status == .add {
         worker.assignedOrchards.append(orchard.id)
+        HarvestDB.save(worker: worker, oldWorker: worker)
       } else if status == .remove, let idx = worker.assignedOrchards.index(of: orchard.id) {
         worker.assignedOrchards.remove(at: idx)
+        HarvestDB.save(worker: worker, oldWorker: worker)
       }
-      HarvestDB.save(worker: worker, oldNumber: worker.phoneNumber)
     }
   }
   

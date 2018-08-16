@@ -142,6 +142,23 @@ extension Date {
     return formatter.string(from: date)
   }
   
+  func stepsSince1970(step: TimeStep) -> Int {
+    let startOfTime = Date(timeIntervalSince1970: 0)
+    
+    switch step {
+    case .hourly:
+      return Calendar.current.dateComponents([.hour], from: startOfTime, to: self).hour ?? 0
+    case .daily:
+      return Calendar.current.dateComponents([.day], from: startOfTime, to: self).day ?? 0
+    case .weekly:
+      return (Calendar.current.dateComponents([.day], from: startOfTime, to: self).day ?? 0) / 7
+    case .monthly:
+      return Calendar.current.dateComponents([.month], from: startOfTime, to: self).month ?? 0
+    case .yearly:
+      return Calendar.current.dateComponents([.year], from: startOfTime, to: self).year ?? 0
+    }
+  }
+  
   func daysSince1970() -> Double {
     var interval = Int(timeIntervalSince1970)
     interval -= interval % 86400

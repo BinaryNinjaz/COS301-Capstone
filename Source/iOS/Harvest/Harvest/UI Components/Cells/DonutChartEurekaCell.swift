@@ -27,10 +27,10 @@ public class DonutChartCell: Cell<Session>, CellType {
     super.update()
     chart.data = row?.value?.workerPerformanceSummary()
     
-    let wname = row.value?.foreman.name ?? "Unknown Foreman"
-    let dist = row?.value?.track.euclideanDistance() ?? .nan
-    
-    chart.centerText = "\(wname) Traveled: \n\(dist == .nan ? "--" : Int(dist).description + "m")"
+//    let wname = row.value?.foreman.name ?? "Unknown Foreman"
+//    let dist = row?.value?.track.euclideanDistance() ?? .nan
+//    
+//    chart.centerText = "\(wname) Traveled: \n\(dist == .nan ? "--" : Int(dist).description + "m")"
   }
 }
 

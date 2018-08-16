@@ -62,8 +62,8 @@ struct Stat: Codable {
     }
     
     func lineChartData(startDate: Date, endDate: Date, step: TimeStep) -> LineChartDataSet {
-      let start = startDate.daysSince1970()
-      let end = endDate.daysSince1970()
+      let start = Double(startDate.stepsSince1970(step: step))
+      let end = Double(endDate.stepsSince1970(step: step))
       
       let interval = Double(step.fullRunningDataSet(between: startDate, and: endDate).count)
       
@@ -136,6 +136,8 @@ struct Stat: Codable {
     var dataSets = [LineChartDataSet]()
     var expectedDataSets: [LineChartDataSet] = []
     
+    var expectedDataSetObject: [String: [String: Double]]?
+    
     HarvestCloud.timeGraphSessions(
       grouping: grouping, ids: ids, period: timeStep, startDate: sd, endDate: ed, mode: mode) { data in
         guard let json = data as? [String: Any] else {
@@ -148,12 +150,7 @@ struct Stat: Codable {
         var allUsedColors = [String: UIColor]()
         for (key, _dataSetObject) in json {
           if key == "exp" {
-            if let data = _dataSetObject as? [String: [String: Double]] {
-              expectedDataSets = self.expectedGraphData(
-                json: data,
-                allUsedColors: &allUsedColors,
-                position: i)
-            }
+            expectedDataSetObject = _dataSetObject as? [String: [String: Double]]
             continue
           }
           
@@ -186,8 +183,14 @@ struct Stat: Codable {
             dataSets.insert(dataSet, at: 0)
           } else {
             dataSets.append(dataSet)
+            i += 1
           }
-          i += 1
+        }
+        
+        if let data = expectedDataSetObject {
+          expectedDataSets = self.expectedGraphData(
+            json: data,
+            allUsedColors: allUsedColors)
         }
         
         let data = LineChartData(dataSets: dataSets)
@@ -201,8 +204,7 @@ struct Stat: Codable {
   
   func expectedGraphData(
     json: [String: [String: Double]],
-    allUsedColors: inout [String: UIColor],
-    position: Int
+    allUsedColors: [String: UIColor]
   ) -> [LineChartDataSet] {
     var functions = [SinusoidalFunction]()
     for (key, function) in json {
@@ -217,7 +219,7 @@ struct Stat: Codable {
     
     return functions.map { fx in
       let dataSet = fx.lineChartData(startDate: sd, endDate: ed, step: timeStep)
-      let color = dataSetColor(key: fx.key, allUsedColors: &allUsedColors, position: position)
+      let color = allUsedColors[fx.key] ?? UIColor.randomColor()
       dataSet.setColor(color.withAlphaComponent(0.25))
       
       dataSet.label = self.legendTitle(forKey: fx.key)

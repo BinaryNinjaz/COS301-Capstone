@@ -36,7 +36,7 @@ public final class Orchard {
     case remove, add, assigned, unassigned
   }
   
-  var bagMass: Double
+  var bagMass: Double?
   var coords: [CLLocationCoordinate2D]
   var crop: String
   var cultivars: [String]
@@ -44,8 +44,8 @@ public final class Orchard {
   var assignedFarm: String
   var details: String
   var name: String
-  var treeSpacing: Double
-  var rowSpacing: Double
+  var treeSpacing: Double?
+  var rowSpacing: Double?
   var irrigationKind: IrrigationKind
   var assignedWorkers = [(String, WorkerAssignmentOperation)]() // only for infoRepresentation purposes
   
@@ -54,15 +54,15 @@ public final class Orchard {
   
   init(json: [String: Any], id: String) {
     self.id = id
-    bagMass = json["bagMass"] as? Double ?? 0.0
+    bagMass = json["bagMass"] as? Double
     crop = json["crop"] as? String ?? ""
     cultivars = json["cultivars"] as? [String] ?? []
-    date = Date(timeIntervalSince1970: json["date"] as? Double ?? 0.0)
+    date = Date(timeIntervalSince1970: json["date"] as? Double ?? Date().timeIntervalSince1970)
     assignedFarm = json["farm"] as? String ?? ""
     details = json["further"] as? String ?? ""
     name = json["name"] as? String ?? ""
-    treeSpacing = json["treeSpacing"] as? Double ?? 0.0
-    rowSpacing = json["rowSpacing"] as? Double ?? 0.0
+    treeSpacing = json["treeSpacing"] as? Double
+    rowSpacing = json["rowSpacing"] as? Double
     irrigationKind = IrrigationKind(rawValue:
       json["irrigation"] as? String ?? ""
     ) ?? .none
@@ -88,18 +88,35 @@ public final class Orchard {
   
   func json() -> [String: [String: Any]] {
     return [id: [
-      "bagMass": bagMass.isNaN ? "" : bagMass,
+      "bagMass": bagMass == nil ? "" : bagMass!,
       "crop": crop,
       "date": date.timeIntervalSince1970,
       "farm": assignedFarm,
       "further": details,
       "name": name,
-      "treeSpacing": treeSpacing.isNaN ? "" : treeSpacing,
-      "rowSpacing": rowSpacing.isNaN ? "" : rowSpacing,
+      "treeSpacing": treeSpacing == nil ? "" : treeSpacing!,
+      "rowSpacing": rowSpacing == nil ? "" : rowSpacing!,
       "coords": coords.firbaseCoordRepresentation(),
       "cultivars": cultivars,
       "irrigation": irrigationKind.rawValue
     ]]
+  }
+  
+  func makeChangesPermanent() {
+    if let t = tempory {
+      bagMass = t.bagMass
+      crop = t.crop
+      date = t.date
+      assignedFarm = t.assignedFarm
+      details = t.details
+      name = t.name
+      treeSpacing = t.treeSpacing
+      rowSpacing = t.rowSpacing
+      coords = t.coords
+      cultivars = t.cultivars
+      irrigationKind = t.irrigationKind
+      tempory = nil
+    }
   }
   
   // swiftlint:disable cyclomatic_complexity
@@ -138,12 +155,12 @@ public final class Orchard {
       result.append(("Irrigation Kind", irrigationKind.rawValue))
     }
     
-    if treeSpacing.description.contains(text) {
-      result.append(("Tree Spacing", treeSpacing.description))
+    if treeSpacing?.description.contains(text) ?? false {
+      result.append(("Tree Spacing", treeSpacing!.description))
     }
     
-    if rowSpacing.description.contains(text) {
-      result.append(("Row Spacing", rowSpacing.description))
+    if rowSpacing?.description.contains(text) ?? false {
+      result.append(("Row Spacing", rowSpacing!.description))
     }
     
     if details.lowercased().contains(text) {
@@ -158,8 +175,8 @@ public final class Orchard {
       result.append(("Date", d))
     }
     
-    if bagMass.description.contains(text) {
-      result.append(("Bag Mass", bagMass.description))
+    if bagMass?.description.contains(text) ?? false {
+      result.append(("Bag Mass", bagMass!.description))
     }
     
     return result
@@ -169,14 +186,16 @@ public final class Orchard {
 extension Orchard: Equatable {
   static public func == (lhs: Orchard, rhs: Orchard) -> Bool {
     let _id = lhs.id == rhs.id
-    let _bm = lhs.bagMass == rhs.bagMass || lhs.bagMass.isNaN && rhs.bagMass.isNaN
+    let _bm = lhs.bagMass == rhs.bagMass || (lhs.bagMass?.isNaN ?? true) && (rhs.bagMass?.isNaN ?? true)
     let _cr = lhs.crop == rhs.crop
     let _dt = lhs.date == rhs.date
     let _af = lhs.assignedFarm == rhs.assignedFarm
     let _de = lhs.details == rhs.details
     let _nm = lhs.name == rhs.name
-    let _ts = lhs.treeSpacing == rhs.treeSpacing || lhs.treeSpacing.isNaN && rhs.treeSpacing.isNaN
-    let _rs = lhs.rowSpacing == rhs.rowSpacing || lhs.rowSpacing.isNaN && rhs.rowSpacing.isNaN
+    let _ts = lhs.treeSpacing == rhs.treeSpacing
+      || (lhs.treeSpacing?.isNaN ?? true) && (rhs.treeSpacing?.isNaN ?? true)
+    let _rs = lhs.rowSpacing == rhs.rowSpacing
+      || (lhs.rowSpacing?.isNaN ?? true) && (rhs.rowSpacing?.isNaN ?? true)
     let _cs = lhs.coords == rhs.coords
     let _cu = lhs.cultivars == rhs.cultivars
     let _ir = lhs.irrigationKind == rhs.irrigationKind
@@ -191,7 +210,7 @@ extension Orchard: CustomStringConvertible {
       .shared
       .farms
       .first(where: { $0.value.id == assignedFarm }) else {
-      return name + " – Unassigned (" + Date().timeIntervalSince1970.description + ")"
+      return id + " - " + name
     }
     return farm.value.name + " – " + name
   }
