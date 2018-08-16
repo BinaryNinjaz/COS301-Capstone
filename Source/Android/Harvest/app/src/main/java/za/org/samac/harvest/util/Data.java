@@ -1,10 +1,8 @@
 package za.org.samac.harvest.util;
 
 import android.app.Activity;
-import android.location.Location;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.ViewDebug;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +20,6 @@ import java.util.Stack;
 import java.util.Vector;
 
 import za.org.samac.harvest.Stats;
-import za.org.samac.harvest.InfoListFragment;
 import za.org.samac.harvest.InformationActivity;
 import za.org.samac.harvest.Sessions;
 
@@ -903,6 +900,32 @@ public class Data {
     public void addWorker(Worker addMe){
         workers.addElement(addMe);
         changes.Add(Category.WORKER, addMe.getfID());
+    }
+
+    public List<String> extractIDs(List<DBInfoObject> list, Category category){
+        List<String> ids = new ArrayList<String>();
+
+        if (category == Category.WORKER){
+            for (DBInfoObject item : list){
+                if (((Worker) item).getWorkerType() == WorkerType.WORKER) {
+                    ids.add(item.ID);
+                }
+            }
+        }
+        else if (category == Category.FOREMAN){
+            for (DBInfoObject item : list){
+                if (((Worker) item).getWorkerType() == WorkerType.FOREMAN) {
+                    ids.add(item.ID);
+                }
+            }
+        }
+        else {
+            for (DBInfoObject item : list){
+                ids.add(item.ID);
+            }
+        }
+
+        return ids;
     }
 
     /**

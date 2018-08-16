@@ -25,6 +25,7 @@ public class InfoListFragment extends Fragment{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private TextView nothing;
     private Category cat = Category.NOTHING;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -54,6 +55,9 @@ public class InfoListFragment extends Fragment{
                 }
         );
 
+        nothing = view.findViewById(R.id.nothingText);
+        nothing.setVisibility(View.GONE);
+
         String catString = "";
         switch (cat){
             case FARM:
@@ -82,6 +86,10 @@ public class InfoListFragment extends Fragment{
         else {
             mAdapter = new infoAdapter(data);
             mRecyclerView.setAdapter(mAdapter);
+            if (mAdapter.getItemCount() == 0){
+                nothing.setText(getResources().getString(R.string.info_none_tip, cat.toPluralString()));
+                nothing.setVisibility(View.VISIBLE);
+            }
         }
 
     }
@@ -102,6 +110,10 @@ public class InfoListFragment extends Fragment{
         mSwipeRefreshLayout.setRefreshing(false);
         mAdapter = new infoAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
+        if (mAdapter.getItemCount() == 0){
+            nothing.setText(getResources().getString(R.string.info_none_tip, cat.toPluralString()));
+            nothing.setVisibility(View.VISIBLE);
+        }
     }
 }
 

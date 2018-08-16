@@ -384,9 +384,11 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 return;
             case R.id.stats_select_all:
                 stats_selector.checkAllPerhaps(true);
+                ids.addAll(data.extractIDs(data.getThings(stats_selector.getCategory()), stats_selector.getCategory()));
                 return;
             case R.id.stats_select_none:
                 stats_selector.checkAllPerhaps(false);
+                ids.clear();
                 return;
         }
     }
@@ -1142,7 +1144,6 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         }
 
         public static class NotUniqueNameException extends Exception{
-
 
             public NotUniqueNameException(){
 

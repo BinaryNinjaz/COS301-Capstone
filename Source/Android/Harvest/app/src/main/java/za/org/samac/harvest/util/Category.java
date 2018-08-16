@@ -26,4 +26,22 @@ public enum Category{
         }
         return null;
     }
+
+    public String toPluralString(){
+        switch (this){
+            case ORCHARD:
+                return "orchards";
+            case FARM:
+                return "farms";
+            case FOREMAN:
+                return "foremen";
+            case WORKER:
+                return "workers";
+            case NOTHING:
+                return null;
+            case NAV:
+                return "nav";
+        }
+        return null;
+    }
 }
