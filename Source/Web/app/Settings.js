@@ -1,10 +1,10 @@
 const database = firebase.database();	/* Pointing to database on firebase cloud */
-const user = function() { return firebase.auth().currentUser }; /* Function which authenticates user */
+const getUser = function() { return firebase.auth().currentUser; }; /* Function which authenticates user */
 
 /* Function returns the user ID of the selected user */
-const userID = function() {
-  if (user() !== null) {
-    return user().uid ;
+const getUserID = function() {
+  if (getUser() !== null) {
+    return getUser().uid ;
   } else {
     return "";
   }
@@ -24,12 +24,12 @@ $(window).bind("load", () => {
 
 /* Function returns admin */
 function adminRef() {
-  return database.ref('/' +  userID() + '/admin');
+  return database.ref('/' +  getUserID() + '/admin');
 }
 
 function initPage(){
-    if (user() !== null) {
-        email = user().email;
+    if (getUser() !== null) {
+        email = getUser().email;
         const ref = adminRef();
         ref.once('value').then((snapshot) => {
             const val = snapshot.val();
@@ -44,7 +44,7 @@ function initPage(){
 
 function saveChanges(){
     if(confirm("Are you sure you want to save these account changes?")){
-        database.ref('/' + userID() +'/admin').update({  
+        database.ref('/' + getUserID() +'/admin').update({  
           firstname: document.getElementById("first").value,
           lastname: document.getElementById("sur").value,
           organization: document.getElementById("org").value
@@ -56,8 +56,8 @@ function saveChanges(){
 function saveEmail(){
     if(confirm("Are you sure you want to change your email?")){
         email = document.getElementById("email").value;
-        user().updateEmail(email);
-        database.ref('/' + userID() +'/admin').update({
+        getUser().updateEmail(email);
+        database.ref('/' + getUserID() +'/admin').update({
             email: email
         });
     }
@@ -75,7 +75,7 @@ function savePassword(){
             var thePass = thePrompt.document.getElementById("thePass").value;
             firebase.auth().signInWithEmailAndPassword(email, thePass)
             .then(function() {
-                user().updatePassword(newPass).then(function(){
+                getUser().updatePassword(newPass).then(function(){
                     thePrompt.close();
                     alert("Password successfully changed.");
                     document.getElementById("psw").value = '';
@@ -112,9 +112,9 @@ function deleteAccount(){
         var thePrompt = constructPrompt();
         thePrompt.document.getElementById("authOK").onclick = function () {
             var thePass = thePrompt.document.getElementById("thePass").value;
-            if(user().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
+            if(getUser().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
                 thePrompt.close();
-                database.ref('/' + userID()).remove();
+                database.ref('/' + getUserID()).remove();
                 //sign user out
             }else{
                 thePrompt.close();
