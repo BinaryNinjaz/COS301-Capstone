@@ -9,6 +9,9 @@
 	opacity: 0.3;
 }
 
-#closebtn { width: 15%; background-color:#4CAF50; color: whitesmoke; 
-				height: 15%;}
-			
+#closebtn { 
+	width: 15%; 
+	background-color:#4CAF50; 
+	color: whitesmoke; 
+	height: 15%;
+}
