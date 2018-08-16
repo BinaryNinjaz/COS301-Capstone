@@ -100,7 +100,7 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     let userRow = HarvestUser.current.accountIdentifier
     
     let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
-      row.title = "Admin"
+      row.title = userRow
     }
     
     let logoutRow = ButtonRow { row in
@@ -118,7 +118,7 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     
     if HarvestUser.current.workingForID.isEmpty { // is farmer
       form
-        +++ Section(userRow)
+        +++ Section("Admin")
         <<< adminRow
         <<< logoutRow
       

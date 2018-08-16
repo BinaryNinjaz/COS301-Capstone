@@ -33,6 +33,10 @@ class TrackerViewController: UIViewController {
   }
   var filteredWorkers: [Worker] {
     return workers.filter { (worker) -> Bool in
+      if sessionOrchards.contains("Select All") {
+        return true
+      }
+      
       if !sessionOrchards.isEmpty
       && !worker.assignedOrchards.contains(where: { sessionOrchards.contains($0) }) {
         return false
@@ -181,6 +185,17 @@ class TrackerViewController: UIViewController {
       }
       alert.addAction(action)
     }
+    let action = UIAlertAction(
+      title: "Select All",
+      style: .default) { (_) in
+        self.sessionOrchards.removeAll()
+        self.sessionOrchards.append("Select All")
+        self.workerCollectionView?.reloadData()
+        self.yieldLabel?.attributedText = self
+          .attributedStringForYieldCollection(self.tracker?.totalCollected() ?? 0)
+        completion()
+    }
+    alert.addAction(action)
     let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
     alert.addAction(cancel)
     alert.popoverPresentationController?.sourceView = yieldLabel
@@ -188,7 +203,7 @@ class TrackerViewController: UIViewController {
     if Entities.shared.orchards.isEmpty {
       let notice = SCLAlertView()
       
-      notice.showNotice(
+      notice.showEdit(
         "No Orchards",
         subTitle: """
         You have not added any orchards. Please add orchards in 'Information' before using the yield collector.

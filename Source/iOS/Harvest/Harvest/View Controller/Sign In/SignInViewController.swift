@@ -37,6 +37,7 @@ class SignInViewController: UIViewController {
         self.forgotAccountButton.alpha = self.isLoading ? 0 : 1
         self.orLabel.alpha = self.isLoading ? 0 : 1
         self.cancelButton.alpha = self.isLoading ? 0 : 1
+        self.signUpButton.alpha = self.isLoading ? 0 : 1
       }
       
       if isLoading {
