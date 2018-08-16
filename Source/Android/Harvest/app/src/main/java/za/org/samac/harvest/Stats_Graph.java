@@ -247,9 +247,7 @@ public class Stats_Graph extends AppCompatActivity {
                 @Override
                 public void run() {
                     try {
-                        if (!mode.equals(Stats.ACCUMULATION_TIME)) {
-                            updateDateFormat();
-                        }
+                        updateDateFormat();
 
                         //Get the result of the function
                         String response = sendPost(urlTotalBagsPerDay(), urlParameters());
@@ -304,6 +302,7 @@ public class Stats_Graph extends AppCompatActivity {
         lineChart.getXAxis().setXOffset(0f);
         lineChart.getXAxis().setYOffset(0f);
         lineChart.getXAxis().setTextSize(8f);
+        lineChart.getXAxis().setGranularityEnabled(true);
         lineChart.getXAxis().setGranularity(1f);
         lineChart.getXAxis().setAxisMinimum((float) start);
     }
@@ -345,17 +344,17 @@ public class Stats_Graph extends AppCompatActivity {
                         List<Entry> expectedEntries = new ArrayList<>(); //Expected entries.
                         if (entryNames != null) {
                             LineDataSet lineDataSet = null;
-                            LineDataSet expectedLineDataSet = null;
+                            LineDataSet expectedLineDataSet;
                             curCal.setTimeInMillis((long)(start * THOUSAND));
                             int actualEntryIndex = 0;
-                            Double nextKey = getNextKey(), nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString(), true);
+                            Double nextKey = getNextKey(), nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString());
                             while (nextKey != null){
                                 Entry entry;
                                 Entry expectedEntry;
                                 if (nextKey.doubleValue() == nextActualKey.doubleValue()){
                                     entry = new Entry(nextActualKey.floatValue(), (float) object.getDouble(entryNames.get(actualEntryIndex++).toString()));
                                     if (actualEntryIndex < entryNames.length()) {
-                                        nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString(), true);
+                                        nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString());
                                     }
                                 }
                                 else {
@@ -371,7 +370,7 @@ public class Stats_Graph extends AppCompatActivity {
                             switch (entityNames.get(i).toString()) {
                                 case "avg":
                                     lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_gragh_averageLabel));
-                                    lineDataSet.enableDashedLine(1, 1, 0);
+                                    lineDataSet.enableDashedLine(2, 2, 1);
                                     lineDataSet.setColor(getResources().getColor(R.color.grey));
                                     break;
                                 case "sum":
@@ -379,8 +378,8 @@ public class Stats_Graph extends AppCompatActivity {
                                         lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
                                         lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
 
-                                        expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
-                                        expectedLineDataSet.setColor(R.color.blueLinks, 128);
+                                        expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expected)");
+                                        expectedLineDataSet.setColor(R.color.blueLinks, 200);
                                         expectedLineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
                                         expectedLineDataSet.setDrawCircles(false);
                                         expectedLineDataSet.setLineWidth(1);
@@ -393,7 +392,7 @@ public class Stats_Graph extends AppCompatActivity {
                                     lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour]);
 
                                     expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
-                                    expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 128);
+                                    expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 200);
                                     expectedLineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
                                     expectedLineDataSet.setDrawCircles(false);
                                     expectedLineDataSet.setLineWidth(1);
@@ -422,11 +421,11 @@ public class Stats_Graph extends AppCompatActivity {
      */
     public String getLabel(float value, AxisBase axisBase){
         int position;
-        if (mode.equals(Stats.ACCUMULATION_TIME)) {
-            if (value < 0) value = 0;
-            position = (int) Math.floor((double) value);
-        }
-        else {
+//        if (mode.equals(Stats.ACCUMULATION_TIME)) {
+//            if (value < 0) value = 0;
+//            position = (int) Math.floor((double) value);
+//        }
+//        else {
             //Need to determine where in the integer values the seconds best fit.
             //maxTime is the largest amount of milliseconds seen.
             if (value >= start) {
@@ -438,17 +437,16 @@ public class Stats_Graph extends AppCompatActivity {
             else {
                 return labels[0];
             }
-        }
+//        }
         return labels[position];
     }
 
     /**
      * Take any key, most notably a string key, and turn it into an double.
      * @param key the key to be converted.
-     * @param subMin if false, then the minimum will not be subtracted from the result, set false for initial determination of the min and max before doing anything.
      * @return the double representing the key.
      */
-    public double getDoubleFromKey(String key, boolean subMin){
+    public double getDoubleFromKey(String key){
         double result = 0;
         try {
             Date date = dateFormat.parse(key, new ParsePosition(0));
@@ -483,8 +481,10 @@ public class Stats_Graph extends AppCompatActivity {
                     break;
                 case MONTHLY:
                     fmt = "MMMM";
+                    break;
                 case YEARLY:
                     fmt = "yyyy";
+                    break;
             }
         }
         else {
@@ -498,22 +498,23 @@ public class Stats_Graph extends AppCompatActivity {
             fmt = (fmtYear.equals("") ? "" : fmtYear + " ") + (fmtMonth.equals("") ? "" : fmtMonth + " ") + fmtDay;
             switch (interval) {
                 case Stats.HOURLY:
-                    dateFormat = new SimpleDateFormat(fmt.equals("") ? "HH:mm" : fmt + " HH:mm");
-                    return;
+                    fmt = fmt.equals("") ? "HH:mm" : fmt + " HH:mm";
+                    break;
                 case Stats.DAILY:
-                    dateFormat = new SimpleDateFormat(fmt.equals("") ? "EEE" : fmt);
-                    return;
+                    fmt = fmt.equals("") ? "EEE" : fmt;
+                    break;
                 case Stats.WEEKLY:
-                    dateFormat = new SimpleDateFormat(fmt.equals("") ? "EEE" : fmt);
-                    return;
+                    fmt = fmt.equals("") ? "EEE" : fmt;
+                    break;
                 case Stats.MONTHLY:
-                    dateFormat = new SimpleDateFormat((fmtYear.equals("") ? "" : fmtYear + " ") + "MMM");
-                    return;
+                    fmt = (fmtYear.equals("") ? "" : fmtYear + " ") + "MMM";
+                    break;
                 case Stats.YEARLY:
-                    dateFormat = new SimpleDateFormat("yyyy");
-                    return;
+                    fmt = "yyyy";
+                    break;
             }
         }
+        dateFormat = new SimpleDateFormat(fmt);
     }
 
     /**
@@ -527,52 +528,153 @@ public class Stats_Graph extends AppCompatActivity {
         startCal.setTimeInMillis((long)(start * THOUSAND));
 
         int thing;
-        switch (interval) {
-            case YEARLY:
-                //do nothing, always yyyy
-                break;
-            case MONTHLY:
-                if (!fmt.contains("yyyy")) {
-                    thing = Calendar.YEAR;
-                    diffCal.set(thing, startCal.get(thing));
-                }
-                break;
-            case WEEKLY:
-                if (!fmt.contains("yyyy")) {
-                    thing = Calendar.YEAR;
-                    diffCal.set(thing, startCal.get(thing));
-                }
-                if (!fmt.contains("MMM")) {
-                    thing = Calendar.MONTH;
-                    diffCal.set(thing, startCal.get(thing));
-                }
-                break;
-            case DAILY:
-                if (!fmt.contains("yyyy")) {
-                    thing = Calendar.YEAR;
-                    diffCal.set(thing, startCal.get(thing));
-                }
-                if (!fmt.contains("MMM")) {
-                    thing = Calendar.MONTH;
-                    diffCal.set(thing, startCal.get(thing));
-                }
-                break;
-            case HOURLY:
-                if (!fmt.contains("yyyy")) {
-                    thing = Calendar.YEAR;
-                    diffCal.set(thing, startCal.get(thing));
-                }
-                if (!fmt.contains("MMM")) {
-                    thing = Calendar.MONTH;
-                    diffCal.set(thing, startCal.get(thing)); 
-                }
-                if (!fmt.contains("dd")) {
-                    thing = Calendar.DATE;
-                    diffCal.set(thing, startCal.get(thing));
-                }
+        if (mode.equals(ACCUMULATION_TIME)){
+
+            Calendar endCal = Calendar.getInstance();
+            endCal.setTimeInMillis((long) (end * THOUSAND));
+
+            switch (interval){
+                case HOURLY:
+                    diffCal.set(startCal.get(Calendar.YEAR), startCal.get(Calendar.MONTH), startCal.get(Calendar.DATE));
+
+                    endCal.setTimeInMillis((long) (start * THOUSAND));
+                    endCal.add(Calendar.DATE, 1);
+                    end = endCal.getTimeInMillis() / THOUSAND;
+
+                    break;
+                case DAILY:
+                    diffCal.set(Calendar.YEAR, startCal.get(Calendar.YEAR));
+                    diffCal.set(Calendar.MONTH, startCal.get(Calendar.MONTH));
+                    diffCal.add(Calendar.DATE, 1);
+
+                    endCal.setTimeInMillis((long) (start * THOUSAND));
+                    endCal.add(Calendar.WEEK_OF_YEAR, 1);
+
+                    startCal.add(Calendar.DATE, 1);
+
+                    start = startCal.getTimeInMillis() / THOUSAND;
+                    end = endCal.getTimeInMillis() / THOUSAND;
+                    break;
+                case WEEKLY:
+                    diffCal.set(Calendar.YEAR, startCal.get(Calendar.YEAR));
+                    break;
+                case MONTHLY:
+                    diffCal.set(Calendar.YEAR, startCal.get(Calendar.YEAR));
+                    break;
+                case YEARLY:
+                    //Do nothing
+                    break;
+            }
+        }
+        else {
+            switch (interval) {
+                case YEARLY:
+                    //do nothing, always yyyy
+                    break;
+                case MONTHLY:
+                    if (!fmt.contains("yyyy")) {
+                        thing = Calendar.YEAR;
+                        diffCal.set(thing, startCal.get(thing));
+                    }
+                    break;
+                case WEEKLY:
+                    if (!fmt.contains("yyyy")) {
+                        thing = Calendar.YEAR;
+                        diffCal.set(thing, startCal.get(thing));
+                    }
+                    if (!fmt.contains("MMM")) {
+                        thing = Calendar.MONTH;
+                        diffCal.set(thing, startCal.get(thing));
+                    }
+                    break;
+                case DAILY:
+                    if (!fmt.contains("yyyy")) {
+                        thing = Calendar.YEAR;
+                        diffCal.set(thing, startCal.get(thing));
+                    }
+                    if (!fmt.contains("MMM")) {
+                        thing = Calendar.MONTH;
+                        diffCal.set(thing, startCal.get(thing));
+                    }
+                    break;
+                case HOURLY:
+                    if (!fmt.contains("yyyy")) {
+                        thing = Calendar.YEAR;
+                        diffCal.set(thing, startCal.get(thing));
+                    }
+                    if (!fmt.contains("MMM")) {
+                        thing = Calendar.MONTH;
+                        diffCal.set(thing, startCal.get(thing));
+                    }
+                    if (!fmt.contains("dd")) {
+                        thing = Calendar.DATE;
+                        diffCal.set(thing, startCal.get(thing));
+                    }
+            }
         }
 
         getYourHeadOutOfThePast = diffCal.getTimeInMillis() / THOUSAND;
+    }
+
+    /**
+     * Depending on the interval, create a string array, so that the integers on the x axis can access the array to get what label they actually represent.
+     */
+    public void populateLabels(){
+        /*
+        Here, the plan is to set a calendar to the start date, then keep adding to it by our interval, until it is > than our end date.
+         */
+
+
+        Calendar curCal = Calendar.getInstance();
+        curCal.setTimeInMillis((long) (start * THOUSAND));
+
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTimeInMillis((long) (end * THOUSAND));
+
+        if (mode.equals(ACCUMULATION_TIME)){
+            switch (interval){
+                case HOURLY:
+                    endCal.setTimeInMillis((long) (start * THOUSAND));
+                    endCal.add(Calendar.DATE, 1);
+                    break;
+                case DAILY:
+                    endCal.setTimeInMillis((long) (start * THOUSAND));
+                    endCal.add(Calendar.WEEK_OF_YEAR, 1);
+                    curCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                    endCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                    break;
+            }
+        }
+
+        Log.i(TAG, "LABELS: startCal: " + curCal.getTime().toString() + ", endCal: " + endCal.getTime().toString());
+
+        List<String> labelsList = new ArrayList<>();
+
+        while (curCal.getTimeInMillis() <= endCal.getTimeInMillis()){
+            labelsList.add(dateFormat.format(curCal.getTime()));
+            switch (interval){
+                case Stats.HOURLY:
+                    curCal.add(Calendar.HOUR_OF_DAY, 1);
+                    break;
+                case Stats.DAILY:
+                    curCal.add(Calendar.DAY_OF_MONTH, 1);
+                    break;
+                case Stats.WEEKLY:
+                    curCal.add(Calendar.WEEK_OF_YEAR, 1);
+                    break;
+                case Stats.MONTHLY:
+                    curCal.add(Calendar.MONTH, 1);
+                    break;
+                case Stats.YEARLY:
+                    curCal.add(Calendar.YEAR, 1);
+                    break;
+            }
+        }
+        //Turn our resizable list to standard array.
+        labels = new String[labelsList.size()];
+        for (int i = 0; i < labelsList.size(); i++){
+            labels[i] = labelsList.get(i);
+        }
     }
 
     /**
@@ -621,50 +723,6 @@ public class Stats_Graph extends AppCompatActivity {
         return startCal.get(Calendar.YEAR) == endCal.get(Calendar.YEAR) && startCal.get(Calendar.MONTH) == endCal.get(Calendar.MONTH) && startCal.get(Calendar.DAY_OF_MONTH) == endCal.get(Calendar.DAY_OF_MONTH);
     }
 
-    /**
-     * Depending on the interval, create a string array, so that the integers on the x axis can access the array to get what label they actually represent.
-     */
-    public void populateLabels(){
-        /*
-        Here, the plan is to set a calendar to the start date, then keep adding to it by our interval, until it is > than our end date.
-         */
-        Calendar curCal = Calendar.getInstance();
-        curCal.setTimeInMillis((long) (start * THOUSAND));
-
-        Calendar endCal = Calendar.getInstance();
-        endCal.setTimeInMillis((long) (end * THOUSAND));
-
-        Log.i(TAG, "LABELS: startCal: " + curCal.getTime().toString() + ", endCal: " + endCal.getTime().toString());
-
-        List<String> labelsList = new ArrayList<>();
-
-        while (curCal.getTimeInMillis() <= endCal.getTimeInMillis()){
-            labelsList.add(dateFormat.format(curCal.getTime()));
-            switch (interval){
-                case Stats.HOURLY:
-                    curCal.add(Calendar.HOUR_OF_DAY, 1);
-                    break;
-                case Stats.DAILY:
-                    curCal.add(Calendar.DAY_OF_MONTH, 1);
-                    break;
-                case Stats.WEEKLY:
-                    curCal.add(Calendar.WEEK_OF_YEAR, 1);
-                    break;
-                case Stats.MONTHLY:
-                    curCal.add(Calendar.MONTH, 1);
-                    break;
-                case Stats.YEARLY:
-                    curCal.add(Calendar.YEAR, 1);
-                    break;
-            }
-        }
-        //Turn our resizable list to standard array.
-        labels = new String[labelsList.size()];
-        for (int i = 0; i < labelsList.size(); i++){
-            labels[i] = labelsList.get(i);
-        }
-    }
-
     //Testing
     public void configureForLabelTesting(String mode, String interval, Category category){
         Stats_Graph.mode = mode;
@@ -681,7 +739,7 @@ public class Stats_Graph extends AppCompatActivity {
     }
 
     //Expected
-    /*
+    /**
     *  Here it is:
     *   grab a reference to the exp JSONArray at the very beginning
     *   calculate the number of intervals since the epoch to the start
@@ -698,7 +756,7 @@ public class Stats_Graph extends AppCompatActivity {
     JSONObject expected;
 
     /**
-     * Simple set the expected JSONObject, which is used to create functions. Should be called only once.
+     * Simply set the expected JSONObject, which is used to create functions. Should be called only once.
      * @param expected the JSONObject. Format of *: {a: #, b: #, c: #, d: #}, ...
      */
     private void function_setExpected(JSONObject expected){
@@ -771,16 +829,5 @@ public class Stats_Graph extends AppCompatActivity {
         return (float) (
                 a * Math.sin(b * (intervalsSinceStart++ + intervalsSinceEpochAtStart) + c) + d
         );
-    }
-
-    //Just in case, for now.
-    private class FunctionException extends Exception{
-        public FunctionException(){
-
-        }
-
-        public FunctionException(String message){
-            super(message);
-        }
     }
 }
