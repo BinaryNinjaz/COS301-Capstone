@@ -1,9 +1,14 @@
 body{
     font-family: Sans-Serif;	
-    background-color: #4E342E; 
-    display: block;
-    overflow: auto;    
+    background-image: url("back2Smaller.jpg");
+    background-repeat: no-repeat;  
+    background-size: cover;  
+    display: block;   
+
+    background-origin: center;
+    background-attachment: fixed;
 }
+
 section .c{
     width:92%;
     height: 240px;
