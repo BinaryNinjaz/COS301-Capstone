@@ -307,6 +307,7 @@
     <string name="swipe_to_continue">Swipe left to view next slide</string>
     <string name="skip">Skip</string>
     <string name="done">Done</string>
+    <string name="thatsAll">That\'s all</string>
 
     <integer-array name="img_id_arr">
         <item>@drawable/harvestintro</item>

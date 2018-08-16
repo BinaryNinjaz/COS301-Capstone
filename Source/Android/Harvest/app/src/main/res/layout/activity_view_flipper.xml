@@ -33,6 +33,42 @@
                 android:id="@+id/skipOne"
                 android:text="@string/skip"
                 android:layout_alignParentBottom="true"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/group"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn2"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn3"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn4"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn5"
+                    android:buttonTint="@color/white"/>
+            </RadioGroup>
         </RelativeLayout>
 
         <RelativeLayout
@@ -58,6 +94,42 @@
                 android:id="@+id/skipTwo"
                 android:text="@string/skip"
                 android:layout_alignParentBottom="true"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/group2"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn11"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn22"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn33"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn44"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn55"
+                    android:buttonTint="@color/white"/>
+            </RadioGroup>
         </RelativeLayout>
 
         <RelativeLayout
@@ -83,6 +155,41 @@
                 android:id="@+id/skipThree"
                 android:text="@string/skip"
                 android:layout_alignParentBottom="true"/>
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/group3"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn111"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn222"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn333"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn444"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn555"
+                    android:buttonTint="@color/white"/>
+            </RadioGroup>
         </RelativeLayout>
 
         <RelativeLayout
@@ -108,6 +215,42 @@
                 android:id="@+id/skipFour"
                 android:text="@string/skip"
                 android:layout_alignParentBottom="true"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/group4"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn1111"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn2222"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn3333"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn4444"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn5555"
+                    android:buttonTint="@color/white"/>
+            </RadioGroup>
         </RelativeLayout>
 
         <RelativeLayout
@@ -126,13 +269,49 @@
 
             <TextView
                 style="@style/ImageTitle"
-                android:text="@string/swipe_to_continue"/>
+                android:text="@string/thatsAll"/>
 
             <TextView
                 style="@style/TextView.links"
                 android:id="@+id/done"
                 android:text="@string/done"
                 android:layout_alignParentBottom="true"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/group5"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn11111"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn22222"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn33333"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn44444"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn55555"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+            </RadioGroup>
         </RelativeLayout>
     </ViewFlipper>
 
