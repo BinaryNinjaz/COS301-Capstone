@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SearchView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +30,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.zip.Inflater;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
@@ -51,6 +54,16 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     private Stack<Category> backViews = new Stack<>();
     private List<LatLng> coords;
     Category selectedCat = NOTHING, stackTop = NOTHING;
+
+    private boolean searching = false;
+    private SearchView searchView;
+    private Menu menu;
+
+//    @Override
+//    protected void onResume(){
+//        super.onResume();
+//        bottomNavigationView.setSelectedItemId(R.id.actionInformation);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +170,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             else if (map){
                 map = false;
             }
+            closeSearch();
             getSupportFragmentManager().popBackStack();
             if(getSupportFragmentManager().getBackStackEntryCount() == 2){
                 //The root Nav fragment
@@ -311,7 +325,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         toggleUpButton(true);
     }
 
-    //If a farm, orchard, worker is selected
+    //If a farm, orchard, worker is selected, also in search
     public void onSelectItemButtClick(View view){
         listing = false;
         String tags[] = view.getTag().toString().split(" ");
@@ -542,6 +556,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -549,25 +564,21 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.search:
+                searchView = (SearchView) item.getActionView();
+                item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                        return true;
+                    }
 
-                //The search button will have different functionality than the main.
-
-//                MenuItem searchMenu = menu.findItem(R.id.search);
-//                final SearchView searchView = (SearchView) item.getActionView();
-//                searchView.setIconified(false);
-//                searchView.requestFocusFromTouch();
-//                searchView.setOnQueryTextListener(this);
-//                item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-//                    @Override
-//                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-//                        return true;
-//                    }
-//                });
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                        closeSearch();
+                        showNavFrag();
+                        return true;
+                    }
+                });
+                showSearch();
                 return true;
             case R.id.settings:
                 startActivity(new Intent(InformationActivity.this, SettingsActivity.class));
@@ -594,6 +605,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             case android.R.id.home:
                 if (listing){
                     showNavFrag();
+                    closeSearch();
                 }
                 else if (map){
                     onBackPressed();
@@ -609,6 +621,11 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     }
 
     public void onGotoButtClick(View view){
+        if (searching) {
+            closeSearch();
+            toggleUpButton(true);
+        }
+
         Category cat;
         String token[] = view.getTag().toString().split(" ");
         switch (token[0]){
@@ -750,6 +767,59 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
 
     public void LocationInformationAsked(){
         mapLocationInformationSessionAsked = true;
+    }
+
+    //Everything related to searching
+    /*
+     The user hits the search button
+     Display the search fragment
+     Inflate the search bar at the top
+     */
+    private void showSearch(){
+        searching = true;
+
+        //show the search fragment
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        final InfoSearchFragment searchFrag = new InfoSearchFragment();
+        fragmentTransaction.replace(R.id.infoMainPart, searchFrag, "SEARCHER");
+        searchFrag.setData(data);
+        searchFrag.setCategory(selectedCat);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        searchView.setIconified(false);
+        searchView.requestFocusFromTouch();
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                return true;
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                searchFrag.searchForQuery(s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                searchFrag.searchForQuery(s);
+                return true;
+            }
+        });
+    }
+
+    private void closeSearch(){
+        if (searching){
+            searching = false;
+
+            searchView.setQuery("", false);
+
+            menu.findItem(R.id.search).collapseActionView();
+        }
     }
 }
 

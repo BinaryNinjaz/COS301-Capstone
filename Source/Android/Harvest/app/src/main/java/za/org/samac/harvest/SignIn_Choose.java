@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 
+import za.org.samac.harvest.util.Data;
+
 public class SignIn_Choose extends AppCompatActivity {
     private ImageView farmerPic = null;
     private ImageView foremanPic =  null;
@@ -24,6 +26,7 @@ public class SignIn_Choose extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_choose);
+        Data.newAccount();
     }
 
     public void choseFarmer(View v){
