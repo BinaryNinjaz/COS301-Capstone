@@ -1145,7 +1145,6 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
 
         public static class NotUniqueNameException extends Exception{
 
-
             public NotUniqueNameException(){
 
             }

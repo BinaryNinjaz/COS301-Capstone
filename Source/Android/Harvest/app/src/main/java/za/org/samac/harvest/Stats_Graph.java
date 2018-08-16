@@ -1,11 +1,9 @@
 package za.org.samac.harvest;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -27,7 +25,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +34,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -252,7 +248,7 @@ public class Stats_Graph extends AppCompatActivity {
                 public void run() {
                     try {
                         if (!mode.equals(Stats.ACCUMULATION_TIME)) {
-                            setDateFormat();
+                            updateDateFormat();
                         }
 
                         //Get the result of the function
@@ -312,14 +308,21 @@ public class Stats_Graph extends AppCompatActivity {
         lineChart.getXAxis().setAxisMinimum((float) start);
     }
 
+    //All function related things are done in here.
     private LineData getDataFromString(String response){
         try {
             final JSONObject functionResult = new JSONObject(response);
 
+            //Set the expected object for the function.
+            function_setExpected(functionResult.getJSONObject("exp"));
+
+            //Set the intervals since the epoch. Really this could be done anywhere, but let's keep it tidy.
+            function_updateIntervalsSinceEpochAtStart();
+
             int colour = 0;
 
             //Determine max and min values
-            JSONArray entityNames = functionResult.names(); //to iterate through the top level entities
+            JSONArray entityNames; //to iterate through the top level entities
 
             updateFormatDifference();
 
@@ -329,24 +332,26 @@ public class Stats_Graph extends AppCompatActivity {
             if (entityNames != null) {
                 for (int i = 0; i < entityNames.length(); i++) {
                     if(entityNames.get(i).equals("exp")){
-                        //Deal with this later.
+                        //This is handled elsewhere.
                     }
                     else {
+
+                        //We're now working with a new entity, so let's tell the function so.
+                        function_prepareForNewEntity(entityNames.get(i).toString());
+
                         JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
                         JSONArray entryNames = object.names(); //Keys of the entries, for iteration
                         List<Entry> entries = new ArrayList<>();
+                        List<Entry> expectedEntries = new ArrayList<>(); //Expected entries.
                         if (entryNames != null) {
                             LineDataSet lineDataSet = null;
-//                                for (int j = 0; j < entryNames.length(); j++) {
-//                                    //Get all of the entries, buy turning the key into an int (x axis), and the value to, erm, the value (y axis)
-//                                    Entry entry = new Entry((float) (getDoubleFromKey(entryNames.get(j).toString(), true)), (float) object.getDouble(entryNames.get(j).toString()));
-//                                    entries.add(entry);
-//                                }
+                            LineDataSet expectedLineDataSet = null;
                             curCal.setTimeInMillis((long)(start * THOUSAND));
                             int actualEntryIndex = 0;
                             Double nextKey = getNextKey(), nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString(), true);
                             while (nextKey != null){
                                 Entry entry;
+                                Entry expectedEntry;
                                 if (nextKey.doubleValue() == nextActualKey.doubleValue()){
                                     entry = new Entry(nextActualKey.floatValue(), (float) object.getDouble(entryNames.get(actualEntryIndex++).toString()));
                                     if (actualEntryIndex < entryNames.length()) {
@@ -356,8 +361,12 @@ public class Stats_Graph extends AppCompatActivity {
                                 else {
                                     entry = new Entry(nextKey.floatValue(), 0);
                                 }
+
+                                expectedEntry = new Entry(nextKey.floatValue(), function_getNextY());
+
                                 nextKey = getNextKey();
                                 entries.add(entry);
+                                expectedEntries.add(expectedEntry);
                             }
                             switch (entityNames.get(i).toString()) {
                                 case "avg":
@@ -369,14 +378,26 @@ public class Stats_Graph extends AppCompatActivity {
                                     if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
                                         lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
                                         lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
+
+                                        expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
+                                        expectedLineDataSet.setColor(R.color.blueLinks, 128);
+                                        expectedLineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                                        expectedLineDataSet.setDrawCircles(false);
+                                        expectedLineDataSet.setLineWidth(1);
+                                        dataSets.add(expectedLineDataSet);
+
                                     }
-                                    break;
-                                case "exp":
-                                    //Oh what fun it all is.
                                     break;
                                 default:
                                     lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
-                                    lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++]);
+                                    lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour]);
+
+                                    expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
+                                    expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 128);
+                                    expectedLineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                                    expectedLineDataSet.setDrawCircles(false);
+                                    expectedLineDataSet.setLineWidth(1);
+                                    dataSets.add(expectedLineDataSet);
                                     break;
                             }
                             assert lineDataSet != null;
@@ -448,7 +469,7 @@ public class Stats_Graph extends AppCompatActivity {
 
     @SuppressWarnings("UnnecessaryReturnStatement")
     @SuppressLint("SimpleDateFormat")
-    private void setDateFormat(){
+    private void updateDateFormat(){
         if (mode.equals(ACCUMULATION_TIME)){
             switch (interval){
                 case HOURLY:
@@ -554,6 +575,11 @@ public class Stats_Graph extends AppCompatActivity {
         getYourHeadOutOfThePast = diffCal.getTimeInMillis() / THOUSAND;
     }
 
+    /**
+     * Get a double representing the next key.<br>
+     *
+     * @return the next key.
+     */
     private Double getNextKey(){
         Calendar maxCal = Calendar.getInstance();
         maxCal.setTimeInMillis((long) (end * THOUSAND));
@@ -650,7 +676,111 @@ public class Stats_Graph extends AppCompatActivity {
         Stats_Graph.start = start;
         Stats_Graph.end = end;
         Stats_Graph.interval = interval;
-        setDateFormat();
+        updateDateFormat();
         return dateFormat;
+    }
+
+    //Expected
+    /*
+    *  Here it is:
+    *   grab a reference to the exp JSONArray at the very beginning
+    *   calculate the number of intervals since the epoch to the start
+    *   when a new entity is being processed, grab its relevant stuff from the exp array and generate the function
+    *   every time it is processed, return the y, and increment the x, which is reset when a new entity comes into play.
+    *
+    *   a * sin(b * x + c) + d
+    *   {avg: {*: #}, id0: {*: #, *: #, ...}, id1: {*: #, *: #, ...}, exp: {*: {a: #, b: #, c: #, d: #}, ...}}
+    */
+
+    private double a = 0, b = 0, c = 0, d = 0; //For the function.
+    private int intervalsSinceStart = 0, // The number of intervals since the requested start for this graph.
+            intervalsSinceEpochAtStart = 0; // The number of intervals since the epoch, to the requested start of this graph.
+    JSONObject expected;
+
+    /**
+     * Simple set the expected JSONObject, which is used to create functions. Should be called only once.
+     * @param expected the JSONObject. Format of *: {a: #, b: #, c: #, d: #}, ...
+     */
+    private void function_setExpected(JSONObject expected){
+        this.expected = expected;
+    }
+
+    /**
+     * Update the intervals to the start. This should be done only once. This value is built upon to determine x values.<br>
+     *     start and interval <em>must</em> be set before calling this.
+     */
+    private void function_updateIntervalsSinceEpochAtStart(){
+        /*
+        Plan is simple, calendar for the very start of all things, increment it by the interval, until it no longer <= to start.
+        Capture the number of increments.
+         */
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(0); // It's the start of all things.
+
+        Log.i(TAG, "Function: " + calendar.getTime().toString());
+
+        while ((calendar.getTimeInMillis() / THOUSAND) <= start){
+            switch (interval){
+                case HOURLY:
+                    calendar.add(Calendar.HOUR_OF_DAY, 1);
+                    break;
+                case DAILY:
+                    calendar.add(Calendar.DATE, 1);
+                    break;
+                case WEEKLY:
+                    calendar.add(Calendar.WEEK_OF_YEAR, 1);
+                    break;
+                case MONTHLY:
+                    calendar.add(Calendar.MONTH, 1);
+                    break;
+                case YEARLY:
+                    calendar.add(Calendar.YEAR, 1);
+                    break;
+            }
+            intervalsSinceEpochAtStart++;
+        }
+    }
+
+    /**
+     * Reset the interval (x) counter, and update the a, b, c, and d values.
+     * @param id the id of the new entity.
+     */
+    private void function_prepareForNewEntity(String id){
+        try {
+
+            JSONObject targetedExpected = expected.getJSONObject(id);
+            a = targetedExpected.getDouble("a");
+            b = targetedExpected.getDouble("b");
+            c = targetedExpected.getDouble("c");
+            d = targetedExpected.getDouble("d");
+
+            intervalsSinceStart = 0;
+
+        } catch (JSONException e) {
+            e.printStackTrace(); // Probably avg. This is normal.
+        }
+    }
+
+    /**
+     * Get a y value.<br>
+     *     Updates x at the end, so it can simply be called again.
+     * @return float representing the y value.
+     */
+    private float function_getNextY(){
+        return (float) (
+                a * Math.sin(b * (intervalsSinceStart++ + intervalsSinceEpochAtStart) + c) + d
+        );
+    }
+
+    //Just in case, for now.
+    private class FunctionException extends Exception{
+        public FunctionException(){
+
+        }
+
+        public FunctionException(String message){
+            super(message);
+        }
     }
 }
