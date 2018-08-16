@@ -107,6 +107,14 @@
     <string name="info_orch_loc">Orchard Location</string>
     <string name="info_orch_mass">Bag Mass:</string>
     <string name="info_orch_irig">Irrigation Type:</string>
+    <string-array name="info_orch_irig_options">
+        <item>Micro</item>
+        <item>Drip</item>
+        <item>Floppy</item>
+        <item>Drag Lines</item>
+        <item>Other</item>
+        <item>None (dry land)</item>
+    </string-array>
     <string name="info_orch_date">Date Planted:</string>
     <string name="info_orch_farm">Assigned Farm:</string>
     <string name="info_orch_work">Assigned Workers:</string>
