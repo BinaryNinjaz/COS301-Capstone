@@ -66,7 +66,6 @@ public class Data {
 
     private static boolean needsPull = true;
 
-
     private Activity act = null;
 
     /**
@@ -95,6 +94,10 @@ public class Data {
 
     public static boolean isPulling() {
         return pulling;
+    }
+
+    public static void forceNextPull(){
+        needsPull = true;
     }
 
     /**
