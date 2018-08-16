@@ -4,6 +4,7 @@
         <!--If you change the title, be sure to change it in the if statement in
         firebaseRelatedJavaScriptFunctions, or this will break.-->
         <meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Firebase Dependencies Must be before firebaseRelatedJavaScriptFunctions.js -->
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
@@ -11,40 +12,120 @@
         <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 	
-        <!-- Bootstrap-->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css.map">
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+		<!-- This if for google buttons-->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css.map">
+	
 	
         <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
-        <link href="index.css" rel="stylesheet" type="text/css"/>
+        <link href="css/index.css" rel="stylesheet" type="text/css"/>
+		<link href="css/panel.css" rel="stylesheet" type="text/css"/>
         <link rel="icon" href="HarvestLogo.png">
+		<link href="css/link.css" rel="stylesheet" type="text/css"/>
+		<link href="css/footer.css" rel="stylesheet" type="text/css"/>
+		
     </head>
     
     <body>
-        <div class="topnav">
-            <ul class="nav navbar-nav" id="navHighlight">
-                <li>
-                    <a class="active" href="#">Harvest</a>  
-                </li>
-            </ul>
-        </div>
-        
-	<br />
-        
-        <br />
+	<!--******************************Foremen Tracking***********************************************-->
+		<div class="container">
+		<!-- Modal -->
+		  <div class="modal fade" id="myModal" role="dialog">
+			<div class="modal-dialog">
+			
+			  <!-- Modal content-->
+			  <div class="modal-content" style="border: 4px solid green;">
+				<div class="modal-header" style="background-color: whitesmoke; border-bottom: 4px solid green;">
+				  <h4 class="modal-title" style="text-align: center;color: black;">Foremen Tracking</h4>
+				</div>
+				<div class="modal-body">
+					<div class="panel panel-default" style="border: 4px solid green;">
+					  <div class="panel-heading" style="text-align: center; border-bottom: 4px solid green; background-color: whitesmoke;">Used for</div>
+					  <div class="panel-body" style="height: 14%; background-color: whitesmoke;"> 
+						<ul>
+							<li>Locate foremen allocated to a particular orchard (per session active)</li>
+							<li>Filter out foremen of interest</li>
+							<li>Get an update on the relocation of foremen</li>
+						</ul>
+					  </div>
+					</div>
+				</div>
+				<div class="modal-footer" style="background-color: whitesmoke;">
+				  <button type="button" id="closebtn" class="btn btn-default" data-dismiss="modal" style="height: 30px;">Close</button>
+				</div>
+			  </div>
+			  
+			</div>
+		 </div>
+		</div>
+	<!--******************************Farming Heatmap***********************************************-->
+	<div class="container">
+		<!-- Modal -->
+		  <div class="modal fade" id="myModal1" role="dialog">
+			<div class="modal-dialog"> 
+		 <!-- Modal content-->
+			  <div class="modal-content" style="border: 4px solid green;">
+				<div class="modal-header" style="background-color: whitesmoke; border-bottom: 4px solid green;">
+				  <h4 class="modal-title" style="text-align: center;color: black;">Farming Heatmap</h4>
+				</div>
+				<div class="modal-body">
+					<div class="panel panel-default" style="border: 4px solid green;">
+					  <div class="panel-heading" style="text-align: center; border-bottom: 4px solid green; background-color: whitesmoke;">Used for</div>
+					<div class="panel-body" style="height: 16%; background-color: whitesmoke;">
+						<ul>
+							<li>Display heat zone for choosen Farm (for a given period)</li>
+							<li>Display heat zone for choosen Worker (for a given period)</li>
+							<li>Display heat zone for choosen Orchard (for a given period)</li>
+							<li>Display heat zone for choosen Foreman (for a given period)</li>
+						</ul>
+					</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="background-color: whitesmoke;">
+				  <button type="button" id="closebtn" class="btn btn-default" data-dismiss="modal" style="height: 30px;">Close</button>
+				</div>
+			  </div>
+			  
+			</div>
+		 </div>
+	</div>
+	<!--******************************Farming Statistics***********************************************-->
+	<div class="container">
+		<!-- Modal -->
+		  <div class="modal fade" id="myModal2" role="dialog">
+			<div class="modal-dialog"> 
+		 <!-- Modal content-->
+			  <div class="modal-content" style="border: 4px solid green;">
+				<div class="modal-header" style="background-color: whitesmoke; border-bottom: 4px solid green;">
+				  <h4 class="modal-title" style="text-align: center;color: black;">Farming Statistics</h4>
+				</div>
+				<div class="modal-body">
+					<div class="panel panel-default" style="border: 4px solid green;">
+					  <div class="panel-heading" style="text-align: center; border-bottom: 4px solid green; background-color: whitesmoke;">Used for</div>
+					<div class="panel-body" style="height: 14%; background-color: whitesmoke;">
+						<ul>
+							<li>Display orchard performance statistics</li>
+							<li>Display Worker performance statistics</li>
+							<li>Filter Statistics according to date and time</li>
+						</ul>
+					</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="background-color: whitesmoke;">
+				  <button type="button" id="closebtn" class="btn btn-default" data-dismiss="modal" style="height: 30px;">Close</button>
+				</div>
+			  </div>
+			  
+			</div>
+		 </div>
+	</div>
+    <br/><br/><br/><br/><br/>
         
         <section class="container">
             <div id="con" class="col-lg-12 col-md-12 col-sm-12 col-12">                
@@ -57,7 +138,7 @@
                             <div id="formData">
                                 <fieldset>
                                     <div >
-                                        <h2>Log in to Harvest:</h2>
+                                        <h2>Login</h2>
                                     </div>
                                     <div >
                                         <div class="form-group">
@@ -88,18 +169,53 @@
                 </div>                
                 <div id="right">
                     <div class="col-lg-7 col-md-7 col-sm-6 col-12 col-lg-offset-2 col-md-offset-1 col-sm-offset-1">
-                        <h3 class="list-heading">Features</h3>
 						<!-- This class ico has a corresponding css content -->
-                        <ul class="ico">
-                            <li>Live foremen tracking</li>
-                            <li>Worker efficiency reports</li>
-                            <li>Farm Heatmap</li>
-                            <li>Track work progress live</li>
-                            <li>Efficient Farming </li>
-                            <li>Farming like never before</li>
-                        </ul>
+						<div class="panel panel-default" id="green">
+						<div class="panel-heading" style="text-align: center;" id="green1">Harvest Features</div>
+							<div class="panel-body">
+								<div class="container">
+									<div class="row">
+										<div class="container col-lg-12">
+											<div class="row">
+												<div class="panel panel-default col-sm-2 col-lg-2 " id="green2">
+												  <div class="panel-heading" style="text-align: center;">Foreman Tracking</div>
+												  <div class="panel-body" style="text-align: center; height: 18%;"> <img class="img-responsive" src="images/marker.PNG" class="img-rounded center" id="Panel_Image"></div>
+												</div>
+												
+												<div class="panel panel-default col-sm-2 col-lg-2" id="green2">
+												  <div class="panel-heading" style="text-align: center;">Farming Heatmap</div>
+												  <div class="panel-body" style="text-align: center; height: 18%;"><img class="img-responsive" src="images/heatmap.PNG" class="img-rounded center" id="Panel_Image"></div>
+												</div>
+												
+												<div class="panel panel-default col-sm-2 col-lg-2" id="green2">
+												  <div class="panel-heading" style="text-align: center;">Farming Statistics</div>
+												  <div class="panel-body" style="text-align: center; height: 18%;"><img class="img-responsive" src="images/stats.PNG" class="img-rounded center" id="Panel_Image"></div>
+												</div>
+												
+											</div>
+										</div> <!-- inner container-->
+										<div class="container col-lg-12">
+											<div class="row">
+												<div class="col-sm-2 col-lg-2">
+													<button class="btn btn-dark" data-toggle="modal" data-target="#myModal">Learn More <i class="fa fa-angle-right"></i></button>
+												</div>
+												<div class="col-sm-2 col-lg-2">
+													<button class="btn btn-dark" data-toggle="modal" data-target="#myModal1">Learn More <i class="fa fa-angle-right"></i></button>
+												</div>
+												<div class="col-sm-2 col-lg-2">
+													<button class="btn btn-dark" data-toggle="modal" data-target="#myModal2">Learn More <i class="fa fa-angle-right"></i></button>
+												</div>
+											</div>
+										</div> <!-- inner container-->
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--<a id="fork2" target="_blank" href="#">Github Link</a>-->
+						<!--<a id="fork" target="_blank" href="#">Contact</a>-->
+						<!--<a id="fork1" target="_blank" href="#">Documentation</a>-->
                     </div>
-		</div>                       
+				</div>                       
             </div>
         </section>
         
@@ -111,5 +227,9 @@
         <!--<script src="tests.js"></script>-->
          <script src="index.js" type="text/javascript"></script>
          <div id="ModalSpace"></div>
+		 <div class="footer">
+		  <p style="color: white;">&copy;Harvest</p>
+		</div>
+
   </body>
 </html>
