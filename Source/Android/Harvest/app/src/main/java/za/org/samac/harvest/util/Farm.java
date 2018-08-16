@@ -89,42 +89,16 @@ public class Farm extends DBInfoObject {
         this.ID = ID;
     }
 
-    public ArrayList<SearchedItem> search(String text) {
-        ArrayList<SearchedItem> result = new ArrayList<>();
-
-        text = text.toLowerCase();
-
-        if (getName() != null && getName().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Name", getName()));
-        }
-
-        if (getCompany() != null && getCompany().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Company Name", getCompany()));
-        }
-
-        if (getEmail() != null && getEmail().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Email", getEmail()));
-        }
-
-        if (getPhone() != null && getPhone().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Phone Number", getPhone()));
-        }
-
-        if (getProvince() != null && getProvince().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Province", getProvince()));
-        }
-
-        if (getTown() != null && getTown().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Nearest Town", getTown()));
-        }
-
-        return result;
-    }
-
     public ArrayList<SearchedItem> search(String text, boolean searchName) {
         ArrayList<SearchedItem> result = new ArrayList<>();
 
         text = text.toLowerCase();
+
+        if (searchName) {
+            if (getName() != null && getName().toLowerCase().contains(text)) {
+                result.add(new SearchedItem("Name", getName()));
+            }
+        }
 
         if (getCompany() != null && getCompany().toLowerCase().contains(text)) {
             result.add(new SearchedItem("Company Name", getCompany()));

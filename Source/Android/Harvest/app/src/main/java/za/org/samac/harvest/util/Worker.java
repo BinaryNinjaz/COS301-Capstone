@@ -130,30 +130,23 @@ public class Worker extends DBInfoObject {
         }
     }
 
-    public ArrayList<SearchedItem> search(String text) {
-        ArrayList<SearchedItem> result = new ArrayList<>();
-
-        text = text.toLowerCase();
-
-        if ((getfName() + " " + getsName()).toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Name", getfName() + " " + getsName()));
-        }
-
-        if (getnID().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("ID", getnID()));
-        }
-
-        if (getPhone().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Phone Number", getPhone()));
-        }
-
-        return result;
-    }
-
     public ArrayList<SearchedItem> search(String text, boolean searchName) {
         ArrayList<SearchedItem> result = new ArrayList<>();
 
         text = text.toLowerCase();
+
+        if (searchName) {
+            if ((getfName() + " " + getsName()).toLowerCase().contains(text)) {
+                result.add(new SearchedItem("Name", getfName() + " " + getsName()));
+            }
+        }
+
+        if (("foreman".contains(text.toLowerCase()) || "foremen".contains(text.toLowerCase())) && this.workerType == WorkerType.FOREMAN ){
+            result.add(new SearchedItem("Kind", "Foreman"));
+        }
+        else if ("workers".contains(text.toLowerCase()) && this.workerType == WorkerType.WORKER){
+            result.add(new SearchedItem("Kind", "Worker"));
+        }
 
         if (getnID().toLowerCase().contains(text)) {
             result.add(new SearchedItem("ID", getnID()));

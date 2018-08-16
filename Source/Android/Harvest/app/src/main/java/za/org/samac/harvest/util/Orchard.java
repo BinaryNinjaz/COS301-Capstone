@@ -137,45 +137,20 @@ public class Orchard extends DBInfoObject {
         return null;
     }
 
-    public ArrayList<SearchedItem> search(String text) {
-        ArrayList<SearchedItem> result = new ArrayList<>();
-
-        text = text.toLowerCase();
-
-        if (assignedFarm != null) {
-            for (SearchedItem item : assignedFarm.search(text)) {
-                result.add(new SearchedItem("Farm " + item.property, item.reason));
-            }
-        }
-
-        if ((getName()).toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Name", getName()));
-        }
-
-        if (getCrop().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Crop", getCrop()));
-        }
-
-        String culti = containsSubText(getCultivars(), text);
-        if (culti != null) {
-            result.add(new SearchedItem("Cultivar", culti));
-        }
-
-        if (getIrrigation().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Irrigation Type", getIrrigation()));
-        }
-
-        return result;
-    }
-
     public ArrayList<SearchedItem> search(String text, boolean searchName) {
         ArrayList<SearchedItem> result = new ArrayList<>();
 
         text = text.toLowerCase();
 
         if (assignedFarm != null) {
-            for (SearchedItem item : assignedFarm.search(text)) {
+            for (SearchedItem item : assignedFarm.search(text, true)) {
                 result.add(new SearchedItem("Farm " + item.property, item.reason));
+            }
+        }
+
+        if (searchName) {
+            if ((getName()).toLowerCase().contains(text)) {
+                result.add(new SearchedItem("Name", getName()));
             }
         }
 
@@ -194,7 +169,6 @@ public class Orchard extends DBInfoObject {
 
         return result;
     }
-
 
     @Override
     public String toString() {

@@ -86,21 +86,21 @@ public class InfoSearchFragment extends Fragment {
             List<SearchedItem> searchedItems;
             String tag = "";
             if (object.getClass() == Farm.class){
-                searchedItems = ((Farm) object).search(query);
+                searchedItems = ((Farm) object).search(query, false);
                 tag = "Farm " + object.getId();
             }
             else if (object.getClass() == Orchard.class){
-                searchedItems = ((Orchard) object).search(query);
+                searchedItems = ((Orchard) object).search(query, false);
                 tag = "Orchard " + object.getId();
             }
             else if (object.getClass() == Worker.class){
-                searchedItems = ((Worker) object).search(query);
+                searchedItems = ((Worker) object).search(query, false);
                 tag = "Worker " + object.getId();
             }
             else searchedItems = new ArrayList<>();
 
             for (SearchedItem searchedItem : searchedItems){
-                addResult(" " + object.toString() + " - " + searchedItem.reason, tag, searchedItem.property);
+                addResult(" " + object.toString(), searchedItem.reason, tag, searchedItem.property);
             }
         }
     }
@@ -109,13 +109,13 @@ public class InfoSearchFragment extends Fragment {
     private void addResults(List<DBInfoObject> results){
         for(DBInfoObject object : results){
             if (object.getClass() == Farm.class){
-                addResult(" " + object.toString(), "Farm " + object.getId(), "Farms");
+                addResult(object.toString(), "","Farm " + object.getId(), "Farms");
             }
             else if(object.getClass() == Orchard.class){
-                addResult(" " + object.toString(), "Orchard " + object.getId(), "Orchards");
+                addResult(object.toString(), "", "Orchard " + object.getId(), "Orchards");
             }
             else if (object.getClass() == Worker.class) {
-                addResult(" " + object.toString(), "Worker " + object.getId(), "Workers");
+                addResult(object.toString(), "", "Worker " + object.getId(), "Workers");
             }
         }
     }
@@ -128,12 +128,21 @@ public class InfoSearchFragment extends Fragment {
      * @param tag the tag for the button, so it goes to the correct place
      * @param title the title under which the result should be added
      */
-    private void addResult(String name, String tag, String title){
+    private void addResult(String name, String reason, String tag, String title){
         LinearLayout linearLayout = findLayout(title);
         LinearLayout gotten = (LinearLayout) inflater.inflate(R.layout.info_search_result, null, false);
+        gotten.setBackgroundColor(getResources().getColor(R.color.white));
         Button button = gotten.findViewById(R.id.info_search_result);
         button.setText(name);
         button.setTag(tag);
+        button = gotten.findViewById(R.id.info_search_reason);
+        if (reason.equals("")){
+            button.setVisibility(View.GONE);
+        }
+        else {
+            button.setText(reason);
+            button.setTag(tag);
+        }
         linearLayout.addView(gotten);
     }
 
