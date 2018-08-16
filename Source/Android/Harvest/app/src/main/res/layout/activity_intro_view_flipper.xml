@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@drawable/harvestbackground"
-    android:alpha="0.7">
+    android:background="@drawable/newharvestback">
 
     <ViewFlipper
         android:id="@+id/view_flipper"
@@ -33,9 +33,35 @@
                 style="@style/TextView.links"
                 android:id="@+id/skipOne"
                 android:text="@string/skip"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+                android:layout_alignParentBottom="true"/>
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/group"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn2"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn3"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn4"/>
+            </RadioGroup>
+            
         </RelativeLayout>
 
         <RelativeLayout
@@ -60,9 +86,36 @@
                 style="@style/TextView.links"
                 android:id="@+id/skipTwo"
                 android:text="@string/skip"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+                android:layout_alignParentBottom="true"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/group1"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn1"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn12"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn13"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn14"/>
+            </RadioGroup>
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,9 +140,38 @@
                 style="@style/TextView.links"
                 android:id="@+id/skipThree"
                 android:text="@string/skip"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+                android:layout_alignParentBottom="true"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/group2"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn20"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn22"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn33"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn44"/>
+            </RadioGroup>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -114,11 +196,46 @@
                 style="@style/TextView.links"
                 android:id="@+id/done"
                 android:text="@string/done"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+                android:layout_alignParentBottom="true"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                android:id="@+id/group3"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn50"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn52"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn53"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rbtn54"
+                    android:checked="true"
+                    android:buttonTint="@color/white"/>
+            </RadioGroup>
         </RelativeLayout>
 
     </ViewFlipper>
+
+    <!-- <com.chabbal.slidingdotsplash.SlidingSplashView
+        android:id="@+id/splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:imageResources="@array/img_id_arr"/> -->
 
 </RelativeLayout>

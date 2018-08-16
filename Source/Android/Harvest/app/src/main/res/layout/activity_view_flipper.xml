@@ -3,8 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@drawable/harvestbackground"
-    android:alpha="0.7">
+    android:background="@drawable/newharvestback">
 
     <ViewFlipper
         android:id="@+id/view_flipper"
@@ -33,9 +32,7 @@
                 style="@style/TextView.links"
                 android:id="@+id/skipOne"
                 android:text="@string/skip"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+                android:layout_alignParentBottom="true"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -60,9 +57,7 @@
                 style="@style/TextView.links"
                 android:id="@+id/skipTwo"
                 android:text="@string/skip"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+                android:layout_alignParentBottom="true"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,9 +82,7 @@
                 style="@style/TextView.links"
                 android:id="@+id/skipThree"
                 android:text="@string/skip"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+                android:layout_alignParentBottom="true"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -114,9 +107,7 @@
                 style="@style/TextView.links"
                 android:id="@+id/skipFour"
                 android:text="@string/skip"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+                android:layout_alignParentBottom="true"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -141,9 +132,7 @@
                 style="@style/TextView.links"
                 android:id="@+id/done"
                 android:text="@string/done"
-                android:gravity="bottom|center"
-                android:layout_gravity="bottom|center"
-                android:layout_marginTop="10dp"/>
+                android:layout_alignParentBottom="true"/>
         </RelativeLayout>
     </ViewFlipper>
 

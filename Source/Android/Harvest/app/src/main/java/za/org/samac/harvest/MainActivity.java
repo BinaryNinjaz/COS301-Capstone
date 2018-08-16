@@ -408,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             public void onClick(DialogInterface dialog, int which) {
                 // the user clicked on colors[which]
                 TextView textViewOrch = findViewById(R.id.textViewOrch);
-                textViewOrch.setText(new StringBuilder().append("Orchard: ").append(orchards.get(which)).toString());
+                textViewOrch.setText(new StringBuilder().append("Selected Orchard: ").append(orchards.get(which)).toString());
                 textViewOrch.setTypeface(null, Typeface.BOLD);
                 selectedOrchardKey = orchardKeys.get(which);
                 progressBar.setVisibility(View.VISIBLE);
@@ -669,6 +669,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             To reproduce
             > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
 //        workersRef.addValueEventListener(new ValueEventListener() {
+        workers.clear();
+        workersSearch.clear();
+        adapter.setWorkers(workers);
         workersRef.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -1090,7 +1093,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             adapter.totalBagsCollected = 0;//reset total number of bags collected for all workers
             textView.setText("Current Yield: " + adapter.totalBagsCollected);
             TextView textViewOrch = findViewById(R.id.textViewOrch);
-            textViewOrch.setText(new StringBuilder().append("Orchard: --").toString());
+            textViewOrch.setText(new StringBuilder().append("Selected Orchard: --").toString());
             textViewOrch.setTypeface(null, Typeface.BOLD);
             for (int i = 0; i < workers.size(); i++) {
                 workers.get(i).setValue(0);
