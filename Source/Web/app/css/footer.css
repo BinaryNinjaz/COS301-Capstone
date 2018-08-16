@@ -1,3 +1,4 @@
+/* This styles the footer of the index page*/
 .footer {
 	position: fixed;
 	left: 0;
@@ -9,6 +10,7 @@
 	opacity: 0.3;
 }
 
+/* This styles close button of each modal*/
 #closebtn { 
 	width: 15%; 
 	background-color:#4CAF50; 
