@@ -97,6 +97,10 @@ public class Stats_Selector extends Fragment{
         this.category = category;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
     private void refresh(){
         data.pull();
     }
