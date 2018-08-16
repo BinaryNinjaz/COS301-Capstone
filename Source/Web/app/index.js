@@ -59,7 +59,7 @@ function showLogin(){
 	document.getElementById("formData").innerHTML = "";
 	document.getElementById("formData").innerHTML = "<fieldset>"+
                                                             "<div class='card-header'>"+
-                                                                "<h2>Log in to Harvest:</h2>"+
+                                                                "<h2>Login</h2>"+
                                                            "</div>"+
                                                            "<div class='card-body'>"+
                                                                 "<div class='form-group'>"+
