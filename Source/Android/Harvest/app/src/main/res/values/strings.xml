@@ -137,6 +137,8 @@
     <string name="info_work_fore_off">Worker</string>
     <string name="info_work_fore_on">Foreman</string>
 
+    <string name="info_none_tip">Press the green plus button at the bottom right to add %1$s</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Account settings -->
@@ -278,6 +280,8 @@
     <string name="stats_popup_rename">Rename</string>
     <string name="stats_popup_delete">Delete</string>
     <string name="stats_popup_cancel">Cancel</string>
+
+    <string name="stats_create_tip">Press \"MAKE NEW GRAPH\" above to begin.</string>
 
 
     <string name="title_activity_sessions">Sessions</string>

@@ -18,6 +18,14 @@
         android:text="@string/stats_create_make"
         android:textColor="@color/white" />
 
+    <TextView
+        android:id="@+id/nothingText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/stats_create_tip"
+        android:textAlignment="center"
+        android:layout_marginTop="200dp" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

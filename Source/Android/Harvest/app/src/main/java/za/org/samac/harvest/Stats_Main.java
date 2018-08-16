@@ -27,6 +27,8 @@ public class Stats_Main extends Fragment{
     
     RecyclerView farmsRecycler, orchardsRecycler, workersRecycler, foremenRecycler;
     TextView farmsText, orchardsText, workersText, foremenText;
+    private boolean populationExists = false;
+    private TextView nothing;
 
     private final String TAG = "Stats_Main";
 
@@ -51,6 +53,8 @@ public class Stats_Main extends Fragment{
         orchardsText = view.findViewById(R.id.stats_choose_orchards_title);
         workersText = view.findViewById(R.id.stats_choose_workers_title);
         foremenText = view.findViewById(R.id.stats_choose_foremen_title);
+
+        nothing = view.findViewById(R.id.nothingText);
 
         updateRecyclers(Category.FARM);
     }
@@ -78,10 +82,18 @@ public class Stats_Main extends Fragment{
             }
         }
 
+        populationExists = false;
         populate(Category.FARM, farm, farmsRecycler, farmsText);
         populate(Category.ORCHARD, orchard, orchardsRecycler, orchardsText);
         populate(Category.WORKER, worker, workersRecycler, workersText);
         populate(Category.FOREMAN, foreman, foremenRecycler, foremenText);
+
+        if (!populationExists){
+            nothing.setVisibility(View.VISIBLE);
+        }
+        else {
+            nothing.setVisibility(View.GONE);
+        }
 
     }
 
@@ -96,6 +108,7 @@ public class Stats_Main extends Fragment{
             textView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setHasFixedSize(false);
+            populationExists = true;
         }
         else {
             textView.setVisibility(View.GONE);
