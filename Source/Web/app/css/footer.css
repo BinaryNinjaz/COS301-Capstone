@@ -1,0 +1,19 @@
+/* This styles the footer of the index page*/
+.footer {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	height: 30px;
+	width: 100%;
+	background-color: #4CAF50;
+	text-align: center;
+	opacity: 0.3;
+}
+
+/* This styles close button of each modal*/
+#closebtn { 
+	width: 15%; 
+	background-color:#4CAF50; 
+	color: whitesmoke; 
+	height: 15%;
+}
