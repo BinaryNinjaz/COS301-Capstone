@@ -30,6 +30,10 @@ public class IntroViewFlipper extends Activity {
         setContentView(R.layout.activity_intro_view_flipper);
         mContext = this;
         mViewFlipper = (ViewFlipper) this.findViewById(R.id.view_flipper);
+        //If this is called as a redo, then we don't want to go back to the login, so the HelpPreferenceFragment will signal with this.
+        Bundle extras = getIntent().getExtras();
+        final boolean noNewActivity;
+        noNewActivity = extras != null && extras.getBoolean(SettingsActivity.HelpPreferenceFragment.KEY_NONEWACTIVITY, false);
 
 
         skipOne = findViewById(R.id.skipOne);
@@ -37,9 +41,7 @@ public class IntroViewFlipper extends Activity {
         skipOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
-                startActivity(intent);
-                finish();//kill current Activity
+                endThis(!noNewActivity);
             }
         });
 
@@ -48,9 +50,7 @@ public class IntroViewFlipper extends Activity {
         skipTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
-                startActivity(intent);
-                finish();//kill current Activity
+                endThis(!noNewActivity);
             }
         });
 
@@ -59,9 +59,7 @@ public class IntroViewFlipper extends Activity {
         skipThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
-                startActivity(intent);
-                finish();//kill current Activity
+                endThis(!noNewActivity);
             }
         });
 
@@ -70,9 +68,7 @@ public class IntroViewFlipper extends Activity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
-                startActivity(intent);
-                finish();//kill current Activity
+                endThis(!noNewActivity);
             }
         });
 
@@ -83,6 +79,14 @@ public class IntroViewFlipper extends Activity {
                 return true;
             }
         });
+    }
+
+    private void endThis(boolean goToStart){
+        if (goToStart) {
+            Intent intent = new Intent(IntroViewFlipper.this, SignIn_Choose.class);
+            startActivity(intent);
+        }
+        finish();
     }
 
     class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {

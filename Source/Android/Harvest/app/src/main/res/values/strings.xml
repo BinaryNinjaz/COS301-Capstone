@@ -182,6 +182,16 @@
     <string name="pref_account_reAuthCancel">Cancel</string>
     <string name="pref_account_reAuthConfirm">Confirm</string>
 
+    <!--Help Settings-->
+    <string name="pref_help_key">pref_help_key</string>
+    <string name="pref_help_header">Help</string>
+    <string name="pref_help_intro">Restart Introduction</string>
+    <string name="pref_help_intro_key">pref_help_intro_key</string>
+    <string name="pref_help_tutorial">Restart Tutorial</string>
+    <string name="pref_help_tutorial_key">pref_help_tutorial_key</string>
+    <string name="pref_help_man">Open Manual in Browser</string>
+    <string name="pref_help_man_key">pref_help_man_key</string>
+
 
     <!--Strings related to stats-->
 
