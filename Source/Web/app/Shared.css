@@ -54,6 +54,8 @@ body{
     background-image: url("background.jpg");
     background-repeat: no-repeat;  
     background-size: cover;  
+    background-origin: center;
+    background-attachment: fixed;
     display: block;
     overflow: auto;    
 }
