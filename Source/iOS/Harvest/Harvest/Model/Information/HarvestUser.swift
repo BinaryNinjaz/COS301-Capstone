@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/24.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Firebase
@@ -65,6 +65,7 @@ public final class HarvestUser {
     
     accountIdentifier = user.email ?? user.phoneNumber ?? ""
     uid = user.uid
+    UserDefaults.standard.set(uid: uid)
     
     HarvestDB.getWorkingFor(completion: { ids in
       HarvestUser.current.workingForID = ids
@@ -78,6 +79,7 @@ public final class HarvestUser {
         HarvestUser.current.firstname = user.firstname
         HarvestUser.current.lastname = user.lastname
         HarvestUser.current.organisationName = user.organisationName
+        StatStore.shared.updateStore()
         completion(nil, true)
       }
     })
@@ -143,12 +145,7 @@ public extension UserDefaults {
     return string(forKey: "verificationID")
   }
   
-  public func set(uid: String?, wid: String?) {
-    if let w = wid {
-      set(w, forKey: "wid")
-    } else {
-      removeObject(forKey: "wid")
-    }
+  public func set(uid: String?) {
     if let u = uid {
       set(u, forKey: "uid")
     } else {
@@ -156,10 +153,28 @@ public extension UserDefaults {
     }
   }
   
-  public func getUWID() -> (uid: String, wid: String)? {
-    if let u = string(forKey: "uid"), let w = string(forKey: "wid") {
-      return (u, w)
+  public func set(wid: String?) {
+    if let w = wid {
+      set(w, forKey: "wid")
+    } else {
+      removeObject(forKey: "wid")
     }
-    return nil
+  }
+  
+  public func set(uid: String?, wid: String?) {
+    set(uid: uid)
+    set(wid: wid)
+  }
+  
+  public func getUID() -> String? {
+    return string(forKey: "uid")
+  }
+  
+  public func getWID() -> String? {
+    return string(forKey: "wid")
+  }
+  
+  public func getUWID() -> (uid: String?, wid: String?) {
+    return (getUID(), getWID())
   }
 }

@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/03/26.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Disk
@@ -42,13 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
         annotation: [:])
   }
-  
-  func sign(_ signIn: GIDSignIn!,
-            didDisconnectWith user: GIDGoogleUser!,
-            withError error: Error!
-  ) {
-    // user signed out
-  }
 
   func applicationWillResignActive(_ application: UIApplication) {
     // Sent when the application is about to move from active to inactive state.
@@ -84,8 +77,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Called when the application is about to terminate. Save data if
     // appropriate. See also applicationDidEnterBackground:.
     
-//    FIXME: Uncomment in production
-//    TrackerViewController.tracker?.storeSession()
+    #if !DEBUG
+      TrackerViewController.tracker?.storeSession()
+    #endif
   }
   
   func application(

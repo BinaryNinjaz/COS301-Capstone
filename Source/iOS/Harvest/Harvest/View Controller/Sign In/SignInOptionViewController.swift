@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/06/22.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -32,8 +32,24 @@ class SignInOptionViewController: UIViewController {
     return result
   }
   
+  override func viewDidAppear(_ animated: Bool) {
+    guard UserDefaults.standard.bool(forKey: "Launched") else {
+      let vc = storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
+      if let avc = vc as? CarouselViewController {
+        avc.showIntro()
+        present(avc, animated: true, completion: nil)
+      }
+      return
+    }
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    guard UserDefaults.standard.bool(forKey: "Launched") else {
+      return
+    }
+    
     signUpButton.apply(gradient: .signUpButton)
     
     if let user = Auth.auth().currentUser {

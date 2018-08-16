@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/20.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Firebase
@@ -16,20 +16,28 @@ extension HarvestDB {
     _ completion: @escaping (Bool) -> Void
   ) -> ([(uid: String, wid: String)]?, Bool) -> Void {
     return { ids, succ in
-      guard let ids = ids else { // is farmer
+      guard let ids = ids else { // ensure is foreman else call completion(true)
         completion(true)
         return
       }
       
-      if let (uid, wid) = UserDefaults.standard.getUWID() {
+      if let uid = UserDefaults.standard.getUID(), let wid = UserDefaults.standard.getWID() {
         HarvestUser.current.selectedWorkingForID = (uid, wid)
+        HarvestDB.getWorkingForFarmName(uid: uid) { (name) in
+          HarvestUser.current.organisationName = name ?? "your farm"
+        }
         completion(true)
       } else if ids.count == 1 {
         HarvestUser.current.selectedWorkingForID = ids.first!
+        HarvestDB.getWorkingForFarmName(uid: ids.first!.uid) { (name) in
+          HarvestUser.current.organisationName = name ?? "your farm"
+        }
         completion(true)
       } else if ids.count == 0 {
-        let alert = SCLAlertView()
-        alert.addButton("Done", action: { completion(false) })
+        HarvestUser.current.reset()
+        
+        let alert = SCLAlertView(appearance: .optionsAppearance)
+        alert.addButton("Okay", action: { completion(false) })
         
         alert.showNotice(
           "You're Not Working For Anyone",
@@ -39,12 +47,12 @@ extension HarvestDB {
         HarvestDB.getWorkingForFarmNames(uids: ids.map { $0.uid }, result: [], completion: { (names) in
           let alert = SCLAlertView(
             appearance: .optionsAppearance,
-            options: zip(names, ids).map { ($0.0, $0.1.uid) }) { option in
+            options: zip(names, ids).map { ($0.0, $0.1.uid) }) { option, name in
               guard let fullOption = ids.first(where: { $0.uid == option }) else {
                 completion(false)
                 return
               }
-          
+              HarvestUser.current.organisationName = name
               HarvestUser.current.selectedWorkingForID = fullOption
               UserDefaults.standard.set(uid: fullOption.uid, wid: fullOption.wid)
               completion(true)
@@ -65,14 +73,20 @@ extension HarvestDB {
     on controller: UIViewController?,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
-    Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
-      if let err = error {
-        SCLAlertView().showError("Sign In Failure", subTitle: err.localizedDescription)
+    Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
+      if let error = error {
+        let nserr = error as NSError
+        if [AuthErrorCode.emailAlreadyInUse, .wrongPassword, .userNotFound]
+          .contains(AuthErrorCode(rawValue: nserr.code)) {
+          SCLAlertView().showError("Sign In Failure", subTitle: "Your Email or password is incorrect.")
+        } else {
+          SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+        }
         completion(false)
         return
       }
       
-      guard let user = user else {
+      guard let user = authResult?.user else {
         SCLAlertView().showError("Sign In Failure", subTitle: "An unknow error occured")
         completion(false)
         return
@@ -91,20 +105,27 @@ extension HarvestDB {
     with credential: AuthCredential,
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
-    Auth.auth().signIn(with: credential) { (user, error) in
+    Auth.auth().signInAndRetrieveData(with: credential) { (authResult, error) in
       if let error = error {
-        SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+        let nserr = error as NSError
+        if [AuthErrorCode.emailAlreadyInUse, .wrongPassword, .userNotFound]
+          .contains(AuthErrorCode(rawValue: nserr.code)) {
+          SCLAlertView().showError("Sign In Failure", subTitle: "Your Email or password is incorrect.")
+        } else {
+          SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+        }
         completion(false)
         return
       }
       
-      guard let user = user else {
+      guard let user = authResult?.user else {
         SCLAlertView().showError("Sign In Failure", subTitle: "An unknow error occured")
         completion(false)
         return
       }
       
-      HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor(completion))
+      HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
+      HarvestUser.current.setUser(user, nil, requestWorkingFor(completion))
       
       if let oldSession = try? Disk.retrieve("session", from: .applicationSupport, as: Tracker.self) {
         oldSession.storeSession()
@@ -121,14 +142,14 @@ extension HarvestDB {
     Auth.auth().createUser(
       withEmail: details.email,
       password: details.password
-    ) { (user, error) in
+    ) { (authResult, error) in
       if let error = error {
         SCLAlertView().showError("Sign Up Failure", subTitle: error.localizedDescription)
         completion(false)
         return
       }
       
-      guard let user = user else {
+      guard let user = authResult?.user else {
         SCLAlertView().showError("Sign Up Failure", subTitle: "An unknown error occured")
         completion(false)
         return
@@ -145,7 +166,7 @@ extension HarvestDB {
       HarvestUser.current.lastname = name.last
       HarvestUser.current.organisationName = organisationName
       HarvestUser.current.setUser(user, details.password, HarvestDB.requestWorkingFor(completion))
-      HarvestDB.save(harvestUser: HarvestUser.current)
+      HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
       
       completion(true)
     }
@@ -164,9 +185,8 @@ extension HarvestDB {
       HarvestUser.current.reset()
       Entities.shared.reset()
       
-    } catch {
-      //    FIXME  #warning("Complete with proper errors")
-      SCLAlertView().showError("Sign Out Failure", subTitle: "An unknown error occured")
+    } catch let e {
+      SCLAlertView().showError("Sign Out Failure", subTitle: e.localizedDescription)
       completion(false)
       return
     }
@@ -211,8 +231,7 @@ extension HarvestDB {
   static func getWorkingFor(
     completion: @escaping ([(uid: String, wid: String)]) -> Void
   ) {
-    let wfref = ref.child(
-      Path.workingFor
+    let wfref = ref.child(Path.workingFor
         + "/"
         + HarvestUser.current.accountIdentifier.removedFirebaseInvalids())
     wfref.observeSingleEvent(of: .value) { (snapshot) in
@@ -265,6 +284,5 @@ extension HarvestDB {
       
       HarvestDB.getWorkingForFarmNames(uids: rest, result: result + [name], completion: completion)
     }
-    
   }
 }

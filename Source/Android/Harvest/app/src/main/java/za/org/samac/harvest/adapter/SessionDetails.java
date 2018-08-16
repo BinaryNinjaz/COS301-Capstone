@@ -1,8 +1,11 @@
 package za.org.samac.harvest.adapter;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.MediaCas;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +44,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import za.org.samac.harvest.Stats;
+import za.org.samac.harvest.BottomNavigationViewHelper;
+import za.org.samac.harvest.InformationActivity;
+import za.org.samac.harvest.Sessions;
 import za.org.samac.harvest.SignIn_Choose;
 import za.org.samac.harvest.MainActivity;
 import za.org.samac.harvest.R;
@@ -48,8 +55,10 @@ import za.org.samac.harvest.SessionsMap;
 import za.org.samac.harvest.SettingsActivity;
 import za.org.samac.harvest.SignIn_Farmer;
 import za.org.samac.harvest.SignIn_SignUp;
+import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.SearchedItem;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
 import static za.org.samac.harvest.MainActivity.getWorkers;
@@ -57,10 +66,9 @@ import static za.org.samac.harvest.MainActivity.getWorkers;
 public class SessionDetails extends AppCompatActivity {
 
     String key;
-    String wid;
+    String foreman;
     Date startDate;
     Date endDate;
-    public static collections collected;
     private ArrayList<Worker> workers;
     private HashMap<String, String> workerID;
     private ArrayList<Worker> foremen;
@@ -78,24 +86,25 @@ public class SessionDetails extends AppCompatActivity {
     private ArrayList<Integer> yield;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Query query;
-    private static final String TAG = "Analytics";
+    private static final String TAG = "Stats";
     ArrayList<PieEntry> entries = new ArrayList<>();
     com.github.mikephil.charting.charts.PieChart pieChart;
     private com.github.mikephil.charting.charts.PieChart pieChartView;
     Map<String, Float> collections = new HashMap<>();
+    private Button deleteSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_details);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
         linearLayoutSessDetails = findViewById(R.id.linearLayoutSessDetails);
         progressBar.setVisibility(View.VISIBLE);//put progress bar until data is retrieved from firebase
         linearLayoutSessDetails.setVisibility(View.GONE);
         pieChartView = findViewById(R.id.pieChart);
-
-        collected = new collections("");
+        deleteSession = findViewById(R.id.deleteSession);
 
         Button mapButton = findViewById(R.id.sessionDetailsMapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -122,149 +131,97 @@ public class SessionDetails extends AppCompatActivity {
             String id = foremen.get(i).getID();
             String name = foremen.get(i).getName();
             foremenID.put(id, name);
+            System.out.println(id + " " + name);
         }
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        formatter.setCalendar(Calendar.getInstance());
 
-        final DatabaseReference dbref = database.getReference(MainActivity.farmerKey + "/sessions/" + getIntent().getStringExtra("key"));
+        startDate = Sessions.selectedItem.startDate;
+        endDate = Sessions.selectedItem.endDate;
+        foreman = Sessions.selectedItem.foreman;
+        key = Sessions.selectedItem.key;
 
-        dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+        TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
+        TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
+        TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
+
+        foremanTextView.setText(foreman);
+        startTime.setText(formatter.format(startDate));
+        endTime.setText(formatter.format(endDate));
+
+        //bottom nav bar
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.actionSession);
+        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.actionYieldTracker:
+                                Intent openMainActivity= new Intent(SessionDetails.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
+                                return true;
+                            case R.id.actionInformation:
+                                startActivity(new Intent(SessionDetails.this, InformationActivity.class));
+                                return true;
+                            case R.id.actionSession:
+                                return true;
+                            case R.id.actionStats:
+                                startActivity(new Intent(SessionDetails.this, Stats.class));
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+
+
+        deleteSession.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot == null || dataSnapshot.getValue() == null) {
-                    dbref.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            startDate = new Date((long) (dataSnapshot.child("start_date").getValue(Double.class) * 1000));
-                            Double ed = dataSnapshot.child("end_date").getValue(Double.class);
-                            if (ed != null) {
-                                endDate = new Date((long) (ed * 1000));
-                            } else {
-                                endDate = startDate;
+            public void onClick(View view) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(SessionDetails.this);
+                builder.setMessage("Delete session?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                DatabaseReference myRef;
+                                database = FirebaseDatabase.getInstance();
+                                myRef = database.getReference(MainActivity.farmerKey + "/sessions/" + key);//path to sessions increment in Firebase
+                                myRef.removeValue();//remove latest increment
+                                dialog.dismiss();
+                                Intent intent = new Intent(SessionDetails.this, Sessions.class);
+                                startActivity(intent);
                             }
-                            key = dataSnapshot.getKey();
-                            workerKeys = new ArrayList<>();
-                            workerName = new ArrayList<>();
-                            yield = new ArrayList<>();
-
-                            wid = dataSnapshot.child("wid").getValue(String.class);
-                            for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
-                                Double lat = childSnapshot.child("lat").getValue(Double.class);
-                                Double lng = childSnapshot.child("lng").getValue(Double.class);
-                                Location loc = new Location("");
-                                loc.setLatitude(lat.doubleValue());
-                                loc.setLongitude(lng.doubleValue());
-
-                                collected.addTrack(loc);
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                dialog.cancel();
                             }
-                            for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
-                                String workername = workerID.get(childSnapshot.getKey());
-                                int count = 0;
-                                for (DataSnapshot collection : childSnapshot.getChildren()) {
-                                    System.out.println(collection);
-                                    Double lat = collection.child("coord").child("lat").getValue(Double.class);
-                                    Double lng = collection.child("coord").child("lng").getValue(Double.class);
-                                    Location loc = new Location("");
-                                    loc.setLatitude(lat.doubleValue());
-                                    loc.setLongitude(lng.doubleValue());
-                                    Double time = childSnapshot.child("date").getValue(Double.class);
-
-                                    collected.addCollection(workername, loc, time);
-                                    count++;
-                                }
-                                collections.put(workername, (float) count);
-                            }
-
-                            displayGraph();
-
-                            TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
-                            TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
-                            TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
-
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                            formatter.setCalendar(Calendar.getInstance());
-
-                            String fname = foremenID.get(wid) == null ? "Farm Owner" : foremenID.get(wid);
-                            foremanTextView.setText("Foreman: " + fname);
-                            startTime.setText("Time Started: " + formatter.format(startDate));
-                            endTime.setText("Time Ended: " + formatter.format(endDate));
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                } else {
-                    System.out.println("&&&&&&&&&&& " + dataSnapshot + " &&&&&&&&&&& " + dataSnapshot.getValue() + " **** " + dataSnapshot.child("start_date"));
-                    startDate = new Date((long) (dataSnapshot.child("start_date").getValue(Double.class) * 1000));
-                    Double ed = dataSnapshot.child("end_date").getValue(Double.class);
-                    if (ed != null) {
-                        endDate = new Date((long) (ed * 1000));
-                    } else {
-                        endDate = startDate;
-                    }
-                    key = dataSnapshot.getKey();
-                    workerKeys = new ArrayList<>();
-                    workerName = new ArrayList<>();
-                    yield = new ArrayList<>();
-
-                    wid = dataSnapshot.child("wid").getValue(String.class);
-                    for (DataSnapshot childSnapshot : dataSnapshot.child("track").getChildren()) {
-                        Double lat = childSnapshot.child("lat").getValue(Double.class);
-                        Double lng = childSnapshot.child("lng").getValue(Double.class);
-                        Location loc = new Location("");
-                        loc.setLatitude(lat.doubleValue());
-                        loc.setLongitude(lng.doubleValue());
-
-                        collected.addTrack(loc);
-                    }
-                    for (DataSnapshot childSnapshot : dataSnapshot.child("collections").getChildren()) {
-                        String workername = workerID.get(childSnapshot.getKey());
-                        int count = 0;
-                        for (DataSnapshot collection : childSnapshot.getChildren()) {
-                            System.out.println(collection);
-                            Double lat = collection.child("coord").child("lat").getValue(Double.class);
-                            Double lng = collection.child("coord").child("lng").getValue(Double.class);
-                            Location loc = new Location("");
-                            loc.setLatitude(lat.doubleValue());
-                            loc.setLongitude(lng.doubleValue());
-                            Double time = childSnapshot.child("date").getValue(Double.class);
-
-                            collected.addCollection(workername, loc, time);
-                            count++;
-                        }
-                        collections.put(workername, (float) count);
-                    }
-
-                    displayGraph();
-
-                    TextView foremanTextView = findViewById(R.id.sessionDetailForemanTextView);
-                    TextView startTime = findViewById(R.id.sessionDetailStartDateTextView);
-                    TextView endTime = findViewById(R.id.sessionDetailEndDateTextView);
-
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                    formatter.setCalendar(Calendar.getInstance());
-
-                    String fname = foremenID.get(wid) == null ? "Farm Owner" : foremenID.get(wid);
-                    foremanTextView.setText("Foreman: " + fname);
-                    startTime.setText("Time Started: " + formatter.format(startDate));
-                    endTime.setText("Time Ended: " + formatter.format(endDate));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
             }
         });
+
+        displayGraph();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.actionSession);//set correct item to pop out on the nav bar
+        }
     }
 
     public void displayGraph() {
         pieChart = (com.github.mikephil.charting.charts.PieChart)findViewById(R.id.pieChart);
-        for(String key : collections.keySet()) {
-            String workerName = key;
-            Float yield = collections.get(workerName);
+        for(String key : Sessions.selectedItem.collectionPoints.keySet()) {
+            String workerName = Sessions.selectedItem.collectionPoints.get(key).get(0).workerName;
+            Float yield = (float)Sessions.selectedItem.collectionPoints.get(key).size();
             entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
         }
 
@@ -283,7 +240,7 @@ public class SessionDetails extends AppCompatActivity {
         pieChart.setData(data); // set the data and list of lables into chart
 
         Description description = new Description();
-        description.setText("Worker Performance");
+        description.setText("");
         pieChart.setDescription(description); // set the description
         pieChart.notifyDataSetChanged();
     }
@@ -322,13 +279,8 @@ public class SessionDetails extends AppCompatActivity {
                 }
                 finish();
                 return true;
-//            case R.id.homeAsUp:
-//                onBackPressed();
-//                return true;
             default:
-                super.onOptionsItemSelected(item);
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-//        return false;
     }
 }

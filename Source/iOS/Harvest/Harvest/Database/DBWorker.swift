@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/20.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Firebase
@@ -28,10 +28,12 @@ extension HarvestDB {
     }
   }
   
+  static var workers = [Worker]()
+  
   static func watchWorkers(_ completion: @escaping ([Worker]) -> Void) {
     let wref = ref.child(Path.workers).queryOrdered(byChild: "surname")
-    wref.observe(.value) { (snapshot) in
-      var workers = [Worker]()
+    wref.observeSingleEvent(of: .value) { (snapshot) in
+      workers.removeAll()
       for _child in snapshot.children {
         guard let child = _child as? DataSnapshot else {
           continue
@@ -45,12 +47,45 @@ extension HarvestDB {
       }
       completion(workers)
     }
+    wref.observe(.childAdded) { (snapshot) in
+      guard let worker = snapshot.value as? [String: Any] else {
+        return
+      }
+      let w = Worker(json: worker, id: snapshot.key)
+      if workers.index(where: { $0.id == w.id }) == nil {
+        workers.append(w)
+        completion(workers)
+      }
+    }
+    wref.observe(.childRemoved) { (snapshot) in
+      guard let worker = snapshot.value as? [String: Any] else {
+        return
+      }
+      let w = Worker(json: worker, id: snapshot.key)
+      if let idx = workers.index(where: { $0.id == w.id }) {
+        workers.remove(at: idx)
+        completion(workers)
+      }
+    }
+    wref.observe(.childChanged) { (snapshot) in
+      guard let worker = snapshot.value as? [String: Any] else {
+        return
+      }
+      let w = Worker(json: worker, id: snapshot.key)
+      if let idx = workers.index(where: { $0.id == w.id }) {
+        workers.remove(at: idx)
+        workers.insert(w, at: idx)
+        completion(workers)
+      }
+    }
   }
   
   static func save(worker: Worker, oldNumber: String) {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
     let workingFor = ref.child(Path.workingFor)
+    let locations = ref.child(Path.locations)
+    let requestedLocations = ref.child(Path.requestedLocations)
     
     if worker.id == "" {
       worker.id = workers.childByAutoId().key
@@ -65,8 +100,11 @@ extension HarvestDB {
         foremen.child(oldNumber.removedFirebaseInvalids()).removeValue()
       }
     } else if worker.phoneNumber != "" {
-      foremen.child(worker.phoneNumber.removedFirebaseInvalids()).removeValue()
-      workingFor.child(worker.phoneNumber.removedFirebaseInvalids()).removeValue()
+      let workerPath = worker.phoneNumber.removedFirebaseInvalids()
+      foremen.child(workerPath).removeValue()
+      workingFor.child(workerPath).removeValue()
+      locations.child(workerPath).removeValue()
+      requestedLocations.child(workerPath).removeValue()
     }
   }
   
@@ -103,7 +141,12 @@ extension HarvestDB {
         .removedFirebaseInvalids()).removeValue { err, ref in
         completion(err, ref)
       }
-      workingFor.child(worker.phoneNumber.removedFirebaseInvalids()).removeValue()
+      if let uid = HarvestUser.current.selectedWorkingForID?.uid {
+        workingFor
+          .child(worker.phoneNumber.removedFirebaseInvalids())
+          .child(uid)
+          .removeValue()
+      }
     })
   }
   
@@ -116,6 +159,10 @@ extension HarvestDB {
     }
     
     let worker = workers[workerIdx]
-    delete(worker: worker.value, completion: completion)
+    delete(worker: worker.value) { err, ref in
+      HarvestDB.signOut { _ in
+        completion(err, ref)
+      }
+    }
   }
 }

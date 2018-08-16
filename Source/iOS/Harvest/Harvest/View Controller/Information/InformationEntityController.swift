@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/19.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -154,11 +154,7 @@ extension InformationEntityController: UICollectionViewDelegateFlowLayout {
                       sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
     
-    let w = (collectionView.frame.width
-      - collectionView.contentInset.left
-      - collectionView.contentInset.right
-      - view.layoutMargins.left
-      - view.layoutMargins.right)
+    let w = collectionView.frame.width
     let h = (collectionView.frame.height
       - collectionView.contentInset.top
       - collectionView.contentInset.bottom
@@ -166,7 +162,7 @@ extension InformationEntityController: UICollectionViewDelegateFlowLayout {
       - view.layoutMargins.bottom)
         / 3.2
     
-    let n = CGFloat(Int(w / 240))
+    let n = min(max(CGFloat(Int(w / 240)), 1), 2)
     
     let cw = w / n - ((n - 1) / n)
     let ch = max(h, cw * 0.5)

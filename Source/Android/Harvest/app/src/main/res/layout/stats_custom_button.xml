@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/stats_choose_cus_buttonInRecycler"
+        style="@style/Button"
+        android:background="@color/white"
+        android:onClick="stats_main_buttonHandler"
+        android:textColor="@color/black" />
+
+</android.support.constraint.ConstraintLayout>

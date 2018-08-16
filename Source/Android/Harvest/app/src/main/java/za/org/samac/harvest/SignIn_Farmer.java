@@ -113,21 +113,15 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    hideSoftKeyboard();
-                    signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());//attemptLogin();
+                    if(validateForm()) {
+                        hideSoftKeyboard();
+                        signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());//attemptLogin();
+                    }
                     return true;
                 }
                 return false;
             }
         });
-
-        //Button mEmailSignInButton = (Button) findViewById(R.id.btnLogin);
-        /*mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });*/
 
         login_form = findViewById(R.id.login_form);
         login_progress = findViewById(R.id.login_progress);
@@ -137,8 +131,10 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
         btnLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideSoftKeyboard();
-                signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
+                if(validateForm()) {
+                    hideSoftKeyboard();
+                    signInToAccount(edtEmail.getText().toString(), edtPassword.getText().toString());
+                }
             }
         });
 
@@ -164,17 +160,6 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
             }
         });
 
-//        //user presses Sign up button (goes to sign up screen)
-//        btnSignup = findViewById(R.id.btnSignup);
-//        btnSignup.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(SignIn_Farmer.this, SignIn_SignUp.class);
-//                startActivity(intent);
-//                finish();//kill current Activity
-//            }
-//        });
-
         //user presses Forgot account details link
         linkForgotAccountDetails = findViewById(R.id.linkForgotAccountDetails);
         linkForgotAccountDetails.setMovementMethod(LinkMovementMethod.getInstance());
@@ -184,15 +169,12 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(SignIn_Farmer.this);
 
-                //TODO: center "Reset Password"
                 alert.setMessage(Html.fromHtml("<b>"+"Reset Password"+"</b>"+"<br>"+"Please enter your email, you will receive an email to reset your password."));
 
                 final EditText email = new EditText(SignIn_Farmer.this);
                 email.setInputType(InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 email.setHint("Email");
-
-                //TODO: adjust padding of text field
 
                 alert.setView(email);
 
@@ -220,10 +202,6 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                 });
 
                 alert.show();
-
-                /*Intent intent = new Intent(SignIn_Farmer.this, SignIn_Farmer.class);//refresh log in screen
-                startActivity(intent);
-                finish();//kill current Activity*/
             }
         });
 
@@ -251,20 +229,6 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);//had to create method for this
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        /*GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account == null) {
-            Intent intent = new Intent(SignIn_Farmer.this, SignIn_Farmer.class);//go to log in screen
-            startActivity(intent);
-            finish();//kill current Activity
-        } else {
-            Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);
-            startActivity(intent);
-            finish();//kill current Activity
-        }*/
-        //updateUI(account);
     }
 
     private void signInWithGoogle() {
@@ -350,18 +314,8 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
         Log.d(TAG, "signInToAccount:" + email);
         login_form.setVisibility(View.INVISIBLE);
         login_progress.setVisibility(View.VISIBLE);
-        if (!validateForm(edtEmail.toString(), edtPassword.toString())) {
+        if (!validateForm()) {
             return;
-        }
-
-        if (password.length() < 6) {
-            //int paddingCount = 6 - password.length();
-
-            /*for(int i = 0; i < paddingCount; i++) {
-                password += '#';
-            }*/
-
-            password += "s3cr3ts4uc3";//Letanyans idea for padding
         }
 
         mAuth.signInWithEmailAndPassword(email, password)
@@ -413,18 +367,26 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
 
     }
 
-    public static boolean validateForm(String email, String password) {
+    //validate edit fields
+    public boolean validateForm() {
         boolean valid = true;
+        View focusView = null;
 
-        if (TextUtils.isEmpty(email)) {
+        String email = edtEmail.getText().toString();
+
+        if (isEmailValid(email) == false) {
+            edtEmail.setError(getString(R.string.error_invalid_email));
+            focusView = edtEmail;
+            focusView.requestFocus();
+            valid = false;
+        } else if (TextUtils.isEmpty(email)) {
             edtEmail.setError("Required.");
             valid = false;
         } else {
-            if (edtEmail != null) {
-                edtEmail.setError(null);
-            }
+            edtEmail.setError(null);
         }
 
+        String password = edtPassword.getText().toString();
         if (TextUtils.isEmpty(password)) {
             edtPassword.setError("Required.");
             valid = false;
@@ -437,49 +399,8 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
         return valid;
     }
 
-    /*private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(edtEmail, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }*/
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            }
-        }
-    }*/
-
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: we are still debating on what value to use
-        return password.length() > 0;
     }
 
     /**

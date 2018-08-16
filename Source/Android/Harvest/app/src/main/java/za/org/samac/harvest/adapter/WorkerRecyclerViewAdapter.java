@@ -1,6 +1,8 @@
 package za.org.samac.harvest.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -47,28 +49,31 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private ArrayList<Button> plus;
     private ArrayList<Button> minus;
     private ArrayList<TextView> incrementViews;
-    private Location location;
+    //private Location location;
     public int totalBagsCollected;
-    //private FirebaseAuth mAuth;
     private collections collectionObj;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private double currentLat;
     private double currentLong;
-    //private Date currentTime;
     private double currentTime;
     private double divideBy1000Var = 1000.0000000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String sessionKey;
     private String workerID;
     private String workerIncrement;
-    //private String userUid;
     private String farmerKey;
+    private DatabaseReference sessRef;
+    private double endSessionTime;
     private boolean gotCorrectFarmerKey;
     private DatabaseReference workersRef;
     private static final String TAG = "Button";
+    private double lat = 0.0;
+    private double lng = 0.0;
 
-    public WorkerRecyclerViewAdapter(Context context, ArrayList<Worker> workers) {
+    private OnItemClickListener onItemClickListener;
+
+    public WorkerRecyclerViewAdapter(Context context, ArrayList<Worker> workers, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.workers = workers;
         this.totalBagsCollected = 0;
@@ -76,12 +81,12 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         minus = new ArrayList<>();
         incrementViews = new ArrayList<>();
         String email = "";
-        //mAuth = FirebaseAuth.getInstance();
-        //FirebaseUser user = mAuth.getCurrentUser();
+
         if (user != null) {
             email = user.getEmail();
         }
         collectionObj = new collections(email);
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -111,12 +116,13 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         holder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Integer value = worker.getValue() + 1;
                 holder.increment.setText(String.format("%d", value));
 
                 //get coordinates
-                currentLat = location.getLatitude();
-                currentLong = location.getLongitude();
+                currentLat = lat;
+                currentLong = lng;
 
                 //get time
                 currentTime = (System.currentTimeMillis()/divideBy1000Var);//seconds since January 1, 1970 00:00:00 UTC
@@ -139,10 +145,20 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 childUpdates.put("coord", coordinates);
                 childUpdates.put("date", currentTime);
 
+                Map<String, Object> sessionDate = new HashMap<>();
+                sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
+                endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
+                sessionDate.put("end_date", endSessionTime);
+                sessRef.updateChildren(sessionDate);//save data to Firebase
                 myRef.updateChildren(childUpdates);//store plus button info in Firebase
 
-                collectionObj.addCollection(personName, location);
+                collectionObj.addCollection(personName, lat, lng);
                 ++totalBagsCollected;
+
+                //display incremented current yield
+                if(onItemClickListener != null) {
+                    onItemClickListener.onClick(totalBagsCollected);
+                }
                 worker.setValue(value);
             }
         });
@@ -159,6 +175,26 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
                     collectionObj.removeCollection(personName);
                     --totalBagsCollected;
+
+                    //display incremented current yield
+                    try {
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    MainActivity.textView.setText("Current Yield: " + totalBagsCollected);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                        thread.start();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     worker.setValue(value);
 
                     //make changes on firebase
@@ -167,6 +203,12 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                     workerID = worker.getID();//get worker ID
                     sessionKey = MainActivity.sessionKey;//get key/ID for a session
                     workerIncrement = "" + worker.getValue();//get worker increment (number of yield)
+
+                    Map<String, Object> sessionDate = new HashMap<>();
+                    sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
+                    endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
+                    sessionDate.put("end_date", endSessionTime);
+                    sessRef.updateChildren(sessionDate);//save data to Firebase
 
                     farmerKey = MainActivity.farmerKey;
                     myRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/collections/" + workerID + "/" + workerIncrement);//path to sessions increment in Firebase
@@ -221,12 +263,21 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
         }
     }
 
-    public void setLocation(Location location) {
+    /*public void setLocation(Location location) {
         this.location = location;
+    }*/
+
+    public void setLatLng(Double lat, Double lng) {
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public collections getCollectionObj() {
         return collectionObj;
+    }
+
+    public interface OnItemClickListener {
+        public void onClick(int value);
     }
 
 

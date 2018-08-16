@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/21.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import GoogleMaps
@@ -19,7 +19,7 @@ extension Array where Element == CLLocationCoordinate2D {
     return path
   }
   
-  func gmsPolyline(mapView: GMSMapView, color: UIColor = .blue, width: CGFloat = 1.0) -> GMSPolyline {
+  func gmsPolyline(mapView: GMSMapView, color: UIColor = .red, width: CGFloat = 3.0) -> GMSPolyline {
     let result = GMSPolyline(path: gmsPath())
     result.strokeColor = color
     result.strokeWidth = width
@@ -55,5 +55,17 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
       }
     }
     return result
+  }
+}
+
+extension GMSMapViewType {
+  var title: String {
+    switch self {
+    case .normal: return "Normal"
+    case .hybrid: return "Hybrid"
+    case .satellite: return "Satellite"
+    case .terrain: return "Terrain"
+    case .none: return "None"
+    }
   }
 }

@@ -1,25 +1,19 @@
 const database = firebase.database();
 let findables = [1];
-const user = function() { return firebase.auth().currentUser };
-const userID = function() { return user().uid }
 
-function orchardsRef() {
-  return firebase.database().ref('/' + userID()  + '/orchards/');
-}
+$(window).bind("load", () => {
+  let succ = () => {
+    initEntities();
+  };
+  let fail = () => {
+    orchardPolys = [];
+    orchards = {};
+    farms = {};
+    workers = {};
+  };
+  retryUntilTimeout(succ, fail, 1000);
+});
 
-function workersRef() {
-  return firebase.database().ref('/' + userID()  + '/workers');
-}
-
-function farmsRef() {
-  return firebase.database().ref('/' + userID()  + '/farms');
-}
-
-
-popOrch();
-popWork();
-popFarm();
-clear3();
 
 var editingOrchard = false;
 var orchardCoords = [];
@@ -108,15 +102,15 @@ function initMap() {
     mapTypeId: "satellite"
   });
 }
-function updatePolygon(snapshot) {
+function updatePolygon(orchard) {
   if (orchardCoords === undefined) {
     orchardCoords = [];
   }
   while (orchardCoords.length > 0) {
     orchardCoords.pop();
   }
-  if (snapshot !== null && snapshot !== undefined && snapshot.val() !== undefined && snapshot.val().coords !== undefined) {
-    snapshot.val().coords.forEach(function(coord) {
+  if (orchard !== null && orchard !== undefined && orchard.coords !== undefined) {
+    orchard.coords.forEach(function(coord) {
       orchardCoords.push(coord);
     });
   } else {
@@ -165,37 +159,168 @@ function clearOrchardCoord() {
   updatePolyListener();
 }
 
-/*Populates the list of farms in col2*/
-function popFarm() {
-  findables = [];
-  const add = document.getElementById("AddButt");
-  add.innerHTML = "<h2>Loading Farm List...</h2>";
-  document.getElementById("SearchSpace").innerHTML = "";
-  farmsRef().off();
+function titleFormatter(entity) {
+  if (entity === "Farm") {
+    return (key, farm) => {
+      return farm.name;
+    };
+  } else if (entity === "Orchard") {
+    return (key, orchard) => {
+      const farm = farms[orchard.farm];
+      const farmName = farm === undefined ? key : farm.name;
+      return farmName + " - " + orchard.name;
+    };
+  } else if (entity === "Worker") {
+    return (key, worker) => {
+      return worker.name + " " + worker.surname;
+    };
+  }
+}
 
-  farmsRef().once('value').then(function (snapshot) {
-    add.innerHTML = "" +
-      "<button type='button' class='btn btn-success' onclick='dispFarm(\"-1\")'>Add Farm</button>"
-    ;
-
-    snapshot.forEach(function (child) {
-      let temp = {
-        Name : child.val().name,
-        Button : "<button type='button' class='btn btn-info' onclick='dispFarm(\"" + child.key + "\")'>" + child.val().name + "</button>"
-      };
-      findables.push(temp);
+var selectedEntity = "";
+var farms = {};
+function showFarmsList() {
+  var entityList = document.getElementById("AddButt");
+  if (Object.keys(farms).length === 0) {
+    farms = {};
+    setFarms(farms, () => {
+      displayEntityList(farms, "Farm");
     });
-    searchDisp();
+  } else {
+    displayEntityList(farms, "Farm");
+  }
+}
+
+var orchards = {};
+function showOrchardsList() {
+  var entityList = document.getElementById("AddButt");
+  if (Object.keys(orchards).length === 0) {
+    orchards = {};
+    setOrchards(orchards, () => {
+      displayEntityList(orchards, "Orchard");
+    });
+  } else {
+    displayEntityList(orchards, "Orchard");
+  }
+}
+function orchardsSortedList() {
+  var possibleOrchards = []
+  for (const oKey in orchards) {
+    const orchard = orchards[oKey];
+    possibleOrchards.push({value: orchard, key: oKey});
+  }
+  possibleOrchards = possibleOrchards.sort((a, b) => {
+    const farmA = farms[a.value.farm];
+    const farmNameA = farmA !== undefined ? farmA.name : a.key;
+    const titleA = farmNameA + " - " + a.value.name;
+    const farmB = farms[b.value.farm];
+    const farmNameB = farmB !== undefined ? farmB.name : b.key;
+    const titleB = farmNameB + " - " + b.value.name;
+    return titleA.localeCompare(titleB);
   });
+
+  return possibleOrchards;
+}
+
+var workers = {};
+function showWorkersList() {
+  var entityList = document.getElementById("AddButt");
+  if (Object.keys(workers).length === 0) {
+    workers = {};
+    setWorkers(workers, () => {
+      displayEntityList(workers, "Worker");
+    });
+  } else {
+    displayEntityList(workers, "Worker");
+  }
+}
+
+function showEntityList() {
+  if (selectedEntity === "Farm") {
+    showFarmsList();
+  } else if (selectedEntity === "Orchard") {
+    showOrchardsList();
+  } else if (selectedEntity === "Worker") {
+    showWorkersList();
+  }
+}
+
+function initEntities() {
+  farms = {};
+  orchards = {};
+  workers = {};
+  updateSpiner(true);
+  setFarms(farms, () => {
+    setOrchards(orchards, () => {
+      setWorkers(workers, () => {
+        updateSpiner(false);
+        watchFarms(farms, () => {
+          if (selectedEntity === "Farm") {
+            filterInformation(document.getElementById("informationSearchField"));
+          }
+        });
+        watchOrchards(orchards, () => {
+          if (selectedEntity === "Orchard") {
+            filterInformation(document.getElementById("informationSearchField"));
+          }
+        });
+        watchWorkers(workers, () => {
+          if (selectedEntity === "Worker") {
+            filterInformation(document.getElementById("informationSearchField"));
+          }
+        });
+        showFarmsList();
+      });
+    });
+  });
+}
+
+function displayEntityList(entities, entityName) {
+  selectedEntity = entityName;
+  formatter = titleFormatter(entityName);
+  var addButtonDiv = document.getElementById("AddButt");
+  var entityList = document.getElementById("DispButt");
+  var entityDetails = document.getElementById("entityDetails");
+
+  const addFunction = " onclick='disp" + entityName + "(\"-1\")'";
+  const addName = "Add " + entityName;
+  addButtonDiv.innerHTML = "<button type='button' class='btn btn-success'" + addFunction + ">" + addName + "</button>";
+
+  entityList.innerHTML = "";
+
+  var sortedEntityList = [];
+
+  for (const key in entities) {
+    const entity = entities[key];
+    sortedEntityList.push({value: entity, key: key});
+  }
+  sortedEntityList = sortedEntityList.sort((a, b) => {
+    if (selectedEntity === "Worker") {
+      return (a.value.surname + " " + a.value.name).localeCompare(b.value.surname + " " + b.value.name);
+    }
+    return formatter(a.key, a.value).localeCompare(formatter(b.key, b.value));
+  });
+
+  for (const i in sortedEntityList) {
+    const entity = sortedEntityList[i].value;
+    const key = sortedEntityList[i].key;
+
+    const displayFunction = " onclick='disp" + entityName + "(\"" + key+ "\")'";
+    const displayName = formatter(key, entity);
+    entityList.innerHTML += "<button type='button' class='btn btn-info' " + displayFunction + ">" + displayName + "</button>";
+  }
+
+  document.getElementById("selectedEntity").style.visibility = "visible";
 }
 
 /*Displays a farm in col 3, the farm displayed is set by the id. If -1 is received then display to create a new farm.*/
 function dispFarm(id) {
-  const col3 = document.getElementById("col3");
+  const entityDetails = document.getElementById("entityDetails");
+  const farm = farms[id];
 
   if (id === "-1") {
     /*Create New Orchard*/
-    col3.innerHTML = "" +
+    entityDetails.innerHTML = "" +
       "<form class='form-horizontal'>" +
       "" +
       "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='farmSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
@@ -216,768 +341,910 @@ function dispFarm(id) {
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'></textarea></div></div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince'></div> </div> " +     
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince'></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown'> </div> </div> " +     
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown'> </div> </div> " +
       "" +
       "</form>"
     ;
+  } else {
+    entityDetails.innerHTML = "" +
+      "<form class='form-horizontal'>" +
+      "" +
+      "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='farmMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static' id='farmFurther'>" + farm.name + "</p> </div> </div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='companyName'>Company Name:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static' id='companyName'>" + farm.companyName + "</p> </div> </div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static' id='farmFurther'>" + farm.contactNumber + "</p> </div> </div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static' id='farmContact'>" + farm.email + "</p> </div> </div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static' id='farmEmail'>" + farm.further + "</p></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='AssignedOrchards'>Assigned Orchards:</label>" +
+      "<div class='col-sm-9' id='assignedOrchards'></div></div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='farmProvince'>Province:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static' id='farmProvince'>" + farm.province + "</p> </div> </div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='farmTown'>Nearest Town:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static' id='farmTown'>" + farm.town + " </p> </div> </div> " +
+      "" +
+      "</form>"
+    ;
+
+    const assignedOrchardsDiv = document.getElementById("assignedOrchards");
+    for (const key in orchards) {
+      const orchard = orchards[key];
+      if (orchard.farm === id) {
+        assignedOrchardsDiv.innerHTML += "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispOrchard(\"" + key + "\")'>" + orchard.name + "</button></div>";
+      }
+    }
   }
-  else {
+}
 
-    firebase.database().ref('/' + userID() + '/farms/' + id).once('value').then(function (snapshot) {
+function farmIsValidToSave(candidateKey, candidateFarm) {
+  var valid = "";
 
-      col3.innerHTML = "" +
-        "<form class='form-horizontal'>" +
-        "" +
-        "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='farmMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().name + "</p> </div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().companyName + "</p> </div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().contactNo + "</p> </div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().email + "</p> </div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().further + "</p></div> </div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Orchards:</label>" +
-        "<div class='col-sm-9' id='orchardButtons'></div></div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().province + "</p> </div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
-        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().nearestTown + " </p> </div> </div> " +
-        "" +
-        "</form>"
-      ;
-
-      firebase.database().ref('/' + userID() + "/orchards").once('value').then(function (workers) {
-        const buttons = document.getElementById("orchardButtons");
-        workers.forEach(function (orchard) {
-          if (orchard.val().farm == id) {
-            buttons.innerHTML += "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispOrch(\"" + orchard.key + "\")'>" + orchard.val().name + "</button></div>";
-          }
-        });
-      });
-    });
-
-
+  for (const fKey in farms) {
+    const farm = farms[fKey];
+    if (farm === undefined || candidateFarm === undefined) {
+      continue;
+    }
+    if (fKey !== candidateKey && farm.name === candidateFarm.name) {
+      valid = "Farms must have different names.";
+    }
   }
+
+  return valid;
 }
 
 /*Handles the saving of a farm with the set id, if it receives 0, the farm is created, else it is updated.*/
 function farmSave(type, id) {
   /*0 means create, 1 means modify*/
+  const tempFarm = {
+    name: document.getElementById("farmName").value,
+    companyName: document.getElementById("companyName").value,
+    further: document.getElementById("farmFurther").value,
+    contactNumber: document.getElementById("farmContact").value,
+    email: document.getElementById("farmEmail").value,
+    province: document.getElementById("farmProvince").value,
+    town: (document.getElementById("farmTown").value+"")
+  };
+
+  const valid = farmIsValidToSave(id, tempFarm);
+  if (valid !== "") {
+    alert(valid);
+    return;
+  }
 
   if (type === 0) {
-    let newRef = firebase.database().ref('/' + userID() + "/farms/").push({
-      name: document.getElementById("farmName").value,
-      companyName: document.getElementById("companyName").value,
-      further: document.getElementById("farmFurther").value,
-      contactNo: document.getElementById("farmContact").value,
-      email: document.getElementById("farmEmail").value,
-      province: document.getElementById("farmProvince").value,
-      nearestTown: (document.getElementById("farmTown").value+"")
-    });
+    let newRef = firebase.database().ref('/' + userID() + "/farms/").push(tempFarm);
     id = newRef.getKey();
-    popFarm();
+    farms[id] = tempFarm;
+    showFarmsList();
+    dispFarm(id)
   }
   else if (type === 1) {
-    firebase.database().ref('/' + userID() + "/farms/" + id).update({
-      name: document.getElementById("farmName").value,
-      companyName: document.getElementById("companyName").value,
-      further: document.getElementById("farmFurther").value,
-      contactNo: document.getElementById("farmContact").value,
-      email: document.getElementById("farmEmail").value,
-      province: document.getElementById("farmProvince").value,
-      nearestTown: document.getElementById("farmTown").value
-    });
+    farms[id] = tempFarm;
+    firebase.database().ref('/' + userID() + "/farms/" + id).update(farms[id]);
+     //alert("modified");
   }
-  popFarm();
+  showFarmsList();
   dispFarm(id);
 }
 
 /*Displays in col 3, the interface to modify a farm*/
 function farmMod(id) {
-  firebase.database().ref('/' + userID() + '/farms/' + id).once('value').then(function (snapshot) {
-    document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delFarm(\"" + id + "\")'>Delete</button>";
-    document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name;
-    document.getElementById('col3').innerHTML = "" +
-      "<form class='form-horizontal'>" +
-      "" +
-      "<div class='form-group'>" +
-      "<div class='col-sm-3 col-sm-offset-2'><button onclick='farmSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
-      "<div class='col-sm-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
-      "<div class='col-sm-3'><button onclick='dispFarm(\"" + id + "\")' type='button' class='btn btn-default'>Cancel</button></div>" +
-      "</div> " +
-      "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' value='" + snapshot.val().name + "'></div> </div> " +
-      "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' value='" + snapshot.val().companyName + "'></div> </div> " +
-      "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-      "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'>" + snapshot.val().further + "</textarea></div> </div>" +
-      "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + snapshot.val().phoneNumber + "'></div> </div> " +
-      "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmEmail' value='" + snapshot.val().email + "'></div> </div> " +
-      "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince' value='" + snapshot.val().province + "'></div> </div> " +
-       "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown' value='" + snapshot.val().nearestTown + " '></div> </div> " +
-      "" +
-      "</form>"
-    ;
-  });
+  const farm = farms[id];
+  document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delFarm(\"" + id + "\")'>Delete</button>";
+  document.getElementById('modalText').innerText = "Please confirm deletion of " + farm.name;
+  document.getElementById('entityDetails').innerHTML = "" +
+    "<form class='form-horizontal'>" +
+    "" +
+    "<div class='form-group'>" +
+    "<div class='col-sm-3 col-sm-offset-2'><button onclick='farmSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
+    "<div class='col-sm-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
+    "<div class='col-sm-3'><button onclick='dispFarm(\"" + id + "\")' type='button' class='btn btn-default'>Cancel</button></div>" +
+    "</div> " +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' value='" + farm.name + "'></div> </div> " +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='companyName' value='" + farm.companyName + "'></div> </div> " +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
+    "<div class='col-sm-9'><textarea class='form-control' rows='4' id='farmFurther'>" + farm.further + "</textarea></div> </div>" +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Contact Number:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='farmContact' value='" + farm.contactNumber + "'></div> </div> " +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Email:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='farmEmail' value='" + farm.email + "'></div> </div> " +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Province:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='farmProvince' value='" + farm.province + "'></div> </div> " +
+     "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Nearest Town:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='farmTown' value='" + farm.town + " '></div> </div> " +
+    "" +
+    "</form>";
 }
 
 /*Delets a given farm*/
 function delFarm(id) {
   firebase.database().ref('/' + userID() + '/farms/' + id).remove();
-  popFarm();
-  clear3();
+  delete farms[id];
+  showFarmsList();
+  document.getElementById("entityDetails").innerHTML = "<h1 class='infoDetailHelp'>Select An Item From the Sidebar</h1>";
 }
 
-/*From here, all the functions are similar to that of above.*/
-
-
-function popOrch() {
-  findables = [];
-  const add = document.getElementById("AddButt");
-  add.innerHTML = "<h2>Loading Orchard List...</h2>";
-  document.getElementById("SearchSpace").innerHTML = "";
-
-  orchardsRef().once('value').then(function (snapshot) {
-    add.innerHTML = "" +
-      "<button type='button' class='btn btn-success' onclick='dispOrch(\"-1\")'>Add Orchard</button>"
-    ;
-
-    snapshot.forEach(function (child) {
-      let temp = {
-        Name : child.val().name,
-        Button : "<button type='button' class='btn btn-info' onclick='dispOrch(\"" + child.key + "\")'>" + child.val().name + "</button>"
-      };
-      findables.push(temp);
-    });
-    searchDisp();
-  });
-}
-
-function dispOrch(id) {
-  const col3 = document.getElementById("col3");
+function dispOrchard(id) {
+  const entityDetails = document.getElementById("entityDetails");
+  const orchard = orchards[id];
 
   if (id === "-1") {
     /*Create New Orchard*/
-    firebase.database().ref('/' + userID() + '/farms').once('value').then(function (snapshot) {
-      col3.innerHTML = "" +
-        "<form class='form-horizontal'>" +
-        "" +
-        "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='orchSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='orchName'></div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop'></div> </div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
-        "<div class='col-sm-9'>" +
-        "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
-        "<div class='col-sm-12'><div id='map'></div></div>" +
-        "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
-        "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass'></div>" +
-        "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
-        "</div>" +
-        "" +       
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='irrigationType'></div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
-        "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars'></div> </div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing'></div></div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree Spacing:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='treeSpacing'></div></div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-        "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-        "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
-         "" +        
-        "</form>"
-      ;
-      initEditOrchardMap(true, true);
-      updatePolygon(null);
+    cCount = 0;
+    entityDetails.innerHTML = "" +
+      "<form class='form-horizontal'>" +
+      "" +
+      "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='orchSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='orchName'></div> </div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop'></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
+      "<div class='col-sm-9'>" +
+      "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
+      "<div class='col-sm-12'><div id='map'></div></div>" +
+      "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
+      "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass'></div>" +
+      "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
+      "</div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='irrigationType'>Irrigation:</label>" +
+      "<div class='col-sm-9'>"+
+          "<select class='form-control' id='irrigationType'>"+
+              "<option value='Micro'>Micro</option>"+
+              "<option value='Drip'>Drip</option>"+
+              "<option value='Floppy'>Floppy</option>"+
+              "<option value='Drag Lines'>Drag Lines</option>"+
+              "<option value='Other'>Other</option>"+
+              "<option value='None (dry land)'>None (dry land)</option>"+
+          "</select>"+
+      "</div></div>"+
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
+      "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate'></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: </label>" +
+          "<div class='col-sm-9'>"+
+              "<div id='cultivarBoxes'>"+
+                  "<input type='text' class='form-control' id='cultivars0' />"+
+              "</div>"+
+              "<button type='button' class='btn btn-info' onclick='moreCult()'>Add More Cultivar</button>"+
+          "</div>"+
+      "</div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing'></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree Spacing:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='treeSpacing'></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
+      "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
+      "<div class='col-sm-9'><select class='form-control' id='orchFarm' required></select></div></div>" +
+       "" +
+      "</form>"
+    ;
+    initEditOrchardMap(true, true);
+    updatePolygon(null);
 
-      snapshot.forEach(function (child) {
-        document.getElementById("orchFarm").innerHTML += "<option><" + child.key + "> " + child.val().name + "</option>";
-      });
-    });
+    for (const fKey in farms) {
+      const farm = farms[fKey];
+      document.getElementById("orchFarm").innerHTML += "<option><" + fKey + "> " + farm.name + "</option>";
+    }
   }
   else {
+    const date = new Date(orchard.date * 1000);
+    cCount = (orchard.cultivars || []).length;
+    entityDetails.innerHTML = "" +
+      "<form class='form-horizontal'>" +
+      "" +
+      "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='orchMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static'>" + orchard.name + "</p> </div> </div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static'>" + orchard.crop + "</p></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
+      "<div class='col-sm-9'><div id='map'></div></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static'>" + orchard.bagMass + " Kg</p></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static'>" + orchard.irrigation + "</p></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='date'>Cultivars:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static'>" + (orchard.cultivars || "") + "</p></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static'>" + orchard.rowSpacing + "</p></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree spacing:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static'>" + orchard.treeSpacing + "</p></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
+      "<div class='col-sm-9'><p class='form-control-static'>" + orchard.further + "</p></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Farm:</label>" +
+      "<div class='col-sm-9'><span id='orchFarmDisp'></span></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Workers:</label>" +
+      "<div class='col-sm-9' id='workerButtons'></div></div>" +
+      "" +
+      "</form>"
+      ;
 
-    firebase.database().ref('/' + userID() + '/orchards/' + id).once('value').then(function (snapshot) {
-      farmsRef().once('value').then(function (farmSnapshot) {
-          const date = new Date(snapshot.val().date * 1000);
-        col3.innerHTML = "" +
-          "<form class='form-horizontal'>" +
-          "" +
-          "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='orchMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().name + "</p> </div> </div> " +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().crop + "</p></div> </div>" +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
-          "<div class='col-sm-9'><div id='map'></div></div></div> " +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().bagMass + " Kg</p></div> </div>" +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().irrigation + "</p></div> </div>" +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='date'>Cultivars:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().cultivars + "</p></div></div> " +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().rowSpacing + "</p></div></div> " +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree spacing:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().treeSpacing + "</p></div></div> " +
-          "" +         
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-          "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().further + "</p></div> </div>" +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Farm:</label>" +
-          "<div class='col-sm-9'><span id='orchFarmDisp'></span></div> </div>" +
-          "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Workers:</label>" +
-          "<div class='col-sm-9' id='workerButtons'></div></div>" +
-          "" +         
-          "</form>"
-        ;
+    initEditOrchardMap(false, false);
+    updatePolygon(orchard);
 
-        initEditOrchardMap(false, false);
-        updatePolygon(snapshot);
+    const assignedFarm = farms[orchard.farm];
+    if (assignedFarm !== undefined) {
+      document.getElementById("orchFarmDisp").innerHTML = "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispFarm(\"" + orchard.farm + "\")'>" + assignedFarm.name + "</button></div>";
+    }
 
-        farmSnapshot.forEach(function (farm) {
-          if (farm.key === snapshot.val().farm) {
-            document.getElementById("orchFarmDisp").innerHTML = "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispFarm(\"" + farm.key + "\")'>" + farm.val().name + "</button></div>";
-          }
-        });
-
-        firebase.database().ref('/' + userID() + "/workers").once('value').then(function (workers) {
-          const buttons = document.getElementById("workerButtons");
-          workers.forEach(function (worker) {
-            if (worker.val().orchard == id) {
-              buttons.innerHTML += "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispWork(\"" + worker.key + "\")'>" + worker.val().name + " " + worker.val().surname + "</button></div>";
-            }
-          });
-        });
-      });
-    });
-
-
+    const buttons = document.getElementById("workerButtons");
+    for (wKey in workers) {
+      const worker = workers[wKey];
+      if (worker !== undefined && worker.orchards !== undefined && worker.orchards.includes(id)) {
+        buttons.innerHTML += "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispWorker(\"" + wKey + "\")'>" + worker.name + " " + worker.surname + "</button></div>";
+      }
+    }
   }
 }
 
-function orchSave(type, id) {
+function moreCult(){
+    var input = document.createElement('input');
+    input.setAttribute('type','text');
+    input.setAttribute('id',('cultivars'+cCount));
+    input.setAttribute('class','form-control');
+    document.getElementById('cultivarBoxes').appendChild(input);
+    cCount++;
+    //alert(input);
+}
+
+function orchardIsValidToSave(candidateKey, candidateOrchard) {
+  var valid = "";
+
+  for (const oKey in orchards) {
+    const orchard = orchards[oKey];
+    const farm = farms[orchard.farm];
+    const candidateFarm = farms[candidateOrchard.farm];
+    if (farm === undefined || candidateFarm === undefined) {
+      continue;
+    }
+    if (oKey !== candidateKey && farm.name === candidateFarm.name && orchard.name === candidateOrchard.name) {
+      valid = "Orchards must have different names if they are both in the same farm.\n";
+    }
+  }
+
+  if (candidateOrchard.farm == undefined || candidateOrchard.farm === "") {
+    valid += "Orchards must be assigned to a farm.\n"
+  }
+
+  return valid;
+}
+
+function getCultivars(){
+    var data = [];
+    var actualCount = 0;
+    for(var i = 0; i < cCount; i++){
+        var c = document.getElementById('cultivars'+i).value;
+        if(c==null||c==""){
+        }
+        else{
+            data[actualCount] = c;
+            actualCount++;
+        }
+        //alert(c);
+    }
+    cCount = actualCount;
+    return data;
+}
+function farmWithName(name) {
+  for (const fKey in farms) {
+    if (farms[fKey].name === name) {
+      return fKey;
+    }
+  }
+  return undefined;
+}
+
+function orchSave(type, id, cultivars) {
   /*0 means create, 1 means modify*/
-  const farm = document.getElementById("orchFarm").value;
-  const farmID = farm.substring(farm.indexOf("<") + 1, farm.indexOf(">"));
+  const farmName = document.getElementById("orchFarm").value;
+  const farmID = farmWithName(farmName);
   let d = new Date(document.getElementById("orchDate").valueAsDate);
   let seconds = d.getTime() / 1000;
-  var cult = document.getElementById("cultivars").value;
-  cult = cult.split(",");
+  var data = getCultivars();
+  const tempOrchard = {
+    name: document.getElementById("orchName").value,
+    crop: document.getElementById("orchCrop").value,
+    further: document.getElementById("oi").value,
+    irrigation: document.getElementById("irrigationType").value,
+    date: seconds,
+    cultivars: data,
+    bagMass: document.getElementById("orchBagMass").value,
+    coords: orchardCoords,
+    farm: farmID,
+    rowSpacing: document.getElementById("rowSpacing").value,
+    treeSpacing: document.getElementById("treeSpacing").value
+  };
+
+  const valid = orchardIsValidToSave(id, tempOrchard);
+  if (valid !== "") {
+    alert(valid);
+    return;
+  }
+
   if (type === 0) {
-      firebase.database().ref('/' + userID() +"/orchards/").push({
-      name: document.getElementById("orchName").value,
-      crop: document.getElementById("orchCrop").value,
-      further: document.getElementById("oi").value,
-      irrigation: document.getElementById("irrigationType").value,
-      date: seconds,
-      cultivars: cult,
-      bagMass: document.getElementById("orchBagMass").value,
-      coords: orchardCoords,
-      farm: farmID,
-      rowSpacing: document.getElementById("rowSpacing").value,
-      treeSpacing: document.getElementById("treeSpacing").value
-    });
+    const ref = firebase.database().ref('/' + userID() +"/orchards/").push(tempOrchard);
+    const newId = ref.getKey();
 
-    //popOrch();
-
+    orchards[newId] = tempOrchard;
+    showOrchardsList();
+    dispOrchard(newId);
+  } else if (type === 1) {
+    orchards[id] = tempOrchard;
+    firebase.database().ref('/' + userID() +"/orchards/" + id).update(orchards[id]);
+    showOrchardsList();
+    dispOrchard(id);
   }
-  else if (type === 1) {
-    firebase.database().ref('/' + userID() +"/orchards/" + id).update({
-      name: document.getElementById("orchName").value,
-      crop: document.getElementById("orchCrop").value,
-      further: document.getElementById("oi").value,
-      irrigation: document.getElementById("irrigationType").value,
-      date: seconds,
-      cultivars: cult,
-      /*xDim: document.getElementById("orchDimX").value,
-      yDim: document.getElementById("orchDimY").value,
-      unit: document.getElementById("orchDimUnit").value,
-      */bagMass: document.getElementById("orchBagMass").value,
-      coords: orchardCoords,
-      farm: farmID,
-      rowSpacing: document.getElementById("rowSpacing").value,
-      treeSpacing: document.getElementById("treeSpacing").value
-    });
-  }
-   popWork();
-  clear3();
 }
 
 function orchMod(id) {
-  firebase.database().ref('/' + userID() +'/orchards/' + id).once('value').then(function (snapshot) {
-    document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch(\"" + id + "\")'>Delete</button>";
-    document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name;
-    firebase.database().ref('/' + userID() +'/farms').once('value').then(function (farm) {
-        const date = new Date(snapshot.val().date * 1000);
-      document.getElementById('col3').innerHTML = "" +
-        "<form class='form-horizontal'>" +
-        "" +
-        "<div class='form-group'>" +
-        "<div class='col-sm-3 col-sm-offset-2'><button onclick='orchSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
-        "<div class='col-sm-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
-        "<div class='col-sm-3'><button onclick='dispOrch(\"" + id + "\")' type='button' class='btn btn-default'>Cancel</button></div>" +
-        "</div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' value='" + snapshot.val().name + "'></div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop' value='" + snapshot.val().crop + "'></div> </div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
-        "<div class='col-sm-9'>" +
-        "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
-        "<div class='col-sm-12'><div id='map'></div></div>" +
-        "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
-        "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass' value='" + snapshot.val().bagMass + "'></div>" +
-        "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
-        "</div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation Type:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='irrigationType' value='" + snapshot.val().irrigation + "'></div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
-        "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='cultivars' value='" + snapshot.val().cultivars + "'></div> </div> " +
-        "" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing' value='" +  snapshot.val().rowSpacing + "'></div></div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree Spacing:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='treeSpacing' value='" + snapshot.val().treeSpacing + "'></div></div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-        "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'>" + snapshot.val().further + "</textarea></div> </div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-        "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
-        "" +
-        "</form>"
-      ;//need to fix referencing
-      initEditOrchardMap(false, true);
-      updatePolygon(snapshot);
+  const orchard = orchards[id];
 
-      farm.forEach(function (child) {
-        const orchFarm = document.getElementById("orchFarm");
-        let selec = "";
-        // workOrch.innerHTML = workOrch.innerHTML + "<option";
-        if (child.key === snapshot.val().farm) {
-          selec = ' selected';
-        }
-        // workOrch.innerHTML = workOrch.innerHTML + "><" +child.key+"> " + child.val().name+"  :  "+child.val().crop + "</option>";
-        orchFarm.innerHTML += "<option" + selec + "><" + child.key + "> " + child.val().name + "</option>";
+  document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch(\"" + id + "\")'>Delete</button>";
+  document.getElementById('modalText').innerText = "Please confirm deletion of " + orchard.name;
+  const date = new Date(orchard.date * 1000);
+  var myData="";
+  cCount = 0;
+  try{
+      orchard.cultivars.forEach(function(entry) {
+          myData += "<input id='cultivars"+cCount+"' type='text' class='form-control'  value='"+entry+"' />";
+          cCount++;
       });
-    });
-  });
+  }
+  catch(err){
+      myData += "<input id='cultivars0' type='text' class='form-control'  value='' />";
+      cCount++;
+  }
+  if(myData==""){
+       myData += "<input id='cultivars0' type='text' class='form-control'  value='' />";
+       cCount++;
+  }
+
+  document.getElementById('entityDetails').innerHTML = "" +
+  "<form class='form-horizontal'>" +
+  "" +
+  "<div class='form-group'>" +
+  "<div class='col-sm-3 col-sm-offset-2'><button onclick='orchSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
+  "<div class='col-sm-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
+  "<div class='col-sm-3'><button onclick='dispOrchard(\"" + id + "\")' type='button' class='btn btn-default'>Cancel</button></div>" +
+  "</div> " +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
+  "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' value='" + orchard.name + "'></div> </div> " +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
+  "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop' value='" + orchard.crop + "'></div> </div>" +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
+  "<div class='col-sm-9'>" +
+  "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
+  "<div class='col-sm-12'><div id='map'></div></div>" +
+  "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
+  "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass' value='" + orchard.bagMass + "'></div>" +
+  "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
+  "</div>" +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Irrigation Type:</label>" +
+  "<div class='col-sm-9'>"+
+  "<select class='form-control' id='irrigationType'>"+
+      "<option value='"+orchard.irrigation+"'>"+orchard.irrigation+"</option>"+
+      "<option value='Micro'>Micro</option>"+
+      "<option value='Drip'>Drip</option>"+
+      "<option value='Floppy'>Floppy</option>"+
+      "<option value='Drag Lines'>Drag Lines</option>"+
+      "<option value='Other'>Other</option>"+
+      "<option value='None (dry land)'>None (dry land)</option>"+
+  "</select>"+
+  "</div> </div> " +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
+  "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
+      "<div class='col-sm-9'>"+
+          "<div id='cultivarBoxes'>"+
+              myData+
+          "</div>"+
+          "<button type='button' class='btn btn-info' onclick='moreCult()'>Add More Cultivar</button>"+
+      "</div>"+
+  "</div>" +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Row Spacing:</label>" +
+  "<div class='col-sm-9'><input type='text' class='form-control' id='rowSpacing' value='" +  orchard.rowSpacing + "'></div></div> " +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Tree Spacing:</label>" +
+  "<div class='col-sm-9'><input type='text' class='form-control' id='treeSpacing' value='" + orchard.treeSpacing + "'></div></div> " +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
+  "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'>" + orchard.further + "</textarea></div> </div>" +
+  "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
+  "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
+  "" +
+  "</form>"
+  ;//need to fix referencing
+  initEditOrchardMap(false, true);
+  updatePolygon(orchard);
+
+  for (const fKey in farms) {
+    const farm = farms[fKey];
+    const orchFarm = document.getElementById("orchFarm");
+    let selec = "";
+    // workOrch.innerHTML = workOrch.innerHTML + "<option";
+    if (fKey === orchard.farm) {
+      selec = ' selected';
+    }
+    // workOrch.innerHTML = workOrch.innerHTML + "><" +child.key+"> " + child.val().name+"  :  "+child.val().crop + "</option>";
+    orchFarm.innerHTML += "<option" + selec + ">" + farm.name + "</option>";
+  }
 }
 
 function delOrch(id) {
   firebase.database().ref('/' + userID() +'/orchards/' + id).remove();
-  popOrch();
-  //dispOrch();
-  clear3();
-}
+  delete orchards[id];
+  showOrchardsList();
 
-
-function popWork() {
-  findables = [];
-  const add = document.getElementById("AddButt");
-  add.innerHTML = "<h2>Loading Worker List...</h2>";
-  document.getElementById("SearchSpace").innerHTML = "";
-
-  workersRef().off();
-
-  workersRef().once('value').then(function (snapshot) {
-    add.innerHTML = "" +
-      "<button type='button' class='btn btn-success' onclick='dispWork(\"-1\")'>Add Worker</button>"
-    ;
-
-    snapshot.forEach(function (child) {
-      // col2.innerHTML += "" +
-      //   "<button type='button' class='btn btn-info' onclick='dispWork(" + child.key + ")'>" + child.val().name + " " + child.val().surname + "</button>"
-      // ;
-      let temp = {
-        Name : child.val().name + " " + child.val().surname,
-        Button : "<button type='button' class='btn btn-info' onclick='dispWork(\"" + child.key + "\")'>" + child.val().name + " " + child.val().surname + "</button>"
-      };
-      findables.push(temp);
-    });
-    searchDisp();
-  });
+  document.getElementById("entityDetails").innerHTML = "<h1 class='infoDetailHelp'>Select An Item From the Sidebar</h1>";
 }
 
 //worker functions
-function dispWork(id) {
-  const col3 = document.getElementById("col3");
+function dispWorker(id) {
+  const entityDetails = document.getElementById("entityDetails");
+  const worker = workers[id];
 
   if (id === "-1") {
     /*Create New Worker*/
+    entityDetails.innerHTML = "" +
+      "<form class='form-horizontal'>" +
+      "" +
+      "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='workSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Name:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='workName'></div> </div> " +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Surname:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='workSName'></div> </div>" +
+      "" +
+"<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity Number:</label>" +
+"<div class='col-sm-9'><input type='text' class='form-control' id='workID'></div> </div>" +
+      "" +
+"<div class='form-group'><label class='control-label col-sm-2' for='text'>Phone Number:</label>" +
+"<div class='col-sm-9'><input type='text' class='form-control' id='workContactNo'></div> </div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchards:</label>" +
+      "<div class='col-sm-9'><div id='workOrch'></div></div></div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' id='workType'>Worker Type:</label>" +
+      "<label class='radio-inline'><input type='radio' name='optradio' id='rWorker' checked>Worker</label>" +
+      "<label class='radio-inline'><input type='radio' name='optradio' id='rForeman'>Foreman</label>" +
+      "</div>" +
+      "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
+      "<div class='col-sm-9'><textarea class='form-control' rows='4' id='workInfo'></textarea></div></div>" +
+      "" +
+      "<div id='emailSpace'></div>" +
+      "" +
+      "</form>";
 
+      const possibleOrchards = orchardsSortedList();
+      for (const idx in possibleOrchards) {
+        const orchard = possibleOrchards[idx];
+        const workOrch = document.getElementById("workOrch");
+        const farm = farms[orchard.value.farm];
+        const farmName = farm !== undefined ? farm.name : orchard.key;
+        const title = farmName + " - " + orchard.value.name;
 
-    orchardsRef().once('value').then(function (snapshot) {
-      col3.innerHTML = "" +
+        workOrch.innerHTML +=
+        "<div class='form-check'>" +
+          "<input class='form-check-input' type='checkbox' id='ass"+ orchard.key +"'" + + " value='" + orchard.key + "'>" +
+          "<label class='form-check-label' for='ass" + orchard.key + "'> " + title + "</label>" +
+        "</div>";
+      }
+  }
+  else {
+    entityDetails.innerHTML = "" +
         "<form class='form-horizontal'>" +
         "" +
-        "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='workSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
+        "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='workMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Name:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='workName'></div> </div> " +
+        "<div class='col-sm-9'><p class='form-control-static'>" + worker.name + "</p> </div> </div> " +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Surname:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='workSName'></div> </div>" +
-        "" +
-	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity Number:</label>" +
-	"<div class='col-sm-9'><input type='text' class='form-control' id='workID'></div> </div>" +
-        "" +
-	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Phone Number:</label>" +
-	"<div class='col-sm-9'><input type='text' class='form-control' id='workContactNo'></div> </div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchard:</label>" +
-        "<div class='col-sm-9'><select class='form-control' id='workOrch'></select></div></div>" +
+        "<div class='col-sm-9'><p class='form-control-static'>" + worker.surname + "</p> </div> </div>" +
+"" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity Number:</label>" +
+        "<div class='col-sm-9'><p class='form-control-static'>" + worker.idNumber + "</p> </div> </div>" +
+"" +
+"<div class='form-group'><label class='control-label col-sm-2' for='text'>Phone Number:</label>" +
+        "<div class='col-sm-9'><p class='form-control-static'>" + worker.phoneNumber + "</p> </div> </div>" +
+"" +
+        "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchards:</label>" +
+        "<div class='col-sm-9'><span id='workOrchDisp'></span></div></div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' id='workType'>Worker Type:</label>" +
-        "<label class='radio-inline'><input type='radio' name='optradio' onclick='dispWorkEmail(false)' id='rWorker' checked>Worker</label>" +
-        "<label class='radio-inline'><input type='radio' name='optradio' onclick='dispWorkEmail(true)' id='rForeman'>Foreman</label>" +
+        "<div class='col-sm-9'><p class='form-control-static'>" + worker.type + "</p> </div>" +
         "</div>" +
         "" +
         "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-        "<div class='col-sm-9'><textarea class='form-control' rows='4' id='workInfo'></textarea></div></div>" +
+        "<div class='col-sm-9'><p class='form-control-static'>" + worker.info + "</p> </div></div>" +
         "" +
-        "<div id='emailSpace'></div>" +
+        "<div id='emailDispSpace'></div>" +
         "" +
 
         "</form>"
-      ;
+    ;
 
-      snapshot.forEach(function (child) {
-        document.getElementById("workOrch").innerHTML += "<option><" + child.key + "> " + child.val().name + "  :  " + child.val().crop + "</option>";
-      });
-    });
-  }
-  else {
-    firebase.database().ref('/' + userID() +'/workers/' + id).once('value').then(function (snapshot) {
-
-        // firebase.database().ref('/' + userID() + '/orchards').once('value').then(function (orchardSnapshot) {
-            orchardsRef().once('value').then(function (orchardSnapshot) {
-                col3.innerHTML = "" +
-                    "<form class='form-horizontal'>" +
-                    "" +
-                    "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='workMod(\"" + id + "\")' type='button' class='btn btn-default'>Modify</button></div></div> " +
-                    "" +
-                    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Name:</label>" +
-                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().name + "</p> </div> </div> " +
-                    "" +
-                    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Surname:</label>" +
-                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().surname + "</p> </div> </div>" +
-		    "" +
-                    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity Number:</label>" +
-                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().idNumber + "</p> </div> </div>" +
-		    "" +
-		    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Phone Number:</label>" +
-                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().phoneNumber + "</p> </div> </div>" +
-		    "" +
-                    "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchard:</label>" +
-                    "<div class='col-sm-9'><span id='workOrchDisp'></span></div></div>" +
-                    "" +
-                    "<div class='form-group'><label class='control-label col-sm-2' id='workType'>Worker Type:</label>" +
-                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().type + "</p> </div>" +
-                    "</div>" +
-                    "" +
-                    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-                    "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().info + "</p> </div></div>" +
-                    "" +
-                    "<div id='emailDispSpace'></div>" +
-                    "" +
-
-                    "</form>"
-                ;
-
-                orchardSnapshot.forEach(function (orchard) {
-                    if (orchard.key === snapshot.val().orchard) {
-                        // document.getElementById("workOrchDisp").innerHTML="<p class='form-control-static' onclick='dispOrch("+id+")'>"+orchard.val().name+"</p>"
-                        document.getElementById("workOrchDisp").innerHTML = "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispOrch(\"" + orchard.key + "\")'>" + orchard.val().name + "</button></div>";
-                    }
-                });
-
-                if (snapshot.val().type === "Foreman") {
-                    document.getElementById("emailDispSpace").innerHTML = "" +
-                        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Foreman Email:</label>" +
-                        "<div class='col-sm-9'><p class='form-control-static'>" + snapshot.val().email + "</p> </div></div>"
-                    ;
-                }
-            });
-        });
-    // });
+    for (const oKey in orchards) {
+      const orchard = orchards[oKey];
+      if (worker.orchards !== undefined && worker.orchards.includes(oKey)) {
+        const farm = farms[orchard.farm];
+        const farmName = farm !== undefined ? farm.name : oKey;
+        document.getElementById("workOrchDisp").innerHTML += "<div class='col-sm-4'><button type='button' class='btn btn-default' onclick='dispOrchard(\"" + oKey + "\")'>" + farmName + " - " + orchard.name + "</button></div>";
+      }
+    }
   }
 }
 
-function dispWorkEmail(disp) {
-  if (disp) {
-    document.getElementById("emailSpace").innerHTML = "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='email'>Foreman Email:</label>" +
-      "<div class='col-sm-9'><input type='email' class='form-control' id='workEmail' data-toggle='tooltip' title='We will send the foreman an email so they can create, or link their account on the app to yours.'>" +
-      "</div></div>"
-    ;
+function assignedOrchardsForWorker() {
+  var result = [];
+  for (const oid in orchards) {
+    const inp = document.getElementById("ass" + oid);
+    if (inp.checked) {
+      result.push(oid);
+    }
   }
-  else {
-    document.getElementById("emailSpace").innerHTML = "";
-  }
+  return result;
 }
 
 function workSave(type, id) {
   /*0 means create, 1 means modify*/
   const orchard = document.getElementById("workOrch").value;
-  const orchID = orchard.substring(orchard.indexOf("<") + 1, orchard.indexOf(">"));
+  const orchID = assignedOrchardsForWorker();
+  var pn = document.getElementById("workContactNo").value;
+  if(pn.charAt(0)=="0") {
+    pn = pn.replace(pn.charAt(0), "+27");
+  } //otherwise we assume it's proper
+
   let workType = "Foreman";
   if (document.getElementById("rWorker").checked) {
     workType = "Worker";
   }
   let email = "";
   if (workType === "Foreman") {
-    email = document.getElementById("workEmail").value;
+    email = "";//document.getElementById("workEmail").value;
   }
+  const tempWorker = {
+    name: document.getElementById("workName").value,
+    surname: document.getElementById("workSName").value,
+    idNumber: document.getElementById("workID").value,
+    phoneNumber: pn,
+    orchards: orchID,
+    type: workType,
+    info: document.getElementById("workInfo").value
+  };
   let newRef;
   if (type === 0) {
-    //CreateWorker
-    newRef = firebase.database().ref('/' + userID() +"/workers/").push({
-      name: document.getElementById("workName").value,
-      surname: document.getElementById("workSName").value,
-      idNumber: document.getElementById("workID").value,
-      phoneNumber: document.getElementById("workContactNo").value,
-      orchard: orchID,
-      type: workType,
-      info: document.getElementById("workInfo").value,
-      email: email
-    });
-      if (workType === "Foreman"){
-          /**
-           * Create the correct entry in workingFor
-           */
-          email = email.replace(/\./g, ",");
-          firebase.database().ref('/WorkingFor/' + email).set({
-              [userID()]: newRef.getKey()
-          });
-      }
+    // Create Worker
+    newRef = firebase.database().ref('/' + userID() +"/workers/").push(tempWorker);
+    if (workType === "Foreman" && pn !== undefined && pn !== ""){
+        /**
+         * Create the correct entry in workingFor
+         */
+        email = email.replace(/\./g, ",");
+        firebase.database().ref('/WorkingFor/' + pn).set({
+            [userID()]: newRef.getKey()
+        });
+    }
     id = newRef.getKey();
-    popWork();
-  }
-  else if (type === 1) {
+    workers[id] = tempWorker;
+    showWorkersList();
+    dispWorker(id);
+  } else if (type === 1) {
     //Update Worker
-      firebase.database().ref('/' + userID() +"/workers/" + id).update({
-      name: document.getElementById("workName").value,
-      surname: document.getElementById("workSName").value,
-      idNumber: document.getElementById("workID").value,
-      phoneNumber: document.getElementById("workContactNo").value,
-      orchard: orchID,
-      type: workType,
-      info: document.getElementById("workInfo").value,
-      email: email
-    });
+    const oldPhone = workers[id].phoneNumber;
+    const oldType = workers[id].type;
+    workers[id] = tempWorker;
+    firebase.database().ref('/' + userID() +"/workers/" + id).update(workers[id]);
+    if (pn !== undefined && pn !== "") {
       if (workType === "Foreman"){
           /**
            * Update the correct entry in workingFor
            */
-          email = email.replace(/\./g, ",");
-          firebase.database().ref('/WorkingFor/' + email).update({
+          firebase.database().ref('/WorkingFor/' + pn).update({
               [userID()]: id
           });
       }
+      if (oldPhone !== undefined && oldPhone !== "" && oldPhone !== pn) {
+        firebase.database().ref('/WorkingFor/' + oldPhone).remove();
+      }
+      if (oldType !== undefined && oldType === "Foreman" && workType === "Worker") {
+        firebase.database().ref('/' + userID() + '/foremen/' + pn).remove();
+      }
+    }
+    if (oldType !== undefined && oldType === "Foreman" && workType === "Worker") {
+      firebase.database().ref('/' + userID() + '/locations/' + id).remove();
+      firebase.database().ref('/' + userID() + '/requestedLocations/' + id).remove();
+    }
   }
-  popWork();
-  dispWork(id);
+  showWorkersList();
+  dispWorker(id);
 }
 
 function workMod(id) {
-  firebase.database().ref('/' + userID() +'/workers/' + id).once('value').then(function (snapshot) {
-    document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delWork(\"" + id + "\")'>Delete</button>";
-    document.getElementById('modalText').innerText = "Please confirm deletion of " + snapshot.val().name + " " + snapshot.val().surname;
-    firebase.database().ref('/' + userID() +'/orchards').once('value').then(function (orchard) {
-      document.getElementById('col3').innerHTML = "" +
-        "<form class='form-horizontal'>" +
-        "" +
-        "<div class='form-group'>" +
-        "<div class='col-sm-3 col-sm-offset-2'><button onclick='workSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
-        "<div class='col-sm-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
-        "<div class='col-sm-3'><button onclick='dispWork(\"" + id + "\")' type='button' class='btn btn-default'>Cancel</button></div>" +
-        "</div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Name:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='workName' value='" + snapshot.val().name + "'></div> </div> " +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Surname:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='workSName' value='" + snapshot.val().surname + "'></div> </div>" +
-        "" +
-	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity Number:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='workID' value='" + snapshot.val().idNumber + "'></div> </div>" +
-        "" +	    
-	"<div class='form-group'><label class='control-label col-sm-2' for='text'>Phone Number:</label>" +
-        "<div class='col-sm-9'><input type='text' class='form-control' id='workContactNo' value='" + snapshot.val().phoneNumber + "'></div> </div>" +
-        "" +	
-        "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchard:</label>" +
-        "<div class='col-sm-9'><select class='form-control' id='workOrch'></select></div></div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' id='workType'>Worker Type:</label>" +
-        "<label class='radio-inline'><input type='radio' name='optradio' onclick='dispWorkEmail(false)' id='rWorker'>Worker</label>" +
-        "<label class='radio-inline'><input type='radio' name='optradio' onclick='dispWorkEmail(true)' id='rForeman'>Foreman</label>" +
-        "</div>" +
-        "" +
-        "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
-        "<div class='col-sm-9'><textarea class='form-control' rows='4' id='workInfo'>" + snapshot.val().info + "</textarea></div></div>" +
-        "" +
-        "<div id='emailSpace'></div>" +
-        "" +
+  const worker = workers[id];
 
-        "</form>"
-      ;
+  document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delWork(\""+id+"\")'>Delete</button>";
+  document.getElementById('modalText').innerText = "Please confirm deletion of " + worker.name + " " + worker.surname;
+  document.getElementById('entityDetails').innerHTML = "" +
+    "<form class='form-horizontal'>" +
+    "" +
+    "<div class='form-group'>" +
+    "<div class='col-sm-3 col-sm-offset-2'><button onclick='workSave(" + 1 + ",\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div>" +
+    "<div class='col-sm-3'><button type='button' class='btn btn-danger' data-toggle='modal' data-target='#delModal'>Delete</button></div> " +
+    "<div class='col-sm-3'><button onclick='dispWorker(\"" + id + "\")' type='button' class='btn btn-default'>Cancel</button></div>" +
+    "</div>" +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Name:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='workName' value='" + worker.name + "'></div> </div> " +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Worker Surname:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='workSName' value='" + worker.surname + "'></div> </div>" +
+    "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='text'>Identity Number:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='workID' value='" + worker.idNumber + "'></div> </div>" +
+    "" +
+  "<div id='wf' class='form-group'><label class='control-label col-sm-2' for='workContactNo'>Phone Number:</label>" +
+    "<div class='col-sm-9'><input type='text' class='form-control' id='workContactNo' value='" + worker.phoneNumber + "' ></div> </div>" +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Orchards:</label>" +
+    "<div class='col-sm-9'><div id='workOrch'></div></div></div>" +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' id='workType'>Worker Type:</label>" +
+    "<label class='radio-inline'><input type='radio' name='optradio' id='rWorker'>Worker</label>" +
+    "<label class='radio-inline'><input type='radio' name='optradio' id='rForeman'>Foreman</label>" +
+    "</div>" +
+    "" +
+    "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
+    "<div class='col-sm-9'><textarea class='form-control' rows='4' id='workInfo'>" + worker.info + "</textarea></div></div>" +
+    "" +
+    "<div id='emailSpace'></div>" +
+    "" +
 
-      if (snapshot.val().type === "Foreman") {
-        document.getElementById("rForeman").setAttribute("checked", "");
-        document.getElementById("emailSpace").innerHTML = "" +
-          "<div class='form-group'><label class='control-label col-sm-2' for='text'>Foreman Email:</label>" +
-          "<div class='col-sm-9'><input type='text' class='form-control' id='workEmail' value='" + snapshot.val().email + "'></div> </div> "
-        ;
-      }
-      else {
-        document.getElementById("rWorker").setAttribute("checked", "");
-      }
+    "</form>"
+  ;
 
-      orchard.forEach(function (child) {
-        const workOrch = document.getElementById("workOrch");
-        let selec = "";
-        // workOrch.innerHTML = workOrch.innerHTML + "<option";
-        if (child.key === snapshot.val().orchard) {
-          selec = ' selected';
-        }
-        // workOrch.innerHTML = workOrch.innerHTML + "><" +child.key+"> " + child.val().name+"  :  "+child.val().crop + "</option>";
-        workOrch.innerHTML += "<option" + selec + "><" + child.key + "> " + child.val().name + "  :  " + child.val().crop + "</option>";
-      });
-    });
-  });
+  if (worker.type === "Foreman") {
+    document.getElementById("rForeman").setAttribute("checked", "");
+    try{
+    document.getElementById("workContactNo").setAttribute("required");
+    }catch(err){}
+    /*document.getElementById("emailSpace").innerHTML = "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Foreman Email:</label>" +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='workEmail' value='" + snapshot.val().email + "'></div> </div> "
+    ;*/
+  }
+  else {
+    document.getElementById("rWorker").setAttribute("checked", "");
+    try{
+    document.getElementById("workContactNo").removeAttribute("required");
+    }catch(err){
+
+    }
+  }
+
+  const possibleOrchards = orchardsSortedList();
+  for (const idx in possibleOrchards) {
+    const orchard = possibleOrchards[idx];
+    const workOrch = document.getElementById("workOrch");
+    let isChecked = "";
+    // workOrch.innerHTML = workOrch.innerHTML + "<option";
+    if (worker.orchards !== undefined && worker.orchards.includes(orchard.key)) {
+      isChecked = ' checked';
+    }
+    const farm = farms[orchard.value.farm];
+    const farmName = farm !== undefined ? farm.name : orchard.key;
+    const title = farmName + " - " + orchard.value.name;
+
+    workOrch.innerHTML +=
+    "<div class='form-check'>" +
+      "<input class='form-check-input' type='checkbox' id='ass"+ orchard.key +"'" + + " value='" + orchard.key + "'" + isChecked + ">" +
+      "<label class='form-check-label' for='ass" + orchard.key + "'> " + title + "</label>" +
+    "</div>";
+  }
 }
 
 function delWork(id) {
   const ref = firebase.database().ref('/' + userID() + '/workers/' + id);
-  let email;
-  ref.once('value').then(function (snapshot) {
-      email = snapshot.val().email;
-  });
+  const pn = workers[id].phoneNumber;
   ref.remove();
-  email = email.replace(/\./g, ",");
-  firebase.database().ref('/WorkingFor/' + email).remove();
-  popWork();
-  clear3();
-}
+  delete workers[id];
 
-/*This filters displayed items in col2, based on what is present in the search box*/
-function searchDisp(){
-  document.getElementById("SearchSpace").innerHTML = "" +
-    "" +
-    "<input class='form-control' type='text' placeholder='Search' id='SearchBar' oninput='popResults()'>" +
-    ""
-  ;
-
-  findables.sort(function (a, b) {
-    return a.Name.localeCompare(b.Name);
-  });
-
-  const buttons = document.getElementById("DispButt");
-  buttons.innerHTML = "";
-
-  findables.forEach(function (item, index) {
-    buttons.innerHTML += item.Button;
-  });
-
-}
-
-/*This populates the found results.*/
-function popResults() {
-  const searchText = document.getElementById("SearchBar").value;
-  const buttons = document.getElementById("DispButt");
-  buttons.innerHTML = "";
-  findables.forEach(function (item, index) {
-    if (isValid(searchText, item.Name)){
-      buttons.innerHTML += item.Button;
+  try{
+    if (pn !== undefined && pn !== "") {
+      firebase.database().ref('/WorkingFor/' + pn + '/' + userID()).remove();
+      firebase.database().ref('/' + userID() + '/foremen/' + pn).remove();
     }
-  });
+    firebase.database().ref('/' + userID() + '/locations/' + id).remove();
+    firebase.database().ref('/' + userID() + '/requestedLocations/' + id).remove();
+  } catch(err){
+
+  }
+  document.getElementById("entityDetails").innerHTML = "<h1 class='infoDetailHelp'>Select An Item From the Sidebar</h1>";
+  showWorkersList();
 }
 
-/*This checks if the given name is a valid find*/
-function isValid(search, name) {
-  /*This should get fancy, in time, for now just check if the characters match a pattern, and are in the correct order*/
-  for (let i = 0; i < search.length; i++){
-    if (i === name.length){
-      return true;
+function filterInformation(searchField) {
+  const searchText = searchField.value;
+
+  if (searchText === "") {
+    showEntityList();
+  } else {
+    entitiesList = [];
+    filteredEntities = [];
+    const formatter = titleFormatter(selectedEntity);
+    var entities;
+    if (selectedEntity === "Farm") {
+      entities = farms;
+    } else if (selectedEntity === "Orchard") {
+      entities = orchards;
+    } else if (selectedEntity === "Worker") {
+      entities = workers;
     }
-    if (search.charAt(i).toLowerCase() !== name.charAt(i).toLowerCase()) {
-      return false;
+
+    for (const key in entities) {
+      const entity = entities[key];
+      var searchResults;
+      if (selectedEntity === "Farm") {
+        searchResults = searchFarm(entity, searchText, true);
+      } else if (selectedEntity === "Orchard") {
+        searchResults = searchOrchard(entity, farms, searchText, true);
+      } else if (selectedEntity === "Worker") {
+        searchResults = searchWorker(entity, orchards, searchText, true);
+      }
+
+      for (const property in searchResults) {
+        var newEntity = {};
+        newEntity["value"] = entity;
+        newEntity["reason"] = searchResults[property];
+        newEntity["key"] = key;
+        insertEntityIntoSortedMap(newEntity, property, formatter, filteredEntities);
+      }
+    }
+
+    displayFilteredEntities(formatter);
+  }
+}
+
+// sorted map
+var filteredEntities = [];
+function insertEntityIntoSortedMap(entity, key, formatter, sortedMap) {
+  var belongsInGroup = undefined;
+  for (const groupIdx in sortedMap) {
+    const group = sortedMap[groupIdx];
+    if (group.key === key) {
+      belongsInGroup = groupIdx;
+      break;
     }
   }
-  return true;
+
+  if (belongsInGroup !== undefined) {
+    sortedMap[belongsInGroup].values.push(entity);
+    sortedMap[belongsInGroup].values = sortedMap[belongsInGroup].values.sort((a, b) => {
+      return formatter(a.key, a.value).localeCompare(formatter(b.key, b.value));
+    });
+  } else {
+    sortedMap.push({key: key, values: [entity]});
+  }
+
+  sortedMap = sortedMap.sort((a, b) => {
+    return a.key.localeCompare(b.key);
+  });
 }
 
+function displayFilteredEntities(formatter) {
+  var addButtonDiv = document.getElementById("AddButt");
+  const addFunction = " onclick='disp" + selectedEntity + "(\"-1\")'";
+  const addName = "Add " + selectedEntity;
+  addButtonDiv.innerHTML = "<button type='button' class='btn btn-success'" + addFunction + ">" + addName + "</button>";
 
-function clear3() {
-  document.getElementById("AddButt").innerHTML = "";
-  document.getElementById("SearchBar").innerHTML = "";
-  document.getElementById("DispButt").innerHTML = "";
+  var entityList = document.getElementById("DispButt");
+  entityList.innerHTML = "";
+  for (const groupIdx in filteredEntities) {
+    const group = filteredEntities[groupIdx];
+    const key = group.key;
+    entityList.innerHTML += "<h4>" + key + "</h4>";
+    for (const itemIdx in group.values) {
+      const item = group.values[itemIdx];
+      const displayFunction = " onclick='disp" + selectedEntity + "(\"" + item.key + "\")'";
+      const displayName = formatter(item.key, item.value);
+      entityList.innerHTML += "<button type='button' class='btn btn-info' " + displayFunction + ">" + displayName + "</button>";
+      entityList.innerHTML += "<p class='searchReason'>" + item.reason + "</p>";
+    }
+  }
+}
+
+/* This function shows the spinner while still waiting for resources*/
+var spinner;
+function updateSpiner(shouldSpin) {
+  var opts = {
+		lines: 8, // The number of lines to draw
+		length: 37, // The length of each line
+		width: 10, // The line thickness
+		radius: 20, // The radius of the inner circle
+		scale: 1, // Scales overall size of the spinner
+		corners: 1, // Corner roundness (0..1)
+		color: '#4CAF50', // CSS color or array of colors
+		fadeColor: 'transparent', // CSS color or array of colors
+		speed: 1, // Rounds per second
+		rotate: 0, // The rotation offset
+		animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+		direction: 1, // 1: clockwise, -1: counterclockwise
+		zIndex: 2e9, // The z-index (defaults to 2000000000)
+		className: 'spinner', // The CSS class to assign to the spinner
+		shadow: '0 0 1px transparent', // Box-shadow for the lines
+  };
+
+  var target = document.getElementById("loader"); //This is where the spinner is gonna show
+  if (shouldSpin) {
+		if (spinner == null) {
+		  spinner = new Spinner(opts).spin(target);
+		}
+  } else {
+	  //target.style.top = "0px";
+	  spinner.stop(); //This line stops the spinner.
+	  spinner = null;
+  }
 }

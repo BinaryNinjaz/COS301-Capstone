@@ -3,12 +3,58 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/07/07.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Foundation
 
+extension TimeZone {
+  func offset() -> String {
+    let secs = abs(secondsFromGMT())
+    let sign = secondsFromGMT() < 0 ? "-" : "+"
+    let h = secs / 60
+    
+    return sign + h.description
+  }
+}
+
 extension Date {
+  func startOfHour(using calendar: Calendar = .current) -> Date {
+    let components = calendar.dateComponents([.year, .month, .day, .hour], from: self)
+    let s = calendar.date(from: components)!
+    
+    return s
+  }
+  
+  func startOfDay(using calendar: Calendar = .current) -> Date {
+    return calendar.startOfDay(for: self)
+  }
+  
+  func startOfWeek(using calendar: Calendar = .current) -> Date {
+    let components = calendar.dateComponents([.weekOfYear, .yearForWeekOfYear], from: self)
+    let s = calendar.date(from: components)!
+    
+    return s
+  }
+  
+  func startOfMonth(using calendar: Calendar = .current) -> Date {
+    let components = calendar.dateComponents([.year, .month], from: self)
+    let s = calendar.date(from: components)!
+    
+    return s
+  }
+  
+  func startOfYear(using calendar: Calendar = .current) -> Date {
+    let components = calendar.dateComponents([.year], from: self)
+    let s = calendar.date(from: components)!
+    
+    return s
+  }
+  
+  func date(byAdding comp: Calendar.Component, value: Int, using calendar: Calendar = .current) -> Date {
+    return calendar.date(byAdding: comp, value: value, to: self)!
+  }
+  
   func today(using calendar: Calendar = .current) -> (Date, Date) {
     let now = Date()
     let dayAfter = calendar.date(byAdding: .day, value: 1, to: now)!
@@ -95,71 +141,35 @@ extension Date {
     
     return formatter.string(from: date)
   }
+  
+  func daysSince1970() -> Double {
+    var interval = Int(timeIntervalSince1970)
+    interval -= interval % 86400
+    return Double(interval) / 86400.0
+  }
 }
 
 extension Date {
-  func getWeekDaysInEnglish() -> [String] {
-    var calendar = Calendar(identifier: .gregorian)
-    calendar.locale = Locale(identifier: "en_US_POSIX")
-    return calendar.weekdaySymbols
+  func asFirebaseSessionKey() -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "-YYYYMMdd"
+    return formatter.string(from: self)
+  }
+}
+
+extension DateFormatter {
+  static func iso8601() -> DateFormatter {
+    let result = DateFormatter()
+    result.locale = Locale.current
+    result.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZZZZZ"
+    return result
   }
   
-  enum Weekday: String {
-    case monday, tuesday, wednesday, thursday, friday, saturday, sunday
+  static func iso8601String(from date: Date) -> String {
+    return DateFormatter.iso8601().string(from: date)
   }
   
-  enum SearchDirection {
-    case next
-    case previous
-    
-    var calendarSearchDirection: Calendar.SearchDirection {
-      switch self {
-      case .next:
-        return .forward
-      case .previous:
-        return .backward
-      }
-    }
-  }
-  
-  func next(_ weekday: Weekday, considerToday: Bool = false) -> Date {
-    return get(.next,
-               weekday,
-               considerToday: considerToday)
-  }
-  
-  func previous(_ weekday: Weekday, considerToday: Bool = false) -> Date {
-    return get(.previous,
-               weekday,
-               considerToday: considerToday)
-  }
-  
-  func get(_ direction: SearchDirection,
-           _ weekDay: Weekday,
-           considerToday consider: Bool = false) -> Date {
-    
-    let dayName = weekDay.rawValue
-    
-    let weekdaysName = getWeekDaysInEnglish().map { $0.lowercased() }
-    
-    assert(weekdaysName.contains(dayName), "weekday symbol should be in form \(weekdaysName)")
-    
-    let searchWeekdayIndex = weekdaysName.index(of: dayName)! + 1
-    
-    let calendar = Calendar(identifier: .gregorian)
-    
-    if consider && calendar.component(.weekday, from: self) == searchWeekdayIndex {
-      return self
-    }
-    
-    var nextDateComponent = DateComponents()
-    nextDateComponent.weekday = searchWeekdayIndex
-    
-    let date = calendar.nextDate(after: self,
-                                 matching: nextDateComponent,
-                                 matchingPolicy: .nextTime,
-                                 direction: direction.calendarSearchDirection)
-    
-    return date!
+  static func iso8601Date(from string: String) -> Date {
+    return DateFormatter.iso8601().date(from: string)!
   }
 }

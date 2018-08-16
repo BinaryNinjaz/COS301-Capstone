@@ -1,86 +1,147 @@
+<!DOCTYPE html>
 <html>
     <head>
-        <title>Harvest Home</title>
+        <title>Harvest</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
 
-        <link href="navbar.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="HarvestLogo.png">
 
-        <!-- Firebase Dependencies -->
-        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
-      
-        <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script>
-        
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!--Here import stuff-->
+    <!--Firebase-->
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-database.js"></script>
+    <script src="StringHelpers.js" charset="utf-8" type="text/javascript"></script>
+    <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script>
 
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-                integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-                
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    <script src="information.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
-        
-        
-                
-        <!-- Firebase -->
-      <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
-       
-        <link href="home.css" rel="stylesheet" type="text/css"/>
-        
-        <!-- Google Maps -->
-        <script async defer
-                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap">
-                </script>
-                
-        <script src="databaseCallbacks.js" charset="utf-8"></script>
-        <script src="homepage.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="bodyElements.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css"/>
+
+    <link rel="stylesheet" type="text/css" href="spin.css">
+    <script src="spin.js" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="Shared.css">
+
+    <script src="navbar.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="active.css">
+    <!-- Google Maps -->
+    <script async defer
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap">
+        </script>
+    <script src="polygon.js" charset="utf-8"></script>
+	  <link rel="stylesheet" type="text/css" href="newNavbar.css">
+
+  	<link rel="stylesheet" type="text/css" href="hp.css">
     </head>
     <body>
-
-    <div class="topnav">
-        <ul class="nav navbar-nav">
-			<a class="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a> 
-			<a href="Information.html">Information</a>
-			<a href="Sessions.html">Sessions</a>
-			<a href="HeatMap.html">Heatmap</a>
-			<a href="graphs.html">Analytics</a>
-        </ul>
-
-        <ul class="pull-right nav navbar-nav">
-            <a href="Settings.html" id="emailInNav"></a>
-            <a href="javascript:;" id="signing" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> &nbsp;</a> 
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>			
-        </ul>
-    </div>
-    
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-3">
-                <h1>Foremen Tracking</h1>
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="ForemanTracker.html">Tracker</a></li>
+            <li><a href="Information.html">Information</a></li>
+            <li><a href="Sessions.html">Sessions</a></li>
+            <li><a href="HeatMap.html">Heatmap</a></li>
+            <li><a href="graphs.html">Statistics</a></li>
+          </ul>
+          <ul class=" nav navbar-nav" id="ojo">
+            <li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
+            <li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
+          </ul>
+          </div>
+        </nav>
+        <section class="container">
+            <div class="col-12">
+                <div class="col-12 col-sm-6 col-md-4">
+                    <a href="ForemanTracking.html">
+                        <div class="c" id="ft" >
+                            <div class="header">
+                                Foremen Tracking
+                            </div>
+                            <div class="desc">
+                                Know exactly what is going on around your farm and track your foremen live in orchards.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <a href="information.html">
+                        <div class="c" id="info">
+                            <div class="header">
+                                Information
+                            </div>
+                            <div class="desc">
+                                Create, Manage and update information on: Farm, Orchards and Workers. Setup information once for easy continuous performance tracking.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <a href="sessions.html">
+                        <div class="c" id="sess">
+                            <div class="header">
+                                Sessions
+                            </div>
+                            <div class="desc">
+                                Review where and when collections were made. View summaries of how workers did during collection sessions.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <a href="heatMap.html">
+                        <div class="c" id="heatm">
+                            <div class="header">
+                                Heatmap
+                            </div>
+                            <div class="desc">
+                                Know the exact Hotspots in and around your farm for better management and allocation of resources.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <a href="graphs.html">
+                        <div class="c" id="ana">
+                            <div class="header">
+                                Statistics
+                            </div>
+                            <div class="desc">
+                                View, compare and predict the performance of farms, orchards, workers and foreman.
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4">
+                    <a href="settings.html">
+                        <div class="c" id="sett">
+                            <div class="header">
+                                Account Settings
+                            </div>
+                            <div class="desc">
+                                Manage and update your harvest user account.
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <div class="col-sm-9">
-                <h1>Live Map Overview</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-3">
-                <div id="foremen"></div>
-            </div>
-            <div class="col-sm-9">
-                <div id="map"></div>
-            </div>
-        </div>
-    </div>
-        <script src="navbar.js" type="text/javascript"></script>
+           <!-- <footer>
+                    <img src="HarvestLogo.png" alt="" id="ico" />2018 BinaryNinjaz &nbsp; University Of Pretoria &nbsp; Final Year Computer Science (COS 301) project
+            </footer>-->
+        </section>
     </body>
 </html>

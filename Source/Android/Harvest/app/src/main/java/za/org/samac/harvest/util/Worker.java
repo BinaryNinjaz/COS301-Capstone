@@ -1,16 +1,16 @@
 package za.org.samac.harvest.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-public class Worker{
+public class Worker extends DBInfoObject {
     protected String fName, sName;
     protected List<Orchard> assignedOrchards;
     protected WorkerType workerType;
     protected boolean wasForeman = false;
     protected String further;
     protected String phone, oldPhone;
-    protected String fID;
     protected String nID;
 
     public Worker(){
@@ -40,7 +40,7 @@ public class Worker{
     }
 
     public void setfID(String fID) {
-        this.fID = fID;
+        this.ID = fID;
     }
 
     public void setfName(String fName) {
@@ -79,7 +79,7 @@ public class Worker{
     }
 
     public String getfID() {
-        return fID;
+        return ID;
     }
 
     public String getnID() {
@@ -123,6 +123,26 @@ public class Worker{
                 return;
             }
         }
+    }
+
+    public ArrayList<SearchedItem> search(String text) {
+        ArrayList<SearchedItem> result = new ArrayList<>();
+
+        text = text.toLowerCase();
+
+        if ((getfName() + " " + getsName()).toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Name", getfName() + " " + getsName()));
+        }
+
+        if (getnID().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("ID", getnID()));
+        }
+
+        if (getPhone().toLowerCase().contains(text)) {
+            result.add(new SearchedItem("Phone Number", getPhone()));
+        }
+
+        return result;
     }
 }
 

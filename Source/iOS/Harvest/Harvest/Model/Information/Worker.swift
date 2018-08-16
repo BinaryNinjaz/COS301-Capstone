@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/19.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Swift
@@ -59,7 +59,7 @@ final class Worker {
       "orchards": assignedOrchards,
       "info": details,
       "type": kind == .foreman ? "Foreman" : "Worker",
-      "phoneNumber": phoneNumber,
+      "phoneNumber": phoneNumber.removedFirebaseInvalids(),
       "idNumber": idNumber
     ]]
   }
@@ -77,6 +77,50 @@ final class Worker {
       "name": HarvestUser.current.displayName,
       "phoneNumber": HarvestUser.current.accountIdentifier
     ], id: HarvestUser.current.uid)
+  }
+  
+  func search(for text: String) -> [(String, String)] {
+    var result = [(String, String)]()
+    
+    let text = text.lowercased()
+    
+    if name.lowercased().contains(text) {
+      result.append(("Name", name))
+    }
+    
+    let orchardNames = Entities.shared.orchards
+      .filter { assignedOrchards.contains($0.value.id) }
+      .map { $0.value.name }
+    let foundOrchards = orchardNames.filter { $0.lowercased().contains(text) }
+    if let f = foundOrchards.first {
+      result.append(("Assigned Orchard", f + (foundOrchards.count == 1 ? "" : ", ...")))
+    }
+    
+    let farmNames = Entities.shared.farms
+      .filter { assignedOrchards.contains($0.value.id) }
+      .map { $0.value.name }
+    let foundFarms = farmNames.filter { $0.lowercased().contains(text) }
+    if let f = foundFarms.first {
+      result.append(("Assigned Farm", f + (foundFarms.count == 1 ? "" : ", ...")))
+    }
+    
+    if details.lowercased().contains(text) {
+      result.append(("Details", ""))
+    }
+    
+    if (kind == .worker ? "worker" : "foreman").contains(text) {
+      result.append(("Kind", kind == .worker ? "Worker" : "Foreman"))
+    }
+    
+    if phoneNumber.lowercased().contains(text) {
+      result.append(("Phone Number", phoneNumber))
+    }
+    
+    if idNumber.lowercased().contains(text) {
+      result.append(("ID Number", idNumber))
+    }
+    
+    return result
   }
 }
 

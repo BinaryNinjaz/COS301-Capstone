@@ -2,8 +2,83 @@
     white-space: normal;
 }
 
+#entityDetails {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    border: 1px solid #CCC;
+    padding: 12px;
+    visibility: visible;
+    margin-top: 8px;
+}
 #map {
     height: 500px;
     width: 100%;
     background-color: #EFEEEC;
+}
+#SearchSpace{
+    margin-top: 8px;
+}
+#entitySelector {
+    margin: 16px;
+    margin-top: 8px;
+    padding: 4px;
+    background-color: #333;
+    border-radius: 4px;
+    margin-bottom: 0px;
+    background: linear-gradient(#3B3B3B, #222222);
+    border-color: black;
+}
+#selectedEntity {
+  border-color: transparent;
+}
+.infoDetailHelp {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+#entityList h2 {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #CCC;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.row{
+    display: block;
+    overflow: auto;
+}
+
+@media (max-width: 768px){
+    #entityList{
+        width: 375px;
+    }
+    #entityDetails, #entitySelector{
+        width: 345px;
+
+    }
+    #right #entityList{
+        float: left;
+    }
+
+    #right, #entityList, #entitySelector{
+        transform: translate(150px);// rotate(90deg);
+        transition-duration: 1s;
+    }
+}
+@media (max-width: 578px){
+    #entityList{
+        width: 375px;
+    }
+    #entityDetails, #entitySelector{
+        width: 345px;
+
+    }
+    #right, #entityList, #entitySelector{
+        transform: translate(0px);// rotate(90deg);
+        transition-duration: 1s;
+    }
+}
+[class*="btn"]{
+    border: 1px solid black;
 }

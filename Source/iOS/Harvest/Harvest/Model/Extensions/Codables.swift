@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/21.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Foundation
@@ -37,8 +37,10 @@ extension CollectionPoint: Codable {
   
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
-    location = try values.decode(CLLocationCoordinate2D.self, forKey: .location)
+    let loc = try values.decode(CLLocationCoordinate2D.self, forKey: .location)
+    location = loc
     date = try values.decode(Date.self, forKey: .date)
+    orchard = Entities.shared.orchards.first { $0.value.contains(loc) }?.value
   }
   
   public func encode(to encoder: Encoder) throws {

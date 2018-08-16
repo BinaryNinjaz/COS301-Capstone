@@ -1,4 +1,4 @@
-
+/* This sets the background of the index page to be transparent */
 body{
     background-color: transparent;
     
@@ -31,25 +31,29 @@ body{
     font-size: 24px;
    
 }
+/* This manipulates the section which displays what the website is about */
 .list-heading {
     font-weight: bolder;
     font-size: 35px;
     position: relative;
 }
+/* Team mate needs to explain what this is for, and if it is still relevant*/
 .center {
     position: relative;  
     text-align: center;
     margin-right: auto;
 }
+/* Team mate needs to explain what this is for, and if it is still relevant*/
 .sec {
     text-align: auto;
     padding: 40px;
 	position:relative
 }
+/* This is to force the numbering of the unordered list to use the given icon*/
 ul {
     list-style-type: ico;
 }
-
+/* Adding a logo to the section which displays what the website is about */
 ul.ico {
     list-style-image: url('leaf2.png');// no-repeat left top;
 }
@@ -57,7 +61,7 @@ ul.ico {
 .card-body label{
     text-align: left;
 }
-
+/* Apply css when screen size is minimum 700px*/
 @media only screen and (min-width: 700px) {
     html {
         font-family: Sans-Serif;	
@@ -66,6 +70,7 @@ ul.ico {
         background-size: auto;  
     }
 }
+/* Apply css when screen size is minimum 728px*/
 @media only screen and (max-width: 728px) {
    html {
         font-family: Sans-Serif;	
@@ -74,6 +79,7 @@ ul.ico {
         background-size: cover;  
     }
 }
+/* Apply css when screen size is minimum 728px*/
 @media only screen and (max-width: 728px){
     #right li, h3{
         color: white;

@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/19.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import Foundation
@@ -54,15 +54,15 @@ public final class Orchard {
   
   init(json: [String: Any], id: String) {
     self.id = id
-    bagMass = json["bagMass"] as? Double ?? .nan
+    bagMass = json["bagMass"] as? Double ?? 0.0
     crop = json["crop"] as? String ?? ""
     cultivars = json["cultivars"] as? [String] ?? []
     date = Date(timeIntervalSince1970: json["date"] as? Double ?? 0.0)
     assignedFarm = json["farm"] as? String ?? ""
     details = json["further"] as? String ?? ""
     name = json["name"] as? String ?? ""
-    treeSpacing = json["treeSpacing"] as? Double ?? .nan
-    rowSpacing = json["rowSpacing"] as? Double ?? .nan
+    treeSpacing = json["treeSpacing"] as? Double ?? 0.0
+    rowSpacing = json["rowSpacing"] as? Double ?? 0.0
     irrigationKind = IrrigationKind(rawValue:
       json["irrigation"] as? String ?? ""
     ) ?? .none
@@ -101,22 +101,87 @@ public final class Orchard {
       "irrigation": irrigationKind.rawValue
     ]]
   }
+  
+  // swiftlint:disable cyclomatic_complexity
+  func search(for text: String) -> [(String, String)] {
+    var result = [(String, String)]()
+    
+    let text = text.lowercased()
+    
+    if name.lowercased().contains(text) {
+      result.append(("Name", name))
+    }
+    
+    let farm = Entities.shared.farms.first { $0.value.id == assignedFarm }
+    for (prop, reason) in farm?.value.search(for: text) ?? [] {
+      result.append(("Farm " + prop, reason))
+    }
+    
+    let workerNames = Entities.shared.workers
+      .filter { $0.value.assignedOrchards.contains(id) }
+      .map { $0.value.name }
+    let foundWorkers = workerNames.filter { $0.lowercased().contains(text) }
+    if let f = foundWorkers.first {
+      result.append(("Assigned Workers", f + (foundWorkers.count == 1 ? "" : ", ...")))
+    }
+    
+    if crop.lowercased().contains(text) {
+      result.append(("Crop", crop))
+    }
+    
+    let foundCultivars = cultivars.filter { $0.lowercased().contains(text) }
+    if let c = foundCultivars.first {
+      result.append(("Cultivar", c + (foundCultivars.count == 1 ? "" : ", ...")))
+    }
+    
+    if irrigationKind.rawValue.lowercased().contains(text) {
+      result.append(("Irrigation Kind", irrigationKind.rawValue))
+    }
+    
+    if treeSpacing.description.contains(text) {
+      result.append(("Tree Spacing", treeSpacing.description))
+    }
+    
+    if rowSpacing.description.contains(text) {
+      result.append(("Row Spacing", rowSpacing.description))
+    }
+    
+    if details.lowercased().contains(text) {
+      result.append(("Details", ""))
+    }
+    
+    let formatter = DateFormatter()
+    formatter.dateStyle = .full
+    formatter.timeStyle = .none
+    let d = formatter.string(from: date)
+    if d.lowercased().contains(text) {
+      result.append(("Date", d))
+    }
+    
+    if bagMass.description.contains(text) {
+      result.append(("Bag Mass", bagMass.description))
+    }
+    
+    return result
+  }
 }
 
 extension Orchard: Equatable {
   static public func == (lhs: Orchard, rhs: Orchard) -> Bool {
-    return lhs.id == rhs.id
-      && lhs.bagMass == rhs.bagMass
-      && lhs.crop == rhs.crop
-      && lhs.date == rhs.date
-      && lhs.assignedFarm == rhs.assignedFarm
-      && lhs.details == rhs.details
-      && lhs.name == rhs.name
-      && lhs.treeSpacing == rhs.treeSpacing
-      && lhs.rowSpacing == rhs.rowSpacing
-      && lhs.coords == rhs.coords
-      && lhs.cultivars == rhs.cultivars
-      && lhs.irrigationKind == rhs.irrigationKind
+    let _id = lhs.id == rhs.id
+    let _bm = lhs.bagMass == rhs.bagMass || lhs.bagMass.isNaN && rhs.bagMass.isNaN
+    let _cr = lhs.crop == rhs.crop
+    let _dt = lhs.date == rhs.date
+    let _af = lhs.assignedFarm == rhs.assignedFarm
+    let _de = lhs.details == rhs.details
+    let _nm = lhs.name == rhs.name
+    let _ts = lhs.treeSpacing == rhs.treeSpacing || lhs.treeSpacing.isNaN && rhs.treeSpacing.isNaN
+    let _rs = lhs.rowSpacing == rhs.rowSpacing || lhs.rowSpacing.isNaN && rhs.rowSpacing.isNaN
+    let _cs = lhs.coords == rhs.coords
+    let _cu = lhs.cultivars == rhs.cultivars
+    let _ir = lhs.irrigationKind == rhs.irrigationKind
+    
+    return _id && _bm && _cr && _dt && _af && _de && _nm && _ts && _rs && _cs && _cu && _ir
   }
 }
 

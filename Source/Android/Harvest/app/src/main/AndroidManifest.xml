@@ -20,8 +20,8 @@
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
         <activity android:name=".SignIn_Choose" />
         <activity
             android:name=".SignIn_Farmer"
@@ -44,8 +44,7 @@
         <activity
             android:name=".SignIn_SignUp"
             android:label="@string/title_activity_sign_up"
-            android:parentActivityName=".SignIn_Choose"/>
-
+            android:parentActivityName=".SignIn_Choose" />
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
@@ -64,21 +63,30 @@
             android:name=".InformationActivity"
             android:label="@string/titleInformation" />
         <activity
-            android:name=".Analytics"
-            android:label="@string/title_stats" />
-        <activity
             android:name=".PieChart"
             android:label="@string/title_stats" />
+
+        <!--Stats-->
         <activity
-            android:name=".SpiralGraph"
+            android:name=".Stats"
             android:label="@string/title_stats" />
+        <activity
+            android:name=".Stats_Graph"
+            android:label="@string/title_stats"
+            android:launchMode="singleTop"
+            android:parentActivityName=".Stats">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Stats" />
+        </activity>
+        <!--End Stats-->
+
         <activity
             android:name=".ForemenPerSession"
             android:label="@string/title_activity_sessions" />
         <activity
             android:name=".Sessions"
-            android:label="@string/title_activity_sessions"
-            android:parentActivityName=".MainActivity" />
+            android:label="@string/title_activity_sessions" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -94,35 +102,17 @@
         <activity
             android:name=".SessionsMap"
             android:label="@string/title_activity_sessions_map" />
-        <activity android:name=".adapter.SessionDetails"
-            android:label="@string/title_activity_sessions"></activity>
-        <activity android:name=".OrchardsForGraph"
-            android:label="@string/title_stats"
-            android:parentActivityName=".Analytics" />
-
-        <activity android:name=".WorkerOrForeman"
-            android:label="@string/title_stats"
-            android:parentActivityName=".Analytics">
+        <activity
+            android:name=".adapter.SessionDetails"
+            android:label="@string/title_activity_sessions"
+            android:launchMode="singleTop"
+            android:parentActivityName=".Sessions">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Analytics"/>
+                android:value=".Sessions" />
         </activity>
+        <activity android:name=".ViewFlipperActivity" />
 
-        <activity android:name=".ForemenForBarGraph"
-            android:label="@string/title_stats"
-            android:parentActivityName=".WorkerOrForeman">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".WorkerOrForeman"/>
-        </activity>
-
-        <activity android:name=".WorkersForBarGraph"
-            android:label="@string/title_stats"
-            android:parentActivityName=".WorkerOrForeman" />
-
-        <activity android:name=".BarGraph"
-            android:label="@string/title_stats" />
-        <activity android:name=".BarGraphForemen" />
     </application>
 
 </manifest>

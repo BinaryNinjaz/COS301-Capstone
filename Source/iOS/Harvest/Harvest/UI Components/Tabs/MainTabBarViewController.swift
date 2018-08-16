@@ -3,7 +3,7 @@
 //  Harvest
 //
 //  Created by Letanyan Arumugam on 2018/04/17.
-//  Copyright © 2018 Letanyan Arumugam. All rights reserved.
+//  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
 import UIKit
@@ -27,6 +27,15 @@ class MainTabBarViewController: UITabBarController {
     }
     
     Entities.shared.start()
+    
+    if !UserDefaults.standard.bool(forKey: HarvestUser.current.uid + "SignedIn") {
+      UserDefaults.standard.set(true, forKey: HarvestUser.current.uid + "SignedIn")
+      let vc = storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
+      if let avc = vc as? CarouselViewController {
+        avc.showTutorial()
+        present(avc, animated: true, completion: nil)
+      }
+    }
   }
   
   override func viewWillDisappear(_ animated: Bool) {
