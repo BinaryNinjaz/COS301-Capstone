@@ -2,87 +2,80 @@
     white-space: normal;
 }
 
- #col3:empty{    
-        background-color: transparent;
-        border-radius: 0px;
-        border: 0px;
-        padding: 0px;
-        visibility: hidden;
-} 
-#col3:not(:empty){    
-        background-color: white;
-        border-radius: 10px;
-        border: 2px solid #333;
-        padding: 10px;
-        visibility: visible;
-        border-top-left-radius: 0px;
-        border-top-right-radius: 0px;
-        
-}  
+#entityDetails {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    border: 1px solid #CCC;
+    padding: 12px;
+    visibility: visible;
+    margin-top: 8px;
+}
 #map {
     height: 500px;
     width: 100%;
     background-color: #EFEEEC;
 }
 #SearchSpace{
-    margin-top: 5px;
+    margin-top: 8px;
 }
-#col1 {
-   
-    
-    margin: 15px;
+#entitySelector {
+    margin: 16px;
+    margin-top: 8px;
+    padding: 4px;
     background-color: #333;
-    border-radius: 5px;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-radius: 4px;
     margin-bottom: 0px;
-    
+    background: linear-gradient(#3B3B3B, #222222);
+    border-color: black;
+}
+#selectedEntity {
+  border-color: transparent;
+}
+.infoDetailHelp {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
 }
 
-body{
-    font-family: Sans-Serif;	
-    background-image: url("back2smaller.jpg");
-    background-repeat: no-repeat;  
-    background-size: cover;  
-    display: block;
-    overflow: auto;
-   
+#entityList h2 {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid #CCC;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .row{
     display: block;
     overflow: auto;
 }
-    
-    
- 
+
 @media (max-width: 768px){
-    #col2{
+    #entityList{
         width: 375px;
     }
-    #col3, #col1{
+    #entityDetails, #entitySelector{
         width: 345px;
-        
+
     }
-    #right #col2{
+    #right #entityList{
         float: left;
     }
-    
-    #right, #col2, #col1{
-        transform: translate(150px);// rotate(90deg); 
+
+    #right, #entityList, #entitySelector{
+        transform: translate(150px);// rotate(90deg);
         transition-duration: 1s;
     }
 }
 @media (max-width: 578px){
-    #col2{
+    #entityList{
         width: 375px;
     }
-    #col3, #col1{
+    #entityDetails, #entitySelector{
         width: 345px;
-        
+
     }
-    #right, #col2, #col1{
-        transform: translate(0px);// rotate(90deg); 
+    #right, #entityList, #entitySelector{
+        transform: translate(0px);// rotate(90deg);
         transition-duration: 1s;
     }
 }

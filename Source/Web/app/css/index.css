@@ -1,13 +1,12 @@
 /* This sets the background of the index page to be transparent */
 body{
     background-color: transparent;
-    
+    overflow-x: hidden;
 }
 
 /* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
 .inputBlock {
 	position: relative;
-
     border: 4px solid green;
     border-radius: 10px;
     padding: 7px;
@@ -49,34 +48,23 @@ body{
     padding: 40px;
 	position:relative
 }
-/* This is to force the numbering of the unordered list to use the given icon*/
-ul {
-    list-style-type: ico;
-}
-/* Adding a logo to the section which displays what the website is about */
-ul.ico {
-    list-style-image: url('leaf2.png');// no-repeat left top;
-}
 
-.card-body label{
-    text-align: left;
-}
 /* Apply css when screen size is minimum 700px*/
 @media only screen and (min-width: 700px) {
     html {
         font-family: Sans-Serif;	
-        background-image: url("backgrdSmaller.jpg");
+		background-image: url("../images/back4.jpg");
         background-repeat: no-repeat;  
-        background-size: auto;  
+        background-size: 100%;
     }
 }
 /* Apply css when screen size is minimum 728px*/
 @media only screen and (max-width: 728px) {
    html {
         font-family: Sans-Serif;	
-         background-image: url("backgrdSmaller.jpg");
+        background-image: url("../images/back4.jpg");
         background-repeat: no-repeat;  
-        background-size: cover;  
+        background-size: cover;
     }
 }
 /* Apply css when screen size is minimum 728px*/

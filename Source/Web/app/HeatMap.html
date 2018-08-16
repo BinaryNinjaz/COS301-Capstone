@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="bodyElements.css" rel="stylesheet" type="text/css" /><!-- css file -->
-    
+
     <!-- Firebase Dependencies -->
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-database.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css" />
-    
+
     <script src="firebaseRelatedJavaScriptFunctions.js" type="text/javascript"></script><!-- javascript file -->
-    
+
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -25,37 +25,37 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="navbar.js" type="text/javascript"></script>
-    
+
     <link rel="stylesheet" type="text/css" href="Shared.css">
     <script src="HeatMap.js" charset="utf-8"></script>
-    
-    
+
+
 <!--         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap"></script> -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization&key=AIzaSyCJqTVwcX0FcuhBRaHgpaidiZivaNFPErM&callback=initMap"></script>
-    
+
     <link rel="stylesheet" type="text/css" href="spin.css">
     <script src="spin.js" charset="utf-8"></script>
-	<link rel="stylesheet" type="text/css" href="newNavbar.css">
+  	<link rel="stylesheet" type="text/css" href="newNavbar.css">
   </head>
   <body>
-	<nav class="navbar navbar-inverse">
-		  <div class="container-fluid">
-			<div class="navbar-header">
-			  <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-			  
-			</div>
-			<ul class="nav navbar-nav">
-			  <li><a href="Information.html">Information</a></li>
-			  <li><a href="Sessions.html">Sessions</a></li>
-			  <li><a class="active" href="HeatMap.html">Heatmap</a></li>
-			  <li><a href="graphs.html">Statistics</a></li>
-			</ul>
-			<ul class=" nav navbar-nav" id="ojo">
-						<li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
-						<li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
-					</ul>
-			</div>
-	</nav>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="ForemanTracker.html">Tracker</a></li>
+        <li><a href="Information.html">Information</a></li>
+        <li><a href="Sessions.html">Sessions</a></li>
+        <li><a class="active" href="HeatMap.html">Heatmap</a></li>
+        <li><a href="graphs.html">Statistics</a></li>
+      </ul>
+      <ul class=" nav navbar-nav" id="ojo">
+        <li class="nav-item"><a href="Settings.html" id="emailInNav"></a></li>
+        <li class="nav-item"><a href="javascript:;" onclick="signOut()">Sign out <span class="glyphicon glyphicon-log-out"></span> </a></li>
+      </ul>
+      </div>
+    </nav>
 
     <div class="container">
       <div class="row">
@@ -69,18 +69,18 @@
             <label>Ending At:</label>
             <input type='date' class='form-control' id='endDate'>
             <br>
-            <div id="selectedFilter" class="btn-group" data-toggle="buttons">
-              <label class="btn btn-sm btn-primary active">
-                <input checked type="radio" name="filterEntity" id="orchardFilter"> Orchard
+            <div id="selectedFilter" style="visibility: hidden" class="btn-group" data-toggle="buttons">
+              <label class="btn btn-sm btn-info active">
+                <input checked type="radio" autocomplete="off" name="filterEntity" id="orchardFilter"> Orchard
               </label>
-              <label class="btn btn-sm btn-primary">
-                <input type="radio" name="filterEntity" id="farmFilter" > Farm
+              <label class="btn btn-sm btn-info">
+                <input type="radio" autocomplete="off" name="filterEntity" id="farmFilter" > Farm
               </label>
-              <label class="btn btn-sm btn-primary">
-                <input type="radio" name="filterEntity" id="workerFilter" > Worker
+              <label class="btn btn-sm btn-info">
+                <input type="radio" autocomplete="off" name="filterEntity" id="workerFilter" > Worker
               </label>
-              <label class="btn btn-sm btn-primary">
-                <input type="radio" name="filterEntity" id="foremanFilter" > Foreman
+              <label class="btn btn-sm btn-info">
+                <input type="radio" autocomplete="off" name="filterEntity" id="foremanFilter" > Foreman
               </label>
             </div>
             <div id="entities">

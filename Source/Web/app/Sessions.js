@@ -1,10 +1,10 @@
-/* 
+/*
 * 	File:	Sessions.js
 *	Author:	Binary Ninjaz (Letanyan,Ojo)
 *
-*	Description:	This file contais functions for the data representation on 
+*	Description:	This file contais functions for the data representation on
 *					"Sessions.html". It requests and recieves data from firebase
-*					databse, and uses google graph APIs 
+*					databse, and uses google graph APIs
 */
 var pageIndex = null; // track the last session loaded. Used for pagination
 var pageSize = 21;
@@ -43,7 +43,6 @@ function sessionForKey(key, sortedMap) {
     const group = sortedMap[groupIdx];
     for (const itemIdx in group.values) {
       const item = group.values[itemIdx];
-      console.log(item.key, key);
       if (item.key === key) {
         return item;
       }
@@ -56,15 +55,14 @@ function sessionForKey(key, sortedMap) {
 function sessionsListLoader(loading) {
   var sessionsListHolder = document.getElementById("sessionsListLoader");
   if (!loading) {
-	var divHide = document.getElementById('loader');
-	divHide.style.visibility = "hidden";
-	updateSpiner(false);
-    sessionsListHolder.innerHTML = "<button type='button' class='btn btn-secoundary' style='margin: 4px' onclick='newPage()'>Load More Sessions</button>";
+		var divHide = document.getElementById('loader');
+		divHide.style.visibility = "hidden";
+		updateSpiner(false);
+    sessionsListHolder.innerHTML = "<button type='button' class='btn btn-sm btn-secoundary' style='margin: 4px' onclick='newPage()'>Load More Sessions</button>";
   } else {
-	var divHide = document.getElementById('loader');
-	divHide.style.visibility = "visible";
-	updateSpiner(true);
-    /*sessionsListHolder.innerHTML = "<h2>Loading Sessions...</h2>";*/
+		var divHide = document.getElementById('loader');
+		divHide.style.visibility = "visible";
+		updateSpiner(true);
   }
 }
 
@@ -123,7 +121,7 @@ function displaySessions(sortedMap, displayHeader, isFiltered) {
       const foreman = workers[item.value.wid];
       const time = moment(new Date(item.value.start_date * 1000)).format(isFiltered ? "YYYY/MM/DD HH:mm" : "HH:mm");
       const text = foreman.name + " " + foreman.surname + " - " + time;
-      sessionsList.innerHTML += "<button type='button' class='btn btn-primary' style='margin: 4px' onclick=loadSession('" + item.key + "') >" + text + "</button>";
+      sessionsList.innerHTML += "<button type='button' class='btn btn-sm btn-info' style='margin: 4px' onclick=loadSession('" + item.key + "') >" + text + "</button>";
       if (isFiltered) {
         sessionsList.innerHTML += "<p class='searchReason'>" + item.reason + "</p>";
       }
@@ -182,11 +180,8 @@ var polypath; /* Variable for storing the path of the polygon */
 
 /* This functions plots the graph of a choosen session by a particular foreman */
 function loadSession(sessionID) {
-  const ref = firebase.database().ref('/' + userID() + '/sessions/' + sessionID);
-
   var gdatai = 0;
   var graphData = {datasets: [{data: [], backgroundColor: []}], labels: []};
-
 
   const session = sessionForKey(sessionID, sessions);
   const val = session.value;
@@ -200,7 +195,7 @@ function loadSession(sessionID) {
   var sessionDetails = document.getElementById("sessionDetails");
 
   sessionDetails.innerHTML = "<form class=form-horizontal'><div class='form-group'>"
-  sessionDetails.innerHTML += "<div class='col-sm-12'><label>Foreman: </label> " + fname + "</div>"
+  sessionDetails.innerHTML += "<div class='col-sm-12'><label>Foreman: </label><span> " + fname + "</span></div>"
   sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Started: </label><p> " + start.toLocaleString() + "</p></div>"
   sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Ended: </label><p> " + end.toLocaleString() + "</p></div>"
   sessionDetails.innerHTML += "</div></form>";
@@ -247,7 +242,7 @@ function loadSession(sessionID) {
       }
 
       graphData.datasets[0].data.push(collection.length);
-      graphData.datasets[0].backgroundColor.push(harvestColorful[gdatai % 6]);
+      graphData.datasets[0].backgroundColor.push(colorForIndex(gdatai));
       graphData["labels"].push(wname);
       gdatai++;
 
@@ -280,10 +275,14 @@ function initGraph(collections) {
   var options = {
     title: {
       display: true,
-      text: "Worker Performance Summary"
+      text: "Worker Performance Summary",
+			fontColor: 'white'
     },
     legend: {
-      position: 'right'
+			labels: {
+				fontColor: "white"
+			},
+			position: 'right'
     }
   };
   var ctx = document.getElementById("doughnut").getContext('2d');
@@ -296,39 +295,33 @@ function initGraph(collections) {
   });
 }
 
-/* This function shows the spinner while still waiting for resources*/
 var spinner;
 function updateSpiner(shouldSpin) {
   var opts = {
-	lines: 8, // The number of lines to draw
-	length: 37, // The length of each line
-	width: 10, // The line thickness
-	radius: 20, // The radius of the inner circle
-	scale: 1, // Scales overall size of the spinner
-	corners: 1, // Corner roundness (0..1)
-	color: '#4CAF50', // CSS color or array of colors
-	fadeColor: 'transparent', // CSS color or array of colors
-	speed: 1, // Rounds per second
-	rotate: 0, // The rotation offset
-	animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
-	direction: 1, // 1: clockwise, -1: counterclockwise
-	zIndex: 2e9, // The z-index (defaults to 2000000000)
-	className: 'spinner', // The CSS class to assign to the spinner
-	top: '50%', // Top position relative to parent
-	left: '50%', // Left position relative to parent
-	shadow: '0 0 1px transparent', // Box-shadow for the lines
-	position: 'absolute' // Element positioning
+		lines: 8, // The number of lines to draw
+		length: 37, // The length of each line
+		width: 10, // The line thickness
+		radius: 20, // The radius of the inner circle
+		scale: 1, // Scales overall size of the spinner
+		corners: 1, // Corner roundness (0..1)
+		color: '#4CAF50', // CSS color or array of colors
+		fadeColor: 'transparent', // CSS color or array of colors
+		speed: 1, // Rounds per second
+		rotate: 0, // The rotation offset
+		animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+		direction: 1, // 1: clockwise, -1: counterclockwise
+		zIndex: 2e9, // The z-index (defaults to 2000000000)
+		className: 'spinner', // The CSS class to assign to the spinner
+		shadow: '0 0 1px transparent', // Box-shadow for the lines
   };
-  
+
   var target = document.getElementById("loader"); //This is where the spinner is gonna show
   if (shouldSpin) {
-	  target.style.position = "absolute"; //This is for proper alignment
-	  target.style.top = "100px"; //This is for proper alignment
-	  target.style.left = "100px"; //This is for proper alignment
-	  spinner = new Spinner(opts).spin(target); //The class and corresponding css are defined in spin.js and spin.css
+		if (spinner == null) {
+		  spinner = new Spinner(opts).spin(target);
+		}
   } else {
-	  //target.style.top = "0px";
-	  spinner.stop(); //This line stops the spinner. 
+	  spinner.stop();
 	  spinner = null;
   }
 }
@@ -358,7 +351,6 @@ function filterSessions() {
         }
       }
     }
-    console.log(JSON.stringify(filteredSessions));
 
     const formatHeader = (title) => { return title };
 
