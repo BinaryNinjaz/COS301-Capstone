@@ -160,8 +160,6 @@ enum HarvestCloud {
       ("uid", HarvestDB.Path.parent)
     ])
 
-    print(date.timeIntervalSince1970.description)
-
     runTask(withQuery: query) { (serial) in
       guard let json = serial as? [String: Any] else {
         completion([:])
@@ -292,11 +290,11 @@ func collection() {
 }
 
 func timeGraphSessionsWorker() {
-  let s = Date().thisYear().0
-  let e = Date().thisYear().1
+  let s = Date().thisMonth().0
+  let e = Date().thisMonth().1
   let g = HarvestCloud.GroupBy.worker
-  let p = HarvestCloud.TimePeriod.monthly
-  print(s, e)
+  let p = HarvestCloud.TimePeriod.weekly
+
   let ids = [
     "-LC4tqYXblh6RD6F_LIS", // Tandy Joe
     "-LHJzXzzw_p4LaK93UYu", // Arthur Melo
@@ -391,19 +389,6 @@ timeGraphSessionsWorker()
 RunLoop.main.run()
 
 /*
-exp =     {
-    "-LBykXujU0Igjzvq5giB" =         {
-        a = "137.793259159423";
-        b = "0.01706842260699562";
-        c = "-1.154915072474072";
-        d = "45.6586291145962";
-    };
-    "-LBykjpjTy2RrDApKGLy" =         {
-        a = "47.99884456564988";
-        b = "0.01634019500485161";
-        c = "-0.983434772921029";
-        d = "33.35763312268708";
-    };
-};
+
 
 */
