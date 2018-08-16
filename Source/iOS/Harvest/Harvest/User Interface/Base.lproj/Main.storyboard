@@ -120,6 +120,18 @@
                                 </view>
                                 <blurEffect style="regular"/>
                             </visualEffectView>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ryy-ZI-G7b">
+                                <rect key="frame" x="16" y="600" width="343" height="36"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="Don't Have An Account?">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <segue destination="wzz-PV-SJ5" kind="show" id="942-HW-BHk"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="cq3-uc-Ngi"/>
@@ -127,6 +139,7 @@
                     <connections>
                         <outlet property="farmerSignInButton" destination="wsK-1g-2fP" id="gjR-JI-4Hd"/>
                         <outlet property="foremanSignInButton" destination="7ZS-dy-OAw" id="H64-TA-qQm"/>
+                        <outlet property="signUpButton" destination="Ryy-ZI-G7b" id="tPO-wT-bWy"/>
                         <outlet property="titleVisualEffectView" destination="OId-ks-kFe" id="7cc-BT-IVa"/>
                     </connections>
                 </viewController>
@@ -234,18 +247,6 @@
                                                 <action selector="googleSignInTouchUp:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oG7-cK-Hlz"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ui1-OV-C5u">
-                                            <rect key="frame" x="20" y="574" width="343" height="36"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                            <state key="normal" title="Don't Have An Account?">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
-                                            <connections>
-                                                <segue destination="wzz-PV-SJ5" kind="show" id="kkB-8W-SKe"/>
-                                            </connections>
-                                        </button>
                                         <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xby-px-FZc">
                                             <rect key="frame" x="175" y="318" width="32" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -338,7 +339,6 @@
                         <outlet property="passwordTextField" destination="R87-SE-52j" id="SEc-HY-5Gn"/>
                         <outlet property="signInButton" destination="jNF-TA-p9f" id="I5f-hW-IHN"/>
                         <outlet property="signInVisualEffect" destination="GfQ-DM-Ykn" id="xQL-8A-IW9"/>
-                        <outlet property="signUpButton" destination="ui1-OV-C5u" id="xKI-BF-SBL"/>
                         <outlet property="textGroupView" destination="Ydh-DC-G5M" id="eGf-eB-9Xe"/>
                         <outlet property="titleLabelVisualEffectView" destination="DOp-Su-OFq" id="P87-VZ-Dgs"/>
                         <outlet property="usernameTextField" destination="xaf-iG-9SP" id="0oc-Zm-bDZ"/>

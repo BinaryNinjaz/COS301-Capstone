@@ -26,7 +26,7 @@ class SignInViewController: UIViewController {
   @IBOutlet weak var forgotAccountVisualEffectView: UIVisualEffectView!
   @IBOutlet weak var orLabelVisualEffectView: UIVisualEffectView!
   @IBOutlet weak var titleLabelVisualEffectView: UIVisualEffectView!
-  @IBOutlet weak var signUpButton: UIButton!
+//  @IBOutlet weak var signUpButton: UIButton!
   
   @IBOutlet weak var backgroundImageView: UIImageView!
   var isLoading: Bool = false {
@@ -37,7 +37,7 @@ class SignInViewController: UIViewController {
         self.forgotAccountButton.alpha = self.isLoading ? 0 : 1
         self.orLabel.alpha = self.isLoading ? 0 : 1
         self.cancelButton.alpha = self.isLoading ? 0 : 1
-        self.signUpButton.alpha = self.isLoading ? 0 : 1
+//        self.signUpButton.alpha = self.isLoading ? 0 : 1
       }
       
       if isLoading {
@@ -251,11 +251,11 @@ extension SignInViewController {
     orLabelVisualEffectView.setOriginX(view.frame.width / 2 - orLabel.frame.width / 2)
     activityIndicator.setOriginX(view.frame.width / 2 - activityIndicator.frame.width / 2)
     
-    signUpButton.setWidth(signInButton.frame.width)
-    signUpButton.setOriginX(signInButton.frame.origin.x)
-    signUpButton.setOriginY(forgotAccountVisualEffectView.frame.origin.y - signUpButton.frame.height - 24)
-    
-    signUpButton.apply(gradient: .signUpButton)
+//    signUpButton.setWidth(signInButton.frame.width)
+//    signUpButton.setOriginX(signInButton.frame.origin.x)
+//    signUpButton.setOriginY(forgotAccountVisualEffectView.frame.origin.y - signUpButton.frame.height - 24)
+//    
+//    signUpButton.apply(gradient: .signUpButton)
     signInButton.apply(gradient: .signInButton)
     googleSignInButton.apply(gradient: .googleSignInButton)
   }

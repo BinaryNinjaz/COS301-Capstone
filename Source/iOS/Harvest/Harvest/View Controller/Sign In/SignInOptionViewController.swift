@@ -16,6 +16,7 @@ class SignInOptionViewController: UIViewController {
   @IBOutlet weak var farmerSignInButton: UIView!
   @IBOutlet weak var foremanSignInButton: UIView!
   @IBOutlet weak var titleVisualEffectView: UIVisualEffectView!
+  @IBOutlet weak var signUpButton: UIButton!
   
   func mainViewToPresent() -> UIViewController? {
     let result = storyboard?
@@ -146,9 +147,9 @@ class SignInOptionViewController: UIViewController {
     titleVisualEffectView.setOriginX(view.frame.width / 2 - titleVisualEffectView.frame.width / 2)
     titleVisualEffectView.setOriginY(farmerSignInButton.frame.origin.y - titleVisualEffectView.frame.height - 16)
     
-//    signUpButton.setWidth(farmerSignInButton.frame.width)
-//    signUpButton.setOriginX(farmerSignInButton.frame.origin.x)
-//    signUpButton.setOriginY(view.frame.height - signUpButton.frame.height - 32)
+    signUpButton.setWidth(farmerSignInButton.frame.width)
+    signUpButton.setOriginX(farmerSignInButton.frame.origin.x)
+    signUpButton.setOriginY(view.frame.height - signUpButton.frame.height - 32)
     
     farmerSignInButton.layer.masksToBounds = true
     foremanSignInButton.layer.masksToBounds = true
@@ -159,7 +160,7 @@ class SignInOptionViewController: UIViewController {
     farmerSignInButton.layer.borderWidth = 2.5
     foremanSignInButton.layer.borderWidth = 2.5
     
-//    signUpButton.apply(gradient: .signUpButton)
+    signUpButton.apply(gradient: .signUpButton)
   }
 }
 
