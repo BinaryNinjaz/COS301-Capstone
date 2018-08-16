@@ -841,11 +841,15 @@ public class Data {
     public List<DBInfoObject> getThings(Category category){
         List<DBInfoObject> result = new ArrayList<>();
         switch (category){
-            case ORCHARD:
+            case NAV:
+                result.addAll(getFarms());
                 result.addAll(getOrchards());
-                break;
+                result.addAll(getWorkers());
             case FARM:
                 result.addAll(getFarms());
+                break;
+            case ORCHARD:
+                result.addAll(getOrchards());
                 break;
             default:
                 result.addAll(getWorkers());

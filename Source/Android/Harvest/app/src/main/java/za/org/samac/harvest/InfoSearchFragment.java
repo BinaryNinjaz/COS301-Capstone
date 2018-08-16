@@ -4,25 +4,23 @@ package za.org.samac.harvest;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.DBInfoObject;
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.Orchard;
+import za.org.samac.harvest.util.SearchedItem;
 import za.org.samac.harvest.util.Worker;
 
 
@@ -32,15 +30,14 @@ import za.org.samac.harvest.util.Worker;
 public class InfoSearchFragment extends Fragment {
 
     Data data;
-    List<Farm> farms;
-    List<Orchard> orchards;
-    List<Worker> workers;
-    
-    TextView titleFarms, titleOrchards, titleWorkers;
-    RecyclerView recyclerFarms, recyclerOrchards, recyclerWorkers;
-    SearcherAdapter adapterFarms, adapterOrchards, adapterWorkers;
-    LinearLayout parent;
+    List<LinearLayout> layouts;
+
+    LinearLayout uberParentLayout;
     Category category;
+
+    LayoutInflater inflater;
+
+    View view;
 
     public InfoSearchFragment() {
         // Required empty public constructor
@@ -56,37 +53,15 @@ public class InfoSearchFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        titleFarms = getView().findViewById(R.id.info_search_farmsTitle);
-        titleOrchards = getView().findViewById(R.id.info_search_orchardsTitle);
-        titleWorkers = getView().findViewById(R.id.info_search_workersTitle);
-        
-        recyclerFarms = getView().findViewById(R.id.info_search_farms);
-        recyclerOrchards = getView().findViewById(R.id.info_search_orchards);
-        recyclerWorkers = getView().findViewById(R.id.info_search_workers);
 
-        parent = getView().findViewById(R.id.recyclersParentLinearLayout);
-        
-        adapterFarms = new SearcherAdapter();
-        adapterOrchards = new SearcherAdapter();
-        adapterWorkers = new SearcherAdapter();
-        
-        recyclerFarms.setHasFixedSize(false);
-        recyclerOrchards.setHasFixedSize(false);
-        recyclerWorkers.setHasFixedSize(false);
+        this.view = view;
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setAutoMeasureEnabled(true);
-        recyclerFarms.setLayoutManager(linearLayoutManager);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setAutoMeasureEnabled(true);
-        recyclerOrchards.setLayoutManager(linearLayoutManager);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setAutoMeasureEnabled(true);
-        recyclerWorkers.setLayoutManager(linearLayoutManager);
-        
-        recyclerFarms.setAdapter(adapterFarms);
-        recyclerOrchards.setAdapter(adapterOrchards);
-        recyclerWorkers.setAdapter(adapterWorkers);
+        inflater = getLayoutInflater();
+
+        uberParentLayout = view.findViewById(R.id.info_searchResults);
+
+        layouts = new ArrayList<>();
+
     }
 
     public void setData(Data data){
@@ -98,115 +73,96 @@ public class InfoSearchFragment extends Fragment {
     }
     
     public void searchForQuery(String query){
-        adapterFarms.emptyResults();
-        adapterOrchards.emptyResults();
-        adapterWorkers.emptyResults();
-        
-        List<DBInfoObject> result = data.search(query, category);
-        for (DBInfoObject dbInfoObject: result){
-            if (dbInfoObject.getClass() == Farm.class){
-                adapterFarms.addToShow(dbInfoObject);
+        uberParentLayout.removeAllViews();
+        layouts.clear();
+
+        List<DBInfoObject> foundMegas = data.search(query, category);
+        addResults(foundMegas);
+
+        List<DBInfoObject> allThings = data.getThings(category);
+
+        //Now the inners
+        for (DBInfoObject object : allThings){
+            List<SearchedItem> searchedItems;
+            String tag = "";
+            if (object.getClass() == Farm.class){
+                searchedItems = ((Farm) object).search(query, false);
+                tag = "Farm " + object.getId();
             }
-            else if (dbInfoObject.getClass() == Orchard.class){
-                adapterOrchards.addToShow(dbInfoObject);
+            else if (object.getClass() == Orchard.class){
+                searchedItems = ((Orchard) object).search(query, false);
+                tag = "Orchard " + object.getId();
             }
-            else if (dbInfoObject.getClass() == Worker.class){
-                adapterWorkers.addToShow(dbInfoObject);
+            else if (object.getClass() == Worker.class){
+                searchedItems = ((Worker) object).search(query, false);
+                tag = "Worker " + object.getId();
+            }
+            else searchedItems = new ArrayList<>();
+
+            for (SearchedItem searchedItem : searchedItems){
+                addResult(" " + object.toString(), searchedItem.reason, tag, searchedItem.property);
             }
         }
+    }
 
-        adapterFarms.notifyDataSetChanged();
-        adapterOrchards.notifyDataSetChanged();
-        adapterWorkers.notifyDataSetChanged();
+    //Add the given mega results
+    private void addResults(List<DBInfoObject> results){
+        for(DBInfoObject object : results){
+            if (object.getClass() == Farm.class){
+                addResult(object.toString(), "","Farm " + object.getId(), "Farms");
+            }
+            else if(object.getClass() == Orchard.class){
+                addResult(object.toString(), "", "Orchard " + object.getId(), "Orchards");
+            }
+            else if (object.getClass() == Worker.class) {
+                addResult(object.toString(), "", "Worker " + object.getId(), "Workers");
+            }
+        }
+    }
 
-        recyclerFarms.invalidate();
-        recyclerOrchards.invalidate();
-        recyclerWorkers.invalidate();
+    //tag: "Worker " + id
 
-        parent.invalidate();
-        
-        if (adapterFarms.shouldShow()){
-            recyclerFarms.setVisibility(View.VISIBLE);
-            titleFarms.setVisibility(View.VISIBLE);
+    /**
+     * Adds the result
+     * @param name the name of the result, to be shown on the button
+     * @param tag the tag for the button, so it goes to the correct place
+     * @param title the title under which the result should be added
+     */
+    private void addResult(String name, String reason, String tag, String title){
+        LinearLayout linearLayout = findLayout(title);
+        LinearLayout gotten = (LinearLayout) inflater.inflate(R.layout.info_search_result, null, false);
+        gotten.setBackgroundColor(getResources().getColor(R.color.white));
+        Button button = gotten.findViewById(R.id.info_search_result);
+        button.setText(name);
+        button.setTag(tag);
+        button = gotten.findViewById(R.id.info_search_reason);
+        if (reason.equals("")){
+            button.setVisibility(View.GONE);
         }
         else {
-            recyclerFarms.setVisibility(View.GONE);
-            titleFarms.setVisibility(View.GONE);
+            button.setText(reason);
+            button.setTag(tag);
         }
-        
-        if (adapterOrchards.shouldShow()){
-            recyclerOrchards.setVisibility(View.VISIBLE);
-            titleOrchards.setVisibility(View.VISIBLE);
-        }
-        else {
-            recyclerOrchards.setVisibility(View.GONE);
-            titleOrchards.setVisibility(View.GONE);
-        }
-        
-        if (adapterWorkers.shouldShow()){
-            recyclerWorkers.setVisibility(View.VISIBLE);
-            titleWorkers.setVisibility(View.VISIBLE);
-        }
-        else {
-            recyclerWorkers.setVisibility(View.GONE);
-            titleWorkers.setVisibility(View.GONE);
-        }
-    }
-    
-}
-
-class SearcherAdapter extends RecyclerView.Adapter<SearcherAdapter.ViewHolder>{
-
-    private List<DBInfoObject> showUs;
-    
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-        public Button mButton;
-
-        public ViewHolder(View view){
-            super(view);
-
-            mButton = view.findViewById(R.id.info_list_butt);
-        }
+        linearLayout.addView(gotten);
     }
 
-    public SearcherAdapter(){
-        showUs = new ArrayList<>();
-    }
-    
-    public void addToShow(DBInfoObject addMe){
-        showUs.add(addMe);
-    }
-    
-    public void emptyResults(){
-        showUs.clear();
-    }
-    
-    public boolean shouldShow(){
-        return showUs.size() > 0;
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_goto, parent, false);
-        return new ViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position){
-        holder.mButton.setText(showUs.get(position).toString());
-        if (showUs.get(position).getClass() == Worker.class) {
-            holder.mButton.setTag("Worker " + showUs.get(position).getId());
+    /**
+     * Returns and, if necessary, constructs, the layout that represents the results
+     * @param title title of the set
+     * @return the layout
+     */
+    private LinearLayout findLayout(String title){
+        for (LinearLayout layout : layouts){
+            if (layout.getTag().toString().equals(title)){
+                return layout;
+            }
         }
-        else if (showUs.get(position).getClass() == Orchard.class){
-            holder.mButton.setTag("Orchard " + showUs.get(position).getId());
-        }
-        else if (showUs.get(position).getClass() == Farm.class){
-            holder.mButton.setTag("Farm " + showUs.get(position).getId());
-        }
-    }
-
-    @Override
-    public int getItemCount(){
-        return showUs.size();
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.info_search_layout, null, false);
+        linearLayout.setTag(title);
+        TextView textView =  linearLayout.findViewById(R.id.info_search_title_title);
+        textView.setText(title);
+        layouts.add(linearLayout);
+        uberParentLayout.addView(linearLayout);
+        return linearLayout;
     }
 }

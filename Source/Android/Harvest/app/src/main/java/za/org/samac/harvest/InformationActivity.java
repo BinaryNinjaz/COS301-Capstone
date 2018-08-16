@@ -55,7 +55,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     private List<LatLng> coords;
     Category selectedCat = NOTHING, stackTop = NOTHING;
 
-    private boolean searching = false;
+    private boolean searching = false, searched = false;
     private SearchView searchView;
     private Menu menu;
 
@@ -172,13 +172,13 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             }
             closeSearch();
             getSupportFragmentManager().popBackStack();
-            if(getSupportFragmentManager().getBackStackEntryCount() == 2){
+            if(getSupportFragmentManager().getBackStackEntryCount() == 2 && !searched){
                 //The root Nav fragment
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 setTitle("Information");
                 selectedCat = NAV;
             }
-            else if(getSupportFragmentManager().getBackStackEntryCount() == 3){
+            else if(getSupportFragmentManager().getBackStackEntryCount() == 3 && !searched){
                 data.clearActiveObjects();
                 switch (selectedCat){
                     case FARM:
@@ -194,6 +194,13 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                         setTitle("Good Luck");
                         break;
                 }
+            }
+            else if (searched && getSupportFragmentManager().getBackStackEntryCount() == 2){
+                //Done, get out of looking at things.
+                data.clearActiveObjects();
+                showNavFrag();
+                searched = false;
+                searching = false;
             }
             else if(!backViews.empty()){
                 Category temp = backViews.pop();
@@ -325,7 +332,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         toggleUpButton(true);
     }
 
-    //If a farm, orchard, worker is selected, also in search
+    //If a farm, orchard, worker is selected
     public void onSelectItemButtClick(View view){
         listing = false;
         String tags[] = view.getTag().toString().split(" ");
@@ -610,6 +617,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 else if (map){
                     onBackPressed();
                 }
+                else if (searched){
+                    showNavFrag();
+                    searched = false;
+                }
                 else {
                     showList(stackTop);
                 }
@@ -620,10 +631,12 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         }
     }
 
+    //Also when search result selected.
     public void onGotoButtClick(View view){
         if (searching) {
             closeSearch();
             toggleUpButton(true);
+            searched = true;
         }
 
         Category cat;

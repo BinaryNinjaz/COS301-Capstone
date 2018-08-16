@@ -89,13 +89,15 @@ public class Farm extends DBInfoObject {
         this.ID = ID;
     }
 
-    public ArrayList<SearchedItem> search(String text) {
+    public ArrayList<SearchedItem> search(String text, boolean searchName) {
         ArrayList<SearchedItem> result = new ArrayList<>();
 
         text = text.toLowerCase();
 
-        if (getName() != null && getName().toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Name", getName()));
+        if (searchName) {
+            if (getName() != null && getName().toLowerCase().contains(text)) {
+                result.add(new SearchedItem("Name", getName()));
+            }
         }
 
         if (getCompany() != null && getCompany().toLowerCase().contains(text)) {

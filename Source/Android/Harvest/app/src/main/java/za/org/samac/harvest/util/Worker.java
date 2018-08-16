@@ -86,6 +86,11 @@ public class Worker extends DBInfoObject {
         return nID;
     }
 
+    @Override
+    public String getId() {
+        return ID;
+    }
+
     public WorkerType getWorkerType() {
         return workerType;
     }
@@ -125,13 +130,22 @@ public class Worker extends DBInfoObject {
         }
     }
 
-    public ArrayList<SearchedItem> search(String text) {
+    public ArrayList<SearchedItem> search(String text, boolean searchName) {
         ArrayList<SearchedItem> result = new ArrayList<>();
 
         text = text.toLowerCase();
 
-        if ((getfName() + " " + getsName()).toLowerCase().contains(text)) {
-            result.add(new SearchedItem("Name", getfName() + " " + getsName()));
+        if (searchName) {
+            if ((getfName() + " " + getsName()).toLowerCase().contains(text)) {
+                result.add(new SearchedItem("Name", getfName() + " " + getsName()));
+            }
+        }
+
+        if (("foreman".contains(text.toLowerCase()) || "foremen".contains(text.toLowerCase())) && this.workerType == WorkerType.FOREMAN ){
+            result.add(new SearchedItem("Kind", "Foreman"));
+        }
+        else if ("workers".contains(text.toLowerCase()) && this.workerType == WorkerType.WORKER){
+            result.add(new SearchedItem("Kind", "Worker"));
         }
 
         if (getnID().toLowerCase().contains(text)) {
