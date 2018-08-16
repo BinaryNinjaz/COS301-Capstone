@@ -10,6 +10,9 @@
     visibility: visible;
     margin-top: 8px;
 }
+#entityDetails h4 {
+  color: rgba(255, 255, 255, 0.8);
+}
 #map {
     height: 500px;
     width: 100%;

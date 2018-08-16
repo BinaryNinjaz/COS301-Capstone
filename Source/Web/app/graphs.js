@@ -684,8 +684,10 @@ function fillEntityExpectedData(stat, data, start, end, labels, usedColors, sour
   const formatter = formatterForGroup(stat.groupBy);
   const entities = entitiesForGroup(stat.groupBy);
 
-  for (const kidx in stat.ids[stat.groupBy]) {
-    const key = stat.ids[stat.groupBy][kidx];
+  const ids = stat.mode !== "accumEntity" ? stat.ids[stat.groupBy] : ["sum"];
+
+  for (const kidx in ids) {
+    const key = ids[kidx];
     var plotData = [];
     const info = source[key];
     const plottedData = pollExpectedPlotData(start, end, stat.period, labels, info);
@@ -694,14 +696,23 @@ function fillEntityExpectedData(stat, data, start, end, labels, usedColors, sour
     if (info !== undefined && item !== undefined) {
       data.datasets.push({
         data: plottedData,
-        label: formatter(key, item) + " (exp)",
+        label: formatter(key, item) + " (expected)",
         borderColor: colorWithAlpha(usedColors[key], 0.5)
+      });
+    } else if (stat.mode === "accumEntity") {
+      data.datasets.push({
+        data: plottedData,
+        label: "Sum of Selected (expected)",
+        borderColor: colorWithAlpha('rgba(69, 161, 247, 1)', 0.5)
       });
     }
   }
 }
 
 function pollExpectedPlotData(start, end, period, labels, func) {
+  if (func === undefined) {
+    return [];
+  }
   const a = func.a;
   const b = func.b;
   const c = func.c;
