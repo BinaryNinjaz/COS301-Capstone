@@ -65,7 +65,7 @@ public class InfoNavFragment extends Fragment {
                 .load(imageUri)
                 .into(workersPic);*/
 
-        // Inflate the layout for this fragment
+        // Inflate the uberParentLayout for this fragment
         return inflater.inflate(R.layout.fragment_info_nav, container, false);
     }
 

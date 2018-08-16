@@ -325,7 +325,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         toggleUpButton(true);
     }
 
-    //If a farm, orchard, worker is selected, also in search
+    //If a farm, orchard, worker is selected
     public void onSelectItemButtClick(View view){
         listing = false;
         String tags[] = view.getTag().toString().split(" ");
@@ -620,6 +620,7 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         }
     }
 
+    //Also when search result selected.
     public void onGotoButtClick(View view){
         if (searching) {
             closeSearch();

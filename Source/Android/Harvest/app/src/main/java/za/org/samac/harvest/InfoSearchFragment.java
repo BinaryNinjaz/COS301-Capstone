@@ -4,19 +4,16 @@ package za.org.samac.harvest;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import za.org.samac.harvest.util.Category;
 import za.org.samac.harvest.util.DBInfoObject;
@@ -32,15 +29,15 @@ import za.org.samac.harvest.util.Worker;
 public class InfoSearchFragment extends Fragment {
 
     Data data;
-    List<Farm> farms;
-    List<Orchard> orchards;
-    List<Worker> workers;
-    
-    TextView titleFarms, titleOrchards, titleWorkers;
-    RecyclerView recyclerFarms, recyclerOrchards, recyclerWorkers;
-    SearcherAdapter adapterFarms, adapterOrchards, adapterWorkers;
-    LinearLayout parent;
+    List<DBInfoObject> allThings;
+    List<LinearLayout> layouts;
+
+    LinearLayout uberParentLayout;
     Category category;
+
+    LayoutInflater inflater;
+
+    View view;
 
     public InfoSearchFragment() {
         // Required empty public constructor
@@ -56,37 +53,16 @@ public class InfoSearchFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        titleFarms = getView().findViewById(R.id.info_search_farmsTitle);
-        titleOrchards = getView().findViewById(R.id.info_search_orchardsTitle);
-        titleWorkers = getView().findViewById(R.id.info_search_workersTitle);
-        
-        recyclerFarms = getView().findViewById(R.id.info_search_farms);
-        recyclerOrchards = getView().findViewById(R.id.info_search_orchards);
-        recyclerWorkers = getView().findViewById(R.id.info_search_workers);
 
-        parent = getView().findViewById(R.id.recyclersParentLinearLayout);
-        
-        adapterFarms = new SearcherAdapter();
-        adapterOrchards = new SearcherAdapter();
-        adapterWorkers = new SearcherAdapter();
-        
-        recyclerFarms.setHasFixedSize(false);
-        recyclerOrchards.setHasFixedSize(false);
-        recyclerWorkers.setHasFixedSize(false);
+        this.view = view;
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setAutoMeasureEnabled(true);
-        recyclerFarms.setLayoutManager(linearLayoutManager);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setAutoMeasureEnabled(true);
-        recyclerOrchards.setLayoutManager(linearLayoutManager);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setAutoMeasureEnabled(true);
-        recyclerWorkers.setLayoutManager(linearLayoutManager);
-        
-        recyclerFarms.setAdapter(adapterFarms);
-        recyclerOrchards.setAdapter(adapterOrchards);
-        recyclerWorkers.setAdapter(adapterWorkers);
+        inflater = getLayoutInflater();
+
+        allThings = data.getThings(category);
+        uberParentLayout = view.findViewById(R.id.info_searchResults);
+
+        layouts = new ArrayList<>();
+
     }
 
     public void setData(Data data){
@@ -98,61 +74,64 @@ public class InfoSearchFragment extends Fragment {
     }
     
     public void searchForQuery(String query){
-        adapterFarms.emptyResults();
-        adapterOrchards.emptyResults();
-        adapterWorkers.emptyResults();
-        
-        List<DBInfoObject> result = data.search(query, category);
-        for (DBInfoObject dbInfoObject: result){
-            if (dbInfoObject.getClass() == Farm.class){
-                adapterFarms.addToShow(dbInfoObject);
-            }
-            else if (dbInfoObject.getClass() == Orchard.class){
-                adapterOrchards.addToShow(dbInfoObject);
-            }
-            else if (dbInfoObject.getClass() == Worker.class){
-                adapterWorkers.addToShow(dbInfoObject);
-            }
-        }
+        uberParentLayout.removeAllViews();
+        layouts.clear();
 
-        adapterFarms.notifyDataSetChanged();
-        adapterOrchards.notifyDataSetChanged();
-        adapterWorkers.notifyDataSetChanged();
+        List<DBInfoObject> foundMegas = data.search(query, category);
+        addResults(foundMegas);
+    }
 
-        recyclerFarms.invalidate();
-        recyclerOrchards.invalidate();
-        recyclerWorkers.invalidate();
-
-        parent.invalidate();
-        
-        if (adapterFarms.shouldShow()){
-            recyclerFarms.setVisibility(View.VISIBLE);
-            titleFarms.setVisibility(View.VISIBLE);
-        }
-        else {
-            recyclerFarms.setVisibility(View.GONE);
-            titleFarms.setVisibility(View.GONE);
-        }
-        
-        if (adapterOrchards.shouldShow()){
-            recyclerOrchards.setVisibility(View.VISIBLE);
-            titleOrchards.setVisibility(View.VISIBLE);
-        }
-        else {
-            recyclerOrchards.setVisibility(View.GONE);
-            titleOrchards.setVisibility(View.GONE);
-        }
-        
-        if (adapterWorkers.shouldShow()){
-            recyclerWorkers.setVisibility(View.VISIBLE);
-            titleWorkers.setVisibility(View.VISIBLE);
-        }
-        else {
-            recyclerWorkers.setVisibility(View.GONE);
-            titleWorkers.setVisibility(View.GONE);
+    //Add the given mega results
+    private void addResults(List<DBInfoObject> results){
+        for(DBInfoObject object : results){
+            if (object.getClass() == Farm.class){
+                addResult(" " + object.toString(), "Farm " + object.getId(), "Farms");
+            }
+            else if(object.getClass() == Orchard.class){
+                addResult(" " + object.toString(), "Orchard " + object.getId(), "Orchards");
+            }
+            else if (object.getClass() == Worker.class) {
+                addResult(" " + object.toString(), "Worker " + object.getId(), "Workers");
+            }
         }
     }
-    
+
+    //tag: "Worker " + id
+
+    /**
+     * Adds the result
+     * @param name the name of the result, to be shown on the button
+     * @param tag the tag for the button, so it goes to the correct place
+     * @param title the title under which the result should be added
+     */
+    private void addResult(String name, String tag, String title){
+        LinearLayout linearLayout = findLayout(title);
+        LinearLayout gotten = (LinearLayout) inflater.inflate(R.layout.info_search_result, null, false);
+        Button button = gotten.findViewById(R.id.info_search_result);
+        button.setText(name);
+        button.setTag(tag);
+        linearLayout.addView(gotten);
+    }
+
+    /**
+     * Returns and, if necessary, constructs, the layout that represents the results
+     * @param title title of the set
+     * @return the layout
+     */
+    private LinearLayout findLayout(String title){
+        for (LinearLayout layout : layouts){
+            if (layout.getTag().toString().equals(title)){
+                return layout;
+            }
+        }
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.info_search_layout, null, false);
+        linearLayout.setTag(title);
+        TextView textView =  linearLayout.findViewById(R.id.info_search_title_title);
+        textView.setText(title);
+        layouts.add(linearLayout);
+        uberParentLayout.addView(linearLayout);
+        return linearLayout;
+    }
 }
 
 class SearcherAdapter extends RecyclerView.Adapter<SearcherAdapter.ViewHolder>{
@@ -167,22 +146,6 @@ class SearcherAdapter extends RecyclerView.Adapter<SearcherAdapter.ViewHolder>{
 
             mButton = view.findViewById(R.id.info_list_butt);
         }
-    }
-
-    public SearcherAdapter(){
-        showUs = new ArrayList<>();
-    }
-    
-    public void addToShow(DBInfoObject addMe){
-        showUs.add(addMe);
-    }
-    
-    public void emptyResults(){
-        showUs.clear();
-    }
-    
-    public boolean shouldShow(){
-        return showUs.size() > 0;
     }
 
     @Override
