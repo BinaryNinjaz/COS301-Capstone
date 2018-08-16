@@ -1,8 +1,6 @@
 body{
     font-family: Sans-Serif;	
-    background-image: url("back2smaller.jpg");
-    background-repeat: no-repeat;  
-    background-size: cover;  
+    background-color: #4E342E; 
     display: block;
     overflow: auto;    
 }

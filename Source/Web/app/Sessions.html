@@ -6,7 +6,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="bodyElements.css" rel="stylesheet" type="text/css" /><!-- css file -->
         <link rel="icon" href="HarvestLogo.png">
-        <link rel="stylesheet" type="text/css" href="Shared.css">
 
         <script src="colors.js" charset="utf-8"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
@@ -47,8 +46,8 @@
 		<link rel="stylesheet" type="text/css" href="spin.css">
 		<script src="spin.js" charset="utf-8"></script>
 		<link rel="stylesheet" type="text/css" href="newNavbar.css">
+                <link rel="stylesheet" type="text/css" href="Shared.css">
     </head>
-	<!-- style="background-color: #4E342E; background-image: url(/);"-->
     <body>
 
       <nav class="navbar navbar-inverse">
@@ -57,9 +56,7 @@
           <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
         </div>
         <ul class="nav navbar-nav">
-
-            <li><a href="foremanTracking.html">Tracker</a></li>
-
+          <li><a href="ForemanTracker.html">Tracker</a></li>
           <li><a href="Information.html">Information</a></li>
           <li><a class="active" href="Sessions.html">Sessions</a></li>
           <li><a href="HeatMap.html">Heatmap</a></li>
@@ -88,7 +85,7 @@
                   <div id="sessionDetails">
                   </div>
                   <div class="map" style="height: 42%" id="map"></div>
-                  <canvas id="doughnut" width="100%"></canvas>
+                  <canvas id="doughnut" style="width:100%"></canvas>
               </div>
           </div>
       </div>
