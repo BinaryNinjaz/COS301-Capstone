@@ -50,7 +50,7 @@ body{
 }
 
 /* Apply css when screen size is minimum 700px*/
-@media only screen and (min-width: 700px) {
+@media only screen and (min-width: 992px) {
     html {
         font-family: Sans-Serif;	
 		background-image: url("../images/back4.jpg");
@@ -59,7 +59,7 @@ body{
     }
 }
 /* Apply css when screen size is minimum 728px*/
-@media only screen and (max-width: 728px) {
+@media only screen and (min-width: 992px) {
    html {
         font-family: Sans-Serif;	
         background-image: url("../images/back4.jpg");
@@ -68,7 +68,7 @@ body{
     }
 }
 /* Apply css when screen size is minimum 728px*/
-@media only screen and (max-width: 728px){
+@media only screen and (min-width: 992px){
     #right li, h3{
         color: white;
     }
