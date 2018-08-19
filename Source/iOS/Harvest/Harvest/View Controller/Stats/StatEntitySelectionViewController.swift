@@ -120,7 +120,7 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
         self.timePeriod = .between(a, Date())
       }
     }.onChange { row in
-      let date = row.value ?? Date()
+      let date = row.value?.endOfDay() ?? Date()
       if case let .between(a, _)? = self.timePeriod {
         self.timePeriod = .between(a, date)
       }

@@ -99,7 +99,7 @@ struct Stat: Codable {
     let missingMessage = self.grouping.description
     message = (self.grouping == .orchard
       ? orchard?.name
-      : self.grouping == .worker
+      : self.grouping == .worker || self.grouping == .foreman
         ? worker?.name
         : farm?.name) ?? "Unknown \(missingMessage)"
     message = mode == .accumEntity ? "(Sum)" : message

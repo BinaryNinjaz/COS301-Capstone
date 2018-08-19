@@ -32,12 +32,18 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   
   var actuallyChanged: ((RowOf<Orchard>) -> Void)?
   
+  var markers: [GMSMarker]?
+  
   func updatePolygon() {
     orchardPolygon?.map = nil
     var data = row.value?.json()[row.value?.id ?? ""] ?? [:]
     data["coords"] = collections.firbaseCoordRepresentation()
     row.value = Orchard(json: data, id: row.value?.id ?? "")
     orchardPolygon = row.value?.coords.gmsPolygon(mapView: mapView)
+    
+    markers?.forEach { $0.map = nil }
+    markers = row.value?.coords.gmsPolygonMarkers(mapView: mapView)
+    
     actuallyChanged?(row)
   }
   

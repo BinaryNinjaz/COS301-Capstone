@@ -30,6 +30,10 @@ extension Date {
     return calendar.startOfDay(for: self)
   }
   
+  func endOfDay(using calendar: Calendar = .current) -> Date {
+    return today().1
+  }
+  
   func startOfWeek(using calendar: Calendar = .current) -> Date {
     let components = calendar.dateComponents([.weekOfYear, .yearForWeekOfYear], from: self)
     let s = calendar.date(from: components)!
