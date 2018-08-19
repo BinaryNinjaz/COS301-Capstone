@@ -381,6 +381,9 @@ func expectedYield() {
 //collection()
 
 timeGraphSessionsWorker()
+while let x = readLine(), x != "" {
+  timeGraphSessionsWorker()
+}
 
 // timeGraphSessionsOrchard()
 
