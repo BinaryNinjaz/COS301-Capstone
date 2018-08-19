@@ -818,30 +818,30 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
 });
 
 
-exports.onRemovedWorker = functions.database.ref('/{uid}/workers')
-  .onDelete((snapshot, context) => {
-    const oldValue= snapshot.val();
-    const oldKey = snapshot.key;
-    snapshot.ref.parent.child('deleted/' + oldKey).set(oldValue);
-  });
-
-exports.onRemovedOrchard = functions.database.ref('/{uid}/orchards')
+exports.archiveWorker = functions.database.ref('/{uid}/workers/{wid}')
   .onDelete((snapshot, context) => {
     const oldValue = snapshot.val();
-    const oldKey = snapshot.key;
-    snapshot.ref.parent.child('deleted/' + oldKey).set(oldValue);
+    const oldKey = context.params.wid;
+    snapshot.ref.parent.parent.child('archived/workers/' + oldKey).update(oldValue);
   });
 
-exports.onRemovedFarm = functions.database.ref('/{uid}/farms')
+exports.archiveOrchard = functions.database.ref('/{uid}/orchards/{oid}')
   .onDelete((snapshot, context) => {
     const oldValue = snapshot.val();
-    const oldKey = snapshot.key;
-    snapshot.ref.parent.child('deleted/' + oldKey).set(oldValue);
+    const oldKey = context.params.oid;
+    snapshot.ref.parent.parent.child('archived/orchards/' + oldKey).update(oldValue);
   });
 
-exports.onRemovedSession = functions.database.ref('/{uid}/sessions')
+exports.archiveFarm = functions.database.ref('/{uid}/farms/{fid}')
   .onDelete((snapshot, context) => {
     const oldValue = snapshot.val();
-    const oldKey = snapshot.key;
-    snapshot.ref.parent.child('deleted/' + oldKey).set(oldValue);
+    const oldKey = context.params.fid;
+    snapshot.ref.parent.parent.child('archived/farms/' + oldKey).update(oldValue);
+  });
+
+exports.archiveSession = functions.database.ref('/{uid}/sessions/{sid}')
+  .onDelete((snapshot, context) => {
+    const oldValue = snapshot.val();
+    const oldKey = context.params.sid;
+    snapshot.ref.parent.parent.child('archived/sessions/' + oldKey).update(oldValue);
   });
