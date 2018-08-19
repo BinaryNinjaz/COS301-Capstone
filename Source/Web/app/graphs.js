@@ -103,76 +103,52 @@ function createEntitySelectionList(id) {
 }
 
 function createTimePeriodSelector(id) {
-  const event = (param) => { return "onchange='updateTimePeriod(" + id + ", \"" + param + "\")'" };
-  const name = "name='timePeriod" + id + "'";
+  const event = (param) => { return "onchange='updateTimePeriod(" + id + ")'" };
+  const name = "id='timePeriod" + id + "'";
 
-  const hChecked = stats[id].period === "hourly" ? " checked " : "";
-  const dChecked = stats[id].period === "daily" ? " checked " : "";
-  const wChecked = stats[id].period === "weekly" ? " checked " : "";
-  const mChecked = stats[id].period === "monthly" ? " checked " : "";
-  const yChecked = stats[id].period === "yearly" ? " checked " : "";
+  const hChecked = stats[id].period === "hourly" ? " selected " : " ";
+  const dChecked = stats[id].period === "daily" ? " selected " : " ";
+  const wChecked = stats[id].period === "weekly" ? " selected " : " ";
+  const mChecked = stats[id].period === "monthly" ? " selected " : " ";
+  const yChecked = stats[id].period === "yearly" ? " selected " : " ";
 
   return "<div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + hChecked + name + " type='radio' " + event("hourly") + "> Hourly</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + dChecked  + name + " type='radio' " + event("daily") + "> Daily</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + wChecked  + name + " type='radio' " + event("weekly")  + "> Weekly</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + mChecked  + name + " type='radio' " + event("monthly")  + "> Monthly</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + yChecked  + name + " type='radio' " + event("yearly")  + "> Yearly</label>" +
-  "  </div>" +
+  "  <select class='form-control' " + name + " " + event() + ">"+
+  "    <option" + hChecked + "value='hourly'>Hourly</option>" +
+  "    <option" + dChecked + "value='daily'>Daily</option>" +
+  "    <option" + wChecked + "value='weekly'>Weekly</option>" +
+  "    <option" + mChecked + "value='monthly'>Monthly</option>" +
+  "    <option" + yChecked + "value='yearly'>Yearly</option>" +
+  "  </select>"+
   "</div>";
 }
 
 function createTimeIntervalSelector(id) {
-  const event = (param) => { return "onchange='updateTimeInterval(" + id + ", \"" + param + "\")'"};
-  const name = "name='timeInterval" + id + "'";
+  const event = (param) => { return "onchange='updateTimeInterval(" + id + ")'" };
+  const name = "id='timeInterval" + id + "'";
 
-  const checked0 = stats[id].interval === "today" ? " checked " : "";
-  const checked1 = stats[id].interval === "yesterday" ? " checked " : "";
-  const checked2 = stats[id].interval === "thisweek" ? " checked " : "";
-  const checked3 = stats[id].interval === "lastweek" ? " checked " : "";
-  const checked4 = stats[id].interval === "thismonth" ? " checked " : "";
-  const checked5 = stats[id].interval === "lastmonth" ? " checked " : "";
-  const checked6 = stats[id].interval === "thisyear" ? " checked " : "";
-  const checked7 = stats[id].interval === "lastyear" ? " checked " : "";
-  const checked8 = stats[id].interval === "betweenexactdates" ? " checked " : "";
+  const checked0 = stats[id].interval === "today" ? " selected " : " ";
+  const checked1 = stats[id].interval === "yesterday" ? " selected " : " ";
+  const checked2 = stats[id].interval === "thisweek" ? " selected " : " ";
+  const checked3 = stats[id].interval === "lastweek" ? " selected " : " ";
+  const checked4 = stats[id].interval === "thismonth" ? " selected " : " ";
+  const checked5 = stats[id].interval === "lastmonth" ? " selected " : " ";
+  const checked6 = stats[id].interval === "thisyear" ? " selected " : " ";
+  const checked7 = stats[id].interval === "lastyear" ? " selected " : " ";
+  const checked8 = stats[id].interval === "betweenexactdates" ? " selected " : " ";
 
   return "<div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked0 + name + " type='radio' " + event("today") + "> Today</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked1 + name + " type='radio' " + event("yesterday") + "> Yesterday</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked2 + name + " type='radio' " + event("thisweek") + "> This Week</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked3 + name + " type='radio' " + event("lastweek") + "> Last Week</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked4 + name + " type='radio' " + event("thismonth") + "> This Month</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked5 + name + " type='radio' " + event("lastmonth") + "> Last Month</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked6 + name + " type='radio' " + event("thisyear") + "> This Year</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked7 + name + " type='radio' " + event("lastyear") + "> Last Year</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked8 + name + " type='radio' " + event("betweenexactdates") + "> Between Exact Dates</label>" +
-  "  </div>" +
+  "  <select class='form-control' " + name + " " + event() + ">" +
+  "    <option" + checked0 + "value='today'>Today</option>" +
+  "    <option" + checked1 + "value='yesterday'>Yesterday</option>" +
+  "    <option" + checked2 + "value='thisweek'>This Week</option>" +
+  "    <option" + checked3 + "value='lastweek'>Last Week</option>" +
+  "    <option" + checked4 + "value='thismonth'>This Month</option>" +
+  "    <option" + checked5 + "value='lastmonth'>Last Month</option>" +
+  "    <option" + checked6 + "value='thisyear'>This Year</option>" +
+  "    <option" + checked7 + "value='lastyear'>Last Year</option>" +
+  "    <option" + checked8 + "value='betweenexactdates'>Between Exact Dates</option>" +
+  "  </select>"+
   "</div>";
 }
 
@@ -291,7 +267,8 @@ function displayStat(stat, id) {
   "</div>";
 }
 
-function updateTimePeriod(id, period) {
+function updateTimePeriod(id) {
+  const period = document.getElementById("timePeriod" + id).value;
   stats[id].period = period;
   var accumTime = document.getElementById("stat" + id + "accumTime");
   const message = (param) => { return "<input type='radio' autocomplete='off' name='filterEntity' onchange='updateMode(" + id + ", \"accumTime\")'> By " + param };
@@ -308,7 +285,8 @@ function updateTimePeriod(id, period) {
   }
 }
 
-function updateTimeInterval(id, interval) {
+function updateTimeInterval(id) {
+  const interval = document.getElementById("timeInterval" + id).value;
   var datePickers = document.getElementById("stat" + id + "Date");
   datePickers.hidden = interval !== "betweenexactdates";
   stats[id].interval = interval;
@@ -399,7 +377,7 @@ function timedGraphSessions(id, completion) {
   mode: stat.mode,
   groupBy: stat.groupBy,
   period: stat.period,
-  offset: "120"
+  offset: -(new Date()).getTimezoneOffset(), // negative because api expects offset from GMT but js returns offset away from GMT
   };
 
   for (var idx in stat.ids[stat.groupBy]) {
@@ -693,6 +671,10 @@ function fillEntityExpectedData(stat, data, start, end, labels, usedColors, sour
     const plottedData = pollExpectedPlotData(start, end, stat.period, labels, info);
     const item = entities[key];
 
+    if (plottedData.length == 0) {
+      continue;
+    }
+
     if (info !== undefined && item !== undefined) {
       data.datasets.push({
         data: plottedData,
@@ -717,6 +699,10 @@ function pollExpectedPlotData(start, end, period, labels, func) {
   const b = func.b;
   const c = func.c;
   const d = func.d;
+
+  if (a == null || b == null || c == null || d == null) {
+    return [];
+  }
 
   const s = roundSince1970(start, period);
   const e = roundSince1970(end, period);
