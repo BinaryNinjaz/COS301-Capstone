@@ -274,7 +274,7 @@ function displayStat(stat, id) {
   statsHolder.innerHTML += "<div id='" + statId + "' class='container statView'>" +
   "  <div class='row'>" +
   "    <div class='col-sm-4'>" +
-  "      <div class='scrollView statFilter'>" +
+  "      <div class='scrollView statFilter' style='border:4px solid grey;'>" +
   "        <h5>Compare: </h5>" +
              createEntitySelector(id) +
              createEntitySelectionList(id) +

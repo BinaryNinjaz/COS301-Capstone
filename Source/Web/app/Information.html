@@ -68,7 +68,7 @@
   <div class="container-fluid">
     <!--Body of the page-->
     <div class="row">
-      <div class="col-12 text-center" id="entitySelector">
+      <div class="col-12 text-center" id="entitySelector" style="border:4px solid grey;">
           <div id="selectedEntity" class="btn-group" data-toggle="buttons" style="visibility: hidden">
             <label class="btn btn-primary active">
               <input type="radio" name="selectedEntity" id="farm" value="F" checked autocomplete="off" onchange="showFarmsList()"> Farms
@@ -89,10 +89,10 @@
             <input class="form-control" type="text" placeholder="Search" id="informationSearchField" oninput="filterInformation(this)">
           </div>
           <div id="AddButt"><div id="loader"></div></div>
-          <div id="DispButt" class="scrollView"></div>
+          <div id="DispButt" class="scrollView" style="border:4px solid grey;"></div>
         </div>
         <div id="right" class="col-12 col-sm-8 col-md-9" style="height: calc(100vh - 98px)">
-          <div id="entityDetails">
+          <div id="entityDetails" style="border:4px solid grey;">
             <h1 class="infoDetailHelp">Select An Item From the Sidebar</h1>
           </div>
         </div>
