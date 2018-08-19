@@ -217,36 +217,33 @@ function crossChromosome(x, y) {
 }
 
 function crossChromosomesWithChance(chromosomes, prob) {
-  var result = chromosomes;
-  for (var i = 0; i < chromosomes.length / 2 - 1; i += 1) {
+  const len = chromosomes.length;
+  for (var i = 0; i < len / 2 - 1; i += 1) {
     const p = Math.random();
     if (p > prob) {
       const a = chromosomes[i * 2];
       const b = chromosomes[i * 2 + 1];
       const c = crossChromosome(a, b);
-      result.push(c);
+      chromosomes.push(c);
     }
   }
-  return result;
 }
 
 function mutateChromosomesWithChance(chromosomes, limit, prob) {
-  var result = chromosomes;
-  for (var i = 0; i < chromosomes.length; i += 1) {
+  const len = chromosomes.length;
+  for (var i = 0; i < len; i += 1) {
     const p = Math.random();
     if (p > prob) {
       const a = chromosomes[i];
       const c = mutateChromosome(a, limit);
-      result.push(c);
+      chromosomes.push(c);
     }
   }
-  return result;
 }
 
 function selectChromosomes(chromosomes, tourneySize, data) {
   var result = [];
   var evals = [];
-
   for (const ci in chromosomes) {
     const chromosome = chromosomes[ci];
     const fitness = evaluateFitness(chromosome, data);
@@ -259,6 +256,10 @@ function selectChromosomes(chromosomes, tourneySize, data) {
         } else {
           evals.push(fitness);
           result.push(chromosome);
+        }
+        if (result.length > tourneySize) {
+          result.pop();
+          evals.pop();
         }
       }
     }
@@ -293,9 +294,9 @@ function evolvePopulation(size, generations, data, period) {
   chromosomes.push(limit);
 
   for (var j = 0; j < generations; j += 1) {
-    const ms = mutateChromosomesWithChance(chromosomes, limit, 0.1);
-    const cs = crossChromosomesWithChance(ms, 0.4);
-    const ts = selectChromosomes(cs, size, data);
+    mutateChromosomesWithChance(chromosomes, limit, 0.1);
+    crossChromosomesWithChance(chromosomes, 0.4);
+    const ts = selectChromosomes(chromosomes, size, data);
     chromosomes = ts;
   }
 
