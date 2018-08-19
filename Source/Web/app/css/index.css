@@ -49,23 +49,27 @@ body{
 	position:relative
 }
 
-/* Apply css when screen size is minimum 700px*/
+/* Apply css when screen size is minimum 700px
 @media only screen and (min-width: 992px) {
     html {
         font-family: Sans-Serif;	
+    }
+	body {
 		background-image: url("../images/back4.jpg");
         background-repeat: no-repeat;  
         background-size: 100%;
-    }
-}
+	}
+}*/
 /* Apply css when screen size is minimum 728px*/
 @media only screen and (min-width: 992px) {
    html {
         font-family: Sans-Serif;	
-        background-image: url("../images/back4.jpg");
+    }
+	body {
+		background-image: url("../images/back4.jpg");
         background-repeat: no-repeat;  
         background-size: cover;
-    }
+	}
 }
 /* Apply css when screen size is minimum 728px*/
 @media only screen and (min-width: 992px){
