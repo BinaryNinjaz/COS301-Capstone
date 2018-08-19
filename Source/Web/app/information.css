@@ -58,12 +58,13 @@
     }
     #entityDetails, #entitySelector{
         width: 345px;
-
+    }
+    #entityDetails {
+      margin-top: 48px;
     }
     #right #entityList{
         float: left;
     }
-
     #right, #entityList, #entitySelector{
         transform: translate(150px);// rotate(90deg);
         transition-duration: 1s;

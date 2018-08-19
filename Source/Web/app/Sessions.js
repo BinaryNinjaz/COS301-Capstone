@@ -78,7 +78,9 @@ function initPage() {
   setWorkers(workers, () => {
     newPage();
     setFarms(farms, () => {});
-    setOrchards(orchards, () => {});
+    setOrchards(orchards, () => {
+			drawOrchards();
+		});
   });
 }
 
@@ -220,7 +222,7 @@ function loadSession(sessionID) {
     polypath = new google.maps.Polyline({
       path: track,
       geodesic: true,
-      strokeColor: '#0000FF',
+      strokeColor: '#FF0000',
       strokeOpacity: 1.0,
       strokeWeight: 2,
       map: map
@@ -293,6 +295,32 @@ function initGraph(collections) {
     data: collections,
     options: options
   });
+}
+
+var orchardPolygons = [];
+function drawOrchards() {
+	for (const idx in orchardPolygons) {
+		orchardPolygons[idx].setMap(null);
+	}
+
+	for (const oKey in orchards) {
+		var coords = [];
+		console.log(oKey);
+		const oCoords = orchards[oKey].coords;
+		for (const cidx in oCoords) {
+			coords.push({lat: oCoords[cidx].lat, lng: oCoords[cidx].lng});
+		}
+		console.log(coords);
+		orchardPolygons.push(new google.maps.Polygon({
+	    paths: oCoords,
+	    strokeColor: '#0000FF',
+	    strokeOpacity: 0.5,
+	    strokeWeight: 3,
+	    fillColor: '#0000FF',
+	    fillOpacity: 0.1,
+	    map: map
+	  }));
+	}
 }
 
 var spinner;

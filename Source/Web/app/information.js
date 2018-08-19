@@ -14,10 +14,10 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
-
 var editingOrchard = false;
 var orchardCoords = [];
 var orchardPoly;
+var orchardMarkers = [];
 var loc;
 var map;
 function initEditOrchardMap(withCurrentLoc, editing) {
@@ -38,6 +38,7 @@ function initEditOrchardMap(withCurrentLoc, editing) {
     });
   }
 }
+
 function pushOrchardCoord(e) {
   if (orchardCoords === undefined) {
     orchardCoords = [];
@@ -52,15 +53,18 @@ function pushOrchardCoord(e) {
   }
   orchardPoly = new google.maps.Polygon({
     paths: orchardCoords,
-    strokeColor: '#FF0000',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#FF0000',
-    fillOpacity: 0.35,
+    strokeColor: '#0000FF',
+    strokeOpacity: 0.5,
+    strokeWeight: 3,
+    fillColor: '#0000FF',
+    fillOpacity: 0.1,
     map: map
   });
+  clearMarkers();
+  updateMarkers();
   updatePolyListener();
 }
+
 function updateLocationMap(editing) {
   locationLookup((data) => {
     loc = {
@@ -91,6 +95,7 @@ function updateLocationMap(editing) {
     });
   }
 }
+
 function initMap() {
   if (loc === undefined) {
     loc = {lat: -25, lng: 28};
@@ -102,6 +107,16 @@ function initMap() {
     mapTypeId: "satellite"
   });
 }
+
+function updateMarkers() {
+  for (const idx in orchardCoords) {
+    orchardMarkers.push(new google.maps.Marker({
+      position: orchardCoords[idx],
+      map: map
+    }));
+  }
+}
+
 function updatePolygon(orchard) {
   if (orchardCoords === undefined) {
     orchardCoords = [];
@@ -113,33 +128,34 @@ function updatePolygon(orchard) {
     orchard.coords.forEach(function(coord) {
       orchardCoords.push(coord);
     });
-  } else {
-    orchardCoords.push(loc);
   }
   if (orchardPoly !== undefined && orchardPoly !== null) {
     orchardPoly.setMap(null);
   }
   orchardPoly = new google.maps.Polygon({
     paths: orchardCoords,
-    strokeColor: '#FF0000',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#FF0000',
-    fillOpacity: 0.35,
+    strokeColor: '#0000FF',
+    strokeOpacity: 0.5,
+    strokeWeight: 3,
+    fillColor: '#0000FF',
+    fillOpacity: 0.1,
     map: map
   });
+  clearMarkers();
   updatePolyListener();
   map.setCenter({lat: cenLat(orchardCoords), lng: cenLng(orchardCoords)});
   if (orchardCoords.length > 1) {
     map.fitBounds(bounds(orchardCoords));
   }
 }
+
 function updatePolyListener() {
   if (orchardPoly !== undefined) {
     google.maps.event.clearListeners(orchardPoly, "click");
     orchardPoly.addListener("click", pushOrchardCoord);
   }
 }
+
 function popOrchardCoord() {
   if (orchardCoords === undefined) {
     orchardCoords = [];
@@ -148,6 +164,7 @@ function popOrchardCoord() {
   orchardPoly.setPath(orchardCoords);
   updatePolyListener();
 }
+
 function clearOrchardCoord() {
   if (orchardCoords === undefined) {
     orchardCoords = [];
@@ -156,7 +173,15 @@ function clearOrchardCoord() {
     orchardCoords.pop();
   }
   orchardPoly.setPath(orchardCoords);
+  clearMarkers();
   updatePolyListener();
+}
+
+function clearMarkers() {
+  while (orchardMarkers.length > 0) {
+    let m = orchardMarkers.pop()
+    m.setMap(null);
+  }
 }
 
 function titleFormatter(entity) {
