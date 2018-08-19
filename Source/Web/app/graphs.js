@@ -204,6 +204,35 @@ function createModeSelector(id) {
   "</div>";
 }
 
+function accumulationExplanation(mode, groupBy, period) {
+  var stepDesc = "";
+  if (period === "hourly") {
+    stepDesc = "Hour";
+  } else if (period === "daily") {
+    stepDesc = "Day";
+  } else if (period === "weekly") {
+    stepDesc = "Week";
+  } else if (period === "monthly") {
+    stepDesc = "Month";
+  } else if (period === "yearly") {
+    stepDesc = "Year";
+  }
+
+  if (mode === "running") {
+    return "No data accumulation will take place, a regular graph will be displayed whereby each " + groupBy + " will have its own line.";
+  } else if (mode === "accumEntity") {
+    return "The selected " + groupBy + "s will have their values for each " + stepDesc +
+    "summed up, so that the sum of each individual " + groupBy + "'s collections accross the selected" +
+    "time period. for that " + stepDesc + " will be shown, for each " + stepDesc + ".";
+  } else if (mode === "accumTime") {
+    return "The sum accross each " + stepDesc + " will be shown, so that the total bags collected each week by each of the selected " + groupBy + "s will be shown."
+  }
+}
+
+function createAccumulationExplanation(id) {
+  return "<div><p id='accumExplain" + id + "'>" + accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period) + "</p></div>";
+}
+
 function createUpdateGraphButton(id) {
   const event = "onclick='updateGraph(" + id + ")'";
 
@@ -256,6 +285,7 @@ function displayStat(stat, id) {
              createExactDateSelector(id) +
   "        <h5>Accumulation: </h5>" +
              createModeSelector(id) +
+             createAccumulationExplanation(id) +
   "      </div>" +
          createUpdateGraphButton(id) +
   "    </div>" +
@@ -271,6 +301,7 @@ function updateTimePeriod(id) {
   const period = document.getElementById("timePeriod" + id).value;
   stats[id].period = period;
   var accumTime = document.getElementById("stat" + id + "accumTime");
+  var accumExplain = document.getElementById("accumExplain" + id);
   const message = (param) => { return "<input type='radio' autocomplete='off' name='filterEntity' onchange='updateMode(" + id + ", \"accumTime\")'> By " + param };
   if (period === "hourly") {
     accumTime.innerHTML = message("Hour");
@@ -283,6 +314,7 @@ function updateTimePeriod(id) {
   } else if (period === "yearly") {
     accumTime.innerHTML = message("Year");
   }
+  accumExplain.innerHTML = accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period);
 }
 
 function updateTimeInterval(id) {
@@ -295,6 +327,7 @@ function updateTimeInterval(id) {
 function updateGroupBy(id, groupBy) {
   stats[id].groupBy = groupBy;
   var accumEntity = document.getElementById("stat" + id + "accumEntity");
+  var accumExplain = document.getElementById("accumExplain" + id);
   const message = (param) => { return "<input type='radio' autocomplete='off' name='filterEntity' onchange='updateMode(" + id + ", \"accumEntity\")'> By " + param };
   var struct;
   if (groupBy === "farm") {
@@ -310,6 +343,8 @@ function updateGroupBy(id, groupBy) {
     accumEntity.innerHTML = message("Foreman");
     struct = workers;
   }
+
+  accumExplain.innerHTML = accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period);
 
   var selectionList = document.getElementById("stat" + id + "EntitySelection");
   selectionList.innerHTML = "";
@@ -332,6 +367,8 @@ function updateGroupBy(id, groupBy) {
 
 function updateMode(id, mode) {
   stats[id].mode = mode;
+  var accumExplain = document.getElementById("accumExplain" + id);
+  accumExplain.innerHTML = accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period);
 }
 
 function updateDate(id, option, sender) {
