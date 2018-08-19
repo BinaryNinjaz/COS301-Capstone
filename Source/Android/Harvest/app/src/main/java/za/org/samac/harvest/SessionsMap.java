@@ -132,7 +132,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         mMap.clear();
 
         PolylineOptions polyline = new PolylineOptions();
-        polyline.color(Color.BLUE);
+        polyline.color(Color.RED);
         boolean first = true;
         for (Location loc : Sessions.selectedItem.track) {
             LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
