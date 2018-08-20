@@ -588,8 +588,8 @@ extension Orchard {
       row.title = "Orchard Location"
       row.value = self
     }.cellUpdate { (cell, _) in
-      let lat = self.coords.first?.latitude ?? 0.0
-      let lng = self.coords.first?.longitude ?? 0.0
+      let lat = self.tempory?.coords.first?.latitude ?? 0.0
+      let lng = self.tempory?.coords.first?.longitude ?? 0.0
       let lt = String(format: "%.4f", lat)
       let lg = String(format: "%.4f", lng)
       cell.detailTextLabel?.text = "\(lt), \(lg)"
@@ -743,6 +743,11 @@ extension Session {
       alert.addButton("Cancel", action: {})
       alert.addButton("Delete") {
         HarvestDB.delete(session: self) { (_, _) in
+          let vcs = formVC.navigationController?.viewControllers
+          if let vc = vcs?[(vcs?.count ?? 0) - 2] as? SessionSelectionViewController {
+            vc.sessions.removeSession(withId: self.id)
+            vc.tableView.reloadData()
+          }
           formVC.navigationController?.popViewController(animated: true)
         }
       }

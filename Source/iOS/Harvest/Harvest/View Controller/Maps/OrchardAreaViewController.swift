@@ -54,7 +54,6 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
     } else {
       SCLAlertView().showInfo("No More Points", subTitle: "There are no more points in the orchard to delete")
     }
-    
   }
   
   @IBAction func removeLastCoord(_ sender: Any) {
@@ -64,7 +63,6 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
     } else {
       SCLAlertView().showInfo("No More Points", subTitle: "There are no more points in the orchard to delete")
     }
-    
   }
   
   public override func viewDidLoad() {

@@ -32,7 +32,7 @@ public final class AdminRow: OptionsRow<PushSelectorCell<Box>>, PresenterRowType
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })
   }
   
-  public required init(tag: String?, admin: HarvestUser, callback: @escaping (AdminRow) -> Void) {
+  public required init(tag: String?, callback: @escaping (AdminRow) -> Void) {
     super.init(tag: tag)
     presentationMode = .show(
       controllerProvider: ControllerProvider.callback {
@@ -41,7 +41,7 @@ public final class AdminRow: OptionsRow<PushSelectorCell<Box>>, PresenterRowType
         guard let evc = vc as? EntityViewController else {
           fatalError("We should never get here. We instatiated from entityViewController")
         }
-        evc.entity = EntityItem.user(admin)
+        evc.entity = EntityItem.user(HarvestUser.current)
         return evc
       },
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })

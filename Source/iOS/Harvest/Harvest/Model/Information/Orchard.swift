@@ -104,6 +104,7 @@ public final class Orchard {
   
   func makeChangesPermanent() {
     if let t = tempory {
+      id = t.id
       bagMass = t.bagMass
       crop = t.crop
       date = t.date
@@ -115,7 +116,6 @@ public final class Orchard {
       coords = t.coords
       cultivars = t.cultivars
       irrigationKind = t.irrigationKind
-      tempory = nil
     }
   }
   

@@ -66,6 +66,7 @@ final class Worker {
   
   func makeChangesPermanent() {
     if let t = tempory {
+      id = t.id
       firstname = t.firstname
       lastname = t.lastname
       assignedOrchards = t.assignedOrchards
@@ -73,7 +74,6 @@ final class Worker {
       kind = t.kind
       phoneNumber = t.phoneNumber
       idNumber = t.idNumber
-      tempory = nil
     }
   }
   
