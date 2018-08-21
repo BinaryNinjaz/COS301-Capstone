@@ -23,6 +23,7 @@ class TrackerViewController: UIViewController {
   
   var locationManager: CLLocationManager?
   var currentLocation: CLLocation?
+  var changedOrchard: Bool?
   var sessionOrchards: [String] = []
   var workers: [Worker] = [] {
     didSet {
@@ -83,14 +84,22 @@ class TrackerViewController: UIViewController {
   }
   
   fileprivate func finishCollecting() {
+    if changedOrchard == false {
+      if let orchard = Entities.shared.orchards.first(where: { sessionOrchards.contains($0.value.id) }) {
+        orchard.value.modifyArea(withRespectTo: tracker!)
+        HarvestDB.save(orchard: orchard.value)
+      }
+    }
     endCollecting()
     tracker?.storeSession()
     tracker = nil
+    changedOrchard = nil
   }
   
   fileprivate func discardCollections() {
     endCollecting()
     tracker = nil
+    changedOrchard = nil
   }
   
   fileprivate func presentYieldCollection() {
@@ -233,6 +242,12 @@ class TrackerViewController: UIViewController {
       if CLLocationManager.locationServicesEnabled() {
         locationManager?.startUpdatingLocation()
         requestSelectedOrchard {
+          if self.changedOrchard == nil {
+            self.changedOrchard = false
+          } else if self.changedOrchard == false {
+            self.changedOrchard = true
+          }
+          
           self.startSessionButton?.setTitle("Stop", for: .normal)
           let sessionLayer = CAGradientLayer.gradient(colors: .stopSession,
                                                       locations: [0, 1],

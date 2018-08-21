@@ -908,6 +908,7 @@ extension HarvestUser {
             SCLAlertView().showError("An Error Occurred", subTitle: err.localizedDescription)
             return
           }
+          SCLAlertView.showSuccessToast(message: "Password Updated")
         }
       }
       

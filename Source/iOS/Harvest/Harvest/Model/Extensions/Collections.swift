@@ -6,7 +6,7 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Foundation
+import CoreLocation
 
 extension Array {
   func randomElements(withProbability p: Double) -> [Element] {
