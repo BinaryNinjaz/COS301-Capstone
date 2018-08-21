@@ -1173,11 +1173,11 @@ function filterInformation(searchField) {
       const entity = entities[key];
       var searchResults;
       if (selectedEntity === "Farm") {
-        searchResults = searchFarm(entity, searchText, true);
+        searchResults = queryFarm(entity, searchText, true);
       } else if (selectedEntity === "Orchard") {
-        searchResults = searchOrchard(entity, farms, searchText, true);
+        searchResults = queryOrchard(entity, key, farms, orchards, workers, searchText, true);
       } else if (selectedEntity === "Worker") {
-        searchResults = searchWorker(entity, orchards, searchText, true);
+        searchResults = queryWorker(entity, orchards, searchText, true);
       }
 
       for (const property in searchResults) {

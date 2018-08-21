@@ -229,7 +229,7 @@ function watchWorkers(workers, completion) {
 
 function searchFarm(farm, searchText, full) {
   var result = {};
-  if (farm === undefined) {
+  if (farm === undefined || searchText === "") {
     return result;
   }
 
@@ -266,17 +266,26 @@ function searchFarm(farm, searchText, full) {
   return result;
 }
 
-function searchOrchard(orchard, farms, searchText, full) {
+function workerIsAssignedToOrchard(worker, orchard) {
+  for (const i in worker.orchards) {
+    if (worker.orchards[i] === orchard) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function searchOrchard(orchard, okey, farms, orchards, workers, searchText, full) {
   var result = {};
-  if (orchard === undefined) {
+  if (orchard === undefined || searchText === "") {
     return result;
   }
 
   const text = searchText.toLowerCase();
 
   const farm = farms[orchard.farm];
-  const farmResults = searchFarm(farm, text, full);
-  for (const key in Object.keys(farmResults)) {
+  const farmResults = searchFarm(farm, text, false);
+  for (const key in farmResults) {
     result["Farm " + key] = farmResults[key];
   }
 
@@ -303,12 +312,23 @@ function searchOrchard(orchard, farms, searchText, full) {
     result["Details"] = orchard.further;
   }
 
+  if (full) {
+    for (const wkey in workers) {
+      if (workerIsAssignedToOrchard(workers[wkey], okey)) {
+        const workerResults = searchWorker(workers[wkey], orchards, text, false);
+        for (const key in workerResults) {
+          result["Worker " + key] = workerResults[key];
+        }
+      }
+    }
+  }
+
   return result;
 }
 
 function searchWorker(worker, orchards, searchText, full) {
   var result = {};
-  if (worker === undefined) {
+  if (worker === undefined || searchText === "") {
     return result;
   }
 
@@ -346,6 +366,7 @@ function searchWorker(worker, orchards, searchText, full) {
 }
 
 function orchardAtPoint(orchards, x, y) {
+  // console.log(x + " " + y);
   for (const orchardId in orchards) {
     const orchard = orchards[orchardId];
     var xs = [];
@@ -355,6 +376,8 @@ function orchardAtPoint(orchards, x, y) {
       xs.push(point.lng);
       ys.push(point.lat);
     }
+    // console.log(xs);
+    // console.log(ys);
     if (polygonContainsPoint(xs, ys, x, y)) {
       return {value: orchard, key: orchardId};
     }
@@ -394,11 +417,12 @@ function searchSession(session, searchText, farms, orchards, workers) {
 
     var orchardsForSession = [];
     var points = session.collections[workerId];
-    for (const point in points) {
-      const o = orchardAtPoint(orchards, point.lng, point.lat);
+    for (const pidx in points) {
+      const point = points[pidx];
+      const o = orchardAtPoint(orchards, point.coord.lng, point.coord.lat);
       if (o !== undefined && !arrayContainsEntity(orchardsForSession, o.key)) {
         orchardsForSession.push(o.key);
-        const orchardsResult = searchOrchard(o, farms, text, false);
+        const orchardsResult = searchOrchard(o.value, o.key, farms, orchards, workers, text, false);
         for (const key in orchardsResult) {
           result["Orchard " + key] = orchardsResult[key];
         }

@@ -305,12 +305,10 @@ function drawOrchards() {
 
 	for (const oKey in orchards) {
 		var coords = [];
-		console.log(oKey);
 		const oCoords = orchards[oKey].coords;
 		for (const cidx in oCoords) {
 			coords.push({lat: oCoords[cidx].lat, lng: oCoords[cidx].lng});
 		}
-		console.log(coords);
 		orchardPolygons.push(new google.maps.Polygon({
 	    paths: oCoords,
 	    strokeColor: '#0000FF',
@@ -370,7 +368,7 @@ function filterSessions() {
 
       for (const sessionId in group) {
         const session = group[sessionId];
-        const sessionResults = searchSession(session.value, searchText, farms, orchards, workers);
+        const sessionResults = querySession(session.value, searchText, farms, orchards, workers);
 
         for (const key in sessionResults) {
           var newSession = session;
