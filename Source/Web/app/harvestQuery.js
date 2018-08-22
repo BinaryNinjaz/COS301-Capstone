@@ -10,8 +10,13 @@ function ignoredWord(word) {
 function propertyWords() {
   return [
     "crop", "name", "company", "email", "phone number", "province", "nearest town",
-    "details", "crop", "cultivar", "irrigation type", "id", "type", "assigned orchard"
-  ];
+    "details", "crop", "cultivar", "irrigation type", "id", "type", "assigned orchard",
+    "worker name", "worker id", "worker phone number", "worker assigned orchard",
+    "foreman name", "foreman id", "foreman phone number", "foreman assigned orchard",
+    "orchard name", "orchard crop", "orchard cultivar", "orchard irrigation type",
+    "farm name", "farm company", "farm email", "farm phone number", "farm province",
+    "farm nearest town",
+  ].sort((a, b) => { return b.length - a.length; });
 }
 
 function propertyWord(word) {
@@ -19,7 +24,7 @@ function propertyWord(word) {
 }
 
 function getRequestedPropertiesFromQuery(queryText) {
-  const passes = queryText.trim().split(/\s*or\s*/i);
+  const passes = queryText.trim().split(/(^|\s+)or($|\s+)/i);
   const properties = propertyWords();
   var result = [];
   for (const i in passes) {
@@ -64,7 +69,7 @@ function timePeriods() {
 }
 
 function getTimePeriods(queryText) {
-  const passes = queryText.trim().split(/\s*or\s*/i);
+  const passes = queryText.trim().split(/(^|\s+)or(\s+|$)/i);
   const periods = timePeriods();
   var result = [];
   for (const i in passes) {
@@ -166,7 +171,7 @@ function arrayContainsString(array, string) {
 }
 
 function buildFormalQuery(queryText) {
-  const passes = queryText.trim().split(/\s*or\s*/i);
+  const passes = queryText.trim().split(/(^|\s+)or($|\s+)/i);
   var tokens = [];
   for (const i in passes) {
     const pass = passes[i];
@@ -190,8 +195,12 @@ function unionOfObjects(objectA, objectB) {
         const temp = objectA[keyA];
         result[keyA + "/" + keyB] = temp + "/" + objectB[keyB];
         delete result[keyA];
-      } else if (arrayContainsString(objectA[keyA].split("/"), objectB[keyB])) {
-        result[keyA] = objectA[keyA];
+      } else {
+        if (arrayContainsString(objectA[keyA].split("/"), objectB[keyB]) || arrayContainsString(objectA[keyA].split(", "), objectB[keyB])) {
+          result[keyA] = objectA[keyA];
+        } else if (result[keyA] === undefined) {
+          result[keyA] = objectA[keyA] + ", " + objectB[keyB];
+        }
       }
     }
   }
@@ -216,7 +225,12 @@ function mergeObjects(objectA, objectB) {
     result[a] = objectA[a];
   }
   for (const b in objectB) {
-    result[b] = objectB[b];
+    if (result[b] !== undefined) {
+      result[b] = result[b] + " or " + objectB[b];
+    } else {
+      result[b] = objectB[b];
+    }
+
   }
   return result;
 }
@@ -236,7 +250,7 @@ function queryEntity(option, ekey, entity, farms, orchards, workers, queryText, 
     for (const queryParamIdx in aQuery) {
       const queryParam = aQuery[queryParamIdx];
       var subSubResult;
-      if (ignoredWord(queryParam) || propertyWord(queryParam)) {
+      if (ignoredWord(queryParam)) {
         continue;
       }
       if (option === "worker") {
@@ -267,7 +281,6 @@ function queryEntity(option, ekey, entity, farms, orchards, workers, queryText, 
       result = mergeObjects(result, subResult);
     }
   }
-
   return result;
 }
 

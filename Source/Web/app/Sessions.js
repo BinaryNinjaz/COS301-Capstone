@@ -369,11 +369,10 @@ function filterSessions() {
       for (const sessionId in group) {
         const session = group[sessionId];
         const sessionResults = querySession(session.value, searchText, farms, orchards, workers);
-
         for (const key in sessionResults) {
-          var newSession = session;
+					var newSession = Object.assign({}, session);
           newSession["reason"] = sessionResults[key];
-          insertSessionIntoSortedMap(session, key, (a, b) => { return a === b; }, filteredSessions);
+          insertSessionIntoSortedMap(newSession, key, (a, b) => { return a === b; }, filteredSessions);
         }
       }
     }

@@ -366,7 +366,6 @@ function searchWorker(worker, orchards, searchText, full) {
 }
 
 function orchardAtPoint(orchards, x, y) {
-  // console.log(x + " " + y);
   for (const orchardId in orchards) {
     const orchard = orchards[orchardId];
     var xs = [];
@@ -376,8 +375,6 @@ function orchardAtPoint(orchards, x, y) {
       xs.push(point.lng);
       ys.push(point.lat);
     }
-    // console.log(xs);
-    // console.log(ys);
     if (polygonContainsPoint(xs, ys, x, y)) {
       return {value: orchard, key: orchardId};
     }
@@ -406,25 +403,30 @@ function searchSession(session, searchText, farms, orchards, workers, period) {
       result["Foreman " + key] = foremanResults[key];
     }
   }
+
+  var orchardsForSession = [];
   for (const workerId in session.collections) {
     const worker = workers[workerId];
     if (worker !== undefined) {
       const workerResults = searchWorker(worker, orchards, text, false);
-      for (const key in workerResults) {
-        result["Worker " + key] = workerResults[key];
+      for (const wkey in workerResults) {
+        if (result["Worker " + wkey] !== undefined) {
+          result["Worker " + wkey] = result["Worker " + wkey] + ", " + workerResults[wkey];
+        } else {
+          result["Worker " + wkey] = workerResults[wkey];
+        }
       }
     }
-
-    var orchardsForSession = [];
+    
     var points = session.collections[workerId];
     for (const pidx in points) {
       const point = points[pidx];
       const o = orchardAtPoint(orchards, point.coord.lng, point.coord.lat);
       if (o !== undefined && !arrayContainsEntity(orchardsForSession, o.key)) {
         orchardsForSession.push(o.key);
-        const orchardsResult = searchOrchard(o.value, o.key, farms, orchards, workers, text, false);
-        for (const key in orchardsResult) {
-          result["Orchard " + key] = orchardsResult[key];
+        const orchardResult = searchOrchard(o.value, o.key, farms, orchards, workers, text, false);
+        for (const okey in orchardResult) {
+          result["Orchard " + okey] = orchardResult[okey];
         }
       }
     }
