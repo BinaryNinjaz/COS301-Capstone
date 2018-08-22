@@ -11,7 +11,7 @@ extension DateFormatter {
   static func iso8601() -> DateFormatter {
     let result = DateFormatter()
     result.locale = Locale.current
-    result.timeZone = TimeZone.init(secondsFromGMT: 60 * 60 * 5)
+    result.timeZone = TimeZone.init(secondsFromGMT: 60 * 60 * -5)
     // result.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZZZZZ"
     result.dateFormat = "d MMM YYYY HH:mm ZZZ"
     return result
@@ -309,10 +309,10 @@ func collection() {
 }
 
 func timeGraphSessionsWorker() {
-  let s = Date().thisMonth().0
-  let e = Date().thisMonth().1
+  let s = Date(timeIntervalSinceNow: -60 * 60 * 24)
+  let e = Date()
   let g = HarvestCloud.GroupBy.worker
-  let p = HarvestCloud.TimePeriod.weekly
+  let p = HarvestCloud.TimePeriod.hourly
 
   let ids = [
     // "-LC4tqYXblh6RD6F_LIS", // Tandy Joe
@@ -322,7 +322,7 @@ func timeGraphSessionsWorker() {
 //    "-LBykZoPlQ2xkIMylBr2", // Tony Stark 4
 //    "-LBykabv5OJNBsdv0yl7", // Clark Kent 5
 //    "-LBykcR9o5_S_ndIYHj9", // Bruce Wayne 6
-
+    "-LKYB6pBpxqBdKi54TQr",
     "-LK2zuFD5qvud-kD97n6"
   ]
 

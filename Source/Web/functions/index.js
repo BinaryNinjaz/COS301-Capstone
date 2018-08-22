@@ -116,7 +116,7 @@ function orchardsCooked(orchardIds, uid, completion) {
 }
 
 function roundSince1970(date, period) {
-  const d = date;
+  const d = date.clone();
   const startOfTime = moment(0);
   if (period === "hourly") {
     return d.diff(startOfTime, 'hour');
@@ -402,7 +402,6 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
         snapshot.forEach((childSnapshot) => {
           const key = childSnapshot.key;
           const val = childSnapshot.val();
-          console.log(val.wid + " " + JSON.stringify(ids));
           if (arrayContainsItem(ids, val.wid) && startDate.isSameOrBefore(moment(val.start_date)) && moment(val.start_date).isSameOrBefore(endDate)) {
             for (var ckey in val.collections) {
               const collection = val.collections[ckey];
@@ -468,15 +467,15 @@ function roundDateToPeriod(date, period) {
 }
 
 function isSameYear(d1, d2) {
-  return d1.startOf('year').format('YYYY') === d2.startOf('year').format('YYYY');
+  return d1.clone().startOf('year').format('YYYY') === d2.clone().startOf('year').format('YYYY');
 }
 
 function isSameMonth(d1, d2) {
-  return d1.startOf('month').format('YYYY-MM') === d2.startOf('month').format('YYYY-MM');
+  return d1.clone().startOf('month').format('YYYY-MM') === d2.clone().startOf('month').format('YYYY-MM');
 }
 
 function isSameDay(d1, d2) {
-  return d1.startOf('day').format('YYYY-MM-DD') === d2.startOf('day').format('YYYY-MM-DD');
+  return d1.clone().startOf('day').format('YYYY-MM-DD') === d2.clone().startOf('day').format('YYYY-MM-DD');
 }
 
 function roundDateToRunningPeriod(date, period, sameYear, sameMonth, sameDay) {
@@ -485,15 +484,15 @@ function roundDateToRunningPeriod(date, period, sameYear, sameMonth, sameDay) {
   const fmtDay = sameDay ? '' : 'DD';
   const fmt = fmtYear + fmtMonth + fmtDay;
   if (period === "hourly") {
-    return date.startOf('hour').format(fmt + ' HH:mm');
+    return date.clone().startOf('hour').format(fmt + ' HH:mm');
   } else if (period === "daily") {
-    return date.startOf('day').format(fmt === '' ? 'ddd' : fmt);
+    return date.clone().startOf('day').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "weekly") {
-    return date.startOf('week').format(fmt === '' ? 'ddd' : fmt);
+    return date.clone().startOf('week').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "monthly") {
-    return date.startOf('month').format(fmtYear + 'MMM');
+    return date.clone().startOf('month').format(fmtYear + 'MMM');
   } else if (period === "yearly") {
-    return date.startOf('day').format('YYYY');
+    return date.clone().startOf('day').format('YYYY');
   } else {
     return '';
   }
@@ -518,12 +517,12 @@ function incrSessionCounter(counter, key, accum) {
 
 function updateDaysCounter(days, entities, key, accum, period, date) {
   const grouper = period === "weekly"
-    ? date.startOf('week')
+    ? date.clone().startOf('week')
     : period === "monthly"
-      ? date.startOf('month')
+      ? date.clone().startOf('month')
       : period === "yearly"
-        ? date.startOf('year')
-        : date.startOf('day');
+        ? date.clone().startOf('year')
+        : date.clone().startOf('day');
   if (days[accum] === undefined) {
     days[accum] = {};
   }
