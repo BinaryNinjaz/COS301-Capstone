@@ -102,33 +102,6 @@ enum HarvestCloud {
     task.resume()
   }
   
-  static func getShallowSessions(
-    onPage page: Int,
-    ofSize size: Int,
-    _ completion: @escaping ([ShallowSession]) -> Void
-  ) {
-    let query = component(onBase: Identifiers.shallowSessions, withArgs: [
-      ("pageNo", page.description),
-      ("pageSize", size.description),
-      ("uid", HarvestDB.Path.parent)
-    ])
-    
-    runTask(withQuery: query) { (serial) in
-      guard let json = serial as? [Any] else {
-        completion([])
-        return
-      }
-      
-      var result = [ShallowSession]()
-      
-      for object in json {
-        result.append(ShallowSession(json: object))
-      }
-      
-      completion(result)
-    }
-  }
-  
   static func getExpectedYield(orchardId: String, date: Date, completion: @escaping (Double) -> Void) {
     let query = component(onBase: Identifiers.expectedYield, withArgs: [
       ("orchardId", orchardId),

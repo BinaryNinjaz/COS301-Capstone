@@ -170,14 +170,6 @@ extension Date {
   }
 }
 
-extension Date {
-  func asFirebaseSessionKey() -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "-YYYYMMdd"
-    return formatter.string(from: self)
-  }
-}
-
 extension DateFormatter {
   static func iso8601() -> DateFormatter {
     let result = DateFormatter()
@@ -191,6 +183,6 @@ extension DateFormatter {
   }
   
   static func iso8601Date(from string: String) -> Date {
-    return DateFormatter.iso8601().date(from: string)!
+    return DateFormatter.iso8601().date(from: string) ?? Date(timeIntervalSince1970: 0)
   }
 }
