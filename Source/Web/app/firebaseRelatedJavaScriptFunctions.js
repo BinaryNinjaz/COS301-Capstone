@@ -417,7 +417,7 @@ function searchSession(session, searchText, farms, orchards, workers, period) {
         }
       }
     }
-    
+
     var points = session.collections[workerId];
     for (const pidx in points) {
       const point = points[pidx];
@@ -433,7 +433,7 @@ function searchSession(session, searchText, farms, orchards, workers, period) {
   }
 
   if (period !== undefined) {
-    const date = moment(new Date(session.start_date * 1000));
+    const date = moment(session.start_date);
 
     const cd = date.get('date');
     const cm = date.get('month');

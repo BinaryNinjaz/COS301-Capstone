@@ -121,7 +121,7 @@ function displaySessions(sortedMap, displayHeader, isFiltered) {
     for (const itemIdx in group.values) {
       const item = group.values[itemIdx];
       const foreman = workers[item.value.wid];
-      const time = moment(new Date(item.value.start_date * 1000)).format(isFiltered ? "YYYY/MM/DD HH:mm" : "HH:mm");
+      const time = moment(item.value.start_date).format(isFiltered ? "YYYY/MM/DD HH:mm" : "HH:mm");
       const text = foreman.name + " " + foreman.surname + " - " + time;
       sessionsList.innerHTML += "<button type='button' class='btn btn-sm btn-info' style='margin: 4px' onclick=loadSession('" + item.key + "') >" + text + "</button>";
       if (isFiltered && item.reason !== "") {
@@ -159,7 +159,7 @@ function newPage() {
         }
         const session = {value: obj, key: child.key};
 
-        const key = moment(new Date(session.value.start_date * 1000)).startOf('day');
+        const key = moment(session.value.start_date).startOf('day');
         const equalDates = (a, b) => {
           return a.isSame(b);
         };
@@ -188,8 +188,8 @@ function loadSession(sessionID) {
   const session = sessionForKey(sessionID, sessions);
   const val = session.value;
 
-  const start = new Date(val.start_date * 1000);
-  const end = new Date(val.end_date * 1000);
+  const start = moment(val.start_date);
+  const end = moment(val.end_date);
   const wid = val.wid;
   const foreman = workers[wid];
   const fname = foreman.name + " " + foreman.surname;
@@ -198,8 +198,8 @@ function loadSession(sessionID) {
 
   sessionDetails.innerHTML = "<form class=form-horizontal'><div class='form-group'>"
   sessionDetails.innerHTML += "<div class='col-sm-12'><label>Foreman: </label><span> " + fname + "</span></div>"
-  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Started: </label><p> " + start.toLocaleString() + "</p></div>"
-  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Ended: </label><p> " + end.toLocaleString() + "</p></div>"
+  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Started: </label><p> " + start.format("dddd, DD MMMM YYYY HH:mm") + "</p></div>"
+  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Ended: </label><p> " + end.format("dddd, DD MMMM YYYY HH:mm") + "</p></div>"
   sessionDetails.innerHTML += "</div></form>";
 
   var first = true;

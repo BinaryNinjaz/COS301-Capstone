@@ -589,7 +589,7 @@ function dispOrchard(id) {
     }
   }
   else {
-    const date = new Date(orchard.date * 1000);
+    const date = moment(orchard.date).format("DD MMMM YYYY");
     cCount = (orchard.cultivars || []).length;
     entityDetails.innerHTML = "" +
       "<form class='form-horizontal'>" +
@@ -612,7 +612,7 @@ function dispOrchard(id) {
       "<div class='col-sm-9'><p class='form-control-static'>" + orchard.irrigation + "</p></div> </div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
-      "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
+      "<div class='col-sm-9'><p class='form-control-static'>" + date + "</p></div></div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='date'>Cultivars:</label>" +
       "<div class='col-sm-9'><p class='form-control-static'>" + (orchard.cultivars || "") + "</p></div></div> " +
@@ -714,15 +714,14 @@ function orchSave(type, id, cultivars) {
   /*0 means create, 1 means modify*/
   const farmName = document.getElementById("orchFarm").value;
   const farmID = farmWithName(farmName);
-  let d = new Date(document.getElementById("orchDate").valueAsDate);
-  let seconds = d.getTime() / 1000;
+  let d = moment(new Date(document.getElementById("orchDate").valueAsDate)).format("D MMM YYYY HH:mm ZZ");
   var data = getCultivars();
   const tempOrchard = {
     name: document.getElementById("orchName").value,
     crop: document.getElementById("orchCrop").value,
     further: document.getElementById("oi").value,
     irrigation: document.getElementById("irrigationType").value,
-    date: seconds,
+    date: d,
     cultivars: data,
     bagMass: document.getElementById("orchBagMass").value,
     coords: orchardCoords,
@@ -757,7 +756,7 @@ function orchMod(id) {
 
   document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch(\"" + id + "\")'>Delete</button>";
   document.getElementById('modalText').innerText = "Please confirm deletion of " + orchard.name;
-  const date = new Date(orchard.date * 1000);
+  const date = moment(orchard.date).format("YYYY-MM-DD");
   var myData="";
   cCount = 0;
   try{
@@ -815,7 +814,7 @@ function orchMod(id) {
   "</div> </div> " +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
-  "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
+  "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date + "'></div></div> " +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
       "<div class='col-sm-9'>"+

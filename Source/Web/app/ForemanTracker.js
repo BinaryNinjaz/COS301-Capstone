@@ -130,8 +130,8 @@ function updateMarkers() {
   }
 }
 
-function displayDate(timestamp) {
-  let date = moment(new Date(timestamp * 1000));
+function displayDate(datestring) {
+  let date = moment(datestring);
   let today = moment(new Date());
 
   const fmtYear = date.format('YYYY') === today.format('YYYY') ? "" : "YYYY ";

@@ -271,11 +271,11 @@ function updateHeatmap() {
   var keys = requestedIds();
   const startDate = new Date(document.getElementById("startDate").value);
   const endDate = new Date(document.getElementById("endDate").value);
-  const startTime = startDate.getTime() / 1000;
-  const endTime = endDate.getTime() / 1000 + 60 * 60 * 24;
+  const startTime = moment(startDate).startOf('day');
+  const endTime = moment(endDate).endOf('day');
 
-  keys.startDate = startTime;
-  keys.endDate = endTime;
+  keys.startDate = startTime.format("D MMM YYYY HH:mm ZZ");
+  keys.endDate = endTime.format("D MMM YYYY HH:mm ZZ");
   keys.uid = userID();
   keys.groupBy = selectedEntity;
 

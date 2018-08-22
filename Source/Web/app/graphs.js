@@ -373,9 +373,9 @@ function updateMode(id, mode) {
 
 function updateDate(id, option, sender) {
   if (option === "start") {
-    stats[id].startDate = moment(sender.value);
+    stats[id].startDate = moment(sender.value).startOf('day');
   } else if (option === "end") {
-    stats[id].endDate = moment(sender.value);
+    stats[id].endDate = moment(sender.value).endOf('day');
   }
 }
 
@@ -408,13 +408,12 @@ function timedGraphSessions(id, completion) {
   const timePeriod = timePeriodForStat(stat);
 
   var keys = {
-  startDate: timePeriod.start,
-  endDate: timePeriod.end,
+  startDate: timePeriod.start.format("D MMM YYYY HH:mm ZZ"),
+  endDate: timePeriod.end.format("D MMM YYYY HH:mm ZZ"),
   uid: uid,
   mode: stat.mode,
   groupBy: stat.groupBy,
-  period: stat.period,
-  offset: -(new Date()).getTimezoneOffset(), // negative because api expects offset from GMT but js returns offset away from GMT
+  period: stat.period
   };
 
   for (var idx in stat.ids[stat.groupBy]) {
@@ -463,8 +462,8 @@ function timePeriodForStat(stat) {
     e = stat.endDate;
   }
   return {
-    start: s.toDate().getTime() / 1000.0,
-    end: e.toDate().getTime() / 1000.0
+    start: s,
+    end: e
   }
 }
 
@@ -489,40 +488,39 @@ function accumTimeDates(period) {
 }
 
 function isSameYear(d1, d2) {
-  return moment(d1).startOf('year').format('YYYY') === moment(d2).startOf('year').format('YYYY');
+  return d1.clone().startOf('year').format('YYYY') === d2.clone().startOf('year').format('YYYY');
 }
 
 function isSameMonth(d1, d2) {
-  return moment(d1).startOf('month').format('YYYY-MM') === moment(d2).startOf('month').format('YYYY-MM');
+  return d1.clone().startOf('month').format('YYYY-MM') === d2.clone().startOf('month').format('YYYY-MM');
 }
 
 function isSameDay(d1, d2) {
-  return moment(d1).startOf('day').format('YYYY-MM-DD') === moment(d2).startOf('day').format('YYYY-MM-DD');
+  return d1.clone().startOf('day').format('YYYY-MM-DD') === d2.clone().startOf('day').format('YYYY-MM-DD');
 }
 
-function roundDateToRunningPeriod(timeinterval, period, sameYear, sameMonth, sameDay) {
+function roundDateToRunningPeriod(date, period, sameYear, sameMonth, sameDay) {
   const fmtYear = sameYear ? '' : 'YYYY ';
   const fmtMonth = sameMonth ? '' : 'MMM ';
   const fmtDay = sameDay ? '' : 'DD';
   const fmt = fmtYear + fmtMonth + fmtDay;
-  const date = new Date(timeinterval * 1000);
   if (period === "hourly") {
-    return moment(date).startOf('hour').format(fmt + ' HH:mm');
+    return date.clone().startOf('hour').format(fmt + ' HH:mm');
   } else if (period === "daily") {
-    return moment(date).startOf('day').format(fmt === '' ? 'ddd' : fmt);
+    return date.clone().startOf('day').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "weekly") {
-    return moment(date).startOf('week').format(fmt === '' ? 'ddd' : fmt);
+    return date.clone().startOf('week').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "monthly") {
-    return moment(date).startOf('month').format(fmtYear + 'MMM');
+    return date.clone().startOf('month').format(fmtYear + 'MMM');
   } else if (period === "yearly") {
-    return moment(date).startOf('day').format('YYYY');
+    return date.clone().startOf('day').format('YYYY');
   } else {
     return '';
   }
 }
 
-function roundSince1970(timeinterval, period) {
-  const d = moment(new Date(timeinterval * 1000));
+function roundSince1970(date, period) {
+  const d = date.clone();
   const startOfTime = moment(0);
   if (period === "hourly") {
     return d.diff(startOfTime, 'hour');
@@ -539,11 +537,9 @@ function roundSince1970(timeinterval, period) {
 }
 
 function dateLabelsForTimeInterval(start, end, period) {
-  const s = new Date(start * 1000.0);
-  const e = new Date(end * 1000.0);
-  const sameYear = isSameYear(s, e);
-  const sameMonth = isSameMonth(s, e);
-  const sameDay = isSameDay(s, e);
+  const sameYear = isSameYear(start, end);
+  const sameMonth = isSameMonth(start, end);
+  const sameDay = isSameDay(start, end);
 
   var result = [];
   var step = 'day';
@@ -560,9 +556,10 @@ function dateLabelsForTimeInterval(start, end, period) {
     step = 'year';
   }
 
-  var i = start;
-  while (i < end) {
-    result.push(roundDateToRunningPeriod(i, period, sameYear, sameMonth, sameDay));
+  var i = start.toDate().getTime() / 1000.0;
+  const e = end.toDate().getTime() / 1000.0;
+  while (i < e) {
+    result.push(roundDateToRunningPeriod(moment(new Date(i * 1000)), period, sameYear, sameMonth, sameDay));
     i = moment(new Date(i * 1000.0)).add(1, step).toDate().getTime() / 1000.0;
   }
 
@@ -753,7 +750,7 @@ function pollExpectedPlotData(start, end, period, labels, func) {
   var result = [];
 
   while (x < e) {
-    result.push(Math.round(a * Math.sin(b * x + c) + d));
+    result.push((a * Math.sin(b * x + c) + d));
     x += move;
   }
 
