@@ -2,7 +2,27 @@ import Foundation
 
 enum HarvestDB {
   enum Path {
-    static let parent = "xFBNcNmiuON8ACbAHzH0diWcFQ43"
+    // static let parent = "xFBNcNmiuON8ACbAHzH0diWcFQ43"
+    static let parent = "fRrpUGYODVSV7RbHISvprEU7KfN2"
+  }
+}
+
+extension DateFormatter {
+  static func iso8601() -> DateFormatter {
+    let result = DateFormatter()
+    result.locale = Locale.current
+    result.timeZone = TimeZone.init(secondsFromGMT: 60 * 60 * 5)
+    // result.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZZZZZ"
+    result.dateFormat = "d MMM YYYY HH:mm ZZZ"
+    return result
+  }
+
+  static func iso8601String(from date: Date) -> String {
+    return DateFormatter.iso8601().string(from: date)
+  }
+
+  static func iso8601Date(from string: String) -> Date {
+    return DateFormatter.iso8601().date(from: string)!
   }
 }
 
@@ -256,17 +276,16 @@ enum HarvestCloud {
     mode: Mode,
     completion: @escaping (Any) -> Void
   ) {
-    let timeZone = "120" // Calendar.current.timeZone.offset()
-
     var args = [
       ("groupBy", grouping.description),
       ("period", period.description),
-      ("startDate", startDate.timeIntervalSince1970.description),
-      ("endDate", endDate.timeIntervalSince1970.description),
-      ("offset", timeZone),
+      ("startDate", DateFormatter.iso8601String(from: startDate)),
+      ("endDate",  DateFormatter.iso8601String(from: endDate)),
       ("mode", mode.description),
       ("uid", HarvestDB.Path.parent)
     ]
+
+    print(DateFormatter.iso8601String(from: startDate))
 
     for (i, id) in ids.enumerated() {
       args.append(("id\(i)", id))
@@ -296,13 +315,15 @@ func timeGraphSessionsWorker() {
   let p = HarvestCloud.TimePeriod.weekly
 
   let ids = [
-    "-LC4tqYXblh6RD6F_LIS", // Tandy Joe
-    "-LHJzXzzw_p4LaK93UYu", // Arthur Melo
+    // "-LC4tqYXblh6RD6F_LIS", // Tandy Joe
+    // "-LHJzXzzw_p4LaK93UYu", // Arthur Melo
     // "-LBykXujU0Igjzvq5giB", // Peter Parker 3
     // "-LBykjpjTy2RrDApKGLy", // Barry Allen 7
 //    "-LBykZoPlQ2xkIMylBr2", // Tony Stark 4
 //    "-LBykabv5OJNBsdv0yl7", // Clark Kent 5
 //    "-LBykcR9o5_S_ndIYHj9", // Bruce Wayne 6
+
+    "-LK2zuFD5qvud-kD97n6"
   ]
 
   HarvestCloud.timeGraphSessions(
