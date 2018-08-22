@@ -17,4 +17,5 @@
     <color name="signIn_verification_cancel">#FF8C00</color>
     <color name="loginTextColor">#80000000</color>
     <color name="red">#770000</color>
+    <color name="blueAppTitle">#0277bd</color>
 </resources>
