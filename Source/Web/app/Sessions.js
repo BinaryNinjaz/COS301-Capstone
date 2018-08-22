@@ -124,7 +124,7 @@ function displaySessions(sortedMap, displayHeader, isFiltered) {
       const time = moment(new Date(item.value.start_date * 1000)).format(isFiltered ? "YYYY/MM/DD HH:mm" : "HH:mm");
       const text = foreman.name + " " + foreman.surname + " - " + time;
       sessionsList.innerHTML += "<button type='button' class='btn btn-sm btn-info' style='margin: 4px' onclick=loadSession('" + item.key + "') >" + text + "</button>";
-      if (isFiltered) {
+      if (isFiltered && item.reason !== "") {
         sessionsList.innerHTML += "<p class='searchReason'>" + item.reason + "</p>";
       }
     }
@@ -305,12 +305,10 @@ function drawOrchards() {
 
 	for (const oKey in orchards) {
 		var coords = [];
-		console.log(oKey);
 		const oCoords = orchards[oKey].coords;
 		for (const cidx in oCoords) {
 			coords.push({lat: oCoords[cidx].lat, lng: oCoords[cidx].lng});
 		}
-		console.log(coords);
 		orchardPolygons.push(new google.maps.Polygon({
 	    paths: oCoords,
 	    strokeColor: '#0000FF',
@@ -370,7 +368,7 @@ function filterSessions() {
 
       for (const sessionId in group) {
         const session = group[sessionId];
-        const sessionResults = searchSession(session.value, searchText, farms, orchards, workers);
+        const sessionResults = querySession(session.value, searchText, farms, orchards, workers);
 
         for (const key in sessionResults) {
           var newSession = session;

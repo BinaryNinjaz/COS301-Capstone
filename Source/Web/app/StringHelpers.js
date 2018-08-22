@@ -43,8 +43,39 @@ function kmp_search(source, pattern) {
   return -1;
 }
 
+function stringContainsWord(string, word) {
+  const widx = kmp_search(string, " " + word);
+  const sidx = kmp_search(string, word);
+  const result = widx !== -1 || sidx === 0;
+  return result;
+}
+
 function stringContainsSubstring(string, substring) {
   const idx = kmp_search(string, substring);
   const result = idx !== -1;
+  return result;
+}
+
+function removeAWordFromString(word, string) {
+  const widx = kmp_search(string, " " + word);
+  const sidx = kmp_search(string, word);
+  if (widx !== -1) {
+    return string.replace(" " + word, "");
+  } else if (sidx === 0) {
+    return string.replace(word, "");
+  }
+  return string;
+}
+
+function removeWordFromString(word, string) {
+  var result = string;
+  while (stringContainsWord(string, word)) {
+    const temp = removeAWordFromString(word, result);
+    if (temp === result) {
+      break;
+    }
+    result = temp;
+  }
+  console.log
   return result;
 }
