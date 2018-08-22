@@ -115,8 +115,8 @@ function orchardsCooked(orchardIds, uid, completion) {
   }).catch((error) => {});
 }
 
-function roundSince1970(timeinterval, period) {
-  const d = moment(new Date(timeinterval * 1000));
+function roundSince1970(date, period) {
+  const d = date;
   const startOfTime = moment(0);
   if (period === "hourly") {
     return d.diff(startOfTime, 'hour');
@@ -322,13 +322,13 @@ function evolvePopulation(size, generations, data, period) {
 // idN=[String]
 //
 // groupBy=[worker, orchard, foreman, farm]
-// startDate=[Double]
-// endDate=[Double]
+// startDate=[D MMM YYYY HH:mm ZZ]
+// endDate=[D MMM YYYY HH:mm ZZ]
 // uid=[String]
 exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    const startDate = req.body.startDate;
-    const endDate = req.body.endDate;
+    const startDate = moment(req.body.startDate);
+    const endDate = moment(req.body.endDate);
     const uid = req.body.uid;
     var groupBy = req.body.groupBy;
     if (groupBy === undefined) {
@@ -353,7 +353,7 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
           snapshot.forEach((childSnapshot) => {
             const key = childSnapshot.key;
             const val = childSnapshot.val();
-            if (startDate <= val.start_date && val.start_date <= endDate) {
+            if (startDate.isSameOrBefore(moment(val.start_date)) && moment(val.start_date).isSameOrBefore(endDate)) {
               for (var ckey in val.collections) {
                 const collection = val.collections[ckey];
                 for (var pickup in collection) {
@@ -377,7 +377,7 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
         snapshot.forEach((childSnapshot) => {
           const key = childSnapshot.key;
           const val = childSnapshot.val();
-          if (startDate <= val.start_date && val.start_date <= endDate) {
+          if (startDate.isSameOrBefore(moment(val.start_date)) && moment(val.start_date).isSameOrBefore(endDate)) {
             for (var ckey in val.collections) {
               const collection = val.collections[ckey];
               if (!arrayContainsItem(ids, ckey)) {
@@ -403,7 +403,7 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
           const key = childSnapshot.key;
           const val = childSnapshot.val();
           console.log(val.wid + " " + JSON.stringify(ids));
-          if (arrayContainsItem(ids, val.wid) && startDate <= val.start_date && val.start_date <= endDate) {
+          if (arrayContainsItem(ids, val.wid) && startDate.isSameOrBefore(moment(val.start_date)) && moment(val.start_date).isSameOrBefore(endDate)) {
             for (var ckey in val.collections) {
               const collection = val.collections[ckey];
               for (var pickup in collection) {
@@ -426,7 +426,7 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
           snapshot.forEach((childSnapshot) => {
             const key = childSnapshot.key;
             const val = childSnapshot.val();
-            if (startDate <= val.start_date && val.start_date <= endDate) {
+            if (startDate.isSameOrBefore(moment(val.start_date)) && moment(val.start_date).isSameOrBefore(endDate)) {
               for (var ckey in val.collections) {
                 const collection = val.collections[ckey];
                 for (var pickup in collection) {
@@ -451,105 +451,49 @@ exports.collectionsWithinDate = functions.https.onRequest((req, res) => {
   });
 });
 
-function roundDateToHour(timeinterval) {
-  const date = new Date(timeinterval * 1000);
-  return date.getUTCHours();
-}
-
-function roundDateToDay(timeinterval) {
-  const date = new Date(timeinterval * 1000);
-  const day = date.getUTCDay();
-  switch (day) {
-  case 0: return "Sunday";
-  case 1: return "Monday";
-  case 2: return "Tuesday";
-  case 3: return "Wednesday";
-  case 4: return "Thursday";
-  case 5: return "Friday";
-  case 6: return "Saturday";
-  default: return "";
-  }
-}
-
-function roundDateToWeek(timeinterval) {
-  const date = new Date(timeinterval * 1000);
-  var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-  var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-  var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
-  return weekNo;
-}
-
-function roundDateToMonth(timeinterval) {
-  const date = new Date(timeinterval * 1000);
-  const month = date.getUTCMonth();
-  switch (month) {
-  case 0: return "January";
-  case 1: return "February";
-  case 2: return "March";
-  case 3: return "April";
-  case 4: return "May";
-  case 5: return "June";
-  case 6: return "July";
-  case 7: return "August";
-  case 8: return "September";
-  case 9: return "October";
-  case 10: return "November";
-  case 11: return "December";
-  default: return "";
-  }
-}
-
-function roundDateToYear(timeinterval) {
-  const date = new Date(timeinterval * 1000);
-  const year = date.getUTCFullYear();
-  return year;
-}
-
-function roundDateToPeriod(timeinterval, period) {
+function roundDateToPeriod(date, period) {
   if (period === "hourly") {
-    return roundDateToHour(timeinterval);
+    return date.format("H");
   } else if (period === "daily") {
-    return roundDateToDay(timeinterval);
+    return date.format("eeee");
   } else if (period === "weekly") {
-    return roundDateToWeek(timeinterval);
+    return date.format("dddd");
   } else if (period === "monthly") {
-    return roundDateToMonth(timeinterval);
+    return date.format("MMMM");
   } else if (period === "yearly") {
-    return roundDateToYear(timeinterval);
+    return date.format("YYYY");
   } else {
     return "";
   }
 }
 
 function isSameYear(d1, d2) {
-  return moment(d1).startOf('year').format('YYYY') === moment(d2).startOf('year').format('YYYY');
+  return d1.startOf('year').format('YYYY') === d2.startOf('year').format('YYYY');
 }
 
 function isSameMonth(d1, d2) {
-  return moment(d1).startOf('month').format('YYYY-MM') === moment(d2).startOf('month').format('YYYY-MM');
+  return d1.startOf('month').format('YYYY-MM') === d2.startOf('month').format('YYYY-MM');
 }
 
 function isSameDay(d1, d2) {
-  return moment(d1).startOf('day').format('YYYY-MM-DD') === moment(d2).startOf('day').format('YYYY-MM-DD');
+  return d1.startOf('day').format('YYYY-MM-DD') === d2.startOf('day').format('YYYY-MM-DD');
 }
 
-function roundDateToRunningPeriod(timeinterval, period, sameYear, sameMonth, sameDay) {
+function roundDateToRunningPeriod(date, period, sameYear, sameMonth, sameDay) {
   const fmtYear = sameYear ? '' : 'YYYY ';
   const fmtMonth = sameMonth ? '' : 'MMM ';
   const fmtDay = sameDay ? '' : 'DD';
   const fmt = fmtYear + fmtMonth + fmtDay;
-  const date = new Date(timeinterval * 1000);
   if (period === "hourly") {
-    return moment(date).startOf('hour').format(fmt + ' HH:mm');
+    return date.startOf('hour').format(fmt + ' HH:mm');
   } else if (period === "daily") {
-    return moment(date).startOf('day').format(fmt === '' ? 'ddd' : fmt);
+    return date.startOf('day').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "weekly") {
-    return moment(date).startOf('week').format(fmt === '' ? 'ddd' : fmt);
+    return date.startOf('week').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "monthly") {
-    return moment(date).startOf('month').format(fmtYear + 'MMM');
+    return date.startOf('month').format(fmtYear + 'MMM');
   } else if (period === "yearly") {
-    return moment(date).startOf('day').format('YYYY');
+    return date.startOf('day').format('YYYY');
   } else {
     return '';
   }
@@ -572,15 +516,14 @@ function incrSessionCounter(counter, key, accum) {
   }
 }
 
-function updateDaysCounter(days, entities, key, accum, period, pickedDate) {
-  const date = new Date(pickedDate * 1000);
+function updateDaysCounter(days, entities, key, accum, period, date) {
   const grouper = period === "weekly"
-    ? moment(date).startOf('week')
+    ? date.startOf('week')
     : period === "monthly"
-      ? moment(date).startOf('month')
+      ? date.startOf('month')
       : period === "yearly"
-        ? moment(date).startOf('year')
-        : moment(date).startOf('day');
+        ? date.startOf('year')
+        : date.startOf('day');
   if (days[accum] === undefined) {
     days[accum] = {};
   }
@@ -631,9 +574,8 @@ function sinusoidalOfSessionItems(items, period) {
 //
 // groupBy=[worker, orchard, foreman, farm]
 // period=[hourly, daily, weekly, monthly, yearly]
-// startDate=[Double]
-// endDate=[Double]
-// offset=[minutes from GMT]
+// startDate=[D MMM YYYY HH:mm ZZ]
+// endDate=[D MMM YYYY HH:mm ZZ]
 // mode=[accumTime, accumEntity, running]
 // uid=[String]
 //
@@ -671,8 +613,8 @@ function sinusoidalOfSessionItems(items, period) {
 // + exp components are constants in the function: a * sin(b * x + c) + d where x is the only variable
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    const startDate = req.body.startDate;
-    const endDate = req.body.endDate;
+    const startDate = moment(req.body.startDate);
+    const endDate = moment(req.body.endDate);
     const uid = req.body.uid;
     const groupBy = req.body.groupBy;
     const period = req.body.period;
@@ -680,19 +622,13 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
     if (mode === undefined) {
       mode = "accumTime";
     }
-    var offset = req.body.offset;
-    if (offset === undefined) {
-      offset = "0";
-    }
     const isAccumTime = mode === 'accumTime';
     const isAccumEntity = mode === 'accumEntity';
     const isRunning = mode === 'running';
-    const sd = moment(new Date(startDate * 1000)).add(Number(offset), 'm').toDate();
-    const ed = moment(new Date(endDate * 1000)).add(Number(offset), 'm').toDate();
 
-    const sameY = isSameYear(sd, ed);
-    const sameM = isSameMonth(sd, ed);
-    const sameD = isSameDay(sd, ed);
+    const sameY = isSameYear(startDate, endDate);
+    const sameM = isSameMonth(startDate, endDate);
+    const sameD = isSameDay(startDate, endDate);
 
     var result = {};
     var allOthers = {avg: {}}; // all collections in the requested period
@@ -723,9 +659,10 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
             const collection = val.collections[workerKey];
             for (const pickupKey in collection) {
               const pickup = collection[pickupKey];
+              const pdate = moment(pickup.date);
               const accum = !isAccumTime
-                ? roundDateToRunningPeriod(pickup.date, period, sameY, sameM, sameD)
-                : roundDateToPeriod(pickup.date, period);
+                ? roundDateToRunningPeriod(pdate, period, sameY, sameM, sameD)
+                : roundDateToPeriod(pdate, period);
               const wkey = isAccumEntity
                 ? "sum"
                 : groupBy === "foreman" ? foremanKey : workerKey;
@@ -734,15 +671,15 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
               var contained = groupBy === "foreman" && arrayContainsItem(ids, foremanKey)
               || groupBy === "worker" && arrayContainsItem(ids, workerKey);
 
-              if (startDate <= pickup.date && pickup.date <= endDate) {
+              if (startDate.isSameOrBefore(pdate) && pdate.isSameOrBefore(endDate)) {
                 if (contained) {
                   incrSessionCounter(result, wkey, accum);
                 }
                 incrSessionCounter(allOthers, "avg", accum);
-                updateDaysCounter(days, workingOnDays, wkey, accum, period, pickup.date);
+                updateDaysCounter(days, workingOnDays, wkey, accum, period, pdate);
               }
               if (contained) {
-                incrSessionCounter(all, wkey, roundSince1970(pickup.date, period));
+                incrSessionCounter(all, wkey, roundSince1970(pdate, period));
               }
             }
           }
@@ -767,9 +704,10 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
 
               for (const pickupKey in collection) {
                 const pickup = collection[pickupKey];
+                const pdate = moment(pickup.date);
                 const accum = !isAccumTime
-                  ? roundDateToRunningPeriod(pickup.date, period, sameY, sameM, sameD)
-                  : roundDateToPeriod(pickup.date, period);
+                  ? roundDateToRunningPeriod(pdate, period, sameY, sameM, sameD)
+                  : roundDateToPeriod(pdate, period);
                 const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
 
                 var orc = undefined;
@@ -793,15 +731,15 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                 const pkey = isAccumEntity ? "sum" : akey;
                 const contained = arrayContainsItem(ids, akey);
 
-                if (startDate <= pickup.date && pickup.date <= endDate) {
+                if (startDate.isSameOrBefore(pdate) && pdate.isSameOrBefore(endDate)) {
                   if (contained) {
                     incrSessionCounter(result, pkey, accum);
                   }
                   incrSessionCounter(allOthers, "avg", accum);
-                  updateDaysCounter(days, workingOnDays, pkey, accum, period, pickup.date);
+                  updateDaysCounter(days, workingOnDays, pkey, accum, period, pdate);
                 }
                 if (contained) {
-                  incrSessionCounter(all, pkey, roundSince1970(pickup.date, period));
+                  incrSessionCounter(all, pkey, roundSince1970(pdate, period));
                 }
               }
             }
