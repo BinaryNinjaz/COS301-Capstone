@@ -488,15 +488,15 @@ function accumTimeDates(period) {
 }
 
 function isSameYear(d1, d2) {
-  return d1.clone().startOf('year').format('YYYY') === d2.clone().startOf('year').format('YYYY');
+  return d1.isSame(d2, 'year');
 }
 
 function isSameMonth(d1, d2) {
-  return d1.clone().startOf('month').format('YYYY-MM') === d2.clone().startOf('month').format('YYYY-MM');
+  return d1.isSame(d2, 'month');
 }
 
 function isSameDay(d1, d2) {
-  return d1.clone().startOf('day').format('YYYY-MM-DD') === d2.clone().startOf('day').format('YYYY-MM-DD');
+  return d1.isSame(d2, 'day');
 }
 
 function roundDateToRunningPeriod(date, period, sameYear, sameMonth, sameDay) {
@@ -505,7 +505,7 @@ function roundDateToRunningPeriod(date, period, sameYear, sameMonth, sameDay) {
   const fmtDay = sameDay ? '' : 'DD';
   const fmt = fmtYear + fmtMonth + fmtDay;
   if (period === "hourly") {
-    return date.clone().startOf('hour').format(fmt + ' HH:mm');
+    return date.clone().startOf('hour').format(fmt + (fmt === '' ? '' : ' ') + 'HH:mm');
   } else if (period === "daily") {
     return date.clone().startOf('day').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "weekly") {
