@@ -8,16 +8,6 @@
 
 import Foundation
 
-extension TimeZone {
-  func offset() -> String {
-    let secs = abs(secondsFromGMT())
-    let sign = secondsFromGMT() < 0 ? "-" : "+"
-    let h = secs / 60
-    
-    return sign + h.description
-  }
-}
-
 extension Date {
   func startOfHour(using calendar: Calendar = .current) -> Date {
     let components = calendar.dateComponents([.year, .month, .day, .hour], from: self)
@@ -171,18 +161,18 @@ extension Date {
 }
 
 extension DateFormatter {
-  static func iso8601() -> DateFormatter {
+  static func rfc2822() -> DateFormatter {
     let result = DateFormatter()
     result.locale = Locale.current
-    result.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZZZZZ"
+    result.dateFormat = "d MMM YYYY HH:mm ZZZ"
     return result
   }
   
-  static func iso8601String(from date: Date) -> String {
-    return DateFormatter.iso8601().string(from: date)
+  static func rfc2822String(from date: Date) -> String {
+    return DateFormatter.rfc2822().string(from: date)
   }
   
-  static func iso8601Date(from string: String) -> Date {
-    return DateFormatter.iso8601().date(from: string) ?? Date(timeIntervalSince1970: 0)
+  static func rfc2822Date(from string: String) -> Date {
+    return DateFormatter.rfc2822().date(from: string) ?? Date(timeIntervalSince1970: 0)
   }
 }

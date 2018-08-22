@@ -19,8 +19,8 @@ extension HarvestDB {
     let key = cref.childByAutoId().key
     
     let data: [String: Any] = [
-      "start_date": DateFormatter.iso8601String(from: date),
-      "end_date": DateFormatter.iso8601String(from: Date()),
+      "start_date": DateFormatter.rfc2822String(from: date),
+      "end_date": DateFormatter.rfc2822String(from: Date()),
       "wid": wid,
       "collections": workers.firebaseSessionRepresentation(),
       "track": track.firbaseCoordRepresentation()
@@ -47,7 +47,7 @@ extension HarvestDB {
             "lng": location.longitude
           ],
           "display": name,
-          "date": DateFormatter.iso8601String(from: Date())
+          "date": DateFormatter.rfc2822String(from: Date())
         ]
     ]
     locations.updateChildValues(updates)

@@ -57,7 +57,7 @@ public final class Orchard {
     bagMass = json["bagMass"] as? Double
     crop = json["crop"] as? String ?? ""
     cultivars = json["cultivars"] as? [String] ?? []
-    date = DateFormatter.iso8601Date(from: json["date"] as? String ?? "")
+    date = DateFormatter.rfc2822Date(from: json["date"] as? String ?? "")
     assignedFarm = json["farm"] as? String ?? ""
     details = json["further"] as? String ?? ""
     name = json["name"] as? String ?? ""
@@ -90,7 +90,7 @@ public final class Orchard {
     return [id: [
       "bagMass": bagMass == nil ? "" : bagMass!,
       "crop": crop,
-      "date": DateFormatter.iso8601String(from: date),
+      "date": DateFormatter.rfc2822String(from: date),
       "farm": assignedFarm,
       "further": details,
       "name": name,

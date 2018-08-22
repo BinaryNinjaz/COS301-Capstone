@@ -69,7 +69,7 @@ extension Dictionary where Key == String, Value == Any {
         }
         
         let loc = CLLocationCoordinate2D(latitude: lat, longitude: lng)
-        let date = DateFormatter.iso8601Date(from: _date)
+        let date = DateFormatter.rfc2822Date(from: _date)
         
         colps.append(CollectionPoint(location: loc, date: date))
       }
@@ -99,8 +99,8 @@ public final class Session {
   init(json: [String: Any], id: String) {
     self.id = id
     
-    startDate = DateFormatter.iso8601Date(from: json["start_date"] as? String ?? "")
-    endDate = DateFormatter.iso8601Date(from: json["end_date"] as? String ?? "")
+    startDate = DateFormatter.rfc2822Date(from: json["start_date"] as? String ?? "")
+    endDate = DateFormatter.rfc2822Date(from: json["end_date"] as? String ?? "")
     
     let wid = json["wid"] as? String ?? ""
     foreman = Entities.shared.worker(withId: wid) ?? Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid)
@@ -113,8 +113,8 @@ public final class Session {
   
   func json() -> [String: [String: Any]] {
     return [id: [
-      "start_date": startDate.timeIntervalSince1970,
-      "end_date": endDate.timeIntervalSince1970,
+      "start_date": DateFormatter.rfc2822String(from: startDate),
+      "end_date": DateFormatter.rfc2822String(from: endDate),
       "wid": foreman.id,
       "track": track.firbaseCoordRepresentation(),
       "collections": collections.firebaseSessionRepresentation()
