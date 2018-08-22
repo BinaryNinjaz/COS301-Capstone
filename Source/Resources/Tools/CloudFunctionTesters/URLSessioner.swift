@@ -8,21 +8,21 @@ enum HarvestDB {
 }
 
 extension DateFormatter {
-  static func iso8601() -> DateFormatter {
+  static func rfc2822() -> DateFormatter {
     let result = DateFormatter()
     result.locale = Locale.current
-    result.timeZone = TimeZone.init(secondsFromGMT: 60 * 60 * -5)
+    // result.timeZone = TimeZone.init(secondsFromGMT: 60 * 60 * -5)
     // result.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZZZZZ"
     result.dateFormat = "d MMM YYYY HH:mm ZZZ"
     return result
   }
 
-  static func iso8601String(from date: Date) -> String {
-    return DateFormatter.iso8601().string(from: date)
+  static func rfc2822String(from date: Date) -> String {
+    return DateFormatter.rfc2822().string(from: date)
   }
 
-  static func iso8601Date(from string: String) -> Date {
-    return DateFormatter.iso8601().date(from: string)!
+  static func rfc2822Date(from string: String) -> Date {
+    return DateFormatter.rfc2822().date(from: string)!
   }
 }
 
@@ -65,6 +65,23 @@ extension Date {
     let e = calendar.date(byAdding: nextYearComps, to: s)!
 
     return (s, e)
+  }
+
+  func today(using calendar: Calendar = .current) -> (Date, Date) {
+    let components = calendar.dateComponents([.year, .month, .day], from: self)
+    let s = calendar.date(from: components)!
+
+    var nextMonthComps = DateComponents()
+    nextMonthComps.day = 1
+    nextMonthComps.minute = -1
+    let e = calendar.date(byAdding: nextMonthComps, to: s)!
+
+    return (s, e)
+  }
+
+  func yesterday(using calendar: Calendar = .current) -> (Date, Date) {
+    let dayAgo = calendar.date(byAdding: .day, value: -1, to: self)!
+    return dayAgo.today()
   }
 }
 
@@ -279,13 +296,11 @@ enum HarvestCloud {
     var args = [
       ("groupBy", grouping.description),
       ("period", period.description),
-      ("startDate", DateFormatter.iso8601String(from: startDate)),
-      ("endDate",  DateFormatter.iso8601String(from: endDate)),
+      ("startDate", DateFormatter.rfc2822String(from: startDate)),
+      ("endDate",  DateFormatter.rfc2822String(from: endDate)),
       ("mode", mode.description),
       ("uid", HarvestDB.Path.parent)
     ]
-
-    print(DateFormatter.iso8601String(from: startDate))
 
     for (i, id) in ids.enumerated() {
       args.append(("id\(i)", id))
@@ -309,10 +324,13 @@ func collection() {
 }
 
 func timeGraphSessionsWorker() {
-  let s = Date(timeIntervalSinceNow: -60 * 60 * 24)
-  let e = Date()
+  let s = Date().yesterday().0
+  let e = Date().yesterday().1
   let g = HarvestCloud.GroupBy.worker
   let p = HarvestCloud.TimePeriod.hourly
+
+  print(DateFormatter.rfc2822String(from: s))
+  print(DateFormatter.rfc2822String(from: e))
 
   let ids = [
     // "-LC4tqYXblh6RD6F_LIS", // Tandy Joe
