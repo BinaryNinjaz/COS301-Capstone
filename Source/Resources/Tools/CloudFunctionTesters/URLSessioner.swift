@@ -7,13 +7,15 @@ enum HarvestDB {
   }
 }
 
+let tz = TimeZone.init(secondsFromGMT: 60 * 60 * -0)!
+
 extension DateFormatter {
   static func rfc2822() -> DateFormatter {
     let result = DateFormatter()
     result.locale = Locale.current
-    // result.timeZone = TimeZone.init(secondsFromGMT: 60 * 60 * -5)
+    result.timeZone = tz
     // result.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZZZZZ"
-    result.dateFormat = "d MMM YYYY HH:mm ZZZ"
+    result.dateFormat = "d MMM YYYY HH:mm"
     return result
   }
 
@@ -68,19 +70,23 @@ extension Date {
   }
 
   func today(using calendar: Calendar = .current) -> (Date, Date) {
-    let components = calendar.dateComponents([.year, .month, .day], from: self)
-    let s = calendar.date(from: components)!
+    var cal = Calendar.init(identifier: Calendar.Identifier.gregorian)
+    cal.timeZone = tz
+    let components = cal.dateComponents([.year, .month, .day], from: self)
+    let s = cal.date(from: components)!
 
     var nextMonthComps = DateComponents()
     nextMonthComps.day = 1
     nextMonthComps.minute = -1
-    let e = calendar.date(byAdding: nextMonthComps, to: s)!
+    let e = cal.date(byAdding: nextMonthComps, to: s)!
 
     return (s, e)
   }
 
   func yesterday(using calendar: Calendar = .current) -> (Date, Date) {
-    let dayAgo = calendar.date(byAdding: .day, value: -1, to: self)!
+    var cal = Calendar.init(identifier: Calendar.Identifier.gregorian)
+    cal.timeZone = tz
+    let dayAgo = cal.date(byAdding: .day, value: -1, to: self)!
     return dayAgo.today()
   }
 }
