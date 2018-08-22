@@ -454,9 +454,9 @@ function roundDateToPeriod(date, period) {
   if (period === "hourly") {
     return date.format("H");
   } else if (period === "daily") {
-    return date.format("eeee");
-  } else if (period === "weekly") {
     return date.format("dddd");
+  } else if (period === "weekly") {
+    return date.format("d");
   } else if (period === "monthly") {
     return date.format("MMMM");
   } else if (period === "yearly") {
