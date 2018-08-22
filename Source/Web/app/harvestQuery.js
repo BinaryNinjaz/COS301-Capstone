@@ -4,7 +4,7 @@ function isEmptyObject(obj) {
 }
 
 function ignoredWord(word) {
-  return arrayContainsEntity(["is", "in", "with", "by", "on", "over", "from", "and"], word.toLowerCase());
+  return arrayContainsEntity(["is", "in", "with", "by", "on", "over", "from", "and", "a", "an"], word.toLowerCase());
 }
 
 function propertyWords() {
@@ -18,14 +18,140 @@ function propertyWord(word) {
   return arrayContainsString(propertyWords(), word.toLowerCase());
 }
 
-function getRequestedPropertiesFromQuery(query) {
+function getRequestedPropertiesFromQuery(queryText) {
+  const passes = queryText.trim().split(/\s*or\s*/i);
   const properties = propertyWords();
   var result = [];
+  for (const i in passes) {
+    var subResult = [];
+    for (const pidx in properties) {
+      const prop = properties[pidx];
+      if (stringContainsSubstring(passes[i], prop)) {
+        subResult.push(prop);
+      }
+    }
+    result.push(subResult);
+  }
+  return result;
+}
+
+function removeKeywordsFromQuery(query) {
+  const properties = propertyWords();
+  var result = query;
   for (const pidx in properties) {
     const prop = properties[pidx];
-    if (stringContainsSubstring(query, prop)) {
-      result.push(prop);
+    result = removeWordFromString(prop, result);
+  }
+  return result;
+}
+
+function timePeriods() {
+  return [
+    /(today)/i,
+    /(yesterday)/i,
+    /(this\sweek)/i,
+    /(last\sweek)/i,
+    /(this\smonth)/i,
+    /(last\smonth)/i,
+    /(this\syear)/i,
+    /(last\syear)/i,
+    /last\s+(\d+)\s+(days?)/i, // last # days
+    /last\s+(\d+)\s+(weeks?)/i, // last # weeks
+    /last\s+(\d+)\s+(months?)/i, // last # months
+    /(\d\d?\s(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s+(?:\d{4})?)/i, // DD? MMM YYYY?
+    /(\d\d?\s(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+(?:\d{4})?)/i, // DD? MMMM YYYY?
+  ];
+}
+
+function getTimePeriods(queryText) {
+  const passes = queryText.trim().split(/\s*or\s*/i);
+  const periods = timePeriods();
+  var result = [];
+  for (const i in passes) {
+    var subResult = [];
+    for (const pidx in periods) {
+      const period = periods[pidx];
+      var match = period.exec(passes[i]);
+      if (match != null) {
+        const prebuilt = timePeriodForInterval(match[0]);
+        if (prebuilt !== undefined) {
+          subResult.push(prebuilt);
+        } else if (match[2] !== undefined) {
+          var unit;
+          if (match[2] === "days" || match[2] === "day") {
+            unit = 'day';
+          } else if (match[2] === "weeks" || match[2] === "week") {
+            unit = 'week';
+          } else if (match[2] === "months" || match[2] === "month") {
+            unit = 'month';
+          }
+          if (match[1] !== undefined) {
+            const daterange = timePeriodForRange(match[1], unit);
+            if (daterange !== undefined) {
+              subResult.push(daterange);
+            }
+          }
+        } else {
+          const x = moment(match[0]);
+          if (x != undefined) {
+            const s = x.startOf('day');
+            const e = x.endOf('day');
+            subResult.push({start: s, end: e});
+          }
+        }
+        match = period.exec(passes[i]);
+      }
     }
+    result.push(subResult);
+  }
+  return result;
+}
+
+function timePeriodForInterval(interval) {
+  var s;
+  var e;
+  if (interval === "today") {
+    s = moment().startOf('day');
+    e = moment().endOf('day');
+  } else if (interval === "yesterday") {
+    s = moment().subtract(1, 'days').startOf('day');
+    e = moment().subtract(1, 'days').endOf('day');
+  } else if (interval === "this week") {
+    s = moment().startOf('week');
+    e = moment().endOf('week');
+  } else if (interval === "last week") {
+    s = moment().subtract(1, 'weeks').startOf('week');
+    e = moment().subtract(1, 'weeks').endOf('week');
+  } else if (interval === "this month") {
+    s = moment().startOf('month');
+    e = moment().endOf('month');
+  } else if (interval === "last month") {
+    s = moment().subtract(1, 'months').startOf('month');
+    e = moment().subtract(1, 'months').endOf('month');
+  } else if (interval === "this year") {
+    s = moment().startOf('year');
+    e = moment().endOf('year');
+  } else if (interval === "last year") {
+    s = moment().subtract(1, 'years').startOf('year');
+    e = moment().subtract(1, 'years').endOf('year');
+  } else {
+    s = undefined;
+  }
+  return s !== undefined ? {start: s, end: e} : undefined;
+}
+
+function timePeriodForRange(amount, unit) {
+  var e = moment().endOf(unit + 's');
+  var s = moment().subtract(parseInt(amount), unit + 's').startOf(unit);
+  return {start: s, end: e};
+}
+
+function removeTimePeriodsFromQuery(query) {
+  const periods = timePeriods();
+  var result = query;
+  for (const pidx in periods) {
+    const period = periods[pidx];
+    result = result.replace(period, "");
   }
   return result;
 }
@@ -40,7 +166,7 @@ function arrayContainsString(array, string) {
 }
 
 function buildFormalQuery(queryText) {
-  const passes = queryText.trim().split(/\s*[Oo][Rr]\s*/);
+  const passes = queryText.trim().split(/\s*or\s*/i);
   var tokens = [];
   for (const i in passes) {
     const pass = passes[i];
@@ -98,8 +224,11 @@ function mergeObjects(objectA, objectB) {
 function queryEntity(option, ekey, entity, farms, orchards, workers, queryText, full) {
   var result = {};
 
+  const requested = getRequestedPropertiesFromQuery(queryText);
+  const periods = getTimePeriods(queryText);
+  queryText = removeKeywordsFromQuery(queryText);
+  queryText = removeTimePeriodsFromQuery(queryText);
   const query = buildFormalQuery(queryText);
-  var requestedProperties = [];
   for (const aQueryIdx in query) {
     const aQuery = query[aQueryIdx];
     var subResult = {};
@@ -117,7 +246,7 @@ function queryEntity(option, ekey, entity, farms, orchards, workers, queryText, 
       } else if (option === "farm") {
         subSubResult = searchFarm(entity, queryParam, full);
       } else if (option === "session") {
-        subSubResult = searchSession(entity, queryParam, farms, orchards, workers);
+        subSubResult = searchSession(entity, queryParam, farms, orchards, workers, periods[aQueryIdx][0]);
       }
       if (!isEmptyObject(subSubResult)) {
         subResult = unionOfObjects(subResult, subSubResult);
@@ -127,16 +256,15 @@ function queryEntity(option, ekey, entity, farms, orchards, workers, queryText, 
         break;
       }
     }
+    if (requested[aQueryIdx] !== undefined && requested[aQueryIdx].length > 0) {
+      for (const key in subResult) {
+        if (!arrayContainsString(requested[aQueryIdx], key.toLowerCase())) {
+          delete subResult[key];
+        }
+      }
+    }
     if (!missed && !isEmptyObject(subResult)) {
       result = mergeObjects(result, subResult);
-    }
-  }
-  const requested = getRequestedPropertiesFromQuery(queryText);
-  if (requested.length > 0) {
-    for (const key in result) {
-      if (!arrayContainsString(requested, key.toLowerCase())) {
-        delete result[key];
-      }
     }
   }
 

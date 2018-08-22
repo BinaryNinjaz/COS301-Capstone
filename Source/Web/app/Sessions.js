@@ -124,7 +124,7 @@ function displaySessions(sortedMap, displayHeader, isFiltered) {
       const time = moment(new Date(item.value.start_date * 1000)).format(isFiltered ? "YYYY/MM/DD HH:mm" : "HH:mm");
       const text = foreman.name + " " + foreman.surname + " - " + time;
       sessionsList.innerHTML += "<button type='button' class='btn btn-sm btn-info' style='margin: 4px' onclick=loadSession('" + item.key + "') >" + text + "</button>";
-      if (isFiltered) {
+      if (isFiltered && item.reason !== "") {
         sessionsList.innerHTML += "<p class='searchReason'>" + item.reason + "</p>";
       }
     }
