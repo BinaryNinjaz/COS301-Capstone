@@ -57,8 +57,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,9 +103,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
-    private double startSessionTime;
-    private double endSessionTime;
-    private double divideBy1000Var = 1000.0000000;
+    private int divideBy1000Var = 1000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserEmail;
     private static String currentUserNumber;
@@ -850,9 +850,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             sessionKey = sessRef.push().getKey();//generate key/ID for a session
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//put key in database
 
-            startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
-
-            sessionDate.put("start_date", startSessionTime);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+            String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+            sessionDate.put("start_date", dateString);
 
             if (isFarmer) {
                 sessionDate.put("wid", uid);//add foreman database ID to session;
@@ -860,8 +860,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 sessionDate.put("wid", foremanID);//add foreman database ID to session;
             }
 
-            endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
-            sessionDate.put("end_date", endSessionTime);
+            formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+            dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+            sessionDate.put("end_date", dateString);
 
             sessRef.updateChildren(sessionDate);//save data to Firebase
         }
@@ -1070,8 +1071,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             TextView pressStart = findViewById(R.id.startText);
             pressStart.setText(R.string.pressStart);
 
-            endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
-            sessionDate.put("end_date", endSessionTime);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+            String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+            sessionDate.put("end_date", dateString);
             sessRef.updateChildren(sessionDate);//save data to Firebase
 
             textViewPressStart.setText(R.string.pressStart);
