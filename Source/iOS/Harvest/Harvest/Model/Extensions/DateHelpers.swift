@@ -165,7 +165,7 @@ extension DateFormatter {
   static func rfc2822() -> DateFormatter {
     let result = DateFormatter()
     result.locale = Locale.current
-    result.dateFormat = "d MMM YYYY HH:mm ZZZ"
+    result.dateFormat = "d MMM yyyy HH:mm ZZZ"
     return result
   }
   
