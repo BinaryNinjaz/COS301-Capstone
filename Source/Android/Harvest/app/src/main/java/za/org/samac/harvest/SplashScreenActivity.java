@@ -115,24 +115,29 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void showLoading() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this);
-        if(!prefs.getBoolean("firstTime", false)) {
-            // run your one time code
-            Intent intent = new Intent(SplashScreenActivity.this, IntroViewFlipper.class);
-            startActivity(intent);
-            finish();
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("firstTime", true);
-            editor.commit();
-        } else if(AppUtil.isUserSignedIn(getApplicationContext())) {
-            Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            Intent intent = new Intent(SplashScreenActivity.this, SignIn_Choose.class);
-            startActivity(intent);
-            finish();
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this);
+                if(!prefs.getBoolean("firstTime", false)) {
+                    // run your one time code
+                    Intent intent = new Intent(SplashScreenActivity.this, IntroViewFlipper.class);
+                    startActivity(intent);
+                    finish();
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean("firstTime", true);
+                    editor.commit();
+                } else if(AppUtil.isUserSignedIn(getApplicationContext())) {
+                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(SplashScreenActivity.this, SignIn_Choose.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        }, 2500);
     }
 
     public boolean locationPermissions() {
