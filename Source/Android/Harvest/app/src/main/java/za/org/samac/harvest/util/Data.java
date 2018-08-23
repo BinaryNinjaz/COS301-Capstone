@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -180,17 +181,14 @@ public class Data {
 
                     temp.setIrrigation(dataSet.child("irrigation").getValue(String.class));
 
-                    Long tempL = dataSet.child("date").getValue(Long.class);
-                    Date date;
-                    Calendar c;
-                    if (tempL != null){
-                        tempL *= 1000;
+                    try {
+                        String tempL = dataSet.child("date").getValue(String.class);
+                        Date date = new SimpleDateFormat("d MMM yyyy HH:mm ZZ").parse(tempL);
+                        Calendar c;
                         c = Calendar.getInstance();
-                        date = new Date(tempL);
                         c.setTime(date);
                         temp.setDatePlanted(c);
-                    }
-                    else {
+                    } catch (Exception e) {
                         Log.i(TAG, temp.name + ": Date is null");
                     }
 
