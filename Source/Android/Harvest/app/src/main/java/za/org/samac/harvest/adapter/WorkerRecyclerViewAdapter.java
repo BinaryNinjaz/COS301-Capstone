@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -56,15 +57,13 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private DatabaseReference myRef;
     private double currentLat;
     private double currentLong;
-    private double currentTime;
-    private double divideBy1000Var = 1000.0000000;
+    private int divideBy1000Var = 1000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String sessionKey;
     private String workerID;
     private String workerIncrement;
     private String farmerKey;
     private DatabaseReference sessRef;
-    private double endSessionTime;
     private boolean gotCorrectFarmerKey;
     private DatabaseReference workersRef;
     private static final String TAG = "Button";
@@ -130,7 +129,8 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 currentLong = location.getLongitude();
 
                 //get time
-                currentTime = (System.currentTimeMillis()/divideBy1000Var);//seconds since January 1, 1970 00:00:00 UTC
+                SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+                String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
                 //make changes on Firebase or make changes on client side file (encrypt using SQLite)
                 database = FirebaseDatabase.getInstance();
 
@@ -148,12 +148,11 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 Map<String, Object> childUpdates = new HashMap<>();
                 //childUpdates.put(childKey, collections);//append changes all into one path
                 childUpdates.put("coord", coordinates);
-                childUpdates.put("date", currentTime);
+                childUpdates.put("date", dateString);
 
                 Map<String, Object> sessionDate = new HashMap<>();
                 sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
-                endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
-                sessionDate.put("end_date", endSessionTime);
+                sessionDate.put("end_date", dateString);
                 sessRef.updateChildren(sessionDate);//save data to Firebase
                 myRef.updateChildren(childUpdates);//store plus button info in Firebase
 
@@ -197,8 +196,9 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
                     Map<String, Object> sessionDate = new HashMap<>();
                     sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
-                    endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
-                    sessionDate.put("end_date", endSessionTime);
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+                    String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+                    sessionDate.put("end_date", dateString);
                     sessRef.updateChildren(sessionDate);//save data to Firebase
 
                     farmerKey = MainActivity.farmerKey;
