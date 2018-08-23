@@ -60,8 +60,8 @@ function initForemen() {
     });
     updateSpiner(false);
     displayForemanLocation();
+    requestLocations();
   });
-  requestLocations();
   setInterval(requestLocations, 1000 * 60 * 5);
 }
 

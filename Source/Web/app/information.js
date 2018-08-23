@@ -330,6 +330,10 @@ function displayEntityList(entities, entityName) {
     const entity = sortedEntityList[i].value;
     const key = sortedEntityList[i].key;
 
+    if (entity.isFarmOwner !== undefined) {
+      continue
+    }
+
     const displayFunction = " onclick='disp" + entityName + "(\"" + key+ "\")'";
     const displayName = formatter(key, entity);
     entityList.innerHTML += "<button type='button' class='btn btn-info' " + displayFunction + ">" + displayName + "</button>";
@@ -1027,9 +1031,9 @@ function workSave(type, id) {
           /**
            * Update the correct entry in workingFor
            */
-          firebase.database().ref('/WorkingFor/' + pn).update({
-              [userID()]: id
-          });
+          const obj = {};
+          obj[userID()] = id;
+          firebase.database().ref('/WorkingFor/' + pn).update(obj);
       }
       if (oldPhone !== undefined && oldPhone !== "" && oldPhone !== pn) {
         firebase.database().ref('/WorkingFor/' + oldPhone).remove();
