@@ -84,16 +84,6 @@ struct Tracker: Codable {
     saveState()
   }
   
-  @available(*, deprecated, message: "Expected yield is show directly to the user anymore.")
-  mutating func updateExpectedYield(orchardId: String, completion: @escaping (Double) -> Void) {
-    if orchardId != currentOrchard {
-      currentOrchard = orchardId
-      HarvestCloud.getExpectedYield(orchardId: orchardId, date: Date()) { (expected) in
-        completion(expected)
-      }
-    }
-  }
-  
   func pathTracked() -> [CLLocationCoordinate2D] {
     var result = [CLLocationCoordinate2D]()
     

@@ -135,10 +135,6 @@ enum HarvestCloud {
 
 extension HarvestCloud {
   enum Identifiers {
-    static let shallowSessions = "flattendSessions"
-    static let sessionsWithDates = "sessionsWithinDates"
-    static let expectedYield = "expectedYield"
-    static let orchardCollections = "orchardCollectionsWithinDate"
     static let timeGraphSessions = "timedGraphSessions"
   }
 }

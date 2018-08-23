@@ -50,10 +50,13 @@ extension Date {
   }
   
   func today(using calendar: Calendar = .current) -> (Date, Date) {
-    let now = Date()
-    let dayAfter = calendar.date(byAdding: .day, value: 1, to: now)!
-    let s = calendar.startOfDay(for: now)
-    let e = calendar.startOfDay(for: dayAfter)
+    let components = calendar.dateComponents([.year, .month, .day], from: self)
+    let s = calendar.date(from: components)!
+    
+    var nextDayComps = DateComponents()
+    nextDayComps.day = 1
+    nextDayComps.minute = -1
+    let e = calendar.date(byAdding: nextDayComps, to: s)!
     
     return (s, e)
   }
@@ -61,10 +64,8 @@ extension Date {
   func yesterday(using calendar: Calendar = .current) -> (Date, Date) {
     let now = Date()
     let dayAgo = calendar.date(byAdding: .day, value: -1, to: now)!
-    let s = calendar.startOfDay(for: dayAgo)
-    let e = calendar.startOfDay(for: now)
     
-    return (s, e)
+    return dayAgo.today(using: calendar)
   }
   
   func thisWeek(using calendar: Calendar = .current) -> (Date, Date) {
