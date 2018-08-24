@@ -149,7 +149,31 @@ extension UIColor {
     let h = CGFloat(arc4random()) / CGFloat(UInt32.max)
     let s = (CGFloat(arc4random()) / CGFloat(UInt32.max)) * 0.5 + 0.5
     let b = (CGFloat(arc4random()) / CGFloat(UInt32.max)) * 0.33 + 0.66
-    print(h, s, b)
     return UIColor(hue: h, saturation: s, brightness: b, alpha: 1.0)
+  }
+  
+  static func hashColor(parent: String, child: String) -> UIColor {
+    let hueRatio = parent.utf8.asciiColorHash()
+    let cChild = child.utf8
+    let satRatio = cChild.prefix(cChild.count / 2).asciiColorHash() * 0.5 + 0.5
+    let briRatio = cChild.suffix(cChild.count / 2).asciiColorHash() * 0.33 + 0.66
+    
+    return UIColor(hue: hueRatio, saturation: satRatio, brightness: briRatio, alpha: 1.0)
+  }
+}
+
+extension Collection where Element == UInt8 {
+  func asciiColorHash() -> CGFloat {
+    var hash: UInt32 = 15487469
+    for a in self {
+      hash = hash &* 1301081 &+ UInt32(a)
+    }
+    return CGFloat(hash) / CGFloat(UInt32.max)
+  }
+}
+
+extension Orchard {
+  var color: UIColor {
+    return UIColor.hashColor(parent: assignedFarm, child: id)
   }
 }

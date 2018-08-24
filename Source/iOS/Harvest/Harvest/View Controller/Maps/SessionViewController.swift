@@ -59,7 +59,7 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
     
     orchardPolygons.removeAll(keepingCapacity: true)
     for (_, orchard) in Entities.shared.orchards {
-      let poly = orchard.coords.gmsPolygon(mapView: mapView)
+      let poly = orchard.coords.gmsPolygon(mapView: mapView, color: orchard.color)
       orchardPolygons.append(poly)
     }
     

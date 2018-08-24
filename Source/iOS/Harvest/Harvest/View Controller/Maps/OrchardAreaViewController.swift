@@ -34,15 +34,19 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   
   var markers: [GMSMarker]?
   
+  var shouldShowMarkers = false
+  
   func updatePolygon() {
     orchardPolygon?.map = nil
     var data = row.value?.json()[row.value?.id ?? ""] ?? [:]
     data["coords"] = collections.firbaseCoordRepresentation()
     row.value = Orchard(json: data, id: row.value?.id ?? "")
-    orchardPolygon = row.value?.coords.gmsPolygon(mapView: mapView)
+    orchardPolygon = row.value?.coords.gmsPolygon(mapView: mapView, color: row.value?.color ?? UIColor.red)
     
     markers?.forEach { $0.map = nil }
-    markers = row.value?.coords.gmsPolygonMarkers(mapView: mapView)
+    if shouldShowMarkers {
+      markers = row.value?.coords.gmsPolygonMarkers(mapView: mapView)
+    }
     
     actuallyChanged?(row)
   }
@@ -89,7 +93,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
     }
     
     collections = orchard.coords
-    orchardPolygon = collections.gmsPolygon(mapView: mapView)
+    orchardPolygon = collections.gmsPolygon(mapView: mapView, color: orchard.color)
     
     if let path = orchardPolygon?.path {
       let bounds = GMSCoordinateBounds(path: path)
@@ -100,6 +104,10 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
       locationManager.requestLocation()
     }
+  }
+  
+  public override func viewDidAppear(_ animated: Bool) {
+    updatePolygon()
   }
   
   public override func didReceiveMemoryWarning() {
@@ -115,7 +123,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
     SCLAlertView.toggleMapType(for: mapView, from: navigationItem.rightBarButtonItem)
   }
   
-  public func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
+  public func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
     if #available(iOS 10.0, *) {
       let gen = UISelectionFeedbackGenerator()
       gen.prepare()
@@ -123,7 +131,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
     } else {
       // Fallback on earlier versions
     }
-    
+    shouldShowMarkers = true
     collections.append(coordinate)
     updatePolygon()
   }
