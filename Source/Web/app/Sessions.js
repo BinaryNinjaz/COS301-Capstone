@@ -311,11 +311,11 @@ function drawOrchards() {
 		}
 		orchardPolygons.push(new google.maps.Polygon({
 	    paths: oCoords,
-	    strokeColor: '#0000FF',
-	    strokeOpacity: 0.5,
+	    strokeColor: hashColor(orchards[oKey].farm, oKey),
+	    strokeOpacity: 0.75,
 	    strokeWeight: 3,
-	    fillColor: '#0000FF',
-	    fillOpacity: 0.1,
+	    fillColor: hashColor(orchards[oKey].farm, oKey),
+	    fillOpacity: 0.25,
 	    map: map
 	  }));
 	}

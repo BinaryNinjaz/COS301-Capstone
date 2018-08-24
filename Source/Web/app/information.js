@@ -18,6 +18,7 @@ var editingOrchard = false;
 var orchardCoords = [];
 var orchardPoly;
 var orchardMarkers = [];
+var orchardColor;
 var loc;
 var map;
 function initEditOrchardMap(withCurrentLoc, editing) {
@@ -43,21 +44,32 @@ function pushOrchardCoord(e) {
   if (orchardCoords === undefined) {
     orchardCoords = [];
   }
-  const c = {
-    lat: e.latLng.lat(),
-    lng: e.latLng.lng()
+  const latlng = e.latLng;
+  var c;
+  if (latlng !== undefined) {
+    c = {
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng()
+    }
+  } else {
+    c = {
+      lat: e.lat || 0.0,
+      lng: e.lng || 0.0
+    }
   }
+
   orchardCoords.push(c);
   if (orchardPoly !== undefined && orchardPoly !== null) {
     orchardPoly.setMap(null);
   }
+  const clr = orchardColor === undefined ? 'rgb(255, 0, 0)' : orchardColor;
   orchardPoly = new google.maps.Polygon({
     paths: orchardCoords,
-    strokeColor: '#0000FF',
-    strokeOpacity: 0.5,
+    strokeColor: clr,
+    strokeOpacity: 0.75,
     strokeWeight: 3,
-    fillColor: '#0000FF',
-    fillOpacity: 0.1,
+    fillColor: clr,
+    fillOpacity: 0.25,
     map: map
   });
   clearMarkers();
@@ -132,13 +144,14 @@ function updatePolygon(orchard) {
   if (orchardPoly !== undefined && orchardPoly !== null) {
     orchardPoly.setMap(null);
   }
+  const clr = orchardColor === undefined ? 'rgb(255, 0, 0)' : orchardColor;
   orchardPoly = new google.maps.Polygon({
     paths: orchardCoords,
-    strokeColor: '#0000FF',
-    strokeOpacity: 0.5,
+    strokeColor: clr,
+    strokeOpacity: 0.75,
     strokeWeight: 3,
-    fillColor: '#0000FF',
-    fillOpacity: 0.1,
+    fillColor: clr,
+    fillOpacity: 0.25,
     map: map
   });
   clearMarkers();
@@ -162,6 +175,8 @@ function popOrchardCoord() {
   }
   orchardCoords.pop();
   orchardPoly.setPath(orchardCoords);
+  const m = orchardMarkers.pop();
+  m.setMap(null);
   updatePolyListener();
 }
 
@@ -355,7 +370,7 @@ function dispFarm(id) {
       "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='farmSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmName'></div> </div> " +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' required></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='companyName'></div> </div> " +
@@ -423,6 +438,11 @@ function dispFarm(id) {
 function farmIsValidToSave(candidateKey, candidateFarm) {
   var valid = "";
 
+  if (candidateFarm.name == "" || candidateFarm.name == undefined) {
+    valid += "Farms must have a name.\n";
+  }
+
+
   for (const fKey in farms) {
     const farm = farms[fKey];
     if (farm === undefined || candidateFarm === undefined) {
@@ -486,7 +506,7 @@ function farmMod(id) {
     "</div> " +
     "" +
     "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
-    "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' value='" + farm.name + "'></div> </div> " +
+    "<div class='col-sm-9'><input type='text' class='form-control' required id='farmName' value='" + farm.name + "'></div> </div> " +
     "" +
     "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
     "<div class='col-sm-9'><input type='text' class='form-control' id='companyName' value='" + farm.companyName + "'></div> </div> " +
@@ -524,13 +544,14 @@ function dispOrchard(id) {
   if (id === "-1") {
     /*Create New Orchard*/
     cCount = 0;
+    orchardColor = undefined;
     entityDetails.innerHTML = "" +
       "<form class='form-horizontal'>" +
       "" +
       "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='orchSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='orchName'></div> </div> " +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' required></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop'></div> </div>" +
@@ -580,7 +601,7 @@ function dispOrchard(id) {
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-      "<div class='col-sm-9'><select class='form-control' id='orchFarm' required></select></div></div>" +
+      "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"0\")'></select></div></div>" +
        "" +
       "</form>"
     ;
@@ -589,7 +610,7 @@ function dispOrchard(id) {
 
     for (const fKey in farms) {
       const farm = farms[fKey];
-      document.getElementById("orchFarm").innerHTML += "<option><" + fKey + "> " + farm.name + "</option>";
+      document.getElementById("orchFarm").innerHTML += "<option value='" + fKey + "'>" + farm.name + "</option>";
     }
   }
   else {
@@ -640,6 +661,7 @@ function dispOrchard(id) {
       ;
 
     initEditOrchardMap(false, false);
+    orchardColor = hashColor(orchard.farm, id);
     updatePolygon(orchard);
 
     const assignedFarm = farms[orchard.farm];
@@ -657,6 +679,19 @@ function dispOrchard(id) {
   }
 }
 
+function updateOrchardColor(selector, id) {
+  orchardColor = hashColor(selector.value, id);
+  if (orchards[id] === undefined) {
+    const e = orchardCoords[0];
+    if (e !== undefined) {
+      pushOrchardCoord(e);
+      popOrchardCoord();
+    }
+  } else {
+    updatePolygon(orchards[id]);
+  }
+}
+
 function moreCult(){
     var input = document.createElement('input');
     input.setAttribute('type','text');
@@ -669,6 +704,10 @@ function moreCult(){
 
 function orchardIsValidToSave(candidateKey, candidateOrchard) {
   var valid = "";
+
+  if (candidateOrchard.name == "" || candidateOrchard.name == undefined) {
+    valid += "Orchards must have a name.\n";
+  }
 
   for (const oKey in orchards) {
     const orchard = orchards[oKey];
@@ -716,8 +755,8 @@ function farmWithName(name) {
 
 function orchSave(type, id, cultivars) {
   /*0 means create, 1 means modify*/
-  const farmName = document.getElementById("orchFarm").value;
-  const farmID = farmWithName(farmName);
+  const farmID = document.getElementById("orchFarm").value;
+  // const farmID = farmWithName(farmName);
   let d = moment(new Date(document.getElementById("orchDate").valueAsDate)).format("D MMM YYYY HH:mm ZZ");
   var data = getCultivars();
   const tempOrchard = {
@@ -728,7 +767,7 @@ function orchSave(type, id, cultivars) {
     date: d,
     cultivars: data,
     bagMass: document.getElementById("orchBagMass").value,
-    coords: orchardCoords,
+    coords: orchardCoords.slice(0),
     farm: farmID,
     rowSpacing: document.getElementById("rowSpacing").value,
     treeSpacing: document.getElementById("treeSpacing").value
@@ -788,7 +827,7 @@ function orchMod(id) {
   "</div> " +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
-  "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' value='" + orchard.name + "'></div> </div> " +
+  "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' required value='" + orchard.name + "'></div> </div> " +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
   "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop' value='" + orchard.crop + "'></div> </div>" +
@@ -839,7 +878,7 @@ function orchMod(id) {
   "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'>" + orchard.further + "</textarea></div> </div>" +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-  "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
+  "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"" + id + "\")'></select></div></div>" +
   "" +
   "</form>"
   ;//need to fix referencing
@@ -855,7 +894,7 @@ function orchMod(id) {
       selec = ' selected';
     }
     // workOrch.innerHTML = workOrch.innerHTML + "><" +child.key+"> " + child.val().name+"  :  "+child.val().crop + "</option>";
-    orchFarm.innerHTML += "<option" + selec + ">" + farm.name + "</option>";
+    orchFarm.innerHTML += "<option" + selec + " value='" + fKey + "'>" + farm.name + "</option>";
   }
 }
 
