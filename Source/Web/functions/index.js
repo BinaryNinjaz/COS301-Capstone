@@ -14,6 +14,13 @@ function polygonContainsPoint(polygon, point) {
   if (polygon === undefined) {
     return false;
   }
+  var k = 0;
+  for (; k < polygon.length; k++) {
+    if (polygon[k].y === point.y && polygon[k].x === point.x) {
+      return true;
+    }
+  }
+
   var i = 0;
   var j = polygon.length - 1;
   var c = false;
@@ -709,36 +716,41 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                   : roundDateToPeriod(pdate, period);
                 const pnt = {x: pickup.coord.lng, y: pickup.coord.lat};
 
-                var orc = undefined;
+                var orcs = [];
                 for (const okey in cookedOrchards) {
                   if (polygonContainsPoint(cookedOrchards[okey].polygon, pnt)) {
-                    orc = cookedOrchards[okey];
-                    break;
+                    orcs.push(cookedOrchards[okey]);
                   }
                 }
 
-                if (orc === undefined
-                || orc.id === undefined
-                || orc.val === undefined
-                || orc.val.farm === undefined) {
+                if (orcs === []) {
                   continue;
                 }
+                for (const orcIdx in orcs) {
+                  const orc = orcs[orcIdx];
 
-                // akey is to check if we are actually in an asked for orchard/farm
-                // but we will always use pkey to group dat based on the mode.
-                const akey = groupBy === "orchard" ? orc.id : orc.val.farm;
-                const pkey = isAccumEntity ? "sum" : akey;
-                const contained = arrayContainsItem(ids, akey);
-
-                if (startDate.isSameOrBefore(pdate) && pdate.isSameOrBefore(endDate)) {
-                  if (contained) {
-                    incrSessionCounter(result, pkey, accum);
+                  if (orc.id === undefined
+                  || orc.val === undefined
+                  || orc.val.farm === undefined) {
+                    continue;
                   }
-                  incrSessionCounter(allOthers, "avg", accum);
-                  updateDaysCounter(days, workingOnDays, pkey, accum, period, pdate);
-                }
-                if (contained) {
-                  incrSessionCounter(all, pkey, roundSince1970(pdate, period));
+
+                  // akey is to check if we are actually in an asked for orchard/farm
+                  // but we will always use pkey to group dat based on the mode.
+                  const akey = groupBy === "orchard" ? orc.id : orc.val.farm;
+                  const pkey = isAccumEntity ? "sum" : akey;
+                  const contained = arrayContainsItem(ids, akey);
+
+                  if (startDate.isSameOrBefore(pdate) && pdate.isSameOrBefore(endDate)) {
+                    if (contained) {
+                      incrSessionCounter(result, pkey, accum);
+                    }
+                    incrSessionCounter(allOthers, "avg", accum);
+                    updateDaysCounter(days, workingOnDays, pkey, accum, period, pdate);
+                  }
+                  if (contained) {
+                    incrSessionCounter(all, pkey, roundSince1970(pdate, period));
+                  }
                 }
               }
             }
