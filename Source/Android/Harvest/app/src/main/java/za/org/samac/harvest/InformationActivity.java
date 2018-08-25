@@ -728,10 +728,12 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         if (orchard == null){
             //It's new, so give it these coords, which will be saved in the orchard fragment.
             infoOrchardMapFragment.setCoordinates(coords);
+            infoOrchardMapFragment.inferArea = true;
         }
         else {
             //It's not new, so just give it the same coords that the data has, and the map will update those.
             infoOrchardMapFragment.setCoordinates(orchard.getCoordinates());
+            infoOrchardMapFragment.inferArea = orchard.getInferArea();
         }
 
         fragmentTransaction.commit();

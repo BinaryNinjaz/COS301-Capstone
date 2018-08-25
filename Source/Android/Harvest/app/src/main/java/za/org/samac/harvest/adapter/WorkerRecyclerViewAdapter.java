@@ -52,7 +52,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
     private ArrayList<TextView> incrementViews;
     private Location location;
     public int totalBagsCollected;
-    private collections collectionObj;
+    public collections collectionObj;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private double currentLat;

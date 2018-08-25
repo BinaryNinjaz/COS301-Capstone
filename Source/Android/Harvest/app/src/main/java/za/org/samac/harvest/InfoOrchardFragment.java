@@ -383,6 +383,10 @@ public class InfoOrchardFragment extends Fragment {
 
         orch.setFurther(further.getText().toString());
 
+        if (InfoOrchardMapFragment.inferArea != null) {
+            orch.setInferArea(InfoOrchardMapFragment.inferArea);
+        }
+
         data.modifyActiveOrchard(orch, false);
     }
 

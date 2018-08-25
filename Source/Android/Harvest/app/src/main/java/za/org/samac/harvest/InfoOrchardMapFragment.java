@@ -57,6 +57,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private MapView mView;
     private Data data;
     private List<LatLng> coordinates;
+    public static Boolean inferArea;
     private Polygon polygon;
     private boolean pSet = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -236,6 +237,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onMapLongClick(LatLng latLng) {
         coordinates.add(latLng);
+        inferArea = false;
         redraw();
     }
 
@@ -301,12 +303,15 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         coordinates.clear();
         gMap.clear();
         pSet = false;
+        inferArea = true;
         redraw();
     }
 
     public void removeLast(){
         if (coordinates.size() != 0) {
             coordinates.remove(coordinates.size() - 1);
+        } else {
+            inferArea = true;
         }
         redraw();
     }

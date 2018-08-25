@@ -26,6 +26,7 @@ public class Orchard extends DBInfoObject {
     public Orchard(){
         coordinates = new Vector<LatLng>();
         cultivars = new Vector<>();
+        inferArea = true;
     }
 
     public void setName(String name) {
