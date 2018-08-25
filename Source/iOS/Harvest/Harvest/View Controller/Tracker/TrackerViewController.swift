@@ -34,7 +34,7 @@ class TrackerViewController: UIViewController {
   }
   var filteredWorkers: [Worker] {
     return workers.filter { (worker) -> Bool in
-      if sessionOrchards.contains("Select All") {
+      if sessionOrchards.isEmpty {
         return true
       }
       
@@ -85,10 +85,7 @@ class TrackerViewController: UIViewController {
   
   fileprivate func finishCollecting() {
     if changedOrchard == false {
-      if let orchard = Entities.shared.orchards.first(where: { sessionOrchards.contains($0.value.id) }) {
-        orchard.value.modifyArea(withRespectTo: tracker!)
-        HarvestDB.save(orchard: orchard.value)
-      }
+      tracker?.modifyOrchardAreas()
     }
     endCollecting()
     tracker?.storeSession()
@@ -198,7 +195,6 @@ class TrackerViewController: UIViewController {
       title: "Select All",
       style: .default) { (_) in
         self.sessionOrchards.removeAll()
-        self.sessionOrchards.append("Select All")
         self.workerCollectionView?.reloadData()
         self.yieldLabel?.attributedText = self
           .attributedStringForYieldCollection(self.tracker?.totalCollected() ?? 0)
@@ -371,7 +367,10 @@ extension TrackerViewController: UICollectionViewDataSource {
         cell.inc?(cell)
         return
       }
-      self.tracker?.collect(for: self.filteredWorkers[indexPath.row], at: loc)
+      self.tracker?.collect(
+        for: self.filteredWorkers[indexPath.row],
+        at: loc,
+        selectedOrchard: self.sessionOrchards.first)
       
       cell.yieldLabel.text = self
         .tracker?

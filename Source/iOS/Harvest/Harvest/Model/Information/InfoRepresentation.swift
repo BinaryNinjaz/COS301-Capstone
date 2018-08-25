@@ -585,6 +585,7 @@ extension Orchard {
       
     orchardAreaRow.actuallyChanged = { (row) in
       self.tempory?.coords = row.value?.coords ?? []
+      self.tempory?.inferArea = self.tempory?.coords.isEmpty == true
       onChange()
     }
     

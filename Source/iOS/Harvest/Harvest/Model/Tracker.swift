@@ -14,12 +14,15 @@ struct CollectionPoint {
   var location: CLLocationCoordinate2D
   var date: Date
   var orchard: Orchard?
+  var selectedOrchard: String?
   
-  init(location: CLLocationCoordinate2D, date: Date) {
+  init(location: CLLocationCoordinate2D, date: Date, selectedOrchard: String?) {
     self.location = location
     self.date = date
     
     orchard = Entities.shared.orchards.first { $0.value.contains(location) }?.value
+    
+    self.selectedOrchard = selectedOrchard
   }
 }
 
@@ -48,14 +51,14 @@ struct Tracker: Codable {
     try? Disk.remove("session", from: .applicationSupport)
   }
   
-  mutating func collect(for worker: Worker, at loc: CLLocation) {
+  mutating func collect(for worker: Worker, at loc: CLLocation, selectedOrchard: String?) {
     guard var collection = collections[worker] else {
-      let cp = CollectionPoint(location: loc.coordinate, date: Date())
+      let cp = CollectionPoint(location: loc.coordinate, date: Date(), selectedOrchard: selectedOrchard)
       collections[worker] = [cp]
       return
     }
     
-    collection.append(CollectionPoint(location: loc.coordinate, date: Date()))
+    collection.append(CollectionPoint(location: loc.coordinate, date: Date(), selectedOrchard: selectedOrchard))
     
     collections[worker] = collection
     

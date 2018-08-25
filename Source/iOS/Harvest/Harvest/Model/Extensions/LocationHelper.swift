@@ -15,15 +15,43 @@ extension Orchard {
     return poly.contains(point)
   }
   
-  func modifyArea(withRespectTo tracker: Tracker) {
-    guard coords.isEmpty else {
-      return
+  func modifiedArea(withRespectTo points: [CLLocationCoordinate2D]) -> Bool {
+    guard inferArea else {
+      return false
     }
-    var ps = [CLLocationCoordinate2D]()
-    for (_, pickups) in tracker.collections {
-      ps.append(contentsOf: pickups.map { $0.location })
-    }
+    let ps = coords + points
+    let temp = coords
     coords = ps.convexHull()
+    return temp != coords
+  }
+}
+
+extension Tracker {
+  func modifyOrchardAreas() {
+    var modifiedOrchards = [String: [CLLocationCoordinate2D]]()
+    
+    for (_, pickups) in collections {
+      for pickup in pickups {
+        guard let selectedOrchard = pickup.selectedOrchard else {
+          continue
+        }
+        if modifiedOrchards[selectedOrchard] == nil {
+          modifiedOrchards[selectedOrchard] = [pickup.location]
+        } else {
+          modifiedOrchards[selectedOrchard]?.append(pickup.location)
+        }
+      }
+    }
+    
+    for (orchardId, pickups) in modifiedOrchards {
+      guard let orchard = Entities.shared.orchards.first(where: { $0.value.id == orchardId }) else {
+        continue
+      }
+      
+      if orchard.value.modifiedArea(withRespectTo: pickups) {
+        HarvestDB.save(orchard: orchard.value)
+      }
+    }
   }
 }
 

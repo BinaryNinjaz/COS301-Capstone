@@ -33,6 +33,7 @@ extension CollectionPoint: Codable {
   enum CodingKeys: String, CodingKey {
     case location
     case date
+    case selectedOrchard
   }
   
   public init(from decoder: Decoder) throws {
@@ -41,6 +42,7 @@ extension CollectionPoint: Codable {
     location = loc
     date = try values.decode(Date.self, forKey: .date)
     orchard = Entities.shared.orchards.first { $0.value.contains(loc) }?.value
+    selectedOrchard = try values.decode(String.self, forKey: .selectedOrchard)
   }
   
   public func encode(to encoder: Encoder) throws {

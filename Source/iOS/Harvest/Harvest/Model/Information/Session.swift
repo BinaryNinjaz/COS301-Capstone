@@ -71,7 +71,7 @@ extension Dictionary where Key == String, Value == Any {
         let loc = CLLocationCoordinate2D(latitude: lat, longitude: lng)
         let date = DateFormatter.rfc2822Date(from: _date)
         
-        colps.append(CollectionPoint(location: loc, date: date))
+        colps.append(CollectionPoint(location: loc, date: date, selectedOrchard: nil))
       }
       
       if let worker = Entities.shared.workers.first(where: { (_, value) -> Bool in

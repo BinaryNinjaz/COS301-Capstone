@@ -100,11 +100,10 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
     let startDateRow = DateRow { row in
       row.title = "From Date"
       
-      let cal = Calendar.current
-      let wb = cal.date(byAdding: Calendar.Component.weekday, value: -7, to: Date())
+      let wb = Date().thisWeek().0
       row.value = wb
       if case let .between(_, b)? = self.timePeriod {
-        self.timePeriod = .between(wb ?? Date(), b)
+        self.timePeriod = .between(wb, b)
       }
     }.onChange { row in
       let date = row.value ?? Date()
@@ -115,7 +114,7 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
     
     let endDateRow = DateRow { row in
       row.title = "Up to Date"
-      row.value = Date()
+      row.value = Date().thisWeek().1.endOfDay()
       if case let .between(a, _)? = self.timePeriod {
         self.timePeriod = .between(a, Date())
       }
