@@ -60,6 +60,8 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private Polygon polygon;
     private boolean pSet = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private int strokeColor;
+    private int fillColor;
     protected static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
     LocNotAskAgain locCallback;
@@ -277,6 +279,10 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         this.coordinates = coords;
     }
 
+    public void setFillColor(int fillColor) { this.fillColor = fillColor; }
+
+    public void setStrokeColor(int strokeColor) { this.strokeColor = strokeColor; }
+
     public void redraw(){
 
         if (coordinates.size() > 0) {
@@ -285,9 +291,9 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
                 for (int i = 0; i < coordinates.size(); i++) {
                     polygonOptions.add(coordinates.get(i));
                 }
-                polygonOptions.strokeColor(R.color.info_orchard_map_polygon_stroke);
+                polygonOptions.strokeColor(strokeColor);
                 polygonOptions.strokeWidth(3);
-                polygonOptions.fillColor(R.color.info_orchard_map_polygon_fill);
+                polygonOptions.fillColor(fillColor);
 
                 polygon = gMap.addPolygon(polygonOptions);
                 pSet = true;

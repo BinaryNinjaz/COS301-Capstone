@@ -289,8 +289,17 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                         item.foreman = farmOwnerName;
                     }
 
-                    Double endDate = aChild.child("end_date").getValue(Double.class);
-                    Double startDate = aChild.child("start_date").getValue(Double.class);
+                    Object ed = aChild.child("end_date");
+                    Object sd = aChild.child("start_date");
+                    Double endDate, startDate;
+                    try {
+                        endDate = aChild.child("end_date").getValue(Double.class);
+                        startDate = aChild.child("start_date").getValue(Double.class);
+                    } catch (Exception e) {
+                        endDate = 0.0;
+                        startDate = 0.0;
+                    }
+
                     if (endDate == null) {
                         endDate = 0.0;
                     }
