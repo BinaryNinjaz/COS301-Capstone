@@ -31,6 +31,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -153,15 +154,23 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private void ZoomTo(){
         //Zoom to last known location
         try {
-            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        LatLng userLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 10));
+            if (coordinates.isEmpty()) {
+                mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            LatLng userLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 10));
+                        }
                     }
+                });
+            } else {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (int i = 0; i < coordinates.size(); i++) {
+                    builder.include(coordinates.get(i));
                 }
-            });
+                gMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 2));
+            }
         }
         catch (SecurityException e){
             Log.i(TAG, "ZoomTo: No Permission.");
