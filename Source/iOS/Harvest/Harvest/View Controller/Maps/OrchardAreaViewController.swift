@@ -23,7 +23,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   var zoomLevel: Float = 15.0
   
   var orchardPolygon: GMSPolygon?
-  var collections = [CLLocationCoordinate2D]()
+  var coordinates = [CLLocationCoordinate2D]()
   
   @IBOutlet weak var mapView: GMSMapView!
   @IBOutlet weak var removeAllButton: UIButton!
@@ -39,7 +39,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   func updatePolygon() {
     orchardPolygon?.map = nil
     var data = row.value?.json()[row.value?.id ?? ""] ?? [:]
-    data["coords"] = collections.firbaseCoordRepresentation()
+    data["coords"] = coordinates.firbaseCoordRepresentation()
     row.value = Orchard(json: data, id: row.value?.id ?? "")
     orchardPolygon = row.value?.coords.gmsPolygon(mapView: mapView, color: row.value?.color ?? UIColor.red)
     
@@ -52,8 +52,8 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   }
   
   @IBAction func removeAllCoords(_ sender: Any) {
-    if !collections.isEmpty {
-      collections.removeAll()
+    if !coordinates.isEmpty {
+      coordinates.removeAll()
       updatePolygon()
     } else {
       SCLAlertView().showInfo("No More Points", subTitle: "There are no more points in the orchard to delete")
@@ -61,8 +61,8 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   }
   
   @IBAction func removeLastCoord(_ sender: Any) {
-    if !collections.isEmpty {
-      collections.removeLast()
+    if !coordinates.isEmpty {
+      coordinates.removeLast()
       updatePolygon()
     } else {
       SCLAlertView().showInfo("No More Points", subTitle: "There are no more points in the orchard to delete")
@@ -92,10 +92,13 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       return
     }
     
-    collections = orchard.coords
-    orchardPolygon = collections.gmsPolygon(mapView: mapView, color: orchard.color)
-    
-    if let path = orchardPolygon?.path {
+    coordinates = orchard.coords
+    orchardPolygon = coordinates.gmsPolygon(mapView: mapView, color: orchard.color)
+  }
+  
+  public override func viewDidAppear(_ animated: Bool) {
+    updatePolygon()
+    if let path = orchardPolygon?.path, !coordinates.isEmpty {
       let bounds = GMSCoordinateBounds(path: path)
       mapView.animate(with: GMSCameraUpdate.fit(bounds, withPadding: 15.0))
     } else {
@@ -103,11 +106,10 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       locationManager.delegate = self
       locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
       locationManager.requestLocation()
+      if let loc = mapView.myLocation {
+        mapView.animate(toLocation: loc.coordinate)
+      }
     }
-  }
-  
-  public override func viewDidAppear(_ animated: Bool) {
-    updatePolygon()
   }
   
   public override func didReceiveMemoryWarning() {
@@ -132,7 +134,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       // Fallback on earlier versions
     }
     shouldShowMarkers = true
-    collections.append(coordinate)
+    coordinates.append(coordinate)
     updatePolygon()
   }
   
@@ -144,7 +146,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
                                        zoom: zoomLevel,
                                        bearing: .pi / 2,
                                        viewingAngle: .pi)
-    
+    mapView.animate(to: mapView.camera)
     manager.stopUpdatingLocation()
   }
   
