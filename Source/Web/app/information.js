@@ -19,6 +19,7 @@ var orchardCoords = [];
 var orchardPoly;
 var orchardMarkers = [];
 var orchardColor;
+var orchardCoordsChanged;
 var loc;
 var map;
 function initEditOrchardMap(withCurrentLoc, editing) {
@@ -59,6 +60,7 @@ function pushOrchardCoord(e) {
   }
 
   orchardCoords.push(c);
+  orchardCoordsChanged = true;
   if (orchardPoly !== undefined && orchardPoly !== null) {
     orchardPoly.setMap(null);
   }
@@ -173,6 +175,7 @@ function popOrchardCoord() {
   if (orchardCoords === undefined) {
     orchardCoords = [];
   }
+  orchardCoordsChanged = true;
   orchardCoords.pop();
   orchardPoly.setPath(orchardCoords);
   const m = orchardMarkers.pop();
@@ -187,6 +190,7 @@ function clearOrchardCoord() {
   while(orchardCoords.length > 0) {
     orchardCoords.pop();
   }
+  orchardCoordsChanged = true;
   orchardPoly.setPath(orchardCoords);
   clearMarkers();
   updatePolyListener();
@@ -540,6 +544,7 @@ function delFarm(id) {
 function dispOrchard(id) {
   const entityDetails = document.getElementById("entityDetails");
   const orchard = orchards[id];
+  orchardCoordsChanged = false;
 
   if (id === "-1") {
     /*Create New Orchard*/
@@ -560,7 +565,7 @@ function dispOrchard(id) {
       "<div class='col-sm-9'>" +
       "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
       "<div class='col-sm-12'><div id='map'></div></div>" +
-      "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
+      "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-warning'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-danger'>Remove All</button></div></div></div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
       "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass'></div>" +
@@ -770,7 +775,8 @@ function orchSave(type, id, cultivars) {
     coords: orchardCoords.slice(0),
     farm: farmID,
     rowSpacing: document.getElementById("rowSpacing").value,
-    treeSpacing: document.getElementById("treeSpacing").value
+    treeSpacing: document.getElementById("treeSpacing").value,
+    inferArea: orchardCoords.length == 0
   };
 
   const valid = orchardIsValidToSave(id, tempOrchard);
@@ -787,6 +793,7 @@ function orchSave(type, id, cultivars) {
     showOrchardsList();
     dispOrchard(newId);
   } else if (type === 1) {
+    tempOrchard.inferArea = (orchards[id].inferArea || false && !orchardCoordsChanged) || orchardCoords.length == 0;
     orchards[id] = tempOrchard;
     firebase.database().ref('/' + userID() +"/orchards/" + id).update(orchards[id]);
     showOrchardsList();
@@ -836,7 +843,7 @@ function orchMod(id) {
   "<div class='col-sm-9'>" +
   "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
   "<div class='col-sm-12'><div id='map'></div></div>" +
-  "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
+  "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-warning'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-danger'>Remove All</button></div></div></div>" +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
   "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass' value='" + orchard.bagMass + "'></div>" +
