@@ -156,7 +156,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 sessRef.updateChildren(sessionDate);//save data to Firebase
                 myRef.updateChildren(childUpdates);//store plus button info in Firebase
 
-                collectionObj.addCollection(personName, location);
+                collectionObj.addCollection(personName, location, MainActivity.selectedOrchardKey);
                 ++totalBagsCollected;
 
                 //display incremented current yield

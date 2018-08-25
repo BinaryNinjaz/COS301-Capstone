@@ -25,26 +25,26 @@ public class collections {
         track = new ArrayList<>();
     }
 
-    public void addCollection(String workerName, Location location){
+    public void addCollection(String workerName, Location location, String selectedOrchard){
         if(individualCollections.containsKey(workerName)) {
             MyData data = individualCollections.get(workerName);
-            data.addLocation(location);
+            data.addLocation(location, selectedOrchard);
             individualCollections.put(workerName, data);
         }else {
             MyData data = new MyData();
-            data.addLocation(location);
+            data.addLocation(location, selectedOrchard);
             individualCollections.put(workerName, data);
         }
     }
 
-    public void addCollection(String workerName, Location location, Double date){
+    public void addCollection(String workerName, Location location, String selectedOrchard, Double date){
         if(individualCollections.containsKey(workerName)) {
             MyData data = individualCollections.get(workerName);
-            data.addLocation(location, date);
+            data.addLocation(location, selectedOrchard, date);
             individualCollections.put(workerName, data);
         }else {
             MyData data = new MyData();
-            data.addLocation(location, date);
+            data.addLocation(location, selectedOrchard, date);
             individualCollections.put(workerName, data);
         }
     }
