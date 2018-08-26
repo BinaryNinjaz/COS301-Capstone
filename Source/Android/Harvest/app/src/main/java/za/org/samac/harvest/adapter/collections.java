@@ -3,6 +3,9 @@ package za.org.samac.harvest.adapter;
 import android.location.Location;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,5 +87,111 @@ public class collections {
 
     public double getEnd_date() {
         return end_date;
+    }
+
+    private ArrayList<Location> allPickupPoints() {
+        ArrayList<Location> result = new ArrayList<>();
+        for (String key : individualCollections.keySet()) {
+            MyData cs = individualCollections.get(key);
+            for (int i = 0; i < cs.size; i++) {
+                Location loc = new Location("");
+                loc.setLatitude(cs.latitude.get(i));
+                loc.setLongitude(cs.longitude.get(i));
+                result.add(loc);
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<Location> convexHull() {
+        ArrayList<Location> points = allPickupPoints();
+
+        if (points.size() < 3) {
+            return new ArrayList<Location>();
+        }
+
+        ArrayList<Location> result = new ArrayList<>();
+
+        Location temp = points.get(0);
+        int minPos = minIndex(points);
+        points.set(0, points.get(minPos));
+        points.set(minPos, temp);
+
+        Location pivot = points.get(0);
+
+        Collections.sort(points, new ClockOrder(pivot));
+
+        result.add(points.get(0));
+        result.add(points.get(1));
+        result.add(points.get(2));
+
+        for (int i = 3; i < points.size(); i++) {
+            Location last = result.get(result.size() - 1);
+            Location secondLast = result.get(result.size() - 2);
+            while (ccw(secondLast, last, points.get(i)).compareTo(-1) != 0) {
+                result.remove(result.size() - 1);
+                if (result.size() < 3) {
+                    break;
+                }
+                last = result.get(result.size() - 1);
+                secondLast = result.get(result.size() - 2);
+            }
+            result.add(points.get(i));
+        }
+        return result;
+    }
+
+    public static Integer ccw(Location p, Location q, Location r) {
+        Double t = (r.getLatitude() - q.getLatitude()) * (q.getLongitude() - p.getLongitude()) - (r.getLongitude() - q.getLongitude()) * (q.getLatitude() - p.getLatitude());
+        if (t < 0) {
+            return -1;
+        } else if (t > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public static Double euclideanDistance(Location a, Location b) {
+        Double dx = a.getLatitude() - b.getLatitude();
+        Double dy = a.getLongitude() - b.getLongitude();
+        return dx * dx + dy * dy;
+    }
+
+    private int minIndex(ArrayList<Location> points) {
+        Location min = null;
+        int result = -1;
+        for (int i = 0; i < points.size(); i++) {
+            Location p = points.get(i);
+            if (min == null) {
+                min = p;
+                result = i;
+            } else if (p.getLongitude() < min.getLongitude()) {
+                min = p;
+                result = i;
+            } else if (p.getLongitude() == min.getLongitude() && p.getLatitude() < min.getLatitude()) {
+                min = p;
+                result = i;
+            }
+        }
+
+        return result;
+    }
+
+    static class ClockOrder implements Comparator<Location> {
+        Location pivot;
+
+        public ClockOrder(Location pivot) {
+            this.pivot = pivot;
+        }
+
+        @Override
+        public int compare(Location a, Location b) {
+            Integer order = collections.ccw(pivot, a, b);
+            if (order.compareTo(0) == 0) {
+                return collections.euclideanDistance(pivot, a).compareTo(collections.euclideanDistance(pivot, b));
+            }
+            return order;
+        }
     }
 }
