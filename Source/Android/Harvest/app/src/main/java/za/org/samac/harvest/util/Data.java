@@ -390,7 +390,8 @@ public class Data {
                             }
                             objectRoot.child("irrigation").setValue(newOrchard.irrigation);
                             if (newOrchard.datePlanted != null) {
-                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime().getTime() / 1000);
+//                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime().getTime() / 1000);
+                                objectRoot.child("date").setValue(AppUtil.convertDate(newOrchard.datePlanted.getTimeInMillis()));
                             }
                             if (newOrchard.getAssignedFarm() != null) {
                                 objectRoot.child("farm").setValue(newOrchard.assignedFarm.ID);
@@ -482,7 +483,7 @@ public class Data {
                             }
                             objectRoot.child("irrigation").setValue(activeOrchard.irrigation);
                             if (activeOrchard.datePlanted != null) {
-                                objectRoot.child("date").setValue(activeOrchard.datePlanted.getTime().getTime() / 1000);
+                                objectRoot.child("date").setValue(AppUtil.convertDate(activeOrchard.datePlanted.getTimeInMillis()));
                             }
                             coordsRoot = objectRoot.child("cultivars");
                             coordsRoot.setValue(null);
