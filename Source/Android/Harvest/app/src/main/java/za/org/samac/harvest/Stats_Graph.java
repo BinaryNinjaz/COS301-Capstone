@@ -89,6 +89,8 @@ public class Stats_Graph extends AppCompatActivity {
     private String fmt;
     private Category category;
 
+    private final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions";
+
     //Startup
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -139,12 +141,6 @@ public class Stats_Graph extends AppCompatActivity {
         generateAndDisplayGraph();
     }
 
-    //Function
-    private static String urlTotalBagsPerDay() {
-        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions";
-        return base;
-    }
-
     private String urlParameters() {
         StringBuilder base = new StringBuilder();
         //IDs
@@ -162,8 +158,8 @@ public class Stats_Graph extends AppCompatActivity {
         //Interval
         base.append("&period=").append(interval);
         //Period
-        base.append("&startDate=").append(start);
-        base.append("&endDate=").append(end);
+        base.append("&startDate=").append(AppUtil.convertDate(start * THOUSAND));
+        base.append("&endDate=").append(AppUtil.convertDate(end * THOUSAND));
         //Minutes from GMT
         int minutes = (TimeZone.getDefault().getRawOffset() / 1000 / 60);
 //        int minutes = 120;
@@ -219,7 +215,7 @@ public class Stats_Graph extends AppCompatActivity {
                         updateDateFormat();
 
                         //Get the result of the function
-                        String response = sendPost(urlTotalBagsPerDay(), urlParameters());
+                        String response = sendPost(url, urlParameters());
                         Log.i(TAG, response);
 
                         LineData lineData = getDataFromString(response);

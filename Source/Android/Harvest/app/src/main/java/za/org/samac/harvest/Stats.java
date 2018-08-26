@@ -755,7 +755,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
 
                 endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 endCal.set(Calendar.HOUR_OF_DAY, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
-                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.MINUTE));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
