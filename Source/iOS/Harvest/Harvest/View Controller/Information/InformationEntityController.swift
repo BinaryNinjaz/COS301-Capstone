@@ -154,17 +154,29 @@ extension InformationEntityController: UICollectionViewDelegateFlowLayout {
                       sizeForItemAt indexPath: IndexPath
   ) -> CGSize {
     
-    let w = collectionView.frame.width
-    let h = (collectionView.frame.height
-      - collectionView.contentInset.top
-      - collectionView.contentInset.bottom
-      - view.layoutMargins.top
-      - view.layoutMargins.bottom)
+    let w, h: CGFloat
+    if #available(iOS 11.0, *) {
+      let sf = view.safeAreaInsets
+      w = collectionView.frame.width
+        - sf.left
+        - sf.right
+      h = (collectionView.frame.height
+        - sf.top
+        - sf.bottom)
         / 3.2
+    } else {
+      w = collectionView.frame.width
+      h = (collectionView.frame.height
+        - collectionView.contentInset.top
+        - collectionView.contentInset.bottom
+        - view.layoutMargins.top
+        - view.layoutMargins.bottom)
+        / 3.2
+    }
     
-    let n = min(max(CGFloat(Int(w / 240)), 1), 2)
+    let n = max(CGFloat(Int(w / 256)), 2)
     
-    let cw = w / n - ((n - 1) / n)
+    let cw = (w - n - 1) / n
     let ch = max(h, cw * 0.5)
     
     return CGSize(width: cw, height: ch)
@@ -175,7 +187,7 @@ extension InformationEntityController: UICollectionViewDelegateFlowLayout {
     guard let flowLayout = collectionView?.collectionViewLayout as? UICollectionViewFlowLayout else {
       return
     }
-    
     flowLayout.invalidateLayout()
+    collectionView?.reloadData()
   }
 }
