@@ -309,7 +309,7 @@ public class Stats_Graph extends AppCompatActivity {
                         List<Entry> expectedEntries = new ArrayList<>(); //Expected entries.
                         if (entryNames != null) {
                             LineDataSet lineDataSet = null;
-                            LineDataSet expectedLineDataSet;
+                            LineDataSet expectedLineDataSet = null;
                             curCal.setTimeInMillis((long)(start * THOUSAND));
                             int actualEntryIndex = 0;
                             Double nextKey = getNextKey(), nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString());
@@ -389,13 +389,6 @@ public class Stats_Graph extends AppCompatActivity {
      */
     public String getLabel(float value, AxisBase axisBase){
         int position;
-//        if (mode.equals(Stats.ACCUMULATION_TIME)) {
-//            if (value < 0) value = 0;
-//            position = (int) Math.floor((double) value);
-//        }
-//        else {
-            //Need to determine where in the integer values the seconds best fit.
-            //maxTime is the largest amount of milliseconds seen.
             if (value >= start) {
                 double fpos = (value - start) / (end - start);
                 fpos *= labels.length;
@@ -405,7 +398,6 @@ public class Stats_Graph extends AppCompatActivity {
             else {
                 return labels[0];
             }
-//        }
         return labels[position];
     }
 
@@ -784,7 +776,9 @@ public class Stats_Graph extends AppCompatActivity {
             intervalsSinceStart = 0;
 
         } catch (JSONException e) {
-            e.printStackTrace(); // Probably avg. This is normal.
+            if (!id.equals("avg")) {
+                e.printStackTrace();
+            }
         }
     }
 

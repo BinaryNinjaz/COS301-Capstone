@@ -666,7 +666,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
      * @param period represents the time period, must be lower case string that matches one of the finals in the stats class
      * @return dateBundle that holds two doubles, one for start date, and the other for the end date.
      */
-    public static DateBundle determineDates(String period){
+    public DateBundle determineDates(String period){
         final String TAG = "Stats_Creator-dates";
 
         period = period.toLowerCase();
@@ -823,6 +823,12 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             case Stats.NOTHING:
                 Log.w(TAG, "Period is nothing.");
                 return null;
+        }
+
+        if (this.interval.equals(WEEKLY) && !accumulation.equals(ACCUMULATION_TIME)){
+            startCal.setFirstDayOfWeek(Calendar.SUNDAY);
+            startCal.set(Calendar.WEEK_OF_MONTH, 1);
+            startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         }
 
         Log.i(TAG, "START: " + startCal.getTime().toString());
