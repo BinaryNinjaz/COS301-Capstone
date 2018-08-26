@@ -815,20 +815,20 @@ exports.addWorkingFor = functions.database.ref('/{uid}/workers/{wid}')
     const before = change.before.exists() ? change.before.val() : undefined;
 
     if (after !== undefined && after.type === "Foreman") {
-      const acipher = crypto.createCipheriv('aes-256-ctr', after.phoneNumber);
-      var afterPn = acipher.update(after.phoneNumber, 'utf8', 'hex');
-      afterPn += acipher.final('hex');
+      const hmac = crypto.createHash('sha256');
+      hmac.update(after.phoneNumber, 'utf8');
+      const pn = hmac.digest('hex');
       var obj = {};
       obj[uid] = wid;
-      admin.database().ref('/WorkingFor/' + afterPn).update(obj);
+      admin.database().ref('/WorkingFor/' + pn).update(obj);
     }
 
     if (before !== undefined && before.type === "Foreman") {
       if (after === undefined || after.phoneNumber !== before.phoneNumber || after.type === "Worker") {
-        const bcipher = crypto.createCipheriv('aes-256-ctr', before.phoneNumber);
-        var beforePn = bcipher.update(before.phoneNumber, 'utf8', 'hex');
-        beforePn += bcipher.final('hex');
-        admin.database().ref('/WorkingFor/' + beforePn + '/' + uid).remove();
+        const hmac = crypto.createHash('sha256');
+        hmac.update(before.phoneNumber, 'utf8');
+        const pn = hmac.digest('hex');
+        admin.database().ref('/WorkingFor/' + pn + '/' + uid).remove();
       }
     }
 
