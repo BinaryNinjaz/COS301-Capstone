@@ -1053,15 +1053,6 @@ function workSave(type, id) {
   if (type === 0) {
     // Create Worker
     newRef = firebase.database().ref('/' + userID() +"/workers/").push(tempWorker);
-    if (workType === "Foreman" && pn !== undefined && pn !== ""){
-        /**
-         * Create the correct entry in workingFor
-         */
-        email = email.replace(/\./g, ",");
-        firebase.database().ref('/WorkingFor/' + pn).set({
-            [userID()]: newRef.getKey()
-        });
-    }
     id = newRef.getKey();
     workers[id] = tempWorker;
     showWorkersList();
@@ -1073,17 +1064,6 @@ function workSave(type, id) {
     workers[id] = tempWorker;
     firebase.database().ref('/' + userID() +"/workers/" + id).update(workers[id]);
     if (pn !== undefined && pn !== "") {
-      if (workType === "Foreman"){
-          /**
-           * Update the correct entry in workingFor
-           */
-          const obj = {};
-          obj[userID()] = id;
-          firebase.database().ref('/WorkingFor/' + pn).update(obj);
-      }
-      if (oldPhone !== undefined && oldPhone !== "" && oldPhone !== pn) {
-        firebase.database().ref('/WorkingFor/' + oldPhone).remove();
-      }
       if (oldType !== undefined && oldType === "Foreman" && workType === "Worker") {
         firebase.database().ref('/' + userID() + '/foremen/' + pn).remove();
       }
@@ -1188,7 +1168,6 @@ function delWork(id) {
 
   try{
     if (pn !== undefined && pn !== "") {
-      firebase.database().ref('/WorkingFor/' + pn + '/' + userID()).remove();
       firebase.database().ref('/' + userID() + '/foremen/' + pn).remove();
     }
     firebase.database().ref('/' + userID() + '/locations/' + id).remove();
