@@ -2,6 +2,7 @@ PODS:
   - Charts (3.1.1):
     - Charts/Core (= 3.1.1)
   - Charts/Core (3.1.1)
+  - CryptoSwift (0.11.0)
   - Disk (0.3.3)
   - Eureka (4.2.0)
   - Firebase (5.5.0):
@@ -111,6 +112,7 @@ PODS:
 
 DEPENDENCIES:
   - Charts
+  - CryptoSwift
   - Disk
   - Eureka
   - Firebase
@@ -127,6 +129,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
+  CryptoSwift: ad5208dd2aae0a764ea4ce2c2d34bd067cae67f0
   Disk: d1f55cd61f6ca20f368232d0c6e37e3c3dfcb63e
   Eureka: 0748c7bbb2560130e43c7bfa83e99c98854a1f42
   Firebase: 8c957f9cb3852b519180fb378801b7eeeba4d288
@@ -151,6 +154,6 @@ SPEC CHECKSUMS:
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
 
-PODFILE CHECKSUM: fa342323ad047dda014a903a152f0088abbbbde1
+PODFILE CHECKSUM: 7246927a70aca36160e48f9e2bb315b0fc880d9d
 
 COCOAPODS: 1.4.0

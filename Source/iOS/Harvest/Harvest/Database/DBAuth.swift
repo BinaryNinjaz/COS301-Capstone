@@ -10,6 +10,7 @@ import Firebase
 import GoogleSignIn
 import Disk
 import SCLAlertView
+import CryptoSwift
 
 extension HarvestDB {
   static func requestWorkingFor(
@@ -235,7 +236,7 @@ extension HarvestDB {
   ) {
     let wfref = ref.child(Path.workingFor
         + "/"
-        + HarvestUser.current.accountIdentifier.removedFirebaseInvalids())
+        + encrypt(phoneNumber: HarvestUser.current.accountIdentifier.removedFirebaseInvalids()))
     wfref.observeSingleEvent(of: .value) { (snapshot) in
       guard let _uids = snapshot.value as? [String: Any] else {
         completion([])
@@ -291,5 +292,18 @@ extension HarvestDB {
       }
       HarvestDB.getWorkingForFarmNames(uids: rest, result: result + [name], completion: completion)
     }
+  }
+}
+
+func encrypt(phoneNumber: String) -> String {
+  do {
+    let bytes = Array(phoneNumber.utf8)
+    let aes = try AES(key: bytes, blockMode: CTR(iv: [UInt8](1...16)))
+    let ciphertext = try aes.encrypt(bytes)
+    let text = String(bytes: ciphertext, encoding: .utf8) ?? "-"
+    print(text)
+    return text
+  } catch {
+    return "-"
   }
 }

@@ -15,6 +15,7 @@ target 'Harvest' do
   pod 'SCLAlertView'
   pod 'PhoneNumberKit', '~> 2.1'
   pod 'FSPagerView'
+  pod 'CryptoSwift'
   
   target 'HarvestTests' do
     inherit! :search_paths
