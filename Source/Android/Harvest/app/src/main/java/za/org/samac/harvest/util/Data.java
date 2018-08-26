@@ -651,14 +651,14 @@ public class Data {
         if (category == Category.FARM){
             result = new String[farms.size()];
             for (int i = 0; i < farms.size(); i++) {
-                result[i] = farms.elementAt(i).name;
+                result[i] = farms.elementAt(i).toString();
             }
             return result;
         }
         else if(category == Category.ORCHARD){
             result = new String[orchards.size()];
             for (int i = 0; i < orchards.size(); i++) {
-                result[i] = orchards.elementAt(i).name;
+                result[i] = orchards.elementAt(i).toString();
             }
             return result;
         }
