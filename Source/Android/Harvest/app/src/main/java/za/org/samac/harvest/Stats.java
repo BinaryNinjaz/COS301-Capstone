@@ -148,10 +148,10 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                startActivity(new Intent(Stats.this, InformationActivity.class));
+                                startActivityIfNeeded(new Intent(Stats.this, InformationActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                             case R.id.actionSession:
-                                startActivity(new Intent(Stats.this, Sessions.class));
+                                startActivityIfNeeded(new Intent(Stats.this, Sessions.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                             case R.id.actionStats:
                                 return true;

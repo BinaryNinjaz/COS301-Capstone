@@ -87,10 +87,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                             case R.id.actionInformation:
                                 return true;
                             case R.id.actionSession:
-                                startActivity(new Intent(InformationActivity.this, Sessions.class));
+                                startActivityIfNeeded(new Intent(InformationActivity.this, Sessions.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(InformationActivity.this, Stats.class));
+                                startActivityIfNeeded(new Intent(InformationActivity.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
 
                         }
