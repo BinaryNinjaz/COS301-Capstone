@@ -17,8 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
 
@@ -40,6 +43,11 @@ public class Stats_Selector extends Fragment{
 
     private Boolean showProceed;
     private List<String> ids;
+
+    private LinearLayout display;
+    private LayoutInflater inflater;
+    private List<CheckBox> checkBoxes;
+
 
     @SuppressWarnings("FieldCanBeLocal")
     private final String TAG = "Stats_Selector";
@@ -70,12 +78,9 @@ public class Stats_Selector extends Fragment{
 
         Log.i(TAG, "size: " + ids.size());
 
-        recyclerView = getView().findViewById(R.id.stats_select_recycler);
-
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new Stats_Selector_ItemDivider(getContext()));
+        inflater = getLayoutInflater();
+        display = view.findViewById(R.id.stats_select_display);
+        checkBoxes = new ArrayList<>();
 
         if (Data.isPulling()){
             swipeRefreshLayout.setRefreshing(true);
@@ -122,70 +127,21 @@ public class Stats_Selector extends Fragment{
             swipeRefreshLayout.setRefreshing(false);
         }
 
-        adapter = new Stats_Selector_Adapter(data, category);
-        recyclerView.setAdapter(adapter);
+        constructDisplay();
     }
 
     public void checkAllPerhaps(boolean check){
         data.toggleCheckedness(check);
-        adapter = new Stats_Selector_Adapter(data, category);
-        adapter.notifyDataSetChanged();
-        recyclerView.setAdapter(adapter);
-    }
-
-    public void showProceed(boolean show){
-        showProceed = show;
-    }
-
-    public void setIDs(List<String> ids){
-        this.ids = ids;
-    }
-}
-
-class Stats_Selector_ItemDivider extends RecyclerView.ItemDecoration{
-    private Drawable divider;
-
-    public Stats_Selector_ItemDivider(Context context){
-//        divider = context.getResources().getDrawable(R.drawable.line_divider);
-        divider = ContextCompat.getDrawable(context, R.drawable.line_divider);
-    }
-
-    @Override
-    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        int left = parent.getPaddingLeft();
-        int right = parent.getWidth() - parent.getPaddingRight();
-
-        int childCount = parent.getChildCount();
-        for (int i = 0; i < childCount; i ++){
-            View child = parent.getChildAt(i);
-
-            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-
-            int top = child.getBottom() + params.bottomMargin;
-            int bottom = top + divider.getIntrinsicHeight();
-
-            divider.setBounds(left, top, right, bottom);
-            divider.draw(c);
-        }
-    }
-}
-
-class Stats_Selector_Adapter extends RecyclerView.Adapter<Stats_Selector_Adapter.ViewHolder>{
-
-    private List<DBInfoObject> items;
-
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-        public CheckBox checkBox;
-
-        public ViewHolder(View view){
-            super(view);
-
-            checkBox = view.findViewById(R.id.stats_itemCheckBox);
+        for (CheckBox checkBox : checkBoxes){
+            checkBox.setChecked(check);
         }
     }
 
-    public Stats_Selector_Adapter(Data data, Category category){
-        items = new Vector<>();
+    @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
+    private void constructDisplay(){
+        display.removeAllViews();
+        List<DBInfoObject> items = new ArrayList<>();
+
         if (category == Category.ORCHARD){
             items.addAll(data.getOrchards());
         }
@@ -198,30 +154,28 @@ class Stats_Selector_Adapter extends RecyclerView.Adapter<Stats_Selector_Adapter
                 if (worker.getWorkerType() == WorkerType.FOREMAN && category == Category.FOREMAN){
                     items.add(worker);
                 }
-                else if(worker.getWorkerType() == WorkerType.WORKER && category == Category.WORKER){
+                else if (worker.getWorkerType() == WorkerType.WORKER && category == Category.WORKER){
                     items.add(worker);
                 }
             }
         }
-    }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.stats_select_to_display_item, parent, false);
-        return new ViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.checkBox.setTag(items.get(position).getId());
-        holder.checkBox.setText(items.get(position).toString());
-        if (items.get(position).checked){
-            holder.checkBox.setChecked(true);
+        for (DBInfoObject object : items){
+            LinearLayout newBox = (LinearLayout) inflater.inflate(R.layout.stats_select_to_display_item, null, false);
+            CheckBox box = newBox.findViewById(R.id.stats_itemCheckBox);
+            box.setText(object.toString());
+            box.setTag(object.getId());
+            box.setChecked(object.checked);
+            checkBoxes.add(box);
+            display.addView(newBox);
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return items.size();
+    public void showProceed(boolean show){
+        showProceed = show;
+    }
+
+    public void setIDs(List<String> ids){
+        this.ids = ids;
     }
 }
