@@ -5,6 +5,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const cors = require('cors')({origin: true});
 const moment = require('moment');
+const crypto = require('crypto');
 admin.initializeApp();
 
 // Point: [x: Float, y: Float]
@@ -779,26 +780,57 @@ exports.archiveWorker = functions.database.ref('/{uid}/workers/{wid}')
   .onDelete((snapshot, context) => {
     const oldValue = snapshot.val();
     const oldKey = context.params.wid;
-    snapshot.ref.parent.parent.child('archived/workers/' + oldKey).update(oldValue);
+    return snapshot.ref.parent.parent.child('archived/workers/' + oldKey).update(oldValue);
   });
 
 exports.archiveOrchard = functions.database.ref('/{uid}/orchards/{oid}')
   .onDelete((snapshot, context) => {
     const oldValue = snapshot.val();
     const oldKey = context.params.oid;
-    snapshot.ref.parent.parent.child('archived/orchards/' + oldKey).update(oldValue);
+    return snapshot.ref.parent.parent.child('archived/orchards/' + oldKey).update(oldValue);
   });
 
 exports.archiveFarm = functions.database.ref('/{uid}/farms/{fid}')
   .onDelete((snapshot, context) => {
     const oldValue = snapshot.val();
     const oldKey = context.params.fid;
-    snapshot.ref.parent.parent.child('archived/farms/' + oldKey).update(oldValue);
+    return snapshot.ref.parent.parent.child('archived/farms/' + oldKey).update(oldValue);
   });
 
 exports.archiveSession = functions.database.ref('/{uid}/sessions/{sid}')
   .onDelete((snapshot, context) => {
     const oldValue = snapshot.val();
     const oldKey = context.params.sid;
-    snapshot.ref.parent.parent.child('archived/sessions/' + oldKey).update(oldValue);
+    return snapshot.ref.parent.parent.child('archived/sessions/' + oldKey).update(oldValue);
+  });
+
+exports.addWorkingFor = functions.database.ref('/{uid}/workers/{wid}')
+  .onWrite((change, context) => {
+    const uid = context.params.uid;
+    const wid = context.params.wid;
+    if (uid === "" || wid === "") {
+      return;
+    }
+    const after = change.after.exists() ? change.after.val() : undefined;
+    const before = change.before.exists() ? change.before.val() : undefined;
+
+    if (after !== undefined && after.type === "Foreman") {
+      const acipher = crypto.createCipheriv('aes-256-ctr', after.phoneNumber);
+      var afterPn = acipher.update(after.phoneNumber, 'utf8', 'hex');
+      afterPn += acipher.final('hex');
+      var obj = {};
+      obj[uid] = wid;
+      admin.database().ref('/WorkingFor/' + afterPn).update(obj);
+    }
+
+    if (before !== undefined && before.type === "Foreman") {
+      if (after === undefined || after.phoneNumber !== before.phoneNumber || after.type === "Worker") {
+        const bcipher = crypto.createCipheriv('aes-256-ctr', before.phoneNumber);
+        var beforePn = bcipher.update(before.phoneNumber, 'utf8', 'hex');
+        beforePn += bcipher.final('hex');
+        admin.database().ref('/WorkingFor/' + beforePn + '/' + uid).remove();
+      }
+    }
+
+    return null;
   });
