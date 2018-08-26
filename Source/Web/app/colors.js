@@ -30,12 +30,12 @@ function colorWithAlpha(color, alpha) {
 function hashColor(parent, child) {
   const hueRatio = asciiColorHash(parent);
   const satRatio = asciiColorHash(child.substr(0, child.length / 2));
-  const briRatio = asciiColorHash(child.substr(child.length / 2, 0));
+  const briRatio = asciiColorHash(child.substr(child.length / 2, child.length / 2));
 
   const hue = Math.round(hueRatio * 360) | 0;
   const sat = Math.round(satRatio * 50 + 50) | 0;
   const lum = Math.round(briRatio * 33 + 66) | 0;
-  
+
   return 'hsla(' + hue + ', ' + sat + '%, ' + lum + '%, 1)';
 }
 

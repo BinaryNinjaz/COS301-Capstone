@@ -156,7 +156,7 @@ function setWorkers(workers, completion) {
   getAdmin((adminSnapshot) => {
     const val = adminSnapshot.val();
     if (val !== null && val !== undefined) {
-      const farmOwner = {name: val.firstname, surname: val.lastname, isFarmOwner: true};
+      const farmOwner = {name: val.firstname, surname: val.lastname, isFarmOwner: true, type: "Foreman"};
 
       workers[val.uid] = farmOwner;
       getWorkers((snapshot) => {
