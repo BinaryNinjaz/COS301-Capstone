@@ -268,11 +268,22 @@ final class Entities {
     return worker
   }
   
+  func foremen() -> [Worker] {
+    return Array(workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
+  }
+  
+  func workersList() -> [Worker] {
+    return Array(workers.lazy.map { $0.value }.filter { $0.kind == .worker })
+  }
+  
   func entities(for kind: StatKind) -> [EntityItem] {
     switch kind {
     case .farm: return farms.map { .farm($0.value) }
     case .worker: return workers.compactMap { $0.value.kind == .worker ? .worker($0.value) : nil }
-    case .foreman: return workers.compactMap { $0.value.kind == .foreman ? .worker($0.value) : nil }
+    case .foreman:
+      return workers
+        .compactMap { $0.value.kind == .foreman ? .worker($0.value) : nil }
+        + [.worker(Worker(HarvestUser.current))]
     case .orchard: return orchards.map { .orchard($0.value) }
     }
   }

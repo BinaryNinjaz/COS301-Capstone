@@ -78,7 +78,11 @@ final class Worker {
   }
   
   convenience init(_ user: HarvestUser) {
-    self.init(json: ["name": "Farm Owner"], id: user.uid)
+    self.init(json: [
+      "name": user.firstname,
+      "surname": user.lastname,
+      "type": "Foreman",
+      "info": "Farm Owner"], id: user.uid)
   }
   
   var name: String {
