@@ -236,7 +236,7 @@ extension HarvestDB {
   ) {
     let wfref = ref.child(Path.workingFor
         + "/"
-        + encrypt(phoneNumber: HarvestUser.current.accountIdentifier.removedFirebaseInvalids()))
+        + hashed(phoneNumber: HarvestUser.current.accountIdentifier.removedFirebaseInvalids()))
     wfref.observeSingleEvent(of: .value) { (snapshot) in
       guard let _uids = snapshot.value as? [String: Any] else {
         completion([])
@@ -295,15 +295,19 @@ extension HarvestDB {
   }
 }
 
-func encrypt(phoneNumber: String) -> String {
-  do {
-    let bytes = Array(phoneNumber.utf8)
-    let aes = try AES(key: bytes, blockMode: CTR(iv: [UInt8](1...16)))
-    let ciphertext = try aes.encrypt(bytes)
-    let text = String(bytes: ciphertext, encoding: .utf8) ?? "-"
-    print(text)
-    return text
-  } catch {
-    return "-"
+func hashed(phoneNumber: String) -> String {
+  let bytes = phoneNumber.bytes
+  var hasher = SHA2(variant: .sha256)
+  _ = try? hasher.update(withBytes: bytes)
+  let result = try? hasher.finish()
+  
+  let text = result?.hexEncodedString() ?? ""
+  print(text)
+  return text
+}
+
+extension Array where Element == UInt8 {
+  func hexEncodedString() -> String {
+    return map { String(format: "%02hhx", $0) }.joined()
   }
 }
