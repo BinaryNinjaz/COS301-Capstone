@@ -17,8 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,6 +50,8 @@ public class Stats_Selector extends Fragment{
     private LinearLayout display;
     private LayoutInflater inflater;
     private List<CheckBox> checkBoxes;
+
+    private Boolean farmOwnerChecked;
 
 
     @SuppressWarnings("FieldCanBeLocal")
@@ -94,12 +99,17 @@ public class Stats_Selector extends Fragment{
     public void onDestroyView() {
         showProceed = null;
         ids = null;
+        farmOwnerChecked = null;
         super.onDestroyView();
     }
 
     public void setDataAndCategory(Data data, Category category){
         this.data = data;
         this.category = category;
+    }
+
+    public void setFarmOwnerChecked(Boolean farmOwnerChecked){
+        this.farmOwnerChecked = farmOwnerChecked;
     }
 
     public Category getCategory() {
@@ -166,6 +176,21 @@ public class Stats_Selector extends Fragment{
             box.setText(object.toString());
             box.setTag(object.getId());
             box.setChecked(object.checked);
+            checkBoxes.add(box);
+            display.addView(newBox);
+        }
+        if (category == Category.FOREMAN) {
+            LinearLayout newBox = (LinearLayout) inflater.inflate(R.layout.stats_select_to_display_item, null, false);
+            CheckBox box = newBox.findViewById(R.id.stats_itemCheckBox);
+            box.setText(getResources().getString(R.string.farm_owner));
+            box.setTag(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            box.setChecked(farmOwnerChecked);
+            box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    farmOwnerChecked = isChecked;
+                }
+            });
             checkBoxes.add(box);
             display.addView(newBox);
         }

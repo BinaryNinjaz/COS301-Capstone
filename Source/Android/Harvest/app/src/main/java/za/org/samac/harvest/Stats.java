@@ -269,7 +269,12 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             }
             StringBuilder builder = new StringBuilder();
             for (String id : ids){
-                builder.append(data.toStringID(id, category)).append(", ");
+                if (!id.equals(FirebaseAuth.getInstance().getUid())){
+                    builder.append(data.toStringID(id, category)).append(", ");
+                }
+                else {
+                    builder.append("Farm Owner, ");
+                }
             }
             if (builder.length() > 2) {
                 builder.delete(builder.length() - 2, builder.length()).append(".");
@@ -337,6 +342,8 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         else {
             stats_selector.showProceed(true);
         }
+        stats_selector.setFarmOwnerChecked(ids.contains(FirebaseAuth.getInstance().getUid()));
+
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         toggleUpButton(true);
@@ -384,7 +391,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 return;
             case R.id.stats_select_all:
                 stats_selector.checkAllPerhaps(true);
+                ids.clear();
                 ids.addAll(data.extractIDs(data.getThings(stats_selector.getCategory()), stats_selector.getCategory()));
+                ids.add(FirebaseAuth.getInstance().getUid());
                 return;
             case R.id.stats_select_none:
                 stats_selector.checkAllPerhaps(false);

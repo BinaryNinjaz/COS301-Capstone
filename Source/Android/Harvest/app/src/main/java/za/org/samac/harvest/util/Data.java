@@ -809,6 +809,9 @@ public class Data {
                 activeOrchard = temp;
                 return otherTemp.toString();
             case WORKER:
+                if (ID.equals(FirebaseAuth.getInstance().getUid())){
+                    return "Farm Owner";
+                }
                 Worker temp1 = activeWorker;
                 findObject(ID, category);
                 Worker otherTemp1 = activeWorker;
