@@ -852,7 +852,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             sessionKey = sessRef.push().getKey();//generate key/ID for a session
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//put key in database
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
             String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
             sessionDate.put("start_date", dateString);
 
@@ -862,7 +862,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 sessionDate.put("wid", foremanID);//add foreman database ID to session;
             }
 
-            formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+            formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
             dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
             sessionDate.put("end_date", dateString);
 
@@ -1073,7 +1073,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             TextView pressStart = findViewById(R.id.startText);
             pressStart.setText(R.string.pressStart);
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
             String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
             sessionDate.put("end_date", dateString);
             sessRef.updateChildren(sessionDate);//save data to Firebase

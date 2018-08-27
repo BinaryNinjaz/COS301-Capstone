@@ -129,7 +129,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
                 currentLong = location.getLongitude();
 
                 //get time
-                SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+                SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
                 String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
                 //make changes on Firebase or make changes on client side file (encrypt using SQLite)
                 database = FirebaseDatabase.getInstance();
@@ -196,7 +196,7 @@ public class WorkerRecyclerViewAdapter extends RecyclerView.Adapter<WorkerRecycl
 
                     Map<String, Object> sessionDate = new HashMap<>();
                     sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//path to inside a session key in Firebase
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+                    SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
                     String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
                     sessionDate.put("end_date", dateString);
                     sessRef.updateChildren(sessionDate);//save data to Firebase
