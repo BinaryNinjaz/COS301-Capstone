@@ -31,6 +31,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -60,6 +61,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private MapView mView;
     private Data data;
     private List<LatLng> coordinates;
+    public static Boolean inferArea;
     private List<Marker> markers;
     private Polygon polygon;
     private boolean pSet = false;
@@ -159,15 +161,23 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private void ZoomTo(){
         //Zoom to last known location
         try {
-            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        LatLng userLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 10));
+            if (coordinates.isEmpty()) {
+                mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            LatLng userLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 10));
+                        }
                     }
+                });
+            } else {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (int i = 0; i < coordinates.size(); i++) {
+                    builder.include(coordinates.get(i));
                 }
-            });
+                gMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 2));
+            }
         }
         catch (SecurityException e){
             Log.i(TAG, "ZoomTo: No Permission.");
@@ -243,6 +253,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onMapLongClick(LatLng latLng) {
         coordinates.add(latLng);
+        inferArea = false;
         redraw();
     }
 
@@ -327,12 +338,15 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         markers.clear();
         gMap.clear();
         pSet = false;
+        inferArea = true;
         redraw();
     }
 
     public void removeLast(){
         if (coordinates.size() != 0) {
             coordinates.remove(coordinates.size() - 1);
+        } else {
+            inferArea = true;
             Marker marker = markers.get(markers.size() - 1);
             marker.remove();
             markers.remove(markers.size() - 1);

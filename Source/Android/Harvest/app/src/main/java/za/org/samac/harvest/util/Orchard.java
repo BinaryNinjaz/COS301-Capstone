@@ -21,10 +21,12 @@ public class Orchard extends DBInfoObject {
     protected Float tree;
     protected Vector<String> cultivars;
     protected String further;
+    protected Boolean inferArea;
 
     public Orchard(){
         coordinates = new Vector<LatLng>();
         cultivars = new Vector<>();
+        inferArea = true;
     }
 
     public void setName(String name) {
@@ -75,6 +77,8 @@ public class Orchard extends DBInfoObject {
         this.tree = tree;
     }
 
+    public void setInferArea(Boolean inferArea) { this.inferArea = inferArea; }
+
     public String getFurther() {
         return further;
     }
@@ -114,6 +118,8 @@ public class Orchard extends DBInfoObject {
     public void addCultivar(String addMe){
         cultivars.addElement(addMe);
     }
+
+    public Boolean getInferArea() {  return inferArea; }
 
     public String getName() {
         return name;

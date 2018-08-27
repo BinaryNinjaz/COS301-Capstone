@@ -188,6 +188,7 @@ public class Data {
                         c = Calendar.getInstance();
                         c.setTime(date);
                         temp.setDatePlanted(c);
+                        System.out.println(c.toString());
                     } catch (Exception e) {
                         Log.i(TAG, temp.name + ": Date is null");
                     }
@@ -235,6 +236,13 @@ public class Data {
                     }
 
                     temp.setFurther(dataSet.child("further").getValue(String.class));
+
+                    DataSnapshot inferAreaObj = dataSet.child("inferArea");
+                    if (inferAreaObj != null && inferAreaObj.getValue() != null) {
+                        temp.setInferArea(inferAreaObj.getValue(Boolean.class));
+                    } else {
+                        temp.setInferArea(false);
+                    }
 
                     temp.setID(dataSet.getKey());
 
@@ -409,6 +417,7 @@ public class Data {
                                 }
                             }
                             objectRoot.child("further").setValue(newOrchard.further);
+                            objectRoot.child("inferArea").setValue(newOrchard.inferArea);
                             break;
                         case WORKER:
                             objectRoot = userRoot.child("workers");
@@ -502,6 +511,7 @@ public class Data {
                                 objectRoot.child("farm").setValue(activeOrchard.assignedFarm.ID);
                             }
                             objectRoot.child("further").setValue(activeOrchard.further);
+                            objectRoot.child("inferArea").setValue(activeOrchard.inferArea);
                             break;
                         case WORKER:
                             objectRoot = objectRoot.child("workers").child(currentChange.ID);
