@@ -6,7 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -16,38 +16,26 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import za.org.samac.harvest.adapter.MyData;
-import za.org.samac.harvest.adapter.SessionDetails;
 import za.org.samac.harvest.domain.Worker;
-import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.ColorScheme;
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.Orchard;
 
-import static za.org.samac.harvest.MainActivity.getWorkers;
-
-public class SessionsMap extends FragmentActivity implements OnMapReadyCallback {
+public class SessionsMap extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -72,6 +60,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessions_map);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
