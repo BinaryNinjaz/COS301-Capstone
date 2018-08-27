@@ -194,7 +194,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(Stats.this, SignIn_Farmer.class));
+                    startActivity(new Intent(Stats.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
