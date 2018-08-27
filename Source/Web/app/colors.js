@@ -39,10 +39,18 @@ function hashColor(parent, child) {
   return 'hsla(' + hue + ', ' + sat + '%, ' + lum + '%, 1)';
 }
 
+function add32(a, b) {
+  return ((a | 0) + (b | 0)) | 0;
+}
+
+function mul32(a, b) {
+  return ((a | 0) * (b | 0)) | 0;
+}
+
 function asciiColorHash(string) {
-  var hash = 15487469;
+  var hash = 15487469 | 0;
   for (const i in string) {
-    hash = (((hash * 1301081) | 0) + string.charCodeAt(i)) | 0;
+    hash = add32(mul32(hash, 1301081), string.charCodeAt(i));
   }
-  return hash / 4294967295.0;
+  return Math.abs(hash) / 2147483647.0;
 }
