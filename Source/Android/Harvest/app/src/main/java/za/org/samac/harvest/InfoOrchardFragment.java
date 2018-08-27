@@ -363,7 +363,7 @@ public class InfoOrchardFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         String[] tokens = dateText.getText().toString().split("/");
         if (tokens.length == 3) {
-            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]));
+            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), 0, 0, 0);
             orch.setDatePlanted(c);
         }
 
@@ -404,7 +404,7 @@ public class InfoOrchardFragment extends Fragment {
         Calendar c = Calendar.getInstance();
         String[] tokens = dateText.getText().toString().split("/");
         if (tokens.length == 3) {
-            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]));
+            c.set(Integer.parseInt(tokens[2]), Integer.parseInt(tokens[1]) - 1, Integer.parseInt(tokens[0]), 0, 0, 0);
             newOrch.setDatePlanted(c);
         }
 

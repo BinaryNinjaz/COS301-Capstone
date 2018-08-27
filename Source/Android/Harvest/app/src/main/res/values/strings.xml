@@ -223,6 +223,7 @@
     <!--Selector-->
     <string name="stats_selector_all">Select All</string>
     <string name="stats_selector_none">Select None</string>
+    <string name="farm_owner">Farm Owner</string>
 
     <!--Custom-->
     <string name="stats_create_make">Make New Graph</string>

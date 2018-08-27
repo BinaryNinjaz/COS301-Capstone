@@ -172,7 +172,7 @@ public class Orchard extends DBInfoObject {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.assignedFarm == null ? this.name : this.assignedFarm.name + " - " + this.name;
     }
 }
 

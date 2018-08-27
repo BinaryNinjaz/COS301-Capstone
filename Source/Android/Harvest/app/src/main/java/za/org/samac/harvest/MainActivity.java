@@ -320,13 +320,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                 case R.id.actionYieldTracker:
                                     return true;
                                 case R.id.actionInformation:
-                                    startActivity(new Intent(MainActivity.this, InformationActivity.class));
+                                    startActivityIfNeeded(new Intent(MainActivity.this, InformationActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                                 case R.id.actionSession:
-                                    startActivity(new Intent(MainActivity.this, Sessions.class));
+                                    startActivityIfNeeded(new Intent(MainActivity.this, Sessions.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                                 case R.id.actionStats:
-                                    startActivity(new Intent(MainActivity.this, Stats.class));
+                                    startActivityIfNeeded(new Intent(MainActivity.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                             }
                             return true;
