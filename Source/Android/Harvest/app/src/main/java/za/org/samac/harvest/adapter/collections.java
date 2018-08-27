@@ -2,14 +2,21 @@ package za.org.samac.harvest.adapter;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
-import za.org.samac.harvest.adapter.MyData;
+import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Orchard;
 
 public class collections {
 
@@ -25,26 +32,26 @@ public class collections {
         track = new ArrayList<>();
     }
 
-    public void addCollection(String workerName, Location location){
+    public void addCollection(String workerName, Location location, String selectedOrchard){
         if(individualCollections.containsKey(workerName)) {
             MyData data = individualCollections.get(workerName);
-            data.addLocation(location);
+            data.addLocation(location, selectedOrchard);
             individualCollections.put(workerName, data);
         }else {
             MyData data = new MyData();
-            data.addLocation(location);
+            data.addLocation(location, selectedOrchard);
             individualCollections.put(workerName, data);
         }
     }
 
-    public void addCollection(String workerName, Location location, Double date){
+    public void addCollection(String workerName, Location location, String selectedOrchard, Double date){
         if(individualCollections.containsKey(workerName)) {
             MyData data = individualCollections.get(workerName);
-            data.addLocation(location, date);
+            data.addLocation(location, selectedOrchard, date);
             individualCollections.put(workerName, data);
         }else {
             MyData data = new MyData();
-            data.addLocation(location, date);
+            data.addLocation(location, selectedOrchard, date);
             individualCollections.put(workerName, data);
         }
     }
@@ -89,35 +96,65 @@ public class collections {
         return end_date;
     }
 
-    private ArrayList<Location> allPickupPoints() {
-        ArrayList<Location> result = new ArrayList<>();
+    private ArrayList<LatLng> allPickupPoints(String selectedOrchard) {
+        ArrayList<LatLng> result = new ArrayList<>();
         for (String key : individualCollections.keySet()) {
             MyData cs = individualCollections.get(key);
             for (int i = 0; i < cs.size; i++) {
-                Location loc = new Location("");
-                loc.setLatitude(cs.latitude.get(i));
-                loc.setLongitude(cs.longitude.get(i));
-                result.add(loc);
+                if (selectedOrchard.compareTo(cs.selectedOrchards.get(i)) == 0) {
+                    LatLng loc = new LatLng(cs.latitude.get(i), cs.longitude.get(i));
+                    result.add(loc);
+                }
             }
         }
         return result;
     }
 
-    public ArrayList<Location> convexHull() {
-        ArrayList<Location> points = allPickupPoints();
+    public void modifyOrchardAreas() {
+        Data data = new Data();
 
-        if (points.size() < 3) {
-            return new ArrayList<Location>();
+        Vector<Orchard> orchards = data.getOrchards();
+        for (Orchard orchard : orchards) {
+            if (orchard.getInferArea()) {
+                List<LatLng> currentCoords = orchard.getCoordinates();
+                ArrayList<LatLng> points = convexHull(orchard.getID(), currentCoords);
+
+                if (!points.isEmpty()) {
+                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DatabaseReference userRef =  FirebaseDatabase.getInstance().getReference(uid + "/");
+                    DatabaseReference coordRef = userRef.child("orchards/" + orchard.getID() + "/coords");
+                    ArrayList<FirebaseLocation> firPoints = new ArrayList<>();
+                    for (int i = 0; i < points.size(); i++) {
+                        firPoints.add(new FirebaseLocation(points.get(i).latitude, points.get(i).longitude));
+                    }
+                    coordRef.setValue(firPoints);
+                }
+            }
         }
 
-        ArrayList<Location> result = new ArrayList<>();
+    }
 
-        Location temp = points.get(0);
+    public ArrayList<LatLng> convexHull(String selectedOrchard, List<LatLng> additionalPoints) {
+        ArrayList<LatLng> points = allPickupPoints(selectedOrchard);
+        if (points.size() < 3) {
+            return new ArrayList<LatLng>();
+        }
+
+        points.addAll(additionalPoints);
+        for (int p = 0; p < points.size(); p++) {
+            System.out.println("----------------");
+            System.out.println(points.get(p).latitude);
+            System.out.println(points.get(p).longitude);
+        }
+
+        ArrayList<LatLng> result = new ArrayList<>();
+
+        LatLng temp = points.get(0);
         int minPos = minIndex(points);
         points.set(0, points.get(minPos));
         points.set(minPos, temp);
 
-        Location pivot = points.get(0);
+        LatLng pivot = points.get(0);
 
         Collections.sort(points, new ClockOrder(pivot));
 
@@ -126,8 +163,8 @@ public class collections {
         result.add(points.get(2));
 
         for (int i = 3; i < points.size(); i++) {
-            Location last = result.get(result.size() - 1);
-            Location secondLast = result.get(result.size() - 2);
+            LatLng last = result.get(result.size() - 1);
+            LatLng secondLast = result.get(result.size() - 2);
             while (ccw(secondLast, last, points.get(i)).compareTo(-1) != 0) {
                 result.remove(result.size() - 1);
                 if (result.size() < 3) {
@@ -138,11 +175,12 @@ public class collections {
             }
             result.add(points.get(i));
         }
+
         return result;
     }
 
-    public static Integer ccw(Location p, Location q, Location r) {
-        Double t = (r.getLatitude() - q.getLatitude()) * (q.getLongitude() - p.getLongitude()) - (r.getLongitude() - q.getLongitude()) * (q.getLatitude() - p.getLatitude());
+    public static Integer ccw(LatLng p, LatLng q, LatLng r) {
+        Double t = (r.latitude - q.latitude) * (q.longitude - p.longitude) - (r.longitude - q.longitude) * (q.latitude - p.latitude);
         if (t < 0) {
             return -1;
         } else if (t > 0) {
@@ -152,24 +190,24 @@ public class collections {
         }
     }
 
-    public static Double euclideanDistance(Location a, Location b) {
-        Double dx = a.getLatitude() - b.getLatitude();
-        Double dy = a.getLongitude() - b.getLongitude();
+    public static Double euclideanDistance(LatLng a, LatLng b) {
+        Double dx = a.latitude - b.latitude;
+        Double dy = a.longitude- b.longitude;
         return dx * dx + dy * dy;
     }
 
-    private int minIndex(ArrayList<Location> points) {
-        Location min = null;
+    private int minIndex(ArrayList<LatLng> points) {
+        LatLng min = null;
         int result = -1;
         for (int i = 0; i < points.size(); i++) {
-            Location p = points.get(i);
+            LatLng p = points.get(i);
             if (min == null) {
                 min = p;
                 result = i;
-            } else if (p.getLongitude() < min.getLongitude()) {
+            } else if (p.longitude < min.longitude) {
                 min = p;
                 result = i;
-            } else if (p.getLongitude() == min.getLongitude() && p.getLatitude() < min.getLatitude()) {
+            } else if (p.longitude == min.longitude && p.latitude < min.latitude) {
                 min = p;
                 result = i;
             }
@@ -178,20 +216,30 @@ public class collections {
         return result;
     }
 
-    static class ClockOrder implements Comparator<Location> {
-        Location pivot;
+    static class ClockOrder implements Comparator<LatLng> {
+        LatLng pivot;
 
-        public ClockOrder(Location pivot) {
+        public ClockOrder(LatLng pivot) {
             this.pivot = pivot;
         }
 
         @Override
-        public int compare(Location a, Location b) {
+        public int compare(LatLng a, LatLng b) {
             Integer order = collections.ccw(pivot, a, b);
             if (order.compareTo(0) == 0) {
                 return collections.euclideanDistance(pivot, a).compareTo(collections.euclideanDistance(pivot, b));
             }
             return order;
+        }
+    }
+
+    static class FirebaseLocation {
+        double lat;
+        double lng;
+
+        public FirebaseLocation(double lat, double lng) {
+            this.lat = lat;
+            this.lng = lng;
         }
     }
 }

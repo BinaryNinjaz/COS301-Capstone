@@ -72,6 +72,7 @@ import za.org.samac.harvest.adapter.collections;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.service.BackgroundService;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.WorkerComparator;
 
 import static za.org.samac.harvest.R.drawable.rounded_button;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private final int GPS_SETTINGS_UPDATE = 989;
     private static final String TAG = "Clicker";
 
+    private Data data;
     private static ArrayList<Worker> workers;
     private static ArrayList<Worker> foremen;
     private static ArrayList<Worker> workersSearch;
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private BottomNavigationView bottomNavigationView;
 
     private void init() {
+        data = new Data();
         track = new HashMap<>();
         this.workers = new ArrayList<>();//stores worker names
         workersSearch = new ArrayList<>();//stores worker names
@@ -320,13 +323,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                 case R.id.actionYieldTracker:
                                     return true;
                                 case R.id.actionInformation:
-                                    startActivity(new Intent(MainActivity.this, InformationActivity.class));
+                                    startActivityIfNeeded(new Intent(MainActivity.this, InformationActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                                 case R.id.actionSession:
-                                    startActivity(new Intent(MainActivity.this, Sessions.class));
+                                    startActivityIfNeeded(new Intent(MainActivity.this, Sessions.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                                 case R.id.actionStats:
-                                    startActivity(new Intent(MainActivity.this, Stats.class));
+                                    startActivityIfNeeded(new Intent(MainActivity.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                             }
                             return true;
@@ -1094,6 +1097,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             dlgAlerter.setMessage(msg);
             dlgAlerter.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    adapter.collectionObj.modifyOrchardAreas();
                     adapter.setIncrement();
                     recyclerView.setVisibility(View.GONE);
                     dialog.dismiss();

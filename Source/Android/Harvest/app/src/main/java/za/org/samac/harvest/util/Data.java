@@ -188,6 +188,7 @@ public class Data {
                         c = Calendar.getInstance();
                         c.setTime(date);
                         temp.setDatePlanted(c);
+                        System.out.println(c.toString());
                     } catch (Exception e) {
                         Log.i(TAG, temp.name + ": Date is null");
                     }
@@ -235,6 +236,13 @@ public class Data {
                     }
 
                     temp.setFurther(dataSet.child("further").getValue(String.class));
+
+                    DataSnapshot inferAreaObj = dataSet.child("inferArea");
+                    if (inferAreaObj != null && inferAreaObj.getValue() != null) {
+                        temp.setInferArea(inferAreaObj.getValue(Boolean.class));
+                    } else {
+                        temp.setInferArea(false);
+                    }
 
                     temp.setID(dataSet.getKey());
 
@@ -390,7 +398,8 @@ public class Data {
                             }
                             objectRoot.child("irrigation").setValue(newOrchard.irrigation);
                             if (newOrchard.datePlanted != null) {
-                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime().getTime() / 1000);
+//                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime().getTime() / 1000);
+                                objectRoot.child("date").setValue(AppUtil.convertDate(newOrchard.datePlanted.getTimeInMillis()));
                             }
                             if (newOrchard.getAssignedFarm() != null) {
                                 objectRoot.child("farm").setValue(newOrchard.assignedFarm.ID);
@@ -408,6 +417,7 @@ public class Data {
                                 }
                             }
                             objectRoot.child("further").setValue(newOrchard.further);
+                            objectRoot.child("inferArea").setValue(newOrchard.inferArea);
                             break;
                         case WORKER:
                             objectRoot = userRoot.child("workers");
@@ -482,7 +492,7 @@ public class Data {
                             }
                             objectRoot.child("irrigation").setValue(activeOrchard.irrigation);
                             if (activeOrchard.datePlanted != null) {
-                                objectRoot.child("date").setValue(activeOrchard.datePlanted.getTime().getTime() / 1000);
+                                objectRoot.child("date").setValue(AppUtil.convertDate(activeOrchard.datePlanted.getTimeInMillis()));
                             }
                             coordsRoot = objectRoot.child("cultivars");
                             coordsRoot.setValue(null);
@@ -501,6 +511,7 @@ public class Data {
                                 objectRoot.child("farm").setValue(activeOrchard.assignedFarm.ID);
                             }
                             objectRoot.child("further").setValue(activeOrchard.further);
+                            objectRoot.child("inferArea").setValue(activeOrchard.inferArea);
                             break;
                         case WORKER:
                             objectRoot = objectRoot.child("workers").child(currentChange.ID);
@@ -650,14 +661,14 @@ public class Data {
         if (category == Category.FARM){
             result = new String[farms.size()];
             for (int i = 0; i < farms.size(); i++) {
-                result[i] = farms.elementAt(i).name;
+                result[i] = farms.elementAt(i).toString();
             }
             return result;
         }
         else if(category == Category.ORCHARD){
             result = new String[orchards.size()];
             for (int i = 0; i < orchards.size(); i++) {
-                result[i] = orchards.elementAt(i).name;
+                result[i] = orchards.elementAt(i).toString();
             }
             return result;
         }
@@ -808,6 +819,9 @@ public class Data {
                 activeOrchard = temp;
                 return otherTemp.toString();
             case WORKER:
+                if (ID.equals(FirebaseAuth.getInstance().getUid())){
+                    return "Farm Owner";
+                }
                 Worker temp1 = activeWorker;
                 findObject(ID, category);
                 Worker otherTemp1 = activeWorker;

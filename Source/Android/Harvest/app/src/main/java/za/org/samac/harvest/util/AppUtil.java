@@ -1,5 +1,6 @@
 package za.org.samac.harvest.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import za.org.samac.harvest.R;
@@ -87,5 +91,16 @@ public class AppUtil {
         }
 
         return number;
+    }
+
+    public static String convertDate(double milliseconds){
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("d MMM YYYY HH:mm ZZ");
+        return format.format(milliseconds);
+    }
+
+    public static double convertDate(String fbString){
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("d MMM YYYY HH:mm ZZ");
+        Date date = format.parse(fbString, new ParsePosition(0));
+        return date.getTime();
     }
 }

@@ -94,12 +94,12 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
                                     startActivityIfNeeded(openMainActivity, 0);
                                     return true;
                                 case R.id.actionInformation:
-                                    startActivity(new Intent(SessionsMap.this, InformationActivity.class));
+                                    startActivityIfNeeded(new Intent(SessionsMap.this, InformationActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                                 case R.id.actionSession:
                                     return true;
                                 case R.id.actionStats:
-                                    startActivity(new Intent(SessionsMap.this, Stats.class));
+                                    startActivityIfNeeded(new Intent(SessionsMap.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                             }
                             return true;

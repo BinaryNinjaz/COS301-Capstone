@@ -89,10 +89,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                             case R.id.actionInformation:
                                 return true;
                             case R.id.actionSession:
-                                startActivity(new Intent(InformationActivity.this, Sessions.class));
+                                startActivityIfNeeded(new Intent(InformationActivity.this, Sessions.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(InformationActivity.this, Stats.class));
+                                startActivityIfNeeded(new Intent(InformationActivity.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
 
                         }
@@ -730,10 +730,12 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         if (orchard == null){
             //It's new, so give it these coords, which will be saved in the orchard fragment.
             infoOrchardMapFragment.setCoordinates(coords);
+            infoOrchardMapFragment.inferArea = true;
         }
         else {
             //It's not new, so just give it the same coords that the data has, and the map will update those.
             infoOrchardMapFragment.setCoordinates(orchard.getCoordinates());
+            infoOrchardMapFragment.inferArea = orchard.getInferArea();
         }
         Farm farm = orchard.getAssignedFarm();
         String farmId = farm == null ? "" : farm.getID();

@@ -31,10 +31,14 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -57,12 +61,15 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private MapView mView;
     private Data data;
     private List<LatLng> coordinates;
+    public static Boolean inferArea;
+    private List<Marker> markers;
     private Polygon polygon;
     private boolean pSet = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private int strokeColor;
     private int fillColor;
     protected static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+
 
     LocNotAskAgain locCallback;
 
@@ -115,6 +122,8 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         mView = getView().findViewById(R.id.info_orch_map_map);
         mView.onCreate(savedInstanceState);
         mView.getMapAsync(this);
+
+        markers = new ArrayList<>();
     }
 
     @Override
@@ -154,15 +163,23 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private void ZoomTo(){
         //Zoom to last known location
         try {
-            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        LatLng userLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 10));
+            if (coordinates.isEmpty()) {
+                mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            LatLng userLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLoc, 10));
+                        }
                     }
+                });
+            } else {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (int i = 0; i < coordinates.size(); i++) {
+                    builder.include(coordinates.get(i));
                 }
-            });
+                gMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 2));
+            }
         }
         catch (SecurityException e){
             Log.i(TAG, "ZoomTo: No Permission.");
@@ -238,6 +255,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onMapLongClick(LatLng latLng) {
         coordinates.add(latLng);
+        inferArea = false;
         redraw();
     }
 
@@ -282,14 +300,19 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     public void setFillColor(int fillColor) { this.fillColor = fillColor; }
 
     public void setStrokeColor(int strokeColor) { this.strokeColor = strokeColor; }
-
-    public void redraw(){
-
+  
+    public void redraw(boolean newMarker){
         if (coordinates.size() > 0) {
             if (!pSet) {
                 PolygonOptions polygonOptions = new PolygonOptions();
                 for (int i = 0; i < coordinates.size(); i++) {
                     polygonOptions.add(coordinates.get(i));
+
+                    MarkerOptions options = new MarkerOptions();
+                    options.position(coordinates.get(i));
+                    options.alpha((float) 0.25);
+                    options.flat(false);
+                    markers.add(gMap.addMarker(options));
                 }
                 polygonOptions.strokeColor(strokeColor);
                 polygonOptions.strokeWidth(3);
@@ -299,21 +322,40 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
                 pSet = true;
             } else {
                 polygon.setPoints(coordinates);
+
+                if (newMarker) {
+                    MarkerOptions options = new MarkerOptions();
+                    options.position(coordinates.get(coordinates.size() - 1));
+                    options.alpha((float) 0.25);
+                    options.flat(false);
+                    markers.add(gMap.addMarker(options));
+                }
             }
         }
     }
 
+    private void redraw(){
+        redraw(true);
+    }
+
     public void erase(){
         coordinates.clear();
+        markers.clear();
         gMap.clear();
         pSet = false;
+        inferArea = true;
         redraw();
     }
 
     public void removeLast(){
         if (coordinates.size() != 0) {
             coordinates.remove(coordinates.size() - 1);
+        } else {
+            inferArea = true;
+            Marker marker = markers.get(markers.size() - 1);
+            marker.remove();
+            markers.remove(markers.size() - 1);
         }
-        redraw();
+        redraw(false);
     }
 }
