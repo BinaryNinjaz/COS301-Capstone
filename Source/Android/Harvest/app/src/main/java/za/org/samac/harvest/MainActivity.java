@@ -703,10 +703,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                    //Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
                     String workerOrchards = "";
-                    String surname = zoneSnapshot.child("surname").getValue(String.class);
-                    String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                    String surname = "";
+                    String fullName = "";
+                    if (zoneSnapshot.child("surname") != null) {
+                        surname = zoneSnapshot.child("surname").getValue(String.class);
+                    }
+                    if (zoneSnapshot.child("name") != null) {
+                        fullName = zoneSnapshot.child("name").getValue(String.class) + " " + surname;
+                    }
                     if (zoneSnapshot.child("orchards") != null) {
                         workerOrchards = "";
                         for (DataSnapshot orch : zoneSnapshot.child("orchards").getChildren()) {
@@ -716,20 +722,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                     if (workerOrchards.contains(selectedOrchardKey)) {
                         //collect workers
-                        if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
-                            Worker workerObj = new Worker();
-                            workerObj.setName(fullName);
-                            workerObj.setSurname(surname);
-                            workerObj.setValue(0);
-                            workerObj.setID(zoneSnapshot.getKey());
-                            workers.add(workerObj);
-                        } else {
-                            Worker workerObj = new Worker();
-                            workerObj.setName(fullName);
-                            workerObj.setSurname(surname);
-                            workerObj.setValue(0);
-                            workerObj.setID(zoneSnapshot.getKey());
-                            foremen.add(workerObj);
+                        if (zoneSnapshot.child("type") != null) {
+                            if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
+                                Worker workerObj = new Worker();
+                                workerObj.setName(fullName);
+                                workerObj.setSurname(surname);
+                                workerObj.setValue(0);
+                                workerObj.setID(zoneSnapshot.getKey());
+                                workers.add(workerObj);
+                            } else {
+                                Worker workerObj = new Worker();
+                                workerObj.setName(fullName);
+                                workerObj.setSurname(surname);
+                                workerObj.setValue(0);
+                                workerObj.setID(zoneSnapshot.getKey());
+                                foremen.add(workerObj);
+                            }
                         }
                     }
                 }
