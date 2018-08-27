@@ -89,6 +89,8 @@ public class Stats_Graph extends AppCompatActivity {
     private String fmt;
     private Category category;
 
+    private final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions";
+
     //Startup
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -139,12 +141,6 @@ public class Stats_Graph extends AppCompatActivity {
         generateAndDisplayGraph();
     }
 
-    //Function
-    private static String urlTotalBagsPerDay() {
-        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions";
-        return base;
-    }
-
     private String urlParameters() {
         StringBuilder base = new StringBuilder();
         //IDs
@@ -162,8 +158,8 @@ public class Stats_Graph extends AppCompatActivity {
         //Interval
         base.append("&period=").append(interval);
         //Period
-        base.append("&startDate=").append(start);
-        base.append("&endDate=").append(end);
+        base.append("&startDate=").append(AppUtil.convertDate(start * THOUSAND));
+        base.append("&endDate=").append(AppUtil.convertDate(end * THOUSAND));
         //Minutes from GMT
         int minutes = (TimeZone.getDefault().getRawOffset() / 1000 / 60);
 //        int minutes = 120;
@@ -219,7 +215,7 @@ public class Stats_Graph extends AppCompatActivity {
                         updateDateFormat();
 
                         //Get the result of the function
-                        String response = sendPost(urlTotalBagsPerDay(), urlParameters());
+                        String response = sendPost(url, urlParameters());
                         Log.i(TAG, response);
 
                         LineData lineData = getDataFromString(response);
@@ -313,7 +309,7 @@ public class Stats_Graph extends AppCompatActivity {
                         List<Entry> expectedEntries = new ArrayList<>(); //Expected entries.
                         if (entryNames != null) {
                             LineDataSet lineDataSet = null;
-                            LineDataSet expectedLineDataSet;
+                            LineDataSet expectedLineDataSet = null;
                             curCal.setTimeInMillis((long)(start * THOUSAND));
                             int actualEntryIndex = 0;
                             Double nextKey = getNextKey(), nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString());
@@ -393,13 +389,6 @@ public class Stats_Graph extends AppCompatActivity {
      */
     public String getLabel(float value, AxisBase axisBase){
         int position;
-//        if (mode.equals(Stats.ACCUMULATION_TIME)) {
-//            if (value < 0) value = 0;
-//            position = (int) Math.floor((double) value);
-//        }
-//        else {
-            //Need to determine where in the integer values the seconds best fit.
-            //maxTime is the largest amount of milliseconds seen.
             if (value >= start) {
                 double fpos = (value - start) / (end - start);
                 fpos *= labels.length;
@@ -409,7 +398,6 @@ public class Stats_Graph extends AppCompatActivity {
             else {
                 return labels[0];
             }
-//        }
         return labels[position];
     }
 
@@ -788,7 +776,9 @@ public class Stats_Graph extends AppCompatActivity {
             intervalsSinceStart = 0;
 
         } catch (JSONException e) {
-            e.printStackTrace(); // Probably avg. This is normal.
+            if (!id.equals("avg")) {
+                e.printStackTrace();
+            }
         }
     }
 

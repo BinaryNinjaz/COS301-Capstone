@@ -130,12 +130,12 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                startActivity(new Intent(Sessions.this, InformationActivity.class));
+                                startActivityIfNeeded(new Intent(Sessions.this, InformationActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(Sessions.this, Stats.class));
+                                startActivityIfNeeded(new Intent(Sessions.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                         }
                         return true;

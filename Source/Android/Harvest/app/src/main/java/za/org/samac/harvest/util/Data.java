@@ -398,8 +398,8 @@ public class Data {
                             }
                             objectRoot.child("irrigation").setValue(newOrchard.irrigation);
                             if (newOrchard.datePlanted != null) {
-                                SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
-                                objectRoot.child("date").setValue(formatter.format(newOrchard.datePlanted.getTime()));
+//                                objectRoot.child("date").setValue(newOrchard.datePlanted.getTime().getTime() / 1000);
+                                objectRoot.child("date").setValue(AppUtil.convertDate(newOrchard.datePlanted.getTimeInMillis()));
                             }
                             if (newOrchard.getAssignedFarm() != null) {
                                 objectRoot.child("farm").setValue(newOrchard.assignedFarm.ID);
@@ -492,8 +492,7 @@ public class Data {
                             }
                             objectRoot.child("irrigation").setValue(activeOrchard.irrigation);
                             if (activeOrchard.datePlanted != null) {
-                                SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
-                                objectRoot.child("date").setValue(formatter.format(activeOrchard.datePlanted.getTime()));
+                                objectRoot.child("date").setValue(AppUtil.convertDate(activeOrchard.datePlanted.getTimeInMillis()));
                             }
                             coordsRoot = objectRoot.child("cultivars");
                             coordsRoot.setValue(null);
@@ -662,14 +661,14 @@ public class Data {
         if (category == Category.FARM){
             result = new String[farms.size()];
             for (int i = 0; i < farms.size(); i++) {
-                result[i] = farms.elementAt(i).name;
+                result[i] = farms.elementAt(i).toString();
             }
             return result;
         }
         else if(category == Category.ORCHARD){
             result = new String[orchards.size()];
             for (int i = 0; i < orchards.size(); i++) {
-                result[i] = orchards.elementAt(i).name;
+                result[i] = orchards.elementAt(i).toString();
             }
             return result;
         }
@@ -820,6 +819,9 @@ public class Data {
                 activeOrchard = temp;
                 return otherTemp.toString();
             case WORKER:
+                if (ID.equals(FirebaseAuth.getInstance().getUid())){
+                    return "Farm Owner";
+                }
                 Worker temp1 = activeWorker;
                 findObject(ID, category);
                 Worker otherTemp1 = activeWorker;

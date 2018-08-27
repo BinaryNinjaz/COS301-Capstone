@@ -32,10 +32,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -59,10 +62,12 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private Data data;
     private List<LatLng> coordinates;
     public static Boolean inferArea;
+    private List<Marker> markers;
     private Polygon polygon;
     private boolean pSet = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     protected static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+
 
     LocNotAskAgain locCallback;
 
@@ -115,6 +120,8 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         mView = getView().findViewById(R.id.info_orch_map_map);
         mView.onCreate(savedInstanceState);
         mView.getMapAsync(this);
+
+        markers = new ArrayList<>();
     }
 
     @Override
@@ -288,13 +295,19 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         this.coordinates = coords;
     }
 
-    public void redraw(){
+    public void redraw(boolean newMarker){
 
         if (coordinates.size() > 0) {
             if (!pSet) {
                 PolygonOptions polygonOptions = new PolygonOptions();
                 for (int i = 0; i < coordinates.size(); i++) {
                     polygonOptions.add(coordinates.get(i));
+
+                    MarkerOptions options = new MarkerOptions();
+                    options.position(coordinates.get(i));
+                    options.alpha((float) 0.25);
+                    options.flat(false);
+                    markers.add(gMap.addMarker(options));
                 }
                 polygonOptions.strokeColor(R.color.info_orchard_map_polygon_stroke);
                 polygonOptions.strokeWidth(3);
@@ -304,12 +317,25 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
                 pSet = true;
             } else {
                 polygon.setPoints(coordinates);
+
+                if (newMarker) {
+                    MarkerOptions options = new MarkerOptions();
+                    options.position(coordinates.get(coordinates.size() - 1));
+                    options.alpha((float) 0.25);
+                    options.flat(false);
+                    markers.add(gMap.addMarker(options));
+                }
             }
         }
     }
 
+    private void redraw(){
+        redraw(true);
+    }
+
     public void erase(){
         coordinates.clear();
+        markers.clear();
         gMap.clear();
         pSet = false;
         inferArea = true;
@@ -321,7 +347,10 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
             coordinates.remove(coordinates.size() - 1);
         } else {
             inferArea = true;
+            Marker marker = markers.get(markers.size() - 1);
+            marker.remove();
+            markers.remove(markers.size() - 1);
         }
-        redraw();
+        redraw(false);
     }
 }
