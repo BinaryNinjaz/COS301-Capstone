@@ -174,7 +174,7 @@ extension InformationEntityController: UICollectionViewDelegateFlowLayout {
         / 3.2
     }
     
-    let n = max(CGFloat(Int(w / 256)), 2)
+    let n = min(CGFloat(Int(w / 256)), 2)
     
     let cw = (w - n - 1) / n
     let ch = max(h, cw * 0.5)

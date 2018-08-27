@@ -164,11 +164,11 @@ extension UIColor {
 
 extension Collection where Element == UInt8 {
   func asciiColorHash() -> CGFloat {
-    var hash: UInt32 = 15487469
+    var hash: Int32 = 15487469
     for a in self {
-      hash = hash &* 1301081 &+ UInt32(a)
+      hash = hash &* 1301081 &+ Int32(a)
     }
-    return CGFloat(hash) / CGFloat(UInt32.max)
+    return CGFloat(abs(hash)) / CGFloat(Int32.max)
   }
 }
 
