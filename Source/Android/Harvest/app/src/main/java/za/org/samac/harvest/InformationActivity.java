@@ -18,15 +18,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SearchView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Stack;
@@ -753,6 +756,45 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public void onOrchMapRemLastClick(View view){
         InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
         temp.removeLast();
+    }
+
+    public void onInfoOrchardMapMapTypeClick(View view) {
+        final InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Map Type");
+
+        final ArrayList<String> optionsArray = new ArrayList<>();
+
+        optionsArray.add("Hybrid");
+        optionsArray.add("Satellite");
+        optionsArray.add("Normal");
+        optionsArray.add("Terrain");
+        optionsArray.add("Cancel");
+
+        final CharSequence []options = optionsArray.toArray(new CharSequence[5]);
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String option = optionsArray.get(which);
+                Button btn  = findViewById(R.id.info_orch_map_mapType_btn);
+                if (option.compareTo("Hybrid") == 0) {
+                    temp.gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                } else if (option.compareTo("Satellite") == 0) {
+                    temp.gMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                } else if (option.compareTo("Normal") == 0) {
+                    temp.gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                } else if (option.compareTo("Terrain") == 0) {
+                    temp.gMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                }
+                if (option.compareTo("Cancel") != 0 && btn != null) {
+                    btn.setText(options[which]);
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     public void onCheck(View view){

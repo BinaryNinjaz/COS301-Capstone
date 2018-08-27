@@ -73,6 +73,7 @@ import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.service.BackgroundService;
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.WorkerComparator;
 
 import static za.org.samac.harvest.R.drawable.rounded_button;
@@ -149,6 +150,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if(savedInstanceState == null) {
             init();
         }
+
+        data = new Data();
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -386,10 +389,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                orchards.clear();
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
                     Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
                     orchardKeys.add(zoneSnapshot.getKey().toString());
-                    orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                    String farmName = data.getOrchardFromIDString(zoneSnapshot.getKey().toString()).getAssignedFarm().getName();
+                    if (farmName == null) {
+                        orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                    } else {
+                        orchards.add(farmName + " - " + zoneSnapshot.child("name").getValue(String.class));
+                    }
                 }
 
                 getForemenId();
@@ -702,6 +711,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                foremen.clear();
+                workers.clear();
                 for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
                     //Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
                     String workerOrchards = "";

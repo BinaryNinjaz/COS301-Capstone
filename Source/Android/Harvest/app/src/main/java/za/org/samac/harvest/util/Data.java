@@ -449,6 +449,9 @@ public class Data {
                                 DatabaseReference workingFor = database.getReference("WorkingFor/");
                                 DatabaseReference workerWorking = workingFor.child(newWorker.phone);
                                 workerWorking.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(newWorker.ID);
+
+                                DatabaseReference foremen = userRoot.child("foremen");
+                                foremen.child(newWorker.phone).setValue(true);
                             }
                             else{
                                 objectRoot.child("type").setValue("Worker");
@@ -536,29 +539,29 @@ public class Data {
                             //Type
                             if (activeWorker.workerType == WorkerType.FOREMAN){
                                 objectRoot.child("type").setValue("Foreman");
-                                //Modify WorkingFor
-//                                if(!activeWorker.oldPhone.equals(activeWorker.phone)) {
-                                    DatabaseReference workingFor1 = database.getReference("WorkingFor/");
-//                                    workingFor1.child(activeWorker.oldPhone).setValue(null);
-                                    DatabaseReference workingForworker = workingFor1.child(activeWorker.oldPhone);
-                                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    if (uid != null && workingForworker != null){
-                                        workingForworker.child(uid).setValue(null);
+                                DatabaseReference foremen = userRoot.child("foremen");
+                                if (activeWorker.oldPhone != activeWorker.phone) {
+                                    if (activeWorker.oldPhone != null && activeWorker.oldPhone.compareTo("") != 0) {
+                                        foremen.child(activeWorker.oldPhone).removeValue();
                                     }
-                                    DatabaseReference workerWorking = workingFor1.child(activeWorker.phone);
-                                    workerWorking.child(uid).setValue(activeWorker.ID);
-                                    activeWorker.oldPhone = activeWorker.phone;
-//                                }
+                                }
+                                if (activeWorker.phone != null && activeWorker.phone.compareTo("") != 0) {
+                                    foremen.child(activeWorker.phone).setValue(true);
+                                }
+                                activeWorker.oldPhone = activeWorker.phone;
                             }
                             else if(activeWorker.workerType == WorkerType.WORKER){
                                 objectRoot.child("type").setValue("Worker");
                                 if (activeWorker.isWasForeman()){
-                                    DatabaseReference working = database.getReference("WorkingFor/");
-                                    working = working.child(activeWorker.oldPhone);
-                                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    if (uid != null && working != null){
-                                        working.child(uid).setValue(null);
+                                    DatabaseReference foremen = userRoot.child("foremen");
+                                    DatabaseReference locations = userRoot.child("locations");
+                                    DatabaseReference requested = userRoot.child("requestedLocations");
+                                    if (activeWorker.oldPhone != null && activeWorker.oldPhone.compareTo("") != 0) {
+                                        foremen.child(activeWorker.oldPhone).removeValue();
                                     }
+                                    locations.child(activeWorker.getId()).removeValue();
+                                    requested.child(activeWorker.getId()).removeValue();
+
                                 }
                             }
 
@@ -577,14 +580,17 @@ public class Data {
                             break;
                         case WORKER:
                             userRoot.child("workers").child(currentChange.ID).setValue(null);
+
                             findObject(currentChange.ID);
-//                            database.getReference("WorkingFor/").child(activeWorker.oldPhone).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(null);
-                            DatabaseReference working = database.getReference("WorkingFor");
-                            working = working.child(activeWorker.oldPhone);
-                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            if (uid != null && working != null){
-                                working.child(uid).setValue(null);
+
+                            if (activeWorker.phone != null && activeWorker.phone.compareTo("") != 0) {
+                                userRoot.child("foremen").child(activeWorker.phone).removeValue();
                             }
+                            DatabaseReference locations = userRoot.child("locations");
+                            DatabaseReference requested = userRoot.child("requestedLocations");
+                            locations.child(currentChange.ID).removeValue();
+                            requested.child(currentChange.ID).removeValue();
+
                             break;
                     }
                     break;

@@ -12,10 +12,10 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -24,4 +24,16 @@
         android:background="@drawable/navbar_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_main" />
+
+    <Button
+        android:id="@+id/sessionMapMapTypeButton"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="96dp"
+        android:layout_height="36dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="onSessionsMapMapTypeClick"
+        android:text="Hybrid"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="parent" />
 </android.support.constraint.ConstraintLayout>

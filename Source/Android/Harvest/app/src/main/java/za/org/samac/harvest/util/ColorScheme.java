@@ -18,10 +18,6 @@ public class ColorScheme {
             int c = string.codePointAt(i);
             hash = hash * 1301081 + c;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return ((float)Integer.toUnsignedLong(hash)) / (float)4294967295.0;
-        } else {
-            return (float)((long)hash) / (float)4294967295.0;
-        }
+        return Math.abs(hash) / (float)2147483647.0;
     }
 }

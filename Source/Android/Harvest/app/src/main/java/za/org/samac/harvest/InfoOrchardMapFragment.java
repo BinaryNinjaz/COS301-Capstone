@@ -57,7 +57,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     private boolean explanationShown = false;
     private boolean permissionAskedInSession;
     private boolean locationInformationAskedInSession;
-    private GoogleMap gMap;
+    public GoogleMap gMap;
     private MapView mView;
     private Data data;
     private List<LatLng> coordinates;
@@ -134,6 +134,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
 
         //Always get location.
         activateLocation();
+        gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         if (show) {
             gMap.setOnMapLongClickListener(this);
