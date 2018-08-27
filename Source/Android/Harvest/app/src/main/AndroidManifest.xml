@@ -106,7 +106,14 @@
 
         <activity
             android:name=".SessionsMap"
-            android:label="@string/title_activity_sessions" />
+            android:label="@string/title_activity_sessions"
+            android:launchMode="singleTop"
+            android:parentActivityName=".adapter.SessionDetails">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".adapter.SessionDetails" />
+        </activity>
+
         <activity
             android:name=".adapter.SessionDetails"
             android:label="@string/title_activity_sessions"
@@ -116,6 +123,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Sessions" />
         </activity>
+
         <activity android:name=".ViewFlipperActivity" />
         <activity android:name=".IntroViewFlipper" />
 
