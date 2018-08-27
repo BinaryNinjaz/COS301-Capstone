@@ -105,7 +105,8 @@
 
         <activity
             android:name=".SessionsMap"
-            android:label="@string/title_activity_sessions_map" />
+            android:label="@string/title_activity_sessions_map"
+            android:theme="@style/AppTheme.PutActionBar" />
         <activity
             android:name=".adapter.SessionDetails"
             android:label="@string/title_activity_sessions"

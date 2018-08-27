@@ -697,7 +697,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
 //        workersRef.addValueEventListener(new ValueEventListener() {
         workers.clear();
-        workersSearch.clear();
         adapter.setWorkers(workers);
         workersRef.addValueEventListener(new ValueEventListener() {
 
