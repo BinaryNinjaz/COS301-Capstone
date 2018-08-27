@@ -94,12 +94,12 @@ public class AppUtil {
     }
 
     public static String convertDate(double milliseconds){
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("d MMM YYYY HH:mm ZZ");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
         return format.format(milliseconds);
     }
 
     public static double convertDate(String fbString){
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("d MMM YYYY HH:mm ZZ");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
         Date date = format.parse(fbString, new ParsePosition(0));
         return date.getTime();
     }

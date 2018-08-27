@@ -696,18 +696,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             To reproduce
             > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
 //        workersRef.addValueEventListener(new ValueEventListener() {
-        workers.clear();
-        workersSearch.clear();
-        adapter.setWorkers(workers);
+        //workers.clear();
+        //adapter.setWorkers(workers);
         workersRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
+                    //Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
                     String workerOrchards = "";
-                    String surname = zoneSnapshot.child("surname").getValue(String.class);
-                    String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                    String surname = "";
+                    String fullName = "";
+                    if (zoneSnapshot.child("surname") != null) {
+                        surname = zoneSnapshot.child("surname").getValue(String.class);
+                    }
+                    if (zoneSnapshot.child("name") != null) {
+                        fullName = zoneSnapshot.child("name").getValue(String.class) + " " + surname;
+                    }
                     if (zoneSnapshot.child("orchards") != null) {
                         workerOrchards = "";
                         for (DataSnapshot orch : zoneSnapshot.child("orchards").getChildren()) {
@@ -717,20 +722,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                     if (workerOrchards.contains(selectedOrchardKey)) {
                         //collect workers
-                        if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
-                            Worker workerObj = new Worker();
-                            workerObj.setName(fullName);
-                            workerObj.setSurname(surname);
-                            workerObj.setValue(0);
-                            workerObj.setID(zoneSnapshot.getKey());
-                            workers.add(workerObj);
-                        } else {
-                            Worker workerObj = new Worker();
-                            workerObj.setName(fullName);
-                            workerObj.setSurname(surname);
-                            workerObj.setValue(0);
-                            workerObj.setID(zoneSnapshot.getKey());
-                            foremen.add(workerObj);
+                        if (zoneSnapshot.child("type") != null) {
+                            if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
+                                Worker workerObj = new Worker();
+                                workerObj.setName(fullName);
+                                workerObj.setSurname(surname);
+                                workerObj.setValue(0);
+                                workerObj.setID(zoneSnapshot.getKey());
+                                workers.add(workerObj);
+                            } else {
+                                Worker workerObj = new Worker();
+                                workerObj.setName(fullName);
+                                workerObj.setSurname(surname);
+                                workerObj.setValue(0);
+                                workerObj.setID(zoneSnapshot.getKey());
+                                foremen.add(workerObj);
+                            }
                         }
                     }
                 }
@@ -853,7 +860,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             sessionKey = sessRef.push().getKey();//generate key/ID for a session
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//put key in database
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
             String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
             sessionDate.put("start_date", dateString);
 
@@ -863,7 +870,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 sessionDate.put("wid", foremanID);//add foreman database ID to session;
             }
 
-            formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+            formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
             dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
             sessionDate.put("end_date", dateString);
 
@@ -1074,7 +1081,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             TextView pressStart = findViewById(R.id.startText);
             pressStart.setText(R.string.pressStart);
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy HH:mm ZZ");
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
             String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
             sessionDate.put("end_date", dateString);
             sessRef.updateChildren(sessionDate);//save data to Firebase
