@@ -702,7 +702,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
                     //Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
                     String workerOrchards = "";
                     String surname = "";
