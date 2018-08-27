@@ -35,7 +35,9 @@ import java.util.zip.Inflater;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
+import za.org.samac.harvest.util.ColorScheme;
 import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.Orchard;
 
 import static za.org.samac.harvest.util.Category.FARM;
@@ -735,6 +737,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             infoOrchardMapFragment.setCoordinates(orchard.getCoordinates());
             infoOrchardMapFragment.inferArea = orchard.getInferArea();
         }
+        Farm farm = orchard.getAssignedFarm();
+        String farmId = farm == null ? "" : farm.getID();
+        infoOrchardMapFragment.setFillColor(ColorScheme.hashColor(farmId, orchard.getID(), 64));
+        infoOrchardMapFragment.setStrokeColor(ColorScheme.hashColor(farmId, orchard.getID(), 191));
 
         fragmentTransaction.commit();
     }

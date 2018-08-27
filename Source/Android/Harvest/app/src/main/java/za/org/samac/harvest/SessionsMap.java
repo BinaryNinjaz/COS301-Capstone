@@ -40,7 +40,9 @@ import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.SessionDetails;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.ColorScheme;
 import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.Orchard;
 
 import static za.org.samac.harvest.MainActivity.getWorkers;
@@ -162,8 +164,15 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         for (Orchard orchard : data.getOrchards()) {
             if (!orchard.getCoordinates().isEmpty()) {
                 PolygonOptions polygon = new PolygonOptions();
-                polygon.fillColor(0x110000FF);
-                polygon.strokeColor(0x550000FF);
+
+                Farm farm = orchard.getAssignedFarm();
+                String farmId = farm == null ? "" : farm.getID();
+
+                int fillColor = ColorScheme.hashColor(farmId, orchard.getID(), 64);
+                int strokeColor = ColorScheme.hashColor(farmId, orchard.getID(), 191);
+
+                polygon.fillColor(fillColor);
+                polygon.strokeColor(strokeColor);
                 polygon.strokeWidth(3);
 
                 for (LatLng coord : orchard.getCoordinates()) {
