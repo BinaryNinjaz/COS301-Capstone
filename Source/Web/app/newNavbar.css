@@ -4,25 +4,27 @@
 }
 .navbar {
 	border: none;
+	border-bottom: 2px solid lightgrey;
 	border-radius: 0px;
+	background: rgba(0, 0, 0, 0.4);
 }
 .nav a {
 	height: 50px; /* tabs change height when glyphs are inside. So we fix the size. */
 }
 .nav a.active {
-    background: #48AD58; /*Green*/
-		border-bottom: 1px solid #48AD58;
+    background: rgba(0, 0, 0, 0.4);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     color: whitesmoke;
 }
 .navbar ul.nav a { color: whitesmoke; }
 .navbar ul.nav a:not(.active):hover {
-	background-color: #24572C; /*Grey*/
-	border-bottom: 1px solid #24572C;
+	background: rgba(0, 0, 0, 0.2);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   text-decoration: none;
 }
 .navbar ul.nav a.active:hover {
-	background-color: #48AD58; /*Green*/
-	border-bottom: 1px solid #48AD58;
+	background-color: rgba(0, 0, 0, 0.4);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .nav a < span {
