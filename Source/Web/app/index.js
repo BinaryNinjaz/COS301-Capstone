@@ -36,15 +36,7 @@ function onSignIn(googleUser) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) { // user details correct
         document.location.href = "HomePage.html";
     }).catch(function (error) { // some error occured
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-        } else {
-            alert(errorMessage);
-        }
-        console.log(error);
+        alert('Email or password is incorrect. Please try again.');
     });
 }
 
@@ -194,16 +186,16 @@ function resetPassword() {
         "" +
         "<div class='modal-content'>" +
         "<div class='modal-header'>" +
-        "<h4 class='modal-title'>Password Reset</h4>" +
+        "<h4 class='modal-title'>Reset Password</h4>" +
         "</div>" +
         "<div class='modal-body'>" +
         "<div class='form-group'>" +
-        "<label class='control-label'>Please enter your email address so we can send you instructions regarding how to reset your password.</label> " +
+        "<label class='control-label'>Please enter your email, you will receive an email to reset your password.</label> " +
         "<input class='form-control' type='email' id='emailAddress'></div>" +
         "</div>" +
         "<div class='modal-footer'>" +
         "<div class='col-sm-2 col-sm-offset-5' style='padding: 2px'><button type='button' class='btn btn-warning' data-dismiss='modal'>Cancel</button></div>" +
-        "<div class='col-sm-5' style='padding: 2px'><button type='button' class='btn btn-success' data-dismiss='modal' onclick='sendPasswordResetEmail(document.getElementById(\"emailAddress\").value)'>Send Password Reset Email</button></div>" +
+        "<div class='col-sm-5' style='padding: 2px'><button type='button' class='btn btn-success' data-dismiss='modal' onclick='sendPasswordResetEmail(document.getElementById(\"emailAddress\").value)'>Request Reset</button></div>" +
         "</div>" +
         "</div>" +
         "" +
