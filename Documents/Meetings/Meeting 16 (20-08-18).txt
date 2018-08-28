@@ -1,0 +1,16 @@
+Meeting 16 (20-08-18)
+Over the past few months the main aim was to get things done in time and give the client a strong product, but now 301 really starts. From now on we are going to concentrate on team work, our agile principles and other software engineering principles. Good enough is good enough from now on. Don’t implement some over complicated thing and don’t suggest extreme things (the time for that has passed).
+With the permission of the client we deploy on Friday.
+It’s over no more of these unnecessary commits. All I want to see is consistent levelled graphs that are product of benefiting commits.
+We attack their soft spots in every meeting and presentation from now on (security and education).
+Testing, testing, testing we have be sure of our app before we deploy it (tablet testing, logging in and out – no data must get into the hands of the wrong person). Deployment drills will also commence. Checking every single text. No more new Ideas, good enough is good enough.
+Vince, you try to break the homepage and the edit information on web.
+Shaun, you try to break the heat map on web.
+Sizo, you try to break the settings page and the graphs on web plus settings on android.
+Kevin, you try to break the yield tracker, login, sign up and sessions on android.
+Letanyan, you will update all images on the user manual, review the user manual, try to break the login, sign up on web, sync Android and iOS and sit down with someone and they will review and try to break all of iOS (Shaun).
+John, you will try to break the edit information and graphs on android, review the user manual and sync Android and iOS.
+All the above by Wednesday midnight, if there are no problems there will be no coding so basically just an hour or two of review and you are done.
+Deployment drills start on Thursday (we will take part in it).
+Make sure there are pop ups before deletions (especially resign from farm and delete account)
+What happens to our system if the client wants to go with the cheaper web driven way of maintaining the system e.g. the OTP? How is the expected yield calculated? How have you bettered the performance of your system? How does foreman tracking work? How have you made your system user friendly? What data does the yield collector store? How have you bettered the security of your system? What have you done to save battery life? What do you check for when reviewing another member’s code? How do we prevent stealing on the farm? 

@@ -103,76 +103,52 @@ function createEntitySelectionList(id) {
 }
 
 function createTimePeriodSelector(id) {
-  const event = (param) => { return "onchange='updateTimePeriod(" + id + ", \"" + param + "\")'" };
-  const name = "name='timePeriod" + id + "'";
+  const event = (param) => { return "onchange='updateTimePeriod(" + id + ")'" };
+  const name = "id='timePeriod" + id + "'";
 
-  const hChecked = stats[id].period === "hourly" ? " checked " : "";
-  const dChecked = stats[id].period === "daily" ? " checked " : "";
-  const wChecked = stats[id].period === "weekly" ? " checked " : "";
-  const mChecked = stats[id].period === "monthly" ? " checked " : "";
-  const yChecked = stats[id].period === "yearly" ? " checked " : "";
+  const hChecked = stats[id].period === "hourly" ? " selected " : " ";
+  const dChecked = stats[id].period === "daily" ? " selected " : " ";
+  const wChecked = stats[id].period === "weekly" ? " selected " : " ";
+  const mChecked = stats[id].period === "monthly" ? " selected " : " ";
+  const yChecked = stats[id].period === "yearly" ? " selected " : " ";
 
   return "<div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + hChecked + name + " type='radio' " + event("hourly") + "> Hourly</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + dChecked  + name + " type='radio' " + event("daily") + "> Daily</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + wChecked  + name + " type='radio' " + event("weekly")  + "> Weekly</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + mChecked  + name + " type='radio' " + event("monthly")  + "> Monthly</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + yChecked  + name + " type='radio' " + event("yearly")  + "> Yearly</label>" +
-  "  </div>" +
+  "  <select class='form-control' " + name + " " + event() + ">"+
+  "    <option" + hChecked + "value='hourly'>Hourly</option>" +
+  "    <option" + dChecked + "value='daily'>Daily</option>" +
+  "    <option" + wChecked + "value='weekly'>Weekly</option>" +
+  "    <option" + mChecked + "value='monthly'>Monthly</option>" +
+  "    <option" + yChecked + "value='yearly'>Yearly</option>" +
+  "  </select>"+
   "</div>";
 }
 
 function createTimeIntervalSelector(id) {
-  const event = (param) => { return "onchange='updateTimeInterval(" + id + ", \"" + param + "\")'"};
-  const name = "name='timeInterval" + id + "'";
+  const event = (param) => { return "onchange='updateTimeInterval(" + id + ")'" };
+  const name = "id='timeInterval" + id + "'";
 
-  const checked0 = stats[id].interval === "today" ? " checked " : "";
-  const checked1 = stats[id].interval === "yesterday" ? " checked " : "";
-  const checked2 = stats[id].interval === "thisweek" ? " checked " : "";
-  const checked3 = stats[id].interval === "lastweek" ? " checked " : "";
-  const checked4 = stats[id].interval === "thismonth" ? " checked " : "";
-  const checked5 = stats[id].interval === "lastmonth" ? " checked " : "";
-  const checked6 = stats[id].interval === "thisyear" ? " checked " : "";
-  const checked7 = stats[id].interval === "lastyear" ? " checked " : "";
-  const checked8 = stats[id].interval === "betweenexactdates" ? " checked " : "";
+  const checked0 = stats[id].interval === "today" ? " selected " : " ";
+  const checked1 = stats[id].interval === "yesterday" ? " selected " : " ";
+  const checked2 = stats[id].interval === "thisweek" ? " selected " : " ";
+  const checked3 = stats[id].interval === "lastweek" ? " selected " : " ";
+  const checked4 = stats[id].interval === "thismonth" ? " selected " : " ";
+  const checked5 = stats[id].interval === "lastmonth" ? " selected " : " ";
+  const checked6 = stats[id].interval === "thisyear" ? " selected " : " ";
+  const checked7 = stats[id].interval === "lastyear" ? " selected " : " ";
+  const checked8 = stats[id].interval === "betweenexactdates" ? " selected " : " ";
 
   return "<div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked0 + name + " type='radio' " + event("today") + "> Today</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked1 + name + " type='radio' " + event("yesterday") + "> Yesterday</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked2 + name + " type='radio' " + event("thisweek") + "> This Week</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked3 + name + " type='radio' " + event("lastweek") + "> Last Week</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked4 + name + " type='radio' " + event("thismonth") + "> This Month</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked5 + name + " type='radio' " + event("lastmonth") + "> Last Month</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked6 + name + " type='radio' " + event("thisyear") + "> This Year</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked7 + name + " type='radio' " + event("lastyear") + "> Last Year</label>" +
-  "  </div>" +
-  "  <div class='radio'>" +
-  "    <label><input " + checked8 + name + " type='radio' " + event("betweenexactdates") + "> Between Exact Dates</label>" +
-  "  </div>" +
+  "  <select class='form-control' " + name + " " + event() + ">" +
+  "    <option" + checked0 + "value='today'>Today</option>" +
+  "    <option" + checked1 + "value='yesterday'>Yesterday</option>" +
+  "    <option" + checked2 + "value='thisweek'>This Week</option>" +
+  "    <option" + checked3 + "value='lastweek'>Last Week</option>" +
+  "    <option" + checked4 + "value='thismonth'>This Month</option>" +
+  "    <option" + checked5 + "value='lastmonth'>Last Month</option>" +
+  "    <option" + checked6 + "value='thisyear'>This Year</option>" +
+  "    <option" + checked7 + "value='lastyear'>Last Year</option>" +
+  "    <option" + checked8 + "value='betweenexactdates'>Between Exact Dates</option>" +
+  "  </select>"+
   "</div>";
 }
 
@@ -228,6 +204,35 @@ function createModeSelector(id) {
   "</div>";
 }
 
+function accumulationExplanation(mode, groupBy, period) {
+  var stepDesc = "";
+  if (period === "hourly") {
+    stepDesc = "Hour";
+  } else if (period === "daily") {
+    stepDesc = "Day";
+  } else if (period === "weekly") {
+    stepDesc = "Week";
+  } else if (period === "monthly") {
+    stepDesc = "Month";
+  } else if (period === "yearly") {
+    stepDesc = "Year";
+  }
+
+  if (mode === "running") {
+    return "No data accumulation will take place, a regular graph will be displayed whereby each " + groupBy + " will have its own line.";
+  } else if (mode === "accumEntity") {
+    return "The selected " + groupBy + "s will have their values for each " + stepDesc +
+    "summed up, so that the sum of each individual " + groupBy + "'s collections accross the selected" +
+    "time period. for that " + stepDesc + " will be shown, for each " + stepDesc + ".";
+  } else if (mode === "accumTime") {
+    return "The sum accross each " + stepDesc + " will be shown, so that the total bags collected each week by each of the selected " + groupBy + "s will be shown."
+  }
+}
+
+function createAccumulationExplanation(id) {
+  return "<div><p id='accumExplain" + id + "'>" + accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period) + "</p></div>";
+}
+
 function createUpdateGraphButton(id) {
   const event = "onclick='updateGraph(" + id + ")'";
 
@@ -280,6 +285,7 @@ function displayStat(stat, id) {
              createExactDateSelector(id) +
   "        <h5>Accumulation: </h5>" +
              createModeSelector(id) +
+             createAccumulationExplanation(id) +
   "      </div>" +
          createUpdateGraphButton(id) +
   "    </div>" +
@@ -291,9 +297,11 @@ function displayStat(stat, id) {
   "</div>";
 }
 
-function updateTimePeriod(id, period) {
+function updateTimePeriod(id) {
+  const period = document.getElementById("timePeriod" + id).value;
   stats[id].period = period;
   var accumTime = document.getElementById("stat" + id + "accumTime");
+  var accumExplain = document.getElementById("accumExplain" + id);
   const message = (param) => { return "<input type='radio' autocomplete='off' name='filterEntity' onchange='updateMode(" + id + ", \"accumTime\")'> By " + param };
   if (period === "hourly") {
     accumTime.innerHTML = message("Hour");
@@ -306,9 +314,11 @@ function updateTimePeriod(id, period) {
   } else if (period === "yearly") {
     accumTime.innerHTML = message("Year");
   }
+  accumExplain.innerHTML = accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period);
 }
 
-function updateTimeInterval(id, interval) {
+function updateTimeInterval(id) {
+  const interval = document.getElementById("timeInterval" + id).value;
   var datePickers = document.getElementById("stat" + id + "Date");
   datePickers.hidden = interval !== "betweenexactdates";
   stats[id].interval = interval;
@@ -317,6 +327,7 @@ function updateTimeInterval(id, interval) {
 function updateGroupBy(id, groupBy) {
   stats[id].groupBy = groupBy;
   var accumEntity = document.getElementById("stat" + id + "accumEntity");
+  var accumExplain = document.getElementById("accumExplain" + id);
   const message = (param) => { return "<input type='radio' autocomplete='off' name='filterEntity' onchange='updateMode(" + id + ", \"accumEntity\")'> By " + param };
   var struct;
   if (groupBy === "farm") {
@@ -332,6 +343,8 @@ function updateGroupBy(id, groupBy) {
     accumEntity.innerHTML = message("Foreman");
     struct = workers;
   }
+
+  accumExplain.innerHTML = accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period);
 
   var selectionList = document.getElementById("stat" + id + "EntitySelection");
   selectionList.innerHTML = "";
@@ -354,13 +367,15 @@ function updateGroupBy(id, groupBy) {
 
 function updateMode(id, mode) {
   stats[id].mode = mode;
+  var accumExplain = document.getElementById("accumExplain" + id);
+  accumExplain.innerHTML = accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period);
 }
 
 function updateDate(id, option, sender) {
   if (option === "start") {
-    stats[id].startDate = moment(sender.value);
+    stats[id].startDate = moment(sender.value).startOf('day');
   } else if (option === "end") {
-    stats[id].endDate = moment(sender.value);
+    stats[id].endDate = moment(sender.value).endOf('day');
   }
 }
 
@@ -393,13 +408,12 @@ function timedGraphSessions(id, completion) {
   const timePeriod = timePeriodForStat(stat);
 
   var keys = {
-  startDate: timePeriod.start,
-  endDate: timePeriod.end,
+  startDate: timePeriod.start.format("D MMM YYYY HH:mm ZZ"),
+  endDate: timePeriod.end.format("D MMM YYYY HH:mm ZZ"),
   uid: uid,
   mode: stat.mode,
   groupBy: stat.groupBy,
-  period: stat.period,
-  offset: "120"
+  period: stat.period
   };
 
   for (var idx in stat.ids[stat.groupBy]) {
@@ -448,8 +462,8 @@ function timePeriodForStat(stat) {
     e = stat.endDate;
   }
   return {
-    start: s.toDate().getTime() / 1000.0,
-    end: e.toDate().getTime() / 1000.0
+    start: s,
+    end: e
   }
 }
 
@@ -474,40 +488,39 @@ function accumTimeDates(period) {
 }
 
 function isSameYear(d1, d2) {
-  return moment(d1).startOf('year').format('YYYY') === moment(d2).startOf('year').format('YYYY');
+  return d1.isSame(d2, 'year');
 }
 
 function isSameMonth(d1, d2) {
-  return moment(d1).startOf('month').format('YYYY-MM') === moment(d2).startOf('month').format('YYYY-MM');
+  return d1.isSame(d2, 'month');
 }
 
 function isSameDay(d1, d2) {
-  return moment(d1).startOf('day').format('YYYY-MM-DD') === moment(d2).startOf('day').format('YYYY-MM-DD');
+  return d1.isSame(d2, 'day');
 }
 
-function roundDateToRunningPeriod(timeinterval, period, sameYear, sameMonth, sameDay) {
+function roundDateToRunningPeriod(date, period, sameYear, sameMonth, sameDay) {
   const fmtYear = sameYear ? '' : 'YYYY ';
   const fmtMonth = sameMonth ? '' : 'MMM ';
   const fmtDay = sameDay ? '' : 'DD';
   const fmt = fmtYear + fmtMonth + fmtDay;
-  const date = new Date(timeinterval * 1000);
   if (period === "hourly") {
-    return moment(date).startOf('hour').format(fmt + ' HH:mm');
+    return date.clone().startOf('hour').format(fmt + (fmt === '' ? '' : ' ') + 'HH:mm');
   } else if (period === "daily") {
-    return moment(date).startOf('day').format(fmt === '' ? 'ddd' : fmt);
+    return date.clone().startOf('day').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "weekly") {
-    return moment(date).startOf('week').format(fmt === '' ? 'ddd' : fmt);
+    return date.clone().startOf('week').format(fmt === '' ? 'ddd' : fmt);
   } else if (period === "monthly") {
-    return moment(date).startOf('month').format(fmtYear + 'MMM');
+    return date.clone().startOf('month').format(fmtYear + 'MMM');
   } else if (period === "yearly") {
-    return moment(date).startOf('day').format('YYYY');
+    return date.clone().startOf('day').format('YYYY');
   } else {
     return '';
   }
 }
 
-function roundSince1970(timeinterval, period) {
-  const d = moment(new Date(timeinterval * 1000));
+function roundSince1970(date, period) {
+  const d = date.clone();
   const startOfTime = moment(0);
   if (period === "hourly") {
     return d.diff(startOfTime, 'hour');
@@ -524,11 +537,9 @@ function roundSince1970(timeinterval, period) {
 }
 
 function dateLabelsForTimeInterval(start, end, period) {
-  const s = new Date(start * 1000.0);
-  const e = new Date(end * 1000.0);
-  const sameYear = isSameYear(s, e);
-  const sameMonth = isSameMonth(s, e);
-  const sameDay = isSameDay(s, e);
+  const sameYear = isSameYear(start, end);
+  const sameMonth = isSameMonth(start, end);
+  const sameDay = isSameDay(start, end);
 
   var result = [];
   var step = 'day';
@@ -545,9 +556,10 @@ function dateLabelsForTimeInterval(start, end, period) {
     step = 'year';
   }
 
-  var i = start;
-  while (i < end) {
-    result.push(roundDateToRunningPeriod(i, period, sameYear, sameMonth, sameDay));
+  var i = start.toDate().getTime() / 1000.0;
+  const e = end.toDate().getTime() / 1000.0;
+  while (i < e) {
+    result.push(roundDateToRunningPeriod(moment(new Date(i * 1000)), period, sameYear, sameMonth, sameDay));
     i = moment(new Date(i * 1000.0)).add(1, step).toDate().getTime() / 1000.0;
   }
 
@@ -693,6 +705,10 @@ function fillEntityExpectedData(stat, data, start, end, labels, usedColors, sour
     const plottedData = pollExpectedPlotData(start, end, stat.period, labels, info);
     const item = entities[key];
 
+    if (plottedData.length == 0) {
+      continue;
+    }
+
     if (info !== undefined && item !== undefined) {
       data.datasets.push({
         data: plottedData,
@@ -718,6 +734,10 @@ function pollExpectedPlotData(start, end, period, labels, func) {
   const c = func.c;
   const d = func.d;
 
+  if (a == null || b == null || c == null || d == null) {
+    return [];
+  }
+
   const s = roundSince1970(start, period);
   const e = roundSince1970(end, period);
 
@@ -730,7 +750,7 @@ function pollExpectedPlotData(start, end, period, labels, func) {
   var result = [];
 
   while (x < e) {
-    result.push(Math.round(a * Math.sin(b * x + c) + d));
+    result.push((a * Math.sin(b * x + c) + d));
     x += move;
   }
 
@@ -746,7 +766,7 @@ function updateSpiner(shouldSpin, targetId) {
 		radius: 20, // The radius of the inner circle
 		scale: 1, // Scales overall size of the spinner
 		corners: 1, // Corner roundness (0..1)
-		color: '#4CAF50', // CSS color or array of colors
+		color: 'white', // CSS color or array of colors
 		fadeColor: 'transparent', // CSS color or array of colors
 		speed: 1, // Rounds per second
 		rotate: 0, // The rotation offset

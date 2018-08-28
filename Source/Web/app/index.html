@@ -4,6 +4,7 @@
         <!--If you change the title, be sure to change it in the if statement in
         firebaseRelatedJavaScriptFunctions, or this will break.-->
         <meta charset="UTF-8">
+	<meta name="author" content="binaryNinjaz">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Firebase Dependencies Must be before firebaseRelatedJavaScriptFunctions.js -->
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
@@ -24,11 +25,12 @@
 	
 	
         <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
-        <link href="css/index.css" rel="stylesheet" type="text/css"/>
+        
 		<link href="css/panel.css" rel="stylesheet" type="text/css"/>
         <link rel="icon" href="HarvestLogo.png">
 		<link href="css/link.css" rel="stylesheet" type="text/css"/>
 		<link href="css/footer.css" rel="stylesheet" type="text/css"/>
+		<link href="css/index.css" rel="stylesheet" type="text/css"/>
 		
     </head>
     
@@ -128,12 +130,9 @@
     <br/><br/><br/><br/><br/>
         
         <section class="container">
-            <div id="con" class="col-lg-12 col-md-12 col-sm-12 col-12">                
-                <div id="left" class="col-lg-3 col-md-4 col-sm-5 col-12" >
-    <!--                     We remove the form because it reloads the page -->
-    <!--                     Which we don't want. -->
-    <!--                     <form action="" method="POST" > -->
-                    <div>
+            <div id="con" class="col-12">                
+                <div id="left" class="col-lg-3 col-md-4 col-sm-5 col-12">   
+                	<div>
                         <div class="inputBlock">
                             <div id="formData">
                                 <fieldset>
@@ -165,58 +164,65 @@
                                 </fieldset>
                             </div>
                         </div>
-                    </div>
-                </div>                
-                <div id="right">
-                    <div class="col-lg-7 col-md-7 col-sm-6 col-12 col-lg-offset-2 col-md-offset-1 col-sm-offset-1">
-						<!-- This class ico has a corresponding css content -->
-						<div class="panel panel-default" id="green">
-						<div class="panel-heading" style="text-align: center;" id="green1">Harvest Features</div>
-							<div class="panel-body">
-								<div class="container">
-									<div class="row">
-										<div class="container col-lg-12">
-											<div class="row">
-												<div class="panel panel-default col-sm-2 col-lg-2 " id="green2">
-												  <div class="panel-heading" style="text-align: center;">Foreman Tracking</div>
-												  <div class="panel-body" style="text-align: center; height: 18%;"> <img class="img-responsive" src="images/marker.PNG" class="img-rounded center" id="Panel_Image"></div>
-												</div>
-												
-												<div class="panel panel-default col-sm-2 col-lg-2" id="green2">
-												  <div class="panel-heading" style="text-align: center;">Farming Heatmap</div>
-												  <div class="panel-body" style="text-align: center; height: 18%;"><img class="img-responsive" src="images/heatmap.PNG" class="img-rounded center" id="Panel_Image"></div>
-												</div>
-												
-												<div class="panel panel-default col-sm-2 col-lg-2" id="green2">
-												  <div class="panel-heading" style="text-align: center;">Farming Statistics</div>
-												  <div class="panel-body" style="text-align: center; height: 18%;"><img class="img-responsive" src="images/stats.PNG" class="img-rounded center" id="Panel_Image"></div>
-												</div>
-												
-											</div>
-										</div> <!-- inner container-->
-										<div class="container col-lg-12">
-											<div class="row">
-												<div class="col-sm-2 col-lg-2">
-													<button class="btn btn-dark" data-toggle="modal" data-target="#myModal">Learn More <i class="fa fa-angle-right"></i></button>
-												</div>
-												<div class="col-sm-2 col-lg-2">
-													<button class="btn btn-dark" data-toggle="modal" data-target="#myModal1">Learn More <i class="fa fa-angle-right"></i></button>
-												</div>
-												<div class="col-sm-2 col-lg-2">
-													<button class="btn btn-dark" data-toggle="modal" data-target="#myModal2">Learn More <i class="fa fa-angle-right"></i></button>
-												</div>
-											</div>
-										</div> <!-- inner container-->
-									</div>
-								</div>
-							</div>
-						</div>
-						<!--<a id="fork2" target="_blank" href="#">Github Link</a>-->
-						<!--<a id="fork" target="_blank" href="#">Contact</a>-->
-						<!--<a id="fork1" target="_blank" href="#">Documentation</a>-->
-                    </div>
-				</div>                       
-            </div>
+                    </div>                 
+                </div>                    
+                <div id="right" class="col-lg-7 col-md-7 col-sm-6 col-hidden col-lg-offset-2 col-md-offset-1 col-sm-offset-1 visible-sm visible-md visible-lg">					
+				<!-- This class ico has a corresponding css content -->
+					<div class="col-12" id="featuresBox">
+						<table>
+							<thead>
+								<th id='thead' colspan="3">
+									<h2 class="headerText">Harvest Features</h2>
+								</th>
+							</thead>
+							<tbody>
+								<tr >
+									<td>
+										Foreman Tracking
+									</td>
+									<td>
+										Farming Heatmap
+									</td>
+									<td>
+										Farming Statistics
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<img class="img-responsive" src="images/marker.PNG" class="img-rounded center" id="Panel_Image" />
+									</td>
+									<td>
+										<img class="img-responsive" src="images/heatmap.PNG" class="img-rounded center" id="Panel_Image" />
+									</td>
+									<td>
+										<img class="img-responsive" src="images/stats.PNG" class="img-rounded center" id="Panel_Image" />
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td>
+										<div class="col-4">
+											<button class="btn btn-info" data-toggle="modal" data-target="#myModal">Learn More <i class="fa fa-angle-right"></i></button>
+										</div>
+									</td>
+									<td>
+										<div class="col-4">
+											<button class="btn btn-info" data-toggle="modal" data-target="#myModal1">Learn More <i class="fa fa-angle-right"></i></button>
+										</div>
+									</td>
+									<td>
+										<div class="col-4 ">
+											<button class="btn btn-info" data-toggle="modal" data-target="#myModal2">Learn More <i class="fa fa-angle-right"></i></button>
+										</div>
+									</td>
+								</tr>
+							</tfoot>						
+						</table>
+					</div>
+				</div>
+			</div>				
         </section>
         
     <!--QUnit testing-->

@@ -60,8 +60,8 @@ function initForemen() {
     });
     updateSpiner(false);
     displayForemanLocation();
+    requestLocations();
   });
-  requestLocations();
   setInterval(requestLocations, 1000 * 60 * 5);
 }
 
@@ -130,8 +130,8 @@ function updateMarkers() {
   }
 }
 
-function displayDate(timestamp) {
-  let date = moment(new Date(timestamp * 1000));
+function displayDate(datestring) {
+  let date = moment(datestring);
   let today = moment(new Date());
 
   const fmtYear = date.format('YYYY') === today.format('YYYY') ? "" : "YYYY ";
@@ -195,7 +195,7 @@ function updateSpiner(shouldSpin) {
 		radius: 20, // The radius of the inner circle
 		scale: 1, // Scales overall size of the spinner
 		corners: 1, // Corner roundness (0..1)
-		color: '#4CAF50', // CSS color or array of colors
+		color: 'white', // CSS color or array of colors
 		fadeColor: 'transparent', // CSS color or array of colors
 		speed: 1, // Rounds per second
 		rotate: 0, // The rotation offset

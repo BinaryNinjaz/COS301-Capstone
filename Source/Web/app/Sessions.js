@@ -78,7 +78,9 @@ function initPage() {
   setWorkers(workers, () => {
     newPage();
     setFarms(farms, () => {});
-    setOrchards(orchards, () => {});
+    setOrchards(orchards, () => {
+			drawOrchards();
+		});
   });
 }
 
@@ -119,10 +121,10 @@ function displaySessions(sortedMap, displayHeader, isFiltered) {
     for (const itemIdx in group.values) {
       const item = group.values[itemIdx];
       const foreman = workers[item.value.wid];
-      const time = moment(new Date(item.value.start_date * 1000)).format(isFiltered ? "YYYY/MM/DD HH:mm" : "HH:mm");
+      const time = moment(item.value.start_date).format(isFiltered ? "YYYY/MM/DD HH:mm" : "HH:mm");
       const text = foreman.name + " " + foreman.surname + " - " + time;
       sessionsList.innerHTML += "<button type='button' class='btn btn-sm btn-info' style='margin: 4px' onclick=loadSession('" + item.key + "') >" + text + "</button>";
-      if (isFiltered) {
+      if (isFiltered && item.reason !== "") {
         sessionsList.innerHTML += "<p class='searchReason'>" + item.reason + "</p>";
       }
     }
@@ -157,7 +159,7 @@ function newPage() {
         }
         const session = {value: obj, key: child.key};
 
-        const key = moment(new Date(session.value.start_date * 1000)).startOf('day');
+        const key = moment(session.value.start_date).startOf('day');
         const equalDates = (a, b) => {
           return a.isSame(b);
         };
@@ -186,8 +188,8 @@ function loadSession(sessionID) {
   const session = sessionForKey(sessionID, sessions);
   const val = session.value;
 
-  const start = new Date(val.start_date * 1000);
-  const end = new Date(val.end_date * 1000);
+  const start = moment(val.start_date);
+  const end = moment(val.end_date);
   const wid = val.wid;
   const foreman = workers[wid];
   const fname = foreman.name + " " + foreman.surname;
@@ -196,8 +198,8 @@ function loadSession(sessionID) {
 
   sessionDetails.innerHTML = "<form class=form-horizontal'><div class='form-group'>"
   sessionDetails.innerHTML += "<div class='col-sm-12'><label>Foreman: </label><span> " + fname + "</span></div>"
-  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Started: </label><p> " + start.toLocaleString() + "</p></div>"
-  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Ended: </label><p> " + end.toLocaleString() + "</p></div>"
+  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Started: </label><p> " + start.format("dddd, DD MMMM YYYY HH:mm") + "</p></div>"
+  sessionDetails.innerHTML += "<div class='col-sm-6'><label>Time Ended: </label><p> " + end.format("dddd, DD MMMM YYYY HH:mm") + "</p></div>"
   sessionDetails.innerHTML += "</div></form>";
 
   var first = true;
@@ -220,7 +222,7 @@ function loadSession(sessionID) {
     polypath = new google.maps.Polyline({
       path: track,
       geodesic: true,
-      strokeColor: '#0000FF',
+      strokeColor: '#FF0000',
       strokeOpacity: 1.0,
       strokeWeight: 2,
       map: map
@@ -295,6 +297,30 @@ function initGraph(collections) {
   });
 }
 
+var orchardPolygons = [];
+function drawOrchards() {
+	for (const idx in orchardPolygons) {
+		orchardPolygons[idx].setMap(null);
+	}
+
+	for (const oKey in orchards) {
+		var coords = [];
+		const oCoords = orchards[oKey].coords;
+		for (const cidx in oCoords) {
+			coords.push({lat: oCoords[cidx].lat, lng: oCoords[cidx].lng});
+		}
+		orchardPolygons.push(new google.maps.Polygon({
+	    paths: oCoords,
+	    strokeColor: hashColor(orchards[oKey].farm, oKey),
+	    strokeOpacity: 0.75,
+	    strokeWeight: 3,
+	    fillColor: hashColor(orchards[oKey].farm, oKey),
+	    fillOpacity: 0.25,
+	    map: map
+	  }));
+	}
+}
+
 var spinner;
 function updateSpiner(shouldSpin) {
   var opts = {
@@ -304,7 +330,7 @@ function updateSpiner(shouldSpin) {
 		radius: 20, // The radius of the inner circle
 		scale: 1, // Scales overall size of the spinner
 		corners: 1, // Corner roundness (0..1)
-		color: '#4CAF50', // CSS color or array of colors
+		color: 'white', // CSS color or array of colors
 		fadeColor: 'transparent', // CSS color or array of colors
 		speed: 1, // Rounds per second
 		rotate: 0, // The rotation offset
@@ -342,12 +368,11 @@ function filterSessions() {
 
       for (const sessionId in group) {
         const session = group[sessionId];
-        const sessionResults = searchSession(session.value, searchText, farms, orchards, workers);
-
+        const sessionResults = querySession(session.value, searchText, farms, orchards, workers);
         for (const key in sessionResults) {
-          var newSession = session;
+					var newSession = Object.assign({}, session);
           newSession["reason"] = sessionResults[key];
-          insertSessionIntoSortedMap(session, key, (a, b) => { return a === b; }, filteredSessions);
+          insertSessionIntoSortedMap(newSession, key, (a, b) => { return a === b; }, filteredSessions);
         }
       }
     }
