@@ -2,7 +2,7 @@
  * File:   Index.js
  * Author: Binary Ninjaz (Teboho, Sizo, Kevin)
  *
- * Description: Contains all functions required for successful signing in or loging in. 
+ * Description: Contains all functions required for successful signing in or logging in. 
  * 
  */
 
@@ -10,38 +10,34 @@ let page = 0; //0 being login, 1 being sign up
 
 /// This function will add the login with google functionality
 function googleLogin(){
-	var provider = new firebase.auth.GoogleAuthProvider();
-	firebase.auth().useDeviceLanguage();
-	provider.setCustomParameters({
-	  'login_hint': 'user@example.com'
-	});
-	
-	firebase.auth().signInWithPopup(provider).then(function(result) {
-	var token = result.credential.accessToken;
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().useDeviceLanguage();
+    provider.setCustomParameters({
+      'login_hint': 'user@example.com'
+    });
+
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+        var token = result.credential.accessToken;
         var user = result.user;
-	document.location.href = "HomePage.html";
-	}).catch(function(error) {
-	  // Handle Errors here.
-	  var errorCode = error.code;
-	  var errorMessage = error.message;
-	  var email = error.email;
-	 var credential = error.credential;
-	});
-	
+        document.location.href = "HomePage.html";
+    }).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var email = error.email;
+        var credential = error.credential;
+    });
 }
+
 ///This function allows the user to login
 function onSignIn(googleUser) {
-  var profile = googleUser.getBasicProfile();
-
-	
-	
-	const email = profile.getEmail();
+    var profile = googleUser.getBasicProfile();
+    const email = profile.getEmail();
     firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) { // user details correct
         document.location.href = "HomePage.html";
     }).catch(function (error) { // some error occured
         const errorCode = error.code;
         const errorMessage = error.message;
-
 
         if (errorCode === 'auth/wrong-password') {
             alert('Wrong password.');
@@ -52,81 +48,79 @@ function onSignIn(googleUser) {
     });
 }
 
-
 /* This function is used to make the page dynamic, in that if user presses the login button, it should render a login form rather than registration*/
 function showLogin(){
-	page = 0;
-	document.getElementById("formData").innerHTML = "";
-	document.getElementById("formData").innerHTML = "<fieldset>"+
-                                                            "<div class='card-header'>"+
-                                                                "<h2>Login</h2>"+
-                                                           "</div>"+
-                                                           "<div class='card-body'>"+
-                                                                "<div class='form-group'>"+
-                                                                    "<label style='text-align:left'>Email</label>"+
-                                                                    "<input type='text' class='form-control' id='username' required>"+
-                                                                '</div>'+
-                                                                '<div class="form-group">'+
-                                                                    '<label style="text-align:left">Password</label>'+
-                                                                    '<input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">'+
-                                                                '</div>'+
-                                                                '<div>'+
-                                                                    '<button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button>'+                  
-                                                                '</div>'+                                    
-                                                                '<div>'+
-                                                                    '<button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>'+                                    
-                                                                '</div>'+                                    
-                                                                '<div>'+
-                                                                    '<button onclick="showRegister()" class="btn btn-primary">Dont have an account? Sign Up</button>'+		
-                                                                '</div>'+                                    
-                                                                '<div>'+
-                                                                    '<a  onclick="resetPassword()" href="javascript:;">Forgot password</a>'+
-                                                                '</div>'+
+    page = 0;
+    document.getElementById("formData").innerHTML = "";
+    document.getElementById("formData").innerHTML = "<fieldset>"+
+                                                        "<div class='card-header'>"+
+                                                            "<h2>Login</h2>"+
+                                                       "</div>"+
+                                                       "<div class='card-body'>"+
+                                                            "<div class='form-group'>"+
+                                                                "<label style='text-align:left'>Email</label>"+
+                                                                "<input type='text' class='form-control' id='username' required>"+
                                                             '</div>'+
-                                                        '</fieldset>';
-                    }
+                                                            '<div class="form-group">'+
+                                                                '<label style="text-align:left">Password</label>'+
+                                                                '<input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">'+
+                                                            '</div>'+
+                                                            '<div>'+
+                                                                '<button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button>'+                  
+                                                            '</div>'+                                    
+                                                            '<div>'+
+                                                                '<button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>'+                                    
+                                                            '</div>'+                                    
+                                                            '<div>'+
+                                                                '<button onclick="showRegister()" class="btn btn-primary">Dont have an account? Sign Up</button>'+		
+                                                            '</div>'+                                    
+                                                            '<div>'+
+                                                                '<a  onclick="resetPassword()" href="javascript:;">Forgot password</a>'+
+                                                            '</div>'+
+                                                        '</div>'+
+                                                    '</fieldset>';
+}
 
 /* This function is used to make the page dynamic, in that if user presses the registration button, it should render a registration form rather than  login*/
 function showRegister(){
-	page = 1;
-        document.getElementById("formData").innerHTML = "";
-	document.getElementById("formData").innerHTML = '<fieldset>'
-								+"<div class='card-header'>"
-                                                                    +"<h2>Signup</h2>"
-                                                                +"</div>"
-                                                                +"<div class='card-body'>"
-                                                                    +'<div class="form-group">'
-                                                                            +'<label style="text-align:left">First Name</label>'
-                                                                            +'<input placeholder="" type="text" class="form-control" id="name" required />'
-                                                                    +'</div>'
-                                                                    +'<div class="form-group">'
-                                                                            +'<label style="text-align:left">Surname</label>'
-                                                                            +'<input placeholder="" type="text" class="form-control" id="surname" required />'
-                                                                    +'</div>'
-                                                                    +'<div class="form-group">'
-                                                                            +'<label style="text-align:left">Organisation</label>'
-                                                                            +'<input placeholder="" type="text" class="form-control" id="organisation" required />'
-                                                                    +'</div>'
-                                                                    +'<div class="form-group">'
-                                                                            +'<label style="text-align:left">Email Address</label>'
-                                                                            +'<input type="text" class="form-control" id="email" required data-type="tooltip"'
-                                                                                                               +'title="The email must be properly formatted, so joe@example.com" />'
-                                                                    +'</div>'
-                                                                    +'<div class="form-group">'
-                                                                            +'<label style="text-align:left">New Password</label>'
-                                                                            +'<input pattern=".{6,}" type="password" class="form-control" id="password"'
-                                                                                                               +'data-type="tooltip" title="Minimum 6 character password" required />'
-                                                                    +'</div>'
-                                                                    +'<div class="form-group">'
-                                                                            +'<label style="text-align:left">Password Confirmation</label>'
-                                                                            +'<input  type="password" class="form-control" id="passwordConf" required />'
-                                                                    +'</div>'
-                                                                    +'<div class="form-group" id="errorSpace"></div>'
-                                                                    +'<button onclick="register()" class="btn btn-success">Create Account</button>'
-                                                                            +'<br /> <button class="btn btn-primary" onclick="showLogin();">Have an account? Log In</button>'
-                                                                    +'</div>'
-                                                            +'</fieldset>';
-                           
+    page = 1;
+    document.getElementById("formData").innerHTML = "";
+    document.getElementById("formData").innerHTML = '<fieldset>'
+                                                            +"<div class='card-header'>"
+                                                                +"<h2>Signup</h2>"
+                                                            +"</div>"
+                                                            +"<div class='card-body'>"
+                                                                +'<div class="form-group">'
+                                                                        +'<label style="text-align:left">First Name</label>'
+                                                                        +'<input placeholder="" type="text" class="form-control" id="name" required />'
+                                                                +'</div>'
+                                                                +'<div class="form-group">'
+                                                                        +'<label style="text-align:left">Surname</label>'
+                                                                        +'<input placeholder="" type="text" class="form-control" id="surname" required />'
+                                                                +'</div>'
+                                                                +'<div class="form-group">'
+                                                                        +'<label style="text-align:left">Organisation</label>'
+                                                                        +'<input placeholder="" type="text" class="form-control" id="organisation" required />'
+                                                                +'</div>'
+                                                                +'<div class="form-group">'
+                                                                        +'<label style="text-align:left">Email Address</label>'
+                                                                        +'<input type="text" class="form-control" id="email" required data-type="tooltip"'
+                                                                                                           +'title="The email must be properly formatted, so joe@example.com" />'
+                                                                +'</div>'
+                                                                +'<div class="form-group">'
+                                                                        +'<label style="text-align:left">New Password</label>'
+                                                                        +'<input pattern=".{6,}" type="password" class="form-control" id="password"'
+                                                                                                           +'data-type="tooltip" title="Minimum 6 character password" required />'
+                                                                +'</div>'
+                                                                +'<div class="form-group">'
+                                                                        +'<label style="text-align:left">Password Confirmation</label>'
+                                                                        +'<input  type="password" class="form-control" id="passwordConf" required />'
+                                                                +'</div>'
+                                                                +'<div class="form-group" id="errorSpace"></div>'
+                                                                +'<button onclick="register()" class="btn btn-success">Create Account</button>'
+                                                                        +'<br /> <button class="btn btn-primary" onclick="showLogin();">Have an account? Log In</button>'
+                                                                +'</div>'
+                                                        +'</fieldset>';
 }
 
 /* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
@@ -169,11 +163,12 @@ function register() {
         firebaseRegister(email, pass);
     }
 }
+
 /* This function checks whether the first password matches the 'verify' password */
 function checkPass(pass1, pass2) {
-	if(page === 0){
-            return false;
-	} 
+    if(page === 0){
+        return false;
+    } 
     //We can do this validation through html's minimum character attribute
     if (pass1 !== pass2) {
         document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Passwords do not match</p>";
