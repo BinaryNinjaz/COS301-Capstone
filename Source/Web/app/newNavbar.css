@@ -1,14 +1,30 @@
 @media (min-width: 768px){
 	#ojo { float:right;}
-	
+
+}
+.navbar {
+	border: none;
+	border-radius: 0px;
+}
+.nav a {
+	height: 50px; /* tabs change height when glyphs are inside. So we fix the size. */
 }
 .nav a.active {
-    background-color: #4CAF50; /*Green*/
-    color: white;
+    background: #48AD58; /*Green*/
+		border-bottom: 1px solid #48AD58;
+    color: whitesmoke;
 }
 .navbar ul.nav a { color: whitesmoke; }
-.navbar ul.nav a:hover { 
-	background-color: #ddd; /*Grey*/
-    color: black;
-    text-decoration: none;
+.navbar ul.nav a:not(.active):hover {
+	background-color: #24572C; /*Grey*/
+	border-bottom: 1px solid #24572C;
+  text-decoration: none;
+}
+.navbar ul.nav a.active:hover {
+	background-color: #48AD58; /*Green*/
+	border-bottom: 1px solid #48AD58;
+}
+
+.nav a < span {
+	border-bottom: none;
 }
