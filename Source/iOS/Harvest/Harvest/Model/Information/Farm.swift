@@ -45,6 +45,7 @@ final class Farm: Codable {
   
   func makeChangesPermanent() {
     if let t = tempory {
+      id = t.id
       name = t.name
       companyName = t.companyName
       email = t.email
@@ -52,7 +53,6 @@ final class Farm: Codable {
       province = t.province
       nearestTown = t.nearestTown
       details = t.details
-      tempory = nil
     }
   }
   

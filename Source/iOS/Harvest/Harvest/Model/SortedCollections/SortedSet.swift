@@ -34,9 +34,9 @@ struct SortedSet<Element: Hashable> : Collection, RandomAccessCollection {
   }
 }
 
-extension SortedSet where SortingElement: Comparable {
+extension SortedSet: RangeReplaceableCollection where Element: Comparable {
   init() {
-    _set = Set<Element>()
+    _set = []
     _ref = SortedArray<Element>()
     areInIncreasingOrder = (<)
   }

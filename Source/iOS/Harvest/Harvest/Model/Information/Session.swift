@@ -64,14 +64,14 @@ extension Dictionary where Key == String, Value == Any {
           continue
         }
         
-        guard let _date = point["date"] as? Double else {
+        guard let _date = point["date"] as? String else {
           continue
         }
         
         let loc = CLLocationCoordinate2D(latitude: lat, longitude: lng)
-        let date = Date(timeIntervalSince1970: _date)
+        let date = DateFormatter.rfc2822Date(from: _date)
         
-        colps.append(CollectionPoint(location: loc, date: date))
+        colps.append(CollectionPoint(location: loc, date: date, selectedOrchard: nil))
       }
       
       if let worker = Entities.shared.workers.first(where: { (_, value) -> Bool in
@@ -99,8 +99,8 @@ public final class Session {
   init(json: [String: Any], id: String) {
     self.id = id
     
-    startDate = Date(timeIntervalSince1970: json["start_date"] as? Double ?? 0.0)
-    endDate = Date(timeIntervalSince1970: json["end_date"] as? Double ?? 0.0)
+    startDate = DateFormatter.rfc2822Date(from: json["start_date"] as? String ?? "")
+    endDate = DateFormatter.rfc2822Date(from: json["end_date"] as? String ?? "")
     
     let wid = json["wid"] as? String ?? ""
     foreman = Entities.shared.worker(withId: wid) ?? Worker(json: ["name": "Farm Owner"], id: HarvestUser.current.uid)
@@ -113,15 +113,14 @@ public final class Session {
   
   func json() -> [String: [String: Any]] {
     return [id: [
-      "start_date": startDate.timeIntervalSince1970,
-      "end_date": endDate.timeIntervalSince1970,
+      "start_date": DateFormatter.rfc2822String(from: startDate),
+      "end_date": DateFormatter.rfc2822String(from: endDate),
       "wid": foreman.id,
       "track": track.firbaseCoordRepresentation(),
       "collections": collections.firebaseSessionRepresentation()
     ]]
   }
   
-  // swiftlint:disable cyclomatic_complexity
   func search(for text: String) -> [(String, String)] {
     var result = [(String, String)]()
     
@@ -138,16 +137,6 @@ public final class Session {
       if personProps.contains(prop) {
         result.append(("Foreman " + prop, reason))
       }
-    }
-  
-    let sd = formatter.string(from: startDate)
-    if sd.lowercased().contains(text) {
-      result.append(("Start Date", sd))
-    }
-    
-    let ed = formatter.string(from: endDate)
-    if ed.lowercased().contains(text) {
-      result.append(("End Date", ed))
     }
     
     for (w, points) in collections {
@@ -199,56 +188,6 @@ extension Session: CustomStringConvertible {
   
   var key: String {
     return startDate.timeIntervalSince1970.description + id
-  }
-}
-
-final class ShallowSession {
-  var startDate: Date
-  var foreman: Worker
-  var id: String
-  
-  init(json: Any) {
-    guard let json = json as? [String: Any] else {
-      startDate = Date()
-      id = startDate.description
-      foreman = Worker(HarvestUser.current)
-      return
-    }
-    
-    let d = Date(timeIntervalSince1970: json["start_date"] as? Double ?? 0.0)
-    startDate = d
-    id = json["key"] as? String ?? d.description
-    
-    let wid = json["wid"] as? String ?? ""
-    foreman = Entities.shared.worker(withId: wid) ?? Worker(HarvestUser.current)
-  }
-  
-  func json() -> Any {
-    return [
-      "key": id,
-      "start_date": startDate.timeIntervalSince1970,
-      "wid": foreman.id
-    ]
-  }
-}
-
-extension ShallowSession: CustomStringConvertible {
-  public var description: String {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .medium
-    formatter.timeStyle = .medium
-    
-    return foreman.description + " ・ " + formatter.string(from: startDate)
-  }
-  
-  var key: String {
-    return startDate.timeIntervalSince1970.description + id
-  }
-}
-
-extension ShallowSession: Equatable {
-  static func == (lhs: ShallowSession, rhs: ShallowSession) -> Bool {
-    return lhs.id == rhs.id
   }
 }
 

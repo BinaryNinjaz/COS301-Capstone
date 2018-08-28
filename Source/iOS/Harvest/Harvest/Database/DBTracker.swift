@@ -19,8 +19,8 @@ extension HarvestDB {
     let key = cref.childByAutoId().key
     
     let data: [String: Any] = [
-      "start_date": date.timeIntervalSince1970,
-      "end_date": Date().timeIntervalSince1970,
+      "start_date": DateFormatter.rfc2822String(from: date),
+      "end_date": DateFormatter.rfc2822String(from: Date()),
       "wid": wid,
       "collections": workers.firebaseSessionRepresentation(),
       "track": track.firbaseCoordRepresentation()
@@ -28,36 +28,6 @@ extension HarvestDB {
     
     let updates = [key: data]
     cref.updateChildValues(updates)
-  }
-  
-  static func yieldCollection(
-    for user: String,
-    on date: Date,
-    completion: @escaping (DataSnapshot) -> Void
-  ) {
-    let yields = ref.child(Path.yields)
-    yields.observeSingleEvent(of: .value) { (snapshot) in
-      for _child in snapshot.children {
-        guard let childSnapshot = _child as? DataSnapshot else {
-          continue
-        }
-        
-        guard let child = childSnapshot.value as? [String: Any] else {
-          continue
-        }
-        guard let email = child["email"] as? String else {
-          continue
-        }
-        guard let cdate = child["date"] as? Date else {
-          continue
-        }
-        
-        if email == user && cdate == date {
-          completion(childSnapshot)
-          return
-        }
-      }
-    }
   }
   
   static func update(location: CLLocationCoordinate2D) {
@@ -70,15 +40,14 @@ extension HarvestDB {
     let name = (worker?.firstname ?? "") + " " + (worker?.lastname ?? "")
     
     let locations = ref.child(Path.locations)
-    let updates =
-      [
+    let updates = [
         id.wid: [
           "coord": [
             "lat": location.latitude,
             "lng": location.longitude
           ],
           "display": name,
-          "date": Date().timeIntervalSince1970
+          "date": DateFormatter.rfc2822String(from: Date())
         ]
     ]
     locations.updateChildValues(updates)

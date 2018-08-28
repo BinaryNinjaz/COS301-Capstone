@@ -99,7 +99,7 @@ class SettingsEurekaViewController: ReloadableFormViewController {
   func userSection(form: Form) {
     let userRow = HarvestUser.current.accountIdentifier
     
-    let adminRow = AdminRow(tag: nil, admin: HarvestUser.current) { row in
+    let adminRow = AdminRow(tag: nil) { row in
       row.title = userRow
     }
     

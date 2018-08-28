@@ -23,7 +23,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   var zoomLevel: Float = 15.0
   
   var orchardPolygon: GMSPolygon?
-  var collections = [CLLocationCoordinate2D]()
+  var coordinates = [CLLocationCoordinate2D]()
   
   @IBOutlet weak var mapView: GMSMapView!
   @IBOutlet weak var removeAllButton: UIButton!
@@ -32,33 +32,41 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
   
   var actuallyChanged: ((RowOf<Orchard>) -> Void)?
   
+  var markers: [GMSMarker]?
+  
+  var shouldShowMarkers = false
+  
   func updatePolygon() {
     orchardPolygon?.map = nil
     var data = row.value?.json()[row.value?.id ?? ""] ?? [:]
-    data["coords"] = collections.firbaseCoordRepresentation()
+    data["coords"] = coordinates.firbaseCoordRepresentation()
     row.value = Orchard(json: data, id: row.value?.id ?? "")
-    orchardPolygon = row.value?.coords.gmsPolygon(mapView: mapView)
+    orchardPolygon = row.value?.coords.gmsPolygon(mapView: mapView, color: row.value?.color ?? UIColor.red)
+    
+    markers?.forEach { $0.map = nil }
+    if shouldShowMarkers {
+      markers = row.value?.coords.gmsPolygonMarkers(mapView: mapView)
+    }
+    
     actuallyChanged?(row)
   }
   
   @IBAction func removeAllCoords(_ sender: Any) {
-    if !collections.isEmpty {
-      collections.removeAll()
+    if !coordinates.isEmpty {
+      coordinates.removeAll()
       updatePolygon()
     } else {
       SCLAlertView().showInfo("No More Points", subTitle: "There are no more points in the orchard to delete")
     }
-    
   }
   
   @IBAction func removeLastCoord(_ sender: Any) {
-    if !collections.isEmpty {
-      collections.removeLast()
+    if !coordinates.isEmpty {
+      coordinates.removeLast()
       updatePolygon()
     } else {
       SCLAlertView().showInfo("No More Points", subTitle: "There are no more points in the orchard to delete")
     }
-    
   }
   
   public override func viewDidLoad() {
@@ -84,10 +92,13 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       return
     }
     
-    collections = orchard.coords
-    orchardPolygon = collections.gmsPolygon(mapView: mapView)
-    
-    if let path = orchardPolygon?.path {
+    coordinates = orchard.coords
+    orchardPolygon = coordinates.gmsPolygon(mapView: mapView, color: orchard.color)
+  }
+  
+  public override func viewDidAppear(_ animated: Bool) {
+    updatePolygon()
+    if let path = orchardPolygon?.path, !coordinates.isEmpty {
       let bounds = GMSCoordinateBounds(path: path)
       mapView.animate(with: GMSCameraUpdate.fit(bounds, withPadding: 15.0))
     } else {
@@ -95,6 +106,9 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
       locationManager.delegate = self
       locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
       locationManager.requestLocation()
+      if let loc = mapView.myLocation {
+        mapView.animate(toLocation: loc.coordinate)
+      }
     }
   }
   
@@ -111,7 +125,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
     SCLAlertView.toggleMapType(for: mapView, from: navigationItem.rightBarButtonItem)
   }
   
-  public func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
+  public func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
     if #available(iOS 10.0, *) {
       let gen = UISelectionFeedbackGenerator()
       gen.prepare()
@@ -119,8 +133,8 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
     } else {
       // Fallback on earlier versions
     }
-    
-    collections.append(coordinate)
+    shouldShowMarkers = true
+    coordinates.append(coordinate)
     updatePolygon()
   }
   
@@ -132,7 +146,7 @@ UIViewController, GMSMapViewDelegate, TypedRowControllerType, CLLocationManagerD
                                        zoom: zoomLevel,
                                        bearing: .pi / 2,
                                        viewingAngle: .pi)
-    
+    mapView.animate(to: mapView.camera)
     manager.stopUpdatingLocation()
   }
   

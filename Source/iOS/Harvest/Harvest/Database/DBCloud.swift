@@ -102,55 +102,6 @@ enum HarvestCloud {
     task.resume()
   }
   
-  static func getShallowSessions(
-    onPage page: Int,
-    ofSize size: Int,
-    _ completion: @escaping ([ShallowSession]) -> Void
-  ) {
-    let query = component(onBase: Identifiers.shallowSessions, withArgs: [
-      ("pageNo", page.description),
-      ("pageSize", size.description),
-      ("uid", HarvestDB.Path.parent)
-    ])
-    
-    runTask(withQuery: query) { (serial) in
-      guard let json = serial as? [Any] else {
-        completion([])
-        return
-      }
-      
-      var result = [ShallowSession]()
-      
-      for object in json {
-        result.append(ShallowSession(json: object))
-      }
-      
-      completion(result)
-    }
-  }
-  
-  static func getExpectedYield(orchardId: String, date: Date, completion: @escaping (Double) -> Void) {
-    let query = component(onBase: Identifiers.expectedYield, withArgs: [
-      ("orchardId", orchardId),
-      ("date", date.timeIntervalSince1970.description),
-      ("uid", HarvestDB.Path.parent)
-    ])
-    
-    runTask(withQuery: query) { (serial) in
-      guard let json = serial as? [String: Any] else {
-        completion(.nan)
-        return
-      }
-      
-      guard let expected = json["expected"] as? Double else {
-        completion(.nan)
-        return
-      }
-      
-      completion(expected)
-    }
-  }
-  
   // swiftlint:disable function_parameter_count
   static func timeGraphSessions(
     grouping: StatKind,
@@ -164,9 +115,8 @@ enum HarvestCloud {
     var args = [
       ("groupBy", grouping.identifier),
       ("period", period.identifier),
-      ("startDate", startDate.timeIntervalSince1970.description),
-      ("endDate", endDate.timeIntervalSince1970.description),
-      ("offset", Calendar.current.timeZone.offset()),
+      ("startDate", DateFormatter.rfc2822String(from: startDate)),
+      ("endDate", DateFormatter.rfc2822String(from: endDate)),
       ("mode", mode.identifier),
       ("uid", HarvestDB.Path.parent)
     ]
@@ -185,10 +135,6 @@ enum HarvestCloud {
 
 extension HarvestCloud {
   enum Identifiers {
-    static let shallowSessions = "flattendSessions"
-    static let sessionsWithDates = "sessionsWithinDates"
-    static let expectedYield = "expectedYield"
-    static let orchardCollections = "orchardCollectionsWithinDate"
     static let timeGraphSessions = "timedGraphSessions"
   }
 }

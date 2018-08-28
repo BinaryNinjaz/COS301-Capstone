@@ -35,7 +35,7 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
             "lat": collection.location.latitude,
             "lng": collection.location.longitude
           ],
-          "date": collection.date.timeIntervalSince1970
+          "date": DateFormatter.rfc2822String(from: collection.date)
         ]
         i += 1
       }

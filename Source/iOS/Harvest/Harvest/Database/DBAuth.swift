@@ -10,6 +10,7 @@ import Firebase
 import GoogleSignIn
 import Disk
 import SCLAlertView
+import CryptoSwift
 
 extension HarvestDB {
   static func requestWorkingFor(
@@ -57,6 +58,8 @@ extension HarvestDB {
               UserDefaults.standard.set(uid: fullOption.uid, wid: fullOption.wid)
               completion(true)
             }
+          
+          alert.addButton("Cancel", action: { completion(false) })
           
           alert.showNotice(
             "Select An Organization",
@@ -233,7 +236,7 @@ extension HarvestDB {
   ) {
     let wfref = ref.child(Path.workingFor
         + "/"
-        + HarvestUser.current.accountIdentifier.removedFirebaseInvalids())
+        + hashed(phoneNumber: HarvestUser.current.accountIdentifier.removedFirebaseInvalids()))
     wfref.observeSingleEvent(of: .value) { (snapshot) in
       guard let _uids = snapshot.value as? [String: Any] else {
         completion([])
@@ -256,13 +259,20 @@ extension HarvestDB {
   
   static func getWorkingForFarmName(uid: String, completion: @escaping (String?) -> Void) {
     let fnref = ref.child(uid + "/admin/organization")
-    fnref.observeSingleEvent(of: .value) { (snapshot) in
+    
+    let success: (DataSnapshot) -> Void = { snapshot in
       guard let name = snapshot.value as? String else {
-        completion(nil)
+        completion(uid)
         return
       }
       completion(name)
     }
+    
+    let failure: (Error) -> Void = { error in
+      completion(nil)
+    }
+    
+    fnref.observeSingleEvent(of: .value, with: success, withCancel: failure)
   }
   
   static func getWorkingForFarmNames(
@@ -276,13 +286,28 @@ extension HarvestDB {
     }
     HarvestDB.getWorkingForFarmName(uid: uid) { (name) in
       let rest = Array(uids.dropFirst())
-      
       guard let name = name else {
-        HarvestDB.getWorkingForFarmNames(uids: rest, result: result + [uid], completion: completion)
+        HarvestDB.getWorkingForFarmNames(uids: rest, result: result, completion: completion)
         return
       }
-      
       HarvestDB.getWorkingForFarmNames(uids: rest, result: result + [name], completion: completion)
     }
+  }
+}
+
+func hashed(phoneNumber: String) -> String {
+  let bytes = phoneNumber.bytes
+  var hasher = SHA2(variant: .sha256)
+  _ = try? hasher.update(withBytes: bytes)
+  let result = try? hasher.finish()
+  
+  let text = result?.hexEncodedString() ?? ""
+  print(text)
+  return text
+}
+
+extension Array where Element == UInt8 {
+  func hexEncodedString() -> String {
+    return map { String(format: "%02hhx", $0) }.joined()
   }
 }

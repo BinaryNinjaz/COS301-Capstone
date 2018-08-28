@@ -51,6 +51,13 @@ extension SortedArray where Element: Comparable {
   }
 }
 
+//extension SortedArray: RangeReplaceableCollection where Element: Comparable {
+//  init() {
+//    _store = []
+//    areInIncreasingOrder = (<)
+//  }
+//}
+
 extension SortedArray: SortedInsertableCollection, CustomStringConvertible {
   @discardableResult
   mutating func insert(_ e: SortingElement) -> Index {
