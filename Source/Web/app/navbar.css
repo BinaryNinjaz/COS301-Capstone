@@ -2,6 +2,7 @@
 .topnav {
     background-color: #333;
     overflow: hidden;
+    border: none;
 }
 
 /* Style the links inside the navigation bar */
@@ -15,7 +16,7 @@
 }
 
 /* Change the colour of links on hover */
-.topnav a:hover {
+.topnav a:hover :not(.active) {
     background-color: #ddd; /*Grey*/
     color: black;
     text-decoration: none;
@@ -26,7 +27,7 @@
 }
 #signing
 {
-	
+
 }*/
 
 /* Colour Co active/current link */
@@ -69,8 +70,3 @@ button {
 p.errmsg {
     color: red;
 }
-
-
-
-
-

@@ -36,20 +36,23 @@ class SessionSelectionViewController: UITableViewController {
     if let selPath = tableView.indexPathForSelectedRow {
       tableView.deselectRow(at: selPath, animated: true)
     }
+    tableView.reloadData()
   }
   
-  func loadNewPage(forcefully: Bool = false) {
-    guard sessions.count > 0 || forcefully else {
+  func updateBackgroundView() {
+    if sessions.count == 0 {
       let label = UILabel(frame: tableView.frame)
       label.textAlignment = .center
       label.textColor = UIColor.black.withAlphaComponent(0.3)
       label.numberOfLines = -1
-      label.text = "Session are created when work is done from the 'Yield Tracker' Tab."
+      label.text = "Session are created when work is done from the 'Yield Collector' Tab."
       tableView.backgroundView = label
-      return
+    } else {
+      tableView.backgroundView = nil
     }
-    tableView.backgroundView = nil
-    
+  }
+  
+  func loadNewPage(forcefully: Bool = false) {
     guard !isLoading else {
       return
     }
@@ -64,6 +67,7 @@ class SessionSelectionViewController: UITableViewController {
         self.filteredSessions = self.sessions.search(for: self.searchText)
       }
       DispatchQueue.main.async {
+        self.updateBackgroundView()
         self.isLoading = false
         self.tableView.reloadData()
       }
@@ -85,6 +89,7 @@ class SessionSelectionViewController: UITableViewController {
         self.filteredSessions = self.sessions.search(for: self.searchText)
       }
       DispatchQueue.main.async {
+        self.updateBackgroundView()
         self.isLoading = false
         self.refreshControl?.endRefreshing()
         self.tableView.reloadData()

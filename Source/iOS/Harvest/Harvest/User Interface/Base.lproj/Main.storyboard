@@ -600,7 +600,7 @@
                                                 <action selector="removeAllCoords:" destination="093-0Y-SHj" eventType="touchUpInside" id="BVI-0W-Y9L"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tap and hold to place a point. Repeat for each corner of the field." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="APc-qa-jGg">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tap to place a point. Repeat for each corner of the field going in a clockwise direction." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="APc-qa-jGg">
                                             <rect key="frame" x="8" y="8" width="359" height="44"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -664,17 +664,17 @@
             </objects>
             <point key="canvasLocation" x="3687" y="-664"/>
         </scene>
-        <!--Yield Tracker-->
+        <!--Yield Collector-->
         <scene sceneID="H2b-6H-xwA">
             <objects>
-                <viewController storyboardIdentifier="trackerViewController" title="Yield Tracker" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Wl-k0-RpW" customClass="TrackerViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="trackerViewController" title="Yield Collector" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Wl-k0-RpW" customClass="TrackerViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Y8O-8S-VIT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="workerClickerCollectionView" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="always" keyboardDismissMode="onDrag" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5MG-iq-Vf2">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <viewLayoutGuide key="safeArea" id="WVh-cf-GbO"/>
                                 <inset key="scrollIndicatorInsets" minX="0.0" minY="56" maxX="0.0" maxY="98"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" sectionInsetReference="safeArea" id="ieY-Xz-2Oa">
@@ -945,21 +945,6 @@ Select Orchard: Apple Farm - Block A</string>
             </objects>
             <point key="canvasLocation" x="3084" y="2121"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="64d-kd-0Td">
-            <objects>
-                <viewController storyboardIdentifier="pdfViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="A7C-gD-aQu" customClass="PDFViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ecz-2t-QJH">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="ao6-8b-x9Q"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="A4W-Aj-9Tu" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3084" y="2804.347826086957"/>
-        </scene>
         <!--Data Source-->
         <scene sceneID="TIm-H1-HXh">
             <objects>
@@ -1228,44 +1213,45 @@ Select Orchard: Apple Farm - Block A</string>
         <scene sceneID="nNE-A1-aoF">
             <objects>
                 <collectionViewController id="Nhw-JI-lkR" customClass="InformationEntityController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="rWD-hP-2Zj">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="always" dataMode="prototypes" id="rWD-hP-2Zj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <viewLayoutGuide key="safeArea" id="eN0-8S-5rP"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" sectionInsetReference="safeArea" id="pSJ-Mn-yy1">
-                            <size key="itemSize" width="371" height="144"/>
+                            <size key="itemSize" width="375" height="144"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="informationEntityCell" reuseIdentifier="informationEntityCell" id="uuB-89-RTK" customClass="InformationEntityCollectionViewCell" customModule="Harvest" customModuleProvider="target">
-                                <rect key="frame" x="2" y="0.0" width="371" height="144"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="144"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="371" height="144"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="144"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6pW-lx-r7r">
-                                            <rect key="frame" x="0.0" y="0.0" width="371" height="144"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="144"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
                                         <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bx2-5z-1HG">
-                                            <rect key="frame" x="0.0" y="85" width="371" height="59"/>
+                                            <rect key="frame" x="0.0" y="85" width="375" height="59"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="6PA-su-wlR">
-                                                <rect key="frame" x="0.0" y="0.0" width="371" height="59"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="59"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c4c-tw-ngn">
-                                                        <rect key="frame" x="103" y="0.0" width="268" height="59"/>
+                                                        <rect key="frame" x="103" y="0.0" width="272" height="59"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="kHK-UW-8en">
-                                                            <rect key="frame" x="0.0" y="0.0" width="268" height="59"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="272" height="59"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FJY-x6-9wR">
-                                                                    <rect key="frame" x="8" y="8" width="252" height="43"/>
+                                                                    <rect key="frame" x="8" y="8" width="256" height="43"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="48"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

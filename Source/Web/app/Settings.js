@@ -63,9 +63,6 @@ function saveEmail(){
     }
 }
 
-/* TODO: send reset password to email for security (real emails need 
-  to be used first) 
-  firebase.auth().sendPasswordResetEmail(email); */
 function savePassword(){
     var newPass = document.getElementById("psw").value;
     var newPass2 = document.getElementById("psw2").value;
@@ -106,7 +103,6 @@ function checkPass(psw, psw2){
     }
 }
 
-/* TODO: sign user out of website after account deletion */
 function deleteAccount(){
     if(confirm("Are you sure you want to permanently delete this account and all the information it contains?")){
         var thePrompt = constructPrompt();
@@ -114,8 +110,10 @@ function deleteAccount(){
             var thePass = thePrompt.document.getElementById("thePass").value;
             if(getUser().reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(email, thePass))){
                 thePrompt.close();
-                database.ref('/' + getUserID()).remove();
-                //sign user out
+                firebase.auth().signOut().then(function () {
+                    database.ref('/' + getUserID()).remove();
+                    document.location.href = "index.html";
+                });
             }else{
                 thePrompt.close();
                 alert("Incorrect password entered.");

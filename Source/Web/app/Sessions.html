@@ -10,6 +10,9 @@
         <script src="colors.js" charset="utf-8"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 
+        <!-- Moment.js -->
+        <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+
         <!-- Firebase Dependencies -->
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
@@ -23,10 +26,7 @@
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"
                 integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
-
-        <!-- Moment.js -->
-        <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
-
+        <script src="harvestQuery.js" charset="utf-8"></script>
         <script src="Sessions.js" charset="utf-8"></script>
 
 
@@ -52,10 +52,8 @@
 
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" id="active" href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a>
-        </div>
         <ul class="nav navbar-nav">
+          <li><a href="HomePage.html">&nbsp;<span class="glyphicon glyphicon-home"></span>&nbsp;</a></li>
           <li><a href="ForemanTracker.html">Tracker</a></li>
           <li><a href="Information.html">Information</a></li>
           <li><a class="active" href="Sessions.html">Sessions</a></li>
@@ -71,21 +69,24 @@
 
       <div class="container">
           <div class="row">
-              <div class="col-sm-3 scrollView">
+              <div class="col-sm-3 scrollView" style="padding-right: 8px">
                   <h1>Sessions</h1>
                   <input class="form-control" type="text" placeholder="Search" id="sessionSearchField" oninput="filterSessions()">
                   <div id="sessionsList">
                   </div>
                   <div id="sessionsListLoader">
                   </div>
-        <div id="loader">
+                  <div id="loader">
                   </div>
               </div>
-              <div class="col-sm-9 detailsView">
-                  <div id="sessionDetails">
+
+              <div class="col-sm-9">
+                  <div class="map" style="height: 42%; margin-left: 16px" id="map"></div>
+                  <div class="detailsView">
+                    <div id="sessionDetails">
+                    </div>
+                    <canvas id="doughnut" style="width:100%"></canvas>
                   </div>
-                  <div class="map" style="height: 42%" id="map"></div>
-                  <canvas id="doughnut" style="width:100%"></canvas>
               </div>
           </div>
       </div>

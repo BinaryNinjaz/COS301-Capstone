@@ -57,8 +57,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +72,9 @@ import za.org.samac.harvest.adapter.collections;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.service.BackgroundService;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Farm;
+import za.org.samac.harvest.util.Orchard;
 import za.org.samac.harvest.util.WorkerComparator;
 
 import static za.org.samac.harvest.R.drawable.rounded_button;
@@ -79,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private final int GPS_SETTINGS_UPDATE = 989;
     private static final String TAG = "Clicker";
 
+    private Data data;
     private static ArrayList<Worker> workers;
     private static ArrayList<Worker> foremen;
     private static ArrayList<Worker> workersSearch;
@@ -101,9 +107,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private boolean locationEnabled = false;
     private static final long LOCATION_REFRESH_TIME = 60000;
     private static final float LOCATION_REFRESH_DISTANCE = 3;
-    private double startSessionTime;
-    private double endSessionTime;
-    private double divideBy1000Var = 1000.0000000;
+    private int divideBy1000Var = 1000;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private String currentUserEmail;
     private static String currentUserNumber;
@@ -132,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private BottomNavigationView bottomNavigationView;
 
     private void init() {
+        data = new Data();
         track = new HashMap<>();
         this.workers = new ArrayList<>();//stores worker names
         workersSearch = new ArrayList<>();//stores worker names
@@ -146,6 +151,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if(savedInstanceState == null) {
             init();
         }
+
+        data = new Data();
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -320,13 +327,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                 case R.id.actionYieldTracker:
                                     return true;
                                 case R.id.actionInformation:
-                                    startActivity(new Intent(MainActivity.this, InformationActivity.class));
+                                    startActivityIfNeeded(new Intent(MainActivity.this, InformationActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                                 case R.id.actionSession:
-                                    startActivity(new Intent(MainActivity.this, Sessions.class));
+                                    startActivityIfNeeded(new Intent(MainActivity.this, Sessions.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                                 case R.id.actionStats:
-                                    startActivity(new Intent(MainActivity.this, Stats.class));
+                                    startActivityIfNeeded(new Intent(MainActivity.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                             }
                             return true;
@@ -346,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     int holdi;
 
     private void getForemenId() {
-        DatabaseReference foremanRef;
+        final DatabaseReference foremanRef;
         foremanRef = currUserRef.child("workers");
         foremanRef.addValueEventListener(new ValueEventListener() {
 
@@ -365,6 +372,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 constraintLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 //user pressed start and all went well with retrieving data
+                foremanRef.removeEventListener(this);
             }
 
             @Override
@@ -383,10 +391,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                orchards.clear();
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
                     Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
                     orchardKeys.add(zoneSnapshot.getKey().toString());
-                    orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                    Orchard orchard = data.getOrchardFromIDString(zoneSnapshot.getKey().toString());
+                    if (orchard != null) {
+                        Farm farm = orchard.getAssignedFarm();
+                        if (farm != null) {
+                            String farmName = farm.getName();
+                            if (farmName == null) {
+                                orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                            } else {
+                                orchards.add(farmName + " - " + zoneSnapshot.child("name").getValue(String.class));
+                            }
+                        } else {
+                            orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                        }
+                    } else {
+                        orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                    }
                 }
 
                 getForemenId();
@@ -693,18 +717,25 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             To reproduce
             > In Debug mode, add a worker from the android information, then crash, but, after the crash and subsequent restart, it works.*/
 //        workersRef.addValueEventListener(new ValueEventListener() {
-        workers.clear();
-        workersSearch.clear();
-        adapter.setWorkers(workers);
+        //workers.clear();
+        //adapter.setWorkers(workers);
         workersRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
+                foremen.clear();
+                workers.clear();
+                for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
+                    //Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
                     String workerOrchards = "";
-                    String surname = zoneSnapshot.child("surname").getValue(String.class);
-                    String fullName = zoneSnapshot.child("name").getValue(String.class) + " " + zoneSnapshot.child("surname").getValue(String.class);
+                    String surname = "";
+                    String fullName = "";
+                    if (zoneSnapshot.child("surname") != null) {
+                        surname = zoneSnapshot.child("surname").getValue(String.class);
+                    }
+                    if (zoneSnapshot.child("name") != null) {
+                        fullName = zoneSnapshot.child("name").getValue(String.class) + " " + surname;
+                    }
                     if (zoneSnapshot.child("orchards") != null) {
                         workerOrchards = "";
                         for (DataSnapshot orch : zoneSnapshot.child("orchards").getChildren()) {
@@ -714,20 +745,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                     if (workerOrchards.contains(selectedOrchardKey)) {
                         //collect workers
-                        if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
-                            Worker workerObj = new Worker();
-                            workerObj.setName(fullName);
-                            workerObj.setSurname(surname);
-                            workerObj.setValue(0);
-                            workerObj.setID(zoneSnapshot.getKey());
-                            workers.add(workerObj);
-                        } else {
-                            Worker workerObj = new Worker();
-                            workerObj.setName(fullName);
-                            workerObj.setSurname(surname);
-                            workerObj.setValue(0);
-                            workerObj.setID(zoneSnapshot.getKey());
-                            foremen.add(workerObj);
+                        if (zoneSnapshot.child("type") != null) {
+                            if (zoneSnapshot.child("type").getValue(String.class).equals("Worker")) {
+                                Worker workerObj = new Worker();
+                                workerObj.setName(fullName);
+                                workerObj.setSurname(surname);
+                                workerObj.setValue(0);
+                                workerObj.setID(zoneSnapshot.getKey());
+                                workers.add(workerObj);
+                            } else {
+                                Worker workerObj = new Worker();
+                                workerObj.setName(fullName);
+                                workerObj.setSurname(surname);
+                                workerObj.setValue(0);
+                                workerObj.setID(zoneSnapshot.getKey());
+                                foremen.add(workerObj);
+                            }
                         }
                     }
                 }
@@ -747,6 +780,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     progressBar.setVisibility(View.GONE);
                 }
                 //user pressed start and all went well with retrieving data
+
+                workersRef.removeEventListener(this);
             }
 
             @Override
@@ -850,9 +885,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             sessionKey = sessRef.push().getKey();//generate key/ID for a session
             sessRef = database.getReference(farmerKey + "/sessions/" + sessionKey + "/");//put key in database
 
-            startSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(start time of session)seconds since January 1, 1970 00:00:00 UTC
-
-            sessionDate.put("start_date", startSessionTime);
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
+            String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+            sessionDate.put("start_date", dateString);
 
             if (isFarmer) {
                 sessionDate.put("wid", uid);//add foreman database ID to session;
@@ -860,8 +895,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 sessionDate.put("wid", foremanID);//add foreman database ID to session;
             }
 
-            endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
-            sessionDate.put("end_date", endSessionTime);
+            formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
+            dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+            sessionDate.put("end_date", dateString);
 
             sessRef.updateChildren(sessionDate);//save data to Firebase
         }
@@ -1070,8 +1106,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             TextView pressStart = findViewById(R.id.startText);
             pressStart.setText(R.string.pressStart);
 
-            endSessionTime = (System.currentTimeMillis() / divideBy1000Var);//(end time of session) seconds since January 1, 1970 00:00:00 UTC
-            sessionDate.put("end_date", endSessionTime);
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
+            String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+            sessionDate.put("end_date", dateString);
             sessRef.updateChildren(sessionDate);//save data to Firebase
 
             textViewPressStart.setText(R.string.pressStart);
@@ -1092,6 +1129,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             dlgAlerter.setMessage(msg);
             dlgAlerter.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
+                    adapter.collectionObj.modifyOrchardAreas();
                     adapter.setIncrement();
                     recyclerView.setVisibility(View.GONE);
                     dialog.dismiss();

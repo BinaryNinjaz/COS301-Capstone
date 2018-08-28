@@ -75,11 +75,7 @@ function firebaseLogin() {
     const errorCode = error.code;
     const errorMessage = error.message;
 
-    if (errorCode === 'auth/wrong-password') {
-      alert('Wrong password.');
-    } else {
-      alert(errorMessage);
-    }
+    alert('Email or password is incorrect. Please try again.');
   });
 }
 
@@ -156,7 +152,7 @@ function setWorkers(workers, completion) {
   getAdmin((adminSnapshot) => {
     const val = adminSnapshot.val();
     if (val !== null && val !== undefined) {
-      const farmOwner = {name: val.firstname, surname: val.lastname};
+      const farmOwner = {name: val.firstname, surname: val.lastname, isFarmOwner: true, type: "Foreman"};
 
       workers[val.uid] = farmOwner;
       getWorkers((snapshot) => {
@@ -229,78 +225,98 @@ function watchWorkers(workers, completion) {
 
 function searchFarm(farm, searchText, full) {
   var result = {};
-  if (farm === undefined) {
+  if (farm === undefined || searchText === "") {
     return result;
   }
 
   const text = searchText.toLowerCase();
 
-  if (farm.name !== undefined && stringContainsSubstring(farm.name.toLowerCase(), text)) {
+  if (farm.name !== undefined && stringContainsWord(farm.name.toLowerCase(), text)) {
     result["Name"] = farm.name;
   }
 
-  if (farm.companyName !== undefined && stringContainsSubstring(farm.companyName.toLowerCase(), text)) {
+  if (farm.companyName !== undefined && stringContainsWord(farm.companyName.toLowerCase(), text)) {
     result["Company"] = farm.companyName;
   }
 
-  if (farm.email !== undefined && stringContainsSubstring(farm.email.toLowerCase(), text)) {
+  if (farm.email !== undefined && stringContainsWord(farm.email.toLowerCase(), text)) {
     result["Email"] = farm.email;
   }
 
-  if (farm.contactNumber !== undefined && stringContainsSubstring(farm.contactNumber.toLowerCase(), text)) {
+  if (farm.contactNumber !== undefined && stringContainsWord(farm.contactNumber.toLowerCase(), text)) {
     result["Phone Number"] = farm.contactNumber;
   }
 
-  if (farm.province !== undefined && stringContainsSubstring(farm.province.toLowerCase(), text)) {
+  if (farm.province !== undefined && stringContainsWord(farm.province.toLowerCase(), text)) {
     result["Province"] = farm.province;
   }
 
-  if (farm.town !== undefined && stringContainsSubstring(farm.town.toLowerCase(), text)) {
+  if (farm.town !== undefined && stringContainsWord(farm.town.toLowerCase(), text)) {
     result["Nearest Town"] = farm.town;
   }
 
-  if (full && farm.further !== undefined && stringContainsSubstring(farm.further.toLowerCase(), text)) {
+  if (full && farm.further !== undefined && stringContainsWord(farm.further.toLowerCase(), text)) {
     result["Details"] = farm.further;
   }
 
   return result;
 }
 
-function searchOrchard(orchard, farms, searchText, full) {
+function workerIsAssignedToOrchard(worker, orchard) {
+  for (const i in worker.orchards) {
+    if (worker.orchards[i] === orchard) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function searchOrchard(orchard, okey, farms, orchards, workers, searchText, full) {
   var result = {};
-  if (orchard === undefined) {
+  if (orchard === undefined || searchText === "") {
     return result;
   }
 
   const text = searchText.toLowerCase();
 
   const farm = farms[orchard.farm];
-  const farmResults = searchFarm(farm, text, full);
-  for (const key in Object.keys(farmResults)) {
+  const farmResults = searchFarm(farm, text, false);
+  for (const key in farmResults) {
     result["Farm " + key] = farmResults[key];
   }
 
-  if (orchard.name !== undefined && stringContainsSubstring(orchard.name.toLowerCase(), text)) {
+  if (orchard.name !== undefined && stringContainsWord(orchard.name.toLowerCase(), text)) {
     result["Name"] = orchard.name;
   }
 
-  if (orchard.crop !== undefined && stringContainsSubstring(orchard.crop.toLowerCase(), text)) {
+  if (orchard.crop !== undefined && stringContainsWord(orchard.crop.toLowerCase(), text)) {
     result["Crop"] = orchard.crop;
   }
 
   for (const i in orchard.cultivars) {
-    if (orchard.cultivars[i] !== undefined && stringContainsSubstring(orchard.cultivars[i].toLowerCase(), text)) {
+    if (orchard.cultivars[i] !== undefined && stringContainsWord(orchard.cultivars[i].toLowerCase(), text)) {
       result["Cultivar"] = orchard.cultivars[i];
       break;
     }
   }
 
-  if (orchard.irrigation !== undefined && stringContainsSubstring(orchard.irrigation.toLowerCase(), text)) {
+  if (orchard.irrigation !== undefined && stringContainsWord(orchard.irrigation.toLowerCase(), text)) {
     result["Irrigation Type"] = orchard.irrigation;
   }
 
-  if (full && orchard.further !== undefined && stringContainsSubstring(orchard.further.toLowerCase(), text)) {
+  if (full && orchard.further !== undefined && stringContainsWord(orchard.further.toLowerCase(), text)) {
     result["Details"] = orchard.further;
+  }
+
+  if (full) {
+    for (const wkey in workers) {
+      if (workerIsAssignedToOrchard(workers[wkey], okey)) {
+        const workerResults = searchWorker(workers[wkey], orchards, text, false);
+        for (const key in workerResults) {
+          result["Worker " + key] = workerResults[key];
+        }
+      }
+    }
   }
 
   return result;
@@ -308,7 +324,7 @@ function searchOrchard(orchard, farms, searchText, full) {
 
 function searchWorker(worker, orchards, searchText, full) {
   var result = {};
-  if (worker === undefined) {
+  if (worker === undefined || searchText === "") {
     return result;
   }
 
@@ -320,23 +336,23 @@ function searchWorker(worker, orchards, searchText, full) {
     result["Name"] = name;
   }
 
-  if (worker.idNumber !== undefined && stringContainsSubstring(worker.idNumber.toLowerCase(), text)) {
+  if (worker.idNumber !== undefined && stringContainsWord(worker.idNumber.toLowerCase(), text)) {
     result["ID"] = worker.idNumber;
   }
-  if (worker.phoneNumber !== undefined && stringContainsSubstring(worker.phoneNumber.toLowerCase(), text)) {
+  if (worker.phoneNumber !== undefined && stringContainsWord(worker.phoneNumber.toLowerCase(), text)) {
     result["Phone Number"] = worker.phoneNumber;
   }
-  if (full && worker.info !== undefined && stringContainsSubstring(worker.info.toLowerCase(), text)) {
+  if (full && worker.info !== undefined && stringContainsWord(worker.info.toLowerCase(), text)) {
     result["Details"] = worker.info;
   }
-  if (full && worker.type !== undefined && stringContainsSubstring(worker.type.toLowerCase(), text)) {
+  if (full && worker.type !== undefined && stringContainsWord(worker.type.toLowerCase(), text)) {
     result["Type"] = worker.type;
   }
   if (full && worker.orchards !== undefined) {
     for (const idx in worker.orchards) {
       const orchardId = worker.orchards[idx];
       const orchard = (orchards || [])[orchardId];
-      if (orchard.name !== undefined && stringContainsSubstring(orchard.name.toLowerCase(), text)) {
+      if (orchard.name !== undefined && stringContainsWord(orchard.name.toLowerCase(), text)) {
         result["Assigned Orchard"] = orchard.name;
       }
     }
@@ -371,7 +387,7 @@ function arrayContainsEntity(array, item) {
   return false;
 }
 
-function searchSession(session, searchText, farms, orchards, workers) {
+function searchSession(session, searchText, farms, orchards, workers, period) {
   var result = {};
 
   const text = searchText.toLowerCase();
@@ -383,26 +399,56 @@ function searchSession(session, searchText, farms, orchards, workers) {
       result["Foreman " + key] = foremanResults[key];
     }
   }
+
+  var orchardsForSession = [];
   for (const workerId in session.collections) {
     const worker = workers[workerId];
     if (worker !== undefined) {
       const workerResults = searchWorker(worker, orchards, text, false);
-      for (const key in workerResults) {
-        result["Worker " + key] = workerResults[key];
+      for (const wkey in workerResults) {
+        if (result["Worker " + wkey] !== undefined) {
+          result["Worker " + wkey] = result["Worker " + wkey] + ", " + workerResults[wkey];
+        } else {
+          result["Worker " + wkey] = workerResults[wkey];
+        }
       }
     }
 
-    var orchardsForSession = [];
     var points = session.collections[workerId];
-    for (const point in points) {
-      const o = orchardAtPoint(orchards, point.lng, point.lat);
+    for (const pidx in points) {
+      const point = points[pidx];
+      const o = orchardAtPoint(orchards, point.coord.lng, point.coord.lat);
       if (o !== undefined && !arrayContainsEntity(orchardsForSession, o.key)) {
         orchardsForSession.push(o.key);
-        const orchardsResult = searchOrchard(o, farms, text, false);
-        for (const key in orchardsResult) {
-          result["Orchard " + key] = orchardsResult[key];
+        const orchardResult = searchOrchard(o.value, o.key, farms, orchards, workers, text, false);
+        for (const okey in orchardResult) {
+          result["Orchard " + okey] = orchardResult[okey];
         }
       }
+    }
+  }
+
+  if (period !== undefined) {
+    const date = moment(session.start_date);
+
+    const cd = date.get('date');
+    const cm = date.get('month');
+    const cy = date.get('year');
+
+    const sd = period.start.get('date');
+    const sm = period.start.get('month');
+    const sy = period.start.get('year');
+
+    const ed = period.end.get('date');
+    const em = period.end.get('month');
+    const ey = period.end.get('year');
+
+    if (sy <= cy && cy <= ey && sm <= cm && cm <= em && sd <= cd && cd <= ed) {
+      if (text === "") {
+        result[date.format("dddd, DD MMMM YYYY")] = "";
+      }
+    } else {
+      result = {};
     }
   }
 

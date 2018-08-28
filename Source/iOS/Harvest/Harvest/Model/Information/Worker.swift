@@ -66,6 +66,7 @@ final class Worker {
   
   func makeChangesPermanent() {
     if let t = tempory {
+      id = t.id
       firstname = t.firstname
       lastname = t.lastname
       assignedOrchards = t.assignedOrchards
@@ -73,12 +74,15 @@ final class Worker {
       kind = t.kind
       phoneNumber = t.phoneNumber
       idNumber = t.idNumber
-      tempory = nil
     }
   }
   
   convenience init(_ user: HarvestUser) {
-    self.init(json: ["name": "Farm Owner"], id: user.uid)
+    self.init(json: [
+      "name": user.firstname,
+      "surname": user.lastname,
+      "type": "Foreman",
+      "info": "Farm Owner"], id: user.uid)
   }
   
   var name: String {

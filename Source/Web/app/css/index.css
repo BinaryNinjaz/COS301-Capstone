@@ -1,7 +1,11 @@
 /* This sets the background of the index page to be transparent */
 body{
     background-color: transparent;
-    overflow-x: hidden;
+    font-family: Sans-Serif;
+    display: block;
+    overflow: auto;
+    min-height: 100vh;
+    background-size: auto;
 }
 
 /* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
@@ -21,15 +25,24 @@ body{
     float: left;
 }
 /* The right class should not be aligned, left margin should be 40%, color should be black , front size should be set to 30pxs*/
-#right{  
-          
-    color: black;
-    outline-color: #006633;
-    outline-width: 2px;
-    letter-spacing: 2px;
-    font-size: 24px;
-   
+@media only screen and (max-width: 720px) {
+    #right{            
+        color: black;
+        outline-color: #006633;
+        outline-width: 2px;
+        letter-spacing: 2px;
+        font-size: 20px;
+        width: 500px;   
+    }
 }
+
+@media (max-width: 576px) {
+    #right{  
+        width:0%;
+               
+    }
+}
+
 /* This manipulates the section which displays what the website is about */
 .list-heading {
     font-weight: bolder;
@@ -49,21 +62,27 @@ body{
 	position:relative
 }
 
-/* Apply css when screen size is minimum 700px*/
-@media only screen and (min-width: 700px) {
-    html {
-        font-family: Sans-Serif;	
-		background-image: url("../images/back4.jpg");
-        background-repeat: no-repeat;  
-        background-size: 100%;
+/* Apply css when screen size is minimum 728px*/
+@media only screen and (min-width: 728px) {
+  body {
+        font-family: Sans-Serif;    
+        background-image: url("../images/back4.jpg");       
+    
+        display: block;
+        overflow: auto;
+        min-height: 100vh;
+        background-size: cover;
     }
 }
 /* Apply css when screen size is minimum 728px*/
 @media only screen and (max-width: 728px) {
-   html {
+   body {
         font-family: Sans-Serif;	
-        background-image: url("../images/back4.jpg");
-        background-repeat: no-repeat;  
+        background-image: url("../images/back4.jpg");       
+  
+        display: block;
+        overflow: auto;
+        min-height: 100vh;
         background-size: cover;
     }
 }
@@ -71,5 +90,51 @@ body{
 @media only screen and (max-width: 728px){
     #right li, h3{
         color: white;
+    }
+}
+
+
+.lm.btn.btn-primary{
+    width: 100px;
+
+}
+
+#featuresBox{
+    background-color: white;
+    //height: 400px;
+    position: relative;
+    border: 4px solid green;
+    border-radius: 10px;
+    padding: 7px;
+    text-align: center;
+    background-color: whitesmoke;
+    overflow: auto;
+}
+#thead{
+      font-weight: bolder;
+    font-size: 75px;
+    text-align: center;
+}
+
+
+tbody tr td{
+    text-align: center;
+
+}
+tfoot tr td{
+    text-align: center;
+    margin: 2px;
+}
+
+@media (max-width: 768px){
+    #left{
+        transform: translate(150px);
+        transition-duration: 1s;
+    }
+}
+@media (max-width: 576px){
+    #left{
+        transform: translate(0px);
+        transition-duration: 1s;
     }
 }

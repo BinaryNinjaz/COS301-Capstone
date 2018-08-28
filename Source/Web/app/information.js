@@ -14,10 +14,12 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
-
 var editingOrchard = false;
 var orchardCoords = [];
 var orchardPoly;
+var orchardMarkers = [];
+var orchardColor;
+var orchardCoordsChanged;
 var loc;
 var map;
 function initEditOrchardMap(withCurrentLoc, editing) {
@@ -38,29 +40,45 @@ function initEditOrchardMap(withCurrentLoc, editing) {
     });
   }
 }
+
 function pushOrchardCoord(e) {
   if (orchardCoords === undefined) {
     orchardCoords = [];
   }
-  const c = {
-    lat: e.latLng.lat(),
-    lng: e.latLng.lng()
+  const latlng = e.latLng;
+  var c;
+  if (latlng !== undefined) {
+    c = {
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng()
+    }
+  } else {
+    c = {
+      lat: e.lat || 0.0,
+      lng: e.lng || 0.0
+    }
   }
+
   orchardCoords.push(c);
+  orchardCoordsChanged = true;
   if (orchardPoly !== undefined && orchardPoly !== null) {
     orchardPoly.setMap(null);
   }
+  const clr = orchardColor === undefined ? 'rgb(255, 0, 0)' : orchardColor;
   orchardPoly = new google.maps.Polygon({
     paths: orchardCoords,
-    strokeColor: '#FF0000',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#FF0000',
-    fillOpacity: 0.35,
+    strokeColor: clr,
+    strokeOpacity: 0.75,
+    strokeWeight: 3,
+    fillColor: clr,
+    fillOpacity: 0.25,
     map: map
   });
+  clearMarkers();
+  updateMarkers();
   updatePolyListener();
 }
+
 function updateLocationMap(editing) {
   locationLookup((data) => {
     loc = {
@@ -91,6 +109,7 @@ function updateLocationMap(editing) {
     });
   }
 }
+
 function initMap() {
   if (loc === undefined) {
     loc = {lat: -25, lng: 28};
@@ -102,6 +121,16 @@ function initMap() {
     mapTypeId: "satellite"
   });
 }
+
+function updateMarkers() {
+  for (const idx in orchardCoords) {
+    orchardMarkers.push(new google.maps.Marker({
+      position: orchardCoords[idx],
+      map: map
+    }));
+  }
+}
+
 function updatePolygon(orchard) {
   if (orchardCoords === undefined) {
     orchardCoords = [];
@@ -113,41 +142,47 @@ function updatePolygon(orchard) {
     orchard.coords.forEach(function(coord) {
       orchardCoords.push(coord);
     });
-  } else {
-    orchardCoords.push(loc);
   }
   if (orchardPoly !== undefined && orchardPoly !== null) {
     orchardPoly.setMap(null);
   }
+  const clr = orchardColor === undefined ? 'rgb(255, 0, 0)' : orchardColor;
   orchardPoly = new google.maps.Polygon({
     paths: orchardCoords,
-    strokeColor: '#FF0000',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#FF0000',
-    fillOpacity: 0.35,
+    strokeColor: clr,
+    strokeOpacity: 0.75,
+    strokeWeight: 3,
+    fillColor: clr,
+    fillOpacity: 0.25,
     map: map
   });
+  clearMarkers();
   updatePolyListener();
   map.setCenter({lat: cenLat(orchardCoords), lng: cenLng(orchardCoords)});
   if (orchardCoords.length > 1) {
     map.fitBounds(bounds(orchardCoords));
   }
 }
+
 function updatePolyListener() {
   if (orchardPoly !== undefined) {
     google.maps.event.clearListeners(orchardPoly, "click");
     orchardPoly.addListener("click", pushOrchardCoord);
   }
 }
+
 function popOrchardCoord() {
   if (orchardCoords === undefined) {
     orchardCoords = [];
   }
+  orchardCoordsChanged = true;
   orchardCoords.pop();
   orchardPoly.setPath(orchardCoords);
+  const m = orchardMarkers.pop();
+  m.setMap(null);
   updatePolyListener();
 }
+
 function clearOrchardCoord() {
   if (orchardCoords === undefined) {
     orchardCoords = [];
@@ -155,8 +190,17 @@ function clearOrchardCoord() {
   while(orchardCoords.length > 0) {
     orchardCoords.pop();
   }
+  orchardCoordsChanged = true;
   orchardPoly.setPath(orchardCoords);
+  clearMarkers();
   updatePolyListener();
+}
+
+function clearMarkers() {
+  while (orchardMarkers.length > 0) {
+    let m = orchardMarkers.pop()
+    m.setMap(null);
+  }
 }
 
 function titleFormatter(entity) {
@@ -305,6 +349,10 @@ function displayEntityList(entities, entityName) {
     const entity = sortedEntityList[i].value;
     const key = sortedEntityList[i].key;
 
+    if (entity.isFarmOwner !== undefined) {
+      continue
+    }
+
     const displayFunction = " onclick='disp" + entityName + "(\"" + key+ "\")'";
     const displayName = formatter(key, entity);
     entityList.innerHTML += "<button type='button' class='btn btn-info' " + displayFunction + ">" + displayName + "</button>";
@@ -326,7 +374,7 @@ function dispFarm(id) {
       "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='farmSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='farmName'></div> </div> " +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' required></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='companyName'></div> </div> " +
@@ -394,6 +442,11 @@ function dispFarm(id) {
 function farmIsValidToSave(candidateKey, candidateFarm) {
   var valid = "";
 
+  if (candidateFarm.name == "" || candidateFarm.name == undefined) {
+    valid += "Farms must have a name.\n";
+  }
+
+
   for (const fKey in farms) {
     const farm = farms[fKey];
     if (farm === undefined || candidateFarm === undefined) {
@@ -457,7 +510,7 @@ function farmMod(id) {
     "</div> " +
     "" +
     "<div class='form-group'><label class='control-label col-sm-2' for='text'>Farm Name:</label>" +
-    "<div class='col-sm-9'><input type='text' class='form-control' id='farmName' value='" + farm.name + "'></div> </div> " +
+    "<div class='col-sm-9'><input type='text' class='form-control' required id='farmName' value='" + farm.name + "'></div> </div> " +
     "" +
     "<div class='form-group'><label class='control-label col-sm-2' for='text'>Company Name:</label>" +
     "<div class='col-sm-9'><input type='text' class='form-control' id='companyName' value='" + farm.companyName + "'></div> </div> " +
@@ -491,17 +544,19 @@ function delFarm(id) {
 function dispOrchard(id) {
   const entityDetails = document.getElementById("entityDetails");
   const orchard = orchards[id];
+  orchardCoordsChanged = false;
 
   if (id === "-1") {
     /*Create New Orchard*/
     cCount = 0;
+    orchardColor = undefined;
     entityDetails.innerHTML = "" +
       "<form class='form-horizontal'>" +
       "" +
       "<div class='form-group'><div class='col-sm-9 col-sm-offset-2'><button onclick='orchSave(0,\"" + id + "\")' type='button' class='btn btn-warning'>Save</button></div></div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
-      "<div class='col-sm-9'><input type='text' class='form-control' id='orchName'></div> </div> " +
+      "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' required></div> </div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
       "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop'></div> </div>" +
@@ -510,7 +565,7 @@ function dispOrchard(id) {
       "<div class='col-sm-9'>" +
       "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
       "<div class='col-sm-12'><div id='map'></div></div>" +
-      "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
+      "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-warning'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-danger'>Remove All</button></div></div></div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
       "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass'></div>" +
@@ -551,7 +606,7 @@ function dispOrchard(id) {
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-      "<div class='col-sm-9'><select class='form-control' id='orchFarm' required></select></div></div>" +
+      "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"0\")'></select></div></div>" +
        "" +
       "</form>"
     ;
@@ -560,11 +615,11 @@ function dispOrchard(id) {
 
     for (const fKey in farms) {
       const farm = farms[fKey];
-      document.getElementById("orchFarm").innerHTML += "<option><" + fKey + "> " + farm.name + "</option>";
+      document.getElementById("orchFarm").innerHTML += "<option value='" + fKey + "'>" + farm.name + "</option>";
     }
   }
   else {
-    const date = new Date(orchard.date * 1000);
+    const date = moment(orchard.date).format("DD MMMM YYYY");
     cCount = (orchard.cultivars || []).length;
     entityDetails.innerHTML = "" +
       "<form class='form-horizontal'>" +
@@ -587,7 +642,7 @@ function dispOrchard(id) {
       "<div class='col-sm-9'><p class='form-control-static'>" + orchard.irrigation + "</p></div> </div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
-      "<div class='col-sm-9'><p class='form-control-static'>" + date.toLocaleDateString() + "</p></div></div> " +
+      "<div class='col-sm-9'><p class='form-control-static'>" + date + "</p></div></div> " +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='date'>Cultivars:</label>" +
       "<div class='col-sm-9'><p class='form-control-static'>" + (orchard.cultivars || "") + "</p></div></div> " +
@@ -611,6 +666,7 @@ function dispOrchard(id) {
       ;
 
     initEditOrchardMap(false, false);
+    orchardColor = hashColor(orchard.farm, id);
     updatePolygon(orchard);
 
     const assignedFarm = farms[orchard.farm];
@@ -628,6 +684,19 @@ function dispOrchard(id) {
   }
 }
 
+function updateOrchardColor(selector, id) {
+  orchardColor = hashColor(selector.value, id);
+  if (orchards[id] === undefined) {
+    const e = orchardCoords[0];
+    if (e !== undefined) {
+      pushOrchardCoord(e);
+      popOrchardCoord();
+    }
+  } else {
+    updatePolygon(orchards[id]);
+  }
+}
+
 function moreCult(){
     var input = document.createElement('input');
     input.setAttribute('type','text');
@@ -640,6 +709,10 @@ function moreCult(){
 
 function orchardIsValidToSave(candidateKey, candidateOrchard) {
   var valid = "";
+
+  if (candidateOrchard.name == "" || candidateOrchard.name == undefined) {
+    valid += "Orchards must have a name.\n";
+  }
 
   for (const oKey in orchards) {
     const orchard = orchards[oKey];
@@ -687,23 +760,23 @@ function farmWithName(name) {
 
 function orchSave(type, id, cultivars) {
   /*0 means create, 1 means modify*/
-  const farmName = document.getElementById("orchFarm").value;
-  const farmID = farmWithName(farmName);
-  let d = new Date(document.getElementById("orchDate").valueAsDate);
-  let seconds = d.getTime() / 1000;
+  const farmID = document.getElementById("orchFarm").value;
+  // const farmID = farmWithName(farmName);
+  let d = moment(new Date(document.getElementById("orchDate").valueAsDate)).format("D MMM YYYY HH:mm ZZ");
   var data = getCultivars();
   const tempOrchard = {
     name: document.getElementById("orchName").value,
     crop: document.getElementById("orchCrop").value,
     further: document.getElementById("oi").value,
     irrigation: document.getElementById("irrigationType").value,
-    date: seconds,
+    date: d,
     cultivars: data,
     bagMass: document.getElementById("orchBagMass").value,
-    coords: orchardCoords,
+    coords: orchardCoords.slice(0),
     farm: farmID,
     rowSpacing: document.getElementById("rowSpacing").value,
-    treeSpacing: document.getElementById("treeSpacing").value
+    treeSpacing: document.getElementById("treeSpacing").value,
+    inferArea: orchardCoords.length == 0
   };
 
   const valid = orchardIsValidToSave(id, tempOrchard);
@@ -720,6 +793,7 @@ function orchSave(type, id, cultivars) {
     showOrchardsList();
     dispOrchard(newId);
   } else if (type === 1) {
+    tempOrchard.inferArea = (orchards[id].inferArea || false && !orchardCoordsChanged) || orchardCoords.length == 0;
     orchards[id] = tempOrchard;
     firebase.database().ref('/' + userID() +"/orchards/" + id).update(orchards[id]);
     showOrchardsList();
@@ -732,7 +806,7 @@ function orchMod(id) {
 
   document.getElementById('modalDelBut').innerHTML = "<button type='button' class='btn btn-danger' data-dismiss='modal' onclick='delOrch(\"" + id + "\")'>Delete</button>";
   document.getElementById('modalText').innerText = "Please confirm deletion of " + orchard.name;
-  const date = new Date(orchard.date * 1000);
+  const date = moment(orchard.date).format("YYYY-MM-DD");
   var myData="";
   cCount = 0;
   try{
@@ -760,7 +834,7 @@ function orchMod(id) {
   "</div> " +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Name:</label>" +
-  "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' value='" + orchard.name + "'></div> </div> " +
+  "<div class='col-sm-9'><input type='text' class='form-control' id='orchName' required value='" + orchard.name + "'></div> </div> " +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Crop:</label>" +
   "<div class='col-sm-9'><input type='text' class='form-control' id='orchCrop' value='" + orchard.crop + "'></div> </div>" +
@@ -769,7 +843,7 @@ function orchMod(id) {
   "<div class='col-sm-9'>" +
   "<div class='col-sm-12'><h4>Click the corners of a field to demarcate area</h4></div>" +
   "<div class='col-sm-12'><div id='map'></div></div>" +
-  "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-default'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-default'>Clear Area</button></div></div></div>" +
+  "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-warning'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-danger'>Remove All</button></div></div></div>" +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
   "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass' value='" + orchard.bagMass + "'></div>" +
@@ -790,7 +864,7 @@ function orchMod(id) {
   "</div> </div> " +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='date'>Date Planted:</label>" +
-  "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date.toISOString().substr(0, 10) + "'></div></div> " +
+  "<div class='col-sm-9'><input type='date' class='form-control' id='orchDate' value='" + date + "'></div></div> " +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Cultivars: (comma seperate)</label>" +
       "<div class='col-sm-9'>"+
@@ -811,7 +885,7 @@ function orchMod(id) {
   "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'>" + orchard.further + "</textarea></div> </div>" +
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-  "<div class='col-sm-9'><select class='form-control' id='orchFarm'></select></div></div>" +
+  "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"" + id + "\")'></select></div></div>" +
   "" +
   "</form>"
   ;//need to fix referencing
@@ -827,7 +901,7 @@ function orchMod(id) {
       selec = ' selected';
     }
     // workOrch.innerHTML = workOrch.innerHTML + "><" +child.key+"> " + child.val().name+"  :  "+child.val().crop + "</option>";
-    orchFarm.innerHTML += "<option" + selec + ">" + farm.name + "</option>";
+    orchFarm.innerHTML += "<option" + selec + " value='" + fKey + "'>" + farm.name + "</option>";
   }
 }
 
@@ -979,15 +1053,6 @@ function workSave(type, id) {
   if (type === 0) {
     // Create Worker
     newRef = firebase.database().ref('/' + userID() +"/workers/").push(tempWorker);
-    if (workType === "Foreman" && pn !== undefined && pn !== ""){
-        /**
-         * Create the correct entry in workingFor
-         */
-        email = email.replace(/\./g, ",");
-        firebase.database().ref('/WorkingFor/' + pn).set({
-            [userID()]: newRef.getKey()
-        });
-    }
     id = newRef.getKey();
     workers[id] = tempWorker;
     showWorkersList();
@@ -999,17 +1064,6 @@ function workSave(type, id) {
     workers[id] = tempWorker;
     firebase.database().ref('/' + userID() +"/workers/" + id).update(workers[id]);
     if (pn !== undefined && pn !== "") {
-      if (workType === "Foreman"){
-          /**
-           * Update the correct entry in workingFor
-           */
-          firebase.database().ref('/WorkingFor/' + pn).update({
-              [userID()]: id
-          });
-      }
-      if (oldPhone !== undefined && oldPhone !== "" && oldPhone !== pn) {
-        firebase.database().ref('/WorkingFor/' + oldPhone).remove();
-      }
       if (oldType !== undefined && oldType === "Foreman" && workType === "Worker") {
         firebase.database().ref('/' + userID() + '/foremen/' + pn).remove();
       }
@@ -1114,7 +1168,6 @@ function delWork(id) {
 
   try{
     if (pn !== undefined && pn !== "") {
-      firebase.database().ref('/WorkingFor/' + pn + '/' + userID()).remove();
       firebase.database().ref('/' + userID() + '/foremen/' + pn).remove();
     }
     firebase.database().ref('/' + userID() + '/locations/' + id).remove();
@@ -1148,11 +1201,11 @@ function filterInformation(searchField) {
       const entity = entities[key];
       var searchResults;
       if (selectedEntity === "Farm") {
-        searchResults = searchFarm(entity, searchText, true);
+        searchResults = queryFarm(entity, searchText, true);
       } else if (selectedEntity === "Orchard") {
-        searchResults = searchOrchard(entity, farms, searchText, true);
+        searchResults = queryOrchard(entity, key, farms, orchards, workers, searchText, true);
       } else if (selectedEntity === "Worker") {
-        searchResults = searchWorker(entity, orchards, searchText, true);
+        searchResults = queryWorker(entity, orchards, searchText, true);
       }
 
       for (const property in searchResults) {
@@ -1226,7 +1279,7 @@ function updateSpiner(shouldSpin) {
 		radius: 20, // The radius of the inner circle
 		scale: 1, // Scales overall size of the spinner
 		corners: 1, // Corner roundness (0..1)
-		color: '#4CAF50', // CSS color or array of colors
+		color: 'white', // CSS color or array of colors
 		fadeColor: 'transparent', // CSS color or array of colors
 		speed: 1, // Rounds per second
 		rotate: 0, // The rotation offset

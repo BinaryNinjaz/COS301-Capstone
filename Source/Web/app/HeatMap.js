@@ -169,10 +169,10 @@ function initOrchards() {
         const k = orchard.key;
         var orchardPoly = new google.maps.Polygon({
           paths: orchardCoords(o),
-          strokeColor: '#0000BB',
+          strokeColor: hashColor(o.farm || "", orchard.key),
           strokeOpacity: 0.5,
           strokeWeight: 3,
-          fillColor: '#0000BB',
+          fillColor: hashColor(o.farm || "", orchard.key),
           fillOpacity: 0.1,
           map: map
         });
@@ -200,12 +200,11 @@ function initOrchards() {
 /* The workers array annd initWorkers initialises the workers on Heatmap.html*/
 var workers = [];
 function initWorkers() {
-  getWorkers((workersSnap) => {
-    workersSnap.forEach((worker) => {
-      const w = worker.val();
-      const k = worker.key;
-      workers.push({key: k, value: w, showing: false});
-    });
+  var tempWorkers = {};
+  setWorkers(tempWorkers, () => {
+    for (const wkey in tempWorkers) {
+      workers.push({key: wkey, value: tempWorkers[wkey], showing: false});
+    }
     workers.sort((a, b) => {
       return (a.value.surname + a.value.name) < (b.value.surname + b.value.name) ? -1 : 1
     });
@@ -271,11 +270,11 @@ function updateHeatmap() {
   var keys = requestedIds();
   const startDate = new Date(document.getElementById("startDate").value);
   const endDate = new Date(document.getElementById("endDate").value);
-  const startTime = startDate.getTime() / 1000;
-  const endTime = endDate.getTime() / 1000 + 60 * 60 * 24;
+  const startTime = moment(startDate).startOf('day');
+  const endTime = moment(endDate).endOf('day');
 
-  keys.startDate = startTime;
-  keys.endDate = endTime;
+  keys.startDate = startTime.format("D MMM YYYY HH:mm ZZ");
+  keys.endDate = endTime.format("D MMM YYYY HH:mm ZZ");
   keys.uid = userID();
   keys.groupBy = selectedEntity;
 
@@ -315,7 +314,7 @@ function updateSpiner(shouldSpin) {
 		radius: 20, // The radius of the inner circle
 		scale: 1, // Scales overall size of the spinner
 		corners: 1, // Corner roundness (0..1)
-		color: '#4CAF50', // CSS color or array of colors
+		color: 'white', // CSS color or array of colors
 		fadeColor: 'transparent', // CSS color or array of colors
 		speed: 1, // Rounds per second
 		rotate: 0, // The rotation offset

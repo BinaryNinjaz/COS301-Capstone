@@ -55,6 +55,7 @@ import static za.org.samac.harvest.MainActivity.farmerKey;
 public class Sessions extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private TreeMap<Date, SessionItem> sessions; //used to store session data
+    private TreeMap<Date, Integer> sessionKeyUniquer;
     private TreeMap<String, ArrayList<SearchedItem.Session>> filteredSessions;
     private ArrayList<SearchedItem.Session> adapterSource;
     private ArrayList<Date> dates;
@@ -111,6 +112,7 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
         dates = new ArrayList<>();
         sessions = new TreeMap<>();
         adapterSource = new ArrayList<>();
+        sessionKeyUniquer = new TreeMap<>();
 
         //bottom nav bar
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -128,12 +130,12 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                                 startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                startActivity(new Intent(Sessions.this, InformationActivity.class));
+                                startActivityIfNeeded(new Intent(Sessions.this, InformationActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                             case R.id.actionSession:
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(Sessions.this, Stats.class));
+                                startActivityIfNeeded(new Intent(Sessions.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                         }
                         return true;
@@ -270,7 +272,6 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                 ArrayList<Date> tempDates = new ArrayList<>();
                 for(DataSnapshot aChild : dataSnapshot.getChildren()){
                     SessionItem item = new SessionItem();
-
                     if (lastKey == "") {
                         lastKey = aChild.getKey();
                     }
@@ -289,16 +290,23 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                         item.foreman = farmOwnerName;
                     }
 
-                    Double endDate = aChild.child("end_date").getValue(Double.class);
-                    Double startDate = aChild.child("start_date").getValue(Double.class);
-                    if (endDate == null) {
-                        endDate = 0.0;
+                    try {
+                        String endDate = aChild.child("end_date").getValue(String.class);
+                        String startDate = aChild.child("start_date").getValue(String.class);
+                        if (endDate == null) {
+                            endDate = "1 Jan 1970 00:00 +0000";
+                        }
+                        if (startDate == null) {
+                            startDate = "1 Jan 1970 00:00 +0000";
+                        }
+
+                        item.endDate = new SimpleDateFormat("d MMM yyyy HH:mm ZZ").parse(endDate);
+                        item.startDate = new SimpleDateFormat("d MMM yyyy HH:mm ZZ").parse(startDate);
+                    } catch (Exception e) {
+                        item.endDate = new Date();
+                        item.startDate = new Date();
                     }
-                    if (startDate == null) {
-                        startDate = 0.0;
-                    }
-                    item.endDate = new Date((long) (endDate * 1000));
-                    item.startDate = new Date((long) (startDate * 1000));
+
 
                     for (DataSnapshot trackSnapshot : aChild.child("track").getChildren()) {
                         Double lat = trackSnapshot.child("lat").getValue(Double.class);
@@ -331,10 +339,26 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                     tempDates.add(item.startDate);
                 }
 
+
                 if (tempSessions.size() > 1) {
-                    for (int i = tempSessions.size() - 1; i > 0; i--) { // we miss the first one on purpose so it isn't duplicated on subsequent calls
-                        sessions.put(tempDates.get(i), tempSessions.get(i));
-                        dates.add(tempDates.get(i));
+                    int isFull = tempSessions.size() < pageSize ? -1 : 0;
+                    for (int i = tempSessions.size() - 1; i > isFull; i--) { // we miss the first one on purpose so it isn't duplicated on subsequent calls
+                        if (sessions.containsKey(tempDates.get(i))) {
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(tempDates.get(i));
+                            Integer count = sessionKeyUniquer.get(tempDates.get(i));
+                            if (count == null) {
+                                count = 0;
+                            }
+                            cal.add(Calendar.MILLISECOND, count + 1);
+                            Date d = cal.getTime();
+                            sessions.put(d, tempSessions.get(i));
+                            dates.add(d);
+                            sessionKeyUniquer.put(tempDates.get(i), count + 1);
+                        } else {
+                            sessions.put(tempDates.get(i), tempSessions.get(i));
+                            dates.add(tempDates.get(i));
+                        }
                     }
                 } else if (tempSessions.size() == 1) {
                     sessions.put(tempDates.get(0), tempSessions.get(0));

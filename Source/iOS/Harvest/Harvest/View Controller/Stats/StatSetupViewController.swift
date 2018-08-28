@@ -117,8 +117,8 @@ final class StatSetupViewController: ReloadableFormViewController {
     
     workersRow = MultipleSelectorRow<Worker> { row in
       row.title = "Worker Selection"
-      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .worker })
-      row.value = row.options?.first != nil ? [row.options!.first!] : []
+      row.options = Entities.shared.workersList()
+      row.value = []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .worker
@@ -127,14 +127,13 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.onPresentCallback = { _, tovc in
         tovc.allSelector()
       }
-      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .worker })
+      row.options = Entities.shared.workersList()
     }
     
     foremenRow = MultipleSelectorRow<Worker> { row in
       row.title = "Foreman Selection"
-      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
-      row.options?.append(Worker(HarvestUser.current))
-      row.value = row.options?.first != nil ? [row.options!.first!] : []
+      row.options = Entities.shared.foremen() + [Worker(HarvestUser.current)]
+      row.value = []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .foreman
@@ -143,14 +142,13 @@ final class StatSetupViewController: ReloadableFormViewController {
       row.onPresentCallback = { _, tovc in
         tovc.allSelector()
       }
-      row.options = Array(Entities.shared.workers.lazy.map { $0.value }.filter { $0.kind == .foreman })
-      row.options?.append(Worker(HarvestUser.current))
+      row.options = Entities.shared.foremen() + [Worker(HarvestUser.current)]
     }
     
     orchardsRow = MultipleSelectorRow<Orchard> { row in
       row.title = "Orchard Selection"
       row.options = Entities.shared.orchards.map { $0.value }
-      row.value = row.options?.first != nil ? [row.options!.first!] : []
+      row.value = []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .orchard
@@ -165,7 +163,7 @@ final class StatSetupViewController: ReloadableFormViewController {
     farmsRow = MultipleSelectorRow<Farm> { row in
       row.title = "Farm Selection"
       row.options = Entities.shared.farms.map { $0.value }
-      row.value = row.options?.first != nil ? [row.options!.first!] : []
+      row.value = []
       row.hidden = Condition.function(["Stat Kind"]) { form in
         let row = form.rowBy(tag: "Stat Kind") as? PickerRow<StatKind>
         return row?.value != .farm
@@ -254,7 +252,7 @@ final class StatSetupViewController: ReloadableFormViewController {
       if let period = self.timePeriodRow?.value {
         if case .between = period {
           let sd = self.startDateRow?.value ?? Date(timeIntervalSince1970: 0)
-          let ed = self.endDateRow?.value ?? Date()
+          let ed = self.endDateRow?.value?.endOfDay() ?? Date()
           timePeriod = .between(sd, ed)
         } else {
           timePeriod = period

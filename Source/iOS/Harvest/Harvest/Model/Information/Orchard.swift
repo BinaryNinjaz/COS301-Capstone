@@ -48,6 +48,7 @@ public final class Orchard {
   var rowSpacing: Double?
   var irrigationKind: IrrigationKind
   var assignedWorkers = [(String, WorkerAssignmentOperation)]() // only for infoRepresentation purposes
+  var inferArea: Bool
   
   var id: String
   var tempory: Orchard?
@@ -57,7 +58,7 @@ public final class Orchard {
     bagMass = json["bagMass"] as? Double
     crop = json["crop"] as? String ?? ""
     cultivars = json["cultivars"] as? [String] ?? []
-    date = Date(timeIntervalSince1970: json["date"] as? Double ?? Date().timeIntervalSince1970)
+    date = DateFormatter.rfc2822Date(from: json["date"] as? String ?? "")
     assignedFarm = json["farm"] as? String ?? ""
     details = json["further"] as? String ?? ""
     name = json["name"] as? String ?? ""
@@ -66,6 +67,7 @@ public final class Orchard {
     irrigationKind = IrrigationKind(rawValue:
       json["irrigation"] as? String ?? ""
     ) ?? .none
+    inferArea = json["inferArea"] as? Bool ?? false
     
     coords = [CLLocationCoordinate2D]()
     let cs = json["coords"] as? [Any] ?? []
@@ -90,7 +92,7 @@ public final class Orchard {
     return [id: [
       "bagMass": bagMass == nil ? "" : bagMass!,
       "crop": crop,
-      "date": date.timeIntervalSince1970,
+      "date": DateFormatter.rfc2822String(from: date),
       "farm": assignedFarm,
       "further": details,
       "name": name,
@@ -98,12 +100,14 @@ public final class Orchard {
       "rowSpacing": rowSpacing == nil ? "" : rowSpacing!,
       "coords": coords.firbaseCoordRepresentation(),
       "cultivars": cultivars,
-      "irrigation": irrigationKind.rawValue
+      "irrigation": irrigationKind.rawValue,
+      "inferArea": inferArea
     ]]
   }
   
   func makeChangesPermanent() {
     if let t = tempory {
+      id = t.id
       bagMass = t.bagMass
       crop = t.crop
       date = t.date
@@ -115,7 +119,7 @@ public final class Orchard {
       coords = t.coords
       cultivars = t.cultivars
       irrigationKind = t.irrigationKind
-      tempory = nil
+      inferArea = t.inferArea
     }
   }
   
@@ -199,8 +203,9 @@ extension Orchard: Equatable {
     let _cs = lhs.coords == rhs.coords
     let _cu = lhs.cultivars == rhs.cultivars
     let _ir = lhs.irrigationKind == rhs.irrigationKind
+    let _me = lhs.inferArea == rhs.inferArea
     
-    return _id && _bm && _cr && _dt && _af && _de && _nm && _ts && _rs && _cs && _cu && _ir
+    return _id && _bm && _cr && _dt && _af && _de && _nm && _ts && _rs && _cs && _cu && _ir && _me
   }
 }
 

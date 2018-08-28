@@ -42,34 +42,22 @@ extension Worker {
     let form = formVC.form
     tempory = Worker(json: json()[id] ?? [:], id: id)
     
-    let orchards = Entities.shared.orchards
-    
-    let orchardSection = SelectableSection<ListCheckRow<Orchard>>(
-      "Assigned Orchards",
-      selectionType: .multipleSelection)
-    
-    for (_, orchard) in orchards {
-      orchardSection <<< ListCheckRow<Orchard>(orchard.description) { row in
-        row.title = orchard.description
-        row.selectableValue = orchard
-        row.value = assignedOrchards.contains(orchard.id) ? orchard : nil
-      }.onChange { (row) in
-        if let sel = row.value {
-          guard let idx = self.tempory?.assignedOrchards.index(of: orchard.id) else {
-            self.tempory?.assignedOrchards.append(orchard.id)
-            onChange()
-            return
-          }
-          self.tempory?.assignedOrchards[idx] = sel.id
-          onChange()
-        } else {
-          guard let idx = self.tempory?.assignedOrchards.index(of: orchard.id) else {
-            return
-          }
-          self.tempory?.assignedOrchards.remove(at: idx)
-          onChange()
+    let assignedOrchards = MultipleSelectorRow<Orchard> { row in
+      row.title = "Assigned Orchards"
+      self.tempory?.assignedOrchards = []
+      var opts = [Orchard]()
+      var vals = Set<Orchard>()
+      for (_, orchard) in Entities.shared.orchards {
+        opts.append(orchard)
+        if self.assignedOrchards.contains(orchard.id) {
+          vals.insert(orchard)
         }
       }
+      row.options = opts
+      row.value = vals
+    }.onChange { row in
+      self.tempory?.assignedOrchards = Array(row.value ?? []).map { $0.id }
+      onChange()
     }
     
     let firstnameRow = NameRow { row in
@@ -209,7 +197,8 @@ extension Worker {
 //      +++ Section("Contact")
 //      <<< phoneRow
     
-      +++ orchardSection
+      +++ Section("Assigne Orchards")
+      <<< assignedOrchards
     
     _ = id != "" ? (form +++ performanceSection) : form
     
@@ -428,8 +417,6 @@ extension Orchard {
     let form = formVC.form
     tempory = Orchard(json: json()[id] ?? [:], id: id)
     
-    let farms = Entities.shared.farms
-    
     let cultivarsRow = DeletableMultivaluedSection(
       multivaluedOptions: [.Insert, .Delete],
       header: "Cultivars",
@@ -562,9 +549,20 @@ extension Orchard {
       onChange()
     }
     
+    let orchardAreaRow = OrchardAreaRow { row in
+      row.title = "Orchard Location"
+      row.value = tempory
+    }.cellUpdate { (cell, _) in
+      let lat = self.tempory?.coords.first?.latitude ?? 0.0
+      let lng = self.tempory?.coords.first?.longitude ?? 0.0
+      let lt = String(format: "%.4f", lat)
+      let lg = String(format: "%.4f", lng)
+      cell.detailTextLabel?.text = "\(lt), \(lg)"
+    }
+    
     let farmSelection = PushRow<Farm> { row in
       row.title = "Assigned Farm"
-      row.add(rule: RuleRequired(msg: "• A farm must be selected for an orchard to be a part of"))
+      row.add(rule: RuleRequired(msg: "• An orchard must be assigned to a farm."))
       row.options = []
       var aFarm: Farm? = nil
       
@@ -575,28 +573,19 @@ extension Orchard {
           aFarm = farm
         }
       }
-      row.value = aFarm ?? farms.first?.value
+      row.value = aFarm
       if aFarm == nil {
         self.tempory?.assignedFarm = row.value?.id ?? ""
       }
     }.onChange { (row) in
       self.tempory?.assignedFarm = row.value?.id ?? ""
+      orchardAreaRow.value = self.tempory
       onChange()
-    }
-    
-    let orchardAreaRow = OrchardAreaRow { row in
-      row.title = "Orchard Location"
-      row.value = self
-    }.cellUpdate { (cell, _) in
-      let lat = self.coords.first?.latitude ?? 0.0
-      let lng = self.coords.first?.longitude ?? 0.0
-      let lt = String(format: "%.4f", lat)
-      let lg = String(format: "%.4f", lng)
-      cell.detailTextLabel?.text = "\(lt), \(lg)"
     }
       
     orchardAreaRow.actuallyChanged = { (row) in
       self.tempory?.coords = row.value?.coords ?? []
+      self.tempory?.inferArea = self.tempory?.coords.isEmpty == true
       onChange()
     }
     
@@ -680,7 +669,7 @@ extension Orchard {
       +++ Section("Crop Dimensions")
       <<< widthRow
       <<< heightRow
-    
+      
       +++ Section("Assigned Farm")
       <<< farmSelection
     
@@ -743,6 +732,11 @@ extension Session {
       alert.addButton("Cancel", action: {})
       alert.addButton("Delete") {
         HarvestDB.delete(session: self) { (_, _) in
+          let vcs = formVC.navigationController?.viewControllers
+          if let vc = vcs?[(vcs?.count ?? 0) - 2] as? SessionSelectionViewController {
+            vc.sessions.removeSession(withId: self.id)
+            vc.tableView.reloadData()
+          }
           formVC.navigationController?.popViewController(animated: true)
         }
       }
@@ -903,6 +897,7 @@ extension HarvestUser {
             SCLAlertView().showError("An Error Occurred", subTitle: err.localizedDescription)
             return
           }
+          SCLAlertView.showSuccessToast(message: "Password Updated")
         }
       }
       

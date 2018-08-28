@@ -83,7 +83,7 @@ extension HarvestDB {
   static func save(worker: Worker, oldWorker: Worker) {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
-    let workingFor = ref.child(Path.workingFor)
+//    let workingFor = ref.child(Path.workingFor)
     let locations = ref.child(Path.locations)
     let requestedLocations = ref.child(Path.requestedLocations)
     
@@ -96,7 +96,7 @@ extension HarvestDB {
     if worker.kind == .worker && oldWorker.kind == .foreman && oldWorker.phoneNumber != "" {
       let workerPath = worker.phoneNumber.removedFirebaseInvalids()
       foremen.child(workerPath).removeValue()
-      workingFor.child(workerPath).removeValue()
+//      workingFor.child(workerPath).removeValue()
       locations.child(workerPath).removeValue()
       requestedLocations.child(workerPath).removeValue()
     }
@@ -110,22 +110,22 @@ extension HarvestDB {
     } else if worker.phoneNumber != "" {
       let workerPath = worker.phoneNumber.removedFirebaseInvalids()
       foremen.child(workerPath).removeValue()
-      workingFor.child(workerPath).removeValue()
+//      workingFor.child(workerPath).removeValue()
       locations.child(workerPath).removeValue()
       requestedLocations.child(workerPath).removeValue()
     }
   }
   
   static func saveWorkerReference(_ worker: Worker, _ oldNumber: String) {
-    if worker.phoneNumber != "" {
-      let workerRefs = ref.child(Path.workingFor
-        + "/"
-        + worker.phoneNumber.removedFirebaseInvalids())
-      let update = [
-        HarvestUser.current.uid: worker.id
-      ]
-      workerRefs.updateChildValues(update)
-    }
+//    if worker.phoneNumber != "" {
+//      let workerRefs = ref.child(Path.workingFor
+//        + "/"
+//        + worker.phoneNumber.removedFirebaseInvalids())
+//      let update = [
+//        HarvestUser.current.uid: worker.id
+//      ]
+//      workerRefs.updateChildValues(update)
+//    }
   }
   
   static func delete(
@@ -134,7 +134,7 @@ extension HarvestDB {
   ) {
     let workers = ref.child(Path.workers)
     let foremen = ref.child(Path.foremen)
-    let workingFor = ref.child(Path.workingFor)
+//    let workingFor = ref.child(Path.workingFor)
     
     guard worker.id != "" else {
       return
@@ -149,12 +149,12 @@ extension HarvestDB {
         .removedFirebaseInvalids()).removeValue { err, ref in
         completion(err, ref)
       }
-      if let uid = HarvestUser.current.selectedWorkingForID?.uid {
-        workingFor
-          .child(worker.phoneNumber.removedFirebaseInvalids())
-          .child(uid)
-          .removeValue()
-      }
+//      if let uid = HarvestUser.current.selectedWorkingForID?.uid {
+//        workingFor
+//          .child(worker.phoneNumber.removedFirebaseInvalids())
+//          .child(uid)
+//          .removeValue()
+//      }
     })
   }
   

@@ -273,7 +273,7 @@ public class SessionDetails extends AppCompatActivity {
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(SessionDetails.this, SignIn_Farmer.class));
+                                    startActivity(new Intent(SessionDetails.this, SignIn_Choose.class));
                                 }
                             });
                 }

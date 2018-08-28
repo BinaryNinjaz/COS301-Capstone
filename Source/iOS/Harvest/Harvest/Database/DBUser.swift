@@ -35,6 +35,10 @@ extension HarvestDB {
   }
   
   static func save(harvestUser: HarvestUser, oldEmail: String) {
+    guard Auth.auth().currentUser?.phoneNumber == nil else {
+      return
+    }
+    
     let admin = ref.child(Path.admin)
     
     let update = harvestUser.json()

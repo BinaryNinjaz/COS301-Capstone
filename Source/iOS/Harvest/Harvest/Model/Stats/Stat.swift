@@ -99,7 +99,7 @@ struct Stat: Codable {
     let missingMessage = self.grouping.description
     message = (self.grouping == .orchard
       ? orchard?.name
-      : self.grouping == .worker
+      : self.grouping == .worker || self.grouping == .foreman
         ? worker?.name
         : farm?.name) ?? "Unknown \(missingMessage)"
     message = mode == .accumEntity ? "(Sum)" : message
@@ -136,7 +136,7 @@ struct Stat: Codable {
     var dataSets = [LineChartDataSet]()
     var expectedDataSets: [LineChartDataSet] = []
     
-    var expectedDataSetObject: [String: [String: Double]]?
+    var expectedDataSetObject: [String: [String: Double?]]?
     
     HarvestCloud.timeGraphSessions(
       grouping: grouping, ids: ids, period: timeStep, startDate: sd, endDate: ed, mode: mode) { data in
@@ -150,7 +150,7 @@ struct Stat: Codable {
         var allUsedColors = [String: UIColor]()
         for (key, _dataSetObject) in json {
           if key == "exp" {
-            expectedDataSetObject = _dataSetObject as? [String: [String: Double]]
+            expectedDataSetObject = _dataSetObject as? [String: [String: Double?]]
             continue
           }
           
@@ -203,7 +203,7 @@ struct Stat: Codable {
   }
   
   func expectedGraphData(
-    json: [String: [String: Double]],
+    json: [String: [String: Double?]],
     allUsedColors: [String: UIColor]
   ) -> [LineChartDataSet] {
     var functions = [SinusoidalFunction]()
@@ -212,7 +212,9 @@ struct Stat: Codable {
       let b = function["b"] ?? 0.0
       let c = function["c"] ?? 0.0
       let d = function["d"] ?? 0.0
-      functions.append(SinusoidalFunction(key: key, a: a, b: b, c: c, d: d))
+      if let a = a, let b = b, let c = c, let d = d {
+        functions.append(SinusoidalFunction(key: key, a: a, b: b, c: c, d: d))
+      }
     }
     
     let (sd, ed) = timePeriod.dateRange()
@@ -222,7 +224,7 @@ struct Stat: Codable {
       let color = allUsedColors[fx.key] ?? UIColor.randomColor()
       dataSet.setColor(color.withAlphaComponent(0.25))
       
-      dataSet.label = self.legendTitle(forKey: fx.key)
+      dataSet.label = self.legendTitle(forKey: fx.key) + " (expected)"
       
       formatDataSet(dataSet)
       dataSet.mode = .linear
