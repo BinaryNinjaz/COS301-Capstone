@@ -104,6 +104,10 @@ function showRegister(){
                                                                             +'<input placeholder="" type="text" class="form-control" id="surname" required />'
                                                                     +'</div>'
                                                                     +'<div class="form-group">'
+                                                                            +'<label style="text-align:left">Organisation</label>'
+                                                                            +'<input placeholder="" type="text" class="form-control" id="organisation" required />'
+                                                                    +'</div>'
+                                                                    +'<div class="form-group">'
                                                                             +'<label style="text-align:left">Email Address</label>'
                                                                             +'<input type="text" class="form-control" id="email" required data-type="tooltip"'
                                                                                                                +'title="The email must be properly formatted, so joe@example.com" />'
@@ -128,8 +132,8 @@ function showRegister(){
 /* This function connects to firebase, it checks if the user is already in the system - Teboho Mokoena */
 function register() {
     document.getElementById("name").style.borderColor = "#A9A9A9";
-    document.getElementById("name").style.borderColor = "#A9A9A93";
     document.getElementById("surname").style.borderColor = "#A9A9A9";
+    document.getElementById("organisation").style.borderColor = "#A9A9A9";
     document.getElementById("email").style.borderColor = "#A9A9A9";
     document.getElementById("passwordConf").style.borderColor = "#A9A9A9";
     document.getElementById("password").style.borderColor = "#A9A9A9";
@@ -146,8 +150,14 @@ function register() {
         document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
         return false;
     }
+    var org = document.getElementById("organisation").value;
+    if(org===""){
+        document.getElementById("organisation").style.borderColor = "red";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        return false;
+    }
     if(document.getElementById("password").value.length<6){
-         document.getElementById("password").style.borderColor = "red";
+        document.getElementById("password").style.borderColor = "red";
         document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Minimum password length is 6</p>";   
         return false;
     }    
