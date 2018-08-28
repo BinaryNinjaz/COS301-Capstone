@@ -293,6 +293,7 @@ public class Stats_Graph extends AppCompatActivity {
             //Line always
             List<ILineDataSet> dataSets = new ArrayList<>(); //Holds all the data sets, so one for each entity
             entityNames = functionResult.names(); //to iterate through the top level entities
+
             if (entityNames != null) {
                 for (int i = 0; i < entityNames.length(); i++) {
                     if(entityNames.get(i).equals("exp")){
@@ -372,6 +373,40 @@ public class Stats_Graph extends AppCompatActivity {
                             lineDataSet.setDrawCircles(false);
 
                             dataSets.add(lineDataSet);
+                        }
+                        else {
+                            //Only do the expected
+                            LineDataSet expectedLineDataSet = null;
+                            curCal.setTimeInMillis((long)(start * THOUSAND));
+                            Double nextKey = getNextKey();
+                            while (nextKey != null){
+                                Entry expectedEntry = new Entry(nextKey.floatValue(), function_getNextY());
+                                nextKey = getNextKey();
+                                expectedEntries.add(expectedEntry);
+                            }
+                            switch (entityNames.get(i).toString()) {
+                                case "avg":
+                                    break;
+                                case "sum":
+                                    if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
+                                        expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expected)");
+                                        expectedLineDataSet.setColor(R.color.blueLinks, 200);
+                                        expectedLineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                                        expectedLineDataSet.setDrawCircles(false);
+                                        expectedLineDataSet.setLineWidth(1);
+                                        dataSets.add(expectedLineDataSet);
+                                    }
+                                    break;
+                                default:
+                                    expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
+                                    expectedLineDataSet.enableDashedLine(10, 5, 1);
+                                    expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 200);
+                                    expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
+                                    expectedLineDataSet.setDrawCircles(false);
+                                    expectedLineDataSet.setLineWidth(1);
+                                    dataSets.add(expectedLineDataSet);
+                                    break;
+                            }
                         }
                     }
                 }
