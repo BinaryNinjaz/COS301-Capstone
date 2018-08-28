@@ -125,3 +125,16 @@ tfoot tr td{
     text-align: center;
     margin: 2px;
 }
+
+@media (max-width: 768px){
+    #left{
+        transform: translate(150px);
+        transition-duration: 1s;
+    }
+}
+@media (max-width: 576px){
+    #left{
+        transform: translate(0px);
+        transition-duration: 1s;
+    }
+}
