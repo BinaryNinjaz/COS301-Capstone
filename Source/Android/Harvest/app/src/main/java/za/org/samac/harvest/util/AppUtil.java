@@ -71,7 +71,7 @@ public class AppUtil {
         //Thank you Wais
         //https://stackoverflow.com/questions/5402253/getting-telephone-country-code-with-android
 
-        if (!number.startsWith("+")) {
+        if (!number.startsWith("+") || !number.startsWith("00")) {
             String CountryZipCode = "";
             String CountryID = "";
 
