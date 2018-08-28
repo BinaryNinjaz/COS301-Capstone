@@ -1,5 +1,6 @@
 package za.org.samac.harvest.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import za.org.samac.harvest.R;
@@ -67,7 +74,7 @@ public class AppUtil {
         //Thank you Wais
         //https://stackoverflow.com/questions/5402253/getting-telephone-country-code-with-android
 
-        if (!number.startsWith("+")) {
+        if (!number.startsWith("+") && !number.startsWith("00")) {
             String CountryZipCode = "";
             String CountryID = "";
 
@@ -83,9 +90,52 @@ public class AppUtil {
                     break;
                 }
             }
-            number = number.replaceFirst("0", "+" + CountryZipCode);
+            number = number.replaceFirst("^0", "+" + CountryZipCode);
         }
 
         return number;
+    }
+
+    public static String convertDate(double milliseconds){
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
+        return format.format(milliseconds);
+    }
+
+    public static double convertDate(String fbString){
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
+        Date date = format.parse(fbString, new ParsePosition(0));
+        return date.getTime();
+    }
+
+    public static class Hash{
+        private static String convertToHex(byte[] data){
+            StringBuilder buf = new StringBuilder();
+            for (byte b : data){
+                int halfByte = (b >>> 4) & 0x0F;
+                int twoHalfs = 0;
+                do {
+                    buf.append((0 <= halfByte) && (halfByte <= 9) ? (char) ('0' + halfByte) : (char) ('a' + (halfByte - 10)));
+                    halfByte = b & 0x0F;
+                } while (twoHalfs++ < 1);
+            }
+            return buf.toString();
+        }
+
+        public static String SHA256(String text){
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                try {
+                    byte[] textBytes = text.getBytes("iso-8859-1");
+                    md.update(textBytes, 0, textBytes.length);
+                    byte[] hash = md.digest();
+                    return convertToHex(hash);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
     }
 }

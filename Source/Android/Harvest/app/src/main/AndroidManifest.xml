@@ -20,9 +20,11 @@
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity android:name=".SignIn_Choose" />
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".SignIn_Choose"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".SignIn_Farmer"
             android:label="@string/title_activity_login"
@@ -75,8 +77,7 @@
             android:label="@string/title_stats"
             android:launchMode="singleTop"
             android:parentActivityName=".Stats"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Stats" />
@@ -88,7 +89,8 @@
             android:label="@string/title_activity_sessions" />
         <activity
             android:name=".Sessions"
-            android:label="@string/title_activity_sessions" />
+            android:label="@string/title_activity_sessions"
+            android:launchMode="singleTop"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -103,7 +105,14 @@
 
         <activity
             android:name=".SessionsMap"
-            android:label="@string/title_activity_sessions_map" />
+            android:label="@string/title_activity_sessions"
+            android:launchMode="singleTop"
+            android:parentActivityName=".adapter.SessionDetails">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".adapter.SessionDetails" />
+        </activity>
+
         <activity
             android:name=".adapter.SessionDetails"
             android:label="@string/title_activity_sessions"
@@ -113,6 +122,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Sessions" />
         </activity>
+
         <activity android:name=".ViewFlipperActivity" />
         <activity android:name=".IntroViewFlipper" />
 

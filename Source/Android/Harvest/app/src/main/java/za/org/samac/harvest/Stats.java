@@ -143,13 +143,15 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(Stats.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(Stats.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
-                                startActivity(new Intent(Stats.this, InformationActivity.class));
+                                startActivityIfNeeded(new Intent(Stats.this, InformationActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                             case R.id.actionSession:
-                                startActivity(new Intent(Stats.this, Sessions.class));
+                                startActivityIfNeeded(new Intent(Stats.this, Sessions.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                             case R.id.actionStats:
                                 return true;
@@ -192,7 +194,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
                 if(!AppUtil.isUserSignedIn()){
-                    startActivity(new Intent(Stats.this, SignIn_Farmer.class));
+                    startActivity(new Intent(Stats.this, SignIn_Choose.class));
                 }
                 else {
 //                    FirebaseAuth.getInstance().signOut();
@@ -267,7 +269,12 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             }
             StringBuilder builder = new StringBuilder();
             for (String id : ids){
-                builder.append(data.toStringID(id, category)).append(", ");
+                if (!id.equals(FirebaseAuth.getInstance().getUid())){
+                    builder.append(data.toStringID(id, category)).append(", ");
+                }
+                else {
+                    builder.append("Farm Owner, ");
+                }
             }
             if (builder.length() > 2) {
                 builder.delete(builder.length() - 2, builder.length()).append(".");
@@ -335,6 +342,8 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         else {
             stats_selector.showProceed(true);
         }
+        stats_selector.setFarmOwnerChecked(ids.contains(FirebaseAuth.getInstance().getUid()));
+
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         toggleUpButton(true);
@@ -382,7 +391,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 return;
             case R.id.stats_select_all:
                 stats_selector.checkAllPerhaps(true);
+                ids.clear();
                 ids.addAll(data.extractIDs(data.getThings(stats_selector.getCategory()), stats_selector.getCategory()));
+                ids.add(FirebaseAuth.getInstance().getUid());
                 return;
             case R.id.stats_select_none:
                 stats_selector.checkAllPerhaps(false);
@@ -664,7 +675,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
      * @param period represents the time period, must be lower case string that matches one of the finals in the stats class
      * @return dateBundle that holds two doubles, one for start date, and the other for the end date.
      */
-    public static DateBundle determineDates(String period){
+    public DateBundle determineDates(String period){
         final String TAG = "Stats_Creator-dates";
 
         period = period.toLowerCase();
@@ -753,7 +764,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
 
                 endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 endCal.set(Calendar.HOUR_OF_DAY, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
-                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.MINUTE));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
@@ -821,6 +832,12 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             case Stats.NOTHING:
                 Log.w(TAG, "Period is nothing.");
                 return null;
+        }
+
+        if (this.interval.equals(WEEKLY) && !accumulation.equals(ACCUMULATION_TIME)){
+            startCal.setFirstDayOfWeek(Calendar.SUNDAY);
+            startCal.set(Calendar.WEEK_OF_MONTH, 1);
+            startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         }
 
         Log.i(TAG, "START: " + startCal.getTime().toString());
