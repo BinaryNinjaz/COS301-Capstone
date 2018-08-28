@@ -1,0 +1,11 @@
+Meeting 17 (23-08-18)
+As said previously the pressure is on and expectations are high. They will try to break us from now on, but we should not falter as we have come too far to crumble in the final stretch. Remember pressure is something accepted rather than given.
+Load harvest on peoples phones for field test.
+The client has sent the money (I think) I’m just waiting for it to reflect.
+I’ve asked the client for his permission to deploy the app.
+We will not delete data from the database (it will just be in deleted fields) – Letanyan explains how it works.
+Choose background on web, one by one give your opinion (already got Shaun’s preference).
+Presentations (prepare like you are going to ask a girl out) in truth we don’t know what will happen or who will be there in the next demo or on the final project day, but let us still try our utmost to be prepared where we can.
+Keep on testing. We must try our best to ensure that the system can sustain itself.
+Anything from you guys?
+Field test.
