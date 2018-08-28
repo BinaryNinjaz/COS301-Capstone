@@ -650,9 +650,6 @@ extension Orchard {
     }
     
     form
-      +++ Section("Assigned Farm")
-      <<< farmSelection
-      
       +++ Section("Orchard")
       <<< nameRow
       <<< cropRow
@@ -672,6 +669,9 @@ extension Orchard {
       +++ Section("Crop Dimensions")
       <<< widthRow
       <<< heightRow
+      
+      +++ Section("Assigned Farm")
+      <<< farmSelection
     
       +++ Section("Assigned Workers")
       <<< assignedWorkersRow
