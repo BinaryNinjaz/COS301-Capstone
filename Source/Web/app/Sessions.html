@@ -69,21 +69,24 @@
 
       <div class="container">
           <div class="row">
-              <div class="col-sm-3 scrollView">
+              <div class="col-sm-3 scrollView" style="padding-right: 8px">
                   <h1>Sessions</h1>
                   <input class="form-control" type="text" placeholder="Search" id="sessionSearchField" oninput="filterSessions()">
                   <div id="sessionsList">
                   </div>
                   <div id="sessionsListLoader">
                   </div>
-        <div id="loader">
+                  <div id="loader">
                   </div>
               </div>
-              <div class="col-sm-9 detailsView">
-                  <div id="sessionDetails">
+
+              <div class="col-sm-9">
+                  <div class="map" style="height: 42%; margin-left: 16px" id="map"></div>
+                  <div class="detailsView">
+                    <div id="sessionDetails">
+                    </div>
+                    <canvas id="doughnut" style="width:100%"></canvas>
                   </div>
-                  <div class="map" style="height: 42%" id="map"></div>
-                  <canvas id="doughnut" style="width:100%"></canvas>
               </div>
           </div>
       </div>

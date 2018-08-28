@@ -35,8 +35,8 @@ function hashColor(parent, child) {
   const hue = Math.round(hueRatio * 360) | 0;
 
   var H = hue;
-  var S = satRatio;
-  var V = briRatio;
+  var S = satRatio * 0.5 + 0.5;
+  var V = briRatio * 0.33 + 0.66;
 
   var C = V * S;
   var X = C * (1 - Math.abs((H / 60) % 2 - 1));
