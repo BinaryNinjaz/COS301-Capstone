@@ -135,27 +135,31 @@ function register() {
     var fname = document.getElementById("name").value;
     if(fname===""){
         document.getElementById("name").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";   
         return false;
     }    
     var lname = document.getElementById("surname").value;
     if(lname===""){
         document.getElementById("surname").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";   
         return false;
     }
     var org = document.getElementById("organisation").value;
     if(org===""){
         document.getElementById("organisation").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";   
         return false;
     }
     if(document.getElementById("password").value.length<6){
         document.getElementById("password").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Minimum password length is 6</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure your password is at least 6 characters long.</p>";   
         return false;
     }    
-   
+    if(document.getElementById("passwordConf").value.length<6){
+        document.getElementById("passwordConf").style.borderColor = "red";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure your password is at least 6 characters long.</p>";   
+        return false;
+    }  
     
     const email = document.getElementById("email").value;
     const pass = document.getElementById("password").value;
@@ -171,7 +175,9 @@ function checkPass(pass1, pass2) {
     } 
     //We can do this validation through html's minimum character attribute
     if (pass1 !== pass2) {
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Passwords do not match</p>";
+        document.getElementById("password").style.borderColor = "red";
+        document.getElementById("passwordConf").style.borderColor = "red";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure that the passwords entered are the same.</p>";
         return false;
     }
     if (pass1 === pass2) {
@@ -192,7 +198,7 @@ function resetPassword() {
         "</div>" +
         "<div class='modal-body'>" +
         "<div class='form-group'>" +
-        "<label class='control-label'>Please enter your email address so we can send you instructions on resetting your password</label> " +
+        "<label class='control-label'>Please enter your email address so we can send you instructions regarding how to reset your password.</label> " +
         "<input class='form-control' type='email' id='emailAddress'></div>" +
         "</div>" +
         "<div class='modal-footer'>" +
