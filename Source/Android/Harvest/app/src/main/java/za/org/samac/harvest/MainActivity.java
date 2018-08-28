@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     int holdi;
 
     private void getForemenId() {
-        DatabaseReference foremanRef;
+        final DatabaseReference foremanRef;
         foremanRef = currUserRef.child("workers");
         foremanRef.addValueEventListener(new ValueEventListener() {
 
@@ -371,6 +371,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 constraintLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 //user pressed start and all went well with retrieving data
+                foremanRef.removeEventListener(this);
             }
 
             @Override
@@ -768,6 +769,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     progressBar.setVisibility(View.GONE);
                 }
                 //user pressed start and all went well with retrieving data
+
+                workersRef.removeEventListener(this);
             }
 
             @Override
