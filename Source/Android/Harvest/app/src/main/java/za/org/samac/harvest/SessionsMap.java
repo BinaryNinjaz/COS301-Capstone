@@ -273,7 +273,7 @@ public class SessionsMap extends AppCompatActivity implements OnMapReadyCallback
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    startActivity(new Intent(SessionsMap.this, SignIn_Farmer.class));
+                                    startActivity(new Intent(SessionsMap.this, SignIn_Choose.class));
                                 }
                             });
                 }
