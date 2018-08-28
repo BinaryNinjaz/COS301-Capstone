@@ -36,15 +36,7 @@ function onSignIn(googleUser) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) { // user details correct
         document.location.href = "HomePage.html";
     }).catch(function (error) { // some error occured
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-        } else {
-            alert(errorMessage);
-        }
-        console.log(error);
+        alert('Email or password is incorrect. Please try again.');
     });
 }
 
@@ -135,27 +127,31 @@ function register() {
     var fname = document.getElementById("name").value;
     if(fname===""){
         document.getElementById("name").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";   
         return false;
     }    
     var lname = document.getElementById("surname").value;
     if(lname===""){
         document.getElementById("surname").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";   
         return false;
     }
     var org = document.getElementById("organisation").value;
     if(org===""){
         document.getElementById("organisation").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";   
         return false;
     }
     if(document.getElementById("password").value.length<6){
         document.getElementById("password").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Minimum password length is 6</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure your password is at least 6 characters long.</p>";   
         return false;
     }    
-   
+    if(document.getElementById("passwordConf").value.length<6){
+        document.getElementById("passwordConf").style.borderColor = "red";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure your password is at least 6 characters long.</p>";   
+        return false;
+    }  
     
     const email = document.getElementById("email").value;
     const pass = document.getElementById("password").value;
@@ -171,7 +167,9 @@ function checkPass(pass1, pass2) {
     } 
     //We can do this validation through html's minimum character attribute
     if (pass1 !== pass2) {
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Passwords do not match</p>";
+        document.getElementById("password").style.borderColor = "red";
+        document.getElementById("passwordConf").style.borderColor = "red";
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure that the passwords entered are the same.</p>";
         return false;
     }
     if (pass1 === pass2) {
@@ -188,16 +186,16 @@ function resetPassword() {
         "" +
         "<div class='modal-content'>" +
         "<div class='modal-header'>" +
-        "<h4 class='modal-title'>Password Reset</h4>" +
+        "<h4 class='modal-title'>Reset Password</h4>" +
         "</div>" +
         "<div class='modal-body'>" +
         "<div class='form-group'>" +
-        "<label class='control-label'>Please enter your email address so we can send you instructions on resetting your password</label> " +
+        "<label class='control-label'>Please enter your email, you will receive an email to reset your password.</label> " +
         "<input class='form-control' type='email' id='emailAddress'></div>" +
         "</div>" +
         "<div class='modal-footer'>" +
         "<div class='col-sm-2 col-sm-offset-5' style='padding: 2px'><button type='button' class='btn btn-warning' data-dismiss='modal'>Cancel</button></div>" +
-        "<div class='col-sm-5' style='padding: 2px'><button type='button' class='btn btn-success' data-dismiss='modal' onclick='sendPasswordResetEmail(document.getElementById(\"emailAddress\").value)'>Send Password Reset Email</button></div>" +
+        "<div class='col-sm-5' style='padding: 2px'><button type='button' class='btn btn-success' data-dismiss='modal' onclick='sendPasswordResetEmail(document.getElementById(\"emailAddress\").value)'>Request Reset</button></div>" +
         "</div>" +
         "</div>" +
         "" +

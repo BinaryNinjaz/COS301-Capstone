@@ -75,11 +75,7 @@ function firebaseLogin() {
     const errorCode = error.code;
     const errorMessage = error.message;
 
-    if (errorCode === 'auth/wrong-password') {
-      alert('Wrong password.');
-    } else {
-      alert(errorMessage);
-    }
+    alert('Email or password is incorrect. Please try again.');
   });
 }
 
