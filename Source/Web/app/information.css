@@ -23,11 +23,10 @@
 }
 #entitySelector {
     margin: 16px;
-    margin-top: 8px;
     padding: 4px;
     border-radius: 4px;
     margin-bottom: 0px;
-    background: linear-gradient(rgb(59, 59, 59), rgb(34, 34, 34));
+    background: none;
     border-color: black;
 }
 #selectedEntity {
