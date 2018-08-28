@@ -91,7 +91,7 @@ function showRegister(){
                                                                         +'<input placeholder="" type="text" class="form-control" id="surname" required />'
                                                                 +'</div>'
                                                                 +'<div class="form-group">'
-                                                                        +'<label style="text-align:left">Organisation</label>'
+                                                                        +'<label style="text-align:left">Organisation Name</label>'
                                                                         +'<input placeholder="" type="text" class="form-control" id="organisation" required />'
                                                                 +'</div>'
                                                                 +'<div class="form-group">'
