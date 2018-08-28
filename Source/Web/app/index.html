@@ -24,11 +24,12 @@
 	
 	
         <link href="navbar.css" rel="stylesheet" type="text/css" /><!-- css file -->
-        <link href="css/index.css" rel="stylesheet" type="text/css"/>
+        
 		<link href="css/panel.css" rel="stylesheet" type="text/css"/>
         <link rel="icon" href="HarvestLogo.png">
 		<link href="css/link.css" rel="stylesheet" type="text/css"/>
 		<link href="css/footer.css" rel="stylesheet" type="text/css"/>
+		<link href="css/index.css" rel="stylesheet" type="text/css"/>
 		
     </head>
     
@@ -167,10 +168,14 @@
                 <div id="right" class="col-lg-7 col-md-7 col-sm-6 col-hidden col-lg-offset-2 col-md-offset-1 col-sm-offset-1 visible-sm visible-md visible-lg">					
 				<!-- This class ico has a corresponding css content -->
 					<div class="col-12" id="featuresBox">
-						<table class="featuresBox">
-							<thead colspan="3">Harvest Features</thead>
+						<table>
+							<thead>
+								<th id='thead' colspan="3">
+									<h2 class="headerText">Harvest Features</h2>
+								</th>
+							</thead>
 							<tbody>
-								<tr>
+								<tr >
 									<td>
 										Foreman Tracking
 									</td>
@@ -187,23 +192,29 @@
 										<img class="img-responsive" src="images/marker.PNG" class="img-rounded center" id="Panel_Image" />
 									</td>
 									<td>
-										<img class="img-responsive" src="images/heatmap.PNG" class="img-rounded center" id="Panel_Image">
+										<img class="img-responsive" src="images/heatmap.PNG" class="img-rounded center" id="Panel_Image" />
 									</td>
 									<td>
-										<img class="img-responsive" src="images/stats.PNG" class="img-rounded center" id="Panel_Image">
+										<img class="img-responsive" src="images/stats.PNG" class="img-rounded center" id="Panel_Image" />
 									</td>
 								</tr>
 							</tbody>
 							<tfoot>
 								<tr>
 									<td>
-										<button class="btn btn-default" data-toggle="modal" data-target="#myModal">Learn More <i class="fa fa-angle-right"></i></button>
+										<div class="col-4">
+											<button class="btn btn-info" data-toggle="modal" data-target="#myModal">Learn More <i class="fa fa-angle-right"></i></button>
+										</div>
 									</td>
 									<td>
-										<button class="btn btn-default" data-toggle="modal" data-target="#myModal1">Learn More <i class="fa fa-angle-right"></i></button>
+										<div class="col-4">
+											<button class="btn btn-info" data-toggle="modal" data-target="#myModal1">Learn More <i class="fa fa-angle-right"></i></button>
+										</div>
 									</td>
 									<td>
-										<button class="btn btn-default" data-toggle="modal" data-target="#myModal2">Learn More <i class="fa fa-angle-right"></i></button>
+										<div class="col-4 ">
+											<button class="btn btn-info" data-toggle="modal" data-target="#myModal2">Learn More <i class="fa fa-angle-right"></i></button>
+										</div>
 									</td>
 								</tr>
 							</tfoot>						
