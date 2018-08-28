@@ -1,13 +1,19 @@
 package za.org.samac.harvest;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -16,36 +22,30 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import za.org.samac.harvest.adapter.MyData;
 import za.org.samac.harvest.adapter.SessionDetails;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.ColorScheme;
 import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.Orchard;
 
-import static za.org.samac.harvest.MainActivity.getWorkers;
-
-public class SessionsMap extends FragmentActivity implements OnMapReadyCallback {
+public class SessionsMap extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -70,6 +70,7 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessions_map);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -92,12 +93,12 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
                                     startActivityIfNeeded(openMainActivity, 0);
                                     return true;
                                 case R.id.actionInformation:
-                                    startActivity(new Intent(SessionsMap.this, InformationActivity.class));
+                                    startActivityIfNeeded(new Intent(SessionsMap.this, InformationActivity.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                                 case R.id.actionSession:
                                     return true;
                                 case R.id.actionStats:
-                                    startActivity(new Intent(SessionsMap.this, Stats.class));
+                                    startActivityIfNeeded(new Intent(SessionsMap.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                     return true;
                             }
                             return true;
@@ -129,10 +130,12 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         isFirstCollection = true; // just used to find where to move map to
         uid = user.getUid();
 
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+
         mMap.clear();
 
         PolylineOptions polyline = new PolylineOptions();
-        polyline.color(Color.BLUE);
+        polyline.color(Color.RED);
         boolean first = true;
         for (Location loc : Sessions.selectedItem.track) {
             LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
@@ -162,8 +165,15 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         for (Orchard orchard : data.getOrchards()) {
             if (!orchard.getCoordinates().isEmpty()) {
                 PolygonOptions polygon = new PolygonOptions();
-                polygon.fillColor(0x110000FF);
-                polygon.strokeColor(0x550000FF);
+
+                Farm farm = orchard.getAssignedFarm();
+                String farmId = farm == null ? "" : farm.getID();
+
+                int fillColor = ColorScheme.hashColor(farmId, orchard.getID(), 64);
+                int strokeColor = ColorScheme.hashColor(farmId, orchard.getID(), 191);
+
+                polygon.fillColor(fillColor);
+                polygon.strokeColor(strokeColor);
                 polygon.strokeWidth(3);
 
                 for (LatLng coord : orchard.getCoordinates()) {
@@ -175,6 +185,44 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
         }
 
         callCameraMove();
+    }
+
+    public void onSessionsMapMapTypeClick(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Map Type");
+
+        final ArrayList<String> optionsArray = new ArrayList<>();
+
+        optionsArray.add("Hybrid");
+        optionsArray.add("Satellite");
+        optionsArray.add("Normal");
+        optionsArray.add("Terrain");
+        optionsArray.add("Cancel");
+
+        final CharSequence []options = optionsArray.toArray(new CharSequence[5]);
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String option = optionsArray.get(which);
+                Button btn  = findViewById(R.id.sessionMapMapTypeButton);
+                if (option.compareTo("Hybrid") == 0) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                } else if (option.compareTo("Satellite") == 0) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                } else if (option.compareTo("Normal") == 0) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                } else if (option.compareTo("Terrain") == 0) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                }
+                if (option.compareTo("Cancel") != 0 && btn != null) {
+                    btn.setText(options[which]);
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     private void callCameraMove() {
@@ -195,5 +243,44 @@ public class SessionsMap extends FragmentActivity implements OnMapReadyCallback 
             return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.search:
+                return true;
+            case R.id.settings:
+                startActivity(new Intent(SessionsMap.this, SettingsActivity.class));
+                return true;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                if(!AppUtil.isUserSignedIn()){
+                    startActivity(new Intent(SessionsMap.this, SignIn_Choose.class));
+                }
+                else {
+//                    FirebaseAuth.getInstance().signOut();
+                }
+                if (SignIn_Farmer.mGoogleSignInClient != null) {
+                    SignIn_Farmer.mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    startActivity(new Intent(SessionsMap.this, SignIn_Choose.class));
+                                }
+                            });
+                }
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

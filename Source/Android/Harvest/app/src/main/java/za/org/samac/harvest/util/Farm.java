@@ -53,7 +53,8 @@ public class Farm extends DBInfoObject {
 
     @Override
     public String toString(){
-        return name;
+//        return company + " - " + name;
+        return this.name;
     }
 
 

@@ -18,15 +18,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SearchView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Stack;
@@ -35,7 +38,9 @@ import java.util.zip.Inflater;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
+import za.org.samac.harvest.util.ColorScheme;
 import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Farm;
 import za.org.samac.harvest.util.Orchard;
 
 import static za.org.samac.harvest.util.Category.FARM;
@@ -80,15 +85,17 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.actionYieldTracker:
-                                startActivity(new Intent(InformationActivity.this, MainActivity.class));
+                                Intent openMainActivity= new Intent(InformationActivity.this, MainActivity.class);
+                                openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                startActivityIfNeeded(openMainActivity, 0);
                                 return true;
                             case R.id.actionInformation:
                                 return true;
                             case R.id.actionSession:
-                                startActivity(new Intent(InformationActivity.this, Sessions.class));
+                                startActivityIfNeeded(new Intent(InformationActivity.this, Sessions.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
                             case R.id.actionStats:
-                                startActivity(new Intent(InformationActivity.this, Stats.class));
+                                startActivityIfNeeded(new Intent(InformationActivity.this, Stats.class).setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), 0);
                                 return true;
 
                         }
@@ -726,11 +733,17 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         if (orchard == null){
             //It's new, so give it these coords, which will be saved in the orchard fragment.
             infoOrchardMapFragment.setCoordinates(coords);
+            infoOrchardMapFragment.inferArea = true;
         }
         else {
             //It's not new, so just give it the same coords that the data has, and the map will update those.
             infoOrchardMapFragment.setCoordinates(orchard.getCoordinates());
+            infoOrchardMapFragment.inferArea = orchard.getInferArea();
         }
+        Farm farm = orchard.getAssignedFarm();
+        String farmId = farm == null ? "" : farm.getID();
+        infoOrchardMapFragment.setFillColor(ColorScheme.hashColor(farmId, orchard.getID(), 64));
+        infoOrchardMapFragment.setStrokeColor(ColorScheme.hashColor(farmId, orchard.getID(), 191));
 
         fragmentTransaction.commit();
     }
@@ -743,6 +756,45 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
     public void onOrchMapRemLastClick(View view){
         InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
         temp.removeLast();
+    }
+
+    public void onInfoOrchardMapMapTypeClick(View view) {
+        final InfoOrchardMapFragment temp = (InfoOrchardMapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Map Type");
+
+        final ArrayList<String> optionsArray = new ArrayList<>();
+
+        optionsArray.add("Hybrid");
+        optionsArray.add("Satellite");
+        optionsArray.add("Normal");
+        optionsArray.add("Terrain");
+        optionsArray.add("Cancel");
+
+        final CharSequence []options = optionsArray.toArray(new CharSequence[5]);
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String option = optionsArray.get(which);
+                Button btn  = findViewById(R.id.info_orch_map_mapType_btn);
+                if (option.compareTo("Hybrid") == 0) {
+                    temp.gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                } else if (option.compareTo("Satellite") == 0) {
+                    temp.gMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                } else if (option.compareTo("Normal") == 0) {
+                    temp.gMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                } else if (option.compareTo("Terrain") == 0) {
+                    temp.gMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                }
+                if (option.compareTo("Cancel") != 0 && btn != null) {
+                    btn.setText(options[which]);
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     public void onCheck(View view){

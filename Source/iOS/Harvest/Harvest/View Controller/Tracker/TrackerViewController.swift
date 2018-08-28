@@ -23,6 +23,7 @@ class TrackerViewController: UIViewController {
   
   var locationManager: CLLocationManager?
   var currentLocation: CLLocation?
+  var changedOrchard: Bool?
   var sessionOrchards: [String] = []
   var workers: [Worker] = [] {
     didSet {
@@ -33,7 +34,7 @@ class TrackerViewController: UIViewController {
   }
   var filteredWorkers: [Worker] {
     return workers.filter { (worker) -> Bool in
-      if sessionOrchards.contains("Select All") {
+      if sessionOrchards.isEmpty {
         return true
       }
       
@@ -83,14 +84,19 @@ class TrackerViewController: UIViewController {
   }
   
   fileprivate func finishCollecting() {
+    if changedOrchard == false {
+      tracker?.modifyOrchardAreas()
+    }
     endCollecting()
     tracker?.storeSession()
     tracker = nil
+    changedOrchard = nil
   }
   
   fileprivate func discardCollections() {
     endCollecting()
     tracker = nil
+    changedOrchard = nil
   }
   
   fileprivate func presentYieldCollection() {
@@ -189,7 +195,6 @@ class TrackerViewController: UIViewController {
       title: "Select All",
       style: .default) { (_) in
         self.sessionOrchards.removeAll()
-        self.sessionOrchards.append("Select All")
         self.workerCollectionView?.reloadData()
         self.yieldLabel?.attributedText = self
           .attributedStringForYieldCollection(self.tracker?.totalCollected() ?? 0)
@@ -233,6 +238,12 @@ class TrackerViewController: UIViewController {
       if CLLocationManager.locationServicesEnabled() {
         locationManager?.startUpdatingLocation()
         requestSelectedOrchard {
+          if self.changedOrchard == nil {
+            self.changedOrchard = false
+          } else if self.changedOrchard == false {
+            self.changedOrchard = true
+          }
+          
           self.startSessionButton?.setTitle("Stop", for: .normal)
           let sessionLayer = CAGradientLayer.gradient(colors: .stopSession,
                                                       locations: [0, 1],
@@ -356,7 +367,10 @@ extension TrackerViewController: UICollectionViewDataSource {
         cell.inc?(cell)
         return
       }
-      self.tracker?.collect(for: self.filteredWorkers[indexPath.row], at: loc)
+      self.tracker?.collect(
+        for: self.filteredWorkers[indexPath.row],
+        at: loc,
+        selectedOrchard: self.sessionOrchards.first)
       
       cell.yieldLabel.text = self
         .tracker?

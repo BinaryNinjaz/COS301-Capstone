@@ -354,7 +354,7 @@ enum TimeStep: String, CustomStringConvertible, Codable {
     switch self {
     case .hourly:
       comp = .hour
-      format = fmt + " HH:mm"
+      format = fmt + (fmt == "" ? "" : " ") + "HH:mm"
       start = startDate.startOfDay()
       end = endDate.startOfDay().date(byAdding: .day, value: 1)
       

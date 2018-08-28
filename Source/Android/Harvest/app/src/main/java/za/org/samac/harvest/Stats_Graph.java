@@ -89,13 +89,12 @@ public class Stats_Graph extends AppCompatActivity {
     private String fmt;
     private Category category;
 
+    private final String url = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions";
+
     //Startup
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        //Remove notification bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats_graph);
@@ -139,12 +138,6 @@ public class Stats_Graph extends AppCompatActivity {
         generateAndDisplayGraph();
     }
 
-    //Function
-    private static String urlTotalBagsPerDay() {
-        String base = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/timedGraphSessions";
-        return base;
-    }
-
     private String urlParameters() {
         StringBuilder base = new StringBuilder();
         //IDs
@@ -162,8 +155,8 @@ public class Stats_Graph extends AppCompatActivity {
         //Interval
         base.append("&period=").append(interval);
         //Period
-        base.append("&startDate=").append(start);
-        base.append("&endDate=").append(end);
+        base.append("&startDate=").append(AppUtil.convertDate(start * THOUSAND));
+        base.append("&endDate=").append(AppUtil.convertDate(end * THOUSAND));
         //Minutes from GMT
         int minutes = (TimeZone.getDefault().getRawOffset() / 1000 / 60);
 //        int minutes = 120;
@@ -219,7 +212,7 @@ public class Stats_Graph extends AppCompatActivity {
                         updateDateFormat();
 
                         //Get the result of the function
-                        String response = sendPost(urlTotalBagsPerDay(), urlParameters());
+                        String response = sendPost(url, urlParameters());
                         Log.i(TAG, response);
 
                         LineData lineData = getDataFromString(response);
@@ -297,6 +290,7 @@ public class Stats_Graph extends AppCompatActivity {
             //Line always
             List<ILineDataSet> dataSets = new ArrayList<>(); //Holds all the data sets, so one for each entity
             entityNames = functionResult.names(); //to iterate through the top level entities
+
             if (entityNames != null) {
                 for (int i = 0; i < entityNames.length(); i++) {
                     if(entityNames.get(i).equals("exp")){
@@ -313,7 +307,7 @@ public class Stats_Graph extends AppCompatActivity {
                         List<Entry> expectedEntries = new ArrayList<>(); //Expected entries.
                         if (entryNames != null) {
                             LineDataSet lineDataSet = null;
-                            LineDataSet expectedLineDataSet;
+                            LineDataSet expectedLineDataSet = null;
                             curCal.setTimeInMillis((long)(start * THOUSAND));
                             int actualEntryIndex = 0;
                             Double nextKey = getNextKey(), nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString());
@@ -377,6 +371,40 @@ public class Stats_Graph extends AppCompatActivity {
 
                             dataSets.add(lineDataSet);
                         }
+                        else {
+                            //Only do the expected
+                            LineDataSet expectedLineDataSet = null;
+                            curCal.setTimeInMillis((long)(start * THOUSAND));
+                            Double nextKey = getNextKey();
+                            while (nextKey != null){
+                                Entry expectedEntry = new Entry(nextKey.floatValue(), function_getNextY());
+                                nextKey = getNextKey();
+                                expectedEntries.add(expectedEntry);
+                            }
+                            switch (entityNames.get(i).toString()) {
+                                case "avg":
+                                    break;
+                                case "sum":
+                                    if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
+                                        expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expected)");
+                                        expectedLineDataSet.setColor(R.color.blueLinks, 200);
+                                        expectedLineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                                        expectedLineDataSet.setDrawCircles(false);
+                                        expectedLineDataSet.setLineWidth(1);
+                                        dataSets.add(expectedLineDataSet);
+                                    }
+                                    break;
+                                default:
+                                    expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
+                                    expectedLineDataSet.enableDashedLine(10, 5, 1);
+                                    expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 200);
+                                    expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
+                                    expectedLineDataSet.setDrawCircles(false);
+                                    expectedLineDataSet.setLineWidth(1);
+                                    dataSets.add(expectedLineDataSet);
+                                    break;
+                            }
+                        }
                     }
                 }
             }
@@ -393,13 +421,6 @@ public class Stats_Graph extends AppCompatActivity {
      */
     public String getLabel(float value, AxisBase axisBase){
         int position;
-//        if (mode.equals(Stats.ACCUMULATION_TIME)) {
-//            if (value < 0) value = 0;
-//            position = (int) Math.floor((double) value);
-//        }
-//        else {
-            //Need to determine where in the integer values the seconds best fit.
-            //maxTime is the largest amount of milliseconds seen.
             if (value >= start) {
                 double fpos = (value - start) / (end - start);
                 fpos *= labels.length;
@@ -409,7 +430,6 @@ public class Stats_Graph extends AppCompatActivity {
             else {
                 return labels[0];
             }
-//        }
         return labels[position];
     }
 
@@ -788,7 +808,9 @@ public class Stats_Graph extends AppCompatActivity {
             intervalsSinceStart = 0;
 
         } catch (JSONException e) {
-            e.printStackTrace(); // Probably avg. This is normal.
+            if (!id.equals("avg")) {
+                e.printStackTrace();
+            }
         }
     }
 

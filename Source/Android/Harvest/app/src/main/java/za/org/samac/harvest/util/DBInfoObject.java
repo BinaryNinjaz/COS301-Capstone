@@ -6,6 +6,7 @@ public class DBInfoObject {
 
     public DBInfoObject(){
         ID = null;
+        checked = false;
     }
 
     @Override

@@ -10,30 +10,34 @@ public class MyData {
     public ArrayList<Double> longitude;
     public ArrayList<Double> latitude;
     public ArrayList<Double> date;
+    public ArrayList<String> selectedOrchards;
 
     MyData(){
         locations = new ArrayList<>();
         longitude = new ArrayList<>();
         latitude = new ArrayList<>();
         date = new ArrayList<>();
+        selectedOrchards = new ArrayList<>();
     }
 
-    public void addLocation(Location location) {
+    public void addLocation(Location location, String selectedOrchard) {
         if(location!=null) {
             ++size;
             longitude.add(location.getLongitude());
             latitude.add(location.getLatitude());
             double currentDate = System.currentTimeMillis() / 1000l;
             date.add(currentDate);
+            selectedOrchards.add(selectedOrchard);
         }
     }
 
-    public void addLocation(Location location, Double adate) {
+    public void addLocation(Location location, String selectedOrchard, Double adate) {
         if(location!=null) {
             ++size;
             longitude.add(location.getLongitude());
             latitude.add(location.getLatitude());
             date.add(adate);
+            selectedOrchards.add(selectedOrchard);
         }
     }
 
@@ -43,6 +47,7 @@ public class MyData {
             longitude.remove(longitude.size()-1);
             latitude.remove(latitude.size()-1);
             date.remove(date.size()-1);
+            selectedOrchards.remove(selectedOrchards.size()-1);
         }
     }
 }
