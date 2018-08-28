@@ -74,6 +74,7 @@ import za.org.samac.harvest.service.BackgroundService;
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Data;
 import za.org.samac.harvest.util.Farm;
+import za.org.samac.harvest.util.Orchard;
 import za.org.samac.harvest.util.WorkerComparator;
 
 import static za.org.samac.harvest.R.drawable.rounded_button;
@@ -393,11 +394,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
                     Log.i(TAG, zoneSnapshot.child("name").getValue(String.class));
                     orchardKeys.add(zoneSnapshot.getKey().toString());
-                    String farmName = data.getOrchardFromIDString(zoneSnapshot.getKey().toString()).getAssignedFarm().getName();
-                    if (farmName == null) {
-                        orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                    Orchard orchard = data.getOrchardFromIDString(zoneSnapshot.getKey().toString());
+                    if (orchard != null) {
+                        Farm farm = orchard.getAssignedFarm();
+                        if (farm != null) {
+                            String farmName = farm.getName();
+                            if (farmName == null) {
+                                orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                            } else {
+                                orchards.add(farmName + " - " + zoneSnapshot.child("name").getValue(String.class));
+                            }
+                        } else {
+                            orchards.add(zoneSnapshot.child("name").getValue(String.class));
+                        }
                     } else {
-                        orchards.add(farmName + " - " + zoneSnapshot.child("name").getValue(String.class));
+                        orchards.add(zoneSnapshot.child("name").getValue(String.class));
                     }
                 }
 
