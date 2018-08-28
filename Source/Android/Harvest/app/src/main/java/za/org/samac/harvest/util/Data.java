@@ -357,6 +357,7 @@ public class Data {
      */
     public void push(){
         nextID = 0;
+        DatabaseReference workingFor = database.getReference("WorkingFor/");
         while (changes.unSavedChange()){
             Change currentChange = changes.getNextChange(true);
             DatabaseReference objectRoot = userRoot;
@@ -446,8 +447,8 @@ public class Data {
                             if (newWorker.workerType == WorkerType.FOREMAN){
                                 objectRoot.child("type").setValue("Foreman");
                                 //Add to WorkingFor
-                                DatabaseReference workingFor = database.getReference("WorkingFor/");
-                                DatabaseReference workerWorking = workingFor.child(newWorker.phone);
+
+                                DatabaseReference workerWorking = workingFor.child(AppUtil.Hash.SHA256(newWorker.phone));
                                 workerWorking.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(newWorker.ID);
 
                                 DatabaseReference foremen = userRoot.child("foremen");
@@ -540,13 +541,15 @@ public class Data {
                             if (activeWorker.workerType == WorkerType.FOREMAN){
                                 objectRoot.child("type").setValue("Foreman");
                                 DatabaseReference foremen = userRoot.child("foremen");
-                                if (activeWorker.oldPhone != activeWorker.phone) {
+                                if (!activeWorker.oldPhone.equals(activeWorker.phone)) {
                                     if (activeWorker.oldPhone != null && activeWorker.oldPhone.compareTo("") != 0) {
                                         foremen.child(activeWorker.oldPhone).removeValue();
+                                        workingFor.child(AppUtil.Hash.SHA256(activeWorker.oldPhone)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(null);
                                     }
                                 }
                                 if (activeWorker.phone != null && activeWorker.phone.compareTo("") != 0) {
                                     foremen.child(activeWorker.phone).setValue(true);
+                                    workingFor.child(AppUtil.Hash.SHA256(activeWorker.phone)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(activeWorker.ID);
                                 }
                                 activeWorker.oldPhone = activeWorker.phone;
                             }
@@ -585,6 +588,7 @@ public class Data {
 
                             if (activeWorker.phone != null && activeWorker.phone.compareTo("") != 0) {
                                 userRoot.child("foremen").child(activeWorker.phone).removeValue();
+                                workingFor.child(AppUtil.Hash.SHA256(activeWorker.phone)).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(null);
                             }
                             DatabaseReference locations = userRoot.child("locations");
                             DatabaseReference requested = userRoot.child("requestedLocations");

@@ -1,13 +1,10 @@
 package za.org.samac.harvest;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.text.method.KeyListener;
 import android.view.View;
@@ -77,7 +74,7 @@ public class SignIn_Foreman extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private String systemPhone;
-    private List<Organization> farms;
+    private List<Organization> organizations;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,7 +108,7 @@ public class SignIn_Foreman extends AppCompatActivity {
         state = STATE_START;
         updateUI();
 
-        farms = new Vector<>();
+        organizations = new Vector<>();
 
         phoneCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
@@ -262,7 +259,7 @@ public class SignIn_Foreman extends AppCompatActivity {
             case R.id.signIn_foreman_farm_okay:
                 switch (state){
                     case STATE_FARM_ONE:
-                        AppUtil.writeStringToSharedPrefs(this, getString(R.string.farmerID_Pref), farms.get(0).getID());
+                        AppUtil.writeStringToSharedPrefs(this, getString(R.string.farmerID_Pref), organizations.get(0).getID());
                         Intent openMain = new Intent(this, MainActivity.class);
                         startActivityIfNeeded(openMain, 0);
                         break;
@@ -284,59 +281,91 @@ public class SignIn_Foreman extends AppCompatActivity {
 
     public void findFarms(){
 
-        farms.clear();
+        organizations.clear();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference workingFor = database.getReference("/WorkingFor/");
+        DatabaseReference workingFor = database.getReference("/WorkingFor/" + AppUtil.Hash.SHA256(systemPhone));
         workingFor.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot worker : dataSnapshot.getChildren()){
-                    String workerPhone = worker.getKey();
-                    if (workerPhone.equals(systemPhone)){
-                        for (DataSnapshot child : worker.getChildren()){
-//                            farms.add(child.getKey());
-                            farms.add(new Organization(child.getKey()));
-                        }
-                    }
+
+                for (DataSnapshot child : dataSnapshot.getChildren()){
+                    organizations.add(new Organization(child.getKey()));
                 }
 
-                if (farms.size() == 0){
+                if (organizations.size() == 0){
                     state = STATE_FARM_NONE;
                     updateUI();
+                    return;
                 }
-                else {
-                    //Set all the organizations
-                    for (final Organization org : farms) {
-                        DatabaseReference orgAdmin = database.getReference("/" + org.getID() + "/admin/");
-                        orgAdmin.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String orgName = dataSnapshot.child("organization").getValue(String.class);
-                                if (orgName != null) {
-                                    if (!orgName.equals("")) {
-                                        org.setOrganizationName(orgName);
-                                    }
+
+                final int updated[] = {0};
+
+                for (final Organization org : organizations) {
+                    DatabaseReference orgAdmin = database.getReference("/" + org.getID() + "/admin/");
+                    orgAdmin.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String orgName = dataSnapshot.child("organization").getValue(String.class);
+                            if (orgName != null) {
+                                if (!orgName.equals("")) {
+                                    org.setOrganizationName(orgName);
                                 }
-                                if (org.toString() == null) {
-                                    org.setOrganizationName(dataSnapshot.child("email").getValue(String.class));
-                                }
-                                if (state != STATE_FARM_MULTI && state != STATE_FARM_ONE){
-                                    if (farms.size() == 1){
-                                        state = STATE_FARM_ONE;
-                                        updateUI();
-                                    }
-                                    else {
-                                        state = STATE_FARM_MULTI;
-                                        updateUI();
-                                    }
-                                }
+                            }
+                            if (org.toString() == null) {
+                                org.setOrganizationName(dataSnapshot.child("email").getValue(String.class));
                             }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                            updated[0]++;
+
+                            if (updated[0] == organizations.size()){
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        switch (organizations.size()){
+                                            case 0:
+                                                state = STATE_FARM_NONE;
+                                                break;
+                                            case 1:
+                                                state = STATE_FARM_ONE;
+                                                break;
+                                            default:
+                                                state = STATE_FARM_MULTI;
+                                                break;
+                                        }
+                                        updateUI();
+                                    }
+                                });
                             }
-                        });
-                    }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            organizations.remove(org);
+
+                            if (updated[0] == organizations.size()){
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        switch (organizations.size()){
+                                            case 0:
+                                                state = STATE_FARM_NONE;
+                                                break;
+                                            case 1:
+                                                state = STATE_FARM_ONE;
+                                                break;
+                                            default:
+                                                state = STATE_FARM_MULTI;
+                                                break;
+                                        }
+                                        updateUI();
+                                    }
+                                });
+                            }
+
+                            //TODO: Notify foreman they are not authorized, if it's even possible for such a situation to occur.
+                        }
+                    });
                 }
             }
 
@@ -393,14 +422,14 @@ public class SignIn_Foreman extends AppCompatActivity {
                 showConfirmationBasics();
                 farmTip.setText(R.string.signIn_foreman_farmOne);
                 farmOneLook.setVisibility(View.VISIBLE);
-                farmOneLook.setText(farms.get(0).toString());
+                farmOneLook.setText(organizations.get(0).toString());
                 farmOkay.setText(getText(R.string.signIn_foreman_verificationOkay));
                 break;
             case STATE_FARM_MULTI:
                 showConfirmationBasics();
                 farmTip.setText(R.string.signIn_foreman_farmChooseTip);
                 farmChoose.setVisibility(View.VISIBLE);
-                ArrayAdapter sAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, farms);
+                ArrayAdapter sAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, organizations);
                 farmChoose.setAdapter(sAdapter);
                 farmOkay.setText(getText(R.string.signIn_foreman_verificationOkay));
                 break;
