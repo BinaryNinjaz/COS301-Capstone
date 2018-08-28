@@ -664,10 +664,10 @@
             </objects>
             <point key="canvasLocation" x="3687" y="-664"/>
         </scene>
-        <!--Yield Tracker-->
+        <!--Yield Collector-->
         <scene sceneID="H2b-6H-xwA">
             <objects>
-                <viewController storyboardIdentifier="trackerViewController" title="Yield Tracker" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Wl-k0-RpW" customClass="TrackerViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="trackerViewController" title="Yield Collector" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Wl-k0-RpW" customClass="TrackerViewController" customModule="Harvest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Y8O-8S-VIT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

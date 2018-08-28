@@ -562,7 +562,7 @@ extension Orchard {
     
     let farmSelection = PushRow<Farm> { row in
       row.title = "Assigned Farm"
-      row.add(rule: RuleRequired(msg: "• A farm must be selected for an orchard to be a part of"))
+      row.add(rule: RuleRequired(msg: "• An orchard must be assigned to a farm."))
       row.options = []
       var aFarm: Farm? = nil
       
