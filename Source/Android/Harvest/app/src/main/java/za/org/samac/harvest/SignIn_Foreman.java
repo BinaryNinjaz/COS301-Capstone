@@ -116,8 +116,6 @@ public class SignIn_Foreman extends AppCompatActivity {
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 verificationInProgress = false;
                 signInWithPhoneAuthCredential(phoneAuthCredential);
-                systemPhone = mAuth.getCurrentUser().getPhoneNumber();
-                findFarms();
             }
 
             @Override
