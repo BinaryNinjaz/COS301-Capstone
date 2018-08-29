@@ -199,8 +199,9 @@
     <string name="pref_help_intro_key">pref_help_intro_key</string>
     <string name="pref_help_tutorial">Restart Tutorial</string>
     <string name="pref_help_tutorial_key">pref_help_tutorial_key</string>
-    <string name="pref_help_man">Open Manual in Browser</string>
+    <string name="pref_help_man">Open Manual</string>
     <string name="pref_help_man_key">pref_help_man_key</string>
+    <string name="pref_help_man_sum">WARNING: Over 16MiB in Size; Use WiFi.</string>
 
 
     <!--Strings related to stats-->

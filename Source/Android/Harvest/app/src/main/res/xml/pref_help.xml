@@ -11,6 +11,7 @@
 
         <Preference
             android:title="@string/pref_help_man"
-            android:key="@string/pref_help_man_key" />
+            android:key="@string/pref_help_man_key"
+            android:summary="@string/pref_help_man_sum"/>
 
 </PreferenceScreen>
