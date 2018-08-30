@@ -452,5 +452,45 @@ function searchSession(session, searchText, farms, orchards, workers, period) {
     }
   }
 
+  if (searchText === "sum") {
+    result["Calculation"] = "Total bags collected: " + sessionSum(session);
+  } else if (searchText === "avg" || searchText === "average") {
+    const avg = sessionAvg(session);
+    if (avg !== undefined && avg !== NaN) {
+      result["Calculation"] = "Average bags collected per worker: " + avg;
+    }
+  } else if (searchText === "countWorkers" || searchText === "count") {
+    result["Calculation"] = "Workers in Session: " + sessionCountWorkers(session);
+  } else if (searchText === "countOrchards") {
+    result["Calculation"] = "Orchards in Session: " + orchardsForSession.length | 0;
+  }
   return result;
+}
+
+function sessionSum(session) {
+  var result = 0;
+  for (const workerId in session.collections) {
+    var points = session.collections[workerId];
+    result += points.length;
+  }
+  return result;
+}
+
+function sessionAvg(session) {
+  const sum = sessionSum(session);
+  const cnt = sessionCountWorkers(session);
+  return Math.round(sum / cnt * 100) / 100;
+}
+
+function sessionCountWorkers(session) {
+  var result = 0;
+  var count = 0;
+  const collections = session.collections;
+  if (collections === undefined) {
+    return undefined;
+  }
+  for (const workerId in collections) {
+    count++;
+  }
+  return count;
 }

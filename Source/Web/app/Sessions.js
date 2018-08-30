@@ -27,13 +27,11 @@ var map;
 function initMap() {
   locationLookup((data, response) => {
     var latLng = new google.maps.LatLng(data.lat, data.lon);
-    map.setCenter(latLng);
-    map.setZoom(11);
-  });
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -25, lng: 28 },
-    zoom: 14,
-    mapTypeId: 'satellite'
+		map = new google.maps.Map(document.getElementById('map'), {
+	    center: latLng,
+	    zoom: 11,
+	    mapTypeId: 'satellite'
+	  });
   });
 }
 
@@ -100,7 +98,11 @@ function insertSessionIntoSortedMap(session, key, checkEqualKey, sortedMap) {
   if (belongsInGroup !== undefined) {
     sortedMap[belongsInGroup].values.push(session);
     sortedMap[belongsInGroup].values = sortedMap[belongsInGroup].values.sort((a, b) => {
-      return b.value.start_date - a.value.start_date;
+			const ma = moment(a.value.start_date);
+			const mb = moment(b.value.start_date);
+      return ma.isSame(mb)
+				? 0
+				: ma.isAfter(mb) ? -1 : 1;
     });
   } else {
     sortedMap.push({key: key, values: [session]});
@@ -305,16 +307,17 @@ function drawOrchards() {
 
 	for (const oKey in orchards) {
 		var coords = [];
-		const oCoords = orchards[oKey].coords;
+		const orchard = orchards[oKey];
+		const oCoords = orchard.coords;
 		for (const cidx in oCoords) {
 			coords.push({lat: oCoords[cidx].lat, lng: oCoords[cidx].lng});
 		}
 		orchardPolygons.push(new google.maps.Polygon({
-	    paths: oCoords,
-	    strokeColor: hashColor(orchards[oKey].farm, oKey),
+	    paths: coords,
+	    strokeColor: hashColor(orchard.farm, oKey),
 	    strokeOpacity: 0.75,
 	    strokeWeight: 3,
-	    fillColor: hashColor(orchards[oKey].farm, oKey),
+	    fillColor: hashColor(orchard.farm, oKey),
 	    fillOpacity: 0.25,
 	    map: map
 	  }));

@@ -80,15 +80,13 @@ var map; /* This variable will be used as a container for drawing on google maps
 
 ///This function initialises the points which initially appear on the map
 function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -25, lng: 28 },
-    zoom: 14,
-    mapTypeId: 'satellite'
-  });
   locationLookup((data) => {
     var latLng = new google.maps.LatLng(data.lat, data.lon);
-    map.setCenter(latLng);
-    map.setZoom(11);
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: latLng,
+      zoom: 11,
+      mapTypeId: 'satellite'
+    });
   });
 }
 

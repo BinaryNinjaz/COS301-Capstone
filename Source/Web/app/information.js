@@ -111,12 +111,11 @@ function updateLocationMap(editing) {
 }
 
 function initMap() {
-  if (loc === undefined) {
-    loc = {lat: -25, lng: 28};
+  var mapDiv = document.getElementById('map');
+  if (mapDiv === undefined) {
+    return;
   }
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: loc,
-    zoom: 14,
+  map = new google.maps.Map(mapDiv, {
     disableDoubleClickZoom: true,
     mapTypeId: "satellite"
   });
