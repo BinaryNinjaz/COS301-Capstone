@@ -1010,9 +1010,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             Map<String, Object> childUpdates = new HashMap<>();
                             childUpdates.put("coord", coordinates);
                             childUpdates.put("display", foremanName);
-                            double currentTime;
-                            currentTime = (System.currentTimeMillis() / divideBy1000Var);
-                            childUpdates.put("date", currentTime);
+                            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
+                            String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+                            childUpdates.put("date", dateString);
 
                             locationWanted = false;
                             myRef2.updateChildren(childUpdates);//store location
@@ -1054,9 +1054,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     Map<String, Object> childUpdates = new HashMap<>();
                                     childUpdates.put("coord", coordinates);
                                     childUpdates.put("display", foremanName);
-                                    double currentTime;
-                                    currentTime = (System.currentTimeMillis() / divideBy1000Var);
-                                    childUpdates.put("date", currentTime);
+                                    SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
+                                    String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+                                    childUpdates.put("date", dateString);
 
                                     locationWanted = false;
                                     myRef2.updateChildren(childUpdates);//store location
