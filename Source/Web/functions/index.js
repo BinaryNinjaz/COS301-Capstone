@@ -769,10 +769,17 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
 });
 
 function momentDate(dateString) {
-  if (dateString.search(/[+-]/) !== -1) {
-    return moment(dateString.substr(0, dateString.length - 6));
+  if (dateString === undefined || dateString === null) {
+    return moment();
+  } else if ((dateString.slice(-2) === "00" && dateString.slice(-3) !== ":00") || dateString.search(/[+-]/) !== -1) {
+    const d = dateString.substr(0, dateString.length - 6);
+    return moment(d, "D MMM YYYY HH:mm");
   } else {
-    return moment(dateString);
+    if (typeof dateString === "number") {
+      return moment(new Date(dateString));
+    } else {
+      return moment(dateString, "D MMM YYYY HH:mm");
+    }
   }
 }
 

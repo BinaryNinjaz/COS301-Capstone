@@ -15,7 +15,7 @@ extension DateFormatter {
     result.locale = Locale.current
     result.timeZone = tz
     // result.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZZZZZ"
-    result.dateFormat = "d MMM YYYY HH:mm"
+    result.dateFormat = "d MMM yyyy HH:mm"
     return result
   }
 
@@ -221,8 +221,8 @@ enum HarvestCloud {
     completion: @escaping ([Any]) -> Void
   ) {
     var args = [
-      ("startDate", startDate.timeIntervalSince1970.description),
-      ("endDate", endDate.timeIntervalSince1970.description),
+      ("startDate", DateFormatter.rfc2822String(from: startDate)),
+      ("endDate", DateFormatter.rfc2822String(from: endDate)),
       ("groupBy", groupBy.description),
       ("uid", HarvestDB.Path.parent)
     ]
@@ -324,14 +324,18 @@ func collection() {
   let s = Date(timeIntervalSince1970: 1529853470 * 0)
   let e = Date()
 
-  HarvestCloud.collections(ids: ["-LBl_xZiXFlcTFzkTbGd"], startDate: s, endDate: e, groupBy: .farm) { f in
+  HarvestCloud.collections(
+    ids: ["fRrpUGYODVSV7RbHISvprEU7KfN2"], //["-LKYB6pBpxqBdKi54TQr", "-LK2zuFD5qvud-kD97n6"],
+    startDate: s,
+    endDate: e,
+    groupBy: .foreman) { f in
     print(f)
   }
 }
 
 func timeGraphSessionsWorker() {
-  let s = Date().today().0
-  let e = Date().today().1
+  let s = Date().thisMonth().0
+  let e = Date().thisMonth().1
   let g = HarvestCloud.GroupBy.worker
   let p = HarvestCloud.TimePeriod.hourly
 
@@ -428,9 +432,9 @@ func expectedYield() {
 
 //collection()
 
-timeGraphSessionsOrchard()
+collection()
 while let x = readLine(), x != "" {
-  timeGraphSessionsOrchard()
+  collection()
 }
 
 // timeGraphSessionsOrchard()
