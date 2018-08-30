@@ -1052,7 +1052,13 @@ function workSave(type, id) {
   let newRef;
   if (type === 0) {
     // Create Worker
-    newRef = firebase.database().ref('/' + userID() +"/workers/").push(tempWorker);
+    const pn = tempWorker.phoneNumber;
+    if (tempWorker.type === "Foreman" && pn !== undefined && pn !== "") {
+      const obj = {};
+      obj[pn] = true;
+      firebase.database().ref('/' + userID() + '/foremen/').update(obj);
+    }
+    newRef = firebase.database().ref('/' + userID() + '/workers/').push(tempWorker);
     id = newRef.getKey();
     workers[id] = tempWorker;
     showWorkersList();
@@ -1066,6 +1072,10 @@ function workSave(type, id) {
     if (pn !== undefined && pn !== "") {
       if (oldType !== undefined && oldType === "Foreman" && workType === "Worker") {
         firebase.database().ref('/' + userID() + '/foremen/' + pn).remove();
+      } else if (workType === "Foreman" && oldType === "Worker") {
+        const obj = {};
+        obj[pn] = true;
+        firebase.database().ref('/' + userID() + '/foremen/').update(obj);
       }
     }
     if (oldType !== undefined && oldType === "Foreman" && workType === "Worker") {
