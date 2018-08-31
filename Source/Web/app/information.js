@@ -566,6 +566,9 @@ function dispOrchard(id) {
       "<div class='col-sm-12'><div id='map'></div></div>" +
       "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-warning'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-danger'>Remove All</button></div></div></div>" +
       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
+      "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"0\")'></select></div></div>" +
+       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
       "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass'></div>" +
       "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
@@ -604,9 +607,6 @@ function dispOrchard(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
       "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-      "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"0\")'></select></div></div>" +
-       "" +
       "</form>"
     ;
     initEditOrchardMap(true, true);
@@ -634,6 +634,9 @@ function dispOrchard(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
       "<div class='col-sm-9'><div id='map'></div></div></div> " +
       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Farm:</label>" +
+      "<div class='col-sm-9'><span id='orchFarmDisp'></span></div> </div>" +
+      "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
       "<div class='col-sm-9'><p class='form-control-static'>" + orchard.bagMass + " Kg</p></div> </div>" +
       "" +
@@ -654,9 +657,6 @@ function dispOrchard(id) {
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
       "<div class='col-sm-9'><p class='form-control-static'>" + orchard.further + "</p></div> </div>" +
-      "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Farm:</label>" +
-      "<div class='col-sm-9'><span id='orchFarmDisp'></span></div> </div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Workers:</label>" +
       "<div class='col-sm-9' id='workerButtons'></div></div>" +
@@ -844,6 +844,9 @@ function orchMod(id) {
   "<div class='col-sm-12'><div id='map'></div></div>" +
   "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-warning'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-danger'>Remove All</button></div></div></div>" +
   "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
+  "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"" + id + "\")'></select></div></div>" +
+  "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
   "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass' value='" + orchard.bagMass + "'></div>" +
   "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
@@ -882,9 +885,6 @@ function orchMod(id) {
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
   "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'>" + orchard.further + "</textarea></div> </div>" +
-  "" +
-  "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-  "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"" + id + "\")'></select></div></div>" +
   "" +
   "</form>"
   ;//need to fix referencing
