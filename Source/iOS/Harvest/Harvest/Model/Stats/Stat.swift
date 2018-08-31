@@ -187,7 +187,7 @@ struct Stat: Codable {
           }
         }
         
-        if let data = expectedDataSetObject {
+        if let data = expectedDataSetObject, self.mode != .accumTime {
           expectedDataSets = self.expectedGraphData(
             json: data,
             allUsedColors: allUsedColors)
