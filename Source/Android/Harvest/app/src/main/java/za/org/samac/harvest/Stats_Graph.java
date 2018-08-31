@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -38,11 +39,14 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -79,6 +83,8 @@ public class Stats_Graph extends AppCompatActivity {
     private static String interval;         //hourly, daily, weekly, monthly, yearly, -- titled period
     private static String group;            //entity type
     private static String mode;             //accumulation
+
+    private Boolean validExpected;
 
     private Data data;
 
@@ -213,10 +219,10 @@ public class Stats_Graph extends AppCompatActivity {
 
                         //Get the result of the function
                         String response = sendPost(url, urlParameters());
-                        Log.i(TAG, response);
+                        Log.i(TAG, "RESPONSE: " + response);
 
-                        LineData lineData = getDataFromString(response);
                         populateLabels();
+                        LineData lineData = getDataFromString(response);
 
                         makeGraphPretty();
 
@@ -266,7 +272,18 @@ public class Stats_Graph extends AppCompatActivity {
         lineChart.getXAxis().setTextSize(8f);
         lineChart.getXAxis().setGranularityEnabled(true);
         lineChart.getXAxis().setGranularity(1f);
-        lineChart.getXAxis().setAxisMinimum((float) start);
+        lineChart.getXAxis().setAxisMinimum((float) 0.0);
+        lineChart.getAxisLeft().setAxisMinimum((float)0.0);
+
+        lineChart.getLegend().setEnabled(true);
+        lineChart.getLegend().setDrawInside(true);
+        lineChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        lineChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        lineChart.getLegend().setOrientation(Legend.LegendOrientation.VERTICAL);
+        lineChart.getLegend().setTextSize(8);
+        lineChart.getLegend().setYOffset(10);
+        lineChart.getLegend().setXOffset(10);
+        lineChart.getLegend().setYEntrySpace(0);
     }
 
     //All function related things are done in here.
@@ -302,108 +319,77 @@ public class Stats_Graph extends AppCompatActivity {
                         function_prepareForNewEntity(entityNames.get(i).toString());
 
                         JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
+                        Log.i(TAG, "Object: " + object.toString());
                         JSONArray entryNames = object.names(); //Keys of the entries, for iteration
                         List<Entry> entries = new ArrayList<>();
                         List<Entry> expectedEntries = new ArrayList<>(); //Expected entries.
-                        if (entryNames != null) {
-                            LineDataSet lineDataSet = null;
-                            LineDataSet expectedLineDataSet = null;
-                            curCal.setTimeInMillis((long)(start * THOUSAND));
-                            int actualEntryIndex = 0;
-                            Double nextKey = getNextKey(), nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString());
-                            while (nextKey != null){
-                                Entry entry;
-                                Entry expectedEntry;
-                                if (nextKey.doubleValue() == nextActualKey.doubleValue()){
-                                    entry = new Entry(nextActualKey.floatValue(), (float) object.getDouble(entryNames.get(actualEntryIndex++).toString()));
-                                    if (actualEntryIndex < entryNames.length()) {
-                                        nextActualKey = getDoubleFromKey(entryNames.get(actualEntryIndex).toString());
-                                    }
-                                }
-                                else {
-                                    entry = new Entry(nextKey.floatValue(), 0);
-                                }
 
-                                expectedEntry = new Entry(nextKey.floatValue(), function_getNextY());
+                        double interval = (double)labels.length;
+                        double diff = intervalsUptoEnd - intervalsSinceEpochAtStart;
+                        double move = diff / interval;
 
-                                nextKey = getNextKey();
-                                entries.add(entry);
-                                expectedEntries.add(expectedEntry);
+                        double x = intervalsSinceEpochAtStart;
+                        for (int lbl = 0; lbl < labels.length; lbl++) {
+                            Entry entry;
+                            Entry expectedEntry;
+                            try {
+                                entry = new Entry((float)lbl, (float)object.getDouble(labels[lbl].toString()));
+                            } catch (Exception e) {
+                                entry = new Entry((float) lbl, (float) 0.0);
                             }
-                            switch (entityNames.get(i).toString()) {
-                                case "avg":
-                                    lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_gragh_averageLabel));
-                                    lineDataSet.enableDashedLine(10, 10, 1);
-                                    lineDataSet.setColor(getResources().getColor(R.color.grey));
-                                    lineDataSet.setLineWidth(1);
-                                    break;
-                                case "sum":
-                                    if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
-                                        lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
-                                        lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
+                            entries.add(entry);
 
-                                        expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expected)");
-                                        expectedLineDataSet.setColor(R.color.blueLinks, 200);
-                                        expectedLineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                                        expectedLineDataSet.setDrawCircles(false);
-                                        expectedLineDataSet.setLineWidth(1);
-                                        dataSets.add(expectedLineDataSet);
-                                        lineDataSet.setLineWidth(2);
-                                    }
-                                    break;
-                                default:
-                                    lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
-                                    lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour]);
+                            if (validExpected && entityNames.get(i).toString().compareTo("avg") != 0) {
+                                expectedEntry = new Entry((float)lbl, (float)( a * Math.sin(b * x + c) + d));
+                                expectedEntries.add(expectedEntry);
+                                x += move;
+                            }
+                        }
 
-                                    expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
-                                    expectedLineDataSet.enableDashedLine(10, 5, 1);
-                                    expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 200);
+                        LineDataSet lineDataSet = null;
+                        LineDataSet expectedLineDataSet = null;
+
+                        switch (entityNames.get(i).toString()) {
+                            case "avg":
+                                lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_gragh_averageLabel));
+                                lineDataSet.enableDashedLine(10, 10, 1);
+                                lineDataSet.setColor(getResources().getColor(R.color.grey));
+                                lineDataSet.setLineWidth(1);
+                                break;
+                            case "sum":
+                                if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
+                                    lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
+                                    lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
+
+                                    expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expected)");
+                                    expectedLineDataSet.setColor(R.color.blueLinks, 200);
                                     expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
                                     expectedLineDataSet.setDrawCircles(false);
                                     expectedLineDataSet.setLineWidth(1);
-                                    dataSets.add(expectedLineDataSet);
                                     lineDataSet.setLineWidth(2);
-                                    break;
-                            }
-                            assert lineDataSet != null;
-                            lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                            lineDataSet.setDrawCircles(false);
+                                }
+                                break;
+                            default:
+                                lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
+                                lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour]);
 
+                                expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
+                                expectedLineDataSet.enableDashedLine(10, 5, 1);
+                                expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 200);
+                                expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
+                                expectedLineDataSet.setDrawCircles(false);
+                                expectedLineDataSet.setLineWidth(1);
+                                lineDataSet.setLineWidth(2);
+                                break;
+                        }
+                        assert lineDataSet != null;
+                        lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                        lineDataSet.setDrawCircles(false);
+                        if (lineDataSet.getEntryCount() > 0) {
                             dataSets.add(lineDataSet);
                         }
-                        else {
-                            //Only do the expected
-                            LineDataSet expectedLineDataSet = null;
-                            curCal.setTimeInMillis((long)(start * THOUSAND));
-                            Double nextKey = getNextKey();
-                            while (nextKey != null){
-                                Entry expectedEntry = new Entry(nextKey.floatValue(), function_getNextY());
-                                nextKey = getNextKey();
-                                expectedEntries.add(expectedEntry);
-                            }
-                            switch (entityNames.get(i).toString()) {
-                                case "avg":
-                                    break;
-                                case "sum":
-                                    if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
-                                        expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expected)");
-                                        expectedLineDataSet.setColor(R.color.blueLinks, 200);
-                                        expectedLineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                                        expectedLineDataSet.setDrawCircles(false);
-                                        expectedLineDataSet.setLineWidth(1);
-                                        dataSets.add(expectedLineDataSet);
-                                    }
-                                    break;
-                                default:
-                                    expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
-                                    expectedLineDataSet.enableDashedLine(10, 5, 1);
-                                    expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 200);
-                                    expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
-                                    expectedLineDataSet.setDrawCircles(false);
-                                    expectedLineDataSet.setLineWidth(1);
-                                    dataSets.add(expectedLineDataSet);
-                                    break;
-                            }
+                        if (expectedLineDataSet != null && expectedLineDataSet.getEntryCount() > 0) {
+                            dataSets.add(expectedLineDataSet);
                         }
                     }
                 }
@@ -420,17 +406,16 @@ public class Stats_Graph extends AppCompatActivity {
     ranges from zero to end, apparently.
      */
     public String getLabel(float value, AxisBase axisBase){
-        int position;
-            if (value >= start) {
-                double fpos = (value - start) / (end - start);
-                fpos *= labels.length;
-                fpos = Math.floor(fpos);
-                position = (int) fpos;
-            }
-            else {
-                return labels[0];
-            }
-        return labels[position];
+        double pc = (double)labels.length - 1;
+        double max = axisBase == null || axisBase.getAxisMaximum() == 0 ? pc : axisBase.getAxisMaximum();
+        int i = (int)Math.floor((double)value / max * pc);
+        if (i >= 0 && i < labels.length) {
+//            Log.i(TAG, "LABEL FORMAT: " + (new Integer(i)).toString() + " " + labels[i]);
+            return labels[i];
+        } else {
+//            Log.i(TAG, "LABEL FORMAT: " + (new Integer(i)).toString());
+            return "";
+        }
     }
 
     /**
@@ -484,13 +469,13 @@ public class Stats_Graph extends AppCompatActivity {
             startCal.setTimeInMillis((long) (start * THOUSAND));
             Calendar endCal = Calendar.getInstance();
             endCal.setTimeInMillis((long) (end * THOUSAND));
-            final String fmtYear = isSameYear(startCal, endCal) ? "" : "yyyy";
-            final String fmtMonth = isSameMonth(startCal, endCal) ? "" : "MMM";
+            final String fmtYear = isSameYear(startCal, endCal) ? "" : "yyyy ";
+            final String fmtMonth = isSameMonth(startCal, endCal) ? "" : "MMM ";
             final String fmtDay = isSameDay(startCal, endCal) ? "" : "dd";
-            fmt = (fmtYear.equals("") ? "" : fmtYear + " ") + (fmtMonth.equals("") ? "" : fmtMonth + " ") + fmtDay;
+            fmt = fmtYear + fmtMonth + fmtDay;
             switch (interval) {
                 case Stats.HOURLY:
-                    fmt = fmt.equals("") ? "HH:mm" : fmt + " HH:mm";
+                    fmt = fmt + (fmt.equals("") ? "" : " ") + "HH:mm";
                     break;
                 case Stats.DAILY:
                     fmt = fmt.equals("") ? "EEE" : fmt;
@@ -499,13 +484,14 @@ public class Stats_Graph extends AppCompatActivity {
                     fmt = fmt.equals("") ? "EEE" : fmt;
                     break;
                 case Stats.MONTHLY:
-                    fmt = (fmtYear.equals("") ? "" : fmtYear + " ") + "MMM";
+                    fmt = fmtYear + "MMM";
                     break;
                 case Stats.YEARLY:
                     fmt = "yyyy";
                     break;
             }
         }
+        Log.i(TAG, "FORMAT: " + fmt);
         dateFormat = new SimpleDateFormat(fmt);
     }
 
@@ -616,7 +602,6 @@ public class Stats_Graph extends AppCompatActivity {
         Here, the plan is to set a calendar to the start date, then keep adding to it by our interval, until it is > than our end date.
          */
 
-
         Calendar curCal = Calendar.getInstance();
         curCal.setTimeInMillis((long) (start * THOUSAND));
 
@@ -642,7 +627,7 @@ public class Stats_Graph extends AppCompatActivity {
 
         List<String> labelsList = new ArrayList<>();
 
-        while (curCal.getTimeInMillis() <= endCal.getTimeInMillis()){
+        while (curCal.getTimeInMillis() < endCal.getTimeInMillis()){
             labelsList.add(dateFormat.format(curCal.getTime()));
             switch (interval){
                 case Stats.HOURLY:
@@ -744,7 +729,8 @@ public class Stats_Graph extends AppCompatActivity {
 
     private double a = 0, b = 0, c = 0, d = 0; //For the function.
     private int intervalsSinceStart = 0, // The number of intervals since the requested start for this graph.
-            intervalsSinceEpochAtStart = 0; // The number of intervals since the epoch, to the requested start of this graph.
+            intervalsSinceEpochAtStart = 0, // The number of intervals since the epoch, to the requested start of this graph.
+            intervalsUptoEnd = 0;
     JSONObject expected;
 
     /**
@@ -769,9 +755,12 @@ public class Stats_Graph extends AppCompatActivity {
         calendar.setTimeInMillis(0); // It's the start of all things.
 
         Log.i(TAG, "Function: " + calendar.getTime().toString());
-
-        while ((calendar.getTimeInMillis() / THOUSAND) <= start){
-            switch (interval){
+        while ((calendar.getTimeInMillis() / THOUSAND) <= end) {
+            if ((calendar.getTimeInMillis() / THOUSAND) <= start) {
+                intervalsSinceEpochAtStart++;
+            }
+            intervalsUptoEnd++;
+            switch (interval) {
                 case HOURLY:
                     calendar.add(Calendar.HOUR_OF_DAY, 1);
                     break;
@@ -788,7 +777,6 @@ public class Stats_Graph extends AppCompatActivity {
                     calendar.add(Calendar.YEAR, 1);
                     break;
             }
-            intervalsSinceEpochAtStart++;
         }
     }
 
@@ -806,8 +794,10 @@ public class Stats_Graph extends AppCompatActivity {
             d = targetedExpected.getDouble("d");
 
             intervalsSinceStart = 0;
+            validExpected = true;
 
         } catch (JSONException e) {
+            validExpected = false;
             if (!id.equals("avg")) {
                 e.printStackTrace();
             }
