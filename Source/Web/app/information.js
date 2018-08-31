@@ -14,30 +14,33 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
+
+var lastLocation;
 var editingOrchard = false;
 var orchardCoords = [];
 var orchardPoly;
 var orchardMarkers = [];
 var orchardColor;
 var orchardCoordsChanged;
-var loc;
 var map;
 function initEditOrchardMap(withCurrentLoc, editing) {
   editingOrchard = editing;
   if (withCurrentLoc) {
+    initMap();
     updateLocationMap(editing);
-  }
-  initMap();
-  google.maps.event.clearListeners(map, "click");
-  if (orchardPoly !== undefined) {
-    google.maps.event.clearListeners(orchardPoly, "click");
-  }
+  } else {
+    initMap();
+    google.maps.event.clearListeners(map, "click");
+    if (orchardPoly !== undefined) {
+      google.maps.event.clearListeners(orchardPoly, "click");
+    }
 
-  if (editing) {
-    map.addListener("click", function(e) {
-      pushOrchardCoord(e);
-      updatePolyListener();
-    });
+    if (editing) {
+      map.addListener("click", function(e) {
+        pushOrchardCoord(e);
+        updatePolyListener();
+      });
+    }
   }
 }
 
@@ -80,34 +83,35 @@ function pushOrchardCoord(e) {
 }
 
 function updateLocationMap(editing) {
-  locationLookup((data) => {
-    loc = {
-      lat: data.lat,
-      lng: data.lon
-    }
+  if (map == null) {
     initMap();
-    if (editing) {
-      google.maps.event.clearListeners(map, "click");
-      if (orchardPoly !== undefined) {
-        google.maps.event.clearListeners(orchardPoly, "click");
+  }
+  if (lastLocation != undefined) {
+    map.setCenter(lastLocation);
+    map.setZoom(11);
+  } else {
+    map.setCenter({lat: 0, lng: 0});
+    map.setZoom(2);
+    locationLookup((data) => {
+      lastLocation = {
+        lat: data.lat,
+        lng: data.lon
       }
-      map.addListener("click", function(e) {
-        pushOrchardCoord(e);
-        updatePolyListener();
-      });
-    }
-  });
-  initMap();
-  if (editing) {
-    google.maps.event.clearListeners(map, "click");
-    if (orchardPoly !== undefined) {
-      google.maps.event.clearListeners(orchardPoly, "click");
-    }
-    map.addListener("click", function(e) {
-      pushOrchardCoord(e);
-      updatePolyListener();
+      map.setCenter(lastLocation);
+      map.setZoom(11);
+      if (editing) {
+        google.maps.event.clearListeners(map, "click");
+        if (orchardPoly !== undefined) {
+          google.maps.event.clearListeners(orchardPoly, "click");
+        }
+        map.addListener("click", function(e) {
+          pushOrchardCoord(e);
+          updatePolyListener();
+        });
+      }
     });
   }
+
 }
 
 function initMap() {
@@ -119,6 +123,13 @@ function initMap() {
     disableDoubleClickZoom: true,
     mapTypeId: "satellite"
   });
+  if (lastLocation != null) {
+    map.setCenter(lastLocation);
+    map.setZoom(11);
+  } else {
+    map.setCenter({lat: 0, lng: 0});
+    map.setZoom(11);
+  }
 }
 
 function updateMarkers() {
@@ -131,35 +142,47 @@ function updateMarkers() {
 }
 
 function updatePolygon(orchard) {
-  if (orchardCoords === undefined) {
-    orchardCoords = [];
-  }
-  while (orchardCoords.length > 0) {
-    orchardCoords.pop();
-  }
-  if (orchard !== null && orchard !== undefined && orchard.coords !== undefined) {
-    orchard.coords.forEach(function(coord) {
-      orchardCoords.push(coord);
+  if (orchard !== null && orchard !== undefined) {
+    if (orchardCoords == undefined) {
+      orchardCoords = [];
+    }
+    while (orchardCoords.length > 0) {
+      orchardCoords.pop();
+    }
+    if (orchard !== null && orchard !== undefined && orchard.coords !== undefined) {
+      orchard.coords.forEach(function(coord) {
+        orchardCoords.push(coord);
+      });
+    }
+    if (orchardPoly !== undefined && orchardPoly !== null) {
+      orchardPoly.setMap(null);
+    }
+    const clr = orchardColor === undefined ? 'rgb(255, 0, 0)' : orchardColor;
+    orchardPoly = new google.maps.Polygon({
+      paths: orchardCoords,
+      strokeColor: clr,
+      strokeOpacity: 0.75,
+      strokeWeight: 3,
+      fillColor: clr,
+      fillOpacity: 0.25,
+      map: map
     });
   }
-  if (orchardPoly !== undefined && orchardPoly !== null) {
-    orchardPoly.setMap(null);
-  }
-  const clr = orchardColor === undefined ? 'rgb(255, 0, 0)' : orchardColor;
-  orchardPoly = new google.maps.Polygon({
-    paths: orchardCoords,
-    strokeColor: clr,
-    strokeOpacity: 0.75,
-    strokeWeight: 3,
-    fillColor: clr,
-    fillOpacity: 0.25,
-    map: map
-  });
-  clearMarkers();
-  updatePolyListener();
-  map.setCenter({lat: cenLat(orchardCoords), lng: cenLng(orchardCoords)});
-  if (orchardCoords.length > 1) {
-    map.fitBounds(bounds(orchardCoords));
+  if (map == null) {
+    initMap();
+  } else {
+    clearMarkers();
+    updatePolyListener();
+    if (orchardCoords.length > 1) {
+      map.setCenter({lat: cenLat(orchardCoords), lng: cenLng(orchardCoords)});
+      map.fitBounds(bounds(orchardCoords));
+    } else if (lastLocation != undefined) {
+      map.setCenter(lastLocation);
+      map.setZoom(11);
+    } else {
+      map.setCenter({lat: 0, lng: 0});
+      map.setZoom(2);
+    }
   }
 }
 
@@ -610,6 +633,7 @@ function dispOrchard(id) {
       "</form>"
     ;
     initEditOrchardMap(true, true);
+    orchardColor = hashColor("HarvestOrchard", "BinaryNinjaz");
     updatePolygon(null);
 
     for (const fKey in farms) {

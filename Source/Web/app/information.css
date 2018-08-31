@@ -23,11 +23,11 @@
 }
 #entitySelector {
     margin: 16px;
-    padding: 4px;
-    border-radius: 4px;
+    padding: 6px;
     margin-bottom: 0px;
-    background: none;
-    border-color: black;
+    border: 2px solid lightgrey;
+    border-radius: 4px 4px 0 0;
+    background: rgba(0, 0, 0, 0.4);
 }
 #selectedEntity {
   border-color: transparent;
