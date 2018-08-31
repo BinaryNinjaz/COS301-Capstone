@@ -68,6 +68,11 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
                                          zoom: zoomLevel,
                                          bearing: .pi / 2,
                                          viewingAngle: .pi)
+    } else if let coord = pickUpMarkers.first?.position {
+      mapView.camera = GMSCameraPosition(target: coord,
+                                         zoom: zoomLevel,
+                                         bearing: .pi / 2,
+                                         viewingAngle: .pi)
     }
     
   }
