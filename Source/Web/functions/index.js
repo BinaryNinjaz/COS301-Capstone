@@ -464,7 +464,7 @@ function roundDateToPeriod(date, period) {
   } else if (period === "daily") {
     return date.format("dddd");
   } else if (period === "weekly") {
-    return date.format("d");
+    return date.format("w");
   } else if (period === "monthly") {
     return date.format("MMMM");
   } else if (period === "yearly") {
