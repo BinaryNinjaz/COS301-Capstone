@@ -662,6 +662,9 @@ extension Orchard {
     
       +++ Section("Orchard Location")
       <<< orchardAreaRow
+      
+      +++ Section("Assigned Farm")
+      <<< farmSelection
     
       +++ Section("Collection Details")
       <<< bagMassRow
@@ -675,9 +678,6 @@ extension Orchard {
       +++ Section("Crop Dimensions")
       <<< widthRow
       <<< heightRow
-      
-      +++ Section("Assigned Farm")
-      <<< farmSelection
     
       +++ Section("Assigned Workers")
       <<< assignedWorkersRow
