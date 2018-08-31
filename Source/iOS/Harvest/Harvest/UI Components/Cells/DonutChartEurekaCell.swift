@@ -46,10 +46,14 @@ public final class DonutChartRow: Row<DonutChartCell>, RowType {
 extension Session {
   func workerPerformanceSummary() -> PieChartData? {
     let result = PieChartDataSet()
+    var colorSet = [UIColor]()
+    var i = 0
     for (worker, amount) in collections {
       result.values.append(PieChartDataEntry(value: Double(amount.count), label: worker.description))
+      colorSet.append(UIColor.hashColor(parent: worker.id, child: worker.id))
+      i += 1
     }
-    result.colors = ChartColorTemplates.harvest()
+    result.colors = colorSet
     return collections.isEmpty ? nil : PieChartData(dataSet: result)
   }
 }

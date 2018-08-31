@@ -108,20 +108,6 @@ struct Stat: Codable {
     return message
   }
   
-  func dataSetColor(key: String, allUsedColors: inout [String: UIColor], position i: Int) -> UIColor {
-    let colors = ChartColorTemplates.harvest()
-    if let color = allUsedColors[key] {
-      return color
-    } else {
-      if i < colors.count {
-        allUsedColors[key] = colors[i]
-      } else {
-        allUsedColors[key] = UIColor.randomColor()
-      }
-      return allUsedColors[key]!
-    }
-  }
-  
   func formatDataSet(_ dataSet: LineChartDataSet) {
     dataSet.drawValuesEnabled = false
     dataSet.valueFormatter = DataValueFormatter()
@@ -147,7 +133,6 @@ struct Stat: Codable {
         
         var i = 0
         
-        var allUsedColors = [String: UIColor]()
         for (key, _dataSetObject) in json {
           if key == "exp" {
             expectedDataSetObject = _dataSetObject as? [String: [String: Double?]]
@@ -173,7 +158,7 @@ struct Stat: Codable {
             }
           }
           
-          dataSet.setColor(self.dataSetColor(key: key, allUsedColors: &allUsedColors, position: i))
+          dataSet.setColor(UIColor.hashColor(parent: key, child: key))
           
           self.formatDataSet(dataSet)
           if key == "avg" {
@@ -188,9 +173,7 @@ struct Stat: Codable {
         }
         
         if let data = expectedDataSetObject, self.mode != .accumTime {
-          expectedDataSets = self.expectedGraphData(
-            json: data,
-            allUsedColors: allUsedColors)
+          expectedDataSets = self.expectedGraphData(json: data)
         }
         
         let data = LineChartData(dataSets: dataSets)
@@ -203,8 +186,7 @@ struct Stat: Codable {
   }
   
   func expectedGraphData(
-    json: [String: [String: Double?]],
-    allUsedColors: [String: UIColor]
+    json: [String: [String: Double?]]
   ) -> [LineChartDataSet] {
     var functions = [SinusoidalFunction]()
     for (key, function) in json {
@@ -221,8 +203,10 @@ struct Stat: Codable {
     
     return functions.map { fx in
       let dataSet = fx.lineChartData(startDate: sd, endDate: ed, step: timeStep)
-      let color = allUsedColors[fx.key] ?? UIColor.randomColor()
-      dataSet.setColor(color.withAlphaComponent(0.25))
+      dataSet.setColor(UIColor.hashColor(parent: fx.key, child: fx.key))
+      dataSet.lineDashPhase = 0.5
+      dataSet.lineDashLengths = [2, 2]
+      dataSet.lineWidth = 2
       
       dataSet.label = self.legendTitle(forKey: fx.key) + " (expected)"
       
