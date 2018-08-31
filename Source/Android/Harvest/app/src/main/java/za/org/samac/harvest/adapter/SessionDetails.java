@@ -58,6 +58,7 @@ import za.org.samac.harvest.SignIn_SignUp;
 import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.ColorScheme;
 import za.org.samac.harvest.util.SearchedItem;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
@@ -219,10 +220,12 @@ public class SessionDetails extends AppCompatActivity {
 
     public void displayGraph() {
         pieChart = (com.github.mikephil.charting.charts.PieChart)findViewById(R.id.pieChart);
+        ArrayList<Integer> colorSet = new ArrayList<>();
         for(String key : Sessions.selectedItem.collectionPoints.keySet()) {
             String workerName = Sessions.selectedItem.collectionPoints.get(key).get(0).workerName;
             Float yield = (float)Sessions.selectedItem.collectionPoints.get(key).size();
             entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
+            colorSet.add(ColorScheme.hashColorOnce(key));
         }
 
         progressBar.setVisibility(View.GONE);
@@ -233,7 +236,7 @@ public class SessionDetails extends AppCompatActivity {
         pieChart.getLegend().setEnabled(false);
 
         PieDataSet dataset = new PieDataSet(entries, "Dataset");
-        dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+        dataset.setColors(colorSet);
         dataset.setValueTextColor(Color.BLACK);
 
         PieData data = new PieData(dataset);//labels was one of the parameters

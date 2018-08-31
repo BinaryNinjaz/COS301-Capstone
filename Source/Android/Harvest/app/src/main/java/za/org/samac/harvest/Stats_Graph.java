@@ -52,6 +52,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.Category;
+import za.org.samac.harvest.util.ColorScheme;
 import za.org.samac.harvest.util.Data;
 
 import static za.org.samac.harvest.Stats.ACCUMULATION_TIME;
@@ -362,7 +363,7 @@ public class Stats_Graph extends AppCompatActivity {
                                     lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
 
                                     expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expected)");
-                                    expectedLineDataSet.setColor(R.color.blueLinks, 200);
+                                    expectedLineDataSet.setColor(R.color.blueLinks, 255);
                                     expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
                                     expectedLineDataSet.setDrawCircles(false);
                                     expectedLineDataSet.setLineWidth(1);
@@ -371,11 +372,11 @@ public class Stats_Graph extends AppCompatActivity {
                                 break;
                             default:
                                 lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
-                                lineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour]);
+                                lineDataSet.setColor(ColorScheme.hashColorOnce(entityNames.get(i).toString()));
 
                                 expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
                                 expectedLineDataSet.enableDashedLine(10, 5, 1);
-                                expectedLineDataSet.setColor(ColorTemplate.COLORFUL_COLORS[colour++], 200);
+                                expectedLineDataSet.setColor(ColorScheme.hashColorOnce(entityNames.get(i).toString()), 255);
                                 expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
                                 expectedLineDataSet.setDrawCircles(false);
                                 expectedLineDataSet.setLineWidth(1);

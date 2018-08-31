@@ -12,6 +12,10 @@ public class ColorScheme {
         return Color.HSVToColor(alpha, new float[]{ hueRatio, satRatio, briRatio });
     }
 
+    static public int hashColorOnce(String key) {
+        return hashColor(key, key, 255);
+    }
+
     static float asciiColorHash(String string) {
         int hash = 15487469;
         for (int i = 0; i < string.length(); i++) {
