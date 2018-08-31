@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.DialogFragment;
@@ -625,6 +626,10 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
                 else {
                     showList(stackTop);
                 }
+                return true;
+            case R.id.website:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://harvestapp.co.za/"));
+                startActivity(browserIntent);
                 return true;
             default:
                 super.onOptionsItemSelected(item);

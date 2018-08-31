@@ -322,6 +322,7 @@
     <string name="skip">Skip</string>
     <string name="done">Done</string>
     <string name="thatsAll">That\'s all</string>
+    <string name="website">Website</string>
 
     <integer-array name="img_id_arr">
         <item>@drawable/harvestintro</item>

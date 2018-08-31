@@ -9,6 +9,9 @@
         app:actionViewClass="android.widget.SearchView"
         />
     <item
+        android:id="@+id/website"
+        android:title="@string/website"/>
+    <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings_white"
         android:title="@string/menuSettings" />

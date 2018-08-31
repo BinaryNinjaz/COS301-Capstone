@@ -1,6 +1,7 @@
 package za.org.samac.harvest;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -85,6 +86,10 @@ public class ForemenPerSession extends AppCompatActivity /*RecyclerView.Adapter<
 //            case R.id.homeAsUp:
 //                onBackPressed();
 //                return true;
+            case R.id.website:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://harvestapp.co.za/"));
+                startActivity(browserIntent);
+                return true;
             default:
                 super.onOptionsItemSelected(item);
                 return true;
