@@ -39,12 +39,12 @@ function initPage(){
             document.getElementById("sur").value = val.lastname;
         });
     }
-    
+
 }
 
 function saveChanges(){
     if(confirm("Are you sure you want to save these account changes?")){
-        database.ref('/' + getUserID() +'/admin').update({  
+        database.ref('/' + getUserID() +'/admin').update({
           firstname: document.getElementById("first").value,
           lastname: document.getElementById("sur").value,
           organization: document.getElementById("org").value
@@ -120,7 +120,7 @@ function deleteAccount(){
             }
         };
     }
-}   
+}
 
 /* creates a prompt to get user to enter current password before
 making account changes */
@@ -145,4 +145,8 @@ function constructPrompt(){
         thePrompt.close();
     };
     return thePrompt;
+}
+
+function loadUserManual() {
+  window.location.href = "HarvestUserManual.pdf"
 }
