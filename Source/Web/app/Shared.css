@@ -60,9 +60,42 @@ p, span {
 
 body{
     font-family: Sans-Serif;
-    background: linear-gradient(#4CAF50, #0096FF);
+    background: linear-gradient(rgb(77, 191, 80), rgb(0, 150, 255));
     display: block;
     overflow: auto;
     min-height: 100vh;
     background-size: cover;
+}
+
+
+/* Bootstrap Model */
+
+
+.modal {
+  /* background: red; */
+}
+
+.modal-dialog {
+  background: transparent;
+}
+
+.modal-content {
+  background: rgba(48, 48, 48, 0.95);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid lightgrey;
+}
+.modal-header {
+  border-bottom: 1px solid grey;
+}
+
+.modal-title {
+
+}
+
+.modal-body {
+
+}
+
+.modal-footer {
+  border-top: 1px solid grey;
 }
