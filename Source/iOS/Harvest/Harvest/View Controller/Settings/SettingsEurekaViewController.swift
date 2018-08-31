@@ -8,6 +8,8 @@
 
 import Eureka
 import SCLAlertView
+import UIKit
+import SafariServices
 
 struct OrganizationInfo: CustomStringConvertible, Equatable {
   var uid: String?
@@ -27,35 +29,15 @@ struct OrganizationInfo: CustomStringConvertible, Equatable {
   }
 }
 
-class SettingsEurekaViewController: ReloadableFormViewController {
+class SettingsEurekaViewController: ReloadableFormViewController, SFSafariViewControllerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
   }
   
   override func setUp() {
-    let welcomeScreenRow = ButtonRow { row in
-      row.title = "Welcome Screen"
-    }.onCellSelection { _, _ in
-      let avc = self
-        .storyboard?
-        .instantiateViewController(withIdentifier: "carouselViewController") as! CarouselViewController
-      avc.showIntro()
-      
-      self.present(avc, animated: true, completion: nil)
-    }
-    
-    let tutorialScreenRow = ButtonRow { row in
-      row.title = "Tutorial"
-    }.onCellSelection { _, _ in
-      let avc = self
-        .storyboard?
-        .instantiateViewController(withIdentifier: "carouselViewController") as! CarouselViewController
-      avc.showTutorial()
-      
-      self.present(avc, animated: true, completion: nil)
-    }
-    
+    websiteSection(form: form)
     userSection(form: form)
+    helpSection(form: form)
     
     let resignRow = ButtonRow { row in
       row.title = "Resign"
@@ -81,16 +63,8 @@ class SettingsEurekaViewController: ReloadableFormViewController {
       cell.backgroundColor = .red
     }
     
-    if HarvestUser.current.workingForID.isEmpty { // is farmer
+    if !HarvestUser.current.workingForID.isEmpty { // is foreman
       form
-        +++ Section("Help")
-        <<< tutorialScreenRow
-        <<< welcomeScreenRow
-      
-    } else { // is foreman
-      form
-        +++ Section("Help")
-        <<< tutorialScreenRow
         +++ Section()
         <<< resignRow
     }
@@ -121,7 +95,6 @@ class SettingsEurekaViewController: ReloadableFormViewController {
         +++ Section("Admin")
         <<< adminRow
         <<< logoutRow
-      
     } else { // is foreman
       form
         +++ Section(userRow)
@@ -129,8 +102,85 @@ class SettingsEurekaViewController: ReloadableFormViewController {
     }
   }
   
+  func helpSection(form: Form) {
+    let welcomeScreenRow = ButtonRow { row in
+      row.title = "Welcome Screen"
+    }.onCellSelection { _, _ in
+      let avc = self
+        .storyboard?
+        .instantiateViewController(withIdentifier: "carouselViewController") as! CarouselViewController
+      avc.showIntro()
+      
+      self.present(avc, animated: true, completion: nil)
+    }
+    
+    let tutorialScreenRow = ButtonRow { row in
+      row.title = "Tutorial"
+    }.onCellSelection { _, _ in
+      let avc = self
+        .storyboard?
+        .instantiateViewController(withIdentifier: "carouselViewController") as! CarouselViewController
+      avc.showTutorial()
+      
+      self.present(avc, animated: true, completion: nil)
+    }
+    
+    let userManualRow = ButtonRow { row in
+      row.title = "User Manual"
+    }.onCellSelection { _, _ in
+      let urlString = """
+        https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Documents/User%20Manual/HarvestUserManual.pdf
+        """
+      if let url = URL(string: urlString) {
+        let controller = SFSafariViewController(url: url)
+        self.present(controller, animated: true, completion: nil)
+        controller.delegate = self
+      } else {
+        let alert = SCLAlertView()
+        alert.showError("Cannot Open", subTitle: "An error occurred trying to open the User Manual.")
+      }
+    }
+    
+    if HarvestUser.current.workingForID.isEmpty { // is farmer
+      form
+        +++ Section("Help")
+        <<< tutorialScreenRow
+        <<< welcomeScreenRow
+        <<< userManualRow
+      
+    } else { // is foreman
+      form
+        +++ Section("Help")
+        <<< tutorialScreenRow
+        <<< userManualRow
+    }
+  }
+  
+  func websiteSection(form: Form) {
+    let websiteRow = ButtonRow { row in
+      row.title = "harvestapp.co.za"
+    }.onCellSelection { _, _ in
+      let urlString = """
+      https://harvestapp.co.za
+      """
+      if let url = URL(string: urlString) {
+        let controller = SFSafariViewController(url: url)
+        self.present(controller, animated: true, completion: nil)
+        controller.delegate = self
+      } else {
+        let alert = SCLAlertView()
+        alert.showError("Cannot Open", subTitle: "An error occurred trying to open the User Manual.")
+      }
+    }
+    
+    form +++ Section("Companion Website") <<< websiteRow
+  }
+  
   override func tearDown() {
     form.removeAll()
   }
   
+  func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+    controller.dismiss(animated: true, completion: nil)
+  }
 }
