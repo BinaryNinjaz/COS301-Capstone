@@ -595,7 +595,7 @@ function chartObjectForStat(id, response) {
     data.datasets.push({
       data: pollPlotData(labels, response.sum),
       label: "Sum of Selected",
-      borderColor: colorForIndex(0)
+      borderColor: 'rgba(69, 161, 247, 1)'
     });
     if (response.avg.sum !== undefined) {
       data.datasets.push({
@@ -661,7 +661,7 @@ function fillEntityStatData(stat, data, labels, source) {
     const item = entities[key];
 
     if (info !== undefined && item !== undefined) {
-      colorsUsed[key] = colorForIndex(colorIdx);
+      colorsUsed[key] = hashColorOnce(key); //colorForIndex(colorIdx);
       data.datasets.push({
         data: plottedData,
         label: formatter(key, item),
@@ -713,13 +713,15 @@ function fillEntityExpectedData(stat, data, start, end, labels, usedColors, sour
       data.datasets.push({
         data: plottedData,
         label: formatter(key, item) + " (expected)",
-        borderColor: colorWithAlpha(usedColors[key], 0.5)
+        borderColor: colorWithAlpha(usedColors[key], 1),
+        borderDash: [10,5]
       });
     } else if (stat.mode === "accumEntity") {
       data.datasets.push({
         data: plottedData,
         label: "Sum of Selected (expected)",
-        borderColor: colorWithAlpha('rgba(69, 161, 247, 1)', 0.5)
+        borderColor: colorWithAlpha('rgba(69, 161, 247, 1)', 1),
+        borderDash: [10,5]
       });
     }
   }

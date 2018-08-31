@@ -246,7 +246,7 @@ function loadSession(sessionID) {
       }
 
       graphData.datasets[0].data.push(collection.length);
-      graphData.datasets[0].backgroundColor.push(colorForIndex(gdatai));
+      graphData.datasets[0].backgroundColor.push(hashColorOnce(ckey));
       graphData["labels"].push(wname);
       gdatai++;
 

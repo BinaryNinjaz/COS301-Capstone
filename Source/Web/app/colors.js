@@ -77,6 +77,10 @@ function hashColor(parent, child) {
   return 'rgb(' + R + ', ' + G + ', ' + B + ')';
 }
 
+function hashColorOnce(key) {
+  return hashColor(key, key);
+}
+
 function add32(a, b) {
   return ((a | 0) + (b | 0)) | 0;
 }
