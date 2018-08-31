@@ -129,7 +129,7 @@ class SettingsEurekaViewController: ReloadableFormViewController, SFSafariViewCo
       row.title = "User Manual"
     }.onCellSelection { _, _ in
       let urlString = """
-        https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Documents/User%20Manual/HarvestUserManual.pdf
+        https://harvestapp.co.za/HarvestUserManual.pdf
         """
       if let url = URL(string: urlString) {
         let controller = SFSafariViewController(url: url)
