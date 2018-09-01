@@ -27,16 +27,25 @@ function colorWithAlpha(color, alpha) {
   return color.substr(0, color.length - 3) + alpha + ")";
 }
 
+function huePrecedence(key) {
+  const hueRatio = asciiColorHash(key);
+  var hue = Math.round(hueRatio * 280 + 80) | 0;
+
+  const dif = hue % 20;
+  hue -= dif;
+
+  return hue;
+}
+
 function hashColor(parent, child) {
-  const hueRatio = asciiColorHash(parent);
   const satRatio = asciiColorHash(child.substr(0, child.length / 2));
   const briRatio = asciiColorHash(child.substr(child.length / 2, child.length / 2));
 
-  const hue = Math.round(hueRatio * 360) | 0;
+  const hue = huePrecedence(parent);
 
   var H = hue;
-  var S = satRatio * 0.5 + 0.5;
-  var V = briRatio * 0.33 + 0.66;
+  var S = satRatio * 0.4 + 0.6;
+  var V = briRatio * 0.4 + 0.6;
 
   var C = V * S;
   var X = C * (1 - Math.abs((H / 60) % 2 - 1));

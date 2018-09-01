@@ -235,6 +235,7 @@ function loadSession(sessionID) {
     markers[marker].setMap(null)
   }
 
+	var unorderedData = [];
   if (val.collections !== undefined) {
     for (const ckey in val.collections) {
       const collection = val.collections[ckey];
@@ -245,9 +246,10 @@ function loadSession(sessionID) {
         wname = worker.name + " " + worker.surname;
       }
 
-      graphData.datasets[0].data.push(collection.length);
-      graphData.datasets[0].backgroundColor.push(hashColorOnce(ckey));
-      graphData["labels"].push(wname);
+			unorderedData.push({x: wname, y: collection.length, color: hashColorOnce(ckey), precedence: huePrecedence(ckey)});
+      // graphData.datasets[0].data.push(collection.length);
+      // graphData.datasets[0].backgroundColor.push(hashColorOnce(ckey));
+      // graphData["labels"].push(wname);
       gdatai++;
 
       for (const pkey in collection) {
@@ -266,6 +268,16 @@ function loadSession(sessionID) {
       }
     }
   }
+	unorderedData = unorderedData.sort((a, b) => {
+		return a.precedence - b.precedence;
+	});
+	for (const udi in unorderedData) {
+		const ud = unorderedData[udi];
+		graphData.datasets[0].data.push(ud.y);
+		graphData.datasets[0].backgroundColor.push(ud.color);
+		graphData["labels"].push(ud.x);
+	}
+
   initGraph(graphData);
 }
 

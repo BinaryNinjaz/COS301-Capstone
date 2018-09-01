@@ -649,9 +649,6 @@ function chartObjectForStat(id, response) {
 function fillEntityStatData(stat, data, labels, source) {
   const formatter = formatterForGroup(stat.groupBy);
   const entities = entitiesForGroup(stat.groupBy);
-  const colors = harvestColorful;
-  var colorIdx = 0;
-  var colorsUsed = {};
 
   for (const kidx in stat.ids[stat.groupBy]) {
     const key = stat.ids[stat.groupBy][kidx];
@@ -661,17 +658,18 @@ function fillEntityStatData(stat, data, labels, source) {
     const item = entities[key];
 
     if (info !== undefined && item !== undefined) {
-      colorsUsed[key] = hashColorOnce(key); //colorForIndex(colorIdx);
-      data.datasets.push({
+      data.datasets .push({
         data: plottedData,
         label: formatter(key, item),
-        borderColor: colorsUsed[key]
+        borderColor: hashColorOnce(key),
+        __precedence: huePrecedence(key)
       });
-      colorIdx += 1;
     }
   }
 
-  return colorsUsed;
+  data.datasets = data.datasets.sort((a, b) => {
+    return a.__precedence - b.__precedence;
+  });
 }
 
 function pollPlotData(labels, info) {
@@ -713,18 +711,34 @@ function fillEntityExpectedData(stat, data, start, end, labels, usedColors, sour
       data.datasets.push({
         data: plottedData,
         label: formatter(key, item) + " (expected)",
-        borderColor: colorWithAlpha(usedColors[key], 1),
-        borderDash: [10,5]
+        borderColor: hashColorOnce(key),
+        borderDash: [10,5],
+        __precedence: huePrecedence(key),
+        __expectedToken: true
       });
     } else if (stat.mode === "accumEntity") {
       data.datasets.push({
         data: plottedData,
         label: "Sum of Selected (expected)",
         borderColor: colorWithAlpha('rgba(69, 161, 247, 1)', 1),
-        borderDash: [10,5]
+        borderDash: [10,5],
+        __precedence: 212,
+        __expectedToken: true
       });
     }
   }
+
+  data.datasets = data.datasets.sort((a, b) => {
+    if (a.__expectedToken === undefined && b.__expectedToken === undefined) {
+      return a.__precedence - b.__precedence;
+    } else if (a.__expectedToken === undefined) {
+      return -1;
+    } else if (b.__expectedToken === undefined) {
+      return 1;
+    } else {
+      return a.__precedence - b.__precedence;
+    }
+  });
 }
 
 function pollExpectedPlotData(start, end, period, labels, func) {
