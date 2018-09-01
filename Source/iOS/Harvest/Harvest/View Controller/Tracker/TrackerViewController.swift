@@ -360,11 +360,13 @@ extension TrackerViewController: UICollectionViewDataSource {
     return shouldDisplayMessage ? 1 : filteredWorkers.count
   }
   
-  func incrementBagCollection(at indexPath: IndexPath) -> (WorkerCollectionViewCell) -> Void {
-    return { cell in
+  func incrementBagCollection(at indexPath: IndexPath) -> (WorkerCollectionViewCell, Int) -> Void {
+    return { cell, tries in
       self.locationManager?.requestLocation()
       guard let loc = self.currentLocation else {
-        cell.inc?(cell)
+        if tries < 100 {
+          cell.inc?(cell, tries + 1)
+        }
         return
       }
       self.tracker?.collect(
