@@ -21,6 +21,7 @@ class TrackerViewController: UIViewController {
     }
   }
   
+  @IBOutlet weak var infoEffectViewHeightConstraint: NSLayoutConstraint?
   var locationManager: CLLocationManager?
   var currentLocation: CLLocation?
   var changedOrchard: Bool?
@@ -61,19 +62,43 @@ class TrackerViewController: UIViewController {
   @IBOutlet weak var yieldLabel: UILabel?
   @IBOutlet weak var infoEffectView: UIVisualEffectView!
   
+  var isPhoneLandscape: Bool {
+    return (UIDevice.current.orientation.isPortrait || !UIDevice.current.orientation.isValidInterfaceOrientation)
+      && UIDevice.current.userInterfaceIdiom == .phone
+  }
+  
   var startButtonCornerRadius: CGFloat {
-    return (startSessionButton?.frame.width ?? 10) / 2
+    if isPhoneLandscape {
+      return startSessionButton?.frame.width == startSessionButton?.frame.height
+        ? (startSessionButton?.frame.width ?? 10) / 2
+        : 8
+    } else {
+      return 8
+    }
+  }
+  
+  func updateStartButtonLayer(isStart: Bool) {
+    if isStart {
+      startSessionButton?.setTitle("Start", for: .normal)
+      let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
+                                                  locations: [0, 1],
+                                                  cornerRadius: self.startButtonCornerRadius,
+                                                  borderColor: [UIColor].startSession[1])
+      startSessionButton?.apply(gradient: sessionLayer)
+    } else {
+      self.startSessionButton?.setTitle("Stop", for: .normal)
+      let sessionLayer = CAGradientLayer.gradient(colors: .stopSession,
+                                                  locations: [0, 1],
+                                                  cornerRadius: self.startButtonCornerRadius,
+                                                  borderColor: [UIColor].stopSession[1])
+      self.startSessionButton?.apply(gradient: sessionLayer)
+    }
   }
   
   fileprivate func endCollecting() {
     locationManager?.stopUpdatingLocation()
     
-    startSessionButton?.setTitle("Start", for: .normal)
-    let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
-                                                locations: [0, 1],
-                                                cornerRadius: startButtonCornerRadius,
-                                                borderColor: [UIColor].startSession[1])
-    startSessionButton?.apply(gradient: sessionLayer)
+    updateStartButtonLayer(isStart: true)
     
     searchBar?.isUserInteractionEnabled = false
     
@@ -205,13 +230,29 @@ class TrackerViewController: UIViewController {
     alert.addAction(cancel)
     alert.popoverPresentationController?.sourceView = yieldLabel
     
-    if Entities.shared.orchards.isEmpty {
+    if Entities.shared.farms.isEmpty {
+      let notice = SCLAlertView()
+      
+      notice.showEdit(
+        "No Farms",
+        subTitle: """
+        You have not added any farms. Please add a farm in 'Information' before using the yield collector.
+        """)
+    } else if Entities.shared.orchards.isEmpty {
       let notice = SCLAlertView()
       
       notice.showEdit(
         "No Orchards",
         subTitle: """
         You have not added any orchards. Please add orchards in 'Information' before using the yield collector.
+        """)
+    } else if Entities.shared.workers.isEmpty {
+      let notice = SCLAlertView()
+      
+      notice.showEdit(
+        "No Workers",
+        subTitle: """
+        You have not added any workers. Please add workers in 'Information' before using the yield collector.
         """)
     } else {
       present(alert, animated: true, completion: nil)
@@ -244,12 +285,7 @@ class TrackerViewController: UIViewController {
             self.changedOrchard = true
           }
           
-          self.startSessionButton?.setTitle("Stop", for: .normal)
-          let sessionLayer = CAGradientLayer.gradient(colors: .stopSession,
-                                                      locations: [0, 1],
-                                                      cornerRadius: self.startButtonCornerRadius,
-                                                      borderColor: [UIColor].stopSession[1])
-          self.startSessionButton?.apply(gradient: sessionLayer)
+          self.updateStartButtonLayer(isStart: false)
           
           self.tracker = Tracker(wid: HarvestUser.current.selectedWorkingForID?.wid ?? HarvestUser.current.uid)
           self.searchBar?.isUserInteractionEnabled = true
@@ -284,14 +320,9 @@ class TrackerViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    startSessionButton?.layer.cornerRadius = (startSessionButton?.frame.width ?? 0) / 2
     hideKeyboardWhenTappedAround()
     
-    let sessionLayer = CAGradientLayer.gradient(colors: .startSession,
-                                                locations: [0, 1],
-                                                cornerRadius: startButtonCornerRadius,
-                                                borderColor: [UIColor].startSession[1])
-    startSessionButton?.apply(gradient: sessionLayer)
+    self.updateStartButtonLayer(isStart: true)
     
     _ = Entities.shared.listen {
       self.gotWorkers = !Entities.shared.workers.isEmpty
@@ -575,6 +606,18 @@ extension TrackerViewController {
     
     self.yieldLabel?.setWidth(fullWidth - startWidth - startLeft - 16)
     self.yieldLabel?.setOriginX(startLeft + 8 + startWidth)
+    
+    if isPhoneLandscape {
+      infoEffectView.setHeight(80.0)
+      infoEffectViewHeightConstraint?.constant = -80.0
+      startSessionButton?.setHeight(64)
+    } else {
+      infoEffectView.setHeight(56.0)
+      infoEffectViewHeightConstraint?.constant = -56.0
+      startSessionButton?.setHeight(40)
+    }
+    infoEffectView.updateConstraints()
+    updateStartButtonLayer(isStart: tracker == nil)
   }
 }
 
@@ -594,7 +637,6 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
       - ofh
       - view.layoutMargins.top
       - view.layoutMargins.bottom
-//      - 109
     
     let n = CGFloat(Int(w / 156))
     
