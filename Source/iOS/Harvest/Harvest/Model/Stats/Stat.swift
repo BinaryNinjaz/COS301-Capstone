@@ -116,6 +116,32 @@ struct Stat: Codable {
     dataSet.lineWidth = 2
   }
   
+  func sortJSONEntities(json: [String: Any]) -> [(String, Any)] {
+    var entities = [(String, Any)]()
+    for (key, _dataSetObject) in json {
+      if entities.isEmpty {
+        entities.append((key, _dataSetObject))
+      } else {
+        let a = UIColor.huePrecedence(key: key)
+        var i = 0
+        var ins = false
+        for (k, _) in entities {
+          let b = UIColor.huePrecedence(key: k)
+          if a < b {
+            entities.insert((key, _dataSetObject), at: i)
+            ins = true
+            break
+          }
+          i += 1
+        }
+        if !ins {
+          entities.append((key, _dataSetObject))
+        }
+      }
+    }
+    return entities
+  }
+  
   func graphData(completion: @escaping (LineChartData?) -> Void) {
     let (sd, ed) = timePeriod.dateRange()
     
@@ -131,9 +157,7 @@ struct Stat: Codable {
           return
         }
         
-        var i = 0
-        
-        for (key, _dataSetObject) in json {
+        for (key, _dataSetObject) in self.sortJSONEntities(json: json) {
           if key == "exp" {
             expectedDataSetObject = _dataSetObject as? [String: [String: Double?]]
             continue
@@ -168,7 +192,6 @@ struct Stat: Codable {
             dataSets.insert(dataSet, at: 0)
           } else {
             dataSets.append(dataSet)
-            i += 1
           }
         }
         
@@ -197,6 +220,9 @@ struct Stat: Codable {
       if let a = a, let b = b, let c = c, let d = d {
         functions.append(SinusoidalFunction(key: key, a: a, b: b, c: c, d: d))
       }
+    }
+    functions.sort { (a, b) -> Bool in
+      return UIColor.huePrecedence(key: a.key) < UIColor.huePrecedence(key: b.key)
     }
     
     let (sd, ed) = timePeriod.dateRange()

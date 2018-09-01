@@ -48,7 +48,10 @@ extension Session {
     let result = PieChartDataSet()
     var colorSet = [UIColor]()
     var i = 0
-    for (worker, amount) in collections {
+    let sortedWorkers = collections.sorted {
+      UIColor.huePrecedence(key: $0.key.id) < UIColor.huePrecedence(key: $1.key.id)
+    }
+    for (worker, amount) in sortedWorkers {
       result.values.append(PieChartDataEntry(value: Double(amount.count), label: worker.description))
       colorSet.append(UIColor.hashColor(parent: worker.id, child: worker.id))
       i += 1
