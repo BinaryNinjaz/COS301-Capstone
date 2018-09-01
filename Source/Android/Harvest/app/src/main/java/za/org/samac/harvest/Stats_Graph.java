@@ -43,6 +43,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -301,16 +302,35 @@ public class Stats_Graph extends AppCompatActivity {
             int colour = 0;
 
             //Determine max and min values
-            JSONArray entityNames; //to iterate through the top level entities
-
             updateFormatDifference();
 
             //Line always
             List<ILineDataSet> dataSets = new ArrayList<>(); //Holds all the data sets, so one for each entity
-            entityNames = functionResult.names(); //to iterate through the top level entities
+            JSONArray tempNames = functionResult.names(); //to iterate through the top level entities
+            ArrayList<Object> entityNames = new ArrayList<>();
+            for (int i = 0; i < tempNames.length(); i++) {
+                if (entityNames.isEmpty()) {
+                    entityNames.add(tempNames.get(i));
+                } else {
+                    int a = ColorScheme.huePrecedence(tempNames.get(i).toString());
+                    Boolean ins = false;
+                    for (int j = 0; j < entityNames.size(); j++) {
+                        int b = ColorScheme.huePrecedence(entityNames.get(j).toString());
+                        if (a < b) {
+                            entityNames.add(j, tempNames.get(i));
+                            ins = true;
+                            break;
+                        }
+                    }
+                    if (!ins) {
+                        entityNames.add(tempNames.get(i));
+                    }
+                }
+            }
+
 
             if (entityNames != null) {
-                for (int i = 0; i < entityNames.length(); i++) {
+                for (int i = 0; i < entityNames.size(); i++) {
                     if(entityNames.get(i).equals("exp")){
                         //This is handled elsewhere.
                     }

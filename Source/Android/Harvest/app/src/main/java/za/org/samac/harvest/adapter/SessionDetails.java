@@ -40,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -221,7 +222,28 @@ public class SessionDetails extends AppCompatActivity {
     public void displayGraph() {
         pieChart = (com.github.mikephil.charting.charts.PieChart)findViewById(R.id.pieChart);
         ArrayList<Integer> colorSet = new ArrayList<>();
+        ArrayList<String> keys = new ArrayList<>();
         for(String key : Sessions.selectedItem.collectionPoints.keySet()) {
+            if (keys.isEmpty()) {
+                keys.add(key);
+            } else {
+                int a = ColorScheme.huePrecedence(key);
+                Boolean ins = false;
+                for (int j = 0; j < keys.size(); j++) {
+                    int b = ColorScheme.huePrecedence(keys.get(j).toString());
+                    if (a < b) {
+                        keys.add(j, key);
+                        ins = true;
+                        break;
+                    }
+                }
+                if (!ins) {
+                    keys.add(key);
+                }
+            }
+        }
+
+        for(String key : keys) {
             String workerName = Sessions.selectedItem.collectionPoints.get(key).get(0).workerName;
             Float yield = (float)Sessions.selectedItem.collectionPoints.get(key).size();
             entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
