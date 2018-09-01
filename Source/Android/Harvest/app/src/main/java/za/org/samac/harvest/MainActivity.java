@@ -813,10 +813,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void statusCheck() {
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (SplashScreenActivity.wantToUseGPS == false) {
+            SplashScreenActivity.wantToUseGPS = true;
+        } else {
+            SplashScreenActivity.wantToUseGPS = true;
+            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {//changed from GPS to NETWORK
-            buildAlertMessageNoGps();
+            if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {//changed from GPS to NETWORK
+                buildAlertMessageNoGps();
+            }
         }
     }
 

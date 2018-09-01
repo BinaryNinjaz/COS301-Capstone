@@ -39,6 +39,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private final int GPS_SETTINGS_UPDATE = 989;
     private final int GPS_PERMISSIONS = 101;
     private TextView tvAppName;
+    public static Boolean wantToUseGPS = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +166,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
+                        wantToUseGPS = false;
                         dialog.cancel();
                         if(locationPermissions()) {
                             showLoading();
