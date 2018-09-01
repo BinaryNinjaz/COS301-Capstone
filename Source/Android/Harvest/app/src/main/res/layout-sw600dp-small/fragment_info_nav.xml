@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InfoNavFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/buttFarms"
+                        app:cardCornerRadius="10dp"
+                        app:elevation="3dp"
+                        style="@style/cardPictureButton"
+                        android:tag="farms"
+                        android:onClick="onInfoNavButtClick"
+                        card_view:cardBackgroundColor="@android:color/transparent"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp">
+
+                        <LinearLayout
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:focusable="false"
+                            style="@style/cardPictureButtonLayout"
+                            android:layout_width="300dp"
+                            android:layout_height="300dp">
+
+                            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                xmlns:tools="http://schemas.android.com/tools"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/barn"
+                                tools:context="com.alvinalexander.motify.LandingPageActivity.ShowFullQuoteFragment"
+                                android:id="@+id/farmPic">
+
+                                <TextView
+                                    android:text="@string/infoFarms"
+                                    android:textSize="30dp"
+                                    android:textAlignment="viewEnd"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="40dp"
+                                    android:gravity="bottom"
+                                    android:padding="3dp"
+                                    android:background="#ddffffff"
+                                    android:alpha="0.8"
+                                    android:layout_alignParentBottom="true"/>
+
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/buttOrchards"
+                        app:cardCornerRadius="10dp"
+                        app:elevation="3dp"
+                        style="@style/cardPictureButton"
+                        android:tag="orchards"
+                        android:onClick="onInfoNavButtClick"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp">
+
+                        <LinearLayout
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:focusable="false"
+                            style="@style/cardPictureButtonLayout"
+                            android:layout_width="300dp"
+                            android:layout_height="300dp">
+
+                            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                xmlns:tools="http://schemas.android.com/tools"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/nutsontreethree"
+                                tools:context="com.alvinalexander.motify.LandingPageActivity.ShowFullQuoteFragment"
+                                android:id="@+id/orchardsPic">
+
+                                <TextView
+                                    android:text="@string/infoOrchards"
+                                    android:textSize="30dp"
+                                    android:textAlignment="viewEnd"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="40dp"
+                                    android:gravity="bottom"
+                                    android:padding="3dp"
+                                    android:background="#ddffffff"
+                                    android:alpha="0.8"
+                                    android:layout_alignParentBottom="true"/>
+
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/buttWorkers"
+                        app:cardCornerRadius="10dp"
+                        app:elevation="3dp"
+                        style="@style/cardPictureButton"
+                        android:tag="workers"
+                        android:onClick="onInfoNavButtClick"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp">
+
+                        <LinearLayout
+                            android:background="@android:color/transparent"
+                            android:clickable="false"
+                            android:focusable="false"
+                            style="@style/cardPictureButtonLayout"
+                            android:layout_width="300dp"
+                            android:layout_height="300dp">
+
+                            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                xmlns:tools="http://schemas.android.com/tools"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/worker"
+                                tools:context="com.alvinalexander.motify.LandingPageActivity.ShowFullQuoteFragment"
+                                android:id="@+id/workersPic">
+
+                                <TextView
+                                    android:text="@string/infoWorkers"
+                                    android:textSize="30dp"
+                                    android:textAlignment="viewEnd"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="40dp"
+                                    android:gravity="bottom"
+                                    android:padding="3dp"
+                                    android:background="#ddffffff"
+                                    android:alpha="0.8"
+                                    android:layout_alignParentBottom="true"/>
+
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+        <!-- <Button
+            android:id="@+id/buttFarms"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:onClick="onInfoNavButtClick"
+            android:tag="farms"
+            android:text="@string/infoFarms"
+            android:background="@color/white"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttOrchards"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:onClick="onInfoNavButtClick"
+            android:tag="orchards"
+            android:text="@string/infoOrchards"
+            android:background="@color/white"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttFarms" />
+
+        <Button
+            android:id="@+id/buttWorkers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:onClick="onInfoNavButtClick"
+            android:tag="workers"
+            android:text="@string/infoWorkers"
+            android:background="@color/white"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttOrchards"
+            app:layout_constraintVertical_bias="0.0" /> -->
+    </android.support.constraint.ConstraintLayout>
+</FrameLayout>
