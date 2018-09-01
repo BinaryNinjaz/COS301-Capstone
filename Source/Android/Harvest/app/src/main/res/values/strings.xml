@@ -122,7 +122,7 @@
     <string name="info_orch_tree">Tree Spacing:</string>
     <string name="info_orch_cult">Cultivars:</string>
     <string name="info_orch_further">Further Information:</string>
-    <string name="info_orch_map_hold">Hold each corner of the field</string>
+    <string name="info_orch_map_hold">Tap to place a point. Repeat for each corner of the field going in a clockwise direction.</string>
     <string name="info_orch_map_remAll">Remove All</string>
     <string name="info_orch_map_remLast">Remove Last Point</string>
     <string name="info_orch_map_permissionDialog_message">We would like access to your location so that you can find yourself on the map, making the orchard easier to find. It\'s alright if you don\'t want to give it to us, you\'ll just need to find the orchard from scratch!</string>

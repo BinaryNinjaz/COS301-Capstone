@@ -51,7 +51,7 @@ import static android.content.ContentValues.TAG;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener{
+public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener{
 
     private boolean show = false;
     private boolean explanationShown = false;
@@ -137,7 +137,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
         gMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         if (show) {
-            gMap.setOnMapLongClickListener(this);
+            gMap.setOnMapClickListener(this);
 //            activateLocation();
         }
 //        else {
@@ -254,7 +254,7 @@ public class InfoOrchardMapFragment extends Fragment implements OnMapReadyCallba
     }
 
     @Override
-    public void onMapLongClick(LatLng latLng) {
+    public void onMapClick(LatLng latLng) {
         coordinates.add(latLng);
         inferArea = false;
         redraw();
