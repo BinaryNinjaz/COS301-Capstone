@@ -15,7 +15,7 @@ function propertyWords() {
     "foreman name", "foreman id", "foreman phone number", "foreman assigned orchard",
     "orchard name", "orchard crop", "orchard cultivar", "orchard irrigation type",
     "farm name", "farm company", "farm email", "farm phone number", "farm province",
-    "farm nearest town",
+    "farm nearest town", "worker", "orchard", "farm", "foreman"
   ].sort((a, b) => { return b.length - a.length; });
 }
 
@@ -32,7 +32,11 @@ function getRequestedPropertiesFromQuery(queryText) {
     for (const pidx in properties) {
       const prop = properties[pidx];
       if (stringContainsSubstring(passes[i], prop)) {
-        subResult.push(prop);
+        if (prop === "worker" || prop === "orchard" || prop === "farm" || prop === "foreman") {
+          subResult.push(prop + " name");
+        } else {
+          subResult.push(prop);
+        }
       }
     }
     result.push(subResult);
@@ -196,7 +200,7 @@ function unionOfObjects(objectA, objectB) {
         if (keyB === "Calculation") {
           result[keyA + "/" + keyB] = temp + "<br>" + objectB[keyB];
         } else {
-          result[keyA + "/" + keyB] = temp + "/" + objectB[keyB];
+          result[keyA + "/" + keyB] = temp + "<br>" + objectB[keyB];
         }
         delete result[keyA];
       } else {
@@ -206,7 +210,7 @@ function unionOfObjects(objectA, objectB) {
           if (arrayContainsString(objectA[keyA].split("/"), "Calculation") || keyB === "Calculation") {
             result[keyA] = objectA[keyA] + "<br>" + objectB[keyB];
           } else {
-            result[keyA] = objectA[keyA] + ", " + objectB[keyB];
+            result[keyA] = objectA[keyA] + "<br>" + objectB[keyB];
           }
         }
       }
@@ -290,7 +294,6 @@ function queryEntity(option, ekey, entity, farms, orchards, workers, queryText, 
           }
         }
         if (removeProp) {
-          console.log(key, requested[aQueryIdx]);
           delete subResult[key];
         }
       }

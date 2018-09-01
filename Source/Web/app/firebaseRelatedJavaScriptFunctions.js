@@ -403,18 +403,20 @@ function searchSession(session, searchText, farms, orchards, workers, period) {
   var orchardsForSession = [];
   for (const workerId in session.collections) {
     const worker = workers[workerId];
+    var points = session.collections[workerId];
+
     if (worker !== undefined) {
       const workerResults = searchWorker(worker, orchards, text, false);
       for (const wkey in workerResults) {
+        const collected = " (" + (points.length | 0) + ")";
         if (result["Worker " + wkey] !== undefined) {
-          result["Worker " + wkey] = result["Worker " + wkey] + ", " + workerResults[wkey];
+          result["Worker " + wkey] = result["Worker " + wkey] + ", " + workerResults[wkey] + collected;
         } else {
-          result["Worker " + wkey] = workerResults[wkey];
+          result["Worker " + wkey] = workerResults[wkey] + collected;
         }
       }
     }
 
-    var points = session.collections[workerId];
     for (const pidx in points) {
       const point = points[pidx];
       const o = orchardAtPoint(orchards, point.coord.lng, point.coord.lat);
@@ -425,6 +427,41 @@ function searchSession(session, searchText, farms, orchards, workers, period) {
           result["Orchard " + okey] = orchardResult[okey];
         }
       }
+    }
+  }
+
+  if (searchText === "sum" || searchText === "total") {
+    result["Calculation"] = "Total bags collected: " + sessionSum(session);
+  } else if (searchText === "avg" || searchText === "average") {
+    const avg = sessionAvg(session);
+    if (avg !== undefined && avg !== NaN) {
+      result["Calculation"] = "Average bags collected per worker: " + avg;
+    }
+  } else if (searchText === "countWorkers" || searchText === "count") {
+    result["Calculation"] = "Workers in Session: " + sessionCountWorkers(session);
+  } else if (searchText === "countOrchards") {
+    result["Calculation"] = "Orchards in Session: " + orchardsForSession.length | 0;
+  } else if (searchText === "max" || searchText === "best") {
+    const max = sessionMax(session, workers);
+    if (max !== undefined) {
+      result["Calculation"] = "Best Worker: " + max;
+    }
+  } else if (searchText === "min" || searchText === "worst") {
+    const min = sessionMin(session, workers);
+    if (min !== undefined) {
+      result["Calculation"] = "Worst Worker: " + min;
+    }
+  } else if (searchText === "duration" || searchText === "length") {
+    result["Calculation"] = "Duration: " + sessionDuration(session);
+  } else if (searchText === "mode" || searchText === "common") {
+    const mode = sessionMode(session);
+    if (mode !== undefined) {
+      result["Calculation"] = "Common Amount Collection: " + mode;
+    }
+  } else if (searchText === "stdev" || searchText === "stddev") {
+    const stdev = sessionSTDDEV(session);
+    if (stdev !== undefined) {
+      result["Calculation"] = "Standard Deviation: " + stdev;
     }
   }
 
@@ -443,7 +480,7 @@ function searchSession(session, searchText, farms, orchards, workers, period) {
     const em = period.end.get('month');
     const ey = period.end.get('year');
 
-    if (sy <= cy && cy <= ey && sm <= cm && cm <= em && sd <= cd && cd <= ed) {
+    if (period.start.toDate().getTime() <= date.toDate().getTime() && date.toDate().getTime() <= period.end.toDate().getTime()) {
       if (text === "") {
         result[date.format("dddd, DD MMMM YYYY")] = "";
       }
@@ -452,18 +489,6 @@ function searchSession(session, searchText, farms, orchards, workers, period) {
     }
   }
 
-  if (searchText === "sum") {
-    result["Calculation"] = "Total bags collected: " + sessionSum(session);
-  } else if (searchText === "avg" || searchText === "average") {
-    const avg = sessionAvg(session);
-    if (avg !== undefined && avg !== NaN) {
-      result["Calculation"] = "Average bags collected per worker: " + avg;
-    }
-  } else if (searchText === "countWorkers" || searchText === "count") {
-    result["Calculation"] = "Workers in Session: " + sessionCountWorkers(session);
-  } else if (searchText === "countOrchards") {
-    result["Calculation"] = "Orchards in Session: " + orchardsForSession.length | 0;
-  }
   return result;
 }
 
@@ -493,4 +518,87 @@ function sessionCountWorkers(session) {
     count++;
   }
   return count;
+}
+
+function sessionMax(session, workers) {
+  var max = 0;
+  var result = undefined;
+  for (const workerId in session.collections) {
+    var points = session.collections[workerId];
+    if (points.length > max) {
+      max = points.length;
+      result = workers[workerId].name + " " + workers[workerId].surname + " (" + max + ")";
+    }
+  }
+  return result;
+}
+
+function sessionMin(session, workers) {
+  var min = Infinity;
+  var result = undefined;
+  for (const workerId in session.collections) {
+    var points = session.collections[workerId];
+    if (points.length < min) {
+      min = points.length;
+      result = workers[workerId].name + " " + workers[workerId].surname + " (" + min + ")";
+    }
+  }
+  return result;
+}
+
+function sessionDuration(session) {
+  const start = moment(session.start_date, "d MMM yyyy HH:mm ZZ");
+  const end = moment(session.end_date, "d MMM yyyy HH:mm ZZ");
+  const hours = end.diff(start, 'hours');
+  const minutes = end.diff(start, 'minutes') - hours * 60;
+
+  const hplural = hours === 1 ? "" : "s";
+  const mplural = minutes === 1 ? "" : "s";
+
+  const hourMessage = hours !== 0 ? (hours + " hour") + hplural : "";
+  const minuteMessage = minutes !== 0 ? (minutes + " minute") + mplural : "";
+
+  const conj = hourMessage !== "" && minuteMessage !== "" ? " and " : "";
+
+  return hourMessage === "" && minuteMessage === "" ? "0 minutes" : hourMessage + conj + minuteMessage;
+}
+
+function sessionMode(session) {
+  var counts = {};
+  for (const workerId in session.collections) {
+    const points = session.collections[workerId];
+    const count = points.length;
+    if (counts[count] === undefined) {
+      counts[count] = 1;
+    } else {
+      counts[count] += 1;
+    }
+  }
+
+  var commonAmount = undefined;
+  var max = 0;
+  for (const id in counts) {
+    if (commonAmount === undefined) {
+      commonAmount = id;
+      max = counts[id];
+    } else if (counts[id] > max) {
+      commonAmount = id;
+      max = counts[id];
+    }
+  }
+
+  return commonAmount;
+}
+
+function sessionSTDDEV(session) {
+  var avg = sessionAvg(session);
+  var diff = 0.0;
+  for (const workerId in session.collections) {
+    diff += Math.pow((session.collections[workerId].length - avg), 2);
+  }
+  const count = sessionCountWorkers(session);
+  if (count === undefined) {
+    return undefined;
+  }
+  return Math.floor((Math.sqrt(diff / (count - 1)) * 10000)) / 10000.0;
 }
