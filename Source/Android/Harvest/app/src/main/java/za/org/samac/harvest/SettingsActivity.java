@@ -567,7 +567,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             findPreference(getString(R.string.pref_help_man_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/BinaryNinjaz/COS301-Capstone/raw/master/Documents/User%20Manual/HarvestUserManual.pdf"));
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://harvestapp.co.za/HarvestUserManual.pdf"));
                     startActivity(browserIntent);
                     return true;
                 }
