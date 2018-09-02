@@ -188,15 +188,10 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                     public void onComplete(@NonNull Task task) {
                         // Re-enable button
                         //findViewById(R.id.verify_email_button).setEnabled(true);
-                        System.out.println("task.isSuccessful() "+task.isSuccessful());
-                        System.out.println("user.isEmailVerified() 1 "+user.isEmailVerified());
                         if (task.isSuccessful()) {
                             Toast.makeText(SignIn_SignUp.this,
                                     "Verification email sent to " + user.getEmail(),
-                                    Toast.LENGTH_SHORT).show();
-                            System.out.println("user.isEmailVerified() 2 "+user.isEmailVerified());
-
-                            System.out.println("user.isEmailVerified() 3 "+user.isEmailVerified());
+                                    Toast.LENGTH_LONG).show();
                             signUp_progress.setVisibility(View.GONE);
                             //Add the name, surname, and organization to Firebase
                             final EditText fname, sname, org, email;
@@ -224,7 +219,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                             Log.e(TAG, "sendEmailVerification", task.getException());
                             Toast.makeText(SignIn_SignUp.this,
                                     "Failed to send verification email.",
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -250,7 +245,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                             final FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
 
-                            AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
+                            //AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
 
                             Snackbar.make(signUp_form, "Registration Successful", Snackbar.LENGTH_LONG).show();
                             emailCheck(user);
