@@ -349,6 +349,9 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                             mAuth.getCurrentUser().reload();
                             user = mAuth.getCurrentUser();
                             if(user.isEmailVerified() == false) {
+                                System.out.println("AppUtil.isUserSignedIn() ******** "+AppUtil.isUserSignedIn(getApplicationContext()));
+                                FirebaseAuth.getInstance().signOut();
+                                System.out.println("AppUtil.isUserSignedIn() ******** "+AppUtil.isUserSignedIn(getApplicationContext()));
                                 login_form.setVisibility(View.VISIBLE);
                                 login_progress.setVisibility(View.GONE);
                                 Snackbar.make(login_form, "Login unsuccessful. Have you confirmed your email?", Snackbar.LENGTH_LONG)

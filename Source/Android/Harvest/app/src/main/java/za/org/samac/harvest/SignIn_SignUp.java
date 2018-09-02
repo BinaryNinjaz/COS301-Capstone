@@ -206,6 +206,10 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                             userAdmin.child("surname").setValue(sname.getText().toString());
                             userAdmin.child("organization").setValue(org.getText().toString());
                             userAdmin.child("email").setValue(email.getText().toString());
+                            System.out.println("AppUtil.isUserSignedIn() ******** "+AppUtil.isUserSignedIn(getApplicationContext()));
+                            FirebaseAuth.getInstance().signOut();
+                            System.out.println("AppUtil.isUserSignedIn() ******** "+AppUtil.isUserSignedIn(getApplicationContext()));
+
                             signUp_progress.setVisibility(View.GONE);
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -245,7 +249,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                             final FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
 
-                            //AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
+                            AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
 
                             Snackbar.make(signUp_form, "Registration Successful", Snackbar.LENGTH_LONG).show();
                             emailCheck(user);
