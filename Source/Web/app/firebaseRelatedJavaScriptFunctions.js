@@ -50,17 +50,62 @@ function firebaseRegister(email, password) {
   firebase.auth()
     .createUserWithEmailAndPassword(email, password)
     .then(function (user) { // user details correct
-      document.location.href = "HomePage.html";
+        if(user && user.emailVerified === false){
+            user.sendEmailVerification().then(function(){
+              verifyEmail(user);
+            });
+        }
+        //document.location.href = "HomePage.html";
     }).catch(function (error) { // some error occured
-      const errorCode = error.code;
-      const errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
 
-      if (errorCode === 'auth/wrong-password') {
-        alert('Wrong password.');
-      } else {
-        alert(errorMessage);
-      }
+        if (errorCode === 'auth/wrong-password') {
+          alert('Wrong password.');
+        } else {
+          alert(errorMessage);
+        }
   });
+}
+
+function verifyEmail(user){
+    var mod = document.getElementById("ModalSpace");
+    mod.innerHTML = "" +
+        "" +
+        "<div id='resetModal' class='modal fade' role='dialog'>" +
+        "<div class='modal-dialog'>" +
+        "" +
+        "<div class='modal-content'>" +
+        "<div class='modal-header'>" +
+        "<h4 class='modal-title'>Email Verification</h4>" +
+        "</div>" +
+        "<div class='modal-body'>" +
+        "<label class='control-label'>An email has been sent, please verify before you progress.</label> " +
+        "</div>" +
+        "<div class='modal-footer'>" +
+        "<div class='col-sm-2 col-sm-offset-5' style='padding: 2px'><button type='button' class='btn btn-success' onclick='sendEmailVerification(user);'>Resend Email Verification</button</button></div>" +
+        "<div class='col-sm-5' style='padding: 2px'><button type='button' class='btn btn-success' data-dismiss='modal' onclick='checkVerification(user)'>Continue</button></div>" +
+        "</div>" +
+        "</div>" +
+        "" +
+        "</div>" +
+        "</div>"
+    ;
+
+    $('#resetModal  ').modal('show');
+}
+
+function sendEmailVerification(user){
+    user.sendEmailVerification();
+}
+
+function checkVerification(user){
+    if (user.emailVerified) {
+        document.location.href = "HomePage.html";
+    }
+    else {
+        alert('Email has not been verified');
+    } 
 }
 
 function firebaseLogin() {
