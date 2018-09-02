@@ -55,7 +55,7 @@ class SignUpViewController: UIViewController {
     return result
   }
   
-  // swiftlint:disable function_body_length
+  /// swiftlint:disable function_body_length
   @IBAction func signUpTouchUp(_ sender: UIButton) {
     guard let username = usernameTextField.text, username != "" else {
       SCLAlertView().showError(
@@ -115,16 +115,9 @@ class SignUpViewController: UIViewController {
       with: (username, password),
       name: (fname, lname),
       organisationName: orgName ?? username) { w in
+        self.isLoading = false
         if w {
-          HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
-            if w,
-              let vc = self.mainViewToPresent() {
-              self.present(vc, animated: true, completion: nil)
-            }
-            self.isLoading = false
-          }
-        } else {
-          self.isLoading = false
+          self.dismiss(animated: true, completion: nil)
         }
     }
     

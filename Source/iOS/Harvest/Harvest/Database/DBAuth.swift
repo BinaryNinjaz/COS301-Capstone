@@ -95,6 +95,26 @@ extension HarvestDB {
         return
       }
       
+      guard user.isEmailVerified else {
+        let alert = SCLAlertView(appearance: SCLAlertView.SCLAppearance.warningAppearance)
+        
+        alert.addButton("Resend Email") {
+          user.sendEmailVerification { (err) in
+            if let err = err {
+              SCLAlertView().showError("Verification Email Failed", subTitle: err.localizedDescription)
+            }
+          }
+        }
+        
+        alert.addButton("Okay") {}
+        
+        alert.showError(
+          "Sign In Failure",
+          subTitle: "Please verify your email address by clicking on the link in the verification email.")
+        completion(false)
+        return
+      }
+      
       HarvestUser.current.setUser(user, password, HarvestDB.requestWorkingFor(completion))
       
       if let oldSession = try? Disk
@@ -123,6 +143,26 @@ extension HarvestDB {
       
       guard let user = authResult?.user else {
         SCLAlertView().showError("Sign In Failure", subTitle: "An unknow error occured")
+        completion(false)
+        return
+      }
+      
+      guard user.isEmailVerified else {
+        let alert = SCLAlertView(appearance: SCLAlertView.SCLAppearance.warningAppearance)
+        
+        alert.addButton("Resend Email") {
+          user.sendEmailVerification { (err) in
+            if let err = err {
+              SCLAlertView().showError("Verification Email Failed", subTitle: err.localizedDescription)
+            }
+          }
+        }
+        
+        alert.addButton("Okay") {}
+        
+        alert.showError(
+          "Sign In Failure",
+          subTitle: "Please verify your email address by clicking on the link in the verification email.")
         completion(false)
         return
       }
@@ -158,20 +198,34 @@ extension HarvestDB {
         return
       }
       
-      UserDefaults.standard.set(password: details.password)
-      UserDefaults.standard.set(username: details.email)
+      user.sendEmailVerification { (err) in
+        if let err = err {
+          SCLAlertView().showError("Verification Email Failed", subTitle: err.localizedDescription)
+          completion(false)
+          return
+        } else {
+          SCLAlertView().showNotice(
+            "Verification Email Sent",
+            subTitle: "Please follow the instructions presented in the verification email we've sent to you.")
+        }
+        
+//        UserDefaults.standard.set(password: details.password)
+//        UserDefaults.standard.set(username: details.email)
+        
+        let changeRequest = user.createProfileChangeRequest()
+        changeRequest.displayName = name.first + " " + name.last
+        changeRequest.commitChanges(completion: nil)
+        
+        HarvestUser.current.firstname = name.first
+        HarvestUser.current.lastname = name.last
+        HarvestUser.current.organisationName = organisationName
+        HarvestUser.current.setUser(user, details.password, { _, _ in })
+        HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
+        
+        completion(true)
+      }
       
-      let changeRequest = user.createProfileChangeRequest()
-      changeRequest.displayName = name.first + " " + name.last
-      changeRequest.commitChanges(completion: nil)
-      
-      HarvestUser.current.firstname = name.first
-      HarvestUser.current.lastname = name.last
-      HarvestUser.current.organisationName = organisationName
-      HarvestUser.current.setUser(user, details.password, HarvestDB.requestWorkingFor(completion))
-      HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
-      
-      completion(true)
+//      completion(true)
     }
   }
   
@@ -302,7 +356,6 @@ func hashed(phoneNumber: String) -> String {
   let result = try? hasher.finish()
   
   let text = result?.hexEncodedString() ?? ""
-  print(text)
   return text
 }
 
