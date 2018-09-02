@@ -10,6 +10,7 @@ import UIKit
 import CoreLocation
 import SCLAlertView
 
+// swiftlint:disable type_body_length
 class TrackerViewController: UIViewController {
   static var tracker: Tracker?
   var tracker: Tracker? {
@@ -194,6 +195,7 @@ class TrackerViewController: UIViewController {
     return result
   }
   
+  // swiftlint:disable function_body_length
   func requestSelectedOrchard(_ completion: @escaping () -> Void) {
     let alert = UIAlertController(
       title: "Select An Orchard",

@@ -206,7 +206,9 @@ extension HarvestDB {
         } else {
           SCLAlertView().showNotice(
             "Verification Email Sent",
-            subTitle: "Please follow the instructions presented in the verification email we've sent to you.")
+            subTitle: """
+            To complete your registration please follow the instructions emailed to you.
+            """)
         }
         
 //        UserDefaults.standard.set(password: details.password)
