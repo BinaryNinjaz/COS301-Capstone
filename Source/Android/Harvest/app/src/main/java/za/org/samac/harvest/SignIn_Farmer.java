@@ -348,10 +348,15 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                             FirebaseUser user = mAuth.getCurrentUser();
                             mAuth.getCurrentUser().reload();
                             user = mAuth.getCurrentUser();
+                            updateUI(user);
+
+                            AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
+
                             if(user.isEmailVerified() == false) {
                                 System.out.println("AppUtil.isUserSignedIn() ******** "+AppUtil.isUserSignedIn(getApplicationContext()));
                                 FirebaseAuth.getInstance().signOut();
                                 System.out.println("AppUtil.isUserSignedIn() ******** "+AppUtil.isUserSignedIn(getApplicationContext()));
+
                                 login_form.setVisibility(View.VISIBLE);
                                 login_progress.setVisibility(View.GONE);
                                 Snackbar.make(login_form, "Login unsuccessful. Have you confirmed your email?", Snackbar.LENGTH_LONG)
@@ -364,10 +369,6 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                                         .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
                                         .show();
                             } else {
-                                updateUI(user);
-
-                                AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
-
                                 Snackbar.make(login_form, "Log In Successful", Snackbar.LENGTH_LONG).show();
 
                                 login_progress.setVisibility(View.GONE);

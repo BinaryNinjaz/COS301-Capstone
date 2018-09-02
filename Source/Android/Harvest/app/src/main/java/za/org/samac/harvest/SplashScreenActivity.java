@@ -128,7 +128,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putBoolean("firstTime", true);
                     editor.commit();
-                } else if(AppUtil.isUserSignedIn(getApplicationContext())) {
+                } else if(AppUtil.isUserSignedInAndValid(getApplicationContext())) {
                     Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
