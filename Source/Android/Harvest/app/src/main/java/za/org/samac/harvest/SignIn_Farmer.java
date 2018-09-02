@@ -312,9 +312,21 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
     }
 
     private void startMain(){
-        Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
-        startActivity(intent);
-        finish();//kill current Activity
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SignIn_Farmer.this);
+        if(!prefs.getBoolean("firstTimeInMain", false)) {
+            // run your one time code
+            Intent intent = new Intent(SignIn_Farmer.this, ViewFlipperActivity.class);
+            startActivity(intent);
+            finish();
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstTimeInMain", true);
+            editor.commit();
+        } else {
+            Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
+            startActivity(intent);
+            finish();//kill current Activity
+        }
+
         Data.forceNextPull();
     }
 
@@ -334,19 +346,35 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            mAuth.getCurrentUser().reload();
+                            user = mAuth.getCurrentUser();
+                            if(user.isEmailVerified() == false) {
+                                login_form.setVisibility(View.VISIBLE);
+                                login_progress.setVisibility(View.GONE);
+                                Snackbar.make(login_form, "Login unsuccessful. Have you confirmed your email?", Snackbar.LENGTH_LONG)
+                                        .setAction("OK", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
 
-                            AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
+                                            }
+                                        })
+                                        .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                                        .show();
+                            } else {
+                                updateUI(user);
 
-                            Snackbar.make(login_form, "Log In Successful", Snackbar.LENGTH_LONG).show();
+                                AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
 
-                            login_progress.setVisibility(View.GONE);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    startMain();
-                                }
-                            }, 1500);
+                                Snackbar.make(login_form, "Log In Successful", Snackbar.LENGTH_LONG).show();
+
+                                login_progress.setVisibility(View.GONE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        startMain();
+                                    }
+                                }, 1500);
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

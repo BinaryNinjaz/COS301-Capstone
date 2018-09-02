@@ -155,15 +155,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             init();
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        if(!prefs.getBoolean("firstTime", false)) {
-            Intent intent = new Intent(MainActivity.this, ViewFlipperActivity.class);//go to actual app
-            startActivity(intent);
-            finish();//kill current Activity
-        } else {
-
-        }
-
         data = new Data();
 
         if (ActivityCompat.checkSelfPermission(this,

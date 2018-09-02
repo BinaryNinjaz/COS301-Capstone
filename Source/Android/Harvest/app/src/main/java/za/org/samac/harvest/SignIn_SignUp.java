@@ -195,36 +195,31 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                                     "Verification email sent to " + user.getEmail(),
                                     Toast.LENGTH_SHORT).show();
                             System.out.println("user.isEmailVerified() 2 "+user.isEmailVerified());
-                            signUp_progress.setVisibility(View.VISIBLE);
-                            while(user.isEmailVerified() == false) {
-                                mAuth.getCurrentUser().reload();
-                            }
-                            System.out.println("user.isEmailVerified() 3 "+user.isEmailVerified());
-                            if (user.isEmailVerified()) {
-                                signUp_progress.setVisibility(View.GONE);
-                                //Add the name, surname, and organization to Firebase
-                                final EditText fname, sname, org, email;
-                                fname = findViewById(R.id.edtFirstName);
-                                sname = findViewById(R.id.edtSurname);
-                                org = findViewById(R.id.edtOrganization);
-                                email = findViewById(R.id.edtEmail);
 
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference userAdmin = database.getReference(user.getUid() + "/admin/");
-                                userAdmin.child("firstname").setValue(fname.getText().toString());
-                                userAdmin.child("surname").setValue(sname.getText().toString());
-                                userAdmin.child("organization").setValue(org.getText().toString());
-                                userAdmin.child("email").setValue(email.getText().toString());
-                                signUp_progress.setVisibility(View.GONE);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Intent intent = new Intent(SignIn_SignUp.this, SignIn_Farmer.class);
-                                        startActivity(intent);
-                                        finish();//kill current Activity
-                                    }
-                                }, 1500);
-                            }
+                            System.out.println("user.isEmailVerified() 3 "+user.isEmailVerified());
+                            signUp_progress.setVisibility(View.GONE);
+                            //Add the name, surname, and organization to Firebase
+                            final EditText fname, sname, org, email;
+                            fname = findViewById(R.id.edtFirstName);
+                            sname = findViewById(R.id.edtSurname);
+                            org = findViewById(R.id.edtOrganization);
+                            email = findViewById(R.id.edtEmail);
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference userAdmin = database.getReference(user.getUid() + "/admin/");
+                            userAdmin.child("firstname").setValue(fname.getText().toString());
+                            userAdmin.child("surname").setValue(sname.getText().toString());
+                            userAdmin.child("organization").setValue(org.getText().toString());
+                            userAdmin.child("email").setValue(email.getText().toString());
+                            signUp_progress.setVisibility(View.GONE);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(SignIn_SignUp.this, SignIn_Farmer.class);
+                                    startActivity(intent);
+                                    finish();//kill current Activity
+                                }
+                            }, 1500);
                         } else {
                             Log.e(TAG, "sendEmailVerification", task.getException());
                             Toast.makeText(SignIn_SignUp.this,
