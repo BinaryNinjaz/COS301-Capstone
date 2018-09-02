@@ -219,7 +219,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Intent intent = new Intent(SignIn_SignUp.this, ViewFlipperActivity.class);
+                                        Intent intent = new Intent(SignIn_SignUp.this, SignIn_Farmer.class);
                                         startActivity(intent);
                                         finish();//kill current Activity
                                     }

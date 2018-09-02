@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -19,6 +20,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
@@ -151,6 +153,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         if(savedInstanceState == null) {
             init();
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        if(!prefs.getBoolean("firstTime", false)) {
+            Intent intent = new Intent(MainActivity.this, ViewFlipperActivity.class);//go to actual app
+            startActivity(intent);
+            finish();//kill current Activity
+        } else {
+
         }
 
         data = new Data();
