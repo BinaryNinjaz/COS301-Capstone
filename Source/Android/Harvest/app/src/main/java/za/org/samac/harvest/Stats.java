@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -685,8 +686,11 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
 
         period = period.toLowerCase();
 
-        Calendar startCal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
+        Calendar startCal = Calendar.getInstance(Locale.getDefault());
+        Calendar endCal = Calendar.getInstance(Locale.getDefault());
+
+        startCal.setFirstDayOfWeek(Calendar.SUNDAY);
+        endCal.setFirstDayOfWeek(Calendar.SUNDAY);
 
         switch (period){
             case Stats.TODAY:
@@ -698,7 +702,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
                 endCal.set(Calendar.HOUR_OF_DAY, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
-                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.MINUTE));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
@@ -715,7 +719,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
 
                 endCal.add(Calendar.DATE, -1);
                 endCal.set(Calendar.HOUR_OF_DAY, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
-                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.MINUTE));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
@@ -724,16 +728,15 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             case Stats.THIS_WEEK:
                 Log.i(TAG, "Period is this week");
 
-                startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                startCal.add(Calendar.WEEK_OF_YEAR, -1);
+                startCal.set(Calendar.DAY_OF_WEEK, startCal.getActualMinimum(Calendar.DAY_OF_WEEK));
                 startCal.set(Calendar.HOUR_OF_DAY, startCal.getActualMinimum(Calendar.HOUR_OF_DAY));
                 startCal.set(Calendar.MINUTE, startCal.getActualMinimum(Calendar.MINUTE));
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
-                endCal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+                endCal.set(Calendar.DAY_OF_WEEK, endCal.getActualMaximum(Calendar.DAY_OF_WEEK));
                 endCal.set(Calendar.HOUR_OF_DAY, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
-                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.MINUTE));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
@@ -742,17 +745,17 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             case Stats.LAST_WEEK:
                 Log.i(TAG, "Period is last week");
 
-                startCal.add(Calendar.WEEK_OF_YEAR, -2);
-                startCal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                startCal.add(Calendar.WEEK_OF_YEAR, -1);
+                startCal.set(Calendar.DAY_OF_WEEK, startCal.getActualMinimum(Calendar.DAY_OF_WEEK));
                 startCal.set(Calendar.HOUR_OF_DAY, startCal.getActualMinimum(Calendar.HOUR_OF_DAY));
                 startCal.set(Calendar.MINUTE, startCal.getActualMinimum(Calendar.MINUTE));
                 startCal.set(Calendar.SECOND, startCal.getActualMinimum(Calendar.SECOND));
                 startCal.set(Calendar.MILLISECOND, startCal.getActualMinimum(Calendar.MILLISECOND));
 
                 endCal.add(Calendar.WEEK_OF_YEAR, -1);
-                endCal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+                endCal.set(Calendar.DAY_OF_WEEK, endCal.getActualMaximum(Calendar.DAY_OF_WEEK));
                 endCal.set(Calendar.HOUR_OF_DAY, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
-                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.MINUTE));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
@@ -788,7 +791,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 endCal.add(Calendar.MONTH, -1);
                 endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 endCal.set(Calendar.HOUR_OF_DAY, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
-                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.MINUTE));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
@@ -807,7 +810,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 endCal.set(Calendar.MONTH, endCal.getActualMaximum(Calendar.MONTH));
                 endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 endCal.set(Calendar.HOUR_OF_DAY, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
-                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.MINUTE));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 
@@ -828,7 +831,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 endCal.set(Calendar.MONTH, endCal.getActualMaximum(Calendar.MONTH));
                 endCal.set(Calendar.DAY_OF_MONTH, endCal.getActualMaximum(Calendar.DAY_OF_MONTH));
                 endCal.set(Calendar.HOUR_OF_DAY, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
-                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+                endCal.set(Calendar.MINUTE, endCal.getActualMaximum(Calendar.MINUTE));
                 endCal.set(Calendar.SECOND, endCal.getActualMaximum(Calendar.SECOND));
                 endCal.set(Calendar.MILLISECOND, endCal.getActualMaximum(Calendar.MILLISECOND));
 

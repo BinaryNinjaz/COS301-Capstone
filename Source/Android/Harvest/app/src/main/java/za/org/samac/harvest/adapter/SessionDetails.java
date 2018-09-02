@@ -40,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +59,7 @@ import za.org.samac.harvest.SignIn_SignUp;
 import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
+import za.org.samac.harvest.util.ColorScheme;
 import za.org.samac.harvest.util.SearchedItem;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
@@ -219,10 +221,33 @@ public class SessionDetails extends AppCompatActivity {
 
     public void displayGraph() {
         pieChart = (com.github.mikephil.charting.charts.PieChart)findViewById(R.id.pieChart);
+        ArrayList<Integer> colorSet = new ArrayList<>();
+        ArrayList<String> keys = new ArrayList<>();
         for(String key : Sessions.selectedItem.collectionPoints.keySet()) {
+            if (keys.isEmpty()) {
+                keys.add(key);
+            } else {
+                int a = ColorScheme.huePrecedence(key);
+                Boolean ins = false;
+                for (int j = 0; j < keys.size(); j++) {
+                    int b = ColorScheme.huePrecedence(keys.get(j).toString());
+                    if (a < b) {
+                        keys.add(j, key);
+                        ins = true;
+                        break;
+                    }
+                }
+                if (!ins) {
+                    keys.add(key);
+                }
+            }
+        }
+
+        for(String key : keys) {
             String workerName = Sessions.selectedItem.collectionPoints.get(key).get(0).workerName;
             Float yield = (float)Sessions.selectedItem.collectionPoints.get(key).size();
             entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
+            colorSet.add(ColorScheme.hashColorOnce(key));
         }
 
         progressBar.setVisibility(View.GONE);
@@ -233,7 +258,7 @@ public class SessionDetails extends AppCompatActivity {
         pieChart.getLegend().setEnabled(false);
 
         PieDataSet dataset = new PieDataSet(entries, "Dataset");
-        dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+        dataset.setColors(colorSet);
         dataset.setValueTextColor(Color.BLACK);
 
         PieData data = new PieData(dataset);//labels was one of the parameters
