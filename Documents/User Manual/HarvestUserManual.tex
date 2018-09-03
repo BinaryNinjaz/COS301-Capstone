@@ -10,6 +10,8 @@
 \usepackage{hyperref}
 \usepackage{float}
 \usepackage{cite}
+\usepackage{subfig}
+\usepackage{todonotes}
 
 \hypersetup{
 	colorlinks=true,
@@ -98,7 +100,7 @@
 				15008739
 			\end{flushright}
 		\end{minipage}
-        
+
         \begin{minipage}{0.4\textwidth}
 			\begin{flushleft} \large
 				\emph{} \\
@@ -144,30 +146,30 @@
 
 \section{General Information}
 \subsection{System Overview}
-Harvest, is an application to assist growers with yield data and optimise worker performance. In other words, it is a system that can efficiently measure the amount of work done by a worker, track the foremen on a farm, record information and data, and display the necessary information. This system is aimed at farming communities to help then record data and get work done more efficiently.
+Harvest, is an application to assist growers with yield data and optimise worker, orchard, farm and foreman performance. In other words, it is a system that can efficiently measure the amount of work done by a worker, track the foremen on a farm, record information and data, and display the necessary information. This system is aimed at farming communities to help them record data and get work done more efficiently.
 
 \subsection{System Requirements}
 \subsubsection{Android}
-The Android application currently requires:
+The Android application requires:
 \begin{itemize}
-	\item Either Android 4.0 OS or above
+ \item Either Android 4.0 OS or above
 \item 200 MB RAM
-\item 6,1 MB Disk Space	
+\item 6,1 MB Disk Space
 	\item Location Services
 \end{itemize}
 \subsubsection{iOS}
-The iOS application currently requires:
+The iOS application requires:
 \begin{itemize}
-	\item iOS 10.0 or above
-\item 200 MB RAM
-\item 50 MB Disk Space	
-	\item Location Services
+ \item iOS 9.0 or above
+ \item 300 MB RAM
+ \item 50 MB Disk Space
+ \item Location Services
 \end{itemize}
 \subsubsection{Website}
 The website requires any modern up-to-date web browser such as Firefox, Opera, Chrome, Safari, Vivaldi, Edge, or any other.
 
 \subsection{Communications}
-All of the subsystems---Android, iOS, and website---run independently, but use Firebase\footnote{\url{https://firebase.google.com}} to store and retrieve data from a common source. This can be seen in \ref{Communications}
+All of the subsystems---Android, iOS, and website---run independently, but use a central database\footnote{\url{https://firebase.google.com}} to store and retrieve data from a common source. This can be seen in \ref{Communications}
 
 \begin{figure}
  \centering
@@ -182,9 +184,20 @@ The application will be available for download on the Google Play Store.
 \subsubsection{iOS}
 The application will be available for download on the Apple App Store.
 \subsubsection{Website}
-No Installation is required to use the website, however it can be accessed at <Web Link>.
+No Installation is required to use the website, however it can be accessed at \href{https://harvestapp.co.za}{Harvest App}.
 \subsubsection{Location Services}
-With regards to configuring the iOS and Android applications: location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application. Profile setting can be configured via selecting the user's username.
+With regards to configuring the iOS and Android applications: location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application.\\
+Android:
+\begin{enumerate}
+ \item \todo{ask someone that has an Android device.}
+\end{enumerate}
+iOS\footnote{instructions pertain to iOS 11.4}:
+\begin{enumerate}
+ \item Go to Settings $\rangle$ Privacy $\rangle$ Location Services
+ \item Ensure that "Location Services" are turned on.
+ \item Find and tap on "Harvest" from the list of Applications.
+ \item Choose either "While Using the App" or "Always".
+\end{enumerate}
 
 \newpage
 \section{Getting Started}
@@ -193,54 +206,63 @@ With regards to configuring the iOS and Android applications: location services 
 \subsection{Mobile}
 
 \subsubsection{Creating an Account}
-The application will open by default on the log in screen. From here the user can choose to sign in as a farmer or as a foreman, or to create a new farmer account. A foreman does not need to create an account, they simply sign in with their phone number, however the farmer must ensure that the foreman appears on their system and that the foreman's number is correct.\\
+The application will open by default on the \textit{Choose} screen. From here the user can choose to sign in as a farmer or as a foreman, or to create a new farmer account\footnote{Note that an email verification will be sent to the user to confirm they've entered the correct address.}. A foreman does not need to create an account, they simply sign in with their phone number, however the farmer must ensure that the foreman appears on their system and that the foreman's number is correct.\\
 To create a farmer account the following information is required:
 \begin{itemize}
-\item Email
-\item Password
+ \item Email
+ \item Password
 \end{itemize}
 Additionally the following information can be optionally provided:
 \begin{itemize}
-\item First name
-\item Surname
-\item Organization
+ \item First name
+ \item Surname
+ \item Organization
 \end{itemize}
 Organization is most important since it will be used by foremen to identify your organization when they log in. \textbf{If it is not provided, you will be identified by your email, which will then be visible to your foremen.}
 
-\begin{figure}[h]
+\begin{figure}%
  \centering
- \includegraphics[width=6cm, keepaspectratio]{Images/mobileLoginChoose.png}
- \caption{Sign In/Up Method Choose}
- \label{SignUpMobile}
+ \subfloat[Android]{{\includegraphics[width=5cm]{Images/GettingStarted/AndroidChoose.png} }}%
+ \qquad
+ \subfloat[iOS]{{\includegraphics[width=5cm]{Images/GettingStarted/iOSChoose.jpeg} }}%
+ \caption{Sign In/Up Method Choose}%
+ \label{fig:example}%
 \end{figure}
 
 \subsubsection{Logging In as a Farmer}
-When on the log in screen enter your email and its password you used to create the account, alternatively click log in with Google to use Google credentials, which will be linked to Harvest if they have not already. If you have already logged in the app will keep you logged in until you log out.
-\begin{figure}[h]
+When on the log in screen enter your email and its password you used to create the account, alternatively click log in with Google to use Google credentials, which will be linked to Harvest if they have not already. Note that the user will not be logged out automatically. Instead the user must manually log out from within the applications settings.
+\begin{figure}%
  \centering
- \includegraphics[width=6cm, keepaspectratio]{Images/mobileLoginFarmer.png}
- \caption{Log In Form for Farmer}
- \label{LogInMobile}
+ \subfloat[Android Farmer Sign In]{{\includegraphics[width=2.5cm]{Images/GettingStarted/AndroidFarmSign.png} }}%
+ \qquad
+ \subfloat[iOS Farmer Sign]{{\includegraphics[width=2.5cm]{Images/GettingStarted/iOSFarmSign.jpeg} }}%
+ \qquad
+ \subfloat[Android Foreman Sign In]{{\includegraphics[width=2.5cm]{Images/GettingStarted/AndroidForemanSign.png} }}%
+ \qquad
+ \subfloat[iOS Foreman Sign]{{\includegraphics[width=2.5cm]{Images/GettingStarted/iOSForemanSign.jpeg} }}%
+ \caption{Sign In/Up Methods}%
+ \label{fig:example}%
 \end{figure}
 
 \subsubsection{Logging In as a Foreman}
 
-Simply enter your mobile phone number and press the button. A verification code may be sent to you via SMS, which will then need to be entered. Once that is done a confirmation screen will be displayed, it will show the phone number saved in the system so that the farmer can confirm that it is saved correctly. Then, depending on the situation, the following will be displayed:
+Simply enter your mobile phone number and press the button. A verification code may be sent to you via SMS, which will then need to be entered. \todo{What number is being displayed from the system? How does it figure out which one corresponds to which?}Once that is done a confirmation screen will be displayed, it will show the phone number saved in the system so that the farmer can confirm that it is saved correctly. Then, depending on the situation, the following will be displayed:
 \begin{itemize}
  \item If the foreman is not assigned to any organization, then they will be prompted to go back and will not be able to continue.
- \item If the foreman is assigned to a single organization, the name will be displayed, and they will then be able to continue to the clicker as seen in \ref{Clicker}.
+ \todo{Is this necessary to do?}
+ \item If the foreman is assigned to a single organization, the name will be displayed\footnote{On iOS the foreman will simply be transferred to their assigned organization}, and they will then be able to continue to the clicker as seen in \ref{Clicker}.
  \item On the off chance that the foreman is assigned to multiple organizations, they will be able to select which organization they wish to work for for the session. In order to change this, they must log out and in again.
 \end{itemize}
 
 \subsubsection{Logging Out}
-The Log out button can be found at the bottom of the Harvest "Settings" Tab.
+The Log out button can be found at the bottom of the Harvest "Settings" Tab on Android. On iOS the log out appears under the "User Account" section in the "Settings" Tab.
 
 \subsection{Website}
 
 
-
 \textit{For ease of visualization, a diagram representing a map of the website is given in \ref{WebsiteMap}: each web page is given, indicating to where, and how a traversal is possible from that page.}
 
+\todo{Update Diagram}
 \begin{figure}[h]
  \centering
  \includegraphics[width=12cm, keepaspectratio]{Images/webDiagramMap.png}
@@ -249,8 +271,9 @@ The Log out button can be found at the bottom of the Harvest "Settings" Tab.
 \end{figure}
 
 \subsubsection{Registering}
-\paragraph{Finding the Register Page}The login and registration page can be found at <Web Link>, and once there the user will be presented with the page as seen in \ref{LoginPage}. To now create an account the user must click on the blue \texttt{Don't have an account? Sign Up} button. They will now be presented with the above page.
+\paragraph{Finding the Register Page}The login and registration page can be found at \href{https://harvestapp.co.za}{Harvest}, and once there the user will be presented with the page as seen in \ref{LoginPage}. To now create an account the user must click on the blue \texttt{Don't have an account? Sign Up} button. They will now be presented with \ref{RegisterPage}.
 
+\todo{update image}
 \begin{figure}
  \centering
  \includegraphics[width=12cm, keepaspectratio]{Images/webRegister-Page.png}
@@ -258,10 +281,10 @@ The Log out button can be found at the bottom of the Harvest "Settings" Tab.
  \label{RegisterPage}
 \end{figure}
 
-\paragraph{Creating an Account}Once at the register page the new user must enter their first name, surname, email address, desired password, and confirm the desired password by entering it again. When all of the information has been entered, and the user is content that the information is correct, they shall click on the green \texttt{Create Account} button. They will now be taken to the login page as seen in \ref{LoginPage}. The user shall receive an email as seen in \ref{AccountCreationConfirmationEmail} at the specified address, asking to confirm their account. The user simply needs to click on the \texttt{Confirm Account} button in order to complete the account creation.
+\paragraph{Creating an Account}Once at the register page the new user must enter their first name, surname, email address, desired password, and confirm the desired password by entering it again. When all of the information has been entered, and the user is content that the information is correct, they shall click on the green \texttt{Create Account} button. They will now be taken to the login page as seen in \ref{LoginPage}. The user shall receive an email at the specified address, asking to confirm their account. The user simply needs to click on the link within the email in order to complete the account creation.
 
 \subsubsection{Logging In}
-\paragraph{Finding the Login Page}The login and register page can be found at <Web Link>.
+\paragraph{Finding the Login Page}The login and register page can be found at \href{https://harvestapp.co.za}{Harvest}.
 
 \begin{figure}
  \centering
@@ -286,11 +309,11 @@ A farmer will have a navigation bar displayed at the bottom that they can use to
 \\
 \textit{A discrepancy between iOS and Android exists in the form of settings. To access the settings in Android, the three dots must be pressed on, in the top right, and settings chosen.}\\
 \\
-The following is accessable through the navigation bar:
+The following is accessible through the navigation bar:
 \begin{itemize}
 \item \ref{Mobile Yield Tracker}: Yield Tracker
 \item \ref{Mobile Information}: Information
-\item \ref{Mobile Sessions}: Sessions 
+\item \ref{Mobile Sessions}: Sessions
 \item \ref{Mobile Statistics}: Statistics
 \item \ref{Mobile Settings}: Settings (OS dependent)
 \end{itemize}
@@ -546,7 +569,7 @@ The Settings allows users to edit their pesonal information.
 \subsubsection{Location Services}
 \begin{enumerate}
 \item Check that your phone supports location services
-\item In the "Settings" application make sure that the Harvest app is allowed location services 
+\item In the "Settings" application make sure that the Harvest app is allowed location services
 \end{enumerate}
 
 \subsection{Website Only}
