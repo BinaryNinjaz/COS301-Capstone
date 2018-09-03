@@ -204,30 +204,29 @@ extension HarvestDB {
           completion(false)
           return
         } else {
-          SCLAlertView().showNotice(
+          let alert = SCLAlertView(appearance: .warningAppearance)
+          
+          alert.addButton("Okay") {
+            let changeRequest = user.createProfileChangeRequest()
+            changeRequest.displayName = name.first + " " + name.last
+            changeRequest.commitChanges(completion: nil)
+            
+            HarvestUser.current.firstname = name.first
+            HarvestUser.current.lastname = name.last
+            HarvestUser.current.organisationName = organisationName
+            HarvestUser.current.setUser(user, details.password, { _, _ in })
+            HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
+            
+            completion(true)
+          }
+          
+          alert.showNotice(
             "Verification Email Sent",
             subTitle: """
             To complete your registration please follow the instructions emailed to you.
             """)
         }
-        
-//        UserDefaults.standard.set(password: details.password)
-//        UserDefaults.standard.set(username: details.email)
-        
-        let changeRequest = user.createProfileChangeRequest()
-        changeRequest.displayName = name.first + " " + name.last
-        changeRequest.commitChanges(completion: nil)
-        
-        HarvestUser.current.firstname = name.first
-        HarvestUser.current.lastname = name.last
-        HarvestUser.current.organisationName = organisationName
-        HarvestUser.current.setUser(user, details.password, { _, _ in })
-        HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
-        
-        completion(true)
       }
-      
-//      completion(true)
     }
   }
   
