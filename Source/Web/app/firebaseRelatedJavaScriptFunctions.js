@@ -118,7 +118,11 @@ function firebaseLogin() {
 
   firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
     // user logged in
-    document.location.href = "HomePage.html";
+    if(user.emailVerified){
+       document.location.href = "HomePage.html";
+    }else{
+       verifyEmail(); 
+    }
   }).catch(function (error) {
     // log in failed
     const errorCode = error.code;
