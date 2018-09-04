@@ -55,7 +55,7 @@ function retryUntilTimeout(succ, fail, timeout) {
   }
 }
 
-function firebaseRegister(email, password) {
+function firebaseRegister(email, password, info) {
   firebase.auth()
     .createUserWithEmailAndPassword(email, password)
     .then(function (user) { // user details correct
@@ -63,6 +63,7 @@ function firebaseRegister(email, password) {
             user.sendEmailVerification().then(function(){
               verifyEmail(user);
             });
+            createAdmin(user, info);
         }
         //document.location.href = "HomePage.html";
     }).catch(function (error) { // some error occured
@@ -74,6 +75,16 @@ function firebaseRegister(email, password) {
         } else {
           alert(errorMessage);
         }
+  });
+}
+
+function createAdmin(user, info) {
+  firebase.database().ref('/' + user.uid + '/admin').update({
+    firstname: info.firstname,
+    lastname: info.lastname,
+    organization: info.organization,
+    email: user.email,
+    uid: user.uid
   });
 }
 
@@ -121,7 +132,7 @@ function firebaseLogin() {
     if(user.emailVerified){
        document.location.href = "HomePage.html";
     }else{
-       verifyEmail(); 
+       verifyEmail();
     }
   }).catch(function (error) {
     // log in failed

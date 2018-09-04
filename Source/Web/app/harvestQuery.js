@@ -204,10 +204,10 @@ function unionOfObjects(objectA, objectB) {
         }
         delete result[keyA];
       } else {
-        if (arrayContainsString(objectA[keyA].split("/"), objectB[keyB]) || arrayContainsString(objectA[keyA].split(", "), objectB[keyB])) {
+        if (arrayContainsString(objectA[keyA].split("<br>"), objectB[keyB]) || arrayContainsString(objectA[keyA].split("<br>"), objectB[keyB])) {
           result[keyA] = objectA[keyA];
         } else if (result[keyA] === undefined) {
-          if (arrayContainsString(objectA[keyA].split("/"), "Calculation") || keyB === "Calculation") {
+          if (arrayContainsString(objectA[keyA].split("<br>"), "Calculation") || keyB === "Calculation") {
             result[keyA] = objectA[keyA] + "<br>" + objectB[keyB];
           } else {
             result[keyA] = objectA[keyA] + "<br>" + objectB[keyB];
