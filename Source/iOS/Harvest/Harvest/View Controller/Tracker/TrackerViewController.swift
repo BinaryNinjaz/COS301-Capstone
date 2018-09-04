@@ -345,6 +345,8 @@ class TrackerViewController: UIViewController {
       right: 0)
     
     yieldLabel?.attributedText = attributedStringForYieldCollection(0)
+    
+    _ = ImageLabeler()
   }
   
   @objc func tapInfo(_ recognizer: UIGestureRecognizer) {

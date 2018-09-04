@@ -167,6 +167,10 @@ extension HarvestDB {
         return
       }
       
+      HarvestUser.current.uid = user.uid
+      HarvestUser.current.accountIdentifier = user.email ?? ""
+      HarvestUser.current.organisationName = user.email ?? ""
+      
       HarvestDB.save(harvestUser: HarvestUser.current, oldEmail: "")
       HarvestUser.current.setUser(user, nil, requestWorkingFor(completion))
       
