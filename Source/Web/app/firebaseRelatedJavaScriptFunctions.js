@@ -1,5 +1,14 @@
 "use strict";
 
+const user = function() { return firebase.auth().currentUser; };
+const userID = function() {
+  if (user() !== null) {
+    return user().uid;
+  } else {
+    return "";
+  }
+};
+
 function initializeFirebase() {
   const config = {
     apiKey: "AIzaSyBTTgAtocwDfror-XZLi4R5rUEphTUK4PU",
@@ -50,17 +59,57 @@ function firebaseRegister(email, password) {
   firebase.auth()
     .createUserWithEmailAndPassword(email, password)
     .then(function (user) { // user details correct
-      document.location.href = "HomePage.html";
+        if(user && user.emailVerified === false){
+            user.sendEmailVerification().then(function(){
+              verifyEmail(user);
+            });
+        }
+        //document.location.href = "HomePage.html";
     }).catch(function (error) { // some error occured
-      const errorCode = error.code;
-      const errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
 
-      if (errorCode === 'auth/wrong-password') {
-        alert('Wrong password.');
-      } else {
-        alert(errorMessage);
-      }
+        if (errorCode === 'auth/wrong-password') {
+          alert('Wrong password.');
+        } else {
+          alert(errorMessage);
+        }
   });
+}
+
+function verifyEmail(){
+    var mod = document.getElementById("ModalSpace");
+    mod.innerHTML = "" +
+        "" +
+        "<div id='resetModal' class='modal fade' role='dialog'>" +
+        "<div class='modal-dialog'>" +
+        "" +
+        "<div class='modal-content'>" +
+        "<div class='modal-header'>" +
+        "<h4 class='modal-title'>Email Verification</h4>" +
+        "</div>" +
+        "<div class='modal-body'>" +
+        "<label class='control-label'>This email needs to be verified. Please verify the email in order to log in.</label> " +
+        "</div>" +
+        "<div class='modal-footer'>" +
+        "<div class='col-sm-2 col-sm-offset-5' style='padding: 2px'><button type='button' class='btn btn-success' onclick='sendEmailVerification()'>Resend Email Verification</button</button></div>" +
+        "<div class='col-sm-5' style='padding: 2px'><button type='button' class='btn btn-success' data-dismiss='modal' onclick='goToLogin()'>Continue</button></div>" +
+        "</div>" +
+        "</div>" +
+        "" +
+        "</div>" +
+        "</div>"
+    ;
+
+    $('#resetModal  ').modal('show');
+}
+
+function sendEmailVerification(){
+    firebase.auth().currentUser.sendEmailVerification();
+}
+
+function goToLogin(){
+    window.location.href = "index.html";
 }
 
 function firebaseLogin() {
@@ -69,7 +118,11 @@ function firebaseLogin() {
 
   firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
     // user logged in
-    document.location.href = "HomePage.html";
+    if(user.emailVerified){
+       document.location.href = "HomePage.html";
+    }else{
+       verifyEmail(); 
+    }
   }).catch(function (error) {
     // log in failed
     const errorCode = error.code;
@@ -97,15 +150,6 @@ function locationLookup(callback) {
   $.get('http://ip-api.com/json', (data, response) => {
     callback(data, response);
   });
-}
-
-const user = function() { return firebase.auth().currentUser };
-const userID = function() {
-  if (user() !== null) {
-    return user().uid
-  } else {
-    return ""
-  }
 }
 
 function getAdmin(callback) {
