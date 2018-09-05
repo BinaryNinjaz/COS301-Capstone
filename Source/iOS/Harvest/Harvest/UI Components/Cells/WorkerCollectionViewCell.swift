@@ -14,9 +14,24 @@ class WorkerCollectionViewCell: UICollectionViewCell {
   @IBOutlet weak var myBackgroundView: UIView!
   @IBOutlet weak var incButton: UIButton!
   @IBOutlet weak var decButton: UIButton!
+  var countLabelHoldGestureRecognizer: UILongPressGestureRecognizer?
   
   var inc: ((WorkerCollectionViewCell, Int) -> Void)?
   var dec: ((WorkerCollectionViewCell) -> Void)?
+  var rec: ((Int) -> Void)?
+  
+  func initGesturesIfNeeded() {
+    guard countLabelHoldGestureRecognizer == nil else {
+      return
+    }
+    
+    countLabelHoldGestureRecognizer = .init(target: self, action: #selector(holdCountLabel(recognizer:)))
+    yieldLabel.addGestureRecognizer(countLabelHoldGestureRecognizer!)
+  }
+  
+  @objc func holdCountLabel(recognizer: UIGestureRecognizer) {
+    rec?(0)
+  }
   
   @IBAction func incrementTouchUp(_ sender: Any) {
     inc?(self, 0)

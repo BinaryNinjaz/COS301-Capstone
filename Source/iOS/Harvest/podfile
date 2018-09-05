@@ -9,6 +9,7 @@ target 'Harvest' do
   pod 'Firebase/Functions'
   pod 'Firebase/MLVision'
   pod 'Firebase/MLVisionLabelModel'
+  pod 'Firebase/MLModelInterpreter'
   pod 'GoogleSignIn', '4.1.2'
   pod 'Eureka'
   pod 'Disk'

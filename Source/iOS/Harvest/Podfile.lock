@@ -21,6 +21,9 @@ PODS:
   - Firebase/Functions (5.7.0):
     - Firebase/CoreOnly
     - FirebaseFunctions (= 2.1.0)
+  - Firebase/MLModelInterpreter (5.7.0):
+    - Firebase/CoreOnly
+    - FirebaseMLModelInterpreter (= 0.11.0)
   - Firebase/MLVision (5.7.0):
     - Firebase/CoreOnly
     - FirebaseMLVision (= 0.11.0)
@@ -55,6 +58,12 @@ PODS:
     - GoogleUtilities/Environment (~> 5.2)
   - FirebaseMLCommon (0.11.0):
     - FirebaseCore (~> 5.1)
+  - FirebaseMLModelInterpreter (0.11.0):
+    - FirebaseCore (~> 5.1)
+    - FirebaseInstanceID (~> 3.2)
+    - FirebaseMLCommon (~> 0.11)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - TensorFlowLite (= 0.1.7)
   - FirebaseMLVision (0.11.0):
     - FirebaseCore (~> 5.1)
     - FirebaseMLCommon (~> 0.11)
@@ -142,6 +151,7 @@ PODS:
   - Protobuf (3.6.1)
   - SCLAlertView (0.8)
   - SnapKit (4.0.0)
+  - TensorFlowLite (0.1.7)
 
 DEPENDENCIES:
   - Charts
@@ -153,6 +163,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Database
   - Firebase/Functions
+  - Firebase/MLModelInterpreter
   - Firebase/MLVision
   - Firebase/MLVisionLabelModel
   - FSPagerView
@@ -176,6 +187,7 @@ SPEC CHECKSUMS:
   FirebaseFunctions: 0cb3bc0bbeac1daf6fea378a1064ff7f484e4c4e
   FirebaseInstanceID: ea5af6920d0a4a29b40459d055bebe4a6c1333c4
   FirebaseMLCommon: 285b93416df5f37164ad08795cb799f253fda549
+  FirebaseMLModelInterpreter: 8754f25ee75034dc13010397d35113ca5c1a021c
   FirebaseMLVision: b2a14ec0d0d885b6b0d0c04825794715cb755c3e
   FirebaseMLVisionLabelModel: e172ed744536db700508f6df125e05e72044826c
   FSPagerView: 7515f63c424da71623d299d4fbbfb3dd884642ff
@@ -194,7 +206,8 @@ SPEC CHECKSUMS:
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
+  TensorFlowLite: 7cd43376c604938a12110b8335a5a407afe41688
 
-PODFILE CHECKSUM: 3d531a0464f215bfdde8b49d9922198f67556a0f
+PODFILE CHECKSUM: 7379873a79369f0c667d86eff468a63cb3ebb4fd
 
 COCOAPODS: 1.4.0
