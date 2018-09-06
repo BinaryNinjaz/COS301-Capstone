@@ -37,6 +37,14 @@ extension Edge {
     return start.x == end.x ? nil : m * -start.x + start.y
   }
   
+  public func line() -> LinearEquation<Number> {
+    return LinearEquation(p1: start, p2: end)
+  }
+  
+  public func domain() -> ClosedRange<Number> {
+    return min().x...max().x
+  }
+  
   public func intersection(onLineXEqual x: Number) -> Point<Number>? {
     let m = gradient()
     guard let c = offset() else {
@@ -44,6 +52,16 @@ extension Edge {
     }
     
     return Point(x, m * x + c)
+  }
+  
+  func intersects(line: LinearEquation<Number>) -> Point<Number>? {
+    let p = self.line().intersects(line: line)
+    return domain().contains(p.x) ? p : nil
+  }
+  
+  func intersects(segment: Edge<Number>) -> Point<Number>? {
+    let p = line().intersects(line: segment.line())
+    return segment.domain().contains(p.x) && domain().contains(p.x) ? p : nil
   }
 }
 
