@@ -2,13 +2,24 @@ import Swift
 
 public struct Poly<Number: BinaryFloatingPoint> {
   public var edges: [Edge<Number>]
+  public var points: [Point<Number>]
   
   public init(_ coords: Point<Number>...) {
     self.edges = createEdges(from: coords)
+    var result = [Point<Number>]()
+    for edge in edges {
+      result.append(contentsOf: [edge.start, edge.end])
+    }
+    points = result
   }
   
   public init(_ coords: [Point<Number>]) {
     self.edges = createEdges(from: coords)
+    var result = [Point<Number>]()
+    for edge in edges {
+      result.append(contentsOf: [edge.start, edge.end])
+    }
+    points = result
   }
 }
 
@@ -19,7 +30,6 @@ extension Poly: Equatable {
 }
 
 extension Poly {
-  
   func min() -> (x: Number, y: Number)? {
     guard var result = edges.first?.min() else {
       return nil
@@ -100,4 +110,8 @@ extension Poly: CustomStringConvertible {
   public var description: String {
     return edges.description
   }
+}
+
+extension Poly {
+  
 }

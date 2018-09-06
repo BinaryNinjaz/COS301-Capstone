@@ -15,6 +15,13 @@ extension Orchard {
     return poly.contains(point)
   }
   
+  func randomPoint() -> CLLocationCoordinate2D {
+    let precisionIncreaser = 100_000_000.0
+    let poly = Poly(coords.map { Point($0.latitude * precisionIncreaser, $0.longitude * precisionIncreaser) })
+    let rp = poly.randomPoint()
+    return CLLocationCoordinate2D(latitude: rp.x / precisionIncreaser, longitude: rp.y / precisionIncreaser)
+  }
+  
   func modifiedArea(withRespectTo points: [CLLocationCoordinate2D]) -> Bool {
     guard inferArea else {
       return false
