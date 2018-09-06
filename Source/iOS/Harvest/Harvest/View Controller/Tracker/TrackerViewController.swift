@@ -63,8 +63,6 @@ class TrackerViewController: UIViewController {
   @IBOutlet weak var yieldLabel: UILabel?
   @IBOutlet weak var infoEffectView: UIVisualEffectView!
   
-  var imageLabeler: ImageLabeler?
-  
   var isPhoneLandscape: Bool {
     return (UIDevice.current.orientation.isPortrait || !UIDevice.current.orientation.isValidInterfaceOrientation)
       && UIDevice.current.userInterfaceIdiom == .phone
@@ -341,8 +339,6 @@ class TrackerViewController: UIViewController {
       right: 0)
     
     yieldLabel?.attributedText = attributedStringForYieldCollection(0)
-    
-    imageLabeler = ImageLabeler(on: self)
   }
   
   @objc func tapInfo(_ recognizer: UIGestureRecognizer) {
@@ -427,44 +423,6 @@ extension TrackerViewController: UICollectionViewDataSource {
     }
   }
   
-  func imageLabelRecognizer(at indexPath: IndexPath) -> (Int) -> Void {
-    return { tries in
-      let cell = self.workerCollectionView?.cellForItem(at: indexPath) as? WorkerCollectionViewCell
-      self.imageLabeler?.requestLabelsFromCamera { label, amount in
-        
-        if label != "" {
-          SCLAlertView().showInfo(label, subTitle: amount.description)
-          return
-        } else {
-          let worker = self.filteredWorkers[indexPath.row]
-          SCLAlertView().showInfo("\(amount) Collected", subTitle: "\(worker.name) has collected \(amount) more bags")
-        }
-        
-        self.locationManager?.requestLocation()
-        guard let loc = self.currentLocation else {
-          if tries < 100 {
-            cell?.rec?(tries + 1)
-          }
-          return
-        }
-        
-        self.tracker?.collect(
-          bags: Int(amount),
-          for: self.filteredWorkers[indexPath.row],
-          at: loc,
-          selectedOrchard: self.sessionOrchards.first)
-        
-        cell?.yieldLabel.text = self
-          .tracker?
-          .collections[self.filteredWorkers[indexPath.row]]?.count.description ?? "0"
-        
-        self.yieldLabel?.attributedText = self.attributedStringForYieldCollection(
-          self.tracker?.totalCollected() ?? 0)
-        self.workerCollectionView?.reloadData()
-      }
-    }
-  }
-  
   func labelWorkingCell(
     title: String,
     on collectionView: UICollectionView,
@@ -521,7 +479,6 @@ extension TrackerViewController: UICollectionViewDataSource {
     for indexPath: IndexPath
   ) {
     cell.myBackgroundView.frame.size = cell.frame.size
-    cell.initGesturesIfNeeded()
     
     let r = collectionView.convert(cell.frame.origin, to: collectionView)
     
@@ -553,7 +510,6 @@ extension TrackerViewController: UICollectionViewDataSource {
     
     cell.inc = incrementBagCollection(at: indexPath)
     cell.dec = decrementBagCollection(at: indexPath)
-    cell.rec = imageLabelRecognizer(at: indexPath)
   }
   
   func collectionView(

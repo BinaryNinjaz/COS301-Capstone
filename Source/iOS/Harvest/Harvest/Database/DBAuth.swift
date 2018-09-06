@@ -17,7 +17,15 @@ extension HarvestDB {
     _ completion: @escaping (Bool) -> Void
   ) -> ([(uid: String, wid: String)]?, Bool) -> Void {
     return { ids, succ in
-      guard let ids = ids else { // ensure is foreman else call completion(true)
+      guard let user = Auth.auth().currentUser else {
+        SCLAlertView().showError(
+          "Not Signed In",
+          subTitle: "You seem to not be signed in. Please try signing in again")
+        return
+      }
+      
+      // ensure is foreman else call completion(true)
+      guard let pn = user.phoneNumber else {
         completion(true)
         return
       }
@@ -28,13 +36,13 @@ extension HarvestDB {
           HarvestUser.current.organisationName = name ?? "your farm"
         }
         completion(true)
-      } else if ids.count == 1 {
+      } /*else if ids.count == 1 {
         HarvestUser.current.selectedWorkingForID = ids.first!
         HarvestDB.getWorkingForFarmName(uid: ids.first!.uid) { (name) in
           HarvestUser.current.organisationName = name ?? "your farm"
         }
         completion(true)
-      } else if ids.count == 0 {
+      }*/ else if ids == nil || ids?.count == 0 {
         HarvestUser.current.reset()
         
         let alert = SCLAlertView(appearance: .optionsAppearance)
@@ -42,9 +50,13 @@ extension HarvestDB {
         
         alert.showNotice(
           "You're Not Working For Anyone",
-          subTitle: "Ensure you've been added to the farm as a worker by your employer.")
+          subTitle: """
+          Ensure you've been added to the farm as a worker by your employer. Your number as stored \
+          in the system is \(pn)
+          """)
         
       } else {
+        let ids = ids!
         HarvestDB.getWorkingForFarmNames(uids: ids.map { $0.uid }, result: [], completion: { (names) in
           let alert = SCLAlertView(
             appearance: .optionsAppearance,
@@ -147,7 +159,7 @@ extension HarvestDB {
         return
       }
       
-      guard user.isEmailVerified else {
+      guard user.phoneNumber != nil || user.isEmailVerified else {
         let alert = SCLAlertView(appearance: SCLAlertView.SCLAppearance.warningAppearance)
         
         alert.addButton("Resend Email") {
