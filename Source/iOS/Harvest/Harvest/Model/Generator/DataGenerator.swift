@@ -12,10 +12,10 @@ struct SessionGenerator {
   var foreman: Worker
   var orchard: Orchard
   var duration: (Date, Date)
-  var curve: ((Double) -> Double)?
+  var curve: (Double) -> Double
   
-  init(_ foreman: Worker, _ orchard: Orchard, _ duration: (Date, Date)) {
-    (self.foreman, self.orchard, self.duration) = (foreman, orchard, duration)
+  init(_ foreman: Worker, _ orchard: Orchard, _ duration: (Date, Date), _ curve: @escaping (Double) -> Double) {
+    (self.foreman, self.orchard, self.duration, self.curve) = (foreman, orchard, duration, curve)
   }
   
   func generateSession() -> Session {
@@ -31,13 +31,18 @@ struct SessionGenerator {
     
     let start = Double(duration.0.stepsSince1970(step: nil))
     let end = Double(duration.1.stepsSince1970(step: nil))
+    let factorX = Double(duration.0.stepsSince1970(step: .daily))
+    let factor = abs(curve(factorX))
+    
+    let dailyFactor: (Double) -> Double = { x in
+      let t = Double(Int(x) % 1440) / 1440.0 - (Double.random() * 0.7)
+      return -(t * t) + 1
+    }
     
     var x = start
     
     while x < end {
-      if let curve = curve, abs(curve(x)) * Double.random() > 0.5 {
-        continue
-      } else if curve == nil && Double.random() > 0.5 {
+      if factor * Double.random() < 0.5 || dailyFactor(x) * Double.random() < 0.75 {
         continue
       }
       
@@ -68,6 +73,7 @@ struct SessionGenerator {
       "collections": data.firebaseSessionRepresentation()
     ]
     
+    print(data.reduce(0, { $0 + $1.value.count }))
     return Session(json: result, id: "-" + Int(Date().timeIntervalSince1970 * 10000).description)
   }
 }
@@ -96,8 +102,9 @@ struct SessionsGenerator {
         let startTime = start.random(hour: .range(6, 9), minute: .range(0, 60), second: .range(0, 60))
         let endTime = start.random(hour: .range(16, 20), minute: .range(0, 60), second: .range(0, 60))
         
-        var creator = SessionGenerator.init(foreman, orchard, (startTime, endTime))
-        creator.curve = { x in sin(x / 365.0 * 2.0 * .pi) }
+        let creator = SessionGenerator(foreman, orchard, (startTime, endTime)) { x in
+          sin(x * (2.0 * .pi / 365.0))
+        }
         result.append(creator.generateSession())
       }
       start = start.date(byAdding: .day, value: 1)
