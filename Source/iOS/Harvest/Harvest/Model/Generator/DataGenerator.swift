@@ -35,7 +35,7 @@ struct SessionGenerator {
     var x = start
     
     while x < end {
-      if let curve = curve, curve(x) > 0.5 {
+      if let curve = curve, abs(curve(x)) * Double.random() > 0.5 {
         continue
       } else if curve == nil && Double.random() > 0.5 {
         continue
@@ -96,7 +96,8 @@ struct SessionsGenerator {
         let startTime = start.random(hour: .range(6, 9), minute: .range(0, 60), second: .range(0, 60))
         let endTime = start.random(hour: .range(16, 20), minute: .range(0, 60), second: .range(0, 60))
         
-        let creator = SessionGenerator.init(foreman, orchard, (startTime, endTime))
+        var creator = SessionGenerator.init(foreman, orchard, (startTime, endTime))
+        creator.curve = { x in sin(x / 365.0 * 2.0 * .pi) }
         result.append(creator.generateSession())
       }
       start = start.date(byAdding: .day, value: 1)
