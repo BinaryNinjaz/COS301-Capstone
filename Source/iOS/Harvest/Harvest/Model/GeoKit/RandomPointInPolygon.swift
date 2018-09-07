@@ -16,6 +16,14 @@ extension BinaryFloatingPoint {
   }
 }
 
+extension Range where Bound == Int {
+  func random() -> Bound {
+    let diff = upperBound - lowerBound
+    let r = Int(arc4random()) % diff
+    return lowerBound + r
+  }
+}
+
 struct Codomain<T: BinaryFloatingPoint>: CustomStringConvertible {
   var low, high: Point<T>
   

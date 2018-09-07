@@ -30,6 +30,8 @@ struct OrganizationInfo: CustomStringConvertible, Equatable {
 }
 
 class SettingsEurekaViewController: ReloadableFormViewController, SFSafariViewControllerDelegate {
+  var generatorViewController: FormViewController?
+  
   override func viewDidLoad() {
     super.viewDidLoad()
   }
@@ -67,6 +69,17 @@ class SettingsEurekaViewController: ReloadableFormViewController, SFSafariViewCo
       form
         +++ Section()
         <<< resignRow
+    } else {
+      let gen = ButtonRow { row in
+        row.title = "Generate Sessions"
+      }.onCellSelection { _, _ in
+        let fvc = FormViewController(style: UITableViewStyle.grouped)
+        self.generatorSection(formVC: fvc)
+        
+        self.present(fvc, animated: true, completion: nil)
+      }
+      
+      form +++ Section("Generate") <<< gen
     }
   }
   
@@ -182,5 +195,69 @@ class SettingsEurekaViewController: ReloadableFormViewController, SFSafariViewCo
   
   func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
     controller.dismiss(animated: true, completion: nil)
+  }
+}
+
+extension SettingsEurekaViewController {
+  func generatorSection(formVC: FormViewController) {
+    let form = formVC.form
+    let start = DateRow { row in
+      row.title = "Start Date"
+      row.value = Date().yesterday().0
+    }
+    
+    let end = DateRow { row in
+      row.title = "End Date"
+      row.value = Date().today().1
+    }
+    
+    let selectionSection = SelectableSection<ListCheckRow<Worker>>(
+      "Foremen that'll work",
+      selectionType: .multipleSelection)
+    
+    for entity in Entities.shared.foremen() {
+      selectionSection <<< ListCheckRow<Worker>(entity.description) { row in
+        row.title = entity.description
+        row.selectableValue = entity
+        row.value = entity
+      }
+    }
+    
+    let generateButton = ButtonRow { row in
+      row.title = "Generate"
+    }.onCellSelection { _, _ in
+      let s = start.value ?? Date()
+      let e = end.value ?? Date()
+      let fs = selectionSection.selectedRows().compactMap { $0.value }
+      
+      let generator = SessionsGenerator(period: (s, e), foremen: fs)
+      let sessions = generator.generateSessions()
+      StoredGeneratedSessions.shared.accumulateByDay(with: sessions)
+    }
+    
+    let dismissButton = ButtonRow { row in
+      row.title = "Dismiss"
+    }.onCellSelection { _, _ in
+      formVC.dismiss(animated: true, completion: nil)
+    }
+    
+    let pushButton = ButtonRow { row in
+      row.title = "Push"
+    }.onCellSelection { _, _ in
+      HarvestDB.save(sessions: StoredGeneratedSessions.shared)
+    }
+    
+    form
+      +++ Section("Date")
+      <<< start
+      <<< end
+    
+      +++ selectionSection
+    
+      +++ Section() <<< generateButton
+    
+      +++ Section() <<< dismissButton
+    
+      +++ Section() <<< pushButton
   }
 }
