@@ -191,15 +191,6 @@ extension Session: CustomStringConvertible {
   }
 }
 
-extension Date {
-  func sameDay(as date: Date) -> Bool {
-    var aday = Calendar.current.dateComponents([.day], from: self)
-    var bday = Calendar.current.dateComponents([.day], from: date)
-    
-    return aday.day == bday.day
-  }
-}
-
 extension SortedDictionary where Key == Date, Value == SortedSet<Session> {
   func contains(session: Session) -> Bool {
     return contains { _, list in
