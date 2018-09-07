@@ -333,7 +333,7 @@ enum TimeStep: String, CustomStringConvertible, Codable {
     let isSameMonth = startDate.startOfMonth() == endDate.startOfMonth()
     let isSameDay = startDate.startOfDay() == endDate.startOfDay()
     
-    let fmtYear = isSameYear ? "" : "YYYY "
+    let fmtYear = isSameYear ? "" : "yyyy "
     let fmtMonth = isSameMonth ? "" : "MMM "
     let fmtDay = isSameDay ? "" : "dd"
     
@@ -378,7 +378,7 @@ enum TimeStep: String, CustomStringConvertible, Codable {
       
     case .yearly:
       comp = .year
-      format = "YYYY"
+      format = "yyyy"
       start = startDate.startOfYear()
       end = endDate.startOfYear().date(byAdding: .year, value: 1)
       
