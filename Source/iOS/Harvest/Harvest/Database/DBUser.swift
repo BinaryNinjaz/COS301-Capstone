@@ -44,10 +44,16 @@ extension HarvestDB {
     let update = harvestUser.json()
     admin.updateChildValues(update)
     
-    if harvestUser.accountIdentifier != oldEmail, let user = Auth.auth().currentUser {
-      user.updateEmail(to: harvestUser.accountIdentifier) { (error) in
-        if let error = error {
-          SCLAlertView().showError("An Error Occurred", subTitle: error.localizedDescription)
+    if let user = Auth.auth().currentUser {
+      let profileUpdate = user.createProfileChangeRequest()
+      profileUpdate.displayName = (update["firstname"] as? String ?? "") + " " + (update["lastname"] as? String ?? "")
+      profileUpdate.commitChanges(completion: nil)
+      
+      if harvestUser.accountIdentifier != oldEmail {
+        user.updateEmail(to: harvestUser.accountIdentifier) { (error) in
+          if let error = error {
+            SCLAlertView().showError("An Error Occurred", subTitle: error.localizedDescription)
+          }
         }
       }
     }

@@ -137,8 +137,12 @@ extension Date {
     return formatter.string(from: date)
   }
   
-  func stepsSince1970(step: TimeStep) -> Int {
+  func stepsSince1970(step: TimeStep?) -> Int {
     let startOfTime = Date(timeIntervalSince1970: 0)
+    
+    guard let step = step else {
+      return Calendar.current.dateComponents([.minute], from: startOfTime, to: self).minute ?? 0
+    }
     
     switch step {
     case .hourly:
@@ -182,5 +186,106 @@ extension DateFormatter {
   
   static func rfc2822Date(from string: String) -> Date {
     return DateFormatter.rfc2822().date(from: string) ?? Date(timeIntervalSince1970: 0)
+  }
+}
+
+enum DateOption: ExpressibleByIntegerLiteral {
+  enum Unit {
+    case year, month, day, hour, minute, second
+    
+    func integerRepresentation(withRespectTo date: Date = Date()) -> Int {
+      let formatter = DateFormatter()
+      switch self {
+      case .year: formatter.dateFormat = "y"
+      case .month: formatter.dateFormat = "M"
+      case .day: formatter.dateFormat = "d"
+      case .hour: formatter.dateFormat = "H"
+      case .minute: formatter.dateFormat = "m"
+      case .second: formatter.dateFormat = "s"
+      }
+      let str = formatter.string(from: date)
+      return Int(string: str) ?? 0
+    }
+  }
+  
+  case exact(Int)
+  case range(Int, Int)
+  case this(Unit)
+  
+  init(integerLiteral value: Int) {
+    self = .exact(value)
+  }
+  
+  func possibleValues(withRespectTo date: Date = Date()) -> Range<Int> {
+    switch self {
+    case let .exact(d): return d..<(d + 1)
+    case let .range(a, b): return a..<b
+    case let .this(d):
+      let x = d.integerRepresentation(withRespectTo: date)
+      return x..<(x + 1)
+    }
+  }
+  
+  func random(withRespectTo date: Date = Date()) -> Int {
+    let r = possibleValues(withRespectTo: date)
+    let d = r.upperBound - r.lowerBound
+    return Int(arc4random()) % d + r.lowerBound
+  }
+}
+
+func ..< (lhs: Int, rhs: Int) -> DateOption {
+  return .range(lhs, rhs)
+}
+
+extension Date {
+  static func random(
+    year: DateOption = .this(.year),
+    month: DateOption = .this(.month),
+    day: DateOption = .this(.day),
+    hour: DateOption = .this(.hour),
+    minute: DateOption = .this(.minute),
+    second: DateOption = .this(.second)
+  ) -> Date {
+    let str = """
+    \(day.random()) \(month.random()) \(year.random()) \(hour.random()):\(minute.random()):\(second.random())
+    """
+    
+    let formatter = DateFormatter()
+    formatter.dateFormat = "d M y H:m:s"
+    
+    return formatter.date(from: str)!
+  }
+  
+  func random(
+    year: DateOption = .this(.year),
+    month: DateOption = .this(.month),
+    day: DateOption = .this(.day),
+    hour: DateOption = .this(.hour),
+    minute: DateOption = .this(.minute),
+    second: DateOption = .this(.second)
+  ) -> Date {
+    let str = """
+    \(day.random(withRespectTo: self)) \
+    \(month.random(withRespectTo: self)) \
+    \(year.random(withRespectTo: self)) \
+    \(hour.random(withRespectTo: self)):\
+    \(minute.random(withRespectTo: self)):\
+    \(second.random(withRespectTo: self))
+    """
+    
+    let formatter = DateFormatter()
+    formatter.dateFormat = "d M y H:m:s"
+    
+    return formatter.date(from: str)!
+  }
+  
+  static func random(between start: Date, and end: Date) -> Date {
+    let s = start.timeIntervalSince1970
+    let e = end.timeIntervalSince1970
+    
+    let dif = e - s
+    let rnd = TimeInterval.random() * dif + s
+    
+    return Date(timeIntervalSince1970: rnd)
   }
 }

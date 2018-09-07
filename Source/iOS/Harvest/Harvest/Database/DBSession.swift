@@ -80,6 +80,21 @@ extension HarvestDB {
     sessions.updateChildValues(update)
   }
   
+  static func save(sessions: SortedDictionary<Date, SortedSet<Session>>) {
+    let sessionsRef = ref.child(Path.sessions)
+    
+    var update = [String: Any]()
+    
+    for (_, items) in StoredGeneratedSessions.shared {
+      for item in items {
+        let id = item.id
+        update[id] = item.json()[id]
+      }
+    }
+    
+    sessionsRef.updateChildValues(update)
+  }
+  
   static func delete(
     session: Session,
     completion: @escaping (Error?, DatabaseReference) -> Void

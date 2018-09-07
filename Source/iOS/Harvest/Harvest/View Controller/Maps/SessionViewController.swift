@@ -61,13 +61,6 @@ public class SessionViewController: UIViewController, GMSMapViewDelegate, TypedR
     for (_, orchard) in Entities.shared.orchards {
       let poly = orchard.coords.gmsPolygon(mapView: mapView, color: orchard.color)
       orchardPolygons.append(poly)
-      for _ in 1...100 {
-        let rp = orchard.randomPoint()
-        let marker = GMSMarker(position: rp)
-        marker.title = Date().hashValue.description
-        marker.map = mapView
-        pickUpMarkers.append(marker)
-      }
     }
     
     if let coord = session.track.first {

@@ -21,6 +21,14 @@ extension Array {
     
     return result
   }
+  
+  func randomElement() -> Element? {
+    guard !isEmpty else {
+      return nil
+    }
+    let r = Int(arc4random()) % count
+    return self[r]
+  }
 }
 
 extension String {

@@ -26,18 +26,16 @@ extension Dictionary where Key == Worker, Value == [CollectionPoint] {
     var result = [String: Any]()
     
     for (key, collectionPoints) in self {
-      var collections: [String: Any] = [:]
-      var i = 0
+      var collections: [Any] = []
       
       for collection in collectionPoints {
-        collections[i.description] = [
+        collections.append([
           "coord": [
             "lat": collection.location.latitude,
             "lng": collection.location.longitude
           ],
           "date": DateFormatter.rfc2822String(from: collection.date)
-        ]
-        i += 1
+        ])
       }
       result[key.id] = collections
     }

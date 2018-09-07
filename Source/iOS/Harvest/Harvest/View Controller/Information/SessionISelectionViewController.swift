@@ -52,7 +52,28 @@ class SessionSelectionViewController: UITableViewController {
     }
   }
   
+  func updateSessions(with psessions: [Session]) {
+    self.sessions.accumulateByDay(with: psessions)
+    if self.searchText.isEmpty {
+      self.filteredSessions = nil
+    } else {
+      self.filteredSessions = self.sessions.search(for: self.searchText)
+    }
+    DispatchQueue.main.async {
+      self.updateBackgroundView()
+      self.isLoading = false
+      self.refreshControl?.endRefreshing()
+      self.tableView.reloadData()
+    }
+  }
+  
   func loadNewPage(forcefully: Bool = false) {
+    guard StoredGeneratedSessions.shared.isEmpty else {
+      sessions = StoredGeneratedSessions.shared
+      self.updateSessions(with: [])
+      return
+    }
+    
     guard !isLoading else {
       return
     }
@@ -60,21 +81,17 @@ class SessionSelectionViewController: UITableViewController {
     isLoading = true
     tableView.reloadData()
     HarvestDB.getSessions(limitedToLast: pageSize) { psessions in
-      self.sessions.accumulateByDay(with: psessions)
-      if self.searchText.isEmpty {
-        self.filteredSessions = nil
-      } else {
-        self.filteredSessions = self.sessions.search(for: self.searchText)
-      }
-      DispatchQueue.main.async {
-        self.updateBackgroundView()
-        self.isLoading = false
-        self.tableView.reloadData()
-      }
+      self.updateSessions(with: psessions)
     }
   }
   
   @objc func refreshList(_ refreshControl: UIRefreshControl) {
+    guard StoredGeneratedSessions.shared.isEmpty else {
+      sessions = StoredGeneratedSessions.shared
+      self.updateSessions(with: [])
+      return
+    }
+    
     guard !isLoading else {
       return
     }
@@ -82,18 +99,7 @@ class SessionSelectionViewController: UITableViewController {
     isLoading = true
     HarvestDB.getRefreshedSessions(limitedToLast: pageSize) { psessions in
       self.sessions.removeAll()
-      self.sessions.accumulateByDay(with: psessions)
-      if self.searchText.isEmpty {
-        self.filteredSessions = nil
-      } else {
-        self.filteredSessions = self.sessions.search(for: self.searchText)
-      }
-      DispatchQueue.main.async {
-        self.updateBackgroundView()
-        self.isLoading = false
-        self.refreshControl?.endRefreshing()
-        self.tableView.reloadData()
-      }
+      self.updateSessions(with: psessions)
     }
   }
   
