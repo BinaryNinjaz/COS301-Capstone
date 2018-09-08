@@ -158,7 +158,7 @@ function sendPasswordResetEmail(emailAddress) {
 }
 
 function locationLookup(callback) {
-  $.get('http://ip-api.com/json', (data, response) => {
+  $.get('https://extreme-ip-lookup.com/json/', (data, response) => {
     callback(data, response);
   });
 }

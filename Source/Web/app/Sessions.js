@@ -7,7 +7,7 @@
 *					databse, and uses google graph APIs
 */
 var pageIndex = null; // track the last session loaded. Used for pagination
-var pageSize = 21;
+var pageSize = 20;
 $(window).bind("load", () => {
 	var divHide = document.getElementById('loader'); /* When the page loads, the error div should be hidden */
 	divHide.style.visibility = "hidden"; /* When the page loads, the error div should be hidden, do not remove */
@@ -96,6 +96,16 @@ function insertSessionIntoSortedMap(session, key, checkEqualKey, sortedMap) {
   }
 
   if (belongsInGroup !== undefined) {
+		var isDuplicate = false;
+		for (var i = 0; i < sortedMap[belongsInGroup].values.length; i++) {
+			if (sortedMap[belongsInGroup].values[i].key === session.key) {
+				isDuplicate = true;
+				break;
+			}
+		}
+		if (isDuplicate) {
+			return;
+		}
     sortedMap[belongsInGroup].values.push(session);
     sortedMap[belongsInGroup].values = sortedMap[belongsInGroup].values.sort((a, b) => {
 			const ma = moment(a.value.start_date);
@@ -147,11 +157,12 @@ function newPage() {
       .endAt(pageIndex)
       .limitToLast(pageSize);
   }
-  var tempSessions = [];
+	const equalDates = (a, b) => {
+		return a.isSame(b);
+	};
   ref.once('value').then((snapshot) => {
     var lastSession = "";
     var resultHtml = [];
-    var i = 0;
     snapshot.forEach((child) => {
       const obj = child.val();
       const foreman = workers[obj.wid];
@@ -162,9 +173,6 @@ function newPage() {
         const session = {value: obj, key: child.key};
 
         const key = moment(session.value.start_date).startOf('day');
-        const equalDates = (a, b) => {
-          return a.isSame(b);
-        };
 
         insertSessionIntoSortedMap(session, key, equalDates, sessions);
       }
