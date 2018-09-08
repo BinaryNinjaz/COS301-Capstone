@@ -93,10 +93,7 @@ function updateLocationMap(editing) {
     map.setCenter({lat: 0, lng: 0});
     map.setZoom(2);
     locationLookup((data) => {
-      lastLocation = {
-        lat: data.lat,
-        lng: data.lon
-      }
+      lastLocation = new google.maps.LatLng(parseFloat(data.lat) || 0, parseFloat(data.lon) || 0);
       map.setCenter(lastLocation);
       map.setZoom(11);
       if (editing) {

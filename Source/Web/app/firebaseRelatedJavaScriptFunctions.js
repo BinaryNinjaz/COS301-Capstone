@@ -158,9 +158,17 @@ function sendPasswordResetEmail(emailAddress) {
 }
 
 function locationLookup(callback) {
-  $.get('https://extreme-ip-lookup.com/json/', (data, response) => {
-    callback(data, response);
-  });
+  const lat = localStorage.getItem('lat');
+  const lon = localStorage.getItem('lon');
+  if (lat != undefined && lon != undefined) {
+    callback({lat: lat, lon: lon});
+  } else {
+    $.get('https://extreme-ip-lookup.com/json/', (data, response) => {
+      localStorage.setItem('lat', parseFloat(data.lat));
+      localStorage.setItem('lon', parseFloat(data.lon));
+      callback(data);
+    });
+  }
 }
 
 function getAdmin(callback) {
