@@ -203,12 +203,12 @@ extension SettingsEurekaViewController {
     let form = formVC.form
     let start = DateRow { row in
       row.title = "Start Date"
-      row.value = Date().thisYear().0
+      row.value = Date().thisMonth().0
     }
     
     let end = DateRow { row in
       row.title = "End Date"
-      row.value = Date().thisYear().1
+      row.value = Date().thisMonth().1
     }
     
     let selectionSection = SelectableSection<ListCheckRow<Worker>>(
