@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:167365669216:android:c3fe73ed021c5c39",
         "android_client_info": {
-          "package_name": "za.org.samac.harvest"
+          "package_name": "com.binaryninjaz.harvest"
         }
       },
       "oauth_client": [
@@ -19,6 +19,164 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.binaryninjaz.harvest",
+            "certificate_hash": "dbc3be54b01392b5cf0c77905082bfdf4e5d996c"
+          }
+        },
+        {
+          "client_id": "167365669216-nf8sg6rugo7j3v127c9b59me6ee5o7fk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.binaryninjaz.harvest",
+            "certificate_hash": "9f2f259fab1144f089d50964d820a7b6acd1499e"
+          }
+        },
+        {
+          "client_id": "167365669216-ebe853q8novgnfbbla796nfclf0jkbna.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGutfEkxRwvt_P9nt5AgRj749aetgnSPg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167365669216-ebe853q8novgnfbbla796nfclf0jkbna.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "167365669216-bl4c19od92hrrtq277uqc59ibmt7q277.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.BinaryNinjaz.Harvest"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167365669216:android:8bd26c00d0ccb7fc",
+        "android_client_info": {
+          "package_name": "com.harvest.harvest2018"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167365669216-r5c201dsmdado58ph99d0hh9apuvu36r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.harvest.harvest2018",
+            "certificate_hash": "4781a72a9112d1df9c805d8512bc30ddc203e377"
+          }
+        },
+        {
+          "client_id": "167365669216-grrjjrlo2hvjg5pqfd2gp4gg7v807c8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.harvest.harvest2018",
+            "certificate_hash": "dbc3be54b01392b5cf0c77905082bfdf4e5d996c"
+          }
+        },
+        {
+          "client_id": "167365669216-ju3n8b089v1fm4c1ib9ca999ns4pgqa2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.harvest.harvest2018",
+            "certificate_hash": "9f2f259fab1144f089d50964d820a7b6acd1499e"
+          }
+        },
+        {
+          "client_id": "167365669216-ebe853q8novgnfbbla796nfclf0jkbna.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGutfEkxRwvt_P9nt5AgRj749aetgnSPg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167365669216-ebe853q8novgnfbbla796nfclf0jkbna.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "167365669216-bl4c19od92hrrtq277uqc59ibmt7q277.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.BinaryNinjaz.Harvest"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167365669216:android:0a4f8d1a9ce27418",
+        "android_client_info": {
+          "package_name": "za.org.samac.harvest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167365669216-k7sj29edkvrppscs30ema38eibd0sd2r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "za.org.samac.harvest",
+            "certificate_hash": "0eabce85133408e24f3109acf2a4bdf074970306"
+          }
+        },
+        {
+          "client_id": "167365669216-uaoad643vn7sod2ugh7gmu6fuki9olq0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "za.org.samac.harvest",
+            "certificate_hash": "42de7ae7ccde1ed4f29472fee74119f6a7e528fe"
+          }
+        },
+        {
+          "client_id": "167365669216-1q1u90clknft8il0e5n6ntivt0req43m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "za.org.samac.harvest",
+            "certificate_hash": "26c6933e4e9a8e43dc410835da6fefd6baa5dcc0"
+          }
+        },
+        {
+          "client_id": "167365669216-k317ukev0p9h99r18if9hcgcf9ae7m6q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "za.org.samac.harvest",
+            "certificate_hash": "9f2f259fab1144f089d50964d820a7b6acd1499e"
+          }
+        },
+        {
+          "client_id": "167365669216-1prfeb87gnlqafc78jhu1g0bb75527nj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "za.org.samac.harvest",
             "certificate_hash": "dbc3be54b01392b5cf0c77905082bfdf4e5d996c"
           }
         },
@@ -33,22 +191,22 @@
         }
       ],
       "services": {
-        "stats_service": {
+        "analytics_service": {
           "status": 1
         },
         "appinvite_service": {
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "167365669216-slnvcunt8cn5d7180l2j1aebbtimqnbo.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.BinaryNinja.Harvest"
-              }
-            },
-            {
               "client_id": "167365669216-ebe853q8novgnfbbla796nfclf0jkbna.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "167365669216-bl4c19od92hrrtq277uqc59ibmt7q277.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.BinaryNinjaz.Harvest"
+              }
             }
           ]
         },
