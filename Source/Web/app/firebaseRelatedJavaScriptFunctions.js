@@ -32,8 +32,8 @@ const title = document.getElementsByTagName("title")[0].innerHTML;
 if (title !== "Harvest | Login and Register") {
   // This is automatic whenever there's a change to a users authorization
   firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      // user logged in
+    if (user && user.emailVerified) {
+      // user logged in with verified email
       // window.location.href = "HomePage.html";
     } else {
       // user logged out
