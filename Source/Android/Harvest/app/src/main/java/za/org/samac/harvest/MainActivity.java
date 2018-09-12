@@ -188,7 +188,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
                 //adapter.setLocation(location);
             }
-            adapter.setLocation(location);
+            if (location != null) {
+                adapter.setLocation(location);
+            }
         }
 
         locationPermissions();
