@@ -116,7 +116,7 @@ public class collections {
         Vector<Orchard> orchards = data.getOrchards();
         for (Orchard orchard : orchards) {
             if (orchard.getInferArea()) {
-                List<LatLng> currentCoords = allPickupPoints(orchard.getID());
+                List<LatLng> currentCoords = orchard.getCoordinates();
                 ArrayList<LatLng> points = convexHull(orchard.getID(), currentCoords);
 
                 if (!points.isEmpty()) {
@@ -134,13 +134,13 @@ public class collections {
 
     }
 
-    public ArrayList<LatLng> convexHull(String selectedOrchard, List<LatLng> additionalPoints) {
+    public ArrayList<LatLng> convexHull(String selectedOrchard, List<LatLng> currentOrchardPoints) {
         ArrayList<LatLng> points = allPickupPoints(selectedOrchard);
+        points.addAll(currentOrchardPoints);
         if (points.size() < 3) {
             return new ArrayList<LatLng>();
         }
 
-        points.addAll(additionalPoints);
         ArrayList<LatLng> result = new ArrayList<>();
 
         LatLng temp = points.get(0);
