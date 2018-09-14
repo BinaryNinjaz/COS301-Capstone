@@ -27,6 +27,19 @@ public class DonutChartCell: Cell<Session>, CellType {
     super.update()
     chart.data = row?.value?.workerPerformanceSummary()
     
+    if let summary = row?.value?.collectionBagSummary() {
+      switch summary {
+      case let .mass(m):
+        let formatter = MassFormatter()
+        let fm = formatter.string(fromKilograms: m)
+        chart.centerText = "Total Collected: \(fm)"
+      case let .count(c):
+        chart.centerText = "Total Collected: \(c) Bags"
+      }
+    } else {
+      chart.centerText = "--"
+    }
+    
 //    let wname = row.value?.foreman.name ?? "Unknown Foreman"
 //    let dist = row?.value?.track.euclideanDistance() ?? .nan
 //    
