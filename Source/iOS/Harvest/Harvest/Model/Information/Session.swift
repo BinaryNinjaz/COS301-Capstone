@@ -161,6 +161,24 @@ public final class Session {
     
     return result
   }
+  
+  enum CollectionBagSummary {
+    case mass(Double)
+    case count(Int)
+  }
+  
+  func collectionBagSummary() -> CollectionBagSummary {
+    let points = collections.flatMap { $0.value }
+    var totalMass = 0.0
+    for point in points {
+      if let orchard = point.orchard, let mass = orchard.bagMass {
+        totalMass += mass
+      } else {
+        return .count(points.count)
+      }
+    }
+    return .mass(totalMass)
+  }
 }
 
 extension Session: Hashable {
