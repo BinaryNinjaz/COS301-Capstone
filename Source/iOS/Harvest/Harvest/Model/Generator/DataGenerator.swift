@@ -24,10 +24,8 @@ struct SessionGenerator {
     
     let workers = Entities
       .shared
-      .workers
-      .lazy
-      .filter { $0.value.assignedOrchards.contains(self.orchard.id) }
-      .map { $0.value }
+      .workersList()
+      .filter { $0.assignedOrchards.contains(self.orchard.id) }
     
     let start = Double(duration.0.stepsSince1970(step: nil))
     let end = Double(duration.1.stepsSince1970(step: nil))
@@ -49,13 +47,13 @@ struct SessionGenerator {
       let rp = orchard.randomPoint()
       var tracked = false
       for w in workers {
-        if Double(abs(w.hashValue)) / Double(Int.max) * Double.random() > 0.5 {
+        if Double(abs(w.hashValue)) / Double(Int.max) * Double.random() * 10.0 > 0.5 {
           let point = CollectionPoint(
             location: orchard.randomPoint(),
             date: .random(between: duration.0, and: duration.1),
             selectedOrchard: orchard.id)
           data[w] = (data[w] ?? []) + [point]
-          if !tracked {
+          if !tracked && track.count < 50 {
             track.append(rp)
             tracked = true
           }
@@ -73,7 +71,6 @@ struct SessionGenerator {
       "collections": data.firebaseSessionRepresentation()
     ]
     
-    print(data.reduce(0, { $0 + $1.value.count }))
     return Session(json: result, id: "-" + Int(Date().timeIntervalSince1970 * 10000).description)
   }
 }
