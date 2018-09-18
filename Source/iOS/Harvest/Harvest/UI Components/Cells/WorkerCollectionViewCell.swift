@@ -15,11 +15,11 @@ class WorkerCollectionViewCell: UICollectionViewCell {
   @IBOutlet weak var incButton: UIButton!
   @IBOutlet weak var decButton: UIButton!
   
-  var inc: ((WorkerCollectionViewCell) -> Void)?
+  var inc: ((WorkerCollectionViewCell, Int) -> Void)?
   var dec: ((WorkerCollectionViewCell) -> Void)?
   
   @IBAction func incrementTouchUp(_ sender: Any) {
-    inc?(self)
+    inc?(self, 0)
   }
   
   @IBAction func decrementTouchUp(_ sender: Any) {

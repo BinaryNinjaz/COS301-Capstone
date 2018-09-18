@@ -309,7 +309,7 @@ extension Farm {
     }
     let o = Orchard(json: ["farm": id], id: "")
     let orchardRow = OrchardInFarmRow(tag: nil, orchard: o) { row in
-      row.title = "Add Orchard to \(self.name)"
+      row.title = "Create New Orchard"
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .addOrchard
       cell.textLabel?.textAlignment = .center
@@ -321,7 +321,7 @@ extension Farm {
       }
     }
     
-    let orchardsSection = Section("Orchards in \(name)")
+    let orchardsSection = Section("Assigned Orchards")
     
     for (_, orchard) in Entities.shared.orchards {
       let oRow = OrchardInFarmRow(tag: nil, orchard: orchard) { row in
@@ -581,6 +581,12 @@ extension Orchard {
       self.tempory?.assignedFarm = row.value?.id ?? ""
       orchardAreaRow.value = self.tempory
       onChange()
+    }.onRowValidationChanged { (cell, row) in
+      if row.validationErrors.isEmpty {
+        cell.backgroundColor = .white
+      } else {
+        cell.backgroundColor = .invalidInput
+      }
     }
       
     orchardAreaRow.actuallyChanged = { (row) in
@@ -656,6 +662,9 @@ extension Orchard {
     
       +++ Section("Orchard Location")
       <<< orchardAreaRow
+      
+      +++ Section("Assigned Farm")
+      <<< farmSelection
     
       +++ Section("Collection Details")
       <<< bagMassRow
@@ -669,9 +678,6 @@ extension Orchard {
       +++ Section("Crop Dimensions")
       <<< widthRow
       <<< heightRow
-      
-      +++ Section("Assigned Farm")
-      <<< farmSelection
     
       +++ Section("Assigned Workers")
       <<< assignedWorkersRow

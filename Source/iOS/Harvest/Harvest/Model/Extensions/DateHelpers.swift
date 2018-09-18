@@ -159,6 +159,13 @@ extension Date {
     interval -= interval % 86400
     return Double(interval) / 86400.0
   }
+  
+  func sameDay(as date: Date) -> Bool {
+    var aday = Calendar.current.dateComponents([.year, .month, .day], from: self)
+    var bday = Calendar.current.dateComponents([.year, .month, .day], from: date)
+    
+    return aday.year == bday.year &&  aday.month == bday.month && aday.day == bday.day
+  }
 }
 
 extension DateFormatter {

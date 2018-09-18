@@ -13,7 +13,6 @@
 		1604E4AA206958E900E9BA15 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4A9206958E900E9BA15 /* Assets.xcassets */; };
 		1604E4AD206958E900E9BA15 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4AB206958E900E9BA15 /* LaunchScreen.storyboard */; };
 		1604E4B8206958E900E9BA15 /* HarvestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1604E4B7206958E900E9BA15 /* HarvestTests.swift */; };
-		1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */; };
 		160A1E19209BCA6E000A1E0F /* SessionISelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */; };
 		160A1E1C209BCD25000A1E0F /* OrchardAreaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */; };
 		160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */; };
@@ -58,6 +57,7 @@
 		167448EB208C085900FA605C /* FirebaseConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167448EA208C085900FA605C /* FirebaseConverter.swift */; };
 		1679DA4720DD5438007AB071 /* SignInOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */; };
 		1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */; };
+		168433472142F7C4007E4471 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 168433462142F7C4007E4471 /* GoogleService-Info.plist */; };
 		1684F7A020F45B8700BC59EB /* DBMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1684F79F20F45B8700BC59EB /* DBMock.swift */; };
 		16906054208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */; };
 		16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906055208E7FFA00BE5ADE /* ColorScheme.swift */; };
@@ -137,7 +137,6 @@
 		1604E4B9206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1604E4BE206958E900E9BA15 /* HarvestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HarvestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1604E4C4206958E900E9BA15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		160A1E18209BCA6E000A1E0F /* SessionISelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionISelectionViewController.swift; sourceTree = "<group>"; };
 		160A1E1B209BCD25000A1E0F /* OrchardAreaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaViewController.swift; sourceTree = "<group>"; };
 		160A1E1D209BD168000A1E0F /* OrchardAreaEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrchardAreaEurekaCell.swift; sourceTree = "<group>"; };
@@ -183,6 +182,7 @@
 		167448EA208C085900FA605C /* FirebaseConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConverter.swift; sourceTree = "<group>"; };
 		1679DA4620DD5438007AB071 /* SignInOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInOptionViewController.swift; sourceTree = "<group>"; };
 		1679DA4820DD69BC007AB071 /* ForemanSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForemanSignInViewController.swift; sourceTree = "<group>"; };
+		168433462142F7C4007E4471 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1684F79F20F45B8700BC59EB /* DBMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBMock.swift; sourceTree = "<group>"; };
 		16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOrchardInFarmEurekaCell.swift; sourceTree = "<group>"; };
 		16906055208E7FFA00BE5ADE /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
@@ -288,7 +288,7 @@
 			isa = PBXGroup;
 			children = (
 				164F30A520D46DAA00E7772A /* Harvest.entitlements */,
-				1604E4D420695E2D00E9BA15 /* GoogleService-Info.plist */,
+				168433462142F7C4007E4471 /* GoogleService-Info.plist */,
 				169E5195206C62D6006B923E /* Model */,
 				16420FCA2069717200E1A292 /* Database */,
 				16420FC720696B6500E1A292 /* UI Components */,
@@ -726,10 +726,10 @@
 				1604E4AA206958E900E9BA15 /* Assets.xcassets in Resources */,
 				16BF89A02108F78200B023A7 /* outa.gpx in Resources */,
 				16BF89A12108F78200B023A7 /* trouter.gpx in Resources */,
-				1604E4D520695E2D00E9BA15 /* GoogleService-Info.plist in Resources */,
 				16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */,
 				1604E4A8206958E900E9BA15 /* Main.storyboard in Resources */,
 				16BF899E2108F78200B023A7 /* h2s.gpx in Resources */,
+				168433472142F7C4007E4471 /* GoogleService-Info.plist in Resources */,
 				16BF899D2108F78200B023A7 /* qh2s.gpx in Resources */,
 				16BF899F2108F78200B023A7 /* BlockU.gpx in Resources */,
 			);
@@ -1171,7 +1171,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Harvest/App Delegate/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.BinaryNinja.Harvest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.BinaryNinjaz.Harvest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1189,7 +1189,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Harvest/App Delegate/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.BinaryNinja.Harvest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.BinaryNinjaz.Harvest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

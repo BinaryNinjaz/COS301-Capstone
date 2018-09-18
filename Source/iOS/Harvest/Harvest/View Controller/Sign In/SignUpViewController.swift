@@ -111,20 +111,21 @@ class SignUpViewController: UIViewController {
     
     isLoading = true
     let orgName = organisationName.text != "" ? organisationName.text : username
+    weak var pvc = self.presentingViewController
     HarvestDB.signUp(
       with: (username, password),
       name: (fname, lname),
       organisationName: orgName ?? username) { w in
+        self.isLoading = false
         if w {
-          HarvestDB.signIn(withEmail: username, andPassword: password, on: self) {w in
-            if w,
-              let vc = self.mainViewToPresent() {
-              self.present(vc, animated: true, completion: nil)
+          self.dismiss(animated: false) {
+            guard let farmerSignInVC = self.storyboard?
+              .instantiateViewController(withIdentifier: "signInViewController") else {
+                return
             }
-            self.isLoading = false
+            
+            pvc?.present(farmerSignInVC, animated: true, completion: nil)
           }
-        } else {
-          self.isLoading = false
         }
     }
     
