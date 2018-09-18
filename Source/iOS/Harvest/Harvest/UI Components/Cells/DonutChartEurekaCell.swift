@@ -27,6 +27,19 @@ public class DonutChartCell: Cell<Session>, CellType {
     super.update()
     chart.data = row?.value?.workerPerformanceSummary()
     
+    if let summary = row?.value?.collectionBagSummary() {
+      switch summary {
+      case let .mass(m):
+        let formatter = MassFormatter()
+        let fm = formatter.string(fromKilograms: m)
+        chart.centerText = "Total Collected: \(fm)"
+      case let .count(c):
+        chart.centerText = "Total Collected: \(c) Bags"
+      }
+    } else {
+      chart.centerText = "--"
+    }
+    
 //    let wname = row.value?.foreman.name ?? "Unknown Foreman"
 //    let dist = row?.value?.track.euclideanDistance() ?? .nan
 //    
@@ -46,10 +59,17 @@ public final class DonutChartRow: Row<DonutChartCell>, RowType {
 extension Session {
   func workerPerformanceSummary() -> PieChartData? {
     let result = PieChartDataSet()
-    for (worker, amount) in collections {
-      result.values.append(PieChartDataEntry(value: Double(amount.count), label: worker.description))
+    var colorSet = [UIColor]()
+    var i = 0
+    let sortedWorkers = collections.sorted {
+      UIColor.huePrecedence(key: $0.key.id) < UIColor.huePrecedence(key: $1.key.id)
     }
-    result.colors = ChartColorTemplates.harvest()
+    for (worker, amount) in sortedWorkers {
+      result.values.append(PieChartDataEntry(value: Double(amount.count), label: worker.description))
+      colorSet.append(UIColor.hashColor(parent: worker.id, child: worker.id))
+      i += 1
+    }
+    result.colors = colorSet
     return collections.isEmpty ? nil : PieChartData(dataSet: result)
   }
 }

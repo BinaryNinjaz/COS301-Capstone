@@ -119,7 +119,7 @@ public class Orchard extends DBInfoObject {
         cultivars.addElement(addMe);
     }
 
-    public Boolean getInferArea() {  return inferArea; }
+    public Boolean getInferArea() {  return inferArea == null ? false : inferArea; }
 
     public String getName() {
         return name;

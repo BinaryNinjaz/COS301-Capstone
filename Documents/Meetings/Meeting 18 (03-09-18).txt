@@ -1,0 +1,9 @@
+Meeting 18 (03-09-18)
+Shaun start pushing all platform branches to master and rebase.
+What are your suggestions for the wow factor (each person give a suggestion)? Voice search is for project day we need something for demo 5. Something with weather, we can tell many things from it.
+Only documentation this week (User manual is a priority). User manual –  Letanyan and John, Landing page – Shaun and Letanyan, Coding Standards – Sizo and Kevin, Finances – John and Sizo, Testing Policy – Vince and Kevin, Requirements Document – Vince and Shaun. All this done by Friday 07 September. I’ve already assigned people on Zenhub, move it to appropriate column on Zenhub when you are done.
+Explain how email verification works, why is it important?
+One automated test from each person per week, it could be something you implemented already, but not too old.
+iOS is in review and is going to be deployed on Letanyan’s App store account.
+When should we book for on 21 September (demo 5)?
+Anything from you guys?

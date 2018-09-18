@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -566,7 +567,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             findPreference(getString(R.string.pref_help_man_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    Log.i(TAG, "Zhu Li, Do the Thing!");
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://harvestapp.co.za/HarvestUserManual.pdf"));
+                    startActivity(browserIntent);
                     return true;
                 }
             });

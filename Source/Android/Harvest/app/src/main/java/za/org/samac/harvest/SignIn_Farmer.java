@@ -5,12 +5,15 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.renderscript.Allocation;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
@@ -56,6 +59,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import za.org.samac.harvest.util.AppUtil;
@@ -310,9 +315,21 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
     }
 
     private void startMain(){
-        Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
-        startActivity(intent);
-        finish();//kill current Activity
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SignIn_Farmer.this);
+        if(!prefs.getBoolean("firstTimeInMain", false)) {
+            // run your one time code
+            Intent intent = new Intent(SignIn_Farmer.this, ViewFlipperActivity.class);
+            startActivity(intent);
+            finish();
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("firstTimeInMain", true);
+            editor.commit();
+        } else {
+            Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
+            startActivity(intent);
+            finish();//kill current Activity
+        }
+
         Data.forceNextPull();
     }
 
@@ -332,19 +349,54 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            mAuth.getCurrentUser().reload();
+                            user = mAuth.getCurrentUser();
                             updateUI(user);
 
                             AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
 
-                            Snackbar.make(login_form, "Log In Successful", Snackbar.LENGTH_LONG).show();
+                            if(user.isEmailVerified() == false) {
+                                System.out.println("AppUtil.isUserSignedIn() ******** "+AppUtil.isUserSignedIn(getApplicationContext()));
+                                FirebaseAuth.getInstance().signOut();
+                                System.out.println("AppUtil.isUserSignedIn() ******** "+AppUtil.isUserSignedIn(getApplicationContext()));
 
-                            login_progress.setVisibility(View.GONE);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    startMain();
+                                login_form.setVisibility(View.VISIBLE);
+                                login_progress.setVisibility(View.GONE);
+                                Snackbar.make(login_form, "Login unsuccessful. Have you confirmed your email?", Snackbar.LENGTH_LONG)
+                                        .setAction("OK", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                            }
+                                        })
+                                        .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                                        .show();
+                            } else {
+                                Snackbar.make(login_form, "Log In Successful", Snackbar.LENGTH_LONG).show();
+                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SignIn_Farmer.this);
+                                if (prefs.contains("firstname")) {
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    DatabaseReference userAdmin = database.getReference(user.getUid() + "/admin/");
+                                    userAdmin.child("firstname").setValue(prefs.getString("firstname", ""));
+                                    userAdmin.child("lastname").setValue(prefs.getString("lastname", ""));
+                                    userAdmin.child("organization").setValue(prefs.getString("organization", ""));
+                                    userAdmin.child("email").setValue(prefs.getString("email", ""));
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.remove("firstname");
+                                    editor.remove("lastname");
+                                    editor.remove("organization");
+                                    editor.remove("email");
+                                    editor.commit();
                                 }
-                            }, 1500);
+
+                                login_progress.setVisibility(View.GONE);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        startMain();
+                                    }
+                                }, 1500);
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

@@ -38,7 +38,13 @@ class HarvestTests: XCTestCase {
     π.mockDB = [
       "foo": [
         "workers": [
-          "1a": ["name": "Andy", "surname": "Andrews", "type": "Foreman", "phoneNumber": "1234567890"],
+          "1a": [
+            "name": "Andy",
+            "surname": "Andrews",
+            "type": "Foreman",
+            "phoneNumber": "1234567890",
+            "assignedOrchards": ["1I", "2II"]
+          ],
           "2b": ["name": "Beth", "surname": "Bethany", "type": "Foreman", "phoneNumber": "0987654321"],
           "3c": ["name": "Carl", "surname": "Carlos", "type": "Worker"],
           "4d": ["name": "Doug", "surname": "Douglas", "type": "Worker"],
@@ -81,11 +87,13 @@ class HarvestTests: XCTestCase {
     let loc1 = CLLocation(latitude: lc, longitude: ld)
     let loc2 = CLLocation(latitude: le, longitude: lf)
     
-    tracker.collect(for: workerA, at: loc0)
-    tracker.collect(for: workerB, at: loc2)
-    tracker.collect(for: workerA, at: loc1)
-    tracker.collect(for: workerB, at: loc2)
-    tracker.collect(for: workerB, at: loc1)
+    let selOrc = "1I"
+    
+    tracker.collect(for: workerA, at: loc0, selectedOrchard: selOrc)
+    tracker.collect(for: workerB, at: loc2, selectedOrchard: selOrc)
+    tracker.collect(for: workerA, at: loc1, selectedOrchard: selOrc)
+    tracker.collect(for: workerB, at: loc2, selectedOrchard: selOrc)
+    tracker.collect(for: workerB, at: loc1, selectedOrchard: selOrc)
     
     return (tracker, [loc0.coordinate, loc1.coordinate, loc2.coordinate], ["3c": workerA, "4d": workerB])
   }
@@ -244,6 +252,45 @@ class HarvestTests: XCTestCase {
       HarvestDB.getOrchards({ (orchards) in
         let oo = orchards.first(where: { $0.id == "2II" })!
         XCTAssertEqual(oo.crop, "42")
+      })
+    }
+  }
+  
+  func testAddingDeletingWorker() {
+    HarvestDB.getWorkers { (workers) in
+      for worker in workers {
+        if worker.id == "1a" {
+          XCTAssertEqual(worker.name, "Andy")
+          
+          XCTAssertEqual(worker.assignedOrchards, ["1I", "2II"])
+          XCTAssertEqual(worker.kind, .foreman)
+        } else if worker.id == "2b" {
+          XCTAssertEqual(worker.name, "Beth")
+        }
+      }
+      
+      XCTAssertEqual(π.mockDB["foo/workers/1a"], [
+        "name": "Andy",
+        "surname": "Andrews",
+        "type": "Foreman",
+        "phoneNumber": "1234567890",
+        "assignedOrchards": ["1I", "2II"]
+      ])
+      HarvestDB.delete(worker: workers.first(where: {$0.id == "1a"})!) { (error, ref) in
+        XCTAssertEqual(π.mockDB["foo/workers/1a"], JSON.none)
+      }
+    }
+  }
+  
+  func testModifyWorker() {
+    HarvestDB.getWorkers { (workers) in
+      let o = workers.first(where: { $0.id == "2b" })!
+      o.tempory = Worker.init(json: o.json()["2b"]!, id: "2b")
+      o.tempory?.idNumber = "42"
+      HarvestDB.save(worker: o.tempory!, oldWorker: o)
+      HarvestDB.getWorkers({ (workers) in
+        let oo = workers.first(where: { $0.id == "2b" })!
+        XCTAssertEqual(oo.idNumber, "42")
       })
     }
   }

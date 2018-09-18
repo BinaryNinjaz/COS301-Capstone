@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -16,8 +17,10 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
@@ -185,7 +188,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);//changed to network provider as GPS wasn't working
                 //adapter.setLocation(location);
             }
-            adapter.setLocation(location);
+            if (location != null) {
+                adapter.setLocation(location);
+            }
         }
 
         locationPermissions();
@@ -702,6 +707,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 finish();
                 return true;
+            case R.id.website:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://harvestapp.co.za/"));
+                startActivity(browserIntent);
+                return true;
         }
         return false;
     }
@@ -808,10 +817,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public void statusCheck() {
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (SplashScreenActivity.wantToUseGPS == false) {
+            SplashScreenActivity.wantToUseGPS = true;
+        } else {
+            SplashScreenActivity.wantToUseGPS = true;
+            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {//changed from GPS to NETWORK
-            buildAlertMessageNoGps();
+            if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {//changed from GPS to NETWORK
+                buildAlertMessageNoGps();
+            }
         }
     }
 
@@ -1010,9 +1024,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             Map<String, Object> childUpdates = new HashMap<>();
                             childUpdates.put("coord", coordinates);
                             childUpdates.put("display", foremanName);
-                            double currentTime;
-                            currentTime = (System.currentTimeMillis() / divideBy1000Var);
-                            childUpdates.put("date", currentTime);
+                            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
+                            String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+                            childUpdates.put("date", dateString);
 
                             locationWanted = false;
                             myRef2.updateChildren(childUpdates);//store location
@@ -1054,9 +1068,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                     Map<String, Object> childUpdates = new HashMap<>();
                                     childUpdates.put("coord", coordinates);
                                     childUpdates.put("display", foremanName);
-                                    double currentTime;
-                                    currentTime = (System.currentTimeMillis() / divideBy1000Var);
-                                    childUpdates.put("date", currentTime);
+                                    SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy HH:mm ZZ");
+                                    String dateString = formatter.format(new Date((System.currentTimeMillis()/divideBy1000Var) * 1000L));
+                                    childUpdates.put("date", dateString);
 
                                     locationWanted = false;
                                     myRef2.updateChildren(childUpdates);//store location

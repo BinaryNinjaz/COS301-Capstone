@@ -14,30 +14,33 @@ $(window).bind("load", () => {
   retryUntilTimeout(succ, fail, 1000);
 });
 
+
+var lastLocation;
 var editingOrchard = false;
 var orchardCoords = [];
 var orchardPoly;
 var orchardMarkers = [];
 var orchardColor;
 var orchardCoordsChanged;
-var loc;
 var map;
 function initEditOrchardMap(withCurrentLoc, editing) {
   editingOrchard = editing;
   if (withCurrentLoc) {
+    initMap();
     updateLocationMap(editing);
-  }
-  initMap();
-  google.maps.event.clearListeners(map, "click");
-  if (orchardPoly !== undefined) {
-    google.maps.event.clearListeners(orchardPoly, "click");
-  }
+  } else {
+    initMap();
+    google.maps.event.clearListeners(map, "click");
+    if (orchardPoly !== undefined) {
+      google.maps.event.clearListeners(orchardPoly, "click");
+    }
 
-  if (editing) {
-    map.addListener("click", function(e) {
-      pushOrchardCoord(e);
-      updatePolyListener();
-    });
+    if (editing) {
+      map.addListener("click", function(e) {
+        pushOrchardCoord(e);
+        updatePolyListener();
+      });
+    }
   }
 }
 
@@ -80,46 +83,50 @@ function pushOrchardCoord(e) {
 }
 
 function updateLocationMap(editing) {
-  locationLookup((data) => {
-    loc = {
-      lat: data.lat,
-      lng: data.lon
-    }
+  if (map == null) {
     initMap();
-    if (editing) {
-      google.maps.event.clearListeners(map, "click");
-      if (orchardPoly !== undefined) {
-        google.maps.event.clearListeners(orchardPoly, "click");
+  }
+  if (lastLocation != undefined) {
+    map.setCenter(lastLocation);
+    map.setZoom(11);
+  } else {
+    map.setCenter({lat: 0, lng: 0});
+    map.setZoom(2);
+    locationLookup((data) => {
+      lastLocation = new google.maps.LatLng(parseFloat(data.lat) || 0, parseFloat(data.lon) || 0);
+      map.setCenter(lastLocation);
+      map.setZoom(11);
+      if (editing) {
+        google.maps.event.clearListeners(map, "click");
+        if (orchardPoly !== undefined) {
+          google.maps.event.clearListeners(orchardPoly, "click");
+        }
+        map.addListener("click", function(e) {
+          pushOrchardCoord(e);
+          updatePolyListener();
+        });
       }
-      map.addListener("click", function(e) {
-        pushOrchardCoord(e);
-        updatePolyListener();
-      });
-    }
-  });
-  initMap();
-  if (editing) {
-    google.maps.event.clearListeners(map, "click");
-    if (orchardPoly !== undefined) {
-      google.maps.event.clearListeners(orchardPoly, "click");
-    }
-    map.addListener("click", function(e) {
-      pushOrchardCoord(e);
-      updatePolyListener();
     });
   }
+
 }
 
 function initMap() {
-  if (loc === undefined) {
-    loc = {lat: -25, lng: 28};
+  var mapDiv = document.getElementById('map');
+  if (mapDiv === undefined) {
+    return;
   }
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: loc,
-    zoom: 14,
+  map = new google.maps.Map(mapDiv, {
     disableDoubleClickZoom: true,
     mapTypeId: "satellite"
   });
+  if (lastLocation != null) {
+    map.setCenter(lastLocation);
+    map.setZoom(11);
+  } else {
+    map.setCenter({lat: 0, lng: 0});
+    map.setZoom(11);
+  }
 }
 
 function updateMarkers() {
@@ -132,35 +139,47 @@ function updateMarkers() {
 }
 
 function updatePolygon(orchard) {
-  if (orchardCoords === undefined) {
-    orchardCoords = [];
-  }
-  while (orchardCoords.length > 0) {
-    orchardCoords.pop();
-  }
-  if (orchard !== null && orchard !== undefined && orchard.coords !== undefined) {
-    orchard.coords.forEach(function(coord) {
-      orchardCoords.push(coord);
+  if (orchard !== null && orchard !== undefined) {
+    if (orchardCoords == undefined) {
+      orchardCoords = [];
+    }
+    while (orchardCoords.length > 0) {
+      orchardCoords.pop();
+    }
+    if (orchard !== null && orchard !== undefined && orchard.coords !== undefined) {
+      orchard.coords.forEach(function(coord) {
+        orchardCoords.push(coord);
+      });
+    }
+    if (orchardPoly !== undefined && orchardPoly !== null) {
+      orchardPoly.setMap(null);
+    }
+    const clr = orchardColor === undefined ? 'rgb(255, 0, 0)' : orchardColor;
+    orchardPoly = new google.maps.Polygon({
+      paths: orchardCoords,
+      strokeColor: clr,
+      strokeOpacity: 0.75,
+      strokeWeight: 3,
+      fillColor: clr,
+      fillOpacity: 0.25,
+      map: map
     });
   }
-  if (orchardPoly !== undefined && orchardPoly !== null) {
-    orchardPoly.setMap(null);
-  }
-  const clr = orchardColor === undefined ? 'rgb(255, 0, 0)' : orchardColor;
-  orchardPoly = new google.maps.Polygon({
-    paths: orchardCoords,
-    strokeColor: clr,
-    strokeOpacity: 0.75,
-    strokeWeight: 3,
-    fillColor: clr,
-    fillOpacity: 0.25,
-    map: map
-  });
-  clearMarkers();
-  updatePolyListener();
-  map.setCenter({lat: cenLat(orchardCoords), lng: cenLng(orchardCoords)});
-  if (orchardCoords.length > 1) {
-    map.fitBounds(bounds(orchardCoords));
+  if (map == null) {
+    initMap();
+  } else {
+    clearMarkers();
+    updatePolyListener();
+    if (orchardCoords.length > 1) {
+      map.setCenter({lat: cenLat(orchardCoords), lng: cenLng(orchardCoords)});
+      map.fitBounds(bounds(orchardCoords));
+    } else if (lastLocation != undefined) {
+      map.setCenter(lastLocation);
+      map.setZoom(11);
+    } else {
+      map.setCenter({lat: 0, lng: 0});
+      map.setZoom(2);
+    }
   }
 }
 
@@ -567,6 +586,9 @@ function dispOrchard(id) {
       "<div class='col-sm-12'><div id='map'></div></div>" +
       "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-warning'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-danger'>Remove All</button></div></div></div>" +
       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
+      "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"0\")'></select></div></div>" +
+       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
       "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass'></div>" +
       "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
@@ -605,12 +627,10 @@ function dispOrchard(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
       "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'></textarea></div></div>" +
       "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-      "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"0\")'></select></div></div>" +
-       "" +
       "</form>"
     ;
     initEditOrchardMap(true, true);
+    orchardColor = hashColor("HarvestOrchard", "BinaryNinjaz");
     updatePolygon(null);
 
     for (const fKey in farms) {
@@ -635,6 +655,9 @@ function dispOrchard(id) {
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Orchard Location:</label>" +
       "<div class='col-sm-9'><div id='map'></div></div></div> " +
       "" +
+      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Farm:</label>" +
+      "<div class='col-sm-9'><span id='orchFarmDisp'></span></div> </div>" +
+      "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
       "<div class='col-sm-9'><p class='form-control-static'>" + orchard.bagMass + " Kg</p></div> </div>" +
       "" +
@@ -655,9 +678,6 @@ function dispOrchard(id) {
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
       "<div class='col-sm-9'><p class='form-control-static'>" + orchard.further + "</p></div> </div>" +
-      "" +
-      "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Farm:</label>" +
-      "<div class='col-sm-9'><span id='orchFarmDisp'></span></div> </div>" +
       "" +
       "<div class='form-group'><label class='control-label col-sm-2' for='text'>Assigned Workers:</label>" +
       "<div class='col-sm-9' id='workerButtons'></div></div>" +
@@ -845,6 +865,9 @@ function orchMod(id) {
   "<div class='col-sm-12'><div id='map'></div></div>" +
   "<div class='col-sm-4'><button onclick='popOrchardCoord()' type='button' class='btn btn-warning'>Remove Last Point</button></div><div class='col-sm-4'><button onclick='clearOrchardCoord()' type='button' class='btn btn-danger'>Remove All</button></div></div></div>" +
   "" +
+  "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
+  "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"" + id + "\")'></select></div></div>" +
+  "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Mean Bag Mass:</label>" +
   "<div class='col-sm-8'><input type='number' class='form-control' id='orchBagMass' value='" + orchard.bagMass + "'></div>" +
   "<div class='col-sm-1'><p class='form-control-static'>Kg</p></div>" +
@@ -883,9 +906,6 @@ function orchMod(id) {
   "" +
   "<div class='form-group'><label class='control-label col-sm-2' for='text'>Information:</label>" +
   "<div class='col-sm-9'><textarea class='form-control' rows='4' id='oi'>" + orchard.further + "</textarea></div> </div>" +
-  "" +
-  "<div class='form-group'><label class='control-label col-sm-2' for='sel1'>Assigned Farm:</label>" +
-  "<div class='col-sm-9'><select class='form-control' id='orchFarm' onchange='updateOrchardColor(this, \"" + id + "\")'></select></div></div>" +
   "" +
   "</form>"
   ;//need to fix referencing
@@ -1052,7 +1072,13 @@ function workSave(type, id) {
   let newRef;
   if (type === 0) {
     // Create Worker
-    newRef = firebase.database().ref('/' + userID() +"/workers/").push(tempWorker);
+    const pn = tempWorker.phoneNumber;
+    if (tempWorker.type === "Foreman" && pn !== undefined && pn !== "") {
+      const obj = {};
+      obj[pn] = true;
+      firebase.database().ref('/' + userID() + '/foremen/').update(obj);
+    }
+    newRef = firebase.database().ref('/' + userID() + '/workers/').push(tempWorker);
     id = newRef.getKey();
     workers[id] = tempWorker;
     showWorkersList();
@@ -1066,6 +1092,10 @@ function workSave(type, id) {
     if (pn !== undefined && pn !== "") {
       if (oldType !== undefined && oldType === "Foreman" && workType === "Worker") {
         firebase.database().ref('/' + userID() + '/foremen/' + pn).remove();
+      } else if (workType === "Foreman" && oldType === "Worker") {
+        const obj = {};
+        obj[pn] = true;
+        firebase.database().ref('/' + userID() + '/foremen/').update(obj);
       }
     }
     if (oldType !== undefined && oldType === "Foreman" && workType === "Worker") {

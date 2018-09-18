@@ -192,7 +192,7 @@ function initOrchards() {
       }
       var btn = document.getElementById("selectedFilter");
       btn.style.visibility = "visible";
-      updateHeatmap();
+      updateSpiner(false);
     });
   });
 }
@@ -214,15 +214,13 @@ function initWorkers() {
 /* The map variable and the initMap initialize the coordinates of the area of farming*/
 var map;
 function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -25, lng: 28 },
-    zoom: 14,
-    mapTypeId: 'satellite'
-  });
   locationLookup((data) => {
     var latLng = new google.maps.LatLng(data.lat, data.lon);
-    map.setCenter(latLng);
-    map.setZoom(11);
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: latLng,
+      zoom: 11,
+      mapTypeId: 'satellite'
+    });
   });
 }
 
@@ -279,7 +277,6 @@ function updateHeatmap() {
   keys.groupBy = selectedEntity;
 
   const url = 'https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/collectionsWithinDate';
-
   updateSpiner(true);
   $.post(url, keys, (data, status) => {
     var formattedData = [];

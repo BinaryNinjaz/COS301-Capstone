@@ -15,7 +15,7 @@ function propertyWords() {
     "foreman name", "foreman id", "foreman phone number", "foreman assigned orchard",
     "orchard name", "orchard crop", "orchard cultivar", "orchard irrigation type",
     "farm name", "farm company", "farm email", "farm phone number", "farm province",
-    "farm nearest town",
+    "farm nearest town", "worker", "orchard", "farm", "foreman"
   ].sort((a, b) => { return b.length - a.length; });
 }
 
@@ -32,7 +32,11 @@ function getRequestedPropertiesFromQuery(queryText) {
     for (const pidx in properties) {
       const prop = properties[pidx];
       if (stringContainsSubstring(passes[i], prop)) {
-        subResult.push(prop);
+        if (prop === "worker" || prop === "orchard" || prop === "farm" || prop === "foreman") {
+          subResult.push(prop + " name");
+        } else {
+          subResult.push(prop);
+        }
       }
     }
     result.push(subResult);
@@ -193,13 +197,21 @@ function unionOfObjects(objectA, objectB) {
     for (const keyB in objectB) {
       if (!arrayContainsString(keyA.split("/"), keyB)) {
         const temp = objectA[keyA];
-        result[keyA + "/" + keyB] = temp + "/" + objectB[keyB];
+        if (keyB === "Calculation") {
+          result[keyA + "/" + keyB] = temp + "<br>" + objectB[keyB];
+        } else {
+          result[keyA + "/" + keyB] = temp + "<br>" + objectB[keyB];
+        }
         delete result[keyA];
       } else {
-        if (arrayContainsString(objectA[keyA].split("/"), objectB[keyB]) || arrayContainsString(objectA[keyA].split(", "), objectB[keyB])) {
+        if (arrayContainsString(objectA[keyA].split("<br>"), objectB[keyB]) || arrayContainsString(objectA[keyA].split("<br>"), objectB[keyB])) {
           result[keyA] = objectA[keyA];
         } else if (result[keyA] === undefined) {
-          result[keyA] = objectA[keyA] + ", " + objectB[keyB];
+          if (arrayContainsString(objectA[keyA].split("<br>"), "Calculation") || keyB === "Calculation") {
+            result[keyA] = objectA[keyA] + "<br>" + objectB[keyB];
+          } else {
+            result[keyA] = objectA[keyA] + "<br>" + objectB[keyB];
+          }
         }
       }
     }
@@ -272,7 +284,16 @@ function queryEntity(option, ekey, entity, farms, orchards, workers, queryText, 
     }
     if (requested[aQueryIdx] !== undefined && requested[aQueryIdx].length > 0) {
       for (const key in subResult) {
-        if (!arrayContainsString(requested[aQueryIdx], key.toLowerCase())) {
+        const keyParts = key.toLowerCase().split("/");
+        var removeProp = true;
+        for (const reqPropIdx in requested[aQueryIdx]) {
+          const reqProp = requested[aQueryIdx][reqPropIdx];
+          if (arrayContainsString(keyParts, reqProp)) {
+            removeProp = false;
+            break;
+          }
+        }
+        if (removeProp) {
           delete subResult[key];
         }
       }

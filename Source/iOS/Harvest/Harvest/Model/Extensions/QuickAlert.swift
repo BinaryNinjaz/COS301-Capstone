@@ -65,6 +65,8 @@ extension SCLAlertView {
       button?.title = "\(mapView.mapType.title)"
     }
     
+    alert.addButton("Cancel") {}
+    
     alert.showEdit(
       "Map Type",
       subTitle: "Please select the map type you wish to view this map in.")

@@ -151,14 +151,28 @@ extension UIColor {
     let b = (CGFloat(arc4random()) / CGFloat(UInt32.max)) * 0.33 + 0.66
     return UIColor(hue: h, saturation: s, brightness: b, alpha: 1.0)
   }
+
+  static func huePrecedence(key: String) -> CGFloat {
+    var hue = key.utf8.asciiColorHash() * 0.78 + 0.22
+    
+    let dif = hue.remainder(dividingBy: 0.05)
+    
+    hue -= dif
+    
+    return hue
+  }
   
   static func hashColor(parent: String, child: String) -> UIColor {
-    let hueRatio = parent.utf8.asciiColorHash()
+    let hueRatio = huePrecedence(key: parent)
     let cChild = child.utf8
-    let satRatio = cChild.prefix(cChild.count / 2).asciiColorHash() * 0.5 + 0.5
-    let briRatio = cChild.suffix(cChild.count / 2).asciiColorHash() * 0.33 + 0.66
+    let satRatio = cChild.prefix(cChild.count / 2).asciiColorHash() * 0.4 + 0.6
+    let briRatio = cChild.suffix(cChild.count / 2).asciiColorHash() * 0.4 + 0.6
     
     return UIColor(hue: hueRatio, saturation: satRatio, brightness: briRatio, alpha: 1.0)
+  }
+  
+  static func hashColorOnce(key: String) -> UIColor {
+    return hashColor(parent: key, child: key)
   }
 }
 

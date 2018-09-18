@@ -7,7 +7,7 @@ target 'Harvest' do
   pod 'Firebase/Database'
   pod 'Firebase/Auth'
   pod 'Firebase/Functions'
-  pod 'GoogleSignIn'
+  pod 'GoogleSignIn', '4.1.2'
   pod 'Eureka'
   pod 'Disk'
   pod 'Charts'
@@ -16,7 +16,7 @@ target 'Harvest' do
   pod 'PhoneNumberKit', '~> 2.1'
   pod 'FSPagerView'
   pod 'CryptoSwift'
-  
+
   target 'HarvestTests' do
     inherit! :search_paths
     pod 'Firebase'

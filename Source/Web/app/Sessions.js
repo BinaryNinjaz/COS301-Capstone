@@ -7,7 +7,7 @@
 *					databse, and uses google graph APIs
 */
 var pageIndex = null; // track the last session loaded. Used for pagination
-var pageSize = 21;
+var pageSize = 20;
 $(window).bind("load", () => {
 	var divHide = document.getElementById('loader'); /* When the page loads, the error div should be hidden */
 	divHide.style.visibility = "hidden"; /* When the page loads, the error div should be hidden, do not remove */
@@ -27,13 +27,11 @@ var map;
 function initMap() {
   locationLookup((data, response) => {
     var latLng = new google.maps.LatLng(data.lat, data.lon);
-    map.setCenter(latLng);
-    map.setZoom(11);
-  });
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -25, lng: 28 },
-    zoom: 14,
-    mapTypeId: 'satellite'
+		map = new google.maps.Map(document.getElementById('map'), {
+	    center: latLng,
+	    zoom: 11,
+	    mapTypeId: 'satellite'
+	  });
   });
 }
 
@@ -98,9 +96,23 @@ function insertSessionIntoSortedMap(session, key, checkEqualKey, sortedMap) {
   }
 
   if (belongsInGroup !== undefined) {
+		var isDuplicate = false;
+		for (var i = 0; i < sortedMap[belongsInGroup].values.length; i++) {
+			if (sortedMap[belongsInGroup].values[i].key === session.key) {
+				isDuplicate = true;
+				break;
+			}
+		}
+		if (isDuplicate) {
+			return;
+		}
     sortedMap[belongsInGroup].values.push(session);
     sortedMap[belongsInGroup].values = sortedMap[belongsInGroup].values.sort((a, b) => {
-      return b.value.start_date - a.value.start_date;
+			const ma = moment(a.value.start_date);
+			const mb = moment(b.value.start_date);
+      return ma.isSame(mb)
+				? 0
+				: ma.isAfter(mb) ? -1 : 1;
     });
   } else {
     sortedMap.push({key: key, values: [session]});
@@ -145,11 +157,12 @@ function newPage() {
       .endAt(pageIndex)
       .limitToLast(pageSize);
   }
-  var tempSessions = [];
+	const equalDates = (a, b) => {
+		return a.isSame(b);
+	};
   ref.once('value').then((snapshot) => {
     var lastSession = "";
     var resultHtml = [];
-    var i = 0;
     snapshot.forEach((child) => {
       const obj = child.val();
       const foreman = workers[obj.wid];
@@ -160,9 +173,6 @@ function newPage() {
         const session = {value: obj, key: child.key};
 
         const key = moment(session.value.start_date).startOf('day');
-        const equalDates = (a, b) => {
-          return a.isSame(b);
-        };
 
         insertSessionIntoSortedMap(session, key, equalDates, sessions);
       }
@@ -233,6 +243,7 @@ function loadSession(sessionID) {
     markers[marker].setMap(null)
   }
 
+	var unorderedData = [];
   if (val.collections !== undefined) {
     for (const ckey in val.collections) {
       const collection = val.collections[ckey];
@@ -243,9 +254,10 @@ function loadSession(sessionID) {
         wname = worker.name + " " + worker.surname;
       }
 
-      graphData.datasets[0].data.push(collection.length);
-      graphData.datasets[0].backgroundColor.push(colorForIndex(gdatai));
-      graphData["labels"].push(wname);
+			unorderedData.push({x: wname, y: collection.length, color: hashColorOnce(ckey), precedence: huePrecedence(ckey)});
+      // graphData.datasets[0].data.push(collection.length);
+      // graphData.datasets[0].backgroundColor.push(hashColorOnce(ckey));
+      // graphData["labels"].push(wname);
       gdatai++;
 
       for (const pkey in collection) {
@@ -264,6 +276,16 @@ function loadSession(sessionID) {
       }
     }
   }
+	unorderedData = unorderedData.sort((a, b) => {
+		return a.precedence - b.precedence;
+	});
+	for (const udi in unorderedData) {
+		const ud = unorderedData[udi];
+		graphData.datasets[0].data.push(ud.y);
+		graphData.datasets[0].backgroundColor.push(ud.color);
+		graphData["labels"].push(ud.x);
+	}
+
   initGraph(graphData);
 }
 
@@ -305,16 +327,17 @@ function drawOrchards() {
 
 	for (const oKey in orchards) {
 		var coords = [];
-		const oCoords = orchards[oKey].coords;
+		const orchard = orchards[oKey];
+		const oCoords = orchard.coords;
 		for (const cidx in oCoords) {
 			coords.push({lat: oCoords[cidx].lat, lng: oCoords[cidx].lng});
 		}
 		orchardPolygons.push(new google.maps.Polygon({
-	    paths: oCoords,
-	    strokeColor: hashColor(orchards[oKey].farm, oKey),
+	    paths: coords,
+	    strokeColor: hashColor(orchard.farm, oKey),
 	    strokeOpacity: 0.75,
 	    strokeWeight: 3,
-	    fillColor: hashColor(orchards[oKey].farm, oKey),
+	    fillColor: hashColor(orchard.farm, oKey),
 	    fillOpacity: 0.25,
 	    map: map
 	  }));

@@ -52,7 +52,7 @@ class SignInOptionViewController: UIViewController {
     
     if let user = Auth.auth().currentUser {
       HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor { succ in
-        if succ, let vc = self.mainViewToPresent() {
+        if succ, let vc = self.mainViewToPresent(), user.isEmailVerified {
           self.present(vc, animated: true, completion: nil)
         }
       })

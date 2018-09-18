@@ -65,6 +65,23 @@ struct Tracker: Codable {
     saveState()
   }
   
+  mutating func collect(bags: Int, for worker: Worker, at loc: CLLocation, selectedOrchard: String?) {
+    guard var collection = collections[worker] else {
+      let cp = CollectionPoint(location: loc.coordinate, date: Date(), selectedOrchard: selectedOrchard)
+      collections[worker] = [cp]
+      return
+    }
+    
+    let point = CollectionPoint(location: loc.coordinate, date: Date(), selectedOrchard: selectedOrchard)
+    let points = repeatElement(point, count: bags)
+    
+    collection.append(contentsOf: points)
+    
+    collections[worker] = collection
+    
+    saveState()
+  }
+  
   mutating func pop(for worker: Worker) {
     guard var collection = collections[worker], !collection.isEmpty else {
       return

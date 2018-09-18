@@ -36,7 +36,7 @@ public final class HarvestUser {
     uid = json["uid"] as? String ?? ""
     firstname = json["firstname"] as? String ?? ""
     lastname = json["lastname"] as? String ?? ""
-    accountIdentifier = json["accountIdentifier"] as? String ?? ""
+    accountIdentifier = json["email"] as? String ?? ""
     let defaultFarmName = accountIdentifier
     organisationName = json["organization"] as? String ?? defaultFarmName
     workingForID = []
@@ -48,7 +48,7 @@ public final class HarvestUser {
       "firstname": firstname,
       "lastname": lastname,
       "organization": organisationName,
-      "accountIdentifier": accountIdentifier,
+      "email": accountIdentifier,
       "uid": uid
     ]
   }
