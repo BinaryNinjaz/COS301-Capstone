@@ -152,7 +152,7 @@ The Android application currently requires:
 \begin{itemize}
 	\item Either Android 4.0 OS or above
 \item 200 MB RAM
-\item 50 MB Disk Space	
+\item 6,1 MB Disk Space	
 	\item Location Services
 \end{itemize}
 \subsubsection{iOS}
@@ -373,22 +373,35 @@ The following settings are available:
 On all web pages a consistent navbar can be seen at the top of the page. The following items are always present:
 \begin{itemize}
  \item \ref{webHome}: Home Page
+ \item \ref{webTracker}: Tracker
  \item \ref{webInformation}: Information
  \item \ref{webSessions}: Sessions
  \item \ref{webHeatmap}: Heatmap
- \item \ref{webAnalytics}: Analytics
+ \item \ref{webAnalytics}: Statistics
  \item \ref{webSettings}: Settings
  \item \ref{webLoggingOut}: Sign Out
 \end{itemize}
+
 \subsubsection{Home Page}
 \label{webHome}
-Once the user has logged in, they will be taken to the home page, as seen in \ref{HomePage}. The home page is the starting point of the system, it serves simply by providing a real time updating feed of all bag drops, and a map overview of the farm and the locations of foremen.
+Once the user has logged in, they will be taken to the home page, as seen in \ref{HomePage}. The home page is the starting point of the system, it serves as a navigation page of the website.
 
 \begin{figure}
  \centering
  \includegraphics[width=12cm, keepaspectratio]{Images/webHome-Page.png}
  \caption{Home Page}
- \label{HomePage}
+ \label{webHome}
+\end{figure}
+
+\subsubsection{Tracker}
+\label{webTracker}
+The Tracker page can be found at any time by clicking on the \texttt{Tracker} button in the navbar. Once clicked on, the user will be taken to \ref{Tracker}, as seen in \ref{HomePage}. It serves simply by providing an updating feed of the farm and the locations of foremen every two minutes.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=12cm, keepaspectratio]{Images/webHome-Page.png}
+ \caption{Tracker}
+ \label{webTracker}
 \end{figure}
 
 \subsubsection{View/Edit Information}
@@ -487,7 +500,7 @@ From here, a list of all sessions can be seen and selected. Once selected, infor
 \subsubsection{Heatmap}
 \label{webHeatmap}
 
-The heatmap (\ref{webHeatmap}) shows where the majority of bag drops took place, by having more active areas be redder.
+The Heatmap (\ref{webHeatmap}) shows where the majority of bag drops took place, by having more active areas be redder.
 
 \begin{figure}
  \centering
@@ -496,7 +509,7 @@ The heatmap (\ref{webHeatmap}) shows where the majority of bag drops took place,
  \label{HeatMap}
 \end{figure}
 
-\subsubsection{Analytics}
+\subsubsection{Statistics}
 \label{webAnalytics}
 
 \begin{figure}
@@ -506,13 +519,13 @@ The heatmap (\ref{webHeatmap}) shows where the majority of bag drops took place,
  \label{webAnalImg}
 \end{figure}
 
-The Analytics on the website can be seen in \ref{webAnalImg}. \\
-The top (radar) graph shows the performance of the selected orchard, which is chosen in the first dropdown. Then the start and end date can be selected, and once \texttt{Filter Orchard Graph} is selected, the graph will be generated.\\
-The second, and final, graph shows the performance of the selected worker---which is chosen in the second dropdown---for the selected date. Once this is chosen, and \texttt{Filter Worker Performance Graph} is clicked on, the graph is generated. It shows the number of bags collected by the selected worker in each hour of the chosen day.
+The Statistics on the website can be seen in \ref{webAnalImg}. \\
+The graph displays the performance of the selected farm(s), orchard(s), foremen/foreman or worker(s), which is chosen in the tick box. Then the start and end date can be selected, and once \texttt{Filter Orchard Graph} is selected, the graph will be generated.\\
 
 \subsubsection{Settings}
 \label{webSettings}
 
+The Settings allows users to edit their pesonal information.
 
 \newpage
 \section{Troubleshooting}

@@ -112,11 +112,10 @@ public class SignIn_Foreman extends AppCompatActivity {
 
         phoneCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
+            //Automatic verification -- no user action necessary
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-                //Already verified, or device says so.
                 verificationInProgress = false;
                 signInWithPhoneAuthCredential(phoneAuthCredential);
-                findFarms();
             }
 
             @Override
@@ -127,6 +126,7 @@ public class SignIn_Foreman extends AppCompatActivity {
                     updateUI();
                 }
                 else if (e instanceof FirebaseTooManyRequestsException){
+                    //SMS quota for the project has been exceeded.
                     state = STATE_QUOTA_EXCEED;
                     updateUI();
                 }
@@ -175,7 +175,7 @@ public class SignIn_Foreman extends AppCompatActivity {
         verificationInProgress = savedInstanceState.getBoolean(KEY_VERIFY_IN_PROGRESS);
     }
 
-    private  void startPhoneNumberVerification(String phoneNumber){
+    private void startPhoneNumberVerification(String phoneNumber){
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,
                 60,

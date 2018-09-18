@@ -105,7 +105,7 @@ public class ViewFlipperActivity extends Activity {
 
     private void endThis(boolean goToStart){
         if (goToStart) {
-            Intent intent = new Intent(ViewFlipperActivity.this, InformationActivity.class);
+            Intent intent = new Intent(ViewFlipperActivity.this, MainActivity.class);
             startActivity(intent);
         }
         finish();

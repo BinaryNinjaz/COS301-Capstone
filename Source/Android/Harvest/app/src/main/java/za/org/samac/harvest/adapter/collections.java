@@ -122,29 +122,25 @@ public class collections {
                 if (!points.isEmpty()) {
                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                     DatabaseReference userRef =  FirebaseDatabase.getInstance().getReference(uid + "/");
-                    DatabaseReference coordRef = userRef.child("orchards/" + orchard.getID() + "/coords");
-                    ArrayList<FirebaseLocation> firPoints = new ArrayList<>();
-                    for (int i = 0; i < points.size(); i++) {
-                        firPoints.add(new FirebaseLocation(points.get(i).latitude, points.get(i).longitude));
+                    if (orchard.getID() != null && !orchard.getID().isEmpty()) {
+                        DatabaseReference coordRef = userRef.child("orchards/" + orchard.getID() + "/coords");
+
+                        for (Integer i = 0; i < points.size(); i++) {
+                            coordRef.child(i.toString() + "/" + "lat").setValue(points.get(i).latitude);
+                            coordRef.child(i.toString() + "/" + "lng").setValue(points.get(i).longitude);
+                        }
                     }
-                    coordRef.setValue(firPoints);
                 }
             }
         }
 
     }
 
-    public ArrayList<LatLng> convexHull(String selectedOrchard, List<LatLng> additionalPoints) {
+    public ArrayList<LatLng> convexHull(String selectedOrchard, List<LatLng> currentOrchardPoints) {
         ArrayList<LatLng> points = allPickupPoints(selectedOrchard);
+        points.addAll(currentOrchardPoints);
         if (points.size() < 3) {
             return new ArrayList<LatLng>();
-        }
-
-        points.addAll(additionalPoints);
-        for (int p = 0; p < points.size(); p++) {
-            System.out.println("----------------");
-            System.out.println(points.get(p).latitude);
-            System.out.println(points.get(p).longitude);
         }
 
         ArrayList<LatLng> result = new ArrayList<>();
@@ -163,6 +159,7 @@ public class collections {
         result.add(points.get(2));
 
         for (int i = 3; i < points.size(); i++) {
+            if (result.size() < 3) { break; }
             LatLng last = result.get(result.size() - 1);
             LatLng secondLast = result.get(result.size() - 2);
             while (ccw(secondLast, last, points.get(i)).compareTo(-1) != 0) {

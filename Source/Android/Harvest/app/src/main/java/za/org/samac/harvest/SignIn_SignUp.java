@@ -4,8 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -180,7 +183,40 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private void createAccount(String email, String password) {
+    public void emailCheck(final FirebaseUser user) {
+        user.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        // Re-enable button
+                        //findViewById(R.id.verify_email_button).setEnabled(true);
+                        if (task.isSuccessful()) {
+                            Toast.makeText(SignIn_SignUp.this,
+                                    "Verification email sent to " + user.getEmail(),
+                                    Toast.LENGTH_LONG).show();
+                            signUp_progress.setVisibility(View.GONE);
+                            //Add the name, surname, and organization to Firebase
+
+                            signUp_progress.setVisibility(View.GONE);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(SignIn_SignUp.this, SignIn_Farmer.class);
+                                    startActivity(intent);
+                                    finish();//kill current Activity
+                                }
+                            }, 1500);
+                        } else {
+                            Log.e(TAG, "sendEmailVerification", task.getException());
+                            Toast.makeText(SignIn_SignUp.this,
+                                    "Failed to send verification email.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    private void createAccount(final String email, final String password) {
         Log.d(TAG, "createAccount:" + email);
         if (!validateForm()) {
             return;
@@ -197,37 +233,32 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            final FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
 
                             AppUtil.writeStringToSharedPrefs(getApplicationContext(), AppUtil.SHARED_PREFERENCES_KEY_EMAIL, user.getEmail());
 
                             Snackbar.make(signUp_form, "Registration Successful", Snackbar.LENGTH_LONG).show();
-                            signUp_progress.setVisibility(View.GONE);
 
-                            //Add the name, surname, and organization to Firebase
-                            EditText fname, sname, org, email;
+                            final EditText fname, sname, org, email;
                             fname = findViewById(R.id.edtFirstName);
                             sname = findViewById(R.id.edtSurname);
                             org = findViewById(R.id.edtOrganization);
                             email = findViewById(R.id.edtEmail);
 
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference userAdmin = database.getReference(user.getUid() + "/admin/");
-                            userAdmin.child("firstname").setValue(fname.getText().toString());
-                            userAdmin.child("surname").setValue(sname.getText().toString());
-                            userAdmin.child("organization").setValue(org.getText().toString());
-                            userAdmin.child("email").setValue(email.getText().toString());
+                            SharedPreferences prefrences = PreferenceManager.getDefaultSharedPreferences(SignIn_SignUp.this);
+                            SharedPreferences.Editor editor = prefrences.edit();
+                            editor.putString("firstname", fname.getText().toString());
+                            editor.putString("lastname", sname.getText().toString());
+                            if (org.getText().toString() == null || org.getText().toString().isEmpty() ) {
+                                editor.putString("organization", email.getText().toString());
+                            } else {
+                                editor.putString("organization", org.getText().toString());
+                            }
+                            editor.putString("email", email.getText().toString());
+                            editor.commit();
 
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(SignIn_SignUp.this, ViewFlipperActivity.class);
-                                    startActivity(intent);
-                                    finish();//kill current Activity
-                                }
-                            }, 1500);
-
+                            emailCheck(user);
                         } else {
 
                             // If sign in fails, display a message to the user.
@@ -242,7 +273,7 @@ public class SignIn_SignUp extends AppCompatActivity implements LoaderCallbacks<
 
                                         }
                                     })
-                                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light ))
+                                    .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                                     .show();
                         }
 

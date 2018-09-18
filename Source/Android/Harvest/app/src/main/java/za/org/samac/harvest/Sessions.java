@@ -2,6 +2,7 @@ package za.org.samac.harvest;
 
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -462,6 +463,10 @@ public class Sessions extends AppCompatActivity implements SearchView.OnQueryTex
                             });
                 }
                 finish();
+                return true;
+            case R.id.website:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://harvestapp.co.za/"));
+                startActivity(browserIntent);
                 return true;
             default:
                 super.onOptionsItemSelected(item);

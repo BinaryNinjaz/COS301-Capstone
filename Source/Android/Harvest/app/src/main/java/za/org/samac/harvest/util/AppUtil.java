@@ -43,6 +43,23 @@ public class AppUtil {
         }
     }
 
+    public static boolean isUserSignedInAndValid(Context context) {
+//        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.app_shared_prefrences), Context.MODE_PRIVATE);
+//        return sharedPreferences.contains(SHARED_PREFERENCES_KEY_EMAIL);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null){
+            //User signed in
+            if (user.isEmailVerified() == true || user.getPhoneNumber() != null) {
+                return true;
+            }
+        }
+        else {
+            //User not signed in
+            return false;
+        }
+        return false;
+    }
+
     public static boolean isUserSignedIn() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null){

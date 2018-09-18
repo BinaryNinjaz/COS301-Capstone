@@ -1,0 +1,12 @@
+Meeting 19 (06-09-18)
+We need an open source licence to protect us and other stuff so I’ll the lecturer which one we need.
+Tell people, but not too many (farmers in specific, we don’t have to risk a bunch of students chowing our monthly limits and causing us to lose money) about the app we barely have any user.
+Change of plans, we don’t start the wow factor without covering all our exits for the demo. So, testing, documentation and all that other stuff specified in the demo is of the highest priority.
+But in terms of our wow factor we need to ask ourselves what is going to stop old fashioned farms from saying that they would rather stick with their paper and pen or that they already know where best to plant their crops or that they already have hardware that caters for some of the stuff the system provides? We need a wow factor that silences them all.
+Deployment and financial monitoring and walkthrough.
+Look for and make a list of all the things that need to be disable (especially in terms of automatic payments), changed and handed over to the client.
+Documentation is now due on Sunday 16 September. Where people need help we help them.
+One automated test at least from each person.
+When should we book for on 21 September (demo 5)? Bookings open on Monday 10 September.
+Vince start merging and rebasing plat form branches.
+Anything from you guys?

@@ -47,7 +47,7 @@
                             xmlns:tools="http://schemas.android.com/tools"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/agriculturebarnbuildings"
+                            android:background="@drawable/barn"
                             tools:context="com.alvinalexander.motify.LandingPageActivity.ShowFullQuoteFragment"
                             android:id="@+id/farmPic">
 
@@ -124,7 +124,7 @@
                             xmlns:tools="http://schemas.android.com/tools"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/nih"
+                            android:background="@drawable/worker"
                             tools:context="com.alvinalexander.motify.LandingPageActivity.ShowFullQuoteFragment"
                             android:id="@+id/workersPic">
 
