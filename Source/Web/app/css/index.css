@@ -1,45 +1,56 @@
-/* This sets the background of the index page to be transparent */
-body{
-    background-color: transparent;
-    font-family: Sans-Serif;
-    display: block;
-    overflow: auto;
-    min-height: 100vh;
-    background-size: auto;
+.indexBG {
+  background: url("../images/back.jpg");
+  display: block;
+  overflow: auto;
+  min-height: 100vh;
+  background-size: cover;
 }
 
 /* The margin of the input block class should be auto, width should be 280px, and the text should be center aligned */
 .inputBlock {
-	position: relative;
-    border: 4px solid green;
-    border-radius: 10px;
+    position: relative;
+    border: 3px solid lightgrey;
+    border-radius: 8px;
     padding: 7px;
     text-align: center;
-    background-color: whitesmoke;
+    background-color: rgba(0, 0, 0, 0.4);
     width: 300px;
 }
+.inputBlock button {
+  width: 100%;
+  margin-bottom: 4px;
+}
+.inputBlock h2 {
+  color: rgba(255, 255, 255, 0.9);
+}
+.inputBlock label {
+  color: rgba(255, 255, 255, 0.7);
+}
+.inputBlock a {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 /* The left class should be left aligned with a width of 40 , floated left */
 .left{
-    text-align: left; 
-    width: 400px;      
+    text-align: left;
+    width: 400px;
     float: left;
 }
 /* The right class should not be aligned, left margin should be 40%, color should be black , front size should be set to 30pxs*/
 @media only screen and (max-width: 720px) {
-    #right{            
+    #right{
         color: black;
         outline-color: #006633;
         outline-width: 2px;
         letter-spacing: 2px;
         font-size: 20px;
-        width: 500px;   
+        width: 500px;
     }
 }
 
 @media (max-width: 576px) {
-    #right{  
+    #right{
         width:0%;
-               
     }
 }
 
@@ -51,7 +62,7 @@ body{
 }
 /* Team mate needs to explain what this is for, and if it is still relevant*/
 .center {
-    position: relative;  
+    position: relative;
     text-align: center;
     margin-right: auto;
 }
@@ -65,9 +76,8 @@ body{
 /* Apply css when screen size is minimum 728px*/
 @media only screen and (min-width: 728px) {
   body {
-        font-family: Sans-Serif;    
-        background-image: url("../images/back4.jpg");       
-    
+        font-family: Sans-Serif;
+
         display: block;
         overflow: auto;
         min-height: 100vh;
@@ -77,9 +87,8 @@ body{
 /* Apply css when screen size is minimum 728px*/
 @media only screen and (max-width: 728px) {
    body {
-        font-family: Sans-Serif;	
-        background-image: url("../images/back4.jpg");       
-  
+        font-family: Sans-Serif;
+
         display: block;
         overflow: auto;
         min-height: 100vh;
@@ -100,27 +109,38 @@ body{
 }
 
 #featuresBox{
-    background-color: white;
     //height: 400px;
     position: relative;
-    border: 4px solid green;
-    border-radius: 10px;
+    border: 3px solid lightgrey;
+    border-radius: 8px;
     padding: 7px;
     text-align: center;
-    background-color: whitesmoke;
+    background-color: rgba(0, 0, 0, 0.4);
     overflow: auto;
+}
+table {
+  width: 100%;
 }
 #thead{
       font-weight: bolder;
     font-size: 75px;
     text-align: center;
+    color: rgba(255, 255, 255, 0.9);
 }
-
 
 tbody tr td{
     text-align: center;
-
+    color: rgba(255, 255, 255, 0.9);
+    width: 33%;
 }
+tbody tr td img {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 16px;
+  width: 100%;
+  opacity: 0.9;
+}
+
 tfoot tr td{
     text-align: center;
     margin: 2px;

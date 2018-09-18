@@ -2,8 +2,8 @@
  * File:   Index.js
  * Author: Binary Ninjaz (Teboho, Sizo, Kevin)
  *
- * Description: Contains all functions required for successful signing in or logging in. 
- * 
+ * Description: Contains all functions required for successful signing in or logging in.
+ *
  */
 
 let page = 0; //0 being login, 1 being sign up
@@ -58,14 +58,14 @@ function showLogin(){
                                                                 '<input type="password" class="form-control" id="password" required data-type="tooltip" title="This password has no requirements">'+
                                                             '</div>'+
                                                             '<div>'+
-                                                                '<button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button>'+                  
-                                                            '</div>'+                                    
+                                                                '<button id="myInput" onclick="firebaseLogin()" class="btn btn-success">Log In</button>'+
+                                                            '</div>'+
                                                             '<div>'+
-                                                                '<button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>'+                                    
-                                                            '</div>'+                                    
+                                                                '<button onclick="googleLogin()" class= "btn btn-google">Log in with Google</button>'+
+                                                            '</div>'+
                                                             '<div>'+
-                                                                '<button onclick="showRegister()" class="btn btn-primary">Dont have an account? Sign Up</button>'+		
-                                                            '</div>'+                                    
+                                                                '<button onclick="showRegister()" class="btn btn-primary">Dont have an account? Sign Up</button>'+
+                                                            '</div>'+
                                                             '<div>'+
                                                                 '<a  onclick="resetPassword()" href="javascript:;">Forgot password</a>'+
                                                             '</div>'+
@@ -92,7 +92,7 @@ function showRegister(){
                                                                 +'</div>'
                                                                 +'<div class="form-group">'
                                                                         +'<label style="text-align:left">Organisation Name</label>'
-                                                                        +'<input placeholder="" type="text" class="form-control" id="organisation" required />'
+                                                                        +'<input placeholder="" type="text" class="form-control" id="organisation"/>'
                                                                 +'</div>'
                                                                 +'<div class="form-group">'
                                                                         +'<label style="text-align:left">Email Address</label>'
@@ -124,39 +124,45 @@ function register() {
     document.getElementById("passwordConf").style.borderColor = "#A9A9A9";
     document.getElementById("password").style.borderColor = "#A9A9A9";
     //need to check if other fields exist
+
+    var info = {};
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+
     var fname = document.getElementById("name").value;
     if(fname===""){
         document.getElementById("name").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";
         return false;
-    }    
+    }
     var lname = document.getElementById("surname").value;
     if(lname===""){
         document.getElementById("surname").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";
         return false;
     }
     var org = document.getElementById("organisation").value;
     if(org===""){
-        document.getElementById("organisation").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Missing required field.</p>";   
-        return false;
+      document.getElementById("organisation").value = email;
+      org = email;
     }
+
     if(document.getElementById("password").value.length<6){
         document.getElementById("password").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure your password is at least 6 characters long.</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure your password is at least 6 characters long.</p>";
         return false;
-    }    
+    }
     if(document.getElementById("passwordConf").value.length<6){
         document.getElementById("passwordConf").style.borderColor = "red";
-        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure your password is at least 6 characters long.</p>";   
+        document.getElementById("errorSpace").innerHTML = "<p class='alert-warning'>Please ensure your password is at least 6 characters long.</p>";
         return false;
-    }  
-    
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
+    }
+
     if(checkPass(pass, document.getElementById("passwordConf").value)){
-        firebaseRegister(email, pass);
+        info.firstname = fname;
+        info.lastname = lname;
+        info.organization = org;
+        firebaseRegister(email, pass, info);
     }
 }
 
@@ -164,7 +170,7 @@ function register() {
 function checkPass(pass1, pass2) {
     if(page === 0){
         return false;
-    } 
+    }
     //We can do this validation through html's minimum character attribute
     if (pass1 !== pass2) {
         document.getElementById("password").style.borderColor = "red";
@@ -215,15 +221,3 @@ input.addEventListener("keyup", function(event) {
         document.getElementById("myInput").click();
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-

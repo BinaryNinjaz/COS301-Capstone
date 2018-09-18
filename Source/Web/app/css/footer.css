@@ -3,17 +3,22 @@
 	position: fixed;
 	left: 0;
 	bottom: 0;
-	height: 30px;
+	height: 36px;
 	width: 100%;
-	background-color: #4CAF50;
+	background-color: rgb(0, 0, 0, 0.3);
 	text-align: center;
-	opacity: 0.3;
+	color: rgba(255, 255, 255, 0.9);
+	border-top: 2px solid lightgrey;
+}
+
+.footer img {
+	height: 32px;
 }
 
 /* This styles close button of each modal*/
-#closebtn { 
-	width: 15%; 
-	background-color:#4CAF50; 
-	color: whitesmoke; 
+#closebtn {
+	width: 15%;
+	background-color:#4CAF50;
+	color: whitesmoke;
 	height: 15%;
 }
