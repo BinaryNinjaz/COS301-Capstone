@@ -26,6 +26,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +45,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import za.org.samac.harvest.Stats;
@@ -60,6 +63,9 @@ import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.ColorScheme;
+import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Farm;
+import za.org.samac.harvest.util.Orchard;
 import za.org.samac.harvest.util.SearchedItem;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
@@ -219,6 +225,58 @@ public class SessionDetails extends AppCompatActivity {
         }
     }
 
+    private Boolean polygonContainsPoint() {
+        Data data = new Data();
+        for (Orchard orchard : data.getOrchards()) {
+            if (!orchard.getCoordinates().isEmpty()) {
+                PolygonOptions polygon = new PolygonOptions();
+
+                Farm farm = orchard.getAssignedFarm();
+                String farmId = farm == null ? "" : farm.getID();
+
+                int fillColor = ColorScheme.hashColor(farmId, orchard.getID(), 64);
+                int strokeColor = ColorScheme.hashColor(farmId, orchard.getID(), 191);
+
+                polygon.fillColor(fillColor);
+                polygon.strokeColor(strokeColor);
+                polygon.strokeWidth(3);
+
+                List<LatLng> px = new ArrayList<>();
+                List<LatLng> py = new ArrayList<>();
+                for (LatLng coord : orchard.getCoordinates()) {
+                    px.add(orchard.getCoordinates().get(0));
+                    py.add(orchard.getCoordinates().get(1));
+                    polygon.add(coord);
+                }
+
+                List<Double> px = polygon.getPoints().get(0).latitude;
+
+            }
+        }
+
+        Double pointx = 0.0;
+        Double pointy = 0.0;
+        pointx = latY;
+        pointy = lngY;
+
+        int i = 0;
+        int j = px.size() - 1;
+        Boolean c = false;
+        for (; i < px.size(); j = i++) {
+            final Boolean yValid = (py.get(i) > pointy) != (py.get(j) > pointy);
+            final Double xValidCond = (px.get(j) - px.get(i)) * (pointy - py.get(i)) / (py.get(j) - py.get(i)) + px.get(i);
+
+            if (yValid && pointx < xValidCond) {
+                c = !c;
+            }
+        }
+
+        return c;
+    }
+
+    Double latY = null;
+    Double lngY = null;
+
     public void displayGraph() {
         pieChart = (com.github.mikephil.charting.charts.PieChart)findViewById(R.id.pieChart);
         ArrayList<Integer> colorSet = new ArrayList<>();
@@ -243,9 +301,14 @@ public class SessionDetails extends AppCompatActivity {
             }
         }
 
+        Float totalYield = null;
+
         for(String key : keys) {
             String workerName = Sessions.selectedItem.collectionPoints.get(key).get(0).workerName;
             Float yield = (float)Sessions.selectedItem.collectionPoints.get(key).size();
+            latY = Sessions.selectedItem.collectionPoints.get(key).get(0).lat;
+            lngY = Sessions.selectedItem.collectionPoints.get(key).get(0).lng;
+            totalYield += yield;
             entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
             colorSet.add(ColorScheme.hashColorOnce(key));
         }
