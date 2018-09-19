@@ -89,7 +89,6 @@
 		16C82F5E20819B6E0074595C /* Poly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5920819B6E0074595C /* Poly.swift */; };
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
 		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
-		16DA38FB211DF7D80094A4E8 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DA38FA211DF7D80094A4E8 /* PDFViewController.swift */; };
 		16DA38FD211DFA550094A4E8 /* HarvestUserManual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 16DA38FC211DFA540094A4E8 /* HarvestUserManual.pdf */; };
 		16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */; };
 		16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */; };
@@ -214,7 +213,6 @@
 		16C82F5920819B6E0074595C /* Poly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly.swift; sourceTree = "<group>"; };
 		16C82F66208407730074595C /* GeoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKitTests.swift; sourceTree = "<group>"; };
 		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
-		16DA38FA211DF7D80094A4E8 /* PDFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
 		16DA38FC211DFA540094A4E8 /* HarvestUserManual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = HarvestUserManual.pdf; sourceTree = "<group>"; };
 		16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutChartEurekaCell.swift; sourceTree = "<group>"; };
 		16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DonutChartEurekaCell.xib; sourceTree = "<group>"; };
@@ -469,7 +467,6 @@
 			isa = PBXGroup;
 			children = (
 				167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */,
-				16DA38FA211DF7D80094A4E8 /* PDFViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -674,6 +671,7 @@
 				TargetAttributes = {
 					1604E49E206958E800E9BA15 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
@@ -686,11 +684,13 @@
 					};
 					1604E4B2206958E900E9BA15 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 1604E49E206958E800E9BA15;
 					};
 					1604E4BD206958E900E9BA15 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 1604E49E206958E800E9BA15;
 					};
@@ -919,7 +919,6 @@
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
 				16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
-				16DA38FB211DF7D80094A4E8 /* PDFViewController.swift in Sources */,
 				16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */,
 				16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */,
 				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
@@ -1173,7 +1172,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.BinaryNinjaz.Harvest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1191,7 +1190,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.BinaryNinjaz.Harvest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

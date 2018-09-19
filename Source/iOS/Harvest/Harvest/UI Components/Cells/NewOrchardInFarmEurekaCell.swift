@@ -13,10 +13,10 @@ public final class OrchardInFarmRow: OptionsRow<PushSelectorCell<Box>>, Presente
   public typealias PresenterRow = EntityViewController
   
   /// Defines how the view controller will be presented, pushed, etc.
-  open var presentationMode: PresentationMode<PresenterRow>?
+  final public var presentationMode: PresentationMode<PresenterRow>?
   
   /// Will be called before the presentation occurs.
-  open var onPresentCallback: ((FormViewController, PresenterRow) -> Void)?
+  final public var onPresentCallback: ((FormViewController, PresenterRow) -> Void)?
   
   public required init(tag: String?) {
     super.init(tag: tag)
@@ -51,7 +51,7 @@ public final class OrchardInFarmRow: OptionsRow<PushSelectorCell<Box>>, Presente
   /**
    Extends `didSelect` method
    */
-  open override func customDidSelect() {
+  final override public func customDidSelect() {
     super.customDidSelect()
     guard let presentationMode = presentationMode, !isDisabled else { return }
     if let controller = presentationMode.makeController() {
@@ -67,7 +67,7 @@ public final class OrchardInFarmRow: OptionsRow<PushSelectorCell<Box>>, Presente
   /**
    Prepares the pushed row setting its title and completion callback.
    */
-  open override func prepare(for segue: UIStoryboardSegue) {
+  final public override func prepare(for segue: UIStoryboardSegue) {
     super.prepare(for: segue)
     guard let rowVC = segue.destination as? PresenterRow else { return }
     rowVC.title = selectorTitle ?? rowVC.title

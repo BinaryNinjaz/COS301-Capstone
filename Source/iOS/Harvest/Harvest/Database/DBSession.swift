@@ -74,7 +74,7 @@ extension HarvestDB {
   static func save(session: Session) {
     let sessions = ref.child(Path.sessions)
     if session.id == "" {
-      session.id = sessions.childByAutoId().key
+      session.id = sessions.childByAutoId().key ?? Date.key
     }
     let update = session.json()
     sessions.updateChildValues(update)

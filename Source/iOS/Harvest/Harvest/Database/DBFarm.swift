@@ -85,7 +85,7 @@ extension HarvestDB {
   static func save(farm: Farm) {
     let farms = ref.child(Path.farms)
     if farm.id == "" {
-      farm.id = farms.childByAutoId().key
+      farm.id = farms.childByAutoId().key ?? Date.key
     }
     let update = farm.json()
     farms.updateChildValues(update)
