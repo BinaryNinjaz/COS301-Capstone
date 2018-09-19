@@ -60,7 +60,7 @@ public class MainActivityTest {
         Espresso.onView(withId(R.id.actionStats))
                 .perform(ViewActions.click());
 
-        Espresso.onView(withId(R.id.workerHistPerformance))
+        Espresso.onView(withId(R.id.actionStats))
                 .check(matches(withText(R.string.WorkerHistPerformance)));
     }
 }
