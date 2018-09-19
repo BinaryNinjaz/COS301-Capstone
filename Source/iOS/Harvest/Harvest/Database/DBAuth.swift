@@ -96,6 +96,7 @@ extension HarvestDB {
           SCLAlertView().showError("Sign In Failure", subTitle: "Your email or password is incorrect.")
         } else {
           SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+          print(error)
         }
         completion(false)
         return
@@ -148,6 +149,7 @@ extension HarvestDB {
           SCLAlertView().showError("Sign In Failure", subTitle: "Your Email or password is incorrect.")
         } else {
           SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+          print(error)
         }
         completion(false)
         return

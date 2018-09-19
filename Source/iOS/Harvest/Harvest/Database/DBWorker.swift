@@ -88,7 +88,7 @@ extension HarvestDB {
     let requestedLocations = ref.child(Path.requestedLocations)
     
     if worker.id == "" {
-      worker.id = workers.childByAutoId().key
+      worker.id = workers.childByAutoId().key ?? Date.key
     }
     let update = worker.json()
     workers.updateChildValues(update)

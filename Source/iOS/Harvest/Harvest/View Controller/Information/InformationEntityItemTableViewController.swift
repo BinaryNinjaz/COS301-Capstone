@@ -188,8 +188,8 @@ class InformationEntityItemTableViewController: UITableViewController {
   override func tableView(
     _ tableView: UITableView,
     editingStyleForRowAt indexPath: IndexPath
-  ) -> UITableViewCellEditingStyle {
-    return UITableViewCellEditingStyle.none
+    ) -> UITableViewCell.EditingStyle {
+    return UITableViewCell.EditingStyle.none
   }
 
   // MARK: - Navigation

@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   
   func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GMSServices.provideAPIKey("AIzaSyCqLn8RGeR84StTCIA1uvoO_iWGhXw8vAU")
     FirebaseApp.configure()
@@ -30,16 +30,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     return true
   }
   
-  func application(_ app: UIApplication,
-                   open url: URL,
-                   options: [UIApplicationOpenURLOptionsKey: Any] = [:]
+  func application(
+    _ app: UIApplication,
+    open url: URL,
+    options: [UIApplication.OpenURLOptionsKey: Any] = [:]
   ) -> Bool {
     return GIDSignIn
       .sharedInstance()
       .handle(
         url,
         sourceApplication:
-          options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+        options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
         annotation: [:])
   }
 
