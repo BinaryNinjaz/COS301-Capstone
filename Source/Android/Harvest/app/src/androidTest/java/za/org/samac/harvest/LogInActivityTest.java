@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -93,13 +94,11 @@ public class LogInActivityTest {
 
         //log in with fakeEmail ****************************************************************************
         Espresso.onView((withId(R.id.edtEmail)))
-                .perform(ViewActions.typeText(""));
-        Espresso.onView((withId(R.id.edtEmail)))
+                .perform(clearText())
                 .perform(ViewActions.typeText(fakeEmail));
 
-        Espresso.onView((withId(R.id.edtPassword)))
-                .perform(ViewActions.typeText(""));
         Espresso.onView(withId(R.id.edtPassword))
+                .perform(clearText())
                 .perform(ViewActions.typeText(fakeEmailPassword), ViewActions.closeSoftKeyboard());
 
         Espresso.onView(withId(R.id.btnLogin))
@@ -107,13 +106,11 @@ public class LogInActivityTest {
 
         //log in with acceptedEmail ****************************************************************************
         Espresso.onView((withId(R.id.edtEmail)))
-                .perform(ViewActions.typeText(""));
-        Espresso.onView((withId(R.id.edtEmail)))
+                .perform(clearText())
                 .perform(ViewActions.typeText(acceptableEmail));
 
-        Espresso.onView((withId(R.id.edtPassword)))
-                .perform(ViewActions.typeText(""));
         Espresso.onView(withId(R.id.edtPassword))
+                .perform(clearText())
                 .perform(ViewActions.typeText(acceptableEmailPassword), ViewActions.closeSoftKeyboard());
 
         Espresso.onView(withId(R.id.btnLogin))
