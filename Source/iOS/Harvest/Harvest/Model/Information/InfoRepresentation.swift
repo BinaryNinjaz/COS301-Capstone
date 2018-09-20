@@ -565,7 +565,7 @@ extension Orchard {
       row.title = "Assigned Farm"
       row.add(rule: RuleRequired(msg: "• An orchard must be assigned to a farm."))
       row.options = []
-      var aFarm: Farm? = nil
+      var aFarm: Farm? = Entities.shared.farms.first?.value
       
       for (_, farm) in Entities.shared.farms {
         let farm = farm

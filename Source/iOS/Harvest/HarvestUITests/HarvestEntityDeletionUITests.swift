@@ -37,7 +37,7 @@ class HarvestEntityDeletionUITests: XCTestCase {
     app.collectionViews.cells.otherElements.containing(.image, identifier: "Workers").element.tap()
     
     let tablesQuery = app.tables
-    tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Adam Bana"]/*[[".cells.staticTexts[\"Adam Bana\"]",".staticTexts[\"Adam Bana\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+    tablesQuery.staticTexts["Andy Andrews"].tap()
     tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Delete Worker"]/*[[".cells.staticTexts[\"Delete Worker\"]",".staticTexts[\"Delete Worker\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
   }
   
@@ -48,7 +48,7 @@ class HarvestEntityDeletionUITests: XCTestCase {
     
     let tablesQuery2 = app.tables
     let tablesQuery = tablesQuery2
-    tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["A – B"]/*[[".cells.staticTexts[\"A – B\"]",".staticTexts[\"A – B\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+    tablesQuery.staticTexts["farm1 – orc1"].tap()
     
     tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Delete Orchard"]/*[[".cells.staticTexts[\"Delete Orchard\"]",".staticTexts[\"Delete Orchard\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
   }
@@ -61,7 +61,7 @@ class HarvestEntityDeletionUITests: XCTestCase {
     
     let tablesQuery2 = app.tables
     let tablesQuery = tablesQuery2
-    tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["A"]/*[[".cells.staticTexts[\"A\"]",".staticTexts[\"A\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+    tablesQuery.staticTexts["farm1"].tap()
     
     tablesQuery/*@START_MENU_TOKEN@*/.staticTexts["Delete Farm"]/*[[".cells.staticTexts[\"Delete Farm\"]",".staticTexts[\"Delete Farm\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
   }
