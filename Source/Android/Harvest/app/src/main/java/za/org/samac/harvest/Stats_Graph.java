@@ -373,7 +373,7 @@ public class Stats_Graph extends AppCompatActivity {
                                 lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
                                 lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
 
-                                expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expectedCondition)");
+                                expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expected)");
                                 expectedLineDataSet.setColor(R.color.blueLinks, 255);
                                 expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
                                 expectedLineDataSet.setDrawCircles(false);
@@ -385,7 +385,7 @@ public class Stats_Graph extends AppCompatActivity {
                             lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
                             lineDataSet.setColor(ColorScheme.hashColorOnce(entityNames.get(i).toString()));
 
-                            expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expectedCondition)");
+                            expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
                             expectedLineDataSet.enableDashedLine(10, 5, 1);
                             expectedLineDataSet.setColor(ColorScheme.hashColorOnce(entityNames.get(i).toString()), 255);
                             expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
