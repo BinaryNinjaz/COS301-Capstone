@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,18 +26,20 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import static za.org.samac.harvest.Stats.KEY_LINE;
 import static za.org.samac.harvest.Stats.THOUSAND;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class Stats_Creator extends Fragment{
 
     //Views
-    private Spinner compareSpinner, periodSpinner, intervalSpinner;
+    private Spinner compareSpinner, periodSpinner, intervalSpinner, lineSpinner;
     private Button selectorButton;
     private TextView compareSelectionTextView, accumulatorDescriptionTextView;
     private EditText fromDateEditText, upToDateEditText;
     private RadioGroup accumulatorRadioGroup;
     private LinearLayout fromLayout, upToLayout;
+    private CheckBox expectedCheckBox, averageCheckBox;
 
     //Specification
     private final String TAG = "Stats_Creator";
@@ -65,6 +68,7 @@ public class Stats_Creator extends Fragment{
         compareSpinner = view.findViewById(R.id.stats_create_compSpinner);
         periodSpinner = view.findViewById(R.id.stats_create_periodSpinner);
         intervalSpinner = view.findViewById(R.id.stats_create_interval_spinner);
+        lineSpinner = view.findViewById(R.id.displayTypeSpinner);
 
         selectorButton = view.findViewById(R.id.stats_create_selectionButton);
 
@@ -80,6 +84,9 @@ public class Stats_Creator extends Fragment{
         fromLayout = view.findViewById(R.id.stats_create_from_layout);
         upToLayout = view.findViewById(R.id.stats_create_upTo_layout);
 
+        expectedCheckBox = view.findViewById(R.id.expBox);
+        averageCheckBox = view.findViewById(R.id.aveBox);
+
         //Populate Spinners
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.stats_create_compsChoose, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -92,6 +99,10 @@ public class Stats_Creator extends Fragment{
         arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.stats_create_intervalChoose, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         intervalSpinner.setAdapter(arrayAdapter);
+
+        arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.stats_create_lines, android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        lineSpinner.setAdapter(arrayAdapter);
 
         //Set selector button text
         setSelectorButtonTitle("farm");
@@ -249,6 +260,9 @@ public class Stats_Creator extends Fragment{
      *  KEY_END : double : The selected end date, divided by 1 000<br>
      *  KEY_INTERVAL : String : Matches a static from Stats class<br>
      *  KEY_ACCUMULATION : String : Matches a static from Stats class<br>
+     *  KEY_EXPECTED : boolean : true if the expected lines should display<br>
+     *  KEY_AVERAGE : boolean : true if the average line should display<br>
+     *  KEY_LINE : String : Matches a static from Stats class
      * @return Bundle of all the configurations. NULL if error, such as a field not set.
      */
     public Bundle getConfigurations(){
@@ -280,6 +294,15 @@ public class Stats_Creator extends Fragment{
 
             bundle.putString(Stats.KEY_INTERVAL, intervalSpinner.getSelectedItem().toString().toLowerCase());
             bundle.putString(Stats.KEY_ACCUMULATION, accumulationSelection);
+
+            bundle.putBoolean(Stats.KEY_EXPECTED, expectedCheckBox.isChecked());
+            bundle.putBoolean(Stats.KEY_AVERAGE, averageCheckBox.isChecked());
+
+            final String[] choices = getResources().getStringArray(R.array.stats_create_lines);
+            final String choice = lineSpinner.getSelectedItem().toString();
+            if (choice.equals(choices[0])) bundle.putString(Stats.KEY_LINE, Stats.LINE_STRAIGHT);
+            else if (choice.equals(choices[1])) bundle.putString(Stats.KEY_LINE, Stats.LINE_CURVE);
+            else bundle.putString(Stats.KEY_LINE, Stats.LINE_STEP);
 
             return bundle;
         }

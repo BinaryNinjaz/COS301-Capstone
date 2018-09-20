@@ -292,6 +292,7 @@
                 android:background="@color/colorPrimary"/>
 
             <CheckBox
+                android:id="@+id/expBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/stats_create_expected"
@@ -301,6 +302,7 @@
                 android:paddingEnd="8dp"/>
 
             <CheckBox
+                android:id="@+id/aveBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/stats_create_average"

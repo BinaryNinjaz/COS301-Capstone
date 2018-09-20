@@ -269,9 +269,10 @@
     <string name="stats_create_average">Show Average Line</string>
     <string name="stats_create_line">Line Type:</string>
     <string-array name="stats_create_lines">
-        <item>Straight</item>
-        <item>Curve</item>
-        <item>Step</item>
+        <!--Order matters!-->
+        <item>Linear</item> <!--Linear-->
+        <item>Curved</item> <!--Horizontal Bezier-->
+        <item>Stepped</item> <!--Stepped-->
     </string-array>
 
     <!--1: entity, lowercase, singular.-->

@@ -1,17 +1,10 @@
 package za.org.samac.harvest;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -24,10 +17,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,15 +28,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -85,6 +70,9 @@ public class Stats_Graph extends AppCompatActivity {
     private static String interval;         //hourly, daily, weekly, monthly, yearly, -- titled period
     private static String group;            //entity type
     private static String mode;             //accumulation
+    private static String line;             //line type
+    private static boolean average;         //true to show average line
+    private static boolean expectedCondition;        //true to show expectedCondition lines
 
     private Boolean validExpected;
 
@@ -125,6 +113,9 @@ public class Stats_Graph extends AppCompatActivity {
             interval = extras.getString(Stats.KEY_INTERVAL);
             group = extras.getString(Stats.KEY_GROUP);
             mode = extras.getString(Stats.KEY_ACCUMULATION);
+            line = extras.getString(Stats.KEY_LINE);
+            expectedCondition = extras.getBoolean(Stats.KEY_EXPECTED);
+            average = extras.getBoolean(Stats.KEY_AVERAGE);
         }
         catch (java.lang.NullPointerException e){
             Log.e(TAG, "NPE from bundle");
@@ -293,7 +284,7 @@ public class Stats_Graph extends AppCompatActivity {
         try {
             final JSONObject functionResult = new JSONObject(response);
 
-            //Set the expected object for the function.
+            //Set the expectedCondition object for the function.
             function_setExpected(functionResult.getJSONObject("exp"));
 
             //Set the intervals since the epoch. Really this could be done anywhere, but let's keep it tidy.
@@ -329,89 +320,98 @@ public class Stats_Graph extends AppCompatActivity {
             }
 
 
-            if (entityNames != null) {
-                for (int i = 0; i < entityNames.size(); i++) {
-                    if(entityNames.get(i).equals("exp")){
-                        //This is handled elsewhere.
-                    }
-                    else {
+            for (int i = 0; i < entityNames.size(); i++) {
+                //noinspection StatementWithEmptyBody
+                if(entityNames.get(i).equals("exp")){
+                    //This is handled elsewhere.
+                }
+                else if (!(entityNames.get(i).equals("avg") && !average)) {
 
-                        //We're now working with a new entity, so let's tell the function so.
-                        function_prepareForNewEntity(entityNames.get(i).toString());
+                    //We're now working with a new entity, so let's tell the function so.
+                    function_prepareForNewEntity(entityNames.get(i).toString());
 
-                        JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
-                        Log.i(TAG, "Object: " + object.toString());
-                        JSONArray entryNames = object.names(); //Keys of the entries, for iteration
-                        List<Entry> entries = new ArrayList<>();
-                        List<Entry> expectedEntries = new ArrayList<>(); //Expected entries.
+                    JSONObject object = functionResult.getJSONObject(entityNames.get(i).toString()); // The entity's entries
+                    Log.i(TAG, "Object: " + object.toString());
+                    JSONArray entryNames = object.names(); //Keys of the entries, for iteration
+                    List<Entry> entries = new ArrayList<>();
+                    List<Entry> expectedEntries = new ArrayList<>(); //Expected entries.
 
-                        double interval = (double)labels.length;
-                        double diff = intervalsUptoEnd - intervalsSinceEpochAtStart;
-                        double move = diff / interval;
+                    double interval = (double)labels.length;
+                    double diff = intervalsUptoEnd - intervalsSinceEpochAtStart;
+                    double move = diff / interval;
 
-                        double x = intervalsSinceEpochAtStart;
-                        for (int lbl = 0; lbl < labels.length; lbl++) {
-                            Entry entry;
-                            Entry expectedEntry;
-                            try {
-                                entry = new Entry((float)lbl, (float)object.getDouble(labels[lbl].toString()));
-                            } catch (Exception e) {
-                                entry = new Entry((float) lbl, (float) 0.0);
-                            }
-                            entries.add(entry);
-
-                            if (validExpected && entityNames.get(i).toString().compareTo("avg") != 0) {
-                                expectedEntry = new Entry((float)lbl, (float)( a * Math.sin(b * x + c) + d));
-                                expectedEntries.add(expectedEntry);
-                                x += move;
-                            }
+                    double x = intervalsSinceEpochAtStart;
+                    for (int lbl = 0; lbl < labels.length; lbl++) {
+                        Entry entry;
+                        Entry expectedEntry;
+                        try {
+                            entry = new Entry((float)lbl, (float)object.getDouble(labels[lbl].toString()));
+                        } catch (Exception e) {
+                            entry = new Entry((float) lbl, (float) 0.0);
                         }
+                        entries.add(entry);
 
-                        LineDataSet lineDataSet = null;
-                        LineDataSet expectedLineDataSet = null;
+                        if (validExpected && entityNames.get(i).toString().compareTo("avg") != 0) {
+                            expectedEntry = new Entry((float)lbl, (float)( a * Math.sin(b * x + c) + d));
+                            expectedEntries.add(expectedEntry);
+                            x += move;
+                        }
+                    }
 
-                        switch (entityNames.get(i).toString()) {
-                            case "avg":
-                                lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_gragh_averageLabel));
-                                lineDataSet.enableDashedLine(10, 10, 1);
-                                lineDataSet.setColor(getResources().getColor(R.color.grey));
-                                lineDataSet.setLineWidth(1);
-                                break;
-                            case "sum":
-                                if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
-                                    lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
-                                    lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
+                    LineDataSet lineDataSet = null;
+                    LineDataSet expectedLineDataSet = null;
 
-                                    expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expected)");
-                                    expectedLineDataSet.setColor(R.color.blueLinks, 255);
-                                    expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
-                                    expectedLineDataSet.setDrawCircles(false);
-                                    expectedLineDataSet.setLineWidth(1);
-                                    lineDataSet.setLineWidth(2);
-                                }
-                                break;
-                            default:
-                                lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
-                                lineDataSet.setColor(ColorScheme.hashColorOnce(entityNames.get(i).toString()));
+                    switch (entityNames.get(i).toString()) {
+                        case "avg":
+                            lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_gragh_averageLabel));
+                            lineDataSet.enableDashedLine(10, 10, 1);
+                            lineDataSet.setColor(getResources().getColor(R.color.grey));
+                            lineDataSet.setLineWidth(1);
+                            break;
+                        case "sum":
+                            if (mode.equals(Stats.ACCUMULATION_ENTITY)) {
+                                lineDataSet = new LineDataSet(entries, getResources().getString(R.string.stats_graph_sum));
+                                lineDataSet.setColor(getResources().getColor(R.color.blueLinks));
 
-                                expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expected)");
-                                expectedLineDataSet.enableDashedLine(10, 5, 1);
-                                expectedLineDataSet.setColor(ColorScheme.hashColorOnce(entityNames.get(i).toString()), 255);
+                                expectedLineDataSet = new LineDataSet(expectedEntries, getResources().getString(R.string.stats_graph_sum) + " (expectedCondition)");
+                                expectedLineDataSet.setColor(R.color.blueLinks, 255);
                                 expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
                                 expectedLineDataSet.setDrawCircles(false);
                                 expectedLineDataSet.setLineWidth(1);
                                 lineDataSet.setLineWidth(2);
-                                break;
-                        }
-                        assert lineDataSet != null;
-                        lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                        lineDataSet.setDrawCircles(false);
-                        if (lineDataSet.getEntryCount() > 0) {
-                            dataSets.add(lineDataSet);
-                        }
-                        if (expectedLineDataSet != null && expectedLineDataSet.getEntryCount() > 0) {
-                            dataSets.add(expectedLineDataSet);
-                        }
+                            }
+                            break;
+                        default:
+                            lineDataSet = new LineDataSet(entries, data.toStringID(entityNames.get(i).toString(), category));
+                            lineDataSet.setColor(ColorScheme.hashColorOnce(entityNames.get(i).toString()));
+
+                            expectedLineDataSet = new LineDataSet(expectedEntries, data.toStringID(entityNames.get(i).toString(), category) + " (expectedCondition)");
+                            expectedLineDataSet.enableDashedLine(10, 5, 1);
+                            expectedLineDataSet.setColor(ColorScheme.hashColorOnce(entityNames.get(i).toString()), 255);
+                            expectedLineDataSet.setMode(LineDataSet.Mode.LINEAR);
+                            expectedLineDataSet.setDrawCircles(false);
+                            expectedLineDataSet.setLineWidth(1);
+                            lineDataSet.setLineWidth(2);
+                            break;
+                    }
+                    assert lineDataSet != null;
+                    switch (line){
+                        case Stats.LINE_CURVE:
+                            lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                            break;
+                        case Stats.LINE_STEP:
+                            lineDataSet.setMode(LineDataSet.Mode.STEPPED);
+                            break;
+                        case Stats.LINE_STRAIGHT:
+                            lineDataSet.setMode(LineDataSet.Mode.LINEAR);
+                    }
+
+                    lineDataSet.setDrawCircles(false);
+                    if (lineDataSet.getEntryCount() > 0) {
+                        dataSets.add(lineDataSet);
+                    }
+                    if (expectedLineDataSet != null && expectedLineDataSet.getEntryCount() > 0 && expectedCondition) {
+                        dataSets.add(expectedLineDataSet);
                     }
                 }
             }
@@ -760,7 +760,7 @@ public class Stats_Graph extends AppCompatActivity {
     JSONObject expected;
 
     /**
-     * Simply set the expected JSONObject, which is used to create functions. Should be called only once.
+     * Simply set the expectedCondition JSONObject, which is used to create functions. Should be called only once.
      * @param expected the JSONObject. Format of *: {a: #, b: #, c: #, d: #}, ...
      */
     private void function_setExpected(JSONObject expected){
