@@ -92,7 +92,7 @@
 				15008739
 			\end{flushright}
 		\end{minipage}
-        
+
         \begin{minipage}{0.4\textwidth}
 			\begin{flushleft} \large
 				\emph{} \\
@@ -242,7 +242,29 @@ QUnit is used for unit testing javascript functions. It was chosen since it disp
 \end{figure}
 
 \section{Test Cases}
-TODO when requirements done.
+\subsection{Database}
+The database cannot be tested locally with unit tests, so UI tests are used to perform create, read, update, and delete operations on the database. The tests also confirm that after the operations are completed, that the database returns the correct information.\\
+\indent These UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestUITests/HarvestEntityCreationUITests.swift}{here} and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestUITests/HarvestEntityDeletionUITests.swift}{here} for iOS; and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/InformationTest.java}{here} for Android.
+\subsection{Location Services}
+
+\subsection{Cloud Functions}
+
+\subsection{Mobile Application}
+
+\subsection{Website}
+
+\subsection{Collection Tracker}
+
+\subsection{Foreman Location Viewer}
+
+\subsection{Foreman Tracker}
+
+\subsection{Collection Viewer}
+
+\subsection{Statistics Viewer}
+
+\subsection{Information Manager}
+
 
 \section{History}
 \subsection{Android}
@@ -276,5 +298,5 @@ iOS test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone
   \end{figure}
 Web test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Web/test-logs}{here}.\\
 \indent Refer to figure \ref{fig:qt} for an example of a QUnit test.
-  
+
 \end{document}
