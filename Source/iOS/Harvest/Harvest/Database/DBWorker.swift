@@ -102,7 +102,8 @@ extension HarvestDB {
     }
     
     if worker.kind == .foreman && worker.phoneNumber != "" {
-      foremen.updateChildValues([worker.phoneNumber.removedFirebaseInvalids(): true])
+      let validatedNumber = worker.phoneNumber.removedFirebaseInvalids()
+      foremen.updateChildValues([validatedNumber: true])
       saveWorkerReference(worker, oldWorker.phoneNumber)
       if oldWorker.phoneNumber != "" && worker.phoneNumber != oldWorker.phoneNumber {
         foremen.child(oldWorker.phoneNumber.removedFirebaseInvalids()).removeValue()

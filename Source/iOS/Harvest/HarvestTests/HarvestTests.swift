@@ -216,14 +216,15 @@ class HarvestTests: XCTestCase {
   
   func testAddingDeletingWorker() {
     HarvestDB.getWorkers { (workers) in
+      print(workers)
       for worker in workers {
         if worker.id == "1a" {
-          XCTAssertEqual(worker.name, "Andy")
+          XCTAssertEqual(worker.name, "Andy Andrews")
           
           XCTAssertEqual(worker.assignedOrchards, ["1I", "2II"])
           XCTAssertEqual(worker.kind, .foreman)
         } else if worker.id == "2b" {
-          XCTAssertEqual(worker.name, "Beth")
+          XCTAssertEqual(worker.name, "Beth Bethany")
         }
       }
       
@@ -232,7 +233,7 @@ class HarvestTests: XCTestCase {
         "surname": "Andrews",
         "type": "Foreman",
         "phoneNumber": "1234567890",
-        "assignedOrchards": ["1I", "2II"]
+        "orchards": ["1I", "2II"]
       ])
       HarvestDB.delete(worker: workers.first(where: {$0.id == "1a"})!) { (error, ref) in
         XCTAssertEqual(π.mockDB["foo/workers/1a"], JSON.none)

@@ -89,6 +89,7 @@
 		16C82F5E20819B6E0074595C /* Poly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5920819B6E0074595C /* Poly.swift */; };
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
 		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
+		16D0D6752153DA60001BDE13 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D0D6742153DA60001BDE13 /* JSON.swift */; };
 		16DA38FD211DFA550094A4E8 /* HarvestUserManual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 16DA38FC211DFA540094A4E8 /* HarvestUserManual.pdf */; };
 		16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */; };
 		16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */; };
@@ -211,6 +212,7 @@
 		16C82F5920819B6E0074595C /* Poly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly.swift; sourceTree = "<group>"; };
 		16C82F66208407730074595C /* GeoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKitTests.swift; sourceTree = "<group>"; };
 		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
+		16D0D6742153DA60001BDE13 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		16DA38FC211DFA540094A4E8 /* HarvestUserManual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = HarvestUserManual.pdf; sourceTree = "<group>"; };
 		16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutChartEurekaCell.swift; sourceTree = "<group>"; };
 		16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DonutChartEurekaCell.xib; sourceTree = "<group>"; };
@@ -520,6 +522,7 @@
 				1657B73C20A0E16300F5F478 /* Stats */,
 				169E5196206C62E6006B923E /* Tracker.swift */,
 				164F30A620D4745900E7772A /* Verification.swift */,
+				16D0D6742153DA60001BDE13 /* JSON.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -908,6 +911,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
+				16D0D6752153DA60001BDE13 /* JSON.swift in Sources */,
 				1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */,
 				167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */,
 				16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */,
