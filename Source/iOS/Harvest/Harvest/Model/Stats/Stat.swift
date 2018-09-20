@@ -88,6 +88,9 @@ struct Stat: Codable {
   var grouping: StatKind
   var mode: TimedGraphMode
   var name: String
+  var showExpected: Bool
+  var showAverage: Bool
+  var curveKind: LineGraphCurve
   
   func legendTitle(forKey key: String) -> String {
     let worker = Entities.shared.worker(withId: key)
@@ -111,8 +114,13 @@ struct Stat: Codable {
   func formatDataSet(_ dataSet: LineChartDataSet) {
     dataSet.drawValuesEnabled = false
     dataSet.valueFormatter = DataValueFormatter()
-    dataSet.mode = .horizontalBezier
-    dataSet.drawCirclesEnabled = false
+    dataSet.mode =  curveKind == .curve
+      ? .horizontalBezier
+      : curveKind == .stepped
+        ? .stepped
+        : .linear
+    dataSet.drawCirclesEnabled = curveKind == .linear
+    dataSet.circleColors = [dataSet.colors[0]]
     dataSet.lineWidth = 2
   }
   
@@ -186,22 +194,24 @@ struct Stat: Codable {
           
           self.formatDataSet(dataSet)
           if key == "avg" {
-            dataSet.setColor(.darkGray)
-            dataSet.lineDashPhase = 0.5
-            dataSet.lineDashLengths = [1, 1]
-            dataSets.insert(dataSet, at: 0)
+            if self.showAverage {
+              dataSet.setColor(.darkGray)
+              dataSet.lineDashPhase = 0.5
+              dataSet.lineDashLengths = [1, 1]
+              dataSets.insert(dataSet, at: 0)
+            }
           } else {
             dataSets.append(dataSet)
           }
         }
         
-        if let data = expectedDataSetObject, self.mode != .accumTime {
-          expectedDataSets = self.expectedGraphData(json: data)
-        }
-        
         let data = LineChartData(dataSets: dataSets)
-        for expDataSet in expectedDataSets {
-          data.addDataSet(expDataSet)
+        
+        if self.showExpected, let expData = expectedDataSetObject, self.mode != .accumTime {
+          expectedDataSets = self.expectedGraphData(json: expData)
+          for expDataSet in expectedDataSets {
+            data.addDataSet(expDataSet)
+          }
         }
         
         completion(data)
@@ -331,7 +341,10 @@ extension StatStore {
       timeStep: .hourly,
       grouping: .worker,
       mode: .running,
-      name: "Today's Worker Performance")
+      name: "Today's Worker Performance",
+      showExpected: true,
+      showAverage: true,
+      curveKind: .curve)
     
     stats ++= Stat(
       ids: [],
@@ -339,7 +352,10 @@ extension StatStore {
       timeStep: .hourly,
       grouping: .worker,
       mode: .running,
-      name: "Yesterday's Worker Performance")
+      name: "Yesterday's Worker Performance",
+      showExpected: true,
+      showAverage: true,
+      curveKind: .curve)
     
     stats ++= Stat(
       ids: [],
@@ -347,7 +363,10 @@ extension StatStore {
       timeStep: .daily,
       grouping: .worker,
       mode: .running,
-      name: "Worker Performance")
+      name: "Worker Performance",
+      showExpected: true,
+      showAverage: true,
+      curveKind: .curve)
     
     stats ++= Stat(
       ids: [],
@@ -355,7 +374,10 @@ extension StatStore {
       timeStep: .daily,
       grouping: .orchard,
       mode: .running,
-      name: "This Month's Orchard Performance")
+      name: "This Month's Orchard Performance",
+      showExpected: true,
+      showAverage: true,
+      curveKind: .curve)
     
     stats ++= Stat(
       ids: [],
@@ -363,7 +385,10 @@ extension StatStore {
       timeStep: .daily,
       grouping: .orchard,
       mode: .running,
-      name: "Orchard Performance")
+      name: "Orchard Performance",
+      showExpected: true,
+      showAverage: true,
+      curveKind: .curve)
     
     stats ++= Stat(
       ids: [],
@@ -371,7 +396,10 @@ extension StatStore {
       timeStep: .daily,
       grouping: .farm,
       mode: .running,
-      name: "This Month's Farm Performance")
+      name: "This Month's Farm Performance",
+      showExpected: true,
+      showAverage: true,
+      curveKind: .curve)
     
     stats ++= Stat(
       ids: [],
@@ -379,7 +407,10 @@ extension StatStore {
       timeStep: .daily,
       grouping: .farm,
       mode: .running,
-      name: "Farm Performance")
+      name: "Farm Performance",
+      showExpected: true,
+      showAverage: true,
+      curveKind: .curve)
     
     for stat in stats {
       StatStore.shared.saveItem(item: stat)

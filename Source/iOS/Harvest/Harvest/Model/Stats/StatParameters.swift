@@ -169,15 +169,11 @@ enum TimedGraphMode: String, CustomStringConvertible, Codable {
   }
 }
 
-enum StatKind: String, CustomStringConvertible, Codable {
+enum StatKind: String, CustomStringConvertible, Codable, CaseIterable {
   case worker
   case orchard
   case foreman
   case farm
-  
-  static var allCases: [StatKind] {
-    return [.farm, .orchard, .worker, .foreman]
-  }
   
   var identifier: String {
     switch self {
@@ -194,6 +190,18 @@ enum StatKind: String, CustomStringConvertible, Codable {
     case .orchard: return "Orchard"
     case .foreman: return "Foreman"
     case .farm: return "Farm"
+    }
+  }
+}
+
+enum LineGraphCurve: String, CustomStringConvertible, Codable, CaseIterable {
+  case linear, curve, stepped
+  
+  var description: String {
+    switch self {
+    case .linear: return "Linear"
+    case .curve: return "Curved"
+    case .stepped: return "Stepped"
     }
   }
 }

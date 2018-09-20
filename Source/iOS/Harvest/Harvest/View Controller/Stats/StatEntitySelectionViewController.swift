@@ -20,6 +20,9 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
   var timeStep: TimeStep?
   var grouping: StatKind = .worker
   var mode: TimedGraphMode?
+  var showExpected: Bool = true
+  var showAverage: Bool = true
+  var curveKind: LineGraphCurve = .curve
   
   var selected: [String] = []
   
@@ -148,7 +151,10 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
         timeStep: self.timeStep ?? .daily,
         grouping: self.grouping,
         mode: self.mode ?? .accumTime,
-        name: "")
+        name: "",
+        showExpected: self.showExpected,
+        showAverage: self.showAverage,
+        curveKind: self.curveKind)
       
       svc.stat = stat
       
