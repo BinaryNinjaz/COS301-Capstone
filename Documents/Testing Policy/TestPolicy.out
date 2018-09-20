@@ -1,12 +1,19 @@
 \BOOKMARK [1][-]{section.1}{Testing Process}{}% 1
-\BOOKMARK [2][-]{subsection.1.1}{Test specification}{section.1}% 2
-\BOOKMARK [2][-]{subsection.1.2}{Implementation of tests}{section.1}% 3
-\BOOKMARK [2][-]{subsection.1.3}{Test Reporting}{section.1}% 4
-\BOOKMARK [1][-]{section.2}{TESTING TOOLS - unit testing level}{}% 5
-\BOOKMARK [2][-]{subsection.2.1}{Android Studio}{section.2}% 6
-\BOOKMARK [2][-]{subsection.2.2}{ XCTest framework example test on IOS App}{section.2}% 7
-\BOOKMARK [2][-]{subsection.2.3}{NPM}{section.2}% 8
-\BOOKMARK [2][-]{subsection.2.4}{XCode}{section.2}% 9
-\BOOKMARK [1][-]{section.3}{TESTING PHILOSOPHY}{}% 10
-\BOOKMARK [2][-]{subsection.3.1}{Benefits}{section.3}% 11
-\BOOKMARK [1][-]{section.4}{TEST EVALUATION}{}% 12
+\BOOKMARK [2][-]{subsubsection.1.0.1}{Test Specification}{section.1}% 2
+\BOOKMARK [3][-]{subsubsection.1.0.2}{Implementation of Tests}{subsubsection.1.0.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.0.3}{Test Reporting}{subsubsection.1.0.1}% 4
+\BOOKMARK [2][-]{subsection.1.1}{Testing Frequency}{section.1}% 5
+\BOOKMARK [1][-]{section.2}{Testing Tools}{}% 6
+\BOOKMARK [2][-]{subsection.2.1}{Android}{section.2}% 7
+\BOOKMARK [3][-]{subsubsection.2.1.1}{JUnit}{subsection.2.1}% 8
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Espresso}{subsection.2.1}% 9
+\BOOKMARK [3][-]{subsubsection.2.1.3}{Execution}{subsection.2.1}% 10
+\BOOKMARK [2][-]{subsection.2.2}{iOS}{section.2}% 11
+\BOOKMARK [3][-]{subsubsection.2.2.1}{XCTest}{subsection.2.2}% 12
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Execution}{subsection.2.2}% 13
+\BOOKMARK [2][-]{subsection.2.3}{Web}{section.2}% 14
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Execution}{subsection.2.3}% 15
+\BOOKMARK [1][-]{section.3}{History}{}% 16
+\BOOKMARK [2][-]{subsection.3.1}{Android}{section.3}% 17
+\BOOKMARK [2][-]{subsection.3.2}{iOS}{section.3}% 18
+\BOOKMARK [2][-]{subsection.3.3}{Web}{section.3}% 19

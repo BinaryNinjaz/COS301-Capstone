@@ -12,8 +12,6 @@
 	urlcolor=cyan,
 }
 
-
-
 % define the title
 \author{Binary Ninjaz}
 \title{Harvest}
@@ -148,13 +146,13 @@ In this section, the testing process, based on IEEE-829, will illustrated. This 
 \indent Three phases within the testing process can be identified, namely:
 \begin{enumerate}
 	\item Test specification,
-	\item Test implementation, and
+	\item Test implementation,
 	\item Test reporting.
 \end{enumerate}
 Each phase is now elaborated.
-\subsection{Test specification}
+\subsubsection{Test Specification}
 The test specification can be subdivided into 2 parts. On the one hand, there is \textit{planning and verification}, on the other there is \textit{Analysis, design, and implementation}.\\
-\indent \textit{Planning and verification} may consist of the following activities:\\
+\indent \textit{Planning and verification} may consist of the following activities:
 \begin{itemize}
  \item Specifying the scope and the risks, and defining the objectives of the tests;
 \item Determining the strategy;
@@ -162,7 +160,7 @@ The test specification can be subdivided into 2 parts. On the one hand, there is
 \item Planning of the test design activities;
 \item Planning of implementation and evaluation.
 \end{itemize}
-During the \textit{analysis, design, and implementation} phase, the test objectives will be transformed into specific test conditions and test cases. This may involve the following activities: \newline
+During the \textit{analysis, design, and implementation} phase, the test objectives will be transformed into specific test conditions and test cases. This may involve the following activities:
 \begin{itemize}
  \item A review of the test base (such as requirements, architecture, design, and interfaces);
 \item Evaluation of the testability of the test base and the test objects;
@@ -171,51 +169,75 @@ During the \textit{analysis, design, and implementation} phase, the test objecti
 \item Identifying the necessary test data in order to support the test cases;
 \item Designing the test environment and identifying the infrastructure and tools.
 \end{itemize}
-\subsection{Implementation of tests}
-The implementation of tests forms the phase in which the test procedures and scripts are implemented and the results of these (including incidents) are logged. This may involve the following activities: \newline
+\subsubsection{Implementation of Tests}
+The implementation of tests forms the phase in which the test procedures and scripts are implemented and the results of these (including incidents) are logged. This may involve the following activities:
 \begin{itemize}
- \item Implementation of the tests, manually or by means of a tool  
-\item Logging the results of the implementation 
-\item Comparing the results with the result that had been predicted 
-\item Reporting any setbacks in the form of incidents and analysing these in order to identify the cause 
-\item Repeating the tests as a result of the incidents identified 
+ \item Implementation of the tests, manually or by means of a tool;
+\item Logging the results of the implementation;
+\item Comparing the results with the result that had been predicted;
+\item Reporting any setbacks in the form of incidents and analysing these in order to identify the cause;
+\item Repeating the tests as a result of the incidents identified.
 \end{itemize}
-\subsection{Test Reporting}
-Test Reporting forms the phase in which the implementation of the tests is compared with the objectives. This may involve the following tasks: \newline
+\subsubsection{Test Reporting}
+Test Reporting forms the phase in which the implementation of the tests is compared with the objectives. This may involve the following tasks:
 \begin{itemize}
- \item Checking of the test logs and the list of defects and comparing these to the exit criteria specified in the test plan   
-\item Investigating whether additional tests are required
-\item Writing a summary report 
+ \item Checking of the test logs and the list of defects and comparing these to the exit criteria specified in the test plan;
+\item Investigating whether additional tests are required;
+\item Writing a summary report.
 \end{itemize}
+\subsection{Testing Frequency}
+Since tests are used to validate the continued performance of a module---or the system as a whole---tests should be run after each module is finished being modified or created. Larger integration tests can take place less frequently, such as after a new feature is finished being implemented or modified.
 
-  \section{TESTING TOOLS - unit testing level}
-Unit tests (otherwise known as component tests) seek to identify defects in, and verify the functioning of, testable software modules, programs, items, classes etc. \newline\newline
-Unit tests are capable of verifying functionalities, as well as non-functional characteristics. The test cases are based on work products, such as the specifications of a component, the software design or the data model. Unit tests are used in order to be certain that the individual components are working correctly. \newline\newline 
-Unit tests mainly make use of white-box testing techniques and are therefore carried out with a knowledge of the code being tested and possibly also with the support of the development environment (the unit test framework, debugging tool, etc.). That is why these tests are often carried out by the developer that wrote the code or by a party of a similar calibre. Any defects identified are resolved as soon as they are detected. \newline\newline
-The following testing tools will be used for the Harvest Software: \newline\newline
-  \subsection{Android Studio}
-JUnit is a unit test for the Java development language. This is important in the case of a test-driven development. JUnit is an instance of the xUnit architecture for unit test frameworks. The JUnit framwork will be used for out automated testing purposes. To run tests one will need Android Studio. To execute the tests one can right click on the tests directory and select 'Run tests.'\newline\newline
-\includegraphics[width=400px]{images/FailedLoginTest}
-\href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/LogInActivityTest.java}{Link to Android App Testing}
-\newline
-\subsection{ XCTest framework example test on IOS App}
-\includegraphics[width=400px]{images/iostest}
-\href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/HarvestTests}{Link to IOS App Testing}
-\newline
+  \section{Testing Tools}
+  There are many types of tests that can be run, in the case of \textbf{Harvest}, Unit, UI, and Integration tests are run.
+  \subsection{Android}
+  \subsubsection{JUnit}
+JUnit is a unit testing framework for the Java Environment, and as such is used for testing the Android---programmed in Java---implementation of \textbf{Harvest}. Android development was carried out using the Android Studio IDE, which facilitates easy use and set up of the JUnit framework. Android Studio also recommends the use of JUnit. For the reasons given, JUnit was selected to run unit tests on Android.\\
+\indent Android unit tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/app/src/test/java/za/org/samac/harvest}{here}.
 
-  \subsection{NPM}
-  The Ava framework will be used for automated testing purposes. To run tests one will need to run "npm test" from the testing directory.
-  \subsection{XCode}
-  The XCTest framework will be used for out automated testing purposes. To run tests one will need XCode. To execute the tests one will need to use XCodes build command.
- 
-  \section{TESTING PHILOSOPHY}
-  Implementation of both simple and holistic tests will be of concern. However, holistic testing will be of more interest. Testing workflows are of vital importance. The project does not have many simple tasks that could provide us with the safety guarantees we would like. We instead seek to find safety in implementing tests that check the whole interaction of these few unit cases.
+ \subsubsection{Espresso}
+ Espresso, like JUnit, is integrated into, and recommended by, Android Studio, and therefore is used to facilitate UI testing on Android.\\
+ \indent Android UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest}{here}.
   
-  \subsection{Benefits}
-  Automated test provide developers with the ability to have safe of mind that they have not made any changes that break the program in any way or introduce bugs in any part of the program.
-  Forcing developers to write tests forces them to check every part of code they write making tests a form of documentation of a projects requirements.
-  
-  \section{TEST EVALUATION}
-  Strict zero test case failure will be followed. Any branch with a failing test case will never be merged into master. Hence we will ensure that every branch runs tests before a pull request.
+ \subsubsection{Execution}
+ Both UI and Unit tests are executed in the same manner for Android, the primary difference being that a UI test will need to run on a connected device or virtual machine.\\
+\indent In order to run a unit or UI test for Android, one must open the file containing the desired test(s) using Android Studio as in figure \ref{fig:android-test}. Once there, one can right click on the green `test' button in the margin, then they can select to run the tests, the results of which will be seen at the bottom of the IDE.
+   \begin{center}
+  \begin{figure}
+	\label{fig:android-test}
+  	\includegraphics[width=\textwidth]{images/Android-JUnit-tests.png}
+	\caption{Android Studio Test Example}
+  \end{figure}
+\end{center}
+
+\subsection{iOS}
+\subsubsection{XCTest}
+XCTest integrates seamlessly into Xcode's (the iOS IDE) testing workflow, and for that reason is used to facilitate all testing on iOS. XCTest is used for both UI and unit testing on iOS.\\
+\indent iOS unit tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/HarvestTests}{here}, and UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/HarvestUITests}{here}.
+\subsubsection{Execution}
+To begin tests in Xcode, click on the play button in the top right, on the line that is highlighted in blue; as seen in figure \ref{fig:is}. This will run the tests. The results will look like figure \ref{fig:ie}.
+\begin{center}
+  \begin{figure}
+	\label{fig:is}
+  	\includegraphics[width=\textwidth]{images/iOS-test.png}
+	\caption{iOS Xcode Test Start}
+  \end{figure}
+  \begin{figure}
+	\label{fig:ie}
+  	\includegraphics[width=\textwidth]{images/iosexample.png}
+	\caption{iOS Xcode Test Example}
+  \end{figure}
+\end{center}
+
+\subsection{Web}
+\subsubsection{Execution}
+
+\section{History}
+\subsection{Android}
+Android test logs can found \href{}{here}.
+\subsection{iOS}
+iOS test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/TestResults}{here}.
+\subsection{Web}
+Web test logs can be found \href{}{here}.
   
 \end{document}
