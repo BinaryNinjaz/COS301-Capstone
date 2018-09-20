@@ -17,8 +17,6 @@ class HarvestTests: XCTestCase {
     continueAfterFailure = true
     
     updateMockDatabase()
-    let ref = DatabaseReferenceMock(path: "", info: [:])
-    HarvestDB.ref = ref
   }
   
   override func tearDown() {

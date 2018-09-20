@@ -6,7 +6,7 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Firebase
+import FirebaseDatabase
 
 func merge(path: String, withKey k: String) -> String {
   var k = k
@@ -122,7 +122,6 @@ indirect enum JSON: Equatable {
     case .none:
       return v
     }
-  
   }
   
   var value: Any? {
@@ -434,6 +433,7 @@ class DataSnapshotMock: DataSnapshot {
 }
 
 func updateMockDatabase() {
+  
   let orc1: JSON = [
     "name": "orc1",
     "coords": [
@@ -453,11 +453,11 @@ func updateMockDatabase() {
   ]
   
   let farm1: JSON = [
-    "name": "farm1",
+    "name": "farm1"
   ]
   
   let farm2: JSON = [
-    "name": "farm2",
+    "name": "farm2"
   ]
   
   π.mockDB = [
@@ -482,4 +482,7 @@ func updateMockDatabase() {
       "sessions": [:]
     ]
   ]
+  
+  let ref = DatabaseReferenceMock(path: "", info: [:])
+  HarvestDB.ref = ref
 }

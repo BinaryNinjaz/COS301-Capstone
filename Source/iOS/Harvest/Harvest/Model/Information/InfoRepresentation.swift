@@ -9,7 +9,8 @@
 // swiftlint:disable function_body_length
 import Eureka
 import SCLAlertView
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 
 extension UIViewController {
   func prebuiltGraph(

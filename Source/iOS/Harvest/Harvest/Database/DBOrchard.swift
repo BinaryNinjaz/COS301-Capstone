@@ -6,7 +6,7 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Firebase
+import FirebaseDatabase
 
 extension HarvestDB {
   static func getOrchards(_ completion: @escaping ([Orchard]) -> Void) {

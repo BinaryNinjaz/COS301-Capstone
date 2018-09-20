@@ -6,7 +6,8 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 import GoogleSignIn
 import Disk
 import SCLAlertView
@@ -90,8 +91,8 @@ extension HarvestDB {
   ) {
     Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
       if email == "iostester@harvestapp.co.za" {
+        print(UserDefaults.standard.bool(forKey: "tester"))
         UserDefaults.standard.set(true, forKey: "tester")
-        HarvestDB.ref = DatabaseReferenceMock(path: "", info: [:])
         updateMockDatabase()
         completion(true)
         return
@@ -260,6 +261,8 @@ extension HarvestDB {
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     do {
+      UserDefaults.standard.removeObject(forKey: "tester")
+      
       TrackerViewController.tracker?.storeSession()
       TrackerViewController.tracker = nil
       try Auth.auth().signOut()

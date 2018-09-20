@@ -7,7 +7,8 @@
 //
 
 import Disk
-import Firebase
+import FirebaseDatabase
+import FirebaseCore
 import GoogleMaps
 import GoogleSignIn
 import UIKit
