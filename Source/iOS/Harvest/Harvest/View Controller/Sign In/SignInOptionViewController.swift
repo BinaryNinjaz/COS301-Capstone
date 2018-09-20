@@ -46,6 +46,11 @@ class SignInOptionViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    if UserDefaults.standard.bool(forKey: "tester"), let vc = mainViewToPresent() {
+      self.present(vc, animated: true, completion: nil)
+      return
+    }
+    
     guard UserDefaults.standard.bool(forKey: "Launched") else {
       return
     }

@@ -432,3 +432,54 @@ class DataSnapshotMock: DataSnapshot {
     return "Snap(\(key)) \(String(describing: value))"
   }
 }
+
+func updateMockDatabase() {
+  let orc1: JSON = [
+    "name": "orc1",
+    "coords": [
+      ["lat": 0.1, "lng": 1.0],
+      ["lat": 0.1, "lng": 2.0],
+      ["lat": 2.0, "lng": 2.0]
+    ]
+  ]
+  
+  let orc2: JSON = [
+    "name": "orc2",
+    "coords": [
+      ["lat": 3.1, "lng": 1.0],
+      ["lat": 0.1, "lng": 0.0],
+      ["lat": 2.0, "lng": 2.0]
+    ]
+  ]
+  
+  let farm1: JSON = [
+    "name": "farm1",
+  ]
+  
+  let farm2: JSON = [
+    "name": "farm2",
+  ]
+  
+  π.mockDB = [
+    "foo": [
+      "workers": [
+        "1a": [
+          "name": "Andy",
+          "surname": "Andrews",
+          "type": "Foreman",
+          "phoneNumber": "1234567890",
+          "assignedOrchards": ["1I", "2II"]
+        ],
+        "2b": ["name": "Beth", "surname": "Bethany", "type": "Foreman", "phoneNumber": "0987654321"],
+        "3c": ["name": "Carl", "surname": "Carlos", "type": "Worker"],
+        "4d": ["name": "Doug", "surname": "Douglas", "type": "Worker"],
+        "5e": ["name": "Ethan", "surname": "Ethanol", "type": "Worker"],
+        "6f": ["name": "Frank", "surname": "Frankly", "type": "Worker"]
+      ],
+      "foremen": ["1234567890": 1, "0987654321": 1],
+      "orchards": ["1I": orc1, "2II": orc2],
+      "farms": ["A1": farm1, "A2": farm2],
+      "sessions": [:]
+    ]
+  ]
+}

@@ -89,6 +89,14 @@ extension HarvestDB {
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
+      if email == "iostester@harvestapp.co.za" {
+        UserDefaults.standard.set(true, forKey: "tester")
+        HarvestDB.ref = DatabaseReferenceMock(path: "", info: [:])
+        updateMockDatabase()
+        completion(true)
+        return
+      }
+      
       if let error = error {
         let nserr = error as NSError
         if [AuthErrorCode.emailAlreadyInUse, .wrongPassword, .userNotFound]
