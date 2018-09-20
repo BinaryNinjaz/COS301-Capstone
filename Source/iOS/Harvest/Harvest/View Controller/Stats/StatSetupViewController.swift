@@ -247,17 +247,17 @@ final class StatSetupViewController: ReloadableFormViewController {
     }
     
     showExpectedRow = SwitchRow { row in
-      row.title = "Show Expected Graph Line"
+      row.title = "Show Expected Lines"
       row.value = true
     }
     
     showAverageRow = SwitchRow { row in
-      row.title = "Show Average Graph Line"
+      row.title = "Show Average Line"
       row.value = true
     }
     
     curveKindRow = SegmentedRow<LineGraphCurve> { row in
-      row.title = "Graph Curve Line"
+      row.title = "Line Type"
       row.options = LineGraphCurve.allCases
       row.value = .curve
     }
