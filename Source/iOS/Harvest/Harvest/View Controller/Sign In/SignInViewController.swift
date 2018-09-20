@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
 import GoogleSignIn
 import Disk
 import SCLAlertView

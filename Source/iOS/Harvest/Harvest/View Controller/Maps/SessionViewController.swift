@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
 import GoogleMaps
 import Eureka
 import SCLAlertView
