@@ -73,7 +73,7 @@ class SettingsEurekaViewController: ReloadableFormViewController, SFSafariViewCo
       let gen = ButtonRow { row in
         row.title = "Generate Sessions"
       }.onCellSelection { _, _ in
-        let fvc = FormViewController(style: UITableViewStyle.grouped)
+        let fvc = FormViewController(style: UITableView.Style.grouped)
         self.generatorSection(formVC: fvc)
         
         self.present(fvc, animated: true, completion: nil)

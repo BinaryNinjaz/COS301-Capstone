@@ -18,12 +18,10 @@ struct StatStore {
   
   init() {
     store = []
-//    try? Disk.remove(path, from: .applicationSupport)
   }
   
   mutating func updateStore() {
     store = (try? Disk.retrieve(path, from: .applicationSupport, as: [Stat].self)) ?? []
-    print(store)
   }
   
   mutating func saveItem(item: Stat) {

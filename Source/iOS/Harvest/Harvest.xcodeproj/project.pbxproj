@@ -68,6 +68,9 @@
 		16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605F208F6A9400BE5ADE /* HarvestUser.swift */; };
 		16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906061208F748600BE5ADE /* AdminEurekaCell.swift */; };
 		16989FC7215402F900CB1DC8 /* StatStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16989FC6215402F900CB1DC8 /* StatStore.swift */; };
+		16989FCA2154059300CB1DC8 /* DataGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16989FC92154059300CB1DC8 /* DataGenerator.swift */; };
+		16989FCD215405B100CB1DC8 /* LinearEquation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16989FCB215405B100CB1DC8 /* LinearEquation.swift */; };
+		16989FCE215405B100CB1DC8 /* RandomPointInPolygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16989FCC215405B100CB1DC8 /* RandomPointInPolygon.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
@@ -192,6 +195,9 @@
 		1690605F208F6A9400BE5ADE /* HarvestUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUser.swift; sourceTree = "<group>"; };
 		16906061208F748600BE5ADE /* AdminEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminEurekaCell.swift; sourceTree = "<group>"; };
 		16989FC6215402F900CB1DC8 /* StatStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatStore.swift; sourceTree = "<group>"; };
+		16989FC92154059300CB1DC8 /* DataGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataGenerator.swift; sourceTree = "<group>"; };
+		16989FCB215405B100CB1DC8 /* LinearEquation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinearEquation.swift; sourceTree = "<group>"; };
+		16989FCC215405B100CB1DC8 /* RandomPointInPolygon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomPointInPolygon.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -291,6 +297,7 @@
 			children = (
 				164F30A520D46DAA00E7772A /* Harvest.entitlements */,
 				168433462142F7C4007E4471 /* GoogleService-Info.plist */,
+				16989FC82154059300CB1DC8 /* Generator */,
 				169E5195206C62D6006B923E /* Model */,
 				16420FCA2069717200E1A292 /* Database */,
 				16420FC720696B6500E1A292 /* UI Components */,
@@ -515,6 +522,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		16989FC82154059300CB1DC8 /* Generator */ = {
+			isa = PBXGroup;
+			children = (
+				16989FC92154059300CB1DC8 /* DataGenerator.swift */,
+			);
+			path = Generator;
+			sourceTree = "<group>";
+		};
 		169E5195206C62D6006B923E /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -545,6 +560,8 @@
 		16C82F5420819B4C0074595C /* GeoKit */ = {
 			isa = PBXGroup;
 			children = (
+				16989FCB215405B100CB1DC8 /* LinearEquation.swift */,
+				16989FCC215405B100CB1DC8 /* RandomPointInPolygon.swift */,
 				16C82F5520819B6E0074595C /* Edge.swift */,
 				16C82F5620819B6E0074595C /* Ellipse.swift */,
 				16C82F5720819B6E0074595C /* Helper.swift */,
@@ -913,6 +930,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16989FCD215405B100CB1DC8 /* LinearEquation.swift in Sources */,
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
 				16D0D6752153DA60001BDE13 /* JSON.swift in Sources */,
 				1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */,
@@ -928,6 +946,7 @@
 				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
 				16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */,
 				16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */,
+				16989FCE215405B100CB1DC8 /* RandomPointInPolygon.swift in Sources */,
 				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
 				16C82F5A20819B6E0074595C /* Edge.swift in Sources */,
 				16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */,
@@ -983,6 +1002,7 @@
 				16F2BA4D20766065007652E8 /* WorkerCollectionViewCell.swift in Sources */,
 				16641408210FE09500AC0A97 /* SessionFilterItemCollectionViewCell.swift in Sources */,
 				165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */,
+				16989FCA2154059300CB1DC8 /* DataGenerator.swift in Sources */,
 				167448DC208A897C00FA605C /* DBSession.swift in Sources */,
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
 				16F5796721000CB50086325B /* PhoneyFormatter.swift in Sources */,
