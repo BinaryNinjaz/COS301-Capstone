@@ -8,14 +8,15 @@
 \contentsline {subsubsection}{\numberline {2.1.1}JUnit}{3}{subsubsection.2.1.1}
 \contentsline {subsubsection}{\numberline {2.1.2}Espresso}{3}{subsubsection.2.1.2}
 \contentsline {subsubsection}{\numberline {2.1.3}Execution}{3}{subsubsection.2.1.3}
-\contentsline {subsection}{\numberline {2.2}iOS}{4}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}XCTest}{4}{subsubsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2}iOS}{3}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}XCTest}{3}{subsubsection.2.2.1}
 \contentsline {subsubsection}{\numberline {2.2.2}Execution}{4}{subsubsection.2.2.2}
-\contentsline {subsection}{\numberline {2.3}Web}{5}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}QUnit}{5}{subsubsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3}Web}{4}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}QUnit}{4}{subsubsection.2.3.1}
 \contentsline {subsubsection}{\numberline {2.3.2}Execution}{5}{subsubsection.2.3.2}
-\contentsline {paragraph}{QUnit}{6}{section*.3}
-\contentsline {section}{\numberline {3}History}{6}{section.3}
-\contentsline {subsection}{\numberline {3.1}Android}{6}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}iOS}{6}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Web}{6}{subsection.3.3}
+\contentsline {paragraph}{QUnit}{5}{section*.3}
+\contentsline {section}{\numberline {3}Test Cases}{5}{section.3}
+\contentsline {section}{\numberline {4}History}{6}{section.4}
+\contentsline {subsection}{\numberline {4.1}Android}{6}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}iOS}{7}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Web}{7}{subsection.4.3}

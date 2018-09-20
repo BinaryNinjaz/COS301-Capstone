@@ -186,13 +186,13 @@ Test Reporting forms the phase in which the implementation of the tests is compa
 \item Writing a summary report.
 \end{itemize}
 \subsection{Testing Frequency}
-Since tests are used to validate the continued performance of a module---or the system as a whole---tests should be run after each module is finished being modified or created. Larger integration tests can take place less frequently, such as after a new feature is finished being implemented or modified.
+Since tests are used to validate the continued performance of a module---or the system as a whole---tests should be run after each module is finished being modified or created.
 
   \section{Testing Tools}
-  There are many types of tests that can be run, in the case of \textbf{Harvest}, Unit, UI, and Integration tests are run.
+  There are many types of tests that can be run, in the case of \textbf{Harvest}, Unit and UI tests are run.
   \subsection{Android}
   \subsubsection{JUnit}
-JUnit is a unit testing framework for the Java Environment, and as such is used for testing the Android---programmed in Java---implementation of \textbf{Harvest}. Android development was carried out using the Android Studio IDE, which facilitates easy use and set up of the JUnit framework. Android Studio also recommends the use of JUnit. For the reasons given, JUnit was selected to run unit tests on Android.\\
+JUnit is a unit testing framework for the Java Environment, and as such is used for testing the Android---programmed in Java---implementation of \textbf{Harvest}. Android development is carried out using the Android Studio IDE, which facilitates easy use and set up of the JUnit framework. Android Studio also recommends the use of JUnit. For the reasons given, JUnit was selected to run unit tests on Android.\\
 \indent Android unit tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/app/src/test/java/za/org/samac/harvest}{here}.
 
  \subsubsection{Espresso}
@@ -200,15 +200,13 @@ JUnit is a unit testing framework for the Java Environment, and as such is used 
  \indent Android UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest}{here}.
   
  \subsubsection{Execution}
- Both UI and Unit tests are executed in the same manner for Android, the primary difference being that a UI test will need to run on a connected device or virtual machine.\\
-\indent In order to run a unit or UI test for Android, one must open the file containing the desired test(s) using Android Studio as in figure \ref{fig:android-test}. Once there, one can right click on the green `test' button in the margin, then they can select to run the tests, the results of which will be seen at the bottom of the IDE.
-   \begin{center}
-  \begin{figure}
-	\label{fig:android-test}
+   \begin{figure}
   	\includegraphics[width=\textwidth]{images/Android-JUnit-tests.png}
 	\caption{Android Studio Test Example}
+	\label{fig:android-test}
   \end{figure}
-\end{center}
+ Both UI and Unit tests are executed in the same manner for Android, the primary difference being that a UI test will need to run on a connected device or virtual machine.\\
+\indent In order to run a unit or UI test for Android, one must open the file containing the desired test(s) using Android Studio as in figure \ref{fig:android-test}. Once there, one can right click on the green `test' button in the margin, then they can select to run the tests, the results of which will be seen at the bottom of the IDE.
 
 \subsection{iOS}
 \subsubsection{XCTest}
@@ -216,13 +214,11 @@ XCTest integrates seamlessly into Xcode's (the iOS IDE) testing workflow, and fo
 \indent iOS unit tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/HarvestTests}{here}, and UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/HarvestUITests}{here}.
 \subsubsection{Execution}
 To begin tests in Xcode, click on the play button in the top right, on the line that is highlighted in blue; as seen in figure \ref{fig:is}. This will run the tests. The results will look like figure \ref{fig:ie}.
-\begin{center}
   \begin{figure}
-	\label{fig:is}
   	\includegraphics[width=\textwidth]{images/iOS-test.png}
 	\caption{iOS Xcode Test Start}
+	\label{fig:is}
   \end{figure}
-\end{center}
 
 \subsection{Web}
 \subsubsection{QUnit}
@@ -237,13 +233,16 @@ QUnit is used for unit testing javascript functions. It was chosen since it disp
             \caption{After Enabling Tests}
             \label{fig:q2}
         \end{figure*}
-\paragraph{QUnit} To execute QUnit tests, go into the html file that uses the functions to be tested. At the bottom, find a segment that has mentions \texttt{QUnit Testing}, such as in figure \ref{fig:q1}; then simply uncomment the code, as in figure \ref{fig:q2}, and refresh the page. The results are now displayed, such as in figure \ref{fig:qr}.
+\paragraph{QUnit} To execute QUnit tests, go into the html file that uses the functions to be tested. At the bottom, find a segment that mentions \texttt{QUnit Testing}, such as in figure \ref{fig:q1}; then simply uncomment the code, as in figure \ref{fig:q2}, and refresh the page. The results are now displayed, such as in figure \ref{fig:qr}.
 
 \begin{figure}
-\label{fig:qr}
 \includegraphics[width=\textwidth]{images/qr.png}
 \caption{Results of QUnit test}
+\label{fig:qr}
 \end{figure}
+
+\section{Test Cases}
+TODO when requirements done.
 
 \section{History}
 \subsection{Android}
@@ -252,19 +251,29 @@ QUnit is used for unit testing javascript functions. It was chosen since it disp
             \includegraphics[width=.3\textwidth]{images/info.png}
             \includegraphics[width=.3\textwidth]{images/stats.png}
             \caption{Unit Test to Verify Functioning of Hash Function}
+                        \label{fig:androidsamples}
             \caption{UI Test to Verify Functioning of Information Editing}
+            \label{fig:as2}
             \caption{Unit Test to Verify Formatting of Dates}
-            \label{fig:androidsamples}
+            \label{fig:as3}
+
         \end{figure*}
-Android test logs can found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/test-logs}{here}. Refer to \ref{fig:androidsamples} for examples of tests.
+Android test logs can found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/test-logs}{here}. Refer to figures \ref{fig:androidsamples}, \ref{fig:as2}, and \ref{fig:as3} for examples of tests.
 \subsection{iOS}
 	\begin{figure}
-	\label{fig:ie}
   	\includegraphics[width=\textwidth]{images/iosexample.png}
 	\caption{iOS Xcode Test Example}
+	\label{fig:ie}
   \end{figure}
-iOS test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/TestResults}{here}.
+iOS test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/TestResults}{here}.\\
+\indent Refer to figure \ref{fig:ie} to see iOS tests.
 \subsection{Web}
-Web test logs can be found \href{}{here}.
+	\begin{figure}
+  	\includegraphics[width=\textwidth]{images/qt.png}
+	\caption{QUnit Test to Verify Passwords are Rejected or Approved Appropriately}
+	\label{fig:qt}
+  \end{figure}
+Web test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Web/test-logs}{here}.\\
+\indent Refer to figure \ref{fig:qt} for an example of a QUnit test.
   
 \end{document}
