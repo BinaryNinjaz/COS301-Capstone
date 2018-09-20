@@ -67,6 +67,7 @@
 		1690605E208F61DF00BE5ADE /* DBUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605D208F61DF00BE5ADE /* DBUser.swift */; };
 		16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605F208F6A9400BE5ADE /* HarvestUser.swift */; };
 		16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906061208F748600BE5ADE /* AdminEurekaCell.swift */; };
+		16989FC7215402F900CB1DC8 /* StatStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16989FC6215402F900CB1DC8 /* StatStore.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
@@ -190,6 +191,7 @@
 		1690605D208F61DF00BE5ADE /* DBUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBUser.swift; sourceTree = "<group>"; };
 		1690605F208F6A9400BE5ADE /* HarvestUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUser.swift; sourceTree = "<group>"; };
 		16906061208F748600BE5ADE /* AdminEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminEurekaCell.swift; sourceTree = "<group>"; };
+		16989FC6215402F900CB1DC8 /* StatStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatStore.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -423,6 +425,7 @@
 			isa = PBXGroup;
 			children = (
 				16ADA5EB210CAB8A00EE369E /* Stat.swift */,
+				16989FC6215402F900CB1DC8 /* StatStore.swift */,
 				164DC2AB2115C84B008A8523 /* StatParameters.swift */,
 			);
 			path = Stats;
@@ -945,6 +948,7 @@
 				164DC2AE211659F0008A8523 /* CarouselViewController.swift in Sources */,
 				164F30A720D4745900E7772A /* Verification.swift in Sources */,
 				16E3750F20F0E4220023AD2C /* StatSelectionViewController.swift in Sources */,
+				16989FC7215402F900CB1DC8 /* StatStore.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
 				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
 				1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */,
