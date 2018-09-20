@@ -222,20 +222,47 @@ To begin tests in Xcode, click on the play button in the top right, on the line 
   	\includegraphics[width=\textwidth]{images/iOS-test.png}
 	\caption{iOS Xcode Test Start}
   \end{figure}
-  \begin{figure}
+\end{center}
+
+\subsection{Web}
+\subsubsection{QUnit}
+QUnit is used for unit testing javascript functions. It was chosen since it displays its results in a convenient way---by including them in the web page, and it's very simple to use.\\
+\indent QUnit tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Web/app}{here}.
+\subsubsection{Execution}
+\begin{figure*}[ht!]
+            \includegraphics[width=.5\textwidth]{images/q1.png}
+            \includegraphics[width=.5\textwidth]{images/q2.png}
+            \caption{Before Enabling Tests}
+            \label{fig:q1}
+            \caption{After Enabling Tests}
+            \label{fig:q2}
+        \end{figure*}
+\paragraph{QUnit} To execute QUnit tests, go into the html file that uses the functions to be tested. At the bottom, find a segment that has mentions \texttt{QUnit Testing}, such as in figure \ref{fig:q1}; then simply uncomment the code, as in figure \ref{fig:q2}, and refresh the page. The results are now displayed, such as in figure \ref{fig:qr}.
+
+\begin{figure}
+\label{fig:qr}
+\includegraphics[width=\textwidth]{images/qr.png}
+\caption{Results of QUnit test}
+\end{figure}
+
+\section{History}
+\subsection{Android}
+\begin{figure*}[ht!]
+            \includegraphics[width=.3\textwidth]{images/hash.png}
+            \includegraphics[width=.3\textwidth]{images/info.png}
+            \includegraphics[width=.3\textwidth]{images/stats.png}
+            \caption{Unit Test to Verify Functioning of Hash Function}
+            \caption{UI Test to Verify Functioning of Information Editing}
+            \caption{Unit Test to Verify Formatting of Dates}
+            \label{fig:androidsamples}
+        \end{figure*}
+Android test logs can found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/test-logs}{here}. Refer to \ref{fig:androidsamples} for examples of tests.
+\subsection{iOS}
+	\begin{figure}
 	\label{fig:ie}
   	\includegraphics[width=\textwidth]{images/iosexample.png}
 	\caption{iOS Xcode Test Example}
   \end{figure}
-\end{center}
-
-\subsection{Web}
-\subsubsection{Execution}
-
-\section{History}
-\subsection{Android}
-Android test logs can found \href{}{here}.
-\subsection{iOS}
 iOS test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/TestResults}{here}.
 \subsection{Web}
 Web test logs can be found \href{}{here}.
