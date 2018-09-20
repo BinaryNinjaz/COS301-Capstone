@@ -189,7 +189,8 @@ No Installation is required to use the website, however it can be accessed at \h
 With regards to configuring the iOS and Android applications: location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application.\\
 Android:
 \begin{enumerate}
- \item \todo{ask someone that has an Android device.}
+ \item Swipe down from the notification pane.
+ \item Press the location services icon.
 \end{enumerate}
 iOS\footnote{instructions pertain to iOS 11.4}:
 \begin{enumerate}
@@ -246,11 +247,10 @@ When on the log in screen enter your email and its password you used to create t
 
 \subsubsection{Logging In as a Foreman}
 
-Simply enter your mobile phone number and press the button. A verification code may be sent to you via SMS, which will then need to be entered. \todo{What number is being displayed from the system? How does it figure out which one corresponds to which?}Once that is done a confirmation screen will be displayed, it will show the phone number saved in the system so that the farmer can confirm that it is saved correctly. Then, depending on the situation, the following will be displayed:
+Simply enter your mobile phone number and press the button. A verification code may be sent to you via SMS, which will then need to be entered. Once that is done a confirmation screen will be displayed, it will show the phone number saved in the system so that the farmer can confirm that it is saved correctly. Then, depending on the situation, the following will be displayed:
 \begin{itemize}
  \item If the foreman is not assigned to any organization, then they will be prompted to go back and will not be able to continue.
- \todo{Is this necessary to do?}
- \item If the foreman is assigned to a single organization, the name will be displayed\footnote{On iOS the foreman will simply be transferred to their assigned organization}, and they will then be able to continue to the clicker as seen in \ref{Clicker}.
+ \item If the foreman is assigned to a single organization, the name will be displayed\footnote{On iOS the foreman will simply be transferred to their assigned organization}, and they will then be able to continue to the clicker as seen in \ref{Yield Collector}.
  \item On the off chance that the foreman is assigned to multiple organizations, they will be able to select which organization they wish to work for for the session. In order to change this, they must log out and in again.
 \end{itemize}
 
@@ -259,16 +259,15 @@ The Log out button can be found at the bottom of the Harvest "Settings" Tab on A
 
 \subsection{Website}
 
-
-\textit{For ease of visualization, a diagram representing a map of the website is given in \ref{WebsiteMap}: each web page is given, indicating to where, and how a traversal is possible from that page.}
-
-\todo{Update Diagram}
-\begin{figure}[h]
- \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webDiagramMap.png}
- \caption{Website Map}
- \label{WebsiteMap}
-\end{figure}
+%
+% \textit{For ease of visualization, a diagram representing a map of the website is given in \ref{WebsiteMap}: each web page is given, indicating to where, and how a traversal is possible from that page.}
+%
+% \begin{figure}[h]
+%  \centering
+%  \includegraphics[width=12cm, keepaspectratio]{Images/webDiagramMap.png}
+%  \caption{Website Map}
+%  \label{WebsiteMap}
+% \end{figure}
 
 \subsubsection{Registering}
 \paragraph{Finding the Register Page}The login and registration page can be found at \href{https://harvestapp.co.za}{Harvest}, and once there the user will be presented with the page as seen in \ref{LoginPage}. To now create an account the user must click on the blue \texttt{Don't have an account? Sign Up} button. They will now be presented with \ref{RegisterPage}.
@@ -434,7 +433,7 @@ On all web pages a consistent navbar can be seen at the top of the page. The fol
 
 \subsubsection{Home Page}
 \label{webHome}
-Once the user has logged in, they will be taken to the home page, as seen in \ref{HomePage}. The home page is the starting point of the system, it serves as a navigation page of the website.
+Once the user has logged in, they will be taken to the home page, as seen in \ref{webHomeImage}. The home page is the starting point of the system, it serves as a navigation page of the website.
 
 \begin{figure}
  \centering
@@ -445,7 +444,7 @@ Once the user has logged in, they will be taken to the home page, as seen in \re
 
 \subsubsection{Tracker}
 \label{webTracker}
-The Tracker page can be found at any time by clicking on the \texttt{Tracker} button in the navbar. Once clicked on, the user will be taken to \ref{Tracker}, as seen in \ref{HomePage}. It serves simply by providing an updating feed of the farm and the locations of foremen every two minutes.
+The Tracker page can be found at any time by clicking on the \texttt{Tracker} button in the navbar. Once clicked on, the user will be taken to \ref{webTrackerImage}. It serves simply by providing an updating feed of the farm and the locations of foremen every two minutes.
 
 \begin{figure}
  \centering
@@ -465,7 +464,7 @@ The Tracker page can be found at any time by clicking on the \texttt{Tracker} bu
  \label{InformationPage}
 \end{figure}
 
-\paragraph{Locating the Correct Information}When in \ref{InformationPage} there are three blue buttons available; \texttt{Farms}, \texttt{Orchards}, and \texttt{Workers}. Each of which will expand a list of the relevant items. The entire process is best described through an example, so, in this example, the goal is to locate information on a worker named \textit{Joe Soap}. The process, however can be accomplished in multiple ways; the first, and most obvious is to select \texttt{Workers}, then \texttt{J. Soap} (the process can be seen by following \ref{InformationPage}, \ref{InformationPageWorkers}, and \ref{InformationPageJoe}), however, if the user is looking at the \texttt{Pear Shaped} orchard, and see's that \textit{Joe Soap} is assigned (see \ref{InformationPagePear}), then they can click on the button representing \textit{Joe Soap}---labeled \texttt{J. Soap}---to go to \textit{Joe Soap's} page, as seen in \ref{InformationPageJoePear}, note that the list of orchards is still displayed.
+\paragraph{Locating the Correct Information}When in \ref{InformationPage} there are three blue buttons available; \texttt{Farms}, \texttt{Orchards}, and \texttt{Workers}. Each of which will expand a list of the relevant items. The entire process is best described through an example, so, in this example, the goal is to locate information on a worker named \textit{Ben Russo}. The process, however can be accomplished in multiple ways; the first, and most obvious is to select \texttt{Workers}, then \texttt{Ben Russo} (the process can be seen by following \ref{InformationPage}, \ref{InformationPageWorkers}, and \ref{InformationPageJoe}).
 
 \begin{figure}
  \centering
@@ -488,7 +487,7 @@ The Tracker page can be found at any time by clicking on the \texttt{Tracker} bu
  \label{InformationPagePear}
 \end{figure}
 
-\paragraph{Adding Information}Note that at the top of the second list in \ref{InformationPageWorkers}, \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear} there is a green \texttt{Add Farm}, \texttt{Add Orchard}, or \texttt{Add Worker} button, clicking this button will display the interface to enter the necessary information. An example of this can be seen in \ref{InformationAddOrchard}, where a new orchard can be created. Once all of the necessary information has been entered, then the \texttt{Save} button can be clicked to create the new orchard, note that none of the fields are required.
+\paragraph{Adding Information} Note that at the top of the list in \ref{InformationPageWorkers}, \ref{InformationPage} or \ref{InformationPagePear} there is a green \texttt{Add Farm}, \texttt{Add Orchard}, or \texttt{Add Worker} button, clicking this button will display the interface to enter the necessary information. An example of this can be seen in \ref{InformationAddOrchard}, where a new orchard can be created. Once all of the necessary information has been entered, then the \texttt{Save} button can be clicked to create the new orchard, note that none of the fields are required.
 
 \begin{figure}
  \centering
@@ -497,7 +496,7 @@ The Tracker page can be found at any time by clicking on the \texttt{Tracker} bu
  \label{InformationAddOrchard}
 \end{figure}
 
-\paragraph{Modifying Information}When looking at any information, a \texttt{Modify} button can be seen at the top (see \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear}). In \ref{InformationModJoe} the view when \textit{Joe Soap} is being modified can be seen. The fields are already populated by the information that was already stored in them. Once the user is content with the changes, they can click on the orange \texttt{Save} button to apply the changes. A reminder that no fields are required, so that fulled in fields can be erased. The user can also click on the red \texttt{Delete} button to delete the entry in its entirety---note a confirmation dialog will appear. The user may also cancel, which will return them to before they clicked on \texttt{Modify}, as seen in \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear}.
+\paragraph{Modifying Information}When looking at any information, a \texttt{Modify} button can be seen at the top (see \ref{InformationPageJoe} or \ref{InformationPagePear}). In \ref{InformationModJoe} the view when \textit{Pete Dave} is being modified can be seen. The fields are already populated by the information that was already stored in them. Once the user is content with the changes, they can click on the orange \texttt{Save} button to apply the changes. The user can also click on the red \texttt{Delete} button to delete the entry in its entirety---note a confirmation dialog will appear. The user may also cancel, which will return them to before they clicked on \texttt{Modify}, as seen in \ref{InformationPageJoe} or \ref{InformationPagePear}.
 
 \begin{figure}
  \centering
@@ -598,7 +597,5 @@ The Settings allows users to edit their pesonal information.
 \item Check that your phone supports location services
 \item In the "Settings" application make sure that the Harvest app is allowed location services
 \end{enumerate}
-
-\subsection{Website Only}
 
 \end{document}
