@@ -24,7 +24,7 @@
 		% Title
 		\rule{\linewidth}{0.5mm} \\[0.5cm]
 		{ \huge \bfseries Harvest \\
-		  \vspace{0.3cm}\large \bfseries User Manual}\\[0.5cm]
+		  \vspace{0.3cm}\large \bfseries Testing Policy}\\[0.5cm]
 		\rule{\linewidth}{0.5mm} \\[1cm]
 
 
@@ -92,7 +92,7 @@
 				15008739
 			\end{flushright}
 		\end{minipage}
-
+        
         \begin{minipage}{0.4\textwidth}
 			\begin{flushleft} \large
 				\emph{} \\
@@ -243,28 +243,35 @@ QUnit is used for unit testing javascript functions. It was chosen since it disp
 
 \section{Test Cases}
 \subsection{Database}
-The database cannot be tested locally with unit tests, so UI tests are used to perform create, read, update, and delete operations on the database. The tests also confirm that after the operations are completed, that the database returns the correct information.\\
-\indent These UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestUITests/HarvestEntityCreationUITests.swift}{here} and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestUITests/HarvestEntityDeletionUITests.swift}{here} for iOS; and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/InformationTest.java}{here} for Android.
+The database cannot be tested locally with unit tests, so UI tests are used to perform create, read, update, and delete (CRUD) operations on the database. The tests also confirm that after the operations are completed, the database returns the correct information.\\
+\indent These UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestUITests/HarvestEntityCreationUITests.swift}{here}, \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestTests/HarvestTests.swift}{here}, and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestUITests/HarvestEntityDeletionUITests.swift}{here} for iOS; and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/InformationTest.java}{here} for Android. These tests are all simply performings one or more CRUD operation pertaining to the database, and confirming that the correct results are returned after the operation; before moving onto the next.
 \subsection{Location Services}
-
+Location services are handled by device hardware and cannot be reasonably tested, however, it is possible to test the handling of the results returned by the location services.\\
+\indent Examples of these tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestTests/GeoKitTests.swift}{here} on iOS, and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/test/java/za/org/samac/harvest/PolygonContainsPointTest.java}{here} for Android.\\
+\indent These tests deal mostly with geo-fencing---testing if a location falls within a given area. These functions serve to test which orchard, if any, a foreman is within when they make use of the mobile application.\\
+\indent The testing is carried out by creating a polygon demarcated by a set of coordinates, then feeding the geo-fencing functions a set of predetermined coordinates to test if the correct results are returned by these functions.
 \subsection{Cloud Functions}
-
-\subsection{Mobile Application}
-
-\subsection{Website}
-
+A variety of functions that operate on the database are hosted in the cloud, so that mobile applications can request the results of a function rather than download all the necessary data from the database and perform the calculations locally, this saves on valuable mobile data.\\
+\indent Tests for these functions can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Web/functions/test.js}{here}.\\
+\indent These functions are tested simply by giving them dummy data and confirming that the correct results are returned.
+\subsection{Mobile Application and Website}
+These are umbrella terms that each encompass a variety of smaller subsystems.
 \subsection{Collection Tracker}
-
+The collection tracker (also termed as yield tracker) is the primary mobile activity performed by foremen. It is how they measure the collections of the workers.\\
+\indent On iOS this is tested by unit tests that create fake information and then feeds it into the tracker to confirm that arbitary information can be processed. Simultaneoulsy, it is confirmed that the location and time measured by the tracker is handled correctly. These tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/iOS-/Source/master/Harvest/HarvestTests/HarvestTests.swift}{here}.\\
+\indent On Android, testing is carried out by means of UI tests which confirm that arrival to the tracker and its operations is carried out correctly as a whole. The tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/YieldTrackerTest.java}{here}.
 \subsection{Foreman Location Viewer}
-
+The foreman location viewer is used to display the live locations of requested foremen, it relies heavily on accurate location reporting from the foreman tracker. Once the information is received, it is simply displayed.
 \subsection{Foreman Tracker}
-
+The foreman tracker is used to report the location of the foreman (the mobile application) to the foreman location viewer. It relies almost exclusively on accurate location reporting, which is received from hardware and written to the database.
 \subsection{Collection Viewer}
-
+The collection viewer shows summaries of previously recorded sessions. It is used solely to report simple previously recorded information to the user. This information is read from the database, tests for which have already been discussed.
 \subsection{Statistics Viewer}
-
+The statistics viewer is used to report information to the user in the form of line graphs. Given the large amounts of data processed, this is handled by cloud functions, testing for which has already been discussed. The complication being the correct reporting of the information received.\\
+\indent Android unit tests, which confirm the correct handling of dates can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/Android/Source/master/Harvest/app/src/test/java/za/org/samac/harvest/StatsTests.java}{here}.
 \subsection{Information Manager}
-
+The information manager is used exclusively to perform basic CRUD operations on the database, no additional processing is performed. Tests for CRUD operations have already been discussed.\\
+\indent On Android this is tested via a UI test \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/InformationTest.java}{here}, which runs through adding, modifying, and deleting information.
 
 \section{History}
 \subsection{Android}
@@ -298,5 +305,5 @@ iOS test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone
   \end{figure}
 Web test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Web/test-logs}{here}.\\
 \indent Refer to figure \ref{fig:qt} for an example of a QUnit test.
-
+  
 \end{document}

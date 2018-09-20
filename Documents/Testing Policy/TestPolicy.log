@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.9.11)  20 SEP 2018 18:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.9.11)  20 SEP 2018 19:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -273,201 +273,96 @@ been already used, duplicate ignored
 l.170 \item D
              esigning the test environment and identifying the infrastructur...
 [1] [2]
-
-LaTeX Warning: File `images/Android-JUnit-tests.png' not found on input line 20
-4.
-
-
-! Package pdftex.def Error: File `images/Android-JUnit-tests.png' not found: us
-ing draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.204 ...extwidth]{images/Android-JUnit-tests.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[3] [4]
-
-LaTeX Warning: File `images/iOS-test.png' not found on input line 218.
-
-
-! Package pdftex.def Error: File `images/iOS-test.png' not found: using draft s
-etting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.218 ...cs[width=\textwidth]{images/iOS-test.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-LaTeX Warning: File `images/q1.png' not found on input line 229.
-
-
-! Package pdftex.def Error: File `images/q1.png' not found: using draft setting
+<images/Android-JUnit-tests.png, id=213, 1552.90909pt x 870.22636pt>
+File: images/Android-JUnit-tests.png Graphic file (type png)
+<use images/Android-JUnit-tests.png>
+Package pdftex.def Info: images/Android-JUnit-tests.png  used on input line 204
 .
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.229 ...aphics[width=.5\textwidth]{images/q1.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-LaTeX Warning: File `images/q2.png' not found on input line 230.
-
-
-! Package pdftex.def Error: File `images/q2.png' not found: using draft setting
-.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.230 ...aphics[width=.5\textwidth]{images/q2.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
+(pdftex.def)             Requested size: 390.0pt x 218.55194pt.
+ [3]
+<images/iOS-test.png, id=224, 2569.6pt x 1445.4pt>
+File: images/iOS-test.png Graphic file (type png)
+<use images/iOS-test.png>
+Package pdftex.def Info: images/iOS-test.png  used on input line 218.
+(pdftex.def)             Requested size: 390.0pt x 219.35902pt.
+<images/q1.png, id=226, 401.96454pt x 78.84pt>
+File: images/q1.png Graphic file (type png)
+<use images/q1.png>
+Package pdftex.def Info: images/q1.png  used on input line 229.
+(pdftex.def)             Requested size: 195.0pt x 38.24696pt.
+<images/q2.png, id=227, 395.99182pt x 74.06181pt>
+File: images/q2.png Graphic file (type png)
+<use images/q2.png>
+Package pdftex.def Info: images/q2.png  used on input line 230.
+(pdftex.def)             Requested size: 195.0pt x 36.47028pt.
 
 Overfull \hbox (2.61108pt too wide) in paragraph at lines 229--231
 [][] [] 
  []
 
-
-LaTeX Warning: File `images/qr.png' not found on input line 239.
-
-
-! Package pdftex.def Error: File `images/qr.png' not found: using draft setting
-.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.239 ...graphics[width=\textwidth]{images/qr.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-LaTeX Warning: File `images/hash.png' not found on input line 272.
-
-
-! Package pdftex.def Error: File `images/hash.png' not found: using draft setti
-ng.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.272 ...hics[width=.3\textwidth]{images/hash.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-LaTeX Warning: File `images/info.png' not found on input line 273.
-
-
-! Package pdftex.def Error: File `images/info.png' not found: using draft setti
-ng.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.273 ...hics[width=.3\textwidth]{images/info.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-LaTeX Warning: File `images/stats.png' not found on input line 274.
-
-
-! Package pdftex.def Error: File `images/stats.png' not found: using draft sett
-ing.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.274 ...ics[width=.3\textwidth]{images/stats.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[5] [6] [7] [8] [9]
-
-LaTeX Warning: File `images/iosexample.png' not found on input line 287.
-
-
-! Package pdftex.def Error: File `images/iosexample.png' not found: using draft
- setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.287 ...[width=\textwidth]{images/iosexample.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-LaTeX Warning: File `images/qt.png' not found on input line 295.
-
-
-! Package pdftex.def Error: File `images/qt.png' not found: using draft setting
-.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.295 ...graphics[width=\textwidth]{images/qt.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 302.
-[10] [11] [12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 302.
+[4 <./images/Android-JUnit-Tests.png>]
+<images/qr.png, id=237, 799.74818pt x 347.01546pt>
+File: images/qr.png Graphic file (type png)
+<use images/qr.png>
+Package pdftex.def Info: images/qr.png  used on input line 239.
+(pdftex.def)             Requested size: 390.0pt x 169.22891pt.
+ [5 <./images/iOS-test.png> <./images/q1.png (PNG copy)> <./images/q2.png (PNG 
+copy)>] [6 <./images/qr.png (PNG copy)>]
+[7]
+<images/hash.png, id=264, 913.82727pt x 476.62364pt>
+File: images/hash.png Graphic file (type png)
+<use images/hash.png>
+Package pdftex.def Info: images/hash.png  used on input line 279.
+(pdftex.def)             Requested size: 117.00119pt x 61.01779pt.
+<images/info.png, id=265, 639.08182pt x 870.22636pt>
+File: images/info.png Graphic file (type png)
+<use images/info.png>
+Package pdftex.def Info: images/info.png  used on input line 280.
+(pdftex.def)             Requested size: 117.00119pt x 159.31625pt.
+<images/stats.png, id=266, 714.93546pt x 870.22636pt>
+File: images/stats.png Graphic file (type png)
+<use images/stats.png>
+Package pdftex.def Info: images/stats.png  used on input line 281.
+(pdftex.def)             Requested size: 117.00119pt x 142.41264pt.
+<images/iosexample.png, id=271, 2569.6pt x 1445.4pt>
+File: images/iosexample.png Graphic file (type png)
+<use images/iosexample.png>
+Package pdftex.def Info: images/iosexample.png  used on input line 294.
+(pdftex.def)             Requested size: 390.0pt x 219.35902pt.
+ [8]
+<images/qt.png, id=279, 318.94363pt x 103.92546pt>
+File: images/qt.png Graphic file (type png)
+<use images/qt.png>
+Package pdftex.def Info: images/qt.png  used on input line 302.
+(pdftex.def)             Requested size: 390.0pt x 127.08064pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 309.
+ [9 <./images/hash.png> <./images/info.png> <./images/stats.png>]
+[10 <./images/iosexample.png> <./images/qt.png (PNG copy)>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 309.
  (./TestPolicy.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 302.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 302.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 309.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 309.
 Package rerunfilecheck Info: File `TestPolicy.out' has not changed.
-(rerunfilecheck)             Checksum: 947A0D73E4897F6900D8E3ECEEBB1C6E;2010.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 302.
+(rerunfilecheck)             Checksum: D8E5BBC70C580213B743A8ABCC24CB1D;1964.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 309.
  ) 
 Here is how much of TeX's memory you used:
- 5172 strings out of 492642
- 76105 string characters out of 6135566
+ 5208 strings out of 492642
+ 76961 string characters out of 6135566
  168653 words of memory out of 5000000
- 8961 multiletter control sequences out of 15000+600000
+ 9000 multiletter control sequences out of 15000+600000
  10266 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,6n,28p,548b,380s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 28i,7n,28p,871b,380s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texmf-dist/fo
 nts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmti12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on TestPolicy.pdf (15 pages, 93426 bytes).
+Output written on TestPolicy.pdf (13 pages, 3007005 bytes).
 PDF statistics:
- 320 PDF objects out of 1000 (max. 8388607)
- 294 compressed objects within 3 object streams
- 63 named destinations out of 1000 (max. 500000)
- 257 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 331 PDF objects out of 1000 (max. 8388607)
+ 291 compressed objects within 3 object streams
+ 60 named destinations out of 1000 (max. 500000)
+ 299 words of extra memory for PDF output out of 10000 (max. 10000000)
 
