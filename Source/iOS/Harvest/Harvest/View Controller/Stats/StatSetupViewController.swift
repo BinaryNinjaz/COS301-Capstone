@@ -23,6 +23,9 @@ final class StatSetupViewController: ReloadableFormViewController {
   var endDateRow: DateRow?
   var timeStepRow: PushRow<TimeStep>?
   var modeRow: SegmentedRow<TimedGraphMode>?
+  var showExpectedRow: SwitchRow?
+  var showAverageRow: SwitchRow?
+  var curveKindRow: SegmentedRow<LineGraphCurve>?
   
   public override func viewDidLoad() {
     super.viewDidLoad()
@@ -63,6 +66,9 @@ final class StatSetupViewController: ReloadableFormViewController {
     let step = timeStepRow?.value ?? .daily
     let period = timePeriodRow?.value ?? .today
     let mode = modeRow?.value ?? TimedGraphMode.accumEntity
+    let showExp = showExpectedRow?.value ?? true
+    let showAvg = showAverageRow?.value ?? true
+    let curveKind = curveKindRow?.value ?? .curve
     
     let filledPeriod: TimePeriod
     if period.wantsStartAndEndDate() {
@@ -82,7 +88,10 @@ final class StatSetupViewController: ReloadableFormViewController {
         timeStep: step,
         grouping: sk,
         mode: mode,
-        name: statNameTextView.text ?? Date().description)
+        name: statNameTextView.text ?? Date().description,
+        showExpected: showExp,
+        showAverage: showAvg,
+        curveKind: curveKind)
       
       StatStore.shared.saveItem(item: item)
       
@@ -237,6 +246,22 @@ final class StatSetupViewController: ReloadableFormViewController {
       }
     }
     
+    showExpectedRow = SwitchRow { row in
+      row.title = "Show Expected Graph Line"
+      row.value = true
+    }
+    
+    showAverageRow = SwitchRow { row in
+      row.title = "Show Average Graph Line"
+      row.value = true
+    }
+    
+    curveKindRow = SegmentedRow<LineGraphCurve> { row in
+      row.title = "Graph Curve Line"
+      row.options = LineGraphCurve.allCases
+      row.value = .curve
+    }
+    
     let showStats = ButtonRow { row in
       row.title = "Display Stats"
     }.onCellSelection { _, _ in
@@ -265,6 +290,10 @@ final class StatSetupViewController: ReloadableFormViewController {
       
       let kind = self.statKindRow?.value ?? .worker
       
+      let showAvg = self.showAverageRow?.value ?? true
+      let showExp = self.showExpectedRow?.value ?? true
+      let curveKind = self.curveKindRow?.value ?? .curve
+      
       let ids: [String]
       if kind == .foreman, let fs = self.foremenRow?.value {
         ids = fs.map { $0.id }
@@ -278,7 +307,16 @@ final class StatSetupViewController: ReloadableFormViewController {
         ids = []
       }
       
-      svc.stat = Stat(ids: ids, timePeriod: timePeriod, timeStep: timeStep, grouping: kind, mode: mode, name: "")
+      svc.stat = Stat(
+        ids: ids,
+        timePeriod: timePeriod,
+        timeStep: timeStep,
+        grouping: kind,
+        mode: mode,
+        name: "",
+        showExpected: showExp,
+        showAverage: showAvg,
+        curveKind: curveKind)
         
       self.navigationController?.pushViewController(svc, animated: true)
     }
@@ -293,7 +331,10 @@ final class StatSetupViewController: ReloadableFormViewController {
             let startDateRow = self.startDateRow,
             let endDateRow = self.endDateRow,
             let timeStepRow = self.timeStepRow,
-            let modeRow = self.modeRow
+            let modeRow = self.modeRow,
+            let showExpectedRow = self.showExpectedRow,
+            let showAverageRow = self.showAverageRow,
+            let curveKindRow = self.curveKindRow
       else {
           return
       }
@@ -316,6 +357,11 @@ final class StatSetupViewController: ReloadableFormViewController {
         
         +++ modeSection
         <<< modeRow
+        
+        +++ Section("Display Options")
+        <<< showExpectedRow
+        <<< showAverageRow
+        <<< curveKindRow
         
         +++ Section()
         <<< showStats
