@@ -728,12 +728,17 @@ public class Stats_Graph extends AppCompatActivity {
         this.category = category;
     }
 
-    public SimpleDateFormat testDateFormatWith(double start, double end, String interval){
+    public SimpleDateFormat testDateFormatWith(double start, double end, String interval, String mode){
         Stats_Graph.start = start;
         Stats_Graph.end = end;
         Stats_Graph.interval = interval;
+        Stats_Graph.mode = mode;
         updateDateFormat();
         return dateFormat;
+    }
+
+    public SimpleDateFormat testDateFormatWith(double start, double end, String interval){
+        return testDateFormatWith(start, end, interval, Stats.ACCUMULATION_NONE);
     }
 
     //Expected

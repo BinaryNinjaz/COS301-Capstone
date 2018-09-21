@@ -10,6 +10,8 @@
 \usepackage{hyperref}
 \usepackage{float}
 \usepackage{cite}
+\usepackage{subfig}
+\usepackage{todonotes}
 
 \hypersetup{
 	colorlinks=true,
@@ -26,9 +28,11 @@
 
 	\begin{center}
 		% Upper part of the page
+		\includegraphics[height=5em]{Images/Bin.png}\\
 		\textsc{\LARGE Binary Ninjaz}\\[0.3cm]
 		% Title
 		\rule{\linewidth}{0.5mm} \\[0.5cm]
+		\includegraphics[height=5em]{Images/Icon.png}\\
 		{ \huge \bfseries Harvest \\
 		  \vspace{0.3cm}\large \bfseries User Manual}\\[0.5cm]
 		\rule{\linewidth}{0.5mm} \\[1cm]
@@ -98,7 +102,7 @@
 				15008739
 			\end{flushright}
 		\end{minipage}
-        
+
         \begin{minipage}{0.4\textwidth}
 			\begin{flushleft} \large
 				\emph{} \\
@@ -144,30 +148,30 @@
 
 \section{General Information}
 \subsection{System Overview}
-Harvest, is an application to assist growers with yield data and optimise worker performance. In other words, it is a system that can efficiently measure the amount of work done by a worker, track the foremen on a farm, record information and data, and display the necessary information. This system is aimed at farming communities to help then record data and get work done more efficiently.
+Harvest, is an application to assist growers with yield data and optimise worker, orchard, farm and foreman performance. In other words, it is a system that can efficiently measure the amount of work done by a worker, track the foremen on a farm, record information and data, and display the necessary information. This system is aimed at farming communities to help them record data and get work done more efficiently.
 
 \subsection{System Requirements}
 \subsubsection{Android}
-The Android application currently requires:
+The Android application requires:
 \begin{itemize}
-	\item Either Android 4.0 OS or above
+ \item Either Android 4.0 OS or above
 \item 200 MB RAM
-\item 6,1 MB Disk Space	
+\item 6,1 MB Disk Space
 	\item Location Services
 \end{itemize}
 \subsubsection{iOS}
-The iOS application currently requires:
+The iOS application requires:
 \begin{itemize}
-	\item iOS 10.0 or above
-\item 200 MB RAM
-\item 50 MB Disk Space	
-	\item Location Services
+ \item iOS 9.0 or above
+ \item 300 MB RAM
+ \item 50 MB Disk Space
+ \item Location Services
 \end{itemize}
 \subsubsection{Website}
 The website requires any modern up-to-date web browser such as Firefox, Opera, Chrome, Safari, Vivaldi, Edge, or any other.
 
 \subsection{Communications}
-All of the subsystems---Android, iOS, and website---run independently, but use Firebase\footnote{\url{https://firebase.google.com}} to store and retrieve data from a common source. This can be seen in \ref{Communications}
+All of the subsystems---Android, iOS, and website---run independently, but use a central database\footnote{\url{https://firebase.google.com}} to store and retrieve data from a common source. This can be seen in \ref{Communications}
 
 \begin{figure}
  \centering
@@ -182,9 +186,21 @@ The application will be available for download on the Google Play Store.
 \subsubsection{iOS}
 The application will be available for download on the Apple App Store.
 \subsubsection{Website}
-No Installation is required to use the website, however it can be accessed at <Web Link>.
+No Installation is required to use the website, however it can be accessed at \href{https://harvestapp.co.za}{Harvest App}.
 \subsubsection{Location Services}
-With regards to configuring the iOS and Android applications: location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application. Profile setting can be configured via selecting the user's username.
+With regards to configuring the iOS and Android applications: location services are required. The user will be prompted for the location permissions in mention to allow full functionality of the application.\\
+Android:
+\begin{enumerate}
+ \item Swipe down from the notification pane.
+ \item Press the location services icon.
+\end{enumerate}
+iOS\footnote{instructions pertain to iOS 11.4}:
+\begin{enumerate}
+ \item Go to Settings $\rangle$ Privacy $\rangle$ Location Services
+ \item Ensure that "Location Services" are turned on.
+ \item Find and tap on "Harvest" from the list of Applications.
+ \item Choose either "While Using the App" or "Always".
+\end{enumerate}
 
 \newpage
 \section{Getting Started}
@@ -193,33 +209,41 @@ With regards to configuring the iOS and Android applications: location services 
 \subsection{Mobile}
 
 \subsubsection{Creating an Account}
-The application will open by default on the log in screen. From here the user can choose to sign in as a farmer or as a foreman, or to create a new farmer account. A foreman does not need to create an account, they simply sign in with their phone number, however the farmer must ensure that the foreman appears on their system and that the foreman's number is correct.\\
+The application will open by default on the \textit{Choose} screen. From here the user can choose to sign in as a farmer or as a foreman, or to create a new farmer account\footnote{Note that an email verification will be sent to the user to confirm they've entered the correct address.}. A foreman does not need to create an account, they simply sign in with their phone number, however the farmer must ensure that the foreman appears on their system and that the foreman's number is correct.\\
 To create a farmer account the following information is required:
 \begin{itemize}
-\item Email
-\item Password
+ \item Email
+ \item Password
 \end{itemize}
 Additionally the following information can be optionally provided:
 \begin{itemize}
-\item First name
-\item Surname
-\item Organization
+ \item First name
+ \item Surname
+ \item Organization
 \end{itemize}
 Organization is most important since it will be used by foremen to identify your organization when they log in. \textbf{If it is not provided, you will be identified by your email, which will then be visible to your foremen.}
 
-\begin{figure}[h]
+\begin{figure}
  \centering
- \includegraphics[width=6cm, keepaspectratio]{Images/mobileLoginChoose.png}
+ \subfloat[Android]{{\includegraphics[width=5cm]{Images/GettingStarted/AndroidChoose.png} }}
+ \qquad
+ \subfloat[iOS]{{\includegraphics[width=5cm]{Images/GettingStarted/iOSChoose.jpeg} }}
  \caption{Sign In/Up Method Choose}
- \label{SignUpMobile}
+ \label{SignInMobile}
 \end{figure}
 
 \subsubsection{Logging In as a Farmer}
-When on the log in screen enter your email and its password you used to create the account, alternatively click log in with Google to use Google credentials, which will be linked to Harvest if they have not already. If you have already logged in the app will keep you logged in until you log out.
-\begin{figure}[h]
+When on the log in screen enter your email and its password you used to create the account, alternatively click log in with Google to use Google credentials, which will be linked to Harvest if they have not already. Note that the user will not be logged out automatically. Instead the user must manually log out from within the applications settings.
+\begin{figure}
  \centering
- \includegraphics[width=6cm, keepaspectratio]{Images/mobileLoginFarmer.png}
- \caption{Log In Form for Farmer}
+ \subfloat[Android Farmer Sign In]{{\includegraphics[width=2.5cm]{Images/GettingStarted/AndroidFarmSign.png} }}
+ \qquad
+ \subfloat[iOS Farmer Sign]{{\includegraphics[width=2.5cm]{Images/GettingStarted/iOSFarmSign.jpeg} }}
+ \qquad
+ \subfloat[Android Foreman Sign In]{{\includegraphics[width=2.5cm]{Images/GettingStarted/AndroidForemanSign.png} }}
+ \qquad
+ \subfloat[iOS Foreman Sign]{{\includegraphics[width=2.5cm]{Images/GettingStarted/iOSForemanSign.jpeg} }}
+ \caption{Sign In/Up Methods}
  \label{LogInMobile}
 \end{figure}
 
@@ -228,44 +252,43 @@ When on the log in screen enter your email and its password you used to create t
 Simply enter your mobile phone number and press the button. A verification code may be sent to you via SMS, which will then need to be entered. Once that is done a confirmation screen will be displayed, it will show the phone number saved in the system so that the farmer can confirm that it is saved correctly. Then, depending on the situation, the following will be displayed:
 \begin{itemize}
  \item If the foreman is not assigned to any organization, then they will be prompted to go back and will not be able to continue.
- \item If the foreman is assigned to a single organization, the name will be displayed, and they will then be able to continue to the clicker as seen in \ref{Clicker}.
+ \item If the foreman is assigned to a single organization, the name will be displayed\footnote{On iOS the foreman will simply be transferred to their assigned organization}, and they will then be able to continue to the clicker as seen in \ref{Yield Collector}.
  \item On the off chance that the foreman is assigned to multiple organizations, they will be able to select which organization they wish to work for for the session. In order to change this, they must log out and in again.
 \end{itemize}
 
 \subsubsection{Logging Out}
-The Log out button can be found at the bottom of the Harvest "Settings" Tab.
+The Log out button can be found at the bottom of the Harvest "Settings" Tab on Android. On iOS the log out appears under the "User Account" section in the "Settings" Tab.
 
 \subsection{Website}
 
-
-
-\textit{For ease of visualization, a diagram representing a map of the website is given in \ref{WebsiteMap}: each web page is given, indicating to where, and how a traversal is possible from that page.}
-
-\begin{figure}[h]
- \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webDiagramMap.png}
- \caption{Website Map}
- \label{WebsiteMap}
-\end{figure}
+%
+% \textit{For ease of visualization, a diagram representing a map of the website is given in \ref{WebsiteMap}: each web page is given, indicating to where, and how a traversal is possible from that page.}
+%
+% \begin{figure}[h]
+%  \centering
+%  \includegraphics[width=12cm, keepaspectratio]{Images/webDiagramMap.png}
+%  \caption{Website Map}
+%  \label{WebsiteMap}
+% \end{figure}
 
 \subsubsection{Registering}
-\paragraph{Finding the Register Page}The login and registration page can be found at <Web Link>, and once there the user will be presented with the page as seen in \ref{LoginPage}. To now create an account the user must click on the blue \texttt{Don't have an account? Sign Up} button. They will now be presented with the above page.
+\paragraph{Finding the Register Page}The login and registration page can be found at \href{https://harvestapp.co.za}{Harvest}, and once there the user will be presented with the page as seen in \ref{LoginPage}. To now create an account the user must click on the blue \texttt{Don't have an account? Sign Up} button. They will now be presented with \ref{RegisterPage}.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webRegister-Page.png}
+ \includegraphics[width=12cm, keepaspectratio]{Images/GettingStarted/WebRegister.png}
  \caption{Register Page}
  \label{RegisterPage}
 \end{figure}
 
-\paragraph{Creating an Account}Once at the register page the new user must enter their first name, surname, email address, desired password, and confirm the desired password by entering it again. When all of the information has been entered, and the user is content that the information is correct, they shall click on the green \texttt{Create Account} button. They will now be taken to the login page as seen in \ref{LoginPage}. The user shall receive an email as seen in \ref{AccountCreationConfirmationEmail} at the specified address, asking to confirm their account. The user simply needs to click on the \texttt{Confirm Account} button in order to complete the account creation.
+\paragraph{Creating an Account}Once at the register page the new user must enter their first name, surname, email address, desired password, and confirm the desired password by entering it again. When all of the information has been entered, and the user is content that the information is correct, they shall click on the green \texttt{Create Account} button. They will now be taken to the login page as seen in \ref{LoginPage}. The user shall receive an email at the specified address, asking to confirm their account. The user simply needs to click on the link within the email in order to complete the account creation.
 
 \subsubsection{Logging In}
-\paragraph{Finding the Login Page}The login and register page can be found at <Web Link>.
+\paragraph{Finding the Login Page}The login and register page can be found at \href{https://harvestapp.co.za}{Harvest}.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webLogin.png}
+ \includegraphics[width=12cm, keepaspectratio]{Images/GettingStarted/WebLogin.png}
  \caption{Login Page}
  \label{LoginPage}
 \end{figure}
@@ -281,36 +304,38 @@ The \texttt{Sign Out} button can be clicked, at the top right of the navigation 
 
 \subsection{Mobile}
 \subsubsection{Navigating}
-If a foreman is logged in, then they can only access the clicker.\\
+If a foreman is logged in, then they can only access the clicker and some foreman specific settings.\\
 A farmer will have a navigation bar displayed at the bottom that they can use to get to different functionalities of the application.\\
 \\
 \textit{A discrepancy between iOS and Android exists in the form of settings. To access the settings in Android, the three dots must be pressed on, in the top right, and settings chosen.}\\
 \\
-The following is accessable through the navigation bar:
+The following is accessible through the navigation bar:
 \begin{itemize}
-\item \ref{Mobile Yield Tracker}: Yield Tracker
-\item \ref{Mobile Information}: Information
-\item \ref{Mobile Sessions}: Sessions 
-\item \ref{Mobile Statistics}: Statistics
-\item \ref{Mobile Settings}: Settings (OS dependent)
+\item Yield Collector (\ref{Mobile Yield Collector})
+\item Information (\ref{Mobile Information})
+\item Sessions (\ref{Mobile Sessions})
+\item Statistics (\ref{Mobile Statistics})
+\item Settings (\ref{Mobile Settings}) [OS dependant]
 \end{itemize}
-\subsubsection{Using the Yield Tracker}
-\label{Mobile Yield Tracker}
+\subsubsection{Using the Yield Collector}
+\label{Mobile Yield Collector}
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/mobileClicker.png}
- \caption{Yield Tracker}
- \label{Yield Tracker}
+ \subfloat[Android]{{\includegraphics[width=5cm]{Images/UsingSystem/AndroidClicker.png} }}
+ \qquad
+ \subfloat[iOS]{{\includegraphics[width=5cm]{Images/UsingSystem/iOSClicker.jpeg} }}
+ \caption{Yield Collector}
+ \label{Yield Collector}
 \end{figure}
 
-The Yield Tracker is shown in \ref{Yield Tracker}. Should the required location permission be disallowed, and the GPS disabled, then this system will not work. The user will be prompted to enable this services.\\
+The Yield Collector is shown in \ref{Yield Collector}. Should the required location permission be disallowed, and the GPS disabled, then this system will not work. The user will be prompted to enable this service.\\
 Note that the bar at the bottom is only displayed when a farmer is logged in. A foreman will have no access to the other functionalities of the application.\\
 \\
-To use the Yield Tracker the following process is followed:
+To use the Yield Collector the following process is followed:
 \begin{enumerate}
 \item Press "Start"
-\item Click the plus buttons bellow the workers name to increment or decrement the amount of bags they dropped off.
+\item Click the plus button below a workers name to increment the amount of bags they drop off or the minus button to correct any mistakes.
 \item Press "Stop"
 \item A summary of the session will be displayed.
 \item The session can then be saved or discarded.
@@ -318,16 +343,23 @@ To use the Yield Tracker the following process is followed:
 
 \subsubsection{Information}
 \label{Mobile Information}
-This works exactly the same way as in the website, please see \ref{Web Information}.\\
-Please see, however, \ref{Android Information Buttons}, for a description of unlabled buttons with regards to Information on Android. Whereby:
+\textit{Please see \ref{webInformation} for general information about how the \texttt{Information} tab works.}\\
+
+To edit, create or delete entities in Android you will use buttons found in the bottom right corner. A description of what exactly each of the 4
+buttons do follows:
 \subparagraph{Add} creates a new item.
 \subparagraph{Save} saves the item that is being modified.
 \subparagraph{Edit} allows for editing of the currently displayed item.
-\subparagraph{Delete} deletes the item that is being edited. A conformation will be displayed.
+\subparagraph{Delete} deletes the item that is being edited. A conformation will be displayed.\\
+\\
+Corrosponding images for each button can be found at \ref{Android Information Buttons}.\\
+\\
+On iOS to edit information simply tap or swipe on what you want to change. Saving and creating buttons can be found in the top right corner.
+A delete button can be found at the bottom of the page.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/AndroidInformationButtons.png}
+ \includegraphics[width=5cm, keepaspectratio]{Images/AndroidInformationButtons.png}
  \caption{Android Information Buttons}
  \label{Android Information Buttons}
 \end{figure}
@@ -337,17 +369,35 @@ Please see, however, \ref{Android Information Buttons}, for a description of unl
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/mobileSession.png}
+ \subfloat[Android]{{\includegraphics[width=5cm]{Images/UsingSystem/AndroidSessions.png} }}
+ \qquad
+ \subfloat[iOS]{{\includegraphics[width=5cm]{Images/UsingSystem/iOSSessions.jpeg} }}
  \caption{Session}
  \label{Mobile Session}
 \end{figure}
 
-Here a list of all sessions carried out is displayed. A session can be selected to get retrieve further information about it. See \ref{Mobile Session}. The button \texttt{TRACKED PATH AND COLLECTION POINTS} can be selected to see a map, where all of the orchards can be seen, as well as the path that was taken by the foreman that was administering the session. Red pins can also be seen along the path, where each indicates where the foreman was when they indicated a bag dropped by a worker.
+Here a list of all sessions carried out is displayed. A session can be selected to retrieve further information about it. See \ref{Mobile Session}. The button \texttt{TRACKED PATH AND COLLECTION POINTS} can be selected to see a map, where all of the orchards can be seen, as well as the path that was taken by the foreman that was administering the session. Red pins can also be seen along the path, where each indicates where the foreman was when they indicated a bag dropped by a worker.
 
 \subsubsection{Statistics}
 \label{Mobile Statistics}
 
-From here, varies statistics can be seen.
+From here, various statistics can be seen. You are able to specify multiple options and control multiple parameters. Graphs can also be saved on mobile. On Android the save button will be present at the bottom of the page and on iOS it is present at the top right.
+
+\subparagraph{Compare} Here the user can choose which entitity types you wish to compare. You can compare farms, foremen, workers or orchards
+against each other.
+\subparagraph{Selection} Here the user can select specifically which entities you wish to compare against each other. You may select as many as you wish.
+\subparagraph{Time Period} This is the amount of specificity the user wants in terms of time. Here the user has the options of hourly, daily, weekly, monthly and yearly. Selecting hourly for instance will provide an hour by hour graph line, while daily will give a day by day line.
+\subparagraph{Time Interval} Here the user can specify the time range you wish to view. Some predefined options are available to the user such as
+today, yesterday, this week and some others. Between exact dates is also provided to the user. This option allows any arbitrary range to be specified.
+\subparagraph{Accumulation} Specifies how data is accumulated for the displayed graph.
+\begin{itemize}
+\item No Accumulation
+	\subparagraph{} No data accumulation will take place, a regular graph will be displayed whereby each entity will have its own line.
+\item Accumulate by Entity
+	\subparagraph{} The select entity will have their values for each period summed up, so that the sum of each individual entities collections accross the selected time period, for that time interval will be shown, for each time period.
+\item Accumulate by Time
+	\subparagraph{} The sum accross each time period will be shown, so that the total bags collect each period by each of the select entities will be shown.
+\end{itemize}
 
 \subsubsection{Settings}
 \label{Mobile Settings}
@@ -364,6 +414,7 @@ The following settings are available:
   \item Delete Account: delete the account. \textbf{This is irreversible, all information related to the account will be lost} (may need to re-authorize.)
  \end{itemize}
  \item Logout (iOS only, on android this is accessed from the menu that is used to access settings.)
+ \item Resign: only available for foremen to remove themselves from an assigned organization.
 \end{itemize}
 \textit{Some sensitive settings, such as deleting the account, may require the user to re-authorize. In this scenario, a dialog will pop up asking them to re-enter their email and password; after which the action will be performed.}
 
@@ -372,86 +423,86 @@ The following settings are available:
 \label{webNavigating}
 On all web pages a consistent navbar can be seen at the top of the page. The following items are always present:
 \begin{itemize}
- \item \ref{webHome}: Home Page
- \item \ref{webTracker}: Tracker
- \item \ref{webInformation}: Information
- \item \ref{webSessions}: Sessions
- \item \ref{webHeatmap}: Heatmap
- \item \ref{webAnalytics}: Statistics
- \item \ref{webSettings}: Settings
- \item \ref{webLoggingOut}: Sign Out
+ \item Home Page (\ref{webHome})
+ \item Foreman Tracker (\ref{webTracker})
+ \item Information (\ref{webInformation})
+ \item Sessions (\ref{webSessions})
+ \item Heatmap (\ref{webHeatmap})
+ \item Statistics (\ref{webStatistics})
+ \item Settings (\ref{webSettings})
+ \item Sign Out (\ref{webLoggingOut})
 \end{itemize}
 
 \subsubsection{Home Page}
 \label{webHome}
-Once the user has logged in, they will be taken to the home page, as seen in \ref{HomePage}. The home page is the starting point of the system, it serves as a navigation page of the website.
+Once the user has logged in, they will be taken to the home page, as seen in \ref{webHomeImage}. The home page is the starting point of the system, it serves as a navigation page of the website.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webHome-Page.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebHome.png}
  \caption{Home Page}
- \label{webHome}
+ \label{webHomeImage}
 \end{figure}
 
 \subsubsection{Tracker}
 \label{webTracker}
-The Tracker page can be found at any time by clicking on the \texttt{Tracker} button in the navbar. Once clicked on, the user will be taken to \ref{Tracker}, as seen in \ref{HomePage}. It serves simply by providing an updating feed of the farm and the locations of foremen every two minutes.
+The Tracker page can be found at any time by clicking on the \texttt{Tracker} button in the navbar. Once clicked on, the user will be taken to \ref{webTrackerImage}. It serves simply by providing an updating feed of the farm and the locations of foremen every two minutes.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webHome-Page.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebTracker.png}
  \caption{Tracker}
- \label{webTracker}
+ \label{webTrackerImage}
 \end{figure}
 
 \subsubsection{View/Edit Information}
 \label{webInformation}
-\paragraph{Introduction}The View/Edit Information page can be found at any time by clicking on the \texttt{View/Edit Information} button in the navbar. Once clicked on, the user will be taken to \ref{InformationPage}. The concept is that almost all information can be viewed from this page, and once the relevant information has been located, it can also be edited.
+\paragraph{Introduction}The View/Edit Information page can be found at any time by clicking on the \texttt{Information} button in the navbar. Once clicked on, the user will be taken to \ref{InformationPage}. The concept is that almost all administrative information can be viewed from this page, and once the relevant information has been located, it can also be edited.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-Page.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebInfo.png}
  \caption{View/Edit Information Page}
  \label{InformationPage}
 \end{figure}
 
-\paragraph{Locating the Correct Information}When in \ref{InformationPage} there are three blue buttons available; \texttt{Farms}, \texttt{Orchards}, and \texttt{Workers}. Each of which will expand a list of the relevant items. The entire process is best described through an example, so, in this example, the goal is to locate information on a worker named \textit{Joe Soap}. The process, however can be accomplished in multiple ways; the first, and most obvious is to select \texttt{Workers}, then \texttt{J. Soap} (the process can be seen by following \ref{InformationPage}, \ref{InformationPageWorkers}, and \ref{InformationPageJoe}), however, if the user is looking at the \texttt{Pear Shaped} orchard, and see's that \textit{Joe Soap} is assigned (see \ref{InformationPagePear}), then they can click on the button representing \textit{Joe Soap}---labeled \texttt{J. Soap}---to go to \textit{Joe Soap's} page, as seen in \ref{InformationPageJoePear}, note that the list of orchards is still displayed.
+\paragraph{Locating the Correct Information}When in \ref{InformationPage} there are three blue buttons available; \texttt{Farms}, \texttt{Orchards}, and \texttt{Workers}. Each of which will expand a list of the relevant items. The entire process is best described through an example, so, in this example, the goal is to locate information on a worker named \textit{Ben Russo}. The process, however can be accomplished in multiple ways; the first, and most obvious is to select \texttt{Workers}, then \texttt{Ben Russo} (the process can be seen by following \ref{InformationPage}, \ref{InformationPageWorkers}, and \ref{InformationPageJoe}).
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-Workers.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebWorkers.png}
  \caption{Workers}
  \label{InformationPageWorkers}
 \end{figure}
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-LookWorker.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebWorker.png}
  \caption{Looking at a Worker}
  \label{InformationPageJoe}
 \end{figure}
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webViewOrchard.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebOrchard.png}
  \caption{Looking at an Orchard}
  \label{InformationPagePear}
 \end{figure}
 
-\paragraph{Adding Information}Note that at the top of the second list in \ref{InformationPageWorkers}, \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear} there is a green \texttt{Add Farm}, \texttt{Add Orchard}, or \texttt{Add Worker} button, clicking this button will display the interface to enter the necessary information. An example of this can be seen in \ref{InformationAddOrchard}, where a new orchard can be created. Once all of the necessary information has been entered, then the \texttt{Save} button can be clicked to create the new orchard, note that none of the fields are required.
+\paragraph{Adding Information} Note that at the top of the list in \ref{InformationPageWorkers}, \ref{InformationPage} or \ref{InformationPagePear} there is a green \texttt{Add Farm}, \texttt{Add Orchard}, or \texttt{Add Worker} button, clicking this button will display the interface to enter the necessary information. An example of this can be seen in \ref{InformationAddOrchard}, where a new orchard can be created. Once all of the necessary information has been entered, then the \texttt{Save} button can be clicked to create the new orchard, note that none of the fields are required.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-AddOrchard.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebOrchardAdd.png}
  \caption{Adding an Orchard}
  \label{InformationAddOrchard}
 \end{figure}
 
-\paragraph{Modifying Information}When looking at any information, a \texttt{Modify} button can be seen at the top (see \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear}). In \ref{InformationModJoe} the view when \textit{Joe Soap} is being modified can be seen. The fields are already populated by the information that was already stored in them. Once the user is content with the changes, they can click on the orange \texttt{Save} button to apply the changes. A reminder that no fields are required, so that fulled in fields can be erased. The user can also click on the red \texttt{Delete} button to delete the entry in its entirety---note a confirmation dialog will appear. The user may also cancel, which will return them to before they clicked on \texttt{Modify}, as seen in \ref{InformationPageJoe}, \ref{InformationPagePear}, or \ref{InformationPageJoePear}.
+\paragraph{Modifying Information}When looking at any information, a \texttt{Modify} button can be seen at the top (see \ref{InformationPageJoe} or \ref{InformationPagePear}). In \ref{InformationModJoe} the view when \textit{Pete Dave} is being modified can be seen. The fields are already populated by the information that was already stored in them. Once the user is content with the changes, they can click on the orange \texttt{Save} button to apply the changes. The user can also click on the red \texttt{Delete} button to delete the entry in its entirety---note a confirmation dialog will appear. The user may also cancel, which will return them to before they clicked on \texttt{Modify}, as seen in \ref{InformationPageJoe} or \ref{InformationPagePear}.
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webInformation-Mod-Worker.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebWorkerEdit.png}
  \caption{Modifying a Worker}
  \label{InformationModJoe}
 \end{figure}
@@ -492,7 +543,7 @@ From here, a list of all sessions can be seen and selected. Once selected, infor
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webSession.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebSession.png}
  \caption{Session}
  \label{webSession}
 \end{figure}
@@ -504,23 +555,23 @@ The Heatmap (\ref{webHeatmap}) shows where the majority of bag drops took place,
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webHeatMap.png}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebHeatmap.png}
  \caption{Heat Map}
  \label{HeatMap}
 \end{figure}
 
 \subsubsection{Statistics}
-\label{webAnalytics}
+\label{webStatistics}
 
 \begin{figure}
  \centering
- \includegraphics[width=12cm, keepaspectratio]{Images/webAnal.png}
- \caption{Website Analytics}
- \label{webAnalImg}
+ \includegraphics[width=8cm, keepaspectratio]{Images/UsingSystem/WebStats.png}
+ \caption{Website Statistics}
+ \label{webStatsImg}
 \end{figure}
 
-The Statistics on the website can be seen in \ref{webAnalImg}. \\
-The graph displays the performance of the selected farm(s), orchard(s), foremen/foreman or worker(s), which is chosen in the tick box. Then the start and end date can be selected, and once \texttt{Filter Orchard Graph} is selected, the graph will be generated.\\
+The Statistics on the website can be seen in \ref{webStatsImg}. \\
+The graph displays the performance of the selected farm(s), orchard(s), foremen/foreman or worker(s), which is chosen in the tick box. Then the start and end date can be selected, and once \texttt{Update Graph} is clicked, the graph will be generated.\\
 
 \subsubsection{Settings}
 \label{webSettings}
@@ -546,9 +597,7 @@ The Settings allows users to edit their pesonal information.
 \subsubsection{Location Services}
 \begin{enumerate}
 \item Check that your phone supports location services
-\item In the "Settings" application make sure that the Harvest app is allowed location services 
+\item In the "Settings" application make sure that the Harvest app is allowed location services
 \end{enumerate}
-
-\subsection{Website Only}
 
 \end{document}
