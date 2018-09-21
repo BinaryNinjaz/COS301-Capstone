@@ -1,24 +1,32 @@
-\contentsline {section}{\numberline {1}INTRODUCTION}{3}{section.1}
-\contentsline {section}{\numberline {2}PURPOSE}{3}{section.2}
-\contentsline {section}{\numberline {3}WHY IS TESTING REQUIRED?}{3}{section.3}
-\contentsline {section}{\numberline {4}WHAT IS TESTING?}{4}{section.4}
-\contentsline {section}{\numberline {5}BASIC PRINCIPLES}{4}{section.5}
-\contentsline {subsection}{\numberline {5.1}Principle 1: Testing reveals defects.}{4}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}Principle 2: Exhaustive testing is impossible.}{4}{subsection.5.2}
-\contentsline {subsection}{\numberline {5.3}Principle 3: Test at an early stage. }{5}{subsection.5.3}
-\contentsline {subsection}{\numberline {5.4}Principle 4: Clustering of defects. }{5}{subsection.5.4}
-\contentsline {subsection}{\numberline {5.5}Principle 5: The pesticides paradox. }{5}{subsection.5.5}
-\contentsline {subsection}{\numberline {5.6}Principle 6: Testing is context-dependent. }{5}{subsection.5.6}
-\contentsline {subsection}{\numberline {5.7}Principle 7: The absence-of-errors fallacy. }{5}{subsection.5.7}
-\contentsline {section}{\numberline {6}TESTING TOOLS - unit testing level}{6}{section.6}
-\contentsline {subsection}{\numberline {6.1}Android Studio}{6}{subsection.6.1}
-\contentsline {subsection}{\numberline {6.2} XCTest framework example test on IOS App}{7}{subsection.6.2}
-\contentsline {subsection}{\numberline {6.3}NPM}{8}{subsection.6.3}
-\contentsline {subsection}{\numberline {6.4}XCode}{8}{subsection.6.4}
-\contentsline {section}{\numberline {7}TEST PROCESS}{8}{section.7}
-\contentsline {subsection}{\numberline {7.1}Test specification}{8}{subsection.7.1}
-\contentsline {subsection}{\numberline {7.2}Implementation of tests}{9}{subsection.7.2}
-\contentsline {subsection}{\numberline {7.3}Test Reporting}{10}{subsection.7.3}
-\contentsline {section}{\numberline {8}TESTING PHILOSOPHY}{10}{section.8}
-\contentsline {subsection}{\numberline {8.1}Benefits}{10}{subsection.8.1}
-\contentsline {section}{\numberline {9}TEST EVALUATION}{11}{section.9}
+\contentsline {section}{\numberline {1}Testing Process}{1}{section.1}
+\contentsline {subsubsection}{\numberline {1.0.1}Test Specification}{1}{subsubsection.1.0.1}
+\contentsline {subsubsection}{\numberline {1.0.2}Implementation of Tests}{2}{subsubsection.1.0.2}
+\contentsline {subsubsection}{\numberline {1.0.3}Test Reporting}{2}{subsubsection.1.0.3}
+\contentsline {subsection}{\numberline {1.1}Testing Frequency}{2}{subsection.1.1}
+\contentsline {section}{\numberline {2}Testing Tools}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}Android}{3}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}JUnit}{3}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Espresso}{3}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}Execution}{3}{subsubsection.2.1.3}
+\contentsline {subsection}{\numberline {2.2}iOS}{3}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}XCTest}{3}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Execution}{4}{subsubsection.2.2.2}
+\contentsline {subsection}{\numberline {2.3}Web}{4}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}QUnit}{4}{subsubsection.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Execution}{5}{subsubsection.2.3.2}
+\contentsline {paragraph}{QUnit}{5}{section*.3}
+\contentsline {section}{\numberline {3}Test Cases}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Database}{6}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Location Services}{6}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Cloud Functions}{7}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Mobile Application and Website}{7}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}Collection Tracker}{7}{subsection.3.5}
+\contentsline {subsection}{\numberline {3.6}Foreman Location Viewer}{7}{subsection.3.6}
+\contentsline {subsection}{\numberline {3.7}Foreman Tracker}{8}{subsection.3.7}
+\contentsline {subsection}{\numberline {3.8}Collection Viewer}{8}{subsection.3.8}
+\contentsline {subsection}{\numberline {3.9}Statistics Viewer}{8}{subsection.3.9}
+\contentsline {subsection}{\numberline {3.10}Information Manager}{8}{subsection.3.10}
+\contentsline {section}{\numberline {4}History}{9}{section.4}
+\contentsline {subsection}{\numberline {4.1}Android}{9}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}iOS}{9}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Web}{9}{subsection.4.3}
