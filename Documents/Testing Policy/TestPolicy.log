@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.9.11)  20 SEP 2018 20:06
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.9.11)  21 SEP 2018 08:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -321,42 +321,42 @@ Package pdftex.def Info: images/qr.png  used on input line 241.
  [5 <./images/iOS-test.png> <./images/q1.png (PNG copy)> <./images/q2.png (PNG 
 copy)>] [6 <./images/qr.png (PNG copy)>]
 [7]
-<images/hash.png, id=268, 913.82727pt x 476.62364pt>
+<images/hash.png, id=270, 913.82727pt x 476.62364pt>
 File: images/hash.png Graphic file (type png)
 <use images/hash.png>
-Package pdftex.def Info: images/hash.png  used on input line 281.
+Package pdftex.def Info: images/hash.png  used on input line 282.
 (pdftex.def)             Requested size: 117.00119pt x 61.01779pt.
-<images/info.png, id=269, 639.08182pt x 870.22636pt>
+<images/info.png, id=271, 639.08182pt x 870.22636pt>
 File: images/info.png Graphic file (type png)
 <use images/info.png>
-Package pdftex.def Info: images/info.png  used on input line 282.
+Package pdftex.def Info: images/info.png  used on input line 283.
 (pdftex.def)             Requested size: 117.00119pt x 159.31625pt.
-<images/stats.png, id=270, 714.93546pt x 870.22636pt>
+<images/stats.png, id=272, 714.93546pt x 870.22636pt>
 File: images/stats.png Graphic file (type png)
 <use images/stats.png>
-Package pdftex.def Info: images/stats.png  used on input line 283.
+Package pdftex.def Info: images/stats.png  used on input line 284.
 (pdftex.def)             Requested size: 117.00119pt x 142.41264pt.
-<images/iosexample.png, id=275, 2569.6pt x 1445.4pt>
+ [8]
+<images/iosexample.png, id=282, 2569.6pt x 1445.4pt>
 File: images/iosexample.png Graphic file (type png)
 <use images/iosexample.png>
-Package pdftex.def Info: images/iosexample.png  used on input line 296.
+Package pdftex.def Info: images/iosexample.png  used on input line 297.
 (pdftex.def)             Requested size: 390.0pt x 219.35902pt.
- [8]
-<images/qt.png, id=283, 318.94363pt x 103.92546pt>
+<images/qt.png, id=285, 318.94363pt x 103.92546pt>
 File: images/qt.png Graphic file (type png)
 <use images/qt.png>
-Package pdftex.def Info: images/qt.png  used on input line 304.
+Package pdftex.def Info: images/qt.png  used on input line 305.
 (pdftex.def)             Requested size: 390.0pt x 127.08064pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 311.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 312.
  [9 <./images/hash.png> <./images/info.png> <./images/stats.png>]
 [10 <./images/iosexample.png> <./images/qt.png (PNG copy)>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 311.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 312.
  (./TestPolicy.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 311.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 311.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 312.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 312.
 Package rerunfilecheck Info: File `TestPolicy.out' has not changed.
 (rerunfilecheck)             Checksum: D8E5BBC70C580213B743A8ABCC24CB1D;1964.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 311.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 312.
  ) 
 Here is how much of TeX's memory you used:
  5218 strings out of 492642
@@ -365,16 +365,16 @@ Here is how much of TeX's memory you used:
  9008 multiletter control sequences out of 15000+600000
  10266 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,7n,28p,871b,380s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 28i,7n,28p,870b,380s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texmf-dist/fo
 nts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmti12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on TestPolicy.pdf (13 pages, 3057190 bytes).
+Output written on TestPolicy.pdf (13 pages, 3057416 bytes).
 PDF statistics:
- 335 PDF objects out of 1000 (max. 8388607)
- 291 compressed objects within 3 object streams
+ 337 PDF objects out of 1000 (max. 8388607)
+ 293 compressed objects within 3 object streams
  60 named destinations out of 1000 (max. 500000)
  309 words of extra memory for PDF output out of 10000 (max. 10000000)
 
