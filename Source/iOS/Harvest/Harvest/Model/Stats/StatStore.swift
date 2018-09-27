@@ -23,7 +23,6 @@ struct StatStore {
   
   mutating func updateStore() {
     store = (try? Disk.retrieve(path, from: .applicationSupport, as: [Stat].self)) ?? []
-    print(store)
   }
   
   mutating func saveItem(item: Stat) {

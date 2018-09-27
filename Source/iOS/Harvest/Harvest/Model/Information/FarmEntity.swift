@@ -153,6 +153,7 @@ final class Entities {
             return (worker.lastname + worker.firstname + worker.id, worker)
         }, <)
         completion(self)
+        self.runListners()
       }
       
     case .orchard:
@@ -167,6 +168,7 @@ final class Entities {
               (v.description + v.id, v)
           }, <)
           completion(self)
+          self.runListners()
         })
       }
       
@@ -181,6 +183,7 @@ final class Entities {
             (v.description + v.id, v)
         }, <)
         completion(self)
+        self.runListners()
       }
       
     case .session: break

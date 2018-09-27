@@ -158,7 +158,6 @@ public final class Session {
               }
             }
           }
-          
         }
       }
     }
