@@ -10,16 +10,23 @@ import UIKit
 import FSPagerView
 
 class CarouselViewController: UIViewController, FSPagerViewDataSource, FSPagerViewDelegate {
+  enum Carousel {
+    case intro, tutorial
+  }
+  
   override var prefersStatusBarHidden: Bool {
     return true
   }
   
+  private var state: Carousel?
   private var images: [UIImage] = []
   func showTutorial() {
+    state = .tutorial
     images = [#imageLiteral(resourceName: "TutorialWorkflow"), #imageLiteral(resourceName: "TutorialInfo"), #imageLiteral(resourceName: "TutorialCollections"), #imageLiteral(resourceName: "TutorialSessions"), #imageLiteral(resourceName: "TutorialStats")]
   }
   
   func showIntro() {
+    state = .intro
     images = [#imageLiteral(resourceName: "HarvestIntro"), #imageLiteral(resourceName: "HarvestManage"), #imageLiteral(resourceName: "HarvestTrack"), #imageLiteral(resourceName: "HarvestAnalyse")]
   }
   

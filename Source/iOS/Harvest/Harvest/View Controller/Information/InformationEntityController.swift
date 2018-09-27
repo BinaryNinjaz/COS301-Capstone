@@ -12,7 +12,15 @@ private let reuseIdentifier = "informationEntityCell"
 
 class InformationEntityController: UICollectionViewController {
   
-  let entities = ["Farms", "Orchards", "Workers"]
+  var entities: [String] {
+    if Entities.shared.farms.isEmpty {
+      return ["Farms"]
+    } else if Entities.shared.orchards.isEmpty {
+      return ["Farms", "Orchards"]
+    } else {
+      return ["Farms", "Orchards", "Workers"]
+    }
+  }
   var entity = ""
   var selectedKind: EntityItem.Kind = .none
   var goingToIndexPath: IndexPath? = nil {
@@ -39,6 +47,7 @@ class InformationEntityController: UICollectionViewController {
   override func viewDidAppear(_ animated: Bool) {
     entity = ""
     selectedKind = .none
+    collectionView.reloadData()
   }
 
   override func didReceiveMemoryWarning() {
