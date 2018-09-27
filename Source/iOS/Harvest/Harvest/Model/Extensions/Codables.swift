@@ -41,7 +41,9 @@ extension CollectionPoint: Codable {
     let loc = try values.decode(CLLocationCoordinate2D.self, forKey: .location)
     location = loc
     date = try values.decode(Date.self, forKey: .date)
-    orchard = Entities.shared.orchards.first { $0.value.contains(loc) }?.value
+    orchards = Entities.shared.orchards
+      .filter { $0.value.contains(loc) }
+      .map { $0.value }
     selectedOrchard = try values.decode(String.self, forKey: .selectedOrchard)
   }
   

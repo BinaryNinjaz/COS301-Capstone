@@ -148,13 +148,17 @@ public final class Session {
       
       var orchards = [Orchard]()
       for point in points {
-        if let orchard = point.orchard, !orchards.contains(where: { $0.id == orchard.id }) {
-          orchards.append(orchard)
-          for (prop, reason) in orchard.search(for: text) {
-            if orchardProps.contains(prop) {
-              result.append(("Orchard " + prop, reason))
+        let allOrchards = point.orchards
+        if !orchards.contains(where: { o in allOrchards.contains { $0.id == o.id } }) {
+          orchards.append(contentsOf: allOrchards)
+          for orchard in orchards {
+            for (prop, reason) in orchard.search(for: text) {
+              if orchardProps.contains(prop) {
+                result.append(("Orchard " + prop, reason))
+              }
             }
           }
+          
         }
       }
     }
@@ -170,9 +174,21 @@ public final class Session {
   func collectionBagSummary() -> CollectionBagSummary {
     let points = collections.flatMap { $0.value }
     var totalMass = 0.0
+    var orch: Orchard?
     for point in points {
-      if let orchard = point.orchard, let mass = orchard.bagMass {
-        totalMass += mass
+      if point.orchards.count != 1 {
+        return .count(points.count)
+      } else if let orchard = point.orchards.first, let mass = orchard.bagMass {
+        if let orch = orch {
+          if orch == orchard {
+            totalMass += mass
+          } else {
+            return .count(points.count)
+          }
+        } else {
+          orch = orchard
+          totalMass += mass
+        }
       } else {
         return .count(points.count)
       }

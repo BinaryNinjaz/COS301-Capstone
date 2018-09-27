@@ -13,14 +13,16 @@ import Disk
 struct CollectionPoint {
   var location: CLLocationCoordinate2D
   var date: Date
-  var orchard: Orchard?
+  var orchards: [Orchard]
   var selectedOrchard: String?
   
   init(location: CLLocationCoordinate2D, date: Date, selectedOrchard: String?) {
     self.location = location
     self.date = date
     
-    orchard = Entities.shared.orchards.first { $0.value.contains(location) }?.value
+    orchards = Entities.shared.orchards
+      .filter { $0.value.contains(location) }
+      .map { $0.value }
     
     self.selectedOrchard = selectedOrchard
   }
