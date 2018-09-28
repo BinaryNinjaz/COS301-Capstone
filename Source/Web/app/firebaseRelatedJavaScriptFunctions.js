@@ -395,7 +395,7 @@ function searchWorker(worker, orchards, searchText, full) {
 
   const name = worker.name + " " + worker.surname;
 
-  if (stringContainsSubstring(name.toLowerCase(), text)) {
+  if (stringContainsWord(name.toLowerCase(), text)) {
     result["Name"] = name;
   }
 
@@ -525,6 +525,11 @@ function searchSession(session, searchText, farms, orchards, workers, period) {
     const stdev = sessionSTDDEV(session);
     if (stdev !== undefined) {
       result["Calculation"] = "Standard Deviation: " + stdev;
+    }
+  } else if (searchText === "range") {
+    const range = sessionRange(session);
+    if (range !== undefined) {
+      result["Calculation"] = "Range: " + range;
     }
   }
 
@@ -664,4 +669,21 @@ function sessionSTDDEV(session) {
     return undefined;
   }
   return Math.floor((Math.sqrt(diff / (count - 1)) * 10000)) / 10000.0;
+}
+
+function sessionRange(session) {
+  var max = 0;
+  var min = Infinity;
+  var result = undefined;
+  for (const workerId in session.collections) {
+    var points = session.collections[workerId];
+    if (points.length > max) {
+      max = points.length;
+    }
+    if (points.length < min) {
+      min = points.length;
+    }
+  }
+
+  return max - min;
 }
