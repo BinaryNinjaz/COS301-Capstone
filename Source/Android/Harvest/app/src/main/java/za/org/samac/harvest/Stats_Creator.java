@@ -103,6 +103,7 @@ public class Stats_Creator extends Fragment{
         arrayAdapter = ArrayAdapter.createFromResource(getContext(), R.array.stats_create_lines, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lineSpinner.setAdapter(arrayAdapter);
+        lineSpinner.setSelection(1);
 
         //Set selector button text
         setSelectorButtonTitle("farm");
