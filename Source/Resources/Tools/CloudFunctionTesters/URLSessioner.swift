@@ -1,9 +1,9 @@
-import Foundation
+ import Foundation
 
 enum HarvestDB {
   enum Path {
     // static let parent = "xFBNcNmiuON8ACbAHzH0diWcFQ43"
-    static let parent = "fRrpUGYODVSV7RbHISvprEU7KfN2"
+    static let parent = "e0s6n4NZQaVuiCk3U9SC3eFttgr1"
   }
 }
 
@@ -15,7 +15,7 @@ extension DateFormatter {
     result.locale = Locale.current
     result.timeZone = tz
     // result.dateFormat = "YYYY-MM-dd'T'HH:mm:ssZZZZZ"
-    result.dateFormat = "d MMM yyyy HH:mm"
+    result.dateFormat = "d MMM YYYY HH:mm"
     return result
   }
 
@@ -221,8 +221,8 @@ enum HarvestCloud {
     completion: @escaping ([Any]) -> Void
   ) {
     var args = [
-      ("startDate", DateFormatter.rfc2822String(from: startDate)),
-      ("endDate", DateFormatter.rfc2822String(from: endDate)),
+      ("startDate", startDate.timeIntervalSince1970.description),
+      ("endDate", endDate.timeIntervalSince1970.description),
       ("groupBy", groupBy.description),
       ("uid", HarvestDB.Path.parent)
     ]
@@ -324,20 +324,16 @@ func collection() {
   let s = Date(timeIntervalSince1970: 1529853470 * 0)
   let e = Date()
 
-  HarvestCloud.collections(
-    ids: ["fRrpUGYODVSV7RbHISvprEU7KfN2"], //["-LKYB6pBpxqBdKi54TQr", "-LK2zuFD5qvud-kD97n6"],
-    startDate: s,
-    endDate: e,
-    groupBy: .foreman) { f in
+  HarvestCloud.collections(ids: ["-LBl_xZiXFlcTFzkTbGd"], startDate: s, endDate: e, groupBy: .farm) { f in
     print(f)
   }
 }
 
 func timeGraphSessionsWorker() {
-  let s = Date().thisMonth().0
-  let e = Date().thisMonth().1
+  let s = Date(timeIntervalSinceNow: -60 * 60 * 24 * 21)
+  let e = Date(timeIntervalSinceNow: -60 * 60 * 24 * 14)
   let g = HarvestCloud.GroupBy.worker
-  let p = HarvestCloud.TimePeriod.hourly
+  let p = HarvestCloud.TimePeriod.daily
 
   print(DateFormatter.rfc2822String(from: s))
   print(DateFormatter.rfc2822String(from: e))
@@ -350,8 +346,8 @@ func timeGraphSessionsWorker() {
 //    "-LBykZoPlQ2xkIMylBr2", // Tony Stark 4
 //    "-LBykabv5OJNBsdv0yl7", // Clark Kent 5
 //    "-LBykcR9o5_S_ndIYHj9", // Bruce Wayne 6
-    "-LKYB6pBpxqBdKi54TQr",
-    "-LK2zuFD5qvud-kD97n6"
+    "-LMOu6sZTSjvZWJBeJxU", // Carl Ciao
+    "-LMOu94PBHcy35qEZ_UC", // Doug Dourn
   ]
 
   HarvestCloud.timeGraphSessions(
@@ -432,9 +428,9 @@ func expectedYield() {
 
 //collection()
 
-collection()
+timeGraphSessionsWorker()
 while let x = readLine(), x != "" {
-  collection()
+  timeGraphSessionsWorker()
 }
 
 // timeGraphSessionsOrchard()
