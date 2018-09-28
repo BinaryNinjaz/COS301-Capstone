@@ -50,7 +50,10 @@ function createStat() {
     period: 'daily',
     mode: 'running',
     groupBy: 'worker',
-    ids: {farm: [], orchard: [], worker: [], foreman: []}
+    ids: {farm: [], orchard: [], worker: [], foreman: []},
+    curveKind: "curved",
+    showExp: true,
+    showAvg: true
   });
   return stats[stats.length - 1];
 }
@@ -233,6 +236,34 @@ function createAccumulationExplanation(id) {
   return "<div><p id='accumExplain" + id + "'>" + accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period) + "</p></div>";
 }
 
+function createShowExpectedLines(id) {
+  return "<div class='checkbox'><label><input onchange='updateShowExpected(" + id + ")' type='checkbox' checked> Show Expected Lines</label></div>"
+}
+
+function createShowAverageLine(id) {
+  return "<div class='checkbox'><label><input onchange='updateShowAverage(" + id + ")'type='checkbox' checked> Show Average Lines</label></div>"
+}
+
+function createLineCurve(id) {
+  const event = (param) => { return "onchange='updateCurveKind(" + id + ",\"" + param + "\")'" }
+
+  const lChecked = stats[id].curveKind === "linear" ? [" checked ", " active "] : ["", ""];
+  const cChecked = stats[id].curveKind === "curved" ? [" checked ", " active "] : ["", ""];
+  const sChecked = stats[id].curveKind === "stepped" ? [" checked ", " active "] : ["", ""];
+
+  return "<div class='btn-group' data-toggle='buttons'>" +
+  "  <label class='btn btn-sm btn-info" + lChecked[1] + "'>" +
+  "    <input type='radio' autocomplete='off' name='filterEntity' " + event('linear') + lChecked[0] + "> Linear" +
+  "  </label>" +
+  "  <label class='btn btn-sm btn-info" + cChecked[1] + "'>" +
+  "    <input type='radio' autocomplete='off' name='filterEntity' " + event('curved') + cChecked[0] + "> Curved" +
+  "  </label>" +
+  "  <label class='btn btn-sm btn-info" + sChecked[1] + "'>" +
+  "    <input type='radio' autocomplete='off' name='filterEntity' " + event('stepped') + sChecked[0] + "> Stepped" +
+  "  </label>" +
+  "</div>";
+}
+
 function createUpdateGraphButton(id) {
   const event = "onclick='updateGraph(" + id + ")'";
 
@@ -286,6 +317,11 @@ function displayStat(stat, id) {
   "        <h5>Accumulation: </h5>" +
              createModeSelector(id) +
              createAccumulationExplanation(id) +
+  "        <h5>Display Options: </h5>" +
+             createShowExpectedLines(id) +
+             createShowAverageLine(id) +
+             createLineCurve(id) +
+  "        <h5></h5>" +
   "      </div>" +
          createUpdateGraphButton(id) +
   "    </div>" +
@@ -369,6 +405,18 @@ function updateMode(id, mode) {
   stats[id].mode = mode;
   var accumExplain = document.getElementById("accumExplain" + id);
   accumExplain.innerHTML = accumulationExplanation(stats[id].mode, stats[id].groupBy, stats[id].period);
+}
+
+function updateShowExpected(id) {
+  stats[id].showExp = !stats[id].showExp;
+}
+
+function updateShowAverage(id) {
+  stats[id].showAvg = !stats[id].showAvg;
+}
+
+function updateCurveKind(id, kind) {
+  stats[id].curveKind = kind;
 }
 
 function updateDate(id, option, sender) {
@@ -582,19 +630,25 @@ function chartObjectForStat(id, response) {
   data["labels"] = labels;
   const usedColors = fillEntityStatData(stat, data, labels, response);
 
-  if (response.avg !== undefined) {
+  if (stat.showAvg && response.avg !== undefined) {
     data.datasets.push({
       data: pollPlotData(labels, response.avg),
       label: "Overall Average",
+      cubicInterpolationMode: stat.curveKind === "curved" ? "default" : "monotone",
+      lineTension: stat.curveKind === "linear" ? 0 : undefined,
+      steppedLine: stat.curveKind === "stepped" ? true : false,
       borderColor: 'black',
       borderDash: [10,5]
     });
   }
 
-  if (response.sum !== undefined) {
+  if (stat.showAvg && response.sum !== undefined) {
     data.datasets.push({
       data: pollPlotData(labels, response.sum),
       label: "Sum of Selected",
+      cubicInterpolationMode: stat.curveKind === "curved" ? "default" : "monotone",
+      lineTension: stat.curveKind === "linear" ? 0 : undefined,
+      steppedLine: stat.curveKind === "stepped" ? true : false,
       borderColor: 'rgba(69, 161, 247, 1)'
     });
     if (response.avg.sum !== undefined) {
@@ -602,12 +656,17 @@ function chartObjectForStat(id, response) {
         data: pollPlotData(labels, response.avg.sum),
         label: "Overall Average",
         borderColor: 'black',
+        cubicInterpolationMode: stat.curveKind === "curved" ? "default" : "monotone",
+        lineTension: stat.curveKind === "linear" ? 0 : undefined,
+        steppedLine: stat.curveKind === "stepped" ? true : false,
         borderDash: [10,5]
       });
     }
   }
 
-  fillEntityExpectedData(stat, data, timeInterval.start, timeInterval.end, labels, usedColors, response.exp);
+  if (stat.showExp) {
+    fillEntityExpectedData(stat, data, timeInterval.start, timeInterval.end, labels, usedColors, response.exp);
+  }
 
   const chartData = {
     type: 'line',
@@ -662,6 +721,9 @@ function fillEntityStatData(stat, data, labels, source) {
         data: plottedData,
         label: formatter(key, item),
         borderColor: hashColorOnce(key),
+        cubicInterpolationMode: stat.curveKind === "curved" ? "default" : "monotone",
+        lineTension: stat.curveKind === "linear" ? 0 : undefined,
+        steppedLine: stat.curveKind === "stepped" ? true : false,
         __precedence: huePrecedence(key)
       });
     }
@@ -722,6 +784,9 @@ function fillEntityExpectedData(stat, data, start, end, labels, usedColors, sour
         label: "Sum of Selected (expected)",
         borderColor: colorWithAlpha('rgba(69, 161, 247, 1)', 1),
         borderDash: [10,5],
+        cubicInterpolationMode: stat.curveKind === "curved" ? "default" : "monotone",
+        lineTension: stat.curveKind === "linear" ? 0 : undefined,
+        steppedLine: stat.curveKind === "stepped" ? true : false,
         __precedence: 212,
         __expectedToken: true
       });
