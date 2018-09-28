@@ -69,7 +69,10 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     public static final String KEY_GROUP = "KEY_GROUP";
     public static final String KEY_ACCUMULATION = "KEY_ACCUMULATION";
     public static final String KEY_BETWEEN = "KEY_BETWEEN";
-    
+    public static final String KEY_EXPECTED = "KEY_EXPECTED";
+    public static final String KEY_AVERAGE = "KEY_AVERAGE";
+    public static final String KEY_LINE = "KEY_LINE";
+
     public static final String NOTHING = "";
 
     //Intervals
@@ -101,6 +104,11 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     public static final String ACCUMULATION_ENTITY = "accumEntity";
     public static final String ACCUMULATION_TIME = "accumTime";
 
+    //Line
+    public static final String LINE_CURVE = "curve";
+    public static final String LINE_STRAIGHT = "straight";
+    public static final String LINE_STEP = "step";
+
     public static final double THOUSAND = 1000.0000000;
 
     private String interval = NOTHING;
@@ -108,6 +116,8 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     private String period = NOTHING;
     private String name = null;
     private boolean between = false;
+    private String line = null;
+    private boolean average = false, expected = false;
 
     private Dialog dialog = null;
 
@@ -416,7 +426,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 stats_selector.checkAllPerhaps(true);
                 ids.clear();
                 ids.addAll(data.extractIDs(data.getThings(stats_selector.getCategory()), stats_selector.getCategory()));
-                ids.add(FirebaseAuth.getInstance().getUid());
+                if (stats_selector.getCategory() == Category.FOREMAN) ids.add(FirebaseAuth.getInstance().getUid());
                 return;
             case R.id.stats_select_none:
                 stats_selector.checkAllPerhaps(false);
@@ -462,6 +472,10 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                         start = bundle.getDouble(KEY_START);
                         end = bundle.getDouble(KEY_END);
                     }
+
+                    expected = bundle.getBoolean(KEY_EXPECTED);
+                    average = bundle.getBoolean(KEY_AVERAGE);
+                    line = bundle.getString(KEY_LINE);
 
                     displayGraph();
                 }
@@ -522,6 +536,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         period = graph.period;
         accumulation = graph.accumulation;
         between = graph.between;
+        line = graph.line;
+        expected = graph.expected;
+        average = graph.average;
 
         showSelector();
     }
@@ -614,6 +631,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         extras.putString(KEY_GROUP, group);
         extras.putString(KEY_PERIOD, period);
         extras.putString(KEY_ACCUMULATION, accumulation);
+        extras.putString(KEY_LINE, line);
+        extras.putBoolean(KEY_AVERAGE, average);
+        extras.putBoolean(KEY_EXPECTED, expected);
         Intent intent = new Intent(this, Stats_Graph.class).putExtras(extras);
         startActivity(intent);
     }
@@ -634,6 +654,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         graph.interval = bundle.getString(KEY_INTERVAL);
         graph.accumulation = bundle.getString(KEY_ACCUMULATION);
         graph.between = bundle.getBoolean(KEY_BETWEEN, false);
+        graph.line = bundle.getString(KEY_LINE);
+        graph.average = bundle.getBoolean(KEY_AVERAGE);
+        graph.expected = bundle.getBoolean(KEY_EXPECTED);
 
         //From the activity
         if (!graph.group.equals(getGroupFromCategory(lastCategory))){
@@ -997,7 +1020,10 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 GROUP = "GROUP",
                 PERIOD = "PERIOD",
                 ACCUMULATION = "ACCUMULATION",
-                BETWEEN = "BETWEEN";
+                BETWEEN = "BETWEEN",
+                LINE = "LINE",
+                AVERAGE = "AVERAGE",
+                EXPECTED = "EXPECTED";
 
         private static String TAG = "GraphDB";
 
@@ -1022,6 +1048,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                     object.put(PERIOD, graph.period);
                     object.put(ACCUMULATION, graph.accumulation);
                     object.put(BETWEEN, graph.between);
+                    object.put(LINE, graph.line);
+                    object.put(EXPECTED, graph.expected);
+                    object.put(AVERAGE, graph.average);
                     Log.i(TAG, "JSONObject assembled: " + object.toString());
 
                     editor.putString(graph.name, object.toString());
@@ -1078,6 +1107,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 graph.period = object.getString(PERIOD);
                 graph.accumulation = object.getString(ACCUMULATION);
                 graph.between = object.getBoolean(BETWEEN);
+                graph.average = object.getBoolean(AVERAGE);
+                graph.expected = object.getBoolean(EXPECTED);
+                graph.line = object.getString(LINE);
 
                 return graph;
 
@@ -1178,7 +1210,8 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             public String name;
             public String ids[];
             public double start, end;
-            public String interval, group, period, accumulation;
+            public String interval, group, period, accumulation, line;
+            public boolean average, expected;
             public boolean between = false;
 
             @Override
@@ -1189,7 +1222,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
 
         public static class NotUniqueNameException extends Exception{
 
-            public NotUniqueNameException(){
+            NotUniqueNameException(){
 
             }
 

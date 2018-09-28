@@ -277,6 +277,63 @@
                 android:layout_marginEnd="8dp"
                 style="@style/TextAppearance.AppCompat.Caption"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_create_display"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                style="@style/TextAppearance.AppCompat.Menu"
+                android:textColor="@color/colorPrimary"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary"/>
+
+            <CheckBox
+                android:id="@+id/expBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_create_expected"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+
+            <CheckBox
+                android:id="@+id/aveBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stats_create_average"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/stats_create_line"
+                    android:layout_marginStart="8dp"
+                    style="@style/TextAppearance.AppCompat.Body1"
+                    android:paddingStart="8dp"/>
+
+                <Spinner
+                    android:id="@+id/displayTypeSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
