@@ -68,6 +68,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     public static final String KEY_PERIOD = "KEY_PERIOD";
     public static final String KEY_GROUP = "KEY_GROUP";
     public static final String KEY_ACCUMULATION = "KEY_ACCUMULATION";
+    public static final String KEY_BETWEEN = "KEY_BETWEEN";
     
     public static final String NOTHING = "";
 
@@ -106,6 +107,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     private String accumulation = NOTHING;
     private String period = NOTHING;
     private String name = null;
+    private boolean between = false;
 
     private Dialog dialog = null;
 
@@ -347,6 +349,16 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         }
         else {
             stats_selector.showProceed(true);
+
+            if (between){
+                if (start == 0 && start.equals(end)){
+                    DateBundle dateBundle = determineDates(THIS_WEEK);
+                    start = dateBundle.startDate;
+                    end = dateBundle.endDate;
+                }
+
+                stats_selector.showDateStuff(start * THOUSAND, end * THOUSAND);
+            }
         }
         stats_selector.setFarmOwnerChecked(ids.contains(FirebaseAuth.getInstance().getUid()));
 
@@ -393,6 +405,11 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     public void stats_selector_buttonHandler(View v){
         switch (v.getId()){
             case R.id.stats_select_proceed:
+                if (between){
+                    DateBundle dateBundle = stats_selector.getDates();
+                    start = dateBundle.startDate / THOUSAND;
+                    end = dateBundle.endDate / THOUSAND;
+                }
                 displayGraph();
                 return;
             case R.id.stats_select_all:
@@ -494,8 +511,6 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         Button button = (Button) v;
         GraphDB.Graph graph = GraphDB.getGraphByName(button.getText().toString(), this);
 
-        //TODO: Go through selector.
-
         //Set all the things
         assert graph != null;
         ids.clear();
@@ -506,6 +521,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         group = graph.group;
         period = graph.period;
         accumulation = graph.accumulation;
+        between = graph.between;
 
         showSelector();
     }
@@ -617,6 +633,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         graph.period = bundle.getString(KEY_PERIOD);
         graph.interval = bundle.getString(KEY_INTERVAL);
         graph.accumulation = bundle.getString(KEY_ACCUMULATION);
+        graph.between = bundle.getBoolean(KEY_BETWEEN, false);
 
         //From the activity
         if (!graph.group.equals(getGroupFromCategory(lastCategory))){
@@ -862,7 +879,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         return result;
     }
 
-    public static class DateBundle{
+    static class DateBundle{
         double startDate, endDate;
     }
     /**
@@ -969,7 +986,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         return "";
     }
 
-    public static class GraphDB{
+    static class GraphDB{
 
         //KEYS
         private static final String
@@ -979,7 +996,8 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 INTERVAL = "INTERVAL",
                 GROUP = "GROUP",
                 PERIOD = "PERIOD",
-                ACCUMULATION = "ACCUMULATION";
+                ACCUMULATION = "ACCUMULATION",
+                BETWEEN = "BETWEEN";
 
         private static String TAG = "GraphDB";
 
@@ -1003,6 +1021,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                     object.put(GROUP, graph.group);
                     object.put(PERIOD, graph.period);
                     object.put(ACCUMULATION, graph.accumulation);
+                    object.put(BETWEEN, graph.between);
                     Log.i(TAG, "JSONObject assembled: " + object.toString());
 
                     editor.putString(graph.name, object.toString());
@@ -1058,6 +1077,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 graph.group = object.getString(GROUP);
                 graph.period = object.getString(PERIOD);
                 graph.accumulation = object.getString(ACCUMULATION);
+                graph.between = object.getBoolean(BETWEEN);
 
                 return graph;
 
@@ -1159,6 +1179,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             public String ids[];
             public double start, end;
             public String interval, group, period, accumulation;
+            public boolean between = false;
 
             @Override
             public String toString() {
