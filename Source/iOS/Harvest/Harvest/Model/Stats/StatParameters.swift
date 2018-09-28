@@ -10,12 +10,12 @@ import Foundation
 
 enum TimePeriod: Codable, Equatable, CustomStringConvertible {
   case today, yesterday, thisWeek, lastWeek, thisMonth, lastMonth, thisYear, lastYear
-  case between(Date, Date)
+  case between(Date?, Date?)
   
   static var allCases: [TimePeriod] {
     return [
       .today, .yesterday, .thisWeek, .lastWeek, .thisMonth, .lastMonth, .thisYear, .lastYear,
-      .between(Date(timeIntervalSince1970: 0), Date(timeIntervalSince1970: 0))
+      .between(nil, nil)
     ]
   }
   
@@ -36,7 +36,7 @@ enum TimePeriod: Codable, Equatable, CustomStringConvertible {
     case .lastMonth: return Date().lastMonth()
     case .thisYear: return Date().thisYear()
     case .lastYear: return Date().lastYear()
-    case let .between(s, e): return (s, e)
+    case let .between(s, e): return (s ?? Date().thisWeek().0.startOfDay(), e ?? Date().thisWeek().1.endOfDay())
     }
   }
   

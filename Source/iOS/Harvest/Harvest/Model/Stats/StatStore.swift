@@ -78,7 +78,7 @@ extension StatStore {
     
     stats ++= Stat(
       ids: [],
-      timePeriod: .between(Date(), Date()),
+      timePeriod: .between(nil, nil),
       timeStep: .daily,
       grouping: .worker,
       mode: .running,
@@ -100,7 +100,7 @@ extension StatStore {
     
     stats ++= Stat(
       ids: [],
-      timePeriod: .between(Date(), Date()),
+      timePeriod: .between(nil, nil),
       timeStep: .daily,
       grouping: .orchard,
       mode: .running,
@@ -122,7 +122,7 @@ extension StatStore {
     
     stats ++= Stat(
       ids: [],
-      timePeriod: .between(Date(), Date()),
+      timePeriod: .between(nil, nil),
       timeStep: .daily,
       grouping: .farm,
       mode: .running,
