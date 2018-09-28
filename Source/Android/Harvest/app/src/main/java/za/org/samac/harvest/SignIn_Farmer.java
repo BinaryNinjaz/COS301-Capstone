@@ -323,7 +323,9 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
             finish();
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("firstTimeInMain", true);
-            editor.commit();
+            editor.apply();
+
+            Stats.GraphDB.createDefaults(this);
         } else {
             Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
             startActivity(intent);
