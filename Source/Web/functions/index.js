@@ -620,6 +620,8 @@ function sinusoidalOfSessionItems(items, period) {
 // + exp components are constants in the function: a * sin(b * x + c) + d where x is the only variable
 exports.timedGraphSessions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
+    console.time("TimedGraph");
+    console.time("SetUpBeforeDownload");
     const startDate = momentDate(req.body.startDate);
     const endDate = momentDate(req.body.endDate);
     const uid = req.body.uid;
@@ -654,12 +656,27 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
       }
     }
 
+    console.timeEnd("SetUpBeforeDownload");
     if (groupBy === "worker" || groupBy === "foreman") {
       var sessionsRef = admin.database().ref('/' + uid + '/sessions');
+      console.time("GettingSessions");
       sessionsRef.once("value").then((snapshot) => {
+        console.timeEnd("GettingSessions");
+        console.time("Calculation");
         snapshot.forEach((childSnapshot) => {
           const key = childSnapshot.key;
           const val = childSnapshot.val();
+
+          const sdate = momentDate(val.start_date);
+          const edate = momentDate(val.end_date);
+
+          if (edate.isBefore(startDate)
+          || sdate.isAfter(endDate)
+          || (sdate.isBefore(startDate) && edate.isBefore(startDate))
+          || (sdate.isAfter(endDate) && edate.isAfter(endDate))
+          ) {
+            return;
+          }
 
           const foremanKey = val.wid;
           for (const workerKey in val.collections) {
@@ -678,13 +695,12 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
               var contained = groupBy === "foreman" && arrayContainsItem(ids, foremanKey)
               || groupBy === "worker" && arrayContainsItem(ids, workerKey);
 
-              if (startDate.isSameOrBefore(pdate) && pdate.isSameOrBefore(endDate)) {
-                if (contained) {
-                  incrSessionCounter(result, wkey, accum);
-                }
-                incrSessionCounter(allOthers, "avg", accum);
-                updateDaysCounter(days, workingOnDays, wkey, accum, period, pdate);
+              if (contained) {
+                incrSessionCounter(result, wkey, accum);
               }
+              incrSessionCounter(allOthers, "avg", accum);
+              updateDaysCounter(days, workingOnDays, wkey, accum, period, pdate);
+
               if (contained) {
                 incrSessionCounter(all, wkey, roundSince1970(pdate, period));
               }
@@ -694,17 +710,35 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
         result.avg = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
         result.exp = sinusoidalOfSessionItems(all, period);
         res.send(result);
+        console.timeEnd("Calculation");
+        console.timeEnd("TimedGraph");
         return true;
       }).catch((err) => {
         console.log(err);
       });
     } else {
+      console.time("GettingOrchards");
       orchardsCooked(undefined, uid, (cookedOrchards) => {
+        console.timeEnd("GettingOrchards");
         var sessionsRef = admin.database().ref('/' + uid + '/sessions');
+        console.time("GettingSessions");
         sessionsRef.once("value").then((snapshot) => {
+          console.timeEnd("GettingSessions")
+          console.time("Calculation");
           snapshot.forEach((childSnapshot) => {
             const key = childSnapshot.key;
             const val = childSnapshot.val();
+
+            const sdate = momentDate(val.start_date);
+            const edate = momentDate(val.end_date);
+
+            if (edate.isBefore(startDate)
+            || sdate.isAfter(endDate)
+            || (sdate.isBefore(startDate) && edate.isBefore(startDate))
+            || (sdate.isAfter(endDate) && edate.isAfter(endDate))
+            ) {
+              return;
+            }
 
             for (const workerKey in val.collections) {
               const collection = val.collections[workerKey];
@@ -742,13 +776,12 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
                   const pkey = isAccumEntity ? "sum" : akey;
                   const contained = arrayContainsItem(ids, akey);
 
-                  if (startDate.isSameOrBefore(pdate) && pdate.isSameOrBefore(endDate)) {
-                    if (contained) {
-                      incrSessionCounter(result, pkey, accum);
-                    }
-                    incrSessionCounter(allOthers, "avg", accum);
-                    updateDaysCounter(days, workingOnDays, pkey, accum, period, pdate);
+                  if (contained) {
+                    incrSessionCounter(result, pkey, accum);
                   }
+                  incrSessionCounter(allOthers, "avg", accum);
+                  updateDaysCounter(days, workingOnDays, pkey, accum, period, pdate);
+
                   if (contained) {
                     incrSessionCounter(all, pkey, roundSince1970(pdate, period));
                   }
@@ -759,6 +792,8 @@ exports.timedGraphSessions = functions.https.onRequest((req, res) => {
           result.avg = averageOfSessionItem(allOthers.avg, "avg", days, workingOnDays);
           result.exp = sinusoidalOfSessionItems(all, period);
           res.send(result);
+          console.timeEnd("Calculation");
+          console.timeEnd("TimedGraph");
           return true;
         }).catch((err) => {
           console.log(err);
