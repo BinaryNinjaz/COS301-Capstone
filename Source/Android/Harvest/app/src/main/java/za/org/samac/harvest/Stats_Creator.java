@@ -277,8 +277,6 @@ public class Stats_Creator extends Fragment{
 
             if (period.equals(Stats.BETWEEN_DATES)) {
 
-                bundle.putBoolean(Stats.KEY_BETWEEN, true);
-
                 //noinspection ConstantConditions
                 String[] tokens = fromDateEditText.getText().toString().split("/");
                 Calendar calendar = Calendar.getInstance();

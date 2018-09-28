@@ -275,6 +275,15 @@
         <item>Stepped</item> <!--Stepped-->
     </string-array>
 
+    <!--Default graph names-->
+    <string name="ThisMonthFarmPerformance">This Month\'s Farm Performance</string>
+    <string name="FarmPerformance">Farm Performance</string>
+    <string name="ThisMonthOrchardPerformance">This Month\'s Orchard Performance</string>
+    <string name="OrchardPerformance">Orchard Performance</string>
+    <string name="TodayWorkerPerformance">Today\'s Worker Performance</string>
+    <string name="YesterdayWorkerPerformance">Yesterday\'s Worker Performance</string>
+    <string name="WorkerPerformance">Worker Performance</string>
+
     <!--1: entity, lowercase, singular.-->
     <string name="stats_create_accumulation_desc_none">No accumulation will take place, a regular graph will be displayed whereby each %1$s will have its own line.</string>
     <!--1: entity, lowercase, singular. 2: entity, lowercase, plural. 3: interval, lowercase, notly.-->
