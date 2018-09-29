@@ -23,6 +23,7 @@ import java.util.Vector;
 import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.InformationActivity;
 import za.org.samac.harvest.Sessions;
+import za.org.samac.harvest.adapter.SessionDetails;
 
 /**
  * This monster class is used to store and manipulate almost, if not all, information in the database that belongs to the logged in farmer.
@@ -346,6 +347,9 @@ public class Data {
                 }
                 else if (act.getClass() == Sessions.class){
                     ((Sessions) act).pullDone();
+                }
+                else if(act.getClass() == SessionDetails.class){
+                    ((SessionDetails) act).pullDone();
                 }
             }
         }
