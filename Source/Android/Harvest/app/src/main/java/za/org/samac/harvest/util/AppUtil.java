@@ -49,7 +49,7 @@ public class AppUtil {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null){
             //User signed in
-            if (user.isEmailVerified() == true || user.getPhoneNumber() != null) {
+            if (user.isEmailVerified() == true || user.getPhoneNumber() != "") {
                 return true;
             }
         }

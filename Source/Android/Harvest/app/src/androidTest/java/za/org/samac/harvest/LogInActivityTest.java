@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
@@ -51,8 +52,15 @@ public class LogInActivityTest {
     //@JvmField
     public ActivityTestRule<SplashScreenActivity> rule  = new ActivityTestRule<>(SplashScreenActivity.class);
 
-    private String username_tobe_typed = "a@gmail.com";
-    private String correct_password = "a";
+    private String registeredUnconfirmedEmail = "peter@parker.park";
+    private String registeredUnconfirmedEmailPassword = "parker";
+
+    private String fakeEmail = "williams@g.com";
+    private String fakeEmailPassword = "000000";
+
+    private String acceptableEmail = "u15096794@tuks.co.za";
+    private String acceptableEmailPassword = "johnojo";
+
     private String startButton = "Start";
 
     private String name = "Test";
@@ -71,15 +79,39 @@ public class LogInActivityTest {
         SystemClock.sleep(3000);//wait for splash
 
         //choose sign in ****************************************************************************
-        Espresso.onView((withId(R.id.signIn_choose_farmer)))
+        Espresso.onView((withId(R.id.farmerPic)))
                 .perform(ViewActions.click());
 
-        //log in ****************************************************************************
+        //log in with registeredUnconfirmedEmail ****************************************************************************
         Espresso.onView((withId(R.id.edtEmail)))
-                .perform(ViewActions.typeText(username_tobe_typed));
+                .perform(ViewActions.typeText(registeredUnconfirmedEmail));
 
         Espresso.onView(withId(R.id.edtPassword))
-                .perform(ViewActions.typeText(correct_password), ViewActions.closeSoftKeyboard());
+                .perform(ViewActions.typeText(registeredUnconfirmedEmailPassword), ViewActions.closeSoftKeyboard());
+
+        Espresso.onView(withId(R.id.btnLogin))
+                .perform(ViewActions.click());
+
+        //log in with fakeEmail ****************************************************************************
+        Espresso.onView((withId(R.id.edtEmail)))
+                .perform(clearText())
+                .perform(ViewActions.typeText(fakeEmail));
+
+        Espresso.onView(withId(R.id.edtPassword))
+                .perform(clearText())
+                .perform(ViewActions.typeText(fakeEmailPassword), ViewActions.closeSoftKeyboard());
+
+        Espresso.onView(withId(R.id.btnLogin))
+                .perform(ViewActions.click());
+
+        //log in with acceptedEmail ****************************************************************************
+        Espresso.onView((withId(R.id.edtEmail)))
+                .perform(clearText())
+                .perform(ViewActions.typeText(acceptableEmail));
+
+        Espresso.onView(withId(R.id.edtPassword))
+                .perform(clearText())
+                .perform(ViewActions.typeText(acceptableEmailPassword), ViewActions.closeSoftKeyboard());
 
         Espresso.onView(withId(R.id.btnLogin))
                 .perform(ViewActions.click());
@@ -88,6 +120,8 @@ public class LogInActivityTest {
 
         Espresso.onView(withId(R.id.button_start))
                 .check(matches(withText(startButton)));
+
+        SystemClock.sleep(3000);//wait for GPS and Orchards to be retrieved
 
         //logout ****************************************************************************
         /*Espresso.onView(withId(R.id.menu))

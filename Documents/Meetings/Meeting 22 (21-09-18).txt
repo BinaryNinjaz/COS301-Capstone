@@ -1,0 +1,18 @@
+Meeting 21 (20-09-18)
+Google sign in keys, are they the correct ones (Firebase Console -> Project settings)? Also explain what keys and credentials do.
+How best to add volume of produce?
+Population of real-world data – next week.
+What tests does everyone have?
+How is documentation coming along?
+Best, worst, average, total, count number of workers, stddev, duration, total worker name, total stddev.
+Demo preparation (Practice Demo):
+Keep it lively, smile, transition nicely to the next speaker, talk with passion, use key words:
+Sort positions:
+Summary of what we did since demo 4 - Sizo.
+Summary of testing process and show test - Letanyan.
+Demo web - Shaun.
+Demo apps - Kevin.
+Demo coding standards – Vincent.
+Show how they used to record produce harvested and what we have turned it into (picture out client sent), before and after photos of system (code, UI – clicker before and after).
+Talk about genetic diversity, importance of usability testing (having system in beta), security should not be taken for granted, progressive disclosure benefiting the system usability by not throwing everything at the user at once, coding standards improving code reviews (increasing software quality), high cohesion and low coupling (show messy code and some other neat code), statistics addressing a common problem of stealing on farms, verification and validation benefiting implementation, having programs be mutually suspicious, even cost is taken into account as for example the map reloads are a limited number so we rather put the heatmap on a stand-alone page rather than combining it on a commonly used page (reducing cost), software quality improves testing, importance of good team dynamic (more ideas, second opinions, we learn from each, accountablity), team cooperation (reducing time-to-market) something about efficiency?
+Anything from you guys?
