@@ -43,11 +43,14 @@ public class PieChart extends AppCompatActivity {
     private ArrayList<Integer> yield;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Query query;
-    private static final String TAG = "Stats";
+    private static final String TAG = "PieChart";
     ArrayList<PieEntry> entries = new ArrayList<>();
     com.github.mikephil.charting.charts.PieChart pieChart;
     private ProgressBar progressBar;
     private com.github.mikephil.charting.charts.PieChart pieChartView;
+
+    private double mass = 0.0;
+    private int collectionCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,10 +126,16 @@ public class PieChart extends AppCompatActivity {
                         if(workerId != null) {
                             workerKeys.add(key);
                             yield.add(((ArrayList)workerId).size());
+
+                            collectionCounter++;
+//                            for (DataSnapshot collection : zoneSnapshot.getChildren()){
+//
+//                            }
                         }
                     }
                 }
 
+                Log.i(TAG, String.valueOf(collectionCounter));
                 getWorkerNames();
             }
 

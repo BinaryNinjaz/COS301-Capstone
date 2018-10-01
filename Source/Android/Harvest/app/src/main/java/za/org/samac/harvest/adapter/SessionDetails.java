@@ -4,13 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Location;
-import android.media.MediaCas;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,26 +22,25 @@ import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import za.org.samac.harvest.Pickup;
+import za.org.samac.harvest.SessionItem;
 import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.BottomNavigationViewHelper;
 import za.org.samac.harvest.InformationActivity;
@@ -55,11 +51,11 @@ import za.org.samac.harvest.R;
 import za.org.samac.harvest.SessionsMap;
 import za.org.samac.harvest.SettingsActivity;
 import za.org.samac.harvest.SignIn_Farmer;
-import za.org.samac.harvest.SignIn_SignUp;
-import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.domain.Worker;
 import za.org.samac.harvest.util.AppUtil;
 import za.org.samac.harvest.util.ColorScheme;
+import za.org.samac.harvest.util.Data;
+import za.org.samac.harvest.util.Orchard;
 import za.org.samac.harvest.util.SearchedItem;
 
 import static za.org.samac.harvest.MainActivity.getForemen;
@@ -95,11 +91,17 @@ public class SessionDetails extends AppCompatActivity {
     Map<String, Float> collections = new HashMap<>();
     private Button deleteSession;
 
+    private int collectionCounter = 0;
+    private double mass = 0.0;
+    private Data data = new Data();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        data.notifyMe(this);
 
         progressBar = findViewById(R.id.progressBar);
         linearLayoutSessDetails = findViewById(R.id.linearLayoutSessDetails);
@@ -243,9 +245,24 @@ public class SessionDetails extends AppCompatActivity {
             }
         }
 
+        boolean showMass = true;
         for(String key : keys) {
             String workerName = Sessions.selectedItem.collectionPoints.get(key).get(0).workerName;
             Float yield = (float)Sessions.selectedItem.collectionPoints.get(key).size();
+            collectionCounter += yield;
+
+            if (showMass){
+                try {
+                    for (Pickup pickup : Sessions.selectedItem.collectionPoints.get(key)){
+                        LatLng temp = new LatLng(pickup.lat, pickup.lng);
+                        mass += getMassPerBag(temp);
+                    }
+                }
+                catch (ReasonForNotMassException e){
+                    showMass = false;
+                }
+            }
+
             entries.add(new PieEntry(yield, workerName));//exchange index with Worker Name
             colorSet.add(ColorScheme.hashColorOnce(key));
         }
@@ -264,9 +281,17 @@ public class SessionDetails extends AppCompatActivity {
         PieData data = new PieData(dataset);//labels was one of the parameters
         pieChart.setData(data); // set the data and list of lables into chart
 
+        if (!showMass) {
+            pieChart.setCenterText(this.getResources().getText(R.string.total_collected) + " " + String.valueOf(collectionCounter) + " Bags");
+        }
+        else {
+            pieChart.setCenterText(this.getResources().getText(R.string.total_collected) + " " + String.valueOf(mass) + " Kg");
+        }
+
         Description description = new Description();
         description.setText("");
         pieChart.setDescription(description); // set the description
+
         pieChart.notifyDataSetChanged();
     }
 
@@ -306,6 +331,43 @@ public class SessionDetails extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private double getMassPerBag(LatLng location) throws ReasonForNotMassException {
+        if (!Data.isPulling()){
+            List<Orchard> orchards = data.getOrchards();
+            boolean found = false;
+            Orchard theOrchard = null;
+            for (Orchard orchard : orchards){
+                ArrayList<Double> x = new ArrayList<>(), y = new ArrayList<>();
+                for (LatLng latLng : orchard.getCoordinates()){
+                    x.add(latLng.latitude);
+                    y.add(latLng.longitude);
+                }
+                if (SessionItem.polygonContainsPoint(x, y, location.latitude, location.longitude)){
+                    if (found) throw new ReasonForNotMassException();
+                    found = true;
+                    theOrchard = orchard;
+                }
+            }
+            if (theOrchard == null) throw new ReasonForNotMassException();
+            Float mass = theOrchard.getMeanBagMass();
+            if (mass == null) throw new ReasonForNotMassException();
+            return mass;
+        }
+        else {
+            throw new ReasonForNotMassException();
+        }
+    }
+
+    public void pullDone(){
+
+    }
+
+    private class ReasonForNotMassException extends Exception{
+        ReasonForNotMassException(){
+
         }
     }
 }

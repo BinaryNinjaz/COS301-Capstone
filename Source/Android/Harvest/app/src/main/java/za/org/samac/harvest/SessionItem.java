@@ -85,7 +85,7 @@ public class SessionItem {
         return polygonContainsPoint(xcoords, ycoords, x, y);
     }
 
-    private Boolean polygonContainsPoint(ArrayList<Double> px, ArrayList<Double> py, Double pointx, Double pointy) {
+    public static Boolean polygonContainsPoint(ArrayList<Double> px, ArrayList<Double> py, Double pointx, Double pointy) {
         int i = 0;
         int j = px.size() - 1;
         Boolean c = false;

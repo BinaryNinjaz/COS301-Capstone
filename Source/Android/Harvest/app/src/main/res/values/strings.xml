@@ -312,6 +312,8 @@
 
     <string name="stats_create_tip">Press \"MAKE NEW GRAPH\" above to begin.</string>
 
+    <!--Strings for Session totals-->
+    <string name="total_collected">Total Collected: </string>
 
     <string name="title_activity_sessions">Sessions</string>
     <string name="title_activity_sessions_map">Map</string>
