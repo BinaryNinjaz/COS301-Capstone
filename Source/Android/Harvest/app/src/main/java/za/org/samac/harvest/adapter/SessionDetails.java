@@ -285,7 +285,7 @@ public class SessionDetails extends AppCompatActivity {
             pieChart.setCenterText(this.getResources().getText(R.string.total_collected) + " " + String.valueOf(collectionCounter) + " Bags");
         }
         else {
-            pieChart.setCenterText(this.getResources().getText(R.string.total_collected) + " " + String.valueOf(mass) + " Kg");
+            pieChart.setCenterText(this.getResources().getText(R.string.total_collected) + " " + String.valueOf(mass) + " kg");
         }
 
         Description description = new Description();
