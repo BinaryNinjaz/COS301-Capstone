@@ -32,7 +32,31 @@ public final class OrchardInFarmRow: OptionsRow<PushSelectorCell<Box>>, Presente
       onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })
   }
   
-  public required init(tag: String?, orchard: Orchard, callback: @escaping (OrchardInFarmRow) -> Void) {
+  public required init(
+    tag: String?,
+    farmId: @escaping () -> String,
+    callback: @escaping (OrchardInFarmRow) -> Void
+  ) {
+    super.init(tag: tag)
+    presentationMode = .show(
+      controllerProvider: ControllerProvider.callback {
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        let vc = storyboard.instantiateViewController(withIdentifier: "entityViewController")
+        guard let evc = vc as? EntityViewController else {
+          fatalError("We should never get here. We instantiated from entityViewController")
+        }
+        evc.entity = EntityItem.orchard(Orchard(json: ["farm": farmId()], id: ""))
+        return evc
+      },
+      onDismiss: { vc in _ = vc.navigationController?.popViewController(animated: true) })
+    callback(self)
+  }
+  
+  public required init(
+    tag: String?,
+    orchard: Orchard,
+    callback: @escaping (OrchardInFarmRow) -> Void
+  ) {
     super.init(tag: tag)
     presentationMode = .show(
       controllerProvider: ControllerProvider.callback {

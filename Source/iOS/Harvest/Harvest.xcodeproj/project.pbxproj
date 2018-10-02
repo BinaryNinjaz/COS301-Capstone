@@ -25,6 +25,7 @@
 		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
 		1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */; };
 		1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B74120A0E53800F5F478 /* StatsViewController.swift */; };
+		165BF7A52163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165BF7A42163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift */; };
 		165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */; };
 		165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */; };
 		16641406210FDFC700AC0A97 /* SessionOrchardFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16641405210FDFC700AC0A97 /* SessionOrchardFilterCollectionViewCell.swift */; };
@@ -149,6 +150,7 @@
 		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
 		1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatSetupViewController.swift; sourceTree = "<group>"; };
 		1657B74120A0E53800F5F478 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		165BF7A42163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityInstructionCollectionReusableView.swift; sourceTree = "<group>"; };
 		165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityCreationUITests.swift; sourceTree = "<group>"; };
 		165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityDeletionUITests.swift; sourceTree = "<group>"; };
 		16641405210FDFC700AC0A97 /* SessionOrchardFilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionOrchardFilterCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -577,6 +579,7 @@
 				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
 				16906061208F748600BE5ADE /* AdminEurekaCell.swift */,
 				16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */,
+				165BF7A42163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -987,6 +990,7 @@
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
 				16F5796721000CB50086325B /* PhoneyFormatter.swift in Sources */,
 				16ADA5EC210CAB8A00EE369E /* Stat.swift in Sources */,
+				165BF7A52163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift in Sources */,
 				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
 				16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */,
 				160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */,

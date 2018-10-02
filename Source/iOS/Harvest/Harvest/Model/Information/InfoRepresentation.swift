@@ -308,8 +308,8 @@ extension Farm {
       self.tempory?.details = row.value ?? ""
       onChange()
     }
-    let o = Orchard(json: ["farm": id], id: "")
-    let orchardRow = OrchardInFarmRow(tag: nil, orchard: o) { row in
+    
+    let orchardRow = ButtonRow { row in
       row.title = "Create New Orchard"
     }.cellUpdate { (cell, _) in
       cell.textLabel?.textColor = .addOrchard
@@ -320,6 +320,13 @@ extension Farm {
         self.makeChangesPermanent()
         Entities.shared.addItem(.farm(temp))
       }
+      let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+      let vc = storyboard.instantiateViewController(withIdentifier: "entityViewController")
+      guard let evc = vc as? EntityViewController else {
+        fatalError("We should never get here. We instantiated from entityViewController")
+      }
+      evc.entity = EntityItem.orchard(Orchard(json: ["farm": self.id], id: ""))
+      formVC.navigationController?.pushViewController(evc, animated: true)
     }
     
     let orchardsSection = Section("Assigned Orchards")
