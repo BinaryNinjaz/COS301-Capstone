@@ -147,6 +147,10 @@
 
     <string name="info_none_tip">Press the green plus button at the bottom right to add %1$s</string>
 
+    <string name="info_tut_cFarm">Create at least one farm, by pressing the farms button, to begin.</string>
+    <string name="info_tut_cOrchard">Now create at least one orchard, by pressing the orchards button.</string>
+    <string name="info_tut_cWorker">Finally, create at least one worker, by pressing the workers button.</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Account settings -->
