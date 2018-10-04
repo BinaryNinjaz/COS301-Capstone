@@ -318,7 +318,7 @@ public class Data {
         this.act = act;
     }
 
-    private void tellMeWhenDonePulling(Category cat){
+    private synchronized void tellMeWhenDonePulling(Category cat){
         switch (cat){
             case FARM:
                 pFarms = false;
