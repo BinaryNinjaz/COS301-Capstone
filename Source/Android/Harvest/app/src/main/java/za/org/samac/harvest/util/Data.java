@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.signin.SignIn;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
+import za.org.samac.harvest.SignIn_Farmer;
 import za.org.samac.harvest.Stats;
 import za.org.samac.harvest.InformationActivity;
 import za.org.samac.harvest.Sessions;
@@ -79,6 +81,10 @@ public class Data {
             Log.i("Data", "Pulling for the first time.");
             pull();
         }
+    }
+
+    public static void setNeedsPull(boolean needsPull){
+        Data.needsPull = needsPull;
     }
 
     /**
@@ -312,7 +318,7 @@ public class Data {
         this.act = act;
     }
 
-    private void tellMeWhenDonePulling(Category cat){
+    private synchronized void tellMeWhenDonePulling(Category cat){
         switch (cat){
             case FARM:
                 pFarms = false;
@@ -350,6 +356,9 @@ public class Data {
                 }
                 else if(act.getClass() == SessionDetails.class){
                     ((SessionDetails) act).pullDone();
+                }
+                else if (act.getClass() == SignIn_Farmer.class){
+                    ((SignIn_Farmer) act).pullDone();
                 }
             }
         }
@@ -1018,7 +1027,17 @@ public class Data {
         return result;
     }
 
+    public static boolean hasFarm(){
+        return !farms.isEmpty();
+    }
 
+    public static boolean hasOrchard(){
+        return !orchards.isEmpty();
+    }
+
+    public static boolean hasWorker(){
+        return !workers.isEmpty();
+    }
 }
 
 /**
