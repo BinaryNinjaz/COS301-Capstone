@@ -315,6 +315,7 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
     }
 
     private void startMain(){
+        Data.setNeedsPull(false);
         Data data = new Data();
         data.notifyMe(this);
         data.pull();

@@ -83,6 +83,10 @@ public class Data {
         }
     }
 
+    public static void setNeedsPull(boolean needsPull){
+        Data.needsPull = needsPull;
+    }
+
     /**
      * Ignore the FireBase stuff, manually set the data, and pretend it came from the magic internet.
      * @param mock Does nothing...
