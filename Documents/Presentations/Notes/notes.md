@@ -7,13 +7,19 @@
 - Help prevent theft.
 - Manage admin (not a priority though)
 
-## Login System
+## Login System and Security
 
 - Farmers log in with (Email or Google Sign In)
 - Foreman must log in with phone numbers.
   - Are asked to select the farm they work for. If they don't work for any
   a message says they aren't in any farm. And must check with the farmer if
   his correctly added him in.
+  - Phone numbers are stored in the database and not secured with database access rules. So we hash the numbers using SHA-256 2.
+- Database is protected with read/write access rules.
+  - A person may read/write inside a database field if that fields name is
+  the same as their database UID.
+  - A person may read/write inside a database field if their phone number
+  is inside a field under the path `/foremen/{Phone Number}`
 
 ## Yield Collector
 
