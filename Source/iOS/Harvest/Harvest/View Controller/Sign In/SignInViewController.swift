@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
 import GoogleSignIn
 import Disk
 import SCLAlertView
@@ -141,11 +141,11 @@ class SignInViewController: UIViewController {
     
     NotificationCenter.default.addObserver(self,
                                            selector: #selector(keyboardWillShow),
-                                           name: NSNotification.Name.UIKeyboardWillShow,
+                                           name: UIResponder.keyboardWillShowNotification,
                                            object: nil)
     NotificationCenter.default.addObserver(self,
                                            selector: #selector(keyboardWillHide),
-                                           name: NSNotification.Name.UIKeyboardWillHide,
+                                           name: UIResponder.keyboardWillHideNotification,
                                            object: nil)
     
     hideKeyboardWhenTappedAround()
@@ -213,7 +213,8 @@ extension SignInViewController: UITextFieldDelegate {
   }
   
   @objc func keyboardWillShow(notification: NSNotification) {
-    if let keyboardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+    if let keyboardFrame = (notification
+      .userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
       if googleSignInButton.frame.origin.y + googleSignInButton.frame.height > view.frame.height - keyboardFrame.height
       && self.view.frame.origin.y == 0 {
         let group = self.textGroupView.frame

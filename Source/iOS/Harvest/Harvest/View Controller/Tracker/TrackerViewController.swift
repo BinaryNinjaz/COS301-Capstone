@@ -157,8 +157,8 @@ class TrackerViewController: UIViewController {
   }
   
   func attributedStringForYieldCollection(_ a: Int) -> NSAttributedString {
-    let boldFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
-    let regularFont = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15, weight: .regular)]
+    let boldFont = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .bold)]
+    let regularFont = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15, weight: .regular)]
     
     let current = NSAttributedString(string: "Current Yield: ", attributes: boldFont)
     let currentAmount = NSAttributedString(string: a.description + "\n", attributes: regularFont)

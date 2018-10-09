@@ -25,6 +25,7 @@
 		165697D62087B29F002CBCEE /* TextFieldGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165697D52087B29F002CBCEE /* TextFieldGroupView.swift */; };
 		1657B73B20A0DC4100F5F478 /* StatSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */; };
 		1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B74120A0E53800F5F478 /* StatsViewController.swift */; };
+		165BF7A52163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165BF7A42163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift */; };
 		165D3FCC20EA9185007ECD9F /* HarvestEntityCreationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */; };
 		165D3FCE20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */; };
 		16641406210FDFC700AC0A97 /* SessionOrchardFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16641405210FDFC700AC0A97 /* SessionOrchardFilterCollectionViewCell.swift */; };
@@ -67,6 +68,7 @@
 		1690605E208F61DF00BE5ADE /* DBUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605D208F61DF00BE5ADE /* DBUser.swift */; };
 		16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690605F208F6A9400BE5ADE /* HarvestUser.swift */; };
 		16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906061208F748600BE5ADE /* AdminEurekaCell.swift */; };
+		16989FC7215402F900CB1DC8 /* StatStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16989FC6215402F900CB1DC8 /* StatStore.swift */; };
 		169E5194206C623F006B923E /* TrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5193206C623F006B923E /* TrackerViewController.swift */; };
 		169E5197206C62E6006B923E /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5196206C62E6006B923E /* Tracker.swift */; };
 		169E5199206C66D6006B923E /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169E5198206C66D6006B923E /* MapKit.framework */; };
@@ -89,7 +91,7 @@
 		16C82F5E20819B6E0074595C /* Poly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F5920819B6E0074595C /* Poly.swift */; };
 		16C82F67208407730074595C /* GeoKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F66208407730074595C /* GeoKitTests.swift */; };
 		16C82F6E20862A8D0074595C /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */; };
-		16DA38FB211DF7D80094A4E8 /* PDFViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DA38FA211DF7D80094A4E8 /* PDFViewController.swift */; };
+		16D0D6752153DA60001BDE13 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D0D6742153DA60001BDE13 /* JSON.swift */; };
 		16DA38FD211DFA550094A4E8 /* HarvestUserManual.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 16DA38FC211DFA540094A4E8 /* HarvestUserManual.pdf */; };
 		16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */; };
 		16E3750D20EFF51B0023AD2C /* DonutChartEurekaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */; };
@@ -101,8 +103,8 @@
 		16FF431E20DFF106001092CF /* DBCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431D20DFF106001092CF /* DBCloud.swift */; };
 		16FF432020E19117001092CF /* LocationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF431F20E19117001092CF /* LocationHelper.swift */; };
 		16FF432220E3B8B8001092CF /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FF432120E3B8B8001092CF /* LocationTracker.swift */; };
-		5BE9DC682C2CA25DD7E90E57 /* Pods_Harvest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2872C81799B6F605EFE5B114 /* Pods_Harvest.framework */; };
-		9D924E3C000A8B66288F62A9 /* Pods_HarvestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D60535AB1BF55D476DEF893 /* Pods_HarvestTests.framework */; };
+		7D99862B06E24F50E7B21D41 /* Pods_Harvest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 887BFCCE407BC8D00A8F06F0 /* Pods_Harvest.framework */; };
+		98E3A0EB33FD634A278E00DD /* Pods_HarvestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A363739AEBA3D60298E4F07 /* Pods_HarvestTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,8 +125,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		01343C746FCD3D5E53F36636 /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
-		08BC94425188B9218C430767 /* Pods-HarvestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarvestTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1604E49F206958E900E9BA15 /* Harvest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harvest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1604E4A2206958E900E9BA15 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1604E4A4206958E900E9BA15 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +150,7 @@
 		165697D52087B29F002CBCEE /* TextFieldGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldGroupView.swift; sourceTree = "<group>"; };
 		1657B73A20A0DC4100F5F478 /* StatSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatSetupViewController.swift; sourceTree = "<group>"; };
 		1657B74120A0E53800F5F478 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		165BF7A42163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityInstructionCollectionReusableView.swift; sourceTree = "<group>"; };
 		165D3FCB20EA9185007ECD9F /* HarvestEntityCreationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityCreationUITests.swift; sourceTree = "<group>"; };
 		165D3FCD20EAA22C007ECD9F /* HarvestEntityDeletionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestEntityDeletionUITests.swift; sourceTree = "<group>"; };
 		16641405210FDFC700AC0A97 /* SessionOrchardFilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionOrchardFilterCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -192,6 +193,7 @@
 		1690605D208F61DF00BE5ADE /* DBUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBUser.swift; sourceTree = "<group>"; };
 		1690605F208F6A9400BE5ADE /* HarvestUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarvestUser.swift; sourceTree = "<group>"; };
 		16906061208F748600BE5ADE /* AdminEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminEurekaCell.swift; sourceTree = "<group>"; };
+		16989FC6215402F900CB1DC8 /* StatStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatStore.swift; sourceTree = "<group>"; };
 		169E5193206C623F006B923E /* TrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewController.swift; sourceTree = "<group>"; };
 		169E5196206C62E6006B923E /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		169E5198206C66D6006B923E /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -214,7 +216,7 @@
 		16C82F5920819B6E0074595C /* Poly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly.swift; sourceTree = "<group>"; };
 		16C82F66208407730074595C /* GeoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoKitTests.swift; sourceTree = "<group>"; };
 		16C82F6D20862A8D0074595C /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
-		16DA38FA211DF7D80094A4E8 /* PDFViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewController.swift; sourceTree = "<group>"; };
+		16D0D6742153DA60001BDE13 /* JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		16DA38FC211DFA540094A4E8 /* HarvestUserManual.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = HarvestUserManual.pdf; sourceTree = "<group>"; };
 		16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutChartEurekaCell.swift; sourceTree = "<group>"; };
 		16E3750C20EFF51B0023AD2C /* DonutChartEurekaCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DonutChartEurekaCell.xib; sourceTree = "<group>"; };
@@ -228,10 +230,12 @@
 		16FF431D20DFF106001092CF /* DBCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBCloud.swift; sourceTree = "<group>"; };
 		16FF431F20E19117001092CF /* LocationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationHelper.swift; sourceTree = "<group>"; };
 		16FF432120E3B8B8001092CF /* LocationTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
-		26863A412E22FD264561E92B /* Pods-HarvestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarvestTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests.release.xcconfig"; sourceTree = "<group>"; };
-		2872C81799B6F605EFE5B114 /* Pods_Harvest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Harvest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D60535AB1BF55D476DEF893 /* Pods_HarvestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HarvestTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D21A6D796FBA9E02AAA47AEE /* Pods-Harvest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.release.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.release.xcconfig"; sourceTree = "<group>"; };
+		2A363739AEBA3D60298E4F07 /* Pods_HarvestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HarvestTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		70B38F03830CD5570BCCAD2D /* Pods-Harvest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.debug.xcconfig"; sourceTree = "<group>"; };
+		887BFCCE407BC8D00A8F06F0 /* Pods_Harvest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Harvest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A987FC2160D681CA9FB214D /* Pods-Harvest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Harvest.release.xcconfig"; path = "Pods/Target Support Files/Pods-Harvest/Pods-Harvest.release.xcconfig"; sourceTree = "<group>"; };
+		9A8990336B034C08DEBB30BD /* Pods-HarvestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarvestTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F2CB3E802307BFFA14CAC329 /* Pods-HarvestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarvestTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,7 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				169E5199206C66D6006B923E /* MapKit.framework in Frameworks */,
-				5BE9DC682C2CA25DD7E90E57 /* Pods_Harvest.framework in Frameworks */,
+				7D99862B06E24F50E7B21D41 /* Pods_Harvest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,7 +252,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D924E3C000A8B66288F62A9 /* Pods_HarvestTests.framework in Frameworks */,
+				98E3A0EB33FD634A278E00DD /* Pods_HarvestTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,7 +274,7 @@
 				1604E4C1206958E900E9BA15 /* HarvestUITests */,
 				1604E4A0206958E900E9BA15 /* Products */,
 				7FC5D262691DF4EC3193E21A /* Frameworks */,
-				9752E3B09AC9E9AACF225E84 /* Pods */,
+				811C28C87E10A2D81F1CC6A2 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -423,6 +427,7 @@
 			isa = PBXGroup;
 			children = (
 				16ADA5EB210CAB8A00EE369E /* Stat.swift */,
+				16989FC6215402F900CB1DC8 /* StatStore.swift */,
 				164DC2AB2115C84B008A8523 /* StatParameters.swift */,
 			);
 			path = Stats;
@@ -469,7 +474,6 @@
 			isa = PBXGroup;
 			children = (
 				167448E5208B9AAA00FA605C /* SettingsEurekaViewController.swift */,
-				16DA38FA211DF7D80094A4E8 /* PDFViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -523,6 +527,7 @@
 				1657B73C20A0E16300F5F478 /* Stats */,
 				169E5196206C62E6006B923E /* Tracker.swift */,
 				164F30A620D4745900E7772A /* Verification.swift */,
+				16D0D6742153DA60001BDE13 /* JSON.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -574,6 +579,7 @@
 				16906053208E755800BE5ADE /* NewOrchardInFarmEurekaCell.swift */,
 				16906061208F748600BE5ADE /* AdminEurekaCell.swift */,
 				16E3750820EFF41E0023AD2C /* DonutChartEurekaCell.swift */,
+				165BF7A42163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -582,19 +588,19 @@
 			isa = PBXGroup;
 			children = (
 				169E5198206C66D6006B923E /* MapKit.framework */,
-				2872C81799B6F605EFE5B114 /* Pods_Harvest.framework */,
-				8D60535AB1BF55D476DEF893 /* Pods_HarvestTests.framework */,
+				887BFCCE407BC8D00A8F06F0 /* Pods_Harvest.framework */,
+				2A363739AEBA3D60298E4F07 /* Pods_HarvestTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		9752E3B09AC9E9AACF225E84 /* Pods */ = {
+		811C28C87E10A2D81F1CC6A2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				01343C746FCD3D5E53F36636 /* Pods-Harvest.debug.xcconfig */,
-				D21A6D796FBA9E02AAA47AEE /* Pods-Harvest.release.xcconfig */,
-				08BC94425188B9218C430767 /* Pods-HarvestTests.debug.xcconfig */,
-				26863A412E22FD264561E92B /* Pods-HarvestTests.release.xcconfig */,
+				70B38F03830CD5570BCCAD2D /* Pods-Harvest.debug.xcconfig */,
+				8A987FC2160D681CA9FB214D /* Pods-Harvest.release.xcconfig */,
+				9A8990336B034C08DEBB30BD /* Pods-HarvestTests.debug.xcconfig */,
+				F2CB3E802307BFFA14CAC329 /* Pods-HarvestTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -606,13 +612,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1604E4C7206958E900E9BA15 /* Build configuration list for PBXNativeTarget "Harvest" */;
 			buildPhases = (
-				7EC1F2DE4207439E1B72E057 /* [CP] Check Pods Manifest.lock */,
+				C28092069CBE695BC9CF9314 /* [CP] Check Pods Manifest.lock */,
 				1604E49B206958E800E9BA15 /* Sources */,
 				1604E49C206958E800E9BA15 /* Frameworks */,
 				1604E49D206958E800E9BA15 /* Resources */,
 				16399E1720C06E9D00D7DDA6 /* ShellScript */,
-				0C8115590EBFF4C2F7BDC6A6 /* [CP] Embed Pods Frameworks */,
-				65F2273E9D8E6D357234E88D /* [CP] Copy Pods Resources */,
+				E921EF2FF03A7717E401026B /* [CP] Embed Pods Frameworks */,
+				A6A42A021FCD9CE2AA023C46 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -627,12 +633,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1604E4CA206958E900E9BA15 /* Build configuration list for PBXNativeTarget "HarvestTests" */;
 			buildPhases = (
-				0DCD97B89759A9A0E2483805 /* [CP] Check Pods Manifest.lock */,
+				21F93E70EF697711D2E5A4FF /* [CP] Check Pods Manifest.lock */,
 				1604E4AF206958E900E9BA15 /* Sources */,
 				1604E4B0206958E900E9BA15 /* Frameworks */,
 				1604E4B1206958E900E9BA15 /* Resources */,
-				D05B135BAAC48B1A0BCDD3C8 /* [CP] Embed Pods Frameworks */,
-				108B4497C76B83342DE6FE6E /* [CP] Copy Pods Resources */,
+				2D4DFB90777B0B438759C95A /* [CP] Embed Pods Frameworks */,
+				CD3BDD292A480CD1E41835A4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -674,6 +680,7 @@
 				TargetAttributes = {
 					1604E49E206958E800E9BA15 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
@@ -686,11 +693,13 @@
 					};
 					1604E4B2206958E900E9BA15 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 1604E49E206958E800E9BA15;
 					};
 					1604E4BD206958E900E9BA15 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 1604E49E206958E800E9BA15;
 					};
@@ -752,7 +761,111 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0C8115590EBFF4C2F7BDC6A6 /* [CP] Embed Pods Frameworks */ = {
+		16399E1720C06E9D00D7DDA6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+		};
+		21F93E70EF697711D2E5A4FF /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HarvestTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D4DFB90777B0B438759C95A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A6A42A021FCD9CE2AA023C46 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C28092069CBE695BC9CF9314 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Harvest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CD3BDD292A480CD1E41835A4 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E921EF2FF03A7717E401026B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -796,110 +909,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		0DCD97B89759A9A0E2483805 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-HarvestTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		108B4497C76B83342DE6FE6E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		16399E1720C06E9D00D7DDA6 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
-		};
-		65F2273E9D8E6D357234E88D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-resources.sh",
-				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
-				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Harvest/Pods-Harvest-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7EC1F2DE4207439E1B72E057 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Harvest-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D05B135BAAC48B1A0BCDD3C8 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HarvestTests/Pods-HarvestTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -908,6 +917,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C82F45207FF34C0074595C /* LabelWorkingCollectionViewCell.swift in Sources */,
+				16D0D6752153DA60001BDE13 /* JSON.swift in Sources */,
 				1679DA4920DD69BC007AB071 /* ForemanSignInViewController.swift in Sources */,
 				167448DE208A9F4900FA605C /* SessionEurekaCell.swift in Sources */,
 				16906056208E7FFA00BE5ADE /* ColorScheme.swift in Sources */,
@@ -919,7 +929,6 @@
 				1690605C208E805400BE5ADE /* ViewExtensions.swift in Sources */,
 				16B9D74820F66D2800EB2082 /* StatEntitySelectionViewController.swift in Sources */,
 				16B3F1CE207E9E9200FC1F77 /* SessionViewController.swift in Sources */,
-				16DA38FB211DF7D80094A4E8 /* PDFViewController.swift in Sources */,
 				16E3750920EFF41E0023AD2C /* DonutChartEurekaCell.swift in Sources */,
 				16A038E720F673B1007B549F /* StatEntitySelectionRow.swift in Sources */,
 				16906060208F6A9400BE5ADE /* HarvestUser.swift in Sources */,
@@ -942,6 +951,7 @@
 				164DC2AE211659F0008A8523 /* CarouselViewController.swift in Sources */,
 				164F30A720D4745900E7772A /* Verification.swift in Sources */,
 				16E3750F20F0E4220023AD2C /* StatSelectionViewController.swift in Sources */,
+				16989FC7215402F900CB1DC8 /* StatStore.swift in Sources */,
 				16C82F5C20819B6E0074595C /* Helper.swift in Sources */,
 				167448C220893B8200FA605C /* SortedSet.swift in Sources */,
 				1657B74220A0E53800F5F478 /* StatsViewController.swift in Sources */,
@@ -980,6 +990,7 @@
 				167448C520893B8200FA605C /* SortedArray.swift in Sources */,
 				16F5796721000CB50086325B /* PhoneyFormatter.swift in Sources */,
 				16ADA5EC210CAB8A00EE369E /* Stat.swift in Sources */,
+				165BF7A52163C5BA00F7AD31 /* EntityInstructionCollectionReusableView.swift in Sources */,
 				167448BC208937BE00FA605C /* InformationEntityItemTableViewController.swift in Sources */,
 				16906062208F748600BE5ADE /* AdminEurekaCell.swift in Sources */,
 				160A1E1E209BD168000A1E0F /* OrchardAreaEurekaCell.swift in Sources */,
@@ -1162,7 +1173,7 @@
 		};
 		1604E4C8206958E900E9BA15 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 01343C746FCD3D5E53F36636 /* Pods-Harvest.debug.xcconfig */;
+			baseConfigurationReference = 70B38F03830CD5570BCCAD2D /* Pods-Harvest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Harvest/Harvest.entitlements;
@@ -1173,14 +1184,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.BinaryNinjaz.Harvest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		1604E4C9206958E900E9BA15 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D21A6D796FBA9E02AAA47AEE /* Pods-Harvest.release.xcconfig */;
+			baseConfigurationReference = 8A987FC2160D681CA9FB214D /* Pods-Harvest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Harvest/Harvest.entitlements;
@@ -1191,14 +1202,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.BinaryNinjaz.Harvest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 		1604E4CB206958E900E9BA15 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 08BC94425188B9218C430767 /* Pods-HarvestTests.debug.xcconfig */;
+			baseConfigurationReference = 9A8990336B034C08DEBB30BD /* Pods-HarvestTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1208,7 +1219,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.letanyan.HarvestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Harvest.app/Harvest";
 			};
@@ -1216,7 +1227,7 @@
 		};
 		1604E4CC206958E900E9BA15 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 26863A412E22FD264561E92B /* Pods-HarvestTests.release.xcconfig */;
+			baseConfigurationReference = F2CB3E802307BFFA14CAC329 /* Pods-HarvestTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1226,7 +1237,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.letanyan.HarvestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Harvest.app/Harvest";
 			};
@@ -1242,7 +1253,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.letanyan.HarvestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Harvest;
 			};
@@ -1258,7 +1269,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.letanyan.HarvestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Harvest;
 			};

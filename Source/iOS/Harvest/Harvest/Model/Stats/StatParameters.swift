@@ -10,12 +10,12 @@ import Foundation
 
 enum TimePeriod: Codable, Equatable, CustomStringConvertible {
   case today, yesterday, thisWeek, lastWeek, thisMonth, lastMonth, thisYear, lastYear
-  case between(Date, Date)
+  case between(Date?, Date?)
   
   static var allCases: [TimePeriod] {
     return [
       .today, .yesterday, .thisWeek, .lastWeek, .thisMonth, .lastMonth, .thisYear, .lastYear,
-      .between(Date(timeIntervalSince1970: 0), Date(timeIntervalSince1970: 0))
+      .between(nil, nil)
     ]
   }
   
@@ -36,7 +36,7 @@ enum TimePeriod: Codable, Equatable, CustomStringConvertible {
     case .lastMonth: return Date().lastMonth()
     case .thisYear: return Date().thisYear()
     case .lastYear: return Date().lastYear()
-    case let .between(s, e): return (s, e)
+    case let .between(s, e): return (s ?? Date().thisWeek().0.startOfDay(), e ?? Date().thisWeek().1.endOfDay())
     }
   }
   
@@ -169,15 +169,11 @@ enum TimedGraphMode: String, CustomStringConvertible, Codable {
   }
 }
 
-enum StatKind: String, CustomStringConvertible, Codable {
+enum StatKind: String, CustomStringConvertible, Codable, CaseIterable {
   case worker
   case orchard
   case foreman
   case farm
-  
-  static var allCases: [StatKind] {
-    return [.farm, .orchard, .worker, .foreman]
-  }
   
   var identifier: String {
     switch self {
@@ -194,6 +190,18 @@ enum StatKind: String, CustomStringConvertible, Codable {
     case .orchard: return "Orchard"
     case .foreman: return "Foreman"
     case .farm: return "Farm"
+    }
+  }
+}
+
+enum LineGraphCurve: String, CustomStringConvertible, Codable, CaseIterable {
+  case linear, curve, stepped
+  
+  var description: String {
+    switch self {
+    case .linear: return "Linear"
+    case .curve: return "Curved"
+    case .stepped: return "Stepped"
     }
   }
 }

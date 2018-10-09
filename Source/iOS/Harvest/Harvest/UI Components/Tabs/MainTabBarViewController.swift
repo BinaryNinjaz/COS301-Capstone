@@ -15,6 +15,8 @@ class MainTabBarViewController: UITabBarController {
     // Do any additional setup after loading the view.
   }
   
+  var tutorialProgressListnerId: Int?
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
@@ -28,6 +30,27 @@ class MainTabBarViewController: UITabBarController {
         avc.showTutorial()
         present(avc, animated: true, completion: nil)
       }
+    } else {
+      tutorialProgressListnerId = Entities.shared.listen {
+        self.tutorialProgression()
+      }
+    }
+//    UserDefaults.standard.set(false, forKey: HarvestUser.current.uid + "SignedIn")
+  }
+  
+  func tutorialProgression() {
+    let isFarmsEmpty = Entities.shared.farms.isEmpty
+    let isOrchardsEmpty = Entities.shared.orchards.isEmpty
+    let isWorkersEmpty = Entities.shared.workers.isEmpty
+    
+    if isFarmsEmpty || isOrchardsEmpty || isWorkersEmpty {
+      if let infoIdx = viewControllers?
+        .index(where: {$0.restorationIdentifier == informationViewControllerKey}) {
+        selectedIndex = infoIdx
+      }
+      self.setUpForFarmerMissingData()
+    } else {
+      self.setUpForFarmer()
     }
   }
   
@@ -42,6 +65,7 @@ class MainTabBarViewController: UITabBarController {
     // Dispose of any resources that can be recreated.
   }
   
+  let trackerViewControllerKey = "trackerViewController"
   let informationViewControllerKey = "informationViewController"
   let statViewControllerKey = "statViewController"
   let sessionsViewControllerKey = "sessionViewController"
@@ -61,26 +85,50 @@ class MainTabBarViewController: UITabBarController {
       .index(where: { $0.restorationIdentifier == statViewControllerKey }) {
         viewControllers?.remove(at: statIdx)
     }
-    
   }
   
   func setUpForFarmer() {
+    let anchor = 1
+    
     if viewControllers?.index(where: { $0.restorationIdentifier == statViewControllerKey }) == nil {
       if let infoVC = storyboard?.instantiateViewController(withIdentifier: statViewControllerKey) {
-        viewControllers?.insert(infoVC, at: 1)
+        viewControllers?.insert(infoVC, at: anchor)
       }
     }
     
     if viewControllers?.index(where: { $0.restorationIdentifier == sessionsViewControllerKey }) == nil {
       if let sessionVC = storyboard?.instantiateViewController(withIdentifier: sessionsViewControllerKey) {
-        viewControllers?.insert(sessionVC, at: 1)
+        viewControllers?.insert(sessionVC, at: anchor)
       }
     }
     
     if viewControllers?.index(where: { $0.restorationIdentifier == informationViewControllerKey }) == nil {
       if let statVC = storyboard?.instantiateViewController(withIdentifier: informationViewControllerKey) {
-        viewControllers?.insert(statVC, at: 1)
+        viewControllers?.insert(statVC, at: anchor)
       }
+    }
+    
+    if viewControllers?.index(where: { $0.restorationIdentifier == trackerViewControllerKey }) == nil {
+      if let trackerVC = storyboard?.instantiateViewController(withIdentifier: trackerViewControllerKey) {
+        viewControllers?.insert(trackerVC, at: 0)
+      }
+    }
+  }
+  
+  func setUpForFarmerMissingData() {
+    if let infoIdx = viewControllers?
+      .index(where: { $0.restorationIdentifier == trackerViewControllerKey}) {
+      viewControllers?.remove(at: infoIdx)
+    }
+    
+    if let sessionIdx = viewControllers?
+      .index(where: { $0.restorationIdentifier == sessionsViewControllerKey }) {
+      viewControllers?.remove(at: sessionIdx)
+    }
+    
+    if let statIdx = viewControllers?
+      .index(where: { $0.restorationIdentifier == statViewControllerKey }) {
+      viewControllers?.remove(at: statIdx)
     }
   }
 }

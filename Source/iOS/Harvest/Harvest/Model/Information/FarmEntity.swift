@@ -153,6 +153,7 @@ final class Entities {
             return (worker.lastname + worker.firstname + worker.id, worker)
         }, <)
         completion(self)
+        self.runListners()
       }
       
     case .orchard:
@@ -161,11 +162,14 @@ final class Entities {
           uniqueKeysWithValues: farms.map { farm in
             return (farm.name + farm.id, farm)
         }, <)
-        self.orchards = SortedDictionary(
-          uniqueKeysWithValues: self.orchards.map { _, v in
-            (v.description + v.id, v)
-        }, <)
-        completion(self)
+        HarvestDB.getOrchards({ (orchards) in
+          self.orchards = SortedDictionary(
+            uniqueKeysWithValues: orchards.map { v in
+              (v.description + v.id, v)
+          }, <)
+          completion(self)
+          self.runListners()
+        })
       }
       
     case .farm:
@@ -179,6 +183,7 @@ final class Entities {
             (v.description + v.id, v)
         }, <)
         completion(self)
+        self.runListners()
       }
       
     case .session: break
@@ -190,7 +195,7 @@ final class Entities {
   func getMultiplesOnce(
     _ kinds: [EntityItem.Kind],
     completion: @escaping (Entities) -> Void
-    ) {
+  ) {
     guard let f = kinds.first else {
       completion(self)
       return

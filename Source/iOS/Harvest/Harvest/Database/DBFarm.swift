@@ -6,7 +6,7 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Firebase
+import FirebaseDatabase
 
 extension HarvestDB {
   static func getFarms(_ completion: @escaping ([Farm]) -> Void) {
@@ -85,7 +85,7 @@ extension HarvestDB {
   static func save(farm: Farm) {
     let farms = ref.child(Path.farms)
     if farm.id == "" {
-      farm.id = farms.childByAutoId().key
+      farm.id = farms.childByAutoId().key ?? Date.key
     }
     let update = farm.json()
     farms.updateChildValues(update)
