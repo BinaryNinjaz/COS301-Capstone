@@ -147,6 +147,10 @@
 
     <string name="info_none_tip">Press the green plus button at the bottom right to add %1$s</string>
 
+    <string name="info_tut_cFarm">Create at least one farm, by pressing the farms button, to begin.</string>
+    <string name="info_tut_cOrchard">Now create at least one orchard, by pressing the orchards button.</string>
+    <string name="info_tut_cWorker">Finally, create at least one worker, by pressing the workers button.</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Account settings -->
@@ -264,6 +268,25 @@
     <string name="stats_create_accumulation_none">None</string>
     <string name="stats_create_accumulation_entity">By %1$s</string>
     <string name="stats_create_accumulation_interval">By %1$s</string>
+    <string name="stats_create_display">Display Options</string>
+    <string name="stats_create_expected">Show Expected Lines</string>
+    <string name="stats_create_average">Show Average Line</string>
+    <string name="stats_create_line">Line Type:</string>
+    <string-array name="stats_create_lines">
+        <!--Order matters!-->
+        <item>Linear</item> <!--Linear-->
+        <item>Curved</item> <!--Horizontal Bezier-->
+        <item>Stepped</item> <!--Stepped-->
+    </string-array>
+
+    <!--Default graph names-->
+    <string name="ThisMonthFarmPerformance">This Month\'s Farm Performance</string>
+    <string name="FarmPerformance">Farm Performance</string>
+    <string name="ThisMonthOrchardPerformance">This Month\'s Orchard Performance</string>
+    <string name="OrchardPerformance">Orchard Performance</string>
+    <string name="TodayWorkerPerformance">Today\'s Worker Performance</string>
+    <string name="YesterdayWorkerPerformance">Yesterday\'s Worker Performance</string>
+    <string name="WorkerPerformance">Worker Performance</string>
 
     <!--1: entity, lowercase, singular.-->
     <string name="stats_create_accumulation_desc_none">No accumulation will take place, a regular graph will be displayed whereby each %1$s will have its own line.</string>
@@ -293,6 +316,8 @@
 
     <string name="stats_create_tip">Press \"MAKE NEW GRAPH\" above to begin.</string>
 
+    <!--Strings for Session totals-->
+    <string name="total_collected">Total Collected: </string>
 
     <string name="title_activity_sessions">Sessions</string>
     <string name="title_activity_sessions_map">Map</string>

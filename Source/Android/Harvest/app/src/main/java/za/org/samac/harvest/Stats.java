@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,6 +35,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -68,7 +70,10 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     public static final String KEY_PERIOD = "KEY_PERIOD";
     public static final String KEY_GROUP = "KEY_GROUP";
     public static final String KEY_ACCUMULATION = "KEY_ACCUMULATION";
-    
+    public static final String KEY_EXPECTED = "KEY_EXPECTED";
+    public static final String KEY_AVERAGE = "KEY_AVERAGE";
+    public static final String KEY_LINE = "KEY_LINE";
+
     public static final String NOTHING = "";
 
     //Intervals
@@ -100,12 +105,19 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     public static final String ACCUMULATION_ENTITY = "accumEntity";
     public static final String ACCUMULATION_TIME = "accumTime";
 
+    //Line
+    public static final String LINE_CURVE = "curve";
+    public static final String LINE_STRAIGHT = "straight";
+    public static final String LINE_STEP = "step";
+
     public static final double THOUSAND = 1000.0000000;
 
     private String interval = NOTHING;
     private String accumulation = NOTHING;
     private String period = NOTHING;
     private String name = null;
+    private String line = null;
+    private boolean average = false, expected = false;
 
     private Dialog dialog = null;
 
@@ -347,6 +359,16 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         }
         else {
             stats_selector.showProceed(true);
+
+            if (period.equals(BETWEEN_DATES)){
+                if (start == 0 && start.equals(end)){
+                    DateBundle dateBundle = determineDates(THIS_WEEK);
+                    start = dateBundle.startDate;
+                    end = dateBundle.endDate;
+                }
+
+                stats_selector.showDateStuff(start * THOUSAND, end * THOUSAND);
+            }
         }
         stats_selector.setFarmOwnerChecked(ids.contains(FirebaseAuth.getInstance().getUid()));
 
@@ -393,13 +415,18 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     public void stats_selector_buttonHandler(View v){
         switch (v.getId()){
             case R.id.stats_select_proceed:
+                if (period.equals(BETWEEN_DATES)){
+                    DateBundle dateBundle = stats_selector.getDates();
+                    start = dateBundle.startDate / THOUSAND;
+                    end = dateBundle.endDate / THOUSAND;
+                }
                 displayGraph();
                 return;
             case R.id.stats_select_all:
                 stats_selector.checkAllPerhaps(true);
                 ids.clear();
                 ids.addAll(data.extractIDs(data.getThings(stats_selector.getCategory()), stats_selector.getCategory()));
-                ids.add(FirebaseAuth.getInstance().getUid());
+                if (stats_selector.getCategory() == Category.FOREMAN) ids.add(FirebaseAuth.getInstance().getUid());
                 return;
             case R.id.stats_select_none:
                 stats_selector.checkAllPerhaps(false);
@@ -445,6 +472,10 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                         start = bundle.getDouble(KEY_START);
                         end = bundle.getDouble(KEY_END);
                     }
+
+                    expected = bundle.getBoolean(KEY_EXPECTED);
+                    average = bundle.getBoolean(KEY_AVERAGE);
+                    line = bundle.getString(KEY_LINE);
 
                     displayGraph();
                 }
@@ -494,18 +525,27 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         Button button = (Button) v;
         GraphDB.Graph graph = GraphDB.getGraphByName(button.getText().toString(), this);
 
-        //TODO: Go through selector.
-
         //Set all the things
         assert graph != null;
         ids.clear();
         ids.addAll(Arrays.asList(graph.ids));
-        start = graph.start;
-        end = graph.end;
         interval = graph.interval;
         group = graph.group;
         period = graph.period;
         accumulation = graph.accumulation;
+        line = graph.line;
+        expected = graph.expected;
+        average = graph.average;
+
+        if (!period.equals(BETWEEN_DATES)){
+            DateBundle dateBundle = determineDates(period);
+            start = dateBundle.startDate;
+            end = dateBundle.endDate;
+        }
+        else {
+            start = graph.start;
+            end = graph.end;
+        }
 
         showSelector();
     }
@@ -598,6 +638,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         extras.putString(KEY_GROUP, group);
         extras.putString(KEY_PERIOD, period);
         extras.putString(KEY_ACCUMULATION, accumulation);
+        extras.putString(KEY_LINE, line);
+        extras.putBoolean(KEY_AVERAGE, average);
+        extras.putBoolean(KEY_EXPECTED, expected);
         Intent intent = new Intent(this, Stats_Graph.class).putExtras(extras);
         startActivity(intent);
     }
@@ -617,6 +660,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         graph.period = bundle.getString(KEY_PERIOD);
         graph.interval = bundle.getString(KEY_INTERVAL);
         graph.accumulation = bundle.getString(KEY_ACCUMULATION);
+        graph.line = bundle.getString(KEY_LINE);
+        graph.average = bundle.getBoolean(KEY_AVERAGE);
+        graph.expected = bundle.getBoolean(KEY_EXPECTED);
 
         //From the activity
         if (!graph.group.equals(getGroupFromCategory(lastCategory))){
@@ -629,14 +675,10 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         graph.ids = gIDs;
 
         //handle dates
-        if (!graph.period.equals(BETWEEN_DATES)){
-            DateBundle dateBundle = determineDates(graph.period);
-            assert dateBundle != null;
-            bundle.putDouble(KEY_START, dateBundle.startDate);
-            bundle.putDouble(KEY_END, dateBundle.endDate);
+        if (graph.period.equals(BETWEEN_DATES)) {
+            graph.start = bundle.getDouble(KEY_START);
+            graph.end = bundle.getDouble(KEY_END);
         }
-        graph.start = bundle.getDouble(KEY_START);
-        graph.end = bundle.getDouble(KEY_END);
 
         boolean err = false;
         try{
@@ -862,7 +904,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         return result;
     }
 
-    public static class DateBundle{
+    static class DateBundle{
         double startDate, endDate;
     }
     /**
@@ -969,7 +1011,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         return "";
     }
 
-    public static class GraphDB{
+    static class GraphDB{
 
         //KEYS
         private static final String
@@ -979,13 +1021,18 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 INTERVAL = "INTERVAL",
                 GROUP = "GROUP",
                 PERIOD = "PERIOD",
-                ACCUMULATION = "ACCUMULATION";
+                ACCUMULATION = "ACCUMULATION",
+                BETWEEN = "BETWEEN",
+                LINE = "LINE",
+                AVERAGE = "AVERAGE",
+                EXPECTED = "EXPECTED";
+        private static final String DEFAULTSCREATED = "D";
 
         private static String TAG = "GraphDB";
 
         private static List<String> farms, orchards, workers, foremen;
 
-        public static void saveGraph(Graph graph, Context context) throws NotUniqueNameException {
+        static void saveGraph(Graph graph, Context context) throws NotUniqueNameException {
             final String uid = FirebaseAuth.getInstance().getUid();
             SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.stats_graph_pref, uid), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -1003,6 +1050,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                     object.put(GROUP, graph.group);
                     object.put(PERIOD, graph.period);
                     object.put(ACCUMULATION, graph.accumulation);
+                    object.put(LINE, graph.line);
+                    object.put(EXPECTED, graph.expected);
+                    object.put(AVERAGE, graph.average);
                     Log.i(TAG, "JSONObject assembled: " + object.toString());
 
                     editor.putString(graph.name, object.toString());
@@ -1016,7 +1066,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             }
         }
 
-        public static void deleteGraph(String name, Context context){
+        static void deleteGraph(String name, Context context){
             final String uid = FirebaseAuth.getInstance().getUid();
             SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.stats_graph_pref, uid), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -1032,7 +1082,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
          * @param context Context.
          * @return the graph itself.
          */
-        public static Graph getGraphByName(String name, Context context){
+        static Graph getGraphByName(String name, Context context){
             final String uid = FirebaseAuth.getInstance().getUid();
             SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.stats_graph_pref, uid), Context.MODE_PRIVATE);
             try {
@@ -1058,6 +1108,9 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
                 graph.group = object.getString(GROUP);
                 graph.period = object.getString(PERIOD);
                 graph.accumulation = object.getString(ACCUMULATION);
+                graph.average = object.getBoolean(AVERAGE);
+                graph.expected = object.getBoolean(EXPECTED);
+                graph.line = object.getString(LINE);
 
                 return graph;
 
@@ -1082,7 +1135,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
          *                The intention is to keep this false if the method is being used in quick succession, like say, setting up four recyclers on the same fragment.
          * @return names of the graphs.
          */
-        public static List<String> getNamesByCategory(Category category, Context context, boolean restore){
+        static List<String> getNamesByCategory(Category category, Context context, boolean restore){
             if (restore) {
                 farms = new ArrayList<>();
                 orchards = new ArrayList<>();
@@ -1134,7 +1187,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
          * @param category the category to find out about.
          * @return true if the list is not empty.
          */
-        public static boolean isThere(Category category){
+        static boolean isThere(Category category){
             switch (category){
                 case FARM:
                     return !farms.isEmpty();
@@ -1148,6 +1201,57 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
             return false;
         }
 
+        /**
+         * Creates defaults in the preference object if 'd' is not present.
+         */
+        static void createDefaults(Context context){
+            try {
+                Graph graph = new Graph();
+                graph.name = context.getResources().getString(R.string.ThisMonthFarmPerformance);
+                String[] ids = {};
+                graph.ids = ids;
+                graph.interval = DAILY;
+                graph.group = FARM;
+                graph.period = THIS_MONTH;
+                graph.accumulation = ACCUMULATION_NONE;
+                graph.line = LINE_CURVE;
+                graph.average = true;
+                graph.expected = true;
+                saveGraph(graph, context);
+
+                graph.name = context.getResources().getString(R.string.FarmPerformance);
+                graph.period = BETWEEN_DATES;
+                saveGraph(graph, context);
+
+                graph.name = context.getResources().getString(R.string.ThisMonthOrchardPerformance);
+                graph.period = THIS_MONTH;
+                graph.group = ORCHARD;
+                saveGraph(graph, context);
+
+                graph.name = context.getResources().getString(R.string.OrchardPerformance);
+                graph.period = BETWEEN_DATES;
+                saveGraph(graph, context);
+
+                graph.name = context.getResources().getString(R.string.TodayWorkerPerformance);
+                graph.period = TODAY;
+                graph.interval = HOURLY;
+                graph. group = WORKER;
+                saveGraph(graph, context);
+
+                graph.name = context.getResources().getString(R.string.YesterdayWorkerPerformance);
+                graph.period = YESTERDAY;
+                saveGraph(graph, context);
+
+                graph.name = context.getResources().getString(R.string.WorkerPerformance);
+                graph.period = BETWEEN_DATES;
+                graph.interval = HOURLY;
+                saveGraph(graph, context);
+            }
+            catch (NotUniqueNameException e){
+                Log.i(TAG, "Default name isn't unique... Like, what?");
+            }
+        }
+
         private static boolean keyExists(SharedPreferences sharedPreferences, String key){
             Map<String, ?> all = sharedPreferences.getAll();
             return all.containsKey(key);
@@ -1156,9 +1260,10 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
         public static class Graph{
 
             public String name;
-            public String ids[];
-            public double start, end;
-            public String interval, group, period, accumulation;
+            String ids[];
+            public double start = 0, end = 0;
+            String interval, group, period, accumulation, line;
+            boolean average, expected;
 
             @Override
             public String toString() {
@@ -1168,7 +1273,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
 
         public static class NotUniqueNameException extends Exception{
 
-            public NotUniqueNameException(){
+            NotUniqueNameException(){
 
             }
 
