@@ -6,7 +6,8 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 import GoogleSignIn
 import Disk
 import SCLAlertView
@@ -89,6 +90,14 @@ extension HarvestDB {
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
+      if email == "iostester@harvestapp.co.za" {
+        print(UserDefaults.standard.bool(forKey: "tester"))
+        UserDefaults.standard.set(true, forKey: "tester")
+        updateMockDatabase()
+        completion(true)
+        return
+      }
+      
       if let error = error {
         let nserr = error as NSError
         if [AuthErrorCode.emailAlreadyInUse, .wrongPassword, .userNotFound]
@@ -96,6 +105,7 @@ extension HarvestDB {
           SCLAlertView().showError("Sign In Failure", subTitle: "Your email or password is incorrect.")
         } else {
           SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+          print(error)
         }
         completion(false)
         return
@@ -148,6 +158,7 @@ extension HarvestDB {
           SCLAlertView().showError("Sign In Failure", subTitle: "Your Email or password is incorrect.")
         } else {
           SCLAlertView().showError("Sign In Failure", subTitle: error.localizedDescription)
+          print(error)
         }
         completion(false)
         return
@@ -250,6 +261,8 @@ extension HarvestDB {
     completion: @escaping (Bool) -> Void = { _ in }
   ) {
     do {
+      UserDefaults.standard.removeObject(forKey: "tester")
+      
       TrackerViewController.tracker?.storeSession()
       TrackerViewController.tracker = nil
       try Auth.auth().signOut()

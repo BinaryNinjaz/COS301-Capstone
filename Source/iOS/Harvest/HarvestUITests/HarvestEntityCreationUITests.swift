@@ -71,23 +71,10 @@ class HarvestEntityCreationUITests: XCTestCase {
     app.collectionViews.cells.otherElements.containing(.image, identifier: "Orchards").element.tap()
     app.navigationBars["Orchards"].buttons["New"].tap()
     
-    let tablesQuery = app.tables
-    tablesQuery/*@START_MENU_TOKEN@*/.textFields["Name of the orchard"]/*[[".cells.textFields[\"Name of the orchard\"]",".textFields[\"Name of the orchard\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+    app.tables/*@START_MENU_TOKEN@*/.textFields["Name of the orchard"]/*[[".cells.textFields[\"Name of the orchard\"]",".textFields[\"Name of the orchard\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
     
-    let bKey = app/*@START_MENU_TOKEN@*/.keys["B"]/*[[".keyboards.keys[\"B\"]",".keys[\"B\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-    bKey.tap()
-    tablesQuery/*@START_MENU_TOKEN@*/.textFields["Crop farmed on the orchard"]/*[[".cells.textFields[\"Crop farmed on the orchard\"]",".textFields[\"Crop farmed on the orchard\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-    bKey.tap()
-    
-    let aKey = app/*@START_MENU_TOKEN@*/.keys["a"]/*[[".keyboards.keys[\"a\"]",".keys[\"a\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-    aKey.tap()
-    
-    let nKey = app/*@START_MENU_TOKEN@*/.keys["n"]/*[[".keyboards.keys[\"n\"]",".keys[\"n\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-    nKey.tap()
-    aKey.tap()
-    nKey.tap()
-    aKey.tap()
-    app.toolbars["Toolbar"].buttons["Done"].tap()
+    let oKey = app/*@START_MENU_TOKEN@*/.keys["O"]/*[[".keyboards.keys[\"O\"]",".keys[\"O\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+    oKey.tap()
     app.navigationBars["Harvest.EntityView"].buttons["Save"].tap()
     
     XCTAssertFalse(app.navigationBars["Harvest.EntityView"].buttons["Save"].isEnabled)

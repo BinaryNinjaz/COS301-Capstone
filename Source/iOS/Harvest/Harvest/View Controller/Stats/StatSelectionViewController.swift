@@ -145,6 +145,6 @@ final class StatSelectionViewController: ReloadableFormViewController {
   
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    tableView.reloadData()
+    reloadFormVC()
   }
 }

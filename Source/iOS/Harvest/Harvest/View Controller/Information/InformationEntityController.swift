@@ -12,7 +12,29 @@ private let reuseIdentifier = "informationEntityCell"
 
 class InformationEntityController: UICollectionViewController {
   
-  let entities = ["Farms", "Orchards", "Workers"]
+  enum DisplayStateWants {
+    case farm, orchard, worker, nothing
+  }
+  
+  var displayStateWants: DisplayStateWants {
+    if Entities.shared.farms.isEmpty {
+      return .farm
+    } else if Entities.shared.orchards.isEmpty {
+      return .orchard
+    } else if Entities.shared.workers.isEmpty {
+      return .worker
+    } else {
+      return .nothing
+    }
+  }
+  
+  var entities: [String] {
+    switch displayStateWants {
+    case .farm: return ["Farms"]
+    case .orchard: return ["Farms", "Orchards"]
+    case .worker, .nothing: return ["Farms", "Orchards", "Workers"]
+    }
+  }
   var entity = ""
   var selectedKind: EntityItem.Kind = .none
   var goingToIndexPath: IndexPath? = nil {
@@ -39,6 +61,7 @@ class InformationEntityController: UICollectionViewController {
   override func viewDidAppear(_ animated: Bool) {
     entity = ""
     selectedKind = .none
+    collectionView.reloadData()
   }
 
   override func didReceiveMemoryWarning() {
@@ -79,6 +102,38 @@ class InformationEntityController: UICollectionViewController {
     return entities.count
   }
 
+  override func collectionView(
+    _ collectionView: UICollectionView,
+    viewForSupplementaryElementOfKind kind: String,
+    at indexPath: IndexPath
+  ) -> UICollectionReusableView {
+    guard kind == UICollectionView.elementKindSectionHeader else {
+      return UICollectionReusableView()
+    }
+    
+    guard let view = collectionView.dequeueReusableSupplementaryView(
+      ofKind: UICollectionView.elementKindSectionHeader,
+      withReuseIdentifier: "entityInstructionCollectionReusableView",
+      for: indexPath) as? EntityInstructionCollectionReusableView else {
+        return UICollectionReusableView()
+    }
+    
+    switch displayStateWants {
+    case .farm: view.titleTextView?.text = """
+    Create at least one farm, by pressing the farms button, to begin.
+    """
+    case .orchard: view.titleTextView?.text = """
+    Now create at least one orchard, by pressing the orchards button.
+    """
+    case .worker: view.titleTextView?.text = """
+    Finally, create at least one worker, by pressing the workers button.
+    """
+    case .nothing: view.titleTextView?.text = ""
+    }
+    
+    return view
+  }
+  
   override func collectionView(
     _ collectionView: UICollectionView,
     cellForItemAt indexPath: IndexPath
@@ -149,6 +204,18 @@ class InformationEntityController: UICollectionViewController {
 }
 
 extension InformationEntityController: UICollectionViewDelegateFlowLayout {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    referenceSizeForHeaderInSection section: Int
+  ) -> CGSize {
+    if displayStateWants == .nothing {
+      return .zero
+    } else {
+      return CGSize(width: collectionView.frame.width, height: 72.0)
+    }
+  }
+  
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath

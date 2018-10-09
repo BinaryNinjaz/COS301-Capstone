@@ -66,8 +66,11 @@ public class InformationTest {
 
     @Test
     public void information(){
+        onView(withText("Farms")).perform(scrollTo());
         onView(withText("Farms")).check(matches(isDisplayed()));
+        onView(withText("Workers")).perform(scrollTo());
         onView(withText("Workers")).check(matches(isDisplayed()));
+        onView(withText("Orchards")).perform(scrollTo());
         onView(withText("Orchards")).check(matches(isDisplayed()));
     }
 
@@ -82,6 +85,7 @@ public class InformationTest {
 
         onView(withId(R.id.info_farm_name_edit)).perform(typeText(farm.name));
 
+        onView(withId(R.id.info_farm_email_edit)).perform(scrollTo());
         onView(withId(R.id.info_farm_company_desc)).perform(scrollTo());
         onView(withId(R.id.info_farm_company_edit)).perform(typeText(farm.company));
 
@@ -112,6 +116,7 @@ public class InformationTest {
     public void orchards(){
         Orchard0 orchard = new Orchard0();
 
+        onView(withText("Orchards")).perform(scrollTo());
         onView(withText("Orchards")).perform(click());
         onView(withId(R.id.addSomething)).perform(click());
         onView(withText("Orchard Name:")).check(matches(isDisplayed()));
@@ -119,6 +124,7 @@ public class InformationTest {
 
         onView(withId(R.id.info_orch_name_edit)).perform(typeText(orchard.name));
 
+        onView(withId(R.id.info_orch_mass_edit)).perform(scrollTo());
         onView(withId(R.id.info_orch_crop_edit)).perform(scrollTo());
         onView(withId(R.id.info_orch_crop_edit)).perform(typeText(orchard.crop));
 
@@ -126,7 +132,9 @@ public class InformationTest {
         onView(withId(R.id.info_orch_mass_edit)).perform(typeText(orchard.mass));
 
         onView(withId(R.id.info_orch_irig_edit)).perform(scrollTo());
-        onView(withId(R.id.info_orch_irig_edit)).perform(typeText(orchard.irrig));
+//        onView(withId(R.id.info_orch_irig_edit)).perform(typeText(orchard.irrig));
+        onView(withId(R.id.info_orch_irig_edit)).perform(click());
+        onView(withText("Floppy")).perform(click());
 
         onView(withId(R.id.info_orch_cultivars_add_text)).perform(scrollTo());
         onView(withId(R.id.info_orch_cultivars_add_text)).perform(typeText(orchard.cult0));
@@ -161,6 +169,7 @@ public class InformationTest {
     public void workers(){
         Worker0 worker = new Worker0();
 
+        onView(withText("Workers")).perform(scrollTo());
         onView(withText("Workers")).perform(click());
         onView(withId(R.id.addSomething)).perform(click());
         onView(withText("Worker Name:")).check(matches(isDisplayed()));
@@ -168,6 +177,7 @@ public class InformationTest {
 
         onView(withId(R.id.info_work_fName_edit)).perform(typeText(worker.fname));
 
+        onView(withId(R.id.info_work_id_edit)).perform(scrollTo());
         onView(withId(R.id.info_work_sName_edit)).perform(scrollTo());
         onView(withId(R.id.info_work_sName_edit)).perform(typeText(worker.surname));
 
@@ -182,7 +192,7 @@ public class InformationTest {
 
         onView(withId(R.id.info_work_butt_save)).perform(click());
 
-        onView(withText(worker.surname + ", " + worker.fname)).perform(click());
+        onView(withText(worker.fname + " " + worker.surname)).perform(click());
 
         onView(withId(R.id.info_work_butt_del)).perform(click());
         onView(withText("Delete")).perform(click());

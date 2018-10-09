@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
 import SCLAlertView
 
 class ForemanSignInViewController: UIViewController {

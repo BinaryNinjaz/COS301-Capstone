@@ -6,7 +6,7 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Firebase
+import FirebaseAuth
 
 public final class HarvestUser {
   var workingForID: [(uid: String, wid: String)]

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.9.11)  20 SEP 2018 08:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/Arch Linux) (preloaded format=pdflatex 2018.9.11)  21 SEP 2018 08:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -166,20 +166,20 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 13.
 (./TestPolicy.aux)
 \openout1 = `TestPolicy.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
  (/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count98
@@ -220,7 +220,7 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package color Info: Driver file: pdftex.def on input line 147.
 )
-Package hyperref Info: Link coloring ON on input line 20.
+Package hyperref Info: Link coloring ON on input line 18.
 
 (/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -230,14 +230,24 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count104
 )
-LaTeX Info: Redefining \ref on input line 20.
-LaTeX Info: Redefining \pageref on input line 20.
-LaTeX Info: Redefining \nameref on input line 20.
+LaTeX Info: Redefining \ref on input line 18.
+LaTeX Info: Redefining \pageref on input line 18.
+LaTeX Info: Redefining \nameref on input line 18.
 
 (./TestPolicy.out) (./TestPolicy.out)
 \@outlinefile=\write3
 \openout3 = `TestPolicy.out'.
 
+<images/Bin.png, id=128, 1505.625pt x 1505.625pt>
+File: images/Bin.png Graphic file (type png)
+<use images/Bin.png>
+Package pdftex.def Info: images/Bin.png  used on input line 23.
+(pdftex.def)             Requested size: 58.7444pt x 58.74939pt.
+<images/Icon.png, id=130, 228.855pt x 228.855pt>
+File: images/Icon.png Graphic file (type png)
+<use images/Icon.png>
+Package pdftex.def Info: images/Icon.png  used on input line 27.
+(pdftex.def)             Requested size: 58.75009pt x 58.74939pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <12> on input line 38.
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -246,18 +256,20 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 38.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./TestPolicy.toc)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./images/Bin.png> <./image
+s/Icon.png>] (./TestPolicy.toc)
 \tf@toc=\write4
 \openout4 = `TestPolicy.toc'.
 
- [1] (./TestPolicy.lof)
+
+[1] (./TestPolicy.lof)
 \tf@lof=\write5
 \openout5 = `TestPolicy.lof'.
 
  [2]
-Underfull \hbox (badness 10000) in paragraph at lines 156--158
 
- []
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 155.
 
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 159.
 
@@ -266,116 +278,103 @@ File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 159.
-
-Underfull \hbox (badness 10000) in paragraph at lines 165--166
-
- []
-
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.170 \item D
-             esigning of the test cases; [1]
-Underfull \hbox (badness 10000) in paragraph at lines 175--176
+l.172 \item D
+             esigning the test environment and identifying the infrastructur...
+[1] [2]
+<images/Android-JUnit-tests.png, id=218, 1552.90909pt x 870.22636pt>
+File: images/Android-JUnit-tests.png Graphic file (type png)
+<use images/Android-JUnit-tests.png>
+Package pdftex.def Info: images/Android-JUnit-tests.png  used on input line 206
+.
+(pdftex.def)             Requested size: 390.0pt x 218.55194pt.
+ [3]
+<images/iOS-test.png, id=228, 2569.6pt x 1445.4pt>
+File: images/iOS-test.png Graphic file (type png)
+<use images/iOS-test.png>
+Package pdftex.def Info: images/iOS-test.png  used on input line 220.
+(pdftex.def)             Requested size: 390.0pt x 219.35902pt.
+<images/q1.png, id=230, 401.96454pt x 78.84pt>
+File: images/q1.png Graphic file (type png)
+<use images/q1.png>
+Package pdftex.def Info: images/q1.png  used on input line 231.
+(pdftex.def)             Requested size: 195.0pt x 38.24696pt.
+<images/q2.png, id=231, 395.99182pt x 74.06181pt>
+File: images/q2.png Graphic file (type png)
+<use images/q2.png>
+Package pdftex.def Info: images/q2.png  used on input line 232.
+(pdftex.def)             Requested size: 195.0pt x 36.47028pt.
 
+Overfull \hbox (2.61108pt too wide) in paragraph at lines 231--233
+[][] [] 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 184--185
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 192--196
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 192--196
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 192--196
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 192--196
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 192--196
-
- []
-
-[2]
-<images/FailedLoginTest.png, id=94, 1028.34187pt x 578.16pt>
-File: images/FailedLoginTest.png Graphic file (type png)
-<use images/FailedLoginTest.png>
-Package pdftex.def Info: images/FailedLoginTest.png  used on input line 198.
-(pdftex.def)             Requested size: 401.50146pt x 225.73732pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 197--201
-
- []
-
-
-Overfull \hbox (11.50146pt too wide) in paragraph at lines 197--201
-[]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 197--201
-
- []
-
-[3]
-<images/iostest.png, id=100, 2503.3525pt x 1422.31375pt>
-File: images/iostest.png Graphic file (type png)
-<use images/iostest.png>
-Package pdftex.def Info: images/iostest.png  used on input line 202.
-(pdftex.def)             Requested size: 401.50146pt x 228.11742pt.
-
-Overfull \hbox (11.50146pt too wide) in paragraph at lines 202--205
-[]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 202--205
-
- []
-
-[4 <./images/FailedLogInTest.png> <./images/iostest.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 221.
- [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 221.
+[4 <./images/Android-JUnit-Tests.png>]
+<images/qr.png, id=241, 799.74818pt x 347.01546pt>
+File: images/qr.png Graphic file (type png)
+<use images/qr.png>
+Package pdftex.def Info: images/qr.png  used on input line 241.
+(pdftex.def)             Requested size: 390.0pt x 169.22891pt.
+ [5 <./images/iOS-test.png> <./images/q1.png (PNG copy)> <./images/q2.png (PNG 
+copy)>] [6 <./images/qr.png (PNG copy)>]
+[7]
+<images/hash.png, id=270, 913.82727pt x 476.62364pt>
+File: images/hash.png Graphic file (type png)
+<use images/hash.png>
+Package pdftex.def Info: images/hash.png  used on input line 282.
+(pdftex.def)             Requested size: 117.00119pt x 61.01779pt.
+<images/info.png, id=271, 639.08182pt x 870.22636pt>
+File: images/info.png Graphic file (type png)
+<use images/info.png>
+Package pdftex.def Info: images/info.png  used on input line 283.
+(pdftex.def)             Requested size: 117.00119pt x 159.31625pt.
+<images/stats.png, id=272, 714.93546pt x 870.22636pt>
+File: images/stats.png Graphic file (type png)
+<use images/stats.png>
+Package pdftex.def Info: images/stats.png  used on input line 284.
+(pdftex.def)             Requested size: 117.00119pt x 142.41264pt.
+ [8]
+<images/iosexample.png, id=282, 2569.6pt x 1445.4pt>
+File: images/iosexample.png Graphic file (type png)
+<use images/iosexample.png>
+Package pdftex.def Info: images/iosexample.png  used on input line 297.
+(pdftex.def)             Requested size: 390.0pt x 219.35902pt.
+<images/qt.png, id=285, 318.94363pt x 103.92546pt>
+File: images/qt.png Graphic file (type png)
+<use images/qt.png>
+Package pdftex.def Info: images/qt.png  used on input line 305.
+(pdftex.def)             Requested size: 390.0pt x 127.08064pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 312.
+ [9 <./images/hash.png> <./images/info.png> <./images/stats.png>]
+[10 <./images/iosexample.png> <./images/qt.png (PNG copy)>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 312.
  (./TestPolicy.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 221.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 221.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 312.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 312.
 Package rerunfilecheck Info: File `TestPolicy.out' has not changed.
-(rerunfilecheck)             Checksum: E8A2488D9F8BF8C67B28F2F3FC0A37E2;743.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 221.
+(rerunfilecheck)             Checksum: D8E5BBC70C580213B743A8ABCC24CB1D;1964.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 312.
  ) 
 Here is how much of TeX's memory you used:
- 5101 strings out of 492642
- 75315 string characters out of 6135566
- 166090 words of memory out of 5000000
- 8937 multiletter control sequences out of 15000+600000
- 10097 words of font info for 35 fonts, out of 8000000 for 9000
+ 5218 strings out of 492642
+ 77130 string characters out of 6135566
+ 168653 words of memory out of 5000000
+ 9008 multiletter control sequences out of 15000+600000
+ 10266 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,5n,28p,464b,380s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 28i,7n,28p,870b,380s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texmf-dist/fo
 nts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmti12.pfb>
-Output written on TestPolicy.pdf (8 pages, 1644211 bytes).
+cmti12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on TestPolicy.pdf (13 pages, 3057416 bytes).
 PDF statistics:
- 140 PDF objects out of 1000 (max. 8388607)
- 120 compressed objects within 2 object streams
- 25 named destinations out of 1000 (max. 500000)
- 107 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 337 PDF objects out of 1000 (max. 8388607)
+ 293 compressed objects within 3 object streams
+ 60 named destinations out of 1000 (max. 500000)
+ 309 words of extra memory for PDF output out of 10000 (max. 10000000)
 

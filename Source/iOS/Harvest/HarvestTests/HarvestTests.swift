@@ -15,50 +15,8 @@ class HarvestTests: XCTestCase {
   override func setUp() {
     super.setUp()
     continueAfterFailure = true
-      // Put setup code here. This method is called before the invocation of each test method in the class.
     
-    let orc1: JSON = [
-      "name": "orc1",
-      "coords": [
-        ["lat": 0.1, "lng": 1.0],
-        ["lat": 0.1, "lng": 2.0],
-        ["lat": 2.0, "lng": 2.0]
-      ]
-    ]
-    
-    let orc2: JSON = [
-      "name": "orc2",
-      "coords": [
-        ["lat": 3.1, "lng": 1.0],
-        ["lat": 0.1, "lng": 0.0],
-        ["lat": 2.0, "lng": 2.0]
-      ]
-    ]
-    
-    π.mockDB = [
-      "foo": [
-        "workers": [
-          "1a": [
-            "name": "Andy",
-            "surname": "Andrews",
-            "type": "Foreman",
-            "phoneNumber": "1234567890",
-            "assignedOrchards": ["1I", "2II"]
-          ],
-          "2b": ["name": "Beth", "surname": "Bethany", "type": "Foreman", "phoneNumber": "0987654321"],
-          "3c": ["name": "Carl", "surname": "Carlos", "type": "Worker"],
-          "4d": ["name": "Doug", "surname": "Douglas", "type": "Worker"],
-          "5e": ["name": "Ethan", "surname": "Ethanol", "type": "Worker"],
-          "6f": ["name": "Frank", "surname": "Frankly", "type": "Worker"]
-        ],
-        "foremen": ["1234567890": 1, "0987654321": 1],
-        "orchards": ["1I": orc1, "2II": orc2],
-        "sessions": [:]
-      ]
-    ]
-    
-    let ref = DatabaseReferenceMock(path: "", info: [:])
-    HarvestDB.ref = ref
+    updateMockDatabase()
   }
   
   override func tearDown() {
@@ -258,14 +216,15 @@ class HarvestTests: XCTestCase {
   
   func testAddingDeletingWorker() {
     HarvestDB.getWorkers { (workers) in
+      print(workers)
       for worker in workers {
         if worker.id == "1a" {
-          XCTAssertEqual(worker.name, "Andy")
+          XCTAssertEqual(worker.name, "Andy Andrews")
           
           XCTAssertEqual(worker.assignedOrchards, ["1I", "2II"])
           XCTAssertEqual(worker.kind, .foreman)
         } else if worker.id == "2b" {
-          XCTAssertEqual(worker.name, "Beth")
+          XCTAssertEqual(worker.name, "Beth Bethany")
         }
       }
       
@@ -274,7 +233,7 @@ class HarvestTests: XCTestCase {
         "surname": "Andrews",
         "type": "Foreman",
         "phoneNumber": "1234567890",
-        "assignedOrchards": ["1I", "2II"]
+        "orchards": ["1I", "2II"]
       ])
       HarvestDB.delete(worker: workers.first(where: {$0.id == "1a"})!) { (error, ref) in
         XCTAssertEqual(π.mockDB["foo/workers/1a"], JSON.none)
@@ -291,6 +250,38 @@ class HarvestTests: XCTestCase {
       HarvestDB.getWorkers({ (workers) in
         let oo = workers.first(where: { $0.id == "2b" })!
         XCTAssertEqual(oo.idNumber, "42")
+      })
+    }
+  }
+  
+  func testAddingDeletingFarm() {
+    HarvestDB.getFarms { (farms) in
+      for farm in farms {
+        if farm.id == "A1" {
+          XCTAssertEqual(farm.name, "farm1")
+        } else if farm.id == "2b" {
+          XCTAssertEqual(farm.name, "farm2")
+        }
+      }
+      
+      XCTAssertEqual(π.mockDB["foo/farms/A1"], [
+        "name": "farm1",
+      ])
+      HarvestDB.delete(farm: farms.first(where: {$0.id == "A1"})!) { (error, ref) in
+        XCTAssertEqual(π.mockDB["foo/farm/A1"], JSON.none)
+      }
+    }
+  }
+  
+  func testModifyFarm() {
+    HarvestDB.getFarms { (farms) in
+      let o = farms.first(where: { $0.id == "A2" })!
+      o.tempory = Farm.init(json: o.json()["A2"]!, id: "A2")
+      o.tempory?.name = "bar"
+      HarvestDB.save(farm: o.tempory!)
+      HarvestDB.getFarms({ (farms) in
+        let oo = farms.first(where: { $0.id == "A2" })!
+        XCTAssertEqual(oo.name, "bar")
       })
     }
   }

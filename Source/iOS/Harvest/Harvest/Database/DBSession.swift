@@ -6,7 +6,7 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Firebase
+import FirebaseDatabase
 
 extension HarvestDB {
   private static var sessionListners = [UInt]()
@@ -74,7 +74,7 @@ extension HarvestDB {
   static func save(session: Session) {
     let sessions = ref.child(Path.sessions)
     if session.id == "" {
-      session.id = sessions.childByAutoId().key
+      session.id = sessions.childByAutoId().key ?? Date.key
     }
     let update = session.json()
     sessions.updateChildValues(update)

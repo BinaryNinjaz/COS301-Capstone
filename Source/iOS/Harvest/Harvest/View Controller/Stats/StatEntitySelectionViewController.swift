@@ -20,6 +20,9 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
   var timeStep: TimeStep?
   var grouping: StatKind = .worker
   var mode: TimedGraphMode?
+  var showExpected: Bool = true
+  var showAverage: Bool = true
+  var curveKind: LineGraphCurve = .curve
   
   var selected: [String] = []
   
@@ -100,10 +103,9 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
     let startDateRow = DateRow { row in
       row.title = "From Date"
       
-      let wb = Date().thisWeek().0
-      row.value = wb
+      row.value = timePeriod?.dateRange().0.startOfDay() ?? Date().thisWeek().0.startOfDay()
       if case let .between(_, b)? = self.timePeriod {
-        self.timePeriod = .between(wb, b)
+        self.timePeriod = .between(row.value, b)
       }
     }.onChange { row in
       let date = row.value ?? Date()
@@ -114,9 +116,9 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
     
     let endDateRow = DateRow { row in
       row.title = "Up to Date"
-      row.value = Date().thisWeek().1.endOfDay()
+      row.value = timePeriod?.dateRange().1.startOfDay() ?? Date().thisWeek().1.endOfDay()
       if case let .between(a, _)? = self.timePeriod {
-        self.timePeriod = .between(a, Date())
+        self.timePeriod = .between(a, row.value)
       }
     }.onChange { row in
       let date = row.value?.endOfDay() ?? Date()
@@ -148,7 +150,10 @@ class StatEntitySelectionViewController: ReloadableFormViewController, TypedRowC
         timeStep: self.timeStep ?? .daily,
         grouping: self.grouping,
         mode: self.mode ?? .accumTime,
-        name: "")
+        name: "",
+        showExpected: self.showExpected,
+        showAverage: self.showAverage,
+        curveKind: self.curveKind)
       
       svc.stat = stat
       

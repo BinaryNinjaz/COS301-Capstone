@@ -6,7 +6,7 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Firebase
+import FirebaseDatabase
 
 extension HarvestDB {
   static func getWorkers(_ completion: @escaping ([Worker]) -> Void) {
@@ -88,7 +88,7 @@ extension HarvestDB {
     let requestedLocations = ref.child(Path.requestedLocations)
     
     if worker.id == "" {
-      worker.id = workers.childByAutoId().key
+      worker.id = workers.childByAutoId().key ?? Date.key
     }
     let update = worker.json()
     workers.updateChildValues(update)
@@ -102,7 +102,8 @@ extension HarvestDB {
     }
     
     if worker.kind == .foreman && worker.phoneNumber != "" {
-      foremen.updateChildValues([worker.phoneNumber.removedFirebaseInvalids(): true])
+      let validatedNumber = worker.phoneNumber.removedFirebaseInvalids()
+      foremen.updateChildValues([validatedNumber: true])
       saveWorkerReference(worker, oldWorker.phoneNumber)
       if oldWorker.phoneNumber != "" && worker.phoneNumber != oldWorker.phoneNumber {
         foremen.child(oldWorker.phoneNumber.removedFirebaseInvalids()).removeValue()

@@ -12,8 +12,6 @@
 	urlcolor=cyan,
 }
 
-
-
 % define the title
 \author{Binary Ninjaz}
 \title{Harvest}
@@ -22,11 +20,13 @@
 
 	\begin{center}
 		% Upper part of the page
+		\includegraphics[height=5em]{images/Bin.png}\\
 		\textsc{\LARGE Binary Ninjaz}\\[0.3cm]
 		% Title
 		\rule{\linewidth}{0.5mm} \\[0.5cm]
+		\includegraphics[height=5em]{images/Icon.png}\\
 		{ \huge \bfseries Harvest \\
-		  \vspace{0.3cm}\large \bfseries User Manual}\\[0.5cm]
+		  \vspace{0.3cm}\large \bfseries Testing Policy}\\[0.5cm]
 		\rule{\linewidth}{0.5mm} \\[1cm]
 
 
@@ -94,7 +94,7 @@
 				15008739
 			\end{flushright}
 		\end{minipage}
-        
+
         \begin{minipage}{0.4\textwidth}
 			\begin{flushleft} \large
 				\emph{} \\
@@ -148,13 +148,13 @@ In this section, the testing process, based on IEEE-829, will illustrated. This 
 \indent Three phases within the testing process can be identified, namely:
 \begin{enumerate}
 	\item Test specification,
-	\item Test implementation, and
+	\item Test implementation,
 	\item Test reporting.
 \end{enumerate}
 Each phase is now elaborated.
-\subsection{Test specification}
+\subsubsection{Test Specification}
 The test specification can be subdivided into 2 parts. On the one hand, there is \textit{planning and verification}, on the other there is \textit{Analysis, design, and implementation}.\\
-\indent \textit{Planning and verification} may consist of the following activities:\\
+\indent \textit{Planning and verification} may consist of the following activities:
 \begin{itemize}
  \item Specifying the scope and the risks, and defining the objectives of the tests;
 \item Determining the strategy;
@@ -162,7 +162,7 @@ The test specification can be subdivided into 2 parts. On the one hand, there is
 \item Planning of the test design activities;
 \item Planning of implementation and evaluation.
 \end{itemize}
-During the \textit{analysis, design, and implementation} phase, the test objectives will be transformed into specific test conditions and test cases. This may involve the following activities: \newline
+During the \textit{analysis, design, and implementation} phase, the test objectives will be transformed into specific test conditions and test cases. This may involve the following activities:
 \begin{itemize}
  \item A review of the test base (such as requirements, architecture, design, and interfaces);
 \item Evaluation of the testability of the test base and the test objects;
@@ -171,51 +171,142 @@ During the \textit{analysis, design, and implementation} phase, the test objecti
 \item Identifying the necessary test data in order to support the test cases;
 \item Designing the test environment and identifying the infrastructure and tools.
 \end{itemize}
-\subsection{Implementation of tests}
-The implementation of tests forms the phase in which the test procedures and scripts are implemented and the results of these (including incidents) are logged. This may involve the following activities: \newline
+\subsubsection{Implementation of Tests}
+The implementation of tests forms the phase in which the test procedures and scripts are implemented and the results of these (including incidents) are logged. This may involve the following activities:
 \begin{itemize}
- \item Implementation of the tests, manually or by means of a tool  
-\item Logging the results of the implementation 
-\item Comparing the results with the result that had been predicted 
-\item Reporting any setbacks in the form of incidents and analysing these in order to identify the cause 
-\item Repeating the tests as a result of the incidents identified 
+ \item Implementation of the tests, manually or by means of a tool;
+\item Logging the results of the implementation;
+\item Comparing the results with the result that had been predicted;
+\item Reporting any setbacks in the form of incidents and analysing these in order to identify the cause;
+\item Repeating the tests as a result of the incidents identified.
 \end{itemize}
-\subsection{Test Reporting}
-Test Reporting forms the phase in which the implementation of the tests is compared with the objectives. This may involve the following tasks: \newline
+\subsubsection{Test Reporting}
+Test Reporting forms the phase in which the implementation of the tests is compared with the objectives. This may involve the following tasks:
 \begin{itemize}
- \item Checking of the test logs and the list of defects and comparing these to the exit criteria specified in the test plan   
-\item Investigating whether additional tests are required
-\item Writing a summary report 
+ \item Checking of the test logs and the list of defects and comparing these to the exit criteria specified in the test plan;
+\item Investigating whether additional tests are required;
+\item Writing a summary report.
 \end{itemize}
+\subsection{Testing Frequency}
+Since tests are used to validate the continued performance of a module---or the system as a whole---tests should be run after each module is finished being modified or created.
 
-  \section{TESTING TOOLS - unit testing level}
-Unit tests (otherwise known as component tests) seek to identify defects in, and verify the functioning of, testable software modules, programs, items, classes etc. \newline\newline
-Unit tests are capable of verifying functionalities, as well as non-functional characteristics. The test cases are based on work products, such as the specifications of a component, the software design or the data model. Unit tests are used in order to be certain that the individual components are working correctly. \newline\newline 
-Unit tests mainly make use of white-box testing techniques and are therefore carried out with a knowledge of the code being tested and possibly also with the support of the development environment (the unit test framework, debugging tool, etc.). That is why these tests are often carried out by the developer that wrote the code or by a party of a similar calibre. Any defects identified are resolved as soon as they are detected. \newline\newline
-The following testing tools will be used for the Harvest Software: \newline\newline
-  \subsection{Android Studio}
-JUnit is a unit test for the Java development language. This is important in the case of a test-driven development. JUnit is an instance of the xUnit architecture for unit test frameworks. The JUnit framwork will be used for out automated testing purposes. To run tests one will need Android Studio. To execute the tests one can right click on the tests directory and select 'Run tests.'\newline\newline
-\includegraphics[width=400px]{images/FailedLoginTest}
-\href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/LogInActivityTest.java}{Link to Android App Testing}
-\newline
-\subsection{ XCTest framework example test on IOS App}
-\includegraphics[width=400px]{images/iostest}
-\href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/HarvestTests}{Link to IOS App Testing}
-\newline
+  \section{Testing Tools}
+  There are many types of tests that can be run, in the case of \textbf{Harvest}, Unit and UI tests are run.
+  \subsection{Android}
+  \subsubsection{JUnit}
+JUnit is a unit testing framework for the Java Environment, and as such is used for testing the Android---programmed in Java---implementation of \textbf{Harvest}. Android development is carried out using the Android Studio IDE, which facilitates easy use and set up of the JUnit framework. Android Studio also recommends the use of JUnit. For the reasons given, JUnit was selected to run unit tests on Android.\\
+\indent Android unit tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/app/src/test/java/za/org/samac/harvest}{here}.
 
-  \subsection{NPM}
-  The Ava framework will be used for automated testing purposes. To run tests one will need to run "npm test" from the testing directory.
-  \subsection{XCode}
-  The XCTest framework will be used for out automated testing purposes. To run tests one will need XCode. To execute the tests one will need to use XCodes build command.
- 
-  \section{TESTING PHILOSOPHY}
-  Implementation of both simple and holistic tests will be of concern. However, holistic testing will be of more interest. Testing workflows are of vital importance. The project does not have many simple tasks that could provide us with the safety guarantees we would like. We instead seek to find safety in implementing tests that check the whole interaction of these few unit cases.
+ \subsubsection{Espresso}
+ Espresso, like JUnit, is integrated into, and recommended by, Android Studio, and therefore is used to facilitate UI testing on Android.\\
+ \indent Android UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest}{here}.
   
-  \subsection{Benefits}
-  Automated test provide developers with the ability to have safe of mind that they have not made any changes that break the program in any way or introduce bugs in any part of the program.
-  Forcing developers to write tests forces them to check every part of code they write making tests a form of documentation of a projects requirements.
-  
-  \section{TEST EVALUATION}
-  Strict zero test case failure will be followed. Any branch with a failing test case will never be merged into master. Hence we will ensure that every branch runs tests before a pull request.
+ \subsubsection{Execution}
+   \begin{figure}
+  	\includegraphics[width=\textwidth]{images/Android-JUnit-tests.png}
+	\caption{Android Studio Test Example}
+	\label{fig:android-test}
+  \end{figure}
+ Both UI and Unit tests are executed in the same manner for Android, the primary difference being that a UI test will need to run on a connected device or virtual machine.\\
+\indent In order to run a unit or UI test for Android, one must open the file containing the desired test(s) using Android Studio as in figure \ref{fig:android-test}. Once there, one can right click on the green `test' button in the margin, then they can select to run the tests, the results of which will be seen at the bottom of the IDE.
+
+\subsection{iOS}
+\subsubsection{XCTest}
+XCTest integrates seamlessly into Xcode's (the iOS IDE) testing workflow, and for that reason is used to facilitate all testing on iOS. XCTest is used for both UI and unit testing on iOS.\\
+\indent iOS unit tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/HarvestTests}{here}, and UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/HarvestUITests}{here}.
+\subsubsection{Execution}
+To begin tests in Xcode, click on the play button in the top right, on the line that is highlighted in blue; as seen in figure \ref{fig:is}. This will run the tests. The results will look like figure \ref{fig:ie}.
+  \begin{figure}
+  	\includegraphics[width=\textwidth]{images/iOS-test.png}
+	\caption{iOS Xcode Test Start}
+	\label{fig:is}
+  \end{figure}
+
+\subsection{Web}
+\subsubsection{QUnit}
+QUnit is used for unit testing javascript functions. It was chosen since it displays its results in a convenient way---by including them in the web page, and it's very simple to use.\\
+\indent QUnit tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Web/app}{here}.
+\subsubsection{Execution}
+\begin{figure*}[ht!]
+            \includegraphics[width=.5\textwidth]{images/q1.png}
+            \includegraphics[width=.5\textwidth]{images/q2.png}
+            \caption{Before Enabling Tests}
+            \label{fig:q1}
+            \caption{After Enabling Tests}
+            \label{fig:q2}
+        \end{figure*}
+\paragraph{QUnit} To execute QUnit tests, go into the html file that uses the functions to be tested. At the bottom, find a segment that mentions \texttt{QUnit Testing}, such as in figure \ref{fig:q1}; then simply uncomment the code, as in figure \ref{fig:q2}, and refresh the page. The results are now displayed, such as in figure \ref{fig:qr}.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{images/qr.png}
+\caption{Results of QUnit test}
+\label{fig:qr}
+\end{figure}
+
+\section{Test Cases}
+\subsection{Database}
+The database cannot be tested locally with unit tests, so UI tests are used to perform create, read, update, and delete (CRUD) operations on the database. The tests also confirm that after the operations are completed, the database returns the correct information.\\
+\indent These UI tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestUITests/HarvestEntityCreationUITests.swift}{here}, \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestTests/HarvestTests.swift}{here}, and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestUITests/HarvestEntityDeletionUITests.swift}{here} for iOS; and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/InformationTest.java}{here} for Android. These tests are all simply performing one or more CRUD operation pertaining to the database, and confirming that the correct results are returned after the operation; before moving onto the next.
+\subsection{Location Services}
+Location services are handled by device hardware and cannot be reasonably tested, however, it is possible to test the handling of the results returned by the location services.\\
+\indent Examples of these tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestTests/GeoKitTests.swift}{here} on iOS, and \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/test/java/za/org/samac/harvest/PolygonContainsPointTest.java}{here} for Android.\\
+\indent These tests deal mostly with geo-fencing---testing if a location falls within a given area. These functions serve to test which orchard, if any, a foreman is within when they make use of the mobile application.\\
+\indent The testing is carried out by creating a polygon demarcated by a set of coordinates, then feeding the geo-fencing functions a set of predetermined coordinates to test if the correct results are returned by these functions.
+\subsection{Cloud Functions}
+A variety of functions that operate on the database are hosted in the cloud, so that mobile applications can request the results of a function rather than download all the necessary data from the database and perform the calculations locally, this saves on valuable mobile data.\\
+\indent Tests for these functions can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Web/functions/test.js}{here}.\\
+\indent These functions are tested simply by giving them dummy data and confirming that the correct results are returned.
+\subsection{Mobile Application and Website}
+These are umbrella terms that each encompass a variety of smaller subsystems.
+\subsection{Collection Tracker}
+The collection tracker (also termed as yield tracker) is the primary mobile activity performed by foremen. It is how they measure the collections of the workers.\\
+\indent On iOS this is tested by unit tests that create fake information and then feeds it into the tracker to confirm that arbitary information can be processed. Simultaneoulsy, it is confirmed that the location and time measured by the tracker is handled correctly. These tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/iOS-/Source/master/Harvest/HarvestTests/HarvestTests.swift}{here}. There are also tests to verify the functioning of the individual components that comprise the collection tracker.\\
+\indent On Android, testing is carried out by means of UI tests which confirm that arrival to the tracker and its operations is carried out correctly as a whole. The tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/YieldTrackerTest.java}{here}.
+\subsection{Foreman Location Viewer}
+The foreman location viewer is used to display the live locations of requested foremen, it relies heavily on accurate location reporting from the foreman tracker. Once the information is received, it is simply displayed.
+\subsection{Foreman Tracker}
+The foreman tracker is used to report the location of the foreman (the mobile application) to the foreman location viewer. It relies almost exclusively on accurate location reporting, which is received from hardware and written to the database. Tests can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestTests/GeoKitTests.swift}{here}.
+\subsection{Collection Viewer}
+The collection viewer shows summaries of previously recorded sessions. It is used solely to report simple previously recorded information to the user. This information is read from the database, tests for which have already been discussed.
+\subsection{Statistics Viewer}
+The statistics viewer is used to report information to the user in the form of line graphs. Given the large amounts of data processed, this is handled by cloud functions, testing for which has already been discussed. The complication being the correct reporting of the information received.\\
+\indent Android unit tests, which confirm the correct handling of dates can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/Android/Source/master/Harvest/app/src/test/java/za/org/samac/harvest/StatsTests.java}{here}.
+\subsection{Information Manager}
+The information manager is used exclusively to perform basic CRUD operations on the database, no additional processing is performed. Tests for CRUD operations have already been discussed.\\
+\indent On Android this is tested via a UI test \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/Android/Harvest/app/src/androidTest/java/za/org/samac/harvest/InformationTest.java}{here}, which runs through adding, modifying, and deleting information.\\
+\indent iOS uses unit tests, found \href{https://github.com/BinaryNinjaz/COS301-Capstone/blob/master/Source/iOS/Harvest/HarvestTests/GeoKitTests.swift}{here}, to test the correct functioning of CRUD operations relating to the information manager.
+
+\section{History}
+\subsection{Android}
+\begin{figure*}[ht!]
+            \includegraphics[width=.3\textwidth]{images/hash.png}
+            \includegraphics[width=.3\textwidth]{images/info.png}
+            \includegraphics[width=.3\textwidth]{images/stats.png}
+            \caption{Unit Test to Verify Functioning of Hash Function}
+                        \label{fig:androidsamples}
+            \caption{UI Test to Verify Functioning of Information Editing}
+            \label{fig:as2}
+            \caption{Unit Test to Verify Formatting of Dates}
+            \label{fig:as3}
+
+        \end{figure*}
+Android test logs can found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Android/Harvest/test-logs}{here}.\\
+\indent Refer to figures \ref{fig:androidsamples}, \ref{fig:as2}, and \ref{fig:as3} for examples of tests.
+\subsection{iOS}
+	\begin{figure}
+  	\includegraphics[width=\textwidth]{images/iosexample.png}
+	\caption{iOS Xcode Test Example}
+	\label{fig:ie}
+  \end{figure}
+iOS test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/iOS/Harvest/TestResults}{here}.\\
+\indent Refer to figure \ref{fig:ie} to see iOS tests.
+\subsection{Web}
+	\begin{figure}
+  	\includegraphics[width=\textwidth]{images/qt.png}
+	\caption{QUnit Test to Verify Passwords are Rejected or Approved Appropriately}
+	\label{fig:qt}
+  \end{figure}
+Web test logs can be found \href{https://github.com/BinaryNinjaz/COS301-Capstone/tree/master/Source/Web/test-logs}{here}.\\
+\indent Refer to figure \ref{fig:qt} for an example of a QUnit test.
   
 \end{document}

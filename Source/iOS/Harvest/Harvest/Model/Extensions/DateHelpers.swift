@@ -9,6 +9,12 @@
 import Foundation
 
 extension Date {
+  static var key: String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyyMMddHHmmss"
+    return formatter.string(from: Date())
+  }
+  
   func startOfHour(using calendar: Calendar = .current) -> Date {
     let components = calendar.dateComponents([.year, .month, .day, .hour], from: self)
     let s = calendar.date(from: components)!
