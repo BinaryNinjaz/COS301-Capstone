@@ -29,7 +29,7 @@ class StatsViewController: UIViewController {
                        height: view.frame.height - navH * 2 - tabH)
     
     lineChart = LineChartView(frame: frame)
-    activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     activityIndicator?.color = UIColor.harvestGreen
     activityIndicator?.stopAnimating()
     

@@ -50,13 +50,19 @@ public class SplashScreenActivity extends AppCompatActivity {
         tvAppName.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
         //Target viewTarget = new ViewTarget(R.id.tvAppName, SplashScreenActivity.this);
 
-        if(statusCheck()) {
+        if(locationPermissions()) {
+            showLoading();
+        }
+
+        //showLoading();
+
+        /*if(statusCheck()) {
             if(locationPermissions()) {
                 showLoading();
             }
         } else {
             buildAlertMessageNoGps();
-        }
+        }*/
 
 
 
@@ -103,7 +109,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     // for ActivityCompat#requestPermissions for more details.
                     //showLoading();
                     if(statusCheck() == false) {
-                        buildAlertMessageNoGps();
+                        //buildAlertMessageNoGps();
                     }
                     showLoading();
                     return;

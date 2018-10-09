@@ -6,7 +6,7 @@
 //  Copyright © 2018 University of Pretoria. All rights reserved.
 //
 
-import Firebase
+import FirebaseDatabase
 
 enum HarvestCloud {
   static let baseURL = "https://us-central1-harvest-ios-1522082524457.cloudfunctions.net/"

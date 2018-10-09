@@ -13,10 +13,10 @@ final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[String]>>, Pres
   typealias PresenterRow = StatEntitySelectionViewController
   
   /// Defines how the view controller will be presented, pushed, etc.
-  open var presentationMode: PresentationMode<PresenterRow>?
+  public var presentationMode: PresentationMode<PresenterRow>?
   
   /// Will be called before the presentation occurs.
-  open var onPresentCallback: ((FormViewController, PresenterRow) -> Void)?
+  public var onPresentCallback: ((FormViewController, PresenterRow) -> Void)?
   
   var actuallyChanged: ((RowOf<Orchard>) -> Void)?
   
@@ -48,7 +48,7 @@ final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[String]>>, Pres
   /**
    Extends `didSelect` method
    */
-  open override func customDidSelect() {
+  public override func customDidSelect() {
     super.customDidSelect()
     guard let presentationMode = presentationMode, !isDisabled else { return }
     if let controller = presentationMode.makeController() {
@@ -64,7 +64,7 @@ final class StatEntitySelectionRow: OptionsRow<PushSelectorCell<[String]>>, Pres
   /**
    Prepares the pushed row setting its title and completion callback.
    */
-  open override func prepare(for segue: UIStoryboardSegue) {
+  public override func prepare(for segue: UIStoryboardSegue) {
     super.prepare(for: segue)
     guard let rowVC = segue.destination as? PresenterRow else { return }
     rowVC.title = selectorTitle ?? rowVC.title

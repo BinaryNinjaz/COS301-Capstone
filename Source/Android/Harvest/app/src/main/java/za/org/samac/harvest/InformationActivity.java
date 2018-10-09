@@ -136,6 +136,13 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
         selectedCat = NAV;
         toggleUpButton(false);
         setTitle("Information");
+
+        if (Data.hasFarm() && Data.hasOrchard() && Data.hasWorker()){
+            bottomNavigationView.setVisibility(View.VISIBLE);
+        }
+        else{
+            bottomNavigationView.setVisibility(View.GONE);
+        }
     }
 
     public void tellAllPullDone(){

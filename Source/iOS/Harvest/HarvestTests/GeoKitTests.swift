@@ -145,7 +145,6 @@ class GeoKitTests: XCTestCase {
     
     XCTAssertEqual(ps, [e0, e1])
     
-    
     XCTAssertEqual(s.intersectionSegments(onLineXEqual: -20), [])
   }
   

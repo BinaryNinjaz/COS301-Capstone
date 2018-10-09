@@ -8,7 +8,7 @@
 
 import UIKit
 import GoogleSignIn
-import Firebase
+import FirebaseAuth
 import Disk
 import SCLAlertView
 
@@ -33,6 +33,12 @@ class SignInOptionViewController: UIViewController {
   }
   
   override func viewDidAppear(_ animated: Bool) {
+    if UserDefaults.standard.bool(forKey: "tester"), let vc = mainViewToPresent() {
+      updateMockDatabase()
+      self.present(vc, animated: true, completion: nil)
+      return
+    }
+    
     guard UserDefaults.standard.bool(forKey: "Launched") else {
       let vc = storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
       if let avc = vc as? CarouselViewController {
@@ -45,6 +51,10 @@ class SignInOptionViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    if UserDefaults.standard.bool(forKey: "tester") { // if testing skip login check
+      return
+    }
     
     guard UserDefaults.standard.bool(forKey: "Launched") else {
       return

@@ -315,6 +315,13 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
     }
 
     private void startMain(){
+        Data.setNeedsPull(false);
+        Data data = new Data();
+        data.notifyMe(this);
+        data.pull();
+    }
+
+    public void pullDone(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SignIn_Farmer.this);
         if(!prefs.getBoolean("firstTimeInMain", false)) {
             // run your one time code
@@ -323,14 +330,19 @@ public class SignIn_Farmer extends AppCompatActivity implements  GoogleApiClient
             finish();
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("firstTimeInMain", true);
-            editor.commit();
+            editor.apply();
+
+            Stats.GraphDB.createDefaults(this);
         } else {
-            Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
-            startActivity(intent);
+            if (Data.hasFarm() && Data.hasOrchard() && Data.hasWorker()) {
+                Intent intent = new Intent(SignIn_Farmer.this, MainActivity.class);//go to actual app
+                startActivity(intent);
+            }
+            else {
+                startActivity(new Intent(SignIn_Farmer.this, InformationActivity.class));//They're missing something.
+            }
             finish();//kill current Activity
         }
-
-        Data.forceNextPull();
     }
 
     private void signInToAccount(String email, String password) {
