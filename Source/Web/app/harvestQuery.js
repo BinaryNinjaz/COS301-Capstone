@@ -67,8 +67,8 @@ function timePeriods() {
     /last\s+(\d+)\s+(days?)/i, // last # days
     /last\s+(\d+)\s+(weeks?)/i, // last # weeks
     /last\s+(\d+)\s+(months?)/i, // last # months
-    /(\d\d?\s(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\s+(?:\d{4})?)/i, // DD? MMM YYYY?
-    /(\d\d?\s(?:january|february|march|april|may|june|july|august|september|october|november|december)\s+(?:\d{4})?)/i, // DD? MMMM YYYY?
+    /((?:\d\d\s+)?(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)(?:\s+\d{4})?)/i, // DD? MMM YYYY?
+    /((?:\d\d\s+)?(?:january|february|march|april|may|june|july|august|september|october|november|december)(?:\s+\d{4})?)/i, // DD? MMMM YYYY?
   ];
 }
 
@@ -184,7 +184,7 @@ function buildFormalQuery(queryText) {
   return tokens;
 }
 
-function unionOfObjects(objectA, objectB) {
+function unionOfObjects(objectA, objectB, count) {
   if (isEmptyObject(objectA)) {
     return objectB;
   }
@@ -192,7 +192,6 @@ function unionOfObjects(objectA, objectB) {
     return objectA;
   }
   var result = {};
-
   for (const keyA in objectA) {
     for (const keyB in objectB) {
       if (!arrayContainsString(keyA.split("/"), keyB)) {
@@ -204,7 +203,7 @@ function unionOfObjects(objectA, objectB) {
         }
         delete result[keyA];
       } else {
-        if (arrayContainsString(objectA[keyA].split("<br>"), objectB[keyB]) || arrayContainsString(objectA[keyA].split("<br>"), objectB[keyB])) {
+        if (arrayContainsString(objectA[keyA].split("<br>"), objectB[keyB])) {
           result[keyA] = objectA[keyA];
         } else if (result[keyA] === undefined) {
           if (arrayContainsString(objectA[keyA].split("<br>"), "Calculation") || keyB === "Calculation") {
@@ -217,18 +216,45 @@ function unionOfObjects(objectA, objectB) {
     }
   }
 
+  console.log("~=", result);
   // filter compound duplicates from compound words
   for (const rKey in result) {
-    if (!stringContainsSubstring(rKey, "/")) {
-      for (const r2Key in result) {
-        if (rKey !== r2Key && stringContainsSubstring(r2Key, rKey)) {
+    for (const r2Key in result) {
+      if (rKey !== r2Key) {
+        if (equalSets(rKey.split("/"), r2Key.split("/"))) {
+          delete result[r2Key];
+        }
+        console.log(stringContainsSubstring(rKey, r2Key))
+        if (stringContainsSubstring(rKey, r2Key)) {
+          console.log("--------", r2Key);
           delete result[r2Key];
         }
       }
     }
   }
 
+  console.log("==", result);
   return result;
+}
+
+function equalSets(setA, setB) {
+  console.log(setA, setB);
+  if (setA.length !== setB.length) {
+    return false;
+  }
+  for (const keyA in setA) {
+    var containsA = false;
+    for (const keyB in setB) {
+      if (setA[keyA] === setB[keyB]) {
+        containsA = true;
+        break;
+      }
+    }
+    if (!containsA) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function mergeObjects(objectA, objectB) {
@@ -274,8 +300,9 @@ function queryEntity(option, ekey, entity, farms, orchards, workers, queryText, 
       } else if (option === "session") {
         subSubResult = searchSession(entity, queryParam, farms, orchards, workers, periods[aQueryIdx][0]);
       }
+
       if (!isEmptyObject(subSubResult)) {
-        subResult = unionOfObjects(subResult, subSubResult);
+        subResult = unionOfObjects(subResult, subSubResult, aQuery.length);
       } else {
         subResult = {};
         missed = true;

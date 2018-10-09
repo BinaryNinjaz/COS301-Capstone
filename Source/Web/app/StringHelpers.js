@@ -76,6 +76,5 @@ function removeWordFromString(word, string) {
     }
     result = temp;
   }
-  console.log
   return result;
 }
