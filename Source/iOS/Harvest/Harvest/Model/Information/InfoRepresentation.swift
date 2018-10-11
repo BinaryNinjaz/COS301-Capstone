@@ -81,8 +81,6 @@ extension Worker {
     }
     
     let lastnameRow = NameRow { row in
-      row.add(rule: RuleRequired(msg: "• Surname must be filled in"))
-      row.validationOptions = .validatesAlways
       row.title = "Worker Surname"
       row.value = lastname
       row.placeholder = "Appleseed"
@@ -91,12 +89,6 @@ extension Worker {
       onChange()
     }.cellUpdate { (cell, _) in
       cell.textField.clearButtonMode = .whileEditing
-    }.onRowValidationChanged { (cell, row) in
-      if row.validationErrors.isEmpty {
-        cell.backgroundColor = .white
-      } else {
-        cell.backgroundColor = .invalidInput
-      }
     }
     
     let isForemanRow = SwitchRow("isForemanTag") { row in
