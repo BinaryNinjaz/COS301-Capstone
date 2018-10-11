@@ -752,10 +752,16 @@ public class InformationActivity extends AppCompatActivity implements InfoOrchar
             infoOrchardMapFragment.setCoordinates(orchard.getCoordinates());
             infoOrchardMapFragment.inferArea = orchard.getInferArea();
         }
-        Farm farm = orchard.getAssignedFarm();
-        String farmId = farm == null ? "" : farm.getID();
-        infoOrchardMapFragment.setFillColor(ColorScheme.hashColor(farmId, orchard.getID(), 64));
-        infoOrchardMapFragment.setStrokeColor(ColorScheme.hashColor(farmId, orchard.getID(), 191));
+        if (orchard != null) {
+            Farm farm = orchard.getAssignedFarm();
+            String farmId = farm == null ? "" : farm.getID();
+            infoOrchardMapFragment.setFillColor(ColorScheme.hashColor(farmId, orchard.getID(), 64));
+            infoOrchardMapFragment.setStrokeColor(ColorScheme.hashColor(farmId, orchard.getID(), 191));
+        }
+        else {
+            infoOrchardMapFragment.setFillColor(ColorScheme.hashColor("   ", "   ", 64));
+            infoOrchardMapFragment.setStrokeColor(ColorScheme.hashColor("   ", "   ", 191));
+        }
 
         fragmentTransaction.commit();
     }
