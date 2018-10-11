@@ -94,11 +94,7 @@ class ForemanSignInViewController: UIViewController {
       .instantiateViewController(withIdentifier: "mainTabBarViewController")
       as? MainTabBarViewController
     
-    if !HarvestUser.current.workingForID.isEmpty {
-      result?.setUpForForeman()
-    } else {
-      result?.setUpForFarmer()
-    }
+    result?.setUpForForeman() // always setup for foreman from phone log in
     
     return result
   }
@@ -158,6 +154,7 @@ class ForemanSignInViewController: UIViewController {
         SCLAlertView().showError(
           "Invalid Phone Number",
           subTitle: "Please enter a valid phone number to sign in.")
+        isLoading = false
         return
       }
       

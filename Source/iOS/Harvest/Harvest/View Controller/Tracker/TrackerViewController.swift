@@ -226,6 +226,7 @@ class TrackerViewController: UIViewController {
     alert.addAction(cancel)
     alert.popoverPresentationController?.sourceView = yieldLabel
     
+    print(Entities.shared.farms)
     if Entities.shared.farms.isEmpty {
       let notice = SCLAlertView()
       

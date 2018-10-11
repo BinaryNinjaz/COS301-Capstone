@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class MainTabBarViewController: UITabBarController {
   override func viewDidLoad() {
@@ -22,19 +23,22 @@ class MainTabBarViewController: UITabBarController {
     
     Entities.shared.start()
     
-    if !UserDefaults.standard.bool(forKey: HarvestUser.current.uid + "SignedIn") {
-      UserDefaults.standard.set(true, forKey: HarvestUser.current.uid + "SignedIn")
-      StatStore.shared.setUpPredefinedGraphs()
-      let vc = storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
-      if let avc = vc as? CarouselViewController {
-        avc.showTutorial()
-        present(avc, animated: true, completion: nil)
-      }
-    } else {
-      tutorialProgressListnerId = Entities.shared.listen {
-        self.tutorialProgression()
+    if HarvestUser.current.isFarmer {
+      if !UserDefaults.standard.bool(forKey: HarvestUser.current.uid + "SignedIn") {
+        UserDefaults.standard.set(true, forKey: HarvestUser.current.uid + "SignedIn")
+        StatStore.shared.setUpPredefinedGraphs()
+        let vc = storyboard?.instantiateViewController(withIdentifier: "carouselViewController")
+        if let avc = vc as? CarouselViewController {
+          avc.showTutorial()
+          present(avc, animated: true, completion: nil)
+        }
+      } else {
+        tutorialProgressListnerId = Entities.shared.listen {
+          self.tutorialProgression()
+        }
       }
     }
+    
 //    UserDefaults.standard.set(false, forKey: HarvestUser.current.uid + "SignedIn")
   }
   
@@ -84,6 +88,12 @@ class MainTabBarViewController: UITabBarController {
     if let statIdx = viewControllers?
       .index(where: { $0.restorationIdentifier == statViewControllerKey }) {
         viewControllers?.remove(at: statIdx)
+    }
+    
+    if viewControllers?.index(where: { $0.restorationIdentifier == trackerViewControllerKey }) == nil {
+      if let trackerVC = storyboard?.instantiateViewController(withIdentifier: trackerViewControllerKey) {
+        viewControllers?.insert(trackerVC, at: 0)
+      }
     }
   }
   

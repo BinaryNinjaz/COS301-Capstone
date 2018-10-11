@@ -64,8 +64,10 @@ public final class HarvestUser {
     UserDefaults.standard.set(username: accountIdentifier)
     
     accountIdentifier = user.email ?? user.phoneNumber ?? ""
-    uid = user.uid
-    UserDefaults.standard.set(uid: uid)
+    if HarvestUser.current.isFarmer {
+      uid = user.uid
+      UserDefaults.standard.set(uid: uid)
+    }
     
     HarvestDB.getWorkingFor(completion: { ids in
       HarvestUser.current.workingForID = ids
@@ -97,6 +99,10 @@ public final class HarvestUser {
     HarvestUser.current.uid = ""
     HarvestUser.current.workingForID = []
     HarvestUser.current.selectedWorkingForID = nil
+  }
+  
+  var isFarmer: Bool {
+    return (Auth.auth().currentUser?.phoneNumber ?? "") == ""
   }
   
   static var current = HarvestUser()
