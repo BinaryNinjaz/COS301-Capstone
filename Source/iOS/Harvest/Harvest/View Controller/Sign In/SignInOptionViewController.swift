@@ -23,10 +23,10 @@ class SignInOptionViewController: UIViewController {
       .instantiateViewController(withIdentifier: "mainTabBarViewController")
       as? MainTabBarViewController
 
-    if !HarvestUser.current.workingForID.isEmpty {
-      result?.setUpForForeman()
-    } else {
+    if HarvestUser.current.isFarmer {
       result?.setUpForFarmer()
+    } else {
+      result?.setUpForForeman()
     }
 
     return result
@@ -62,7 +62,15 @@ class SignInOptionViewController: UIViewController {
     
     if let user = Auth.auth().currentUser {
       HarvestUser.current.setUser(user, nil, HarvestDB.requestWorkingFor { succ in
-        if succ, let vc = self.mainViewToPresent(), user.isEmailVerified {
+        let validUser = user.isEmailVerified || !HarvestUser.current.isFarmer
+        if succ, let vc = self.mainViewToPresent(), validUser {
+          if !HarvestUser.current.isFarmer {
+            if let uid = UserDefaults.standard.getUID(), let wid = UserDefaults.standard.getWID() {
+              HarvestUser.current.selectedWorkingForID = (uid, wid)
+            } else {
+              HarvestUser.current.selectedWorkingForID = nil
+            }
+          }
           self.present(vc, animated: true, completion: nil)
         }
       })
