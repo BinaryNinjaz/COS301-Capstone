@@ -217,7 +217,7 @@ function setWorkers(workers, completion) {
     if (val !== null && val !== undefined) {
       const farmOwner = {name: val.firstname, surname: val.lastname, isFarmOwner: true, type: "Foreman"};
 
-      workers[val.uid] = farmOwner;
+      workers[val.uid || userID()] = farmOwner;
       getWorkers((snapshot) => {
         snapshot.forEach((childSnapshot) => {
           workers[childSnapshot.key] = childSnapshot.val();

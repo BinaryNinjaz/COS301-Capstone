@@ -164,7 +164,7 @@ function newPage() {
     var lastSession = "";
     var resultHtml = [];
     snapshot.forEach((child) => {
-      const obj = child.val();
+			const obj = child.val();
       const foreman = workers[obj.wid];
       if (foreman !== undefined) {
         if (lastSession === "") {
