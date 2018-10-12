@@ -3,11 +3,18 @@
 enum HarvestDB {
   enum Path {
     // static let parent = "xFBNcNmiuON8ACbAHzH0diWcFQ43"
-    static let parent = "e0s6n4NZQaVuiCk3U9SC3eFttgr1"
+    static let parent = "G9AgYOq4zlcHyJTdUtZ6oFVdiI93"
   }
 }
 
 let tz = TimeZone.init(secondsFromGMT: 60 * 60 * -0)!
+
+func makeDate(_ year: Int, _ month: Int, _ day: Int, _ hr: Int, _ min: Int) -> Date {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+    let components = DateComponents(year: year, month: month, day: day, hour: hr, minute: min, second: 0)
+    return calendar.date(from: components)!
+}
 
 extension DateFormatter {
   static func rfc2822() -> DateFormatter {
@@ -330,8 +337,8 @@ func collection() {
 }
 
 func timeGraphSessionsWorker() {
-  let s = Date(timeIntervalSinceNow: -60 * 60 * 24 * 21)
-  let e = Date(timeIntervalSinceNow: -60 * 60 * 24 * 14)
+  let s = makeDate(2018, 2, 7, 0, 0)
+  let e = makeDate(2018, 2, 14, 23, 59)
   let g = HarvestCloud.GroupBy.worker
   let p = HarvestCloud.TimePeriod.daily
 
@@ -339,15 +346,8 @@ func timeGraphSessionsWorker() {
   print(DateFormatter.rfc2822String(from: e))
 
   let ids = [
-    // "-LC4tqYXblh6RD6F_LIS", // Tandy Joe
-    // "-LHJzXzzw_p4LaK93UYu", // Arthur Melo
-    // "-LBykXujU0Igjzvq5giB", // Peter Parker 3
-    // "-LBykjpjTy2RrDApKGLy", // Barry Allen 7
-//    "-LBykZoPlQ2xkIMylBr2", // Tony Stark 4
-//    "-LBykabv5OJNBsdv0yl7", // Clark Kent 5
-//    "-LBykcR9o5_S_ndIYHj9", // Bruce Wayne 6
-    "-LMOu6sZTSjvZWJBeJxU", // Carl Ciao
-    "-LMOu94PBHcy35qEZ_UC", // Doug Dourn
+    "-LMvjEYXeV2MCAO1ApA_", // Carl Sears
+    "-LMvjStBc_4eXoVUoruz", // Chris Lattner
   ]
 
   HarvestCloud.timeGraphSessions(
@@ -372,13 +372,9 @@ func timeGraphSessionsOrchard() {
   let p = HarvestCloud.TimePeriod.hourly
 
   let ids = [
-//    "-LCEFgdMMO80LR98BzPC", // Block H
-    // "-LCEFoWPEw7ThnUaz07W", // Block U
-//    "-LCnEEUlavG3eFLCC3MI", // Maths Building
-    // "-LHWqdM5IgQd00XbdZYT", // Block T
-    "-LKi9OIZ28wDqQlE80qX",
-    "-LKi9pI9Xrlue8mFXyX_",
-    "-LK2z9yQhfZT42ddrKJn",
+    "-LMvifScFhPo1aqY0EMK", // Block C - Apple Farm
+    "-LMviM-AvUIgTqccjvgl", // Block A - Apple Farm
+    "-LMviW0sMEONVfgSJBwp"  // Block B - Apple Farm
   ]
 
   HarvestCloud.timeGraphSessions(
