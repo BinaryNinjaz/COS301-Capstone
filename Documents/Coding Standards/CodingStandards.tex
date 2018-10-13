@@ -6,31 +6,138 @@
 \hypersetup{
   colorlinks=true,
   linkcolor=black,
-  filecolor=magenta,      
+  filecolor=magenta,
   urlcolor=cyan,
 }
 \begin{document}
 
-\title{Coding Standards Document}
-\maketitle
-\center{\textbf{Team Name:} Binary Ninjaz\\}
-\center{\textbf{System Name:} Harvest\\}
-\includegraphics[scale=0.3]{harvestIcon.png}
-\center{\textbf{Client Name:} Barry Christie\\ }{\textbf{Client Affiliation:} Operations Manager at SAMAC\\}
-\center{\textbf{Team Members:\\} 
-Teboho Mokoena (u14415888)\\
-Sizo Duma (u15245579)\\
-Letanyan Delon Arumugam (u14228123)\\
-John Ojo (u15096794)\\
-Kevin Reid (u15008739)\\
-Shaun Yates (u16007493)\\ }
-\newpage
+\begin{titlepage}
 
+	\begin{center}
+		% Upper part of the page
+		\includegraphics[height=5em]{images/Bin.png}\\
+		\textsc{\LARGE Binary Ninjaz}\\[0.3cm]
+		% Title
+		\rule{\linewidth}{0.5mm} \\[0.5cm]
+		\includegraphics[height=5em]{images/Icon.png}\\
+		{ \huge \bfseries Harvest \\
+		  \vspace{0.3cm}\large \bfseries Testing Policy}\\[0.5cm]
+		\rule{\linewidth}{0.5mm} \\[1cm]
+
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				Letanyan {Arumugam}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				14228123
+			\end{flushright}
+		\end{minipage}
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+            	\emph{} \\
+				Sizo {Duma}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				15245579
+			\end{flushright}
+		\end{minipage}
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				Teboho {Mokoena}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				14415888
+			\end{flushright}
+		\end{minipage}
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				John {Ojo}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				15096794
+			\end{flushright}
+		\end{minipage}
+
+        \begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				Kevin {Reid}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				15008739
+			\end{flushright}
+		\end{minipage}
+
+        \begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				Shaun {Yates}
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				16007493
+			\end{flushright}
+		\end{minipage}
+
+		\vspace{1cm}
+		\rule{\linewidth}{0.5mm} \\[1cm]
+		\textsc{\Large Stakeholders}\\[1cm]
+
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{} \\
+				SAMAC:
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{} \\
+				Barry Christie
+			\end{flushright}
+		\end{minipage}
+
+
+	\end{center}
+\end{titlepage}
+
+\newpage
+\pagenumbering{Roman}
 \tableofcontents
 \newpage
+\listoffigures
 
-\section{Detailed System Design}
-\includegraphics[width=1.2\linewidth]{UMLClassDiag.png}
+\newpage
+\pagenumbering{arabic}
+
+\begin{figure*}
+\includegraphics[width=1.0\linewidth]{UMLClassDiag.png}
+\caption{UML Class Diagram}
+\label{UMLClassDiag}
+\end{figure*}
 \newpage
 
 \section{Coding Conventions}
@@ -199,37 +306,44 @@ Shaun Yates (u16007493)\\ }
   \subsection{Conventions used for Specific Languages}
   \subsubsection{HTML/CSS}
   The HTML and CSS standards we shall follow will be the ones of \href{https://google.github.io/styleguide/htmlcssguide.html}{Google's HTML/CSS style guide}
-  
+
   \subsubsection{JavaScript}
   For JavaScript we will be using \href{https://google.github.io/styleguide/jsguide.html}{Google's JavaScript style guide}.
-  
+
   \subsubsection{Java}
   Similarly we will use \href{https://google.github.io/styleguide/javaguide.html}{Google's Java style guide}.
-  
+
   \subsubsection{Swift}
   For Swift we will use \href{https://swift.org/documentation/api-design-guidelines/}{Apple design guidelines}.
-  
-\center\section{File Structure}
-  \subsection{File Structure Diagram}
-  \flushleft 
+
+\section{File Structure}
+  \flushleft
+  \begin{figure*}
   \includegraphics[width=1.2\linewidth]{FileStructure.png}
+  \caption{File Structure}
+  \label{FileStructure}
+  \end{figure*}
+  
   It is important to note that \texttt{Web/app} is where the main functionality of the website source code can be found and that \texttt{Web/functions} is strictly used for cloud functions.
-  
-  \center\subsection{Git Branch Structure}
+
+  \begin{figure*}
   \includegraphics[width=1.2\linewidth]{GitBranchStructure.png}
-  
+  \caption{Git Branch Structure}
+  \label{GitBranchStructure}
+  \end{figure*}
+
 \flushleft\subsubsection{Branching}
-  An example structure is shown above, showing that \texttt{master} is never worked on directly. It is important to note that branch names given of feature branches are not necessarily set branches, but are examples to show branching structure. Each subsystem (Android, iOS, Website) has its own respective branch, and these branches branch off \texttt{Developer}, and in turn any changes done to a branch would then branch off that specific branch. 
+  An example structure is shown above, showing that \texttt{master} is never worked on directly. It is important to note that branch names given of feature branches are not necessarily set branches, but are examples to show branching structure. Each subsystem (Android, iOS, Website) has its own respective branch, and these branches branch off \texttt{Developer}, and in turn any changes done to a branch would then branch off that specific branch.
   A \texttt{Developer} branch is used, to act in much the same way as \texttt{master}, but as a proxy, so that before merging that branch to master, the entire system can be reviewed there before a more solid commitment is made.
   \subsubsection{Naming}
   \flushleft
   A branch shall never contain an individuals name, rather it must be informative as to what the intention of the branch is whilst also remaining short. An example of a  name that would be deemed unacceptable is \texttt{Joe}; another would be \texttt{JoeWebsiteChanges}, where the name contains a member name, and gives very little information as to what is going on in the branch. Bad, but barely acceptable names are \texttt{WebsiteChanges}, or \texttt{WebsiteExperimentation}. Ideal names are as follows: in the case of a branch where the website is ultimately being assembled, by merging other branches into it, and the only modifications taking place are to structure the files, or a quick fix, such as changing the colour of a button, \texttt{Website}; in the case that a new homepage is created for the website, where the homepage is created, and merged into \texttt{Website} on completion, \texttt{Website-Homepage}. Finally, if a user wants to propose a change to the \texttt{Website-Homepage} branch, where he wants to change the colour of a button, but the user has not been assigned, or is not the primary benefactor to \texttt{Website-Homepage}, he creates a new \texttt{Website-Homepage-ButtonColourChange} branch. Notice that in the ideal examples it is possible to track down the source of a branch, to understand exactly what it's purpose is.
-  
+
   \newpage
   \center\section{Code Review Process}
   \flushleft
 All code reviewing is done on GitHub, and occurs every time there are changes done to code, or if new code has been implemented. Currently, pre-commit reviews are utilized and although it is a slower process compared to post-commit reviews, it always for more people to be aware of changes to the code and could possibly lead to better implementation as more eyes usually means more ideas. \newline
 After changes have been made on the branch, the creator, who wants to merge, will then make a pull request on GitHub, and announce the request on Slack. After which it shall become the responsibility of the entire team, but more importantly that of the original branch maintainer to analyze and comment on the changes. The exact location of the discussion is trivial, however GitHub provides a better, and more concrete platform for this discussion to take place, where inline comments can be made. After a sufficient amount of time and discussion has passed, either the branch maintainer (if it is a minor change), or the entire team (if it is to master, or a major change) shall decide to merge or not.
 
-  
+
 \end{document}
