@@ -38,9 +38,9 @@ struct SessionGenerator {
     }
     
     var x = start
-    
     while x < end {
-      if factor * Double.random() < 0.5 || dailyFactor(x) * Double.random() < 0.75 {
+      if factor * Double.random() < 0.4 || dailyFactor(x) * Double.random() < 0.6 {
+        x += Double((5..<10).random())
         continue
       }
       
@@ -61,6 +61,7 @@ struct SessionGenerator {
       }
       
       x += Double((5..<10).random())
+      print(x, end)
     }
     
     let result: [String: Any] = [

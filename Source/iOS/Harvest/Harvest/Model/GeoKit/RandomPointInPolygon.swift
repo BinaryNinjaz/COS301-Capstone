@@ -10,17 +10,7 @@ import Darwin
 
 extension BinaryFloatingPoint {
   static func random() -> Self {
-    let r = Double(arc4random()) / Double(UInt32.max)
-    
-    return r as! Self
-  }
-}
-
-extension Range where Bound == Int {
-  func random() -> Bound {
-    let diff = upperBound - lowerBound
-    let r = Int(arc4random()) % diff
-    return lowerBound + r
+    return Double.random(in: 0..<1) as! Self
   }
 }
 
