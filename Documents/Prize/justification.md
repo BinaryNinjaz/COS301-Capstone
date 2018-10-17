@@ -2,7 +2,7 @@
 
 ## EOH: A Microsoft Partner - Innovation
 
-The Harvest system allows people with basic computer literacy skills. Having this target audience has meant that our system must be elementary to begin. However, as people become accustomed to the system, we would like to enable them to become power users. To do this, we have aimed to use progressive disclosure in the user interface design of the system. Achieving this goal is crucial to us because we want to empower people who may not have the ability to use extensive systems initially.
+The Harvest system was made with people with basic computer literacy skills in mind. Targeting this audience has meant that our system must be elementary to begin. However, as people become accustomed to the system, we would like to enable them to become power users. To do this, we have aimed to use progressive disclosure in the user interface design of the system. Achieving this goal is crucial to us because we want to empower people who may not have the ability to use extensive systems initially.
 
 Areas, where we have implemented progressive disclosure are information entering, statistics creation and search functionality.
 
