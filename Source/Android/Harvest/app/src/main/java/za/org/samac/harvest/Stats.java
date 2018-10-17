@@ -194,6 +194,7 @@ public class Stats extends AppCompatActivity implements SavedGraphsAdapter.HoldL
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        menu.findItem(R.id.search).setVisible(false);
         return true;
     }
 
