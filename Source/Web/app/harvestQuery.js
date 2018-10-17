@@ -4,7 +4,7 @@ function isEmptyObject(obj) {
 }
 
 function ignoredWord(word) {
-  return arrayContainsEntity(["is", "in", "with", "by", "on", "over", "from", "and", "a", "an"], word.toLowerCase());
+  return arrayContainsEntity(["is", "in", "with", "by", "on", "over", "from", "and", "a", "an", "for"], word.toLowerCase());
 }
 
 function propertyWords() {
@@ -158,9 +158,15 @@ function timePeriodForRange(amount, unit) {
 function removeTimePeriodsFromQuery(query) {
   const periods = timePeriods();
   var result = query;
-  for (const pidx in periods) {
+  var pidx = 0;
+  while (pidx < periods.length) {
     const period = periods[pidx];
-    result = result.replace(period, "");
+    const rep = result.replace(period, "");
+    if (rep === result) {
+      pidx++;
+    } else {
+      result = rep;
+    }
   }
   return result;
 }
@@ -216,7 +222,6 @@ function unionOfObjects(objectA, objectB, count) {
     }
   }
 
-  console.log("~=", result);
   // filter compound duplicates from compound words
   for (const rKey in result) {
     for (const r2Key in result) {
@@ -224,21 +229,17 @@ function unionOfObjects(objectA, objectB, count) {
         if (equalSets(rKey.split("/"), r2Key.split("/"))) {
           delete result[r2Key];
         }
-        console.log(stringContainsSubstring(rKey, r2Key))
         if (stringContainsSubstring(rKey, r2Key)) {
-          console.log("--------", r2Key);
           delete result[r2Key];
         }
       }
     }
   }
 
-  console.log("==", result);
   return result;
 }
 
 function equalSets(setA, setB) {
-  console.log(setA, setB);
   if (setA.length !== setB.length) {
     return false;
   }
